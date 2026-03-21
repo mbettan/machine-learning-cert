@@ -1,24 +1,27 @@
-# Machine Learning Certification Hub
+# Machine Learning Certification Hub Repository
 
-This repository contains study materials, infographics, podcasts, and study notes for Machine Learning and AI certifications, focusing primarily on Google Cloud.
+This repository is your one-stop resource for acing machine learning certifications and mastering cloud-based machine learning tools. Whether you're a beginner or a seasoned pro, we've got you covered!
 
-## Structure
+You can access the website on [https://mbettan.github.io/machine-learning-cert/](https://mbettan.github.io/machine-learning-cert/) 
+ 
+Here's what awaits you:
+- Comprehensive Study Notes: Concise, informative, and easy-to-understand notes covering a wide range of machine learning topics. Organized by certification and cloud provider for easy navigation.
+- Engaging Podcast Episodes (powered by NotebookLM): Dive deeper into key concepts with our podcast series. Each episode offers expert insights, real-world examples, and practical tips.
+- Cloud-Specific Content: Master popular machine learning cloud platforms. Gain the knowledge and skills to leverage their powerful machine learning tools.
+- Community-Driven Contributions: We encourage contributions from the machine learning community. Help us keep the content fresh, relevant, and comprehensive!
 
-*   **/docs/**: Contains the GitHub Pages website code (`index.html`) which serves as the central hub for discovering the resources.
-*   **/foundation/**: Contains foundational Machine Learning concepts, such as ML 101.
-*   **/professional-ml-engineer/**: Contains resources specific to the Google Cloud Professional Machine Learning Engineer Certification.
-*   **/google-cloud-ai-leader/**: Contains resources specific to The Google Cloud Generative AI Leader certification.
+Certifications:
+- Google Cloud Professional Machine Learning Engineer
+- Google Cloud Generative AI Leader
 
-## Uploading Assets
+Join the learning community!
+- Found a mistake? Open an issue to let us know! We appreciate your help in keeping the information accurate.
+- Want to contribute? Submit a pull request with your additions, corrections, or improvements.
+- Have a question? Start a discussion to connect with other learners and share your insights.
 
-To add new assets:
-1. Upload your files (`.pdf`, `.jpg`/`.png`, `.mp3`) into the appropriate folder (`foundation/`, `professional-ml-engineer/`, or `google-cloud-ai-leader/`).
-2. Update the `docs/index.html` file to include a new list item (`<li>`) under the corresponding category, pointing to your new files in the `href` and `src` attributes.
-3. Commit and push your changes to GitHub to see the updates live.
+Happy learning!
 
-## Website Theme
+## Disclaimer
+The audio files are generated using NotebookLM, an AI model that may produce inaccurate or incomplete information. Please double-check the content against reliable sources.
 
-The `docs/index.html` is configured to map these three certifications with unique visual themes:
-*   **Foundation** (Amber/Gold theme)
-*   **Professional ML** (Mint Green theme)
-*   **Gen AI Leader** (Amethyst/Purple theme)
+The study notes are based on publicly available documentation and may not be completely up-to-date or reflect all perspectives.
