@@ -22,6 +22,6 @@ Join the learning community!
 Happy learning!
 
 ## Disclaimer
-The audio files are generated using NotebookLM, an AI model that may produce inaccurate or incomplete information. Please double-check the content against reliable sources.
+The audio files, slide decks, and infographics are generated using NotebookLM, an AI model that may produce inaccurate, incomplete, or hallucinated information. Please double-check the content against reliable sources.
 
 The study notes are based on publicly available documentation and may not be completely up-to-date or reflect all perspectives.
