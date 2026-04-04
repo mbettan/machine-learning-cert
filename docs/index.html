@@ -162,25 +162,14 @@
             font-weight: 600;
         }
 
-        .filter-button[data-filter="professional-ml"] {
+        .filter-button[data-filter="google"] {
             border-color: rgba(0, 232, 160, 0.27);
             color: var(--mint);
         }
-        .filter-button[data-filter="professional-ml"]:hover,
-        .filter-button[data-filter="professional-ml"].active {
+        .filter-button[data-filter="google"]:hover,
+        .filter-button[data-filter="google"].active {
             background: var(--mint);
             border-color: var(--mint);
-            color: #080B12;
-        }
-
-        .filter-button[data-filter="gen-ai-leader"] {
-            border-color: rgba(184, 130, 255, 0.27);
-            color: var(--purple);
-        }
-        .filter-button[data-filter="gen-ai-leader"]:hover,
-        .filter-button[data-filter="gen-ai-leader"].active {
-            background: var(--purple);
-            border-color: var(--purple);
             color: #080B12;
         }
 
@@ -192,6 +181,17 @@
         .filter-button[data-filter="foundation"].active {
             background: var(--amber);
             border-color: var(--amber);
+            color: #080B12;
+        }
+
+        .filter-button[data-filter="anthropic"] {
+            border-color: rgba(255, 107, 107, 0.27);
+            color: #FF6B6B;
+        }
+        .filter-button[data-filter="anthropic"]:hover,
+        .filter-button[data-filter="anthropic"].active {
+            background: #FF6B6B;
+            border-color: #FF6B6B;
             color: #080B12;
         }
 
@@ -307,52 +307,28 @@
             border: 1px solid var(--card-border);
         }
 
-        /* PROFESSIONAL ML THEME */
-        .product-item.professional-ml::before {
+        /* GOOGLE THEME (Mint Green) */
+        .product-item.google::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; height: 2px;
             background: linear-gradient(90deg, transparent, var(--mint), transparent);
             opacity: 0; transition: opacity 0.25s ease;
         }
-        .product-item.professional-ml:hover {
+        .product-item.google:hover {
             transform: translateY(-4px);
             border-color: rgba(0, 232, 160, 0.25);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 232, 160, 0.08);
         }
-        .product-item.professional-ml:hover::before { opacity: 1; }
-        .product-item.professional-ml .badge {
+        .product-item.google:hover::before { opacity: 1; }
+        .product-item.google .badge {
             background: var(--mint-dim); color: var(--mint); border-color: rgba(0, 232, 160, 0.2);
         }
-        .product-item.professional-ml .download-link, .product-item.professional-ml .infographic-link {
+        .product-item.google .download-link, .product-item.google .infographic-link {
             color: var(--mint); border-color: rgba(0, 232, 160, 0.3);
         }
-        .product-item.professional-ml .download-link:hover, .product-item.professional-ml .infographic-link:hover {
+        .product-item.google .download-link:hover, .product-item.google .infographic-link:hover {
             background: var(--mint-dim); border-color: var(--mint); transform: translateY(-1px);
-        }
-
-        /* GEN AI LEADER THEME */
-        .product-item.gen-ai-leader::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--purple), transparent);
-            opacity: 0; transition: opacity 0.25s ease;
-        }
-        .product-item.gen-ai-leader:hover {
-            transform: translateY(-4px);
-            border-color: rgba(184, 130, 255, 0.25);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(184, 130, 255, 0.08);
-        }
-        .product-item.gen-ai-leader:hover::before { opacity: 1; }
-        .product-item.gen-ai-leader .badge {
-            background: var(--purple-dim); color: var(--purple); border-color: rgba(184, 130, 255, 0.2);
-        }
-        .product-item.gen-ai-leader .download-link, .product-item.gen-ai-leader .infographic-link {
-            color: var(--purple); border-color: rgba(184, 130, 255, 0.3);
-        }
-        .product-item.gen-ai-leader .download-link:hover, .product-item.gen-ai-leader .infographic-link:hover {
-            background: var(--purple-dim); border-color: var(--purple); transform: translateY(-1px);
         }
 
         /* FOUNDATION THEME */
@@ -377,6 +353,30 @@
         }
         .product-item.foundation .download-link:hover, .product-item.foundation .infographic-link:hover {
             background: var(--amber-dim); border-color: var(--amber); transform: translateY(-1px);
+        }
+
+        /* ANTHROPIC THEME (Databricks Inspired) */
+        .product-item.anthropic::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #FF6B6B, transparent);
+            opacity: 0; transition: opacity 0.25s ease;
+        }
+        .product-item.anthropic:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 107, 107, 0.25);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 107, 107, 0.08);
+        }
+        .product-item.anthropic:hover::before { opacity: 1; }
+        .product-item.anthropic .badge {
+            background: rgba(255, 107, 107, 0.12); color: #FF8E8E; border-color: rgba(255, 107, 107, 0.2);
+        }
+        .product-item.anthropic .download-link, .product-item.anthropic .infographic-link {
+            color: #FF6B6B; border-color: rgba(255, 107, 107, 0.3);
+        }
+        .product-item.anthropic .download-link:hover, .product-item.anthropic .infographic-link:hover {
+            background: rgba(255, 107, 107, 0.12); border-color: #FF6B6B; transform: translateY(-1px);
         }
 
         /* Audio */
@@ -485,13 +485,12 @@
 <body>
 
     <header>
-        <img src="logo.png" alt="ML Certification Hub Logo" class="header-logo">
-        <div class="header-eyebrow">Google Cloud AI & ML</div>
+        <div class="header-eyebrow">Machine Learning Certification Hub Repository</div>
         <h1>Master machine learning,<br><em>ace your certification.</em></h1>
         <p>Study notes, visual infographics and podcast episodes — everything you need to go from learning to certified.</p>
         <div class="filter-bar">
-            <button class="filter-button" data-filter="professional-ml">Professional ML Engineer</button>
-            <button class="filter-button" data-filter="gen-ai-leader">Generative AI Leader</button>
+            <button class="filter-button" data-filter="google">Google</button>
+            <button class="filter-button" data-filter="anthropic">Anthropic</button>
             <button class="filter-button active" data-filter="foundation">Foundation</button>
         </div>
     </header>
@@ -544,11 +543,11 @@
                 </audio>
             </li>
 
-            <!-- Foundation Google Foundational Models -->
-            <li class="product-item foundation active" data-badge="foundation">
+            <!-- Google Foundational Models -->
+            <li class="product-item google active" data-badge="google">
                 <div class="card-header">
                     <h3>Google Foundational Models</h3>
-                    <span class="badge">Foundation</span>
+                    <span class="badge">Google</span>
                 </div>
                 <div class="card-actions">
                     <a href="https://github.com/mbettan/machine-learning-cert/blob/main/google/Google-Foundational-models-v1.0.pdf" class="download-link" download>
@@ -564,6 +563,29 @@
                 <div class="audio-label"><i class="fas fa-headphones"></i> &nbsp;Podcast</div>
                 <audio controls>
                     <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/Google-Foundational-models-v1.0.mp3" type="audio/mpeg">
+                </audio>
+            </li>
+
+            <!-- Anthropic Foundational Models -->
+            <li class="product-item anthropic active" data-badge="anthropic">
+                <div class="card-header">
+                    <h3>Anthropic Foundational Models</h3>
+                    <span class="badge">Anthropic</span>
+                </div>
+                <div class="card-actions">
+                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/anthropic/Anthropic-foundational-models-v1.0.pdf" class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Study Notes
+                    </a>
+                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/anthropic/Anthropic-foundational-models-v1.0.jpg" class="infographic-link">
+                        <i class="fas fa-image"></i> Sketch
+                    </a>
+                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/anthropic/Anthropic-foundational-models-deck-v1.0.pdf" class="download-link" download>
+                        <i class="fas fa-file-powerpoint"></i> Deck
+                    </a>
+                </div>
+                <div class="audio-label"><i class="fas fa-headphones"></i> &nbsp;Podcast</div>
+                <audio controls>
+                    <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/Anthropic-foundational-models-v1.0.mp3" type="audio/mpeg">
                 </audio>
             </li>
 
@@ -707,6 +729,9 @@
     </div>
 
     <footer>
+        <p style="font-size: 0.75rem; max-width: 800px; margin: 0 auto 16px; color: var(--text-secondary); opacity: 0.8;">
+            <strong>DISCLAIMER:</strong> The audio files, slide decks, and infographics provided are for educational and informational purposes only and do not constitute professional advice. These materials were generated using NotebookLM, an AI model that may produce inaccurate, incomplete, or hallucinated information. You should do your own research and independently verify all facts before making any decisions.
+        </p>
         <p>
             Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank">Michaël Bettan</a> &nbsp;·&nbsp;
             Licensed under <a href="https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE"
