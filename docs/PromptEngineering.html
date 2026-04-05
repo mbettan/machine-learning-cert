@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Study Notes — Certification Prep
+                </div>
+                <h1>Prompt Engineering<br><em>Mastery</em></h1>
+                <p class="cover-subtitle">
+                    Comprehensive overview of prompt engineering frameworks, tactics, taxonomy, and operationalization.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Level: <strong>Advanced</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#definitions" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Definitions & Scope</span>
+                </a>
+                <a href="#tcrei" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>TCREI Framework</span>
+                </a>
+                <a href="#anatomy" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Anatomy & Structure</span>
+                </a>
+                <a href="#optimization" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Optimization Tactics</span>
+                </a>
+                <a href="#chaining" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Prompt Chaining</span>
+                </a>
+                <a href="#advanced-tactics" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Advanced Tactics</span>
+                </a>
+                <a href="#agentic" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Agentic Frameworks</span>
+                </a>
+                <a href="#parameters" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Parameter Tuning</span>
+                </a>
+                <a href="#taxonomy" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Prompting Taxonomy</span>
+                </a>
+                <a href="#advanced-thought" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Advanced Thought Gen</span>
+                </a>
+                <a href="#blueprints" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Task Blueprints</span>
+                </a>
+                <a href="#llmops" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Roles & LLMOps</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: DEFINITIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="definitions">
+            <div class="section-divider-number">01</div>
+            <h2>Definitions & Scope</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>Prompt Engineering</h3>
+            <p>
+                A rigorous engineering discipline focused on strategic design and iterative optimization, shifting AI from a static text predictor into a dynamic, agentic reasoning engine.
+            </p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Large Language Models (LLMs)</dt>
+                <dd>Text generation models that utilize advanced algorithms and transformer architectures to predict the next token based on probabilistic likelihood.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Tokens</dt>
+                <dd>The fundamental linguistic unit in NLP (subwords, characters, words). Roughly 100 tokens equate to 75 words.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: TCREI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="tcrei">
+            <div class="section-divider-number">02</div>
+            <h2>TCREI Framework</h2>
+        </div>
+        
+        <div class="prose">
+            <p>Industry standard for transforming vague requests into high-performance, production-ready prompts. The first 3 steps focus on <strong>Giving Direction</strong> and providing examples. The final 2 focus on <strong>Evaluating Quality</strong> and dividing labor.</p>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Task</h4>
+                <p>Be explicit. Defines the Action, Role, and Format. (e.g., Use explicit verbs like "Refactor" rather than "Write").</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Context</h4>
+                <p>Provide background details and explain situational awareness to prevent generic "hallucinations."</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>References</h4>
+                <p>Provide 3–5 diverse examples (Few-shot learning) to steer style and logic reliably.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Evaluate</h4>
+                <p>Review output against success criteria. Use "Chain-of-Thought" to reduce logic errors, track against gold standards.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Iterate</h4>
+                <p>Tweak the prompt using Evaluation results. Apply <em>Positive Framing</em> (tell the model what it should do).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ANATOMY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="anatomy">
+            <div class="section-divider-number">03</div>
+            <h2>Prompt Anatomy & Structure</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Type of Prompts</h3>
+                <ul>
+                    <li><strong>System Prompt:</strong> Defines fundamental capabilities and overarching rules (e.g., "You strictly output JSON").</li>
+                    <li><strong>Role Prompt:</strong> Frames output style, voice, and personality (e.g., "Act as a senior DevOps engineer").</li>
+                    <li><strong>Contextual Prompt:</strong> Provides immediate, task-specific background data needed to process the query.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-compress-alt"></i></div>"Lost in the Middle"</h3>
+                <p>LLMs pay strict attention to the very beginning and very end of a massive prompt, but skim the middle.</p>
+                <ul>
+                    <li><strong>Top of Prompt:</strong> Place large context documents and reference data here.</li>
+                    <li><strong>Bottom of Prompt:</strong> Place critical constraints, task descriptions, and output formatting rules at the very end.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Delimiters</dt>
+                <dd>Use clear markers (<code>###</code>, <code>"""</code>, or <code>&lt;xml&gt;</code>) to separate instructions from data.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Leading Words</dt>
+                <dd>End your prompt with the exact first character of the expected response (e.g., "The valid JSON response is: <code>{</code>").</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: OPTIMIZATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="optimization">
+            <div class="section-divider-number">04</div>
+            <h2>Optimization & Technical Tactics</h2>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Basic Optimization Tactics</h4>
+                <p><strong>Positive Framing:</strong> Tell the model what it <em>should</em> do rather than what it shouldn't. LLMs respond better to "Include X" than "Avoid Y."<br>
+                <strong>Prompt Versioning:</strong> Prompt engineering is highly iterative. Treat prompts like code. Document your attempts tracking Prompt text, Temperature, Top-P, Top-K, and Output.</p>
+            </div>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Prompt Caching</dt>
+                <dd>Place large static documents, system instructions, and few-shot examples at the very beginning of the prompt. Caching cuts costs by up to 90% and drastically speeds up inference.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Prompt Security (Guardrails)</dt>
+                <dd>Defend against Prompt Injection and System Leakage by utilizing input/output moderation models to intercept toxic or out-of-scope requests before reaching the main LLM.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Variables in Prompts (Templating)</dt>
+                <dd>For reusable enterprise prompts, use bracketed variables (e.g., <code>{city}</code>, <code>{document}</code>) to programmatically inject data into the exact same structure.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Automatic Prompt Eng. (APE)</dt>
+                <dd>Using an LLM to generate 10 variations of an instruction, test them all, and select the one yielding best factual accuracy.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Class Mixing (Few-Shot)</dt>
+                <dd>When providing examples for classification tasks, you must randomize the order. Listing all "Positive" examples first causes overfitting and hallucination.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: CHAINING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="chaining">
+            <div class="section-divider-number">05</div>
+            <h2>Prompt Chaining (Pipeline Generation)</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Avoid the "Mega-Prompt"</h3>
+            <p>Asking the model to perform five complex tasks simultaneously overloads attention and drastically increases hallucinations. Instead, break multifaceted problems into sequential, isolated prompts.</p>
+            <ul>
+                <li><strong>Prompt 1 (Extraction):</strong> "Extract all financial figures and metrics from this text."</li>
+                <li><strong>Prompt 2 (Drafting):</strong> "Using only the facts extracted above, draft an executive summary."</li>
+                <li><strong>Prompt 3 (Formatting):</strong> "Rewrite this summary in the tone of an internal company email."</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Positive Instructions vs. Strict Constraints</h4>
+                <p>LLMs perform better with positive framing (what <em>to</em> do). Reserve strict negative constraints (ONLY, NEVER, DO NOT) exclusively for output formatting (e.g., strictly JSON), safety guardrails, or preventing specific hallucinations.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ADVANCED TACTICS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="advanced-tactics">
+            <div class="section-divider-number">06</div>
+            <h2>Advanced Prompting Tactics</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Inner Monologue</dt>
+                <dd>Hiding reasoning steps from the final user output using specific formats (e.g., wrapping thought loops in <code>"""</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Meta Prompting</dt>
+                <dd>Using one AI model to generate, analyze, or refine a prompt for another AI model.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Least to Most</dt>
+                <dd>Sequentially generating increasingly detailed knowledge on a topic, feeding previous outputs into the next prompt.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Ask for Context</dt>
+                <dd>Allowing the LLM to ask clarifying questions before answering a user query.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Text Style Unbundling</dt>
+                <dd>Extracting features (tone, length, vocabulary) from a document to replicate its exact writing style.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: AGENTIC
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agentic">
+            <div class="section-divider-number">07</div>
+            <h2>Agentic Frameworks (Autonomous)</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>ReAct (Reason + Act)</dt>
+                <dd>A prompting paradigm interleaving "Thoughts" with "Actions." The model generates a reasoning trace, executes an action (like an API call or web search), and observes the result before continuing.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Reflexion (Self-Correction Loop)</dt>
+                <dd>Forcing the model to act as its own QA engineer. 1) Actor (generates draft), 2) Evaluator (scores draft against rules), 3) Self-Reflection (analyzes failures and writes corrected final output).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Role Prompting</dt>
+                <dd>Assigning a specific persona to narrow the model's probabilistic output space to domain-specific vocabulary.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: PARAMETERS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="parameters">
+            <div class="section-divider-number">08</div>
+            <h2>Advanced Parameter Tuning</h2>
+        </div>
+        
+        <div class="prose">
+            <p>Beyond the text, engineers must control the mathematical parameters governing token selection.</p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Temperature</dt>
+                <dd>Controls randomness. Use low temperature (0.1 - 0.3) for Logic, Math, and strict Formatting. Use high (0.7+) for Creativity.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Top-P (Nucleus Sampling)</dt>
+                <dd>Controls vocabulary diversity. Rule of thumb: Alter Temperature OR Top-P, but rarely both.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Frequency Penalty</dt>
+                <dd>Penalizes words based on how often they have already appeared in the text. Prevents repetitive loops.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Presence Penalty</dt>
+                <dd>Penalizes words based on whether they have appeared at all. Forces the model to introduce new topics.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Top-K</dt>
+                <dd>Restricts next token prediction to the top 'K' most likely tokens. Lower Top-K keeps the model factual.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Max Token Length</dt>
+                <dd>Restricts output length. Warning: Hitting the limit abruptly stops generation (causing broken JSON); it does not force the model to write more concisely.</dd>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-bug"></i></div>
+            <div class="callout-content">
+                <h4>The Repetition Loop Bug</h4>
+                <p>Extreme or clashing sampling settings (like high temperature with low Top-P) can cause the model to get "stuck" generating the same filler word, phrase, or sentence structure repeatedly until the context window fills.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: TAXONOMY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="taxonomy">
+            <div class="section-divider-number">09</div>
+            <h2>Prompting Taxonomy</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Zero & Few-Shot</h3>
+                <ul>
+                    <li><strong>Zero-Shot Prompting:</strong> Relying purely on precise semantic phrasing without prior examples.</li>
+                    <li><strong>Few-Shot Prompting (In-Context):</strong> Providing a limited set of demonstration pairs (input-output) to leverage pattern-matching.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>Thought Generation</h3>
+                <ul>
+                    <li><strong>Thought Generation:</strong> Prompting the model to explicitly articulate internal reasoning (e.g., Chain-of-Thought).</li>
+                    <li><strong>Decomposition:</strong> Breaking highly complex, multi-faceted problems into smaller, manageable sub-problems to prevent context loss.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-users"></i></div>Evaluation</h3>
+                <ul>
+                    <li><strong>Ensembling:</strong> Generating multiple parallel outputs from identical/varied prompts and aggregating them for a robust consensus.</li>
+                    <li><strong>Self-Criticism:</strong> Requiring the model to independently evaluate, critique, and refine its own initial outputs.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ADVANCED THOUGHT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="advanced-thought">
+            <div class="section-divider-number">10</div>
+            <h2>Advanced Thought & Structural Patterns</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Contrastive Chain-of-Thought (CCoT)</dt>
+                <dd>Embedding both valid and invalid reasoning pathways within the prompt. Showing miscalculations explicitly maps the boundaries of correct reasoning.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Step-Back Prompting</dt>
+                <dd>Forcing the LLM to pause and abstract a granular problem into a high-level conceptual inquiry before calculating the final answer. Highly synergistic with RAG.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Self-Consistency (Ensembling)</dt>
+                <dd>Running the exact same prompt multiple times (using temperature-based decoding) to generate diverse reasoning paths and feed answers back into the LLM for consensus.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Tree of Thoughts (ToT)</dt>
+                <dd>Generalizing CoT into a dynamic tree structure. The model generates multiple candidate thoughts, self-evaluates them, and uses search algorithms (BFS/DFS) to look ahead or backtrack.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Recursive Self-Improvement (RSIP)</dt>
+                <dd>Treating the LLM as a continuous reasoning loop. The model critiques itself through shifting "evaluation lenses" (e.g., logic, structural flow, tone), revising specific flaws each pass.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context-Aware Decomposition (CAD)</dt>
+                <dd>Breaking a massive task into 3-5 macro-components, but forcing the model to explicitly define how the localized sub-task interacts with global system dependencies.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: BLUEPRINTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="blueprints">
+            <div class="section-divider-number">11</div>
+            <h2>Task-Specific Prompt Blueprints</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Information Extraction (NER)</dt>
+                <dd><strong>Concept:</strong> Forcing the model to pull exact data points without adding conversational filler.<br>
+                <strong>Formula:</strong> Extract the following entities from the text below: [Entity 1, Entity 2]. Output strictly as a JSON array.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Classification & Sentiment</dt>
+                <dd><strong>Concept:</strong> Restricting the model's output to predefined categories.<br>
+                <strong>Formula:</strong> Classify the following text into exactly one of these categories: [Cat A, Cat B, Cat C]. Do not provide explanations.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Anti-Hallucination Summarization</dt>
+                <dd><strong>Concept:</strong> Grounding the model to only use provided context.<br>
+                <strong>Formula:</strong> Summarize the following text. You must ONLY use the facts provided in the text. If a fact is not in the text, do not include it. Cite your claims using [Paragraph Number].</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Structured Input Schemas</dt>
+                <dd><strong>Concept:</strong> Using JSON schemas to format your input data (not just outputs) acts as a strict blueprint for attention.<br>
+                <strong>Formula:</strong> Evaluate the following product data to answer the user's query: <code>{ "name": "Headphones", "price": 99.99 }</code></dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: LLMOPS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="llmops">
+            <div class="section-divider-number">12</div>
+            <h2>Emergent Roles & Enterprise LLMOps</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>5-Stage Maturity Model</h3>
+                <ul class="checklist">
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Ad-hoc Experimentation</li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Template Standardization</li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Systematic Evaluation</li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Production Observability</li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Continuous Optimization</li>
+                </ul>
+            </div>
+            
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-sliders-h"></i></div>Prompt vs. Tuning</h3>
+                <ul>
+                    <li><strong>Prompt Design:</strong> Relies entirely on base model weights. Fast to build, but lengthy prompts increase per-call token costs.</li>
+                    <li><strong>Supervised Fine-Tuning (SFT):</strong> Physically alters underlying weights. Allows for much shorter prompts, significantly lowering latency and cost.</li>
+                    <li><strong>LoRA:</strong> Updates only a minute fraction of the model's parameters via small adapter layers. Highly cost-effective customization.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Prompt Engineer</dt>
+                <dd>Tasked exclusively with pattern design, template governance, and assessing prompt sensitivity across updating models.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Knowledge Engineer</dt>
+                <dd>Responsible for curating, structuring, and maintaining vast RAG sources and vector schemas.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>AI QA/Evaluation Engineer</dt>
+                <dd>Focused on building automated testing suites, managing red-team operations, and continuously probing prompts for jailbreaks, hallucinations, and bias.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>AIOps Specialist</dt>
+                <dd>Manages overarching infrastructure, oversees complex cost tuning (token length vs. inference speed), and ensures seamless observability/rollback capabilities.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+</body>
+
+</html>

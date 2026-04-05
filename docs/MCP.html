@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Context Protocol (MCP) — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Study Notes — Certification Prep
+                </div>
+                <h1>Model Context Protocol<br><em>(MCP)</em></h1>
+                <p class="cover-subtitle">
+                    An open-source, standardized protocol establishing a secure, bidirectional communication channel between AI models (clients) and external data sources or tools (servers).
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Protocol Version: <strong>1.0</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Message Format: <strong>JSON-RPC 2.0</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#definition" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Definition & Value</span>
+                </a>
+                <a href="#architecture" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Architecture & Workflow</span>
+                </a>
+                <a href="#capabilities" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Core Capabilities</span>
+                </a>
+                <a href="#transports" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Transports & Execution</span>
+                </a>
+                <a href="#implementation" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Implementation Guide</span>
+                </a>
+                <a href="#security" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Security & Operations</span>
+                </a>
+                <a href="#multi-agent" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Multi-Agent Collaboration</span>
+                </a>
+                <a href="#glossary" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Glossary</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: DEFINITION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="definition">
+            <div class="section-divider-number">01</div>
+            <h2>Definition & Value Proposition</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-info-circle"></i></div>What is MCP?</h3>
+            <p>
+                The <strong>Model Context Protocol (MCP)</strong> is an open-source, standardized protocol that establishes a secure, bidirectional communication channel between AI models (clients) and external data sources or tools (servers) using <strong>JSON-RPC 2.0</strong>.
+            </p>
+            <p style="margin-top: 10px;">
+                Think of it as the <strong>"USB-C port for AI"</strong>; any compliant tool can be plugged in and immediately utilized by any supported AI host.
+            </p>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-exclamation-triangle"></i></div>What Problem Does It Solve?</h3>
+            <p>
+                Historically, every third-party API has a different structure, leading to an <strong>M × N problem</strong> (M models × N tools = massive duplication of integration effort).
+            </p>
+            <p style="margin-top: 10px;">
+                MCP provides a standardized guide telling the AI Agent exactly what an external system can do, what inputs it requires, and what outputs it will return. 
+                <br><br><strong>Complexity formula:</strong> Legacy = O(N × M) → MCP = O(N + M). Adding one new model equals one new client. Adding one new tool equals one new server.
+            </p>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-robot"></i></div>
+            <div class="callout-content">
+                <h4>LLMs vs. AI Agents</h4>
+                <p><strong>LLMs (Large Language Models):</strong> The "brain" (e.g., Gemini, GPT-4, Claude). Natively, they can only generate text (or multimodal outputs). They cannot take actions.</p>
+                <p><strong>AI Agents:</strong> The brain paired with memory, reasoning loops, and Tools. Agents interact with third-party APIs to retrieve data, make decisions, and take actions (e.g., scanning a codebase to find a bug, or hitting a booking API to reserve a flight).</p>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Value Proposition</strong></p>
+        </div>
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>For Developers</dt>
+                <dd>Eliminates custom parsing or integration glue code for every new AI platform.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>For Agents</dt>
+                <dd>Provides instant access to a massive ecosystem of data sources and capabilities.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>For End-Users</dt>
+                <dd>Yields highly personalized AI assistants that securely access private data (e.g., Google Calendar, Notion) to take real-world action.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ARCHITECTURE & WORKFLOW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="architecture">
+            <div class="section-divider-number">02</div>
+            <h2>Architecture & Workflow</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-server"></i></div>MCP Server</h3>
+                <p>LLM-agnostic component that responds to JSON-RPC requests. Exposes Tools, Resources, and Prompts within isolated functional domains.</p>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-laptop"></i></div>MCP Client</h3>
+                <p>Spawned 1:1 per server. Serializes LLM intents into JSON-RPC messages, manages the transport lifecycle, and executes capability negotiation. Lives inside the Host.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>The Host</h3>
+            <p>The application running the AI model (e.g., Claude Desktop, Google ADK). Orchestrates workflow, enforces auth policies, spawns MCP Clients, and requests Human-in-the-Loop (HITL) approvals. Maintains ultimate authority over what the model sees/does.</p>
+        </div>
+
+        <div class="prose" style="margin-top: 32px;">
+            <h3>Standard Workflow</h3>
+            <p>MCP standardizes the exact sequence of communication between the Client (LLM Host) and Server. All communication uses JSON-RPC 2.0 request IDs to match async responses to their original requests.</p>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Initialize Request</h4>
+                <p>Client sends its protocol version and capabilities (e.g., roots, sampling).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Initialize Response</h4>
+                <p>Server responds with its own capabilities (tools, resources, prompts).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Initialized Notification</h4>
+                <p>Client confirms receipt. Handshake complete — no tool calls or prompt fetches permitted before this point.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Operation / Execution</h4>
+                <p>Client requests tool execution, fetches resources, or utilizes prompts.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Session Management</h4>
+                <p>Termination, handling resumability, connection drops, and graceful closures.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: CAPABILITIES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="capabilities">
+            <div class="section-divider-number">03</div>
+            <h2>Core Capabilities</h2>
+        </div>
+
+        <div class="prose">
+            <p>Servers expose functionality through standardized building blocks:</p>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-database"></i></div>Resources (Data Sources)</h3>
+                <p>Static data/context the server provides to empower the LLM (similar to RAG). Application-controlled.</p>
+                <ul>
+                    <li>Can be fixed (<code>config://app</code>) or templated (<code>settings://{type}</code>).</li>
+                    <li>Enterprise examples: <code>postgres://prod-db/schema</code>, <code>github://repo/main/commits</code>.</li>
+                    <li><strong>Payloads:</strong> Raw UTF-8 text (logs, code, JSON) or base64-encoded binary (images, PDFs) with explicit MIME declarations.</li>
+                    <li>Servers notify clients when resources change via <code>resources/updated</code>.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-tools"></i></div>Tools (External Actions)</h3>
+                <p>Executable functions performed on behalf of the LLM (e.g., <code>execute_query</code>), dispatched via <code>tools/call</code>.</p>
+                <ul>
+                    <li>Inputs/outputs rigorously defined using <strong>JSON Schemas</strong>. Model-controlled.</li>
+                    <li>The Host intercepts payloads before execution — typically requesting explicit <strong>user authorization (HITL)</strong> for state-altering operations.</li>
+                    <li>Tools are model-controlled but Host-gated.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-comment-dots"></i></div>Prompts (Workflows)</h3>
+                <p>Pre-built messages hosted on the server that automatically inject context. User-controlled.</p>
+                <ul>
+                    <li>Migrates prompt engineering to the Server layer to keep client applications thin and let domain experts control interaction patterns, reducing hallucination.</li>
+                    <li>Server dynamically constructs a pre-configured array of messages with context resolved server-side.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-search"></i></div>Just-In-Time (JIT) Discovery</h3>
+                <p>Runtime capability negotiation.</p>
+                <ul>
+                    <li>Unlike traditional tool calling (hardcoded schemas pre-loaded at initialization, wasting tokens), MCP agents discover capabilities <strong>dynamically at runtime</strong>.</li>
+                    <li>Exposed via <code>tools/list</code> and <code>resources/list</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-mobile-alt"></i></div>
+            <div class="callout-content">
+                <h4>MCP Apps</h4>
+                <p>Interactive, specialized mini-apps that can run directly inside the AI client's UI to provide a richer user experience (Note: this is currently Claude-specific, not part of the core MCP specification).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: TRANSPORTS & EXECUTION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="transports">
+            <div class="section-divider-number">04</div>
+            <h2>Transports & Execution</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Transports</h3>
+            <ul>
+                <li><strong>STDIO (Standard I/O):</strong> Server communicates through stdin/stdout. Messages must be <strong>newline-delimited</strong> (\n). Stderr is strictly for logging.
+                    <br><em>Stdio Security:</em> Servers run as OS subprocesses; prompt injections can pass malicious parameters. <strong>Mitigation:</strong> Containerize (Docker), use AppArmor, run as non-root. Clients spawn Server directly via <code>subprocess.Popen</code> or <code>child_process.spawn</code>. Clients must never treat stderr as a protocol failure.
+                </li>
+                <li><strong>Streamable HTTP:</strong> The modern standard for web consumption. Uses a single <code>/mcp</code> endpoint.
+                    <br>○ <strong>POST:</strong> All JSON-RPC Requests and Notifications.
+                    <br>○ <strong>GET:</strong> Server streams responses back via SSE (<code>Accept: text/event-stream</code>).
+                    <br>○ <strong>HTTP is stateless:</strong> Server assigns <code>Mcp-Session-Id</code> at init; Client appends it to subsequent requests.
+                    <br>○ <strong>Resumability:</strong> Uses <code>Mcp-Session-Id</code> and <code>Last-Event-Id</code> headers to safely drop and restore connections.
+                </li>
+                <li><strong>SSE (Server-Sent Events):</strong> Legacy unidirectional communication [Deprecated].</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-exchange-alt"></i></div>Advanced Interactive Workflows</h3>
+            <p>Beyond simple request/response, modern MCP supports complex, agentic interactions:</p>
+            <ul>
+                <li><strong>Notifications:</strong> Asynchronous, real-time messages sent outside the standard request cycle to report progress on long-running tasks (e.g., <em>"Processing file 2 of 3..."</em>).</li>
+                <li><strong>Sampling (Reverse Delegation):</strong> Reverses the standard flow. The server delegates a complex generative task <em>back</em> to the client's LLM (e.g., summarizing a server-side document). Requires Low-level API (<code>setRequestHandler</code>); not available via FastMCP decorators.</li>
+                <li><strong>Elicitation (Pausing for Input):</strong> The server pauses execution because it needs more human information. 
+                    <br><em>Flow:</em> User asks to book a trip → Server pauses → Triggers a typed JSON schema (e.g., <code>{alternate_dates: string}</code>) → Client renders prompt → User responds → Flow resumes.
+                </li>
+            </ul>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-bolt"></i></div>
+            <div class="callout-content">
+                <h4>Performance Optimization: Prompt Caching</h4>
+                <p>Static schemas, system instructions, and tool descriptions can be cached at the provider level (e.g., via Anthropic's <code>cache_control</code> header) to reduce token costs by up to 90% and slash latency for repeated calls.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: IMPLEMENTATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="implementation">
+            <div class="section-divider-number">05</div>
+            <h2>Implementation Guide</h2>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Strict Output Schemas</h4>
+                <p>Output schemas must resolve to <code>"type": "object"</code>. Using <code>*args/**kwargs</code>, legacy Pydantic v1, or non-serializable objects triggers <code>PydanticSchemaGenerationError</code> at initialization.</p>
+            </div>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>FastMCP (Python)</dt>
+                <dd>High-level SDK. Uses decorators (e.g., <code>@mcp_server.tool</code>); auto-generates JSON schemas from type hints/docstrings.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Google ADK (MCPToolset)</dt>
+                <dd>Queries <code>list_tools</code> at init and auto-converts schemas to native <code>BaseTool</code> instances. Uses <code>AsyncExitStack</code> for safe subprocess teardown. Use <code>tool_filter=[]</code> for least-privilege.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>LangChain (MultiServerMCPClient)</dt>
+                <dd>Manages concurrent connections to multiple servers. Use <code>npx</code> or <code>uvx</code> to spin up ephemeral servers on the fly, eliminating host machine dependency.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>High vs Low-Level APIs</dt>
+                <dd><strong>High-level:</strong> SDK decorators + auto routing. Best for simple servers.<br><strong>Low-level:</strong> Manual <code>setRequestHandler</code>. Required for Sampling, Elicitation, and advanced architectures.</dd>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-cogs"></i></div>Deterministic Tool Design (Agentic Success)</h3>
+            <p><strong>Anti-Pattern — Legacy API Pass-Through:</strong> Wrapping REST endpoints 1:1 fails as they are for deterministic software. <strong>Rule:</strong> Tools must be contextually enriched (the Semantic Layer) with rich descriptions and self-describing payloads.</p>
+            <p style="margin-top: 10px;">Unconstrained responses cause token exhaustion (e.g. Claude Code truncates at ~25,000 tokens — causing silent context failures). Use:</p>
+            <ul>
+                <li>Mandatory Pagination (limit/offset or cursor)</li>
+                <li>Server-Side Filtering (done natively, not inside the LLM context)</li>
+                <li>Intelligent Truncation (return summary + instructions to refine the query)</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <span class="code-block-lang">Client Configuration (mcp.json)</span>
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+            </div>
+            <pre><code><span class="comment">// To connect an agent to an MCP server, configure a JSON file in the IDE/Client</span>
+{
+  <span class="string">"mcpServers"</span>: {
+    <span class="string">"my-server"</span>: {
+      <span class="string">"command"</span>: <span class="string">"node"</span>, <span class="comment">// or python</span>
+      <span class="string">"args"</span>: [<span class="string">"server.js"</span>],
+      <span class="string">"env"</span>: {
+        <span class="string">"API_KEY"</span>: <span class="string">"..."</span> <span class="comment">// API keys must NOT be hardcoded! Inject via environment variables.</span>
+      }
+    }
+  }
+}</code></pre>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: SECURITY & OPERATIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="security">
+            <div class="section-divider-number">06</div>
+            <h2>Security & Operations (Production)</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>Authentication & Authorization</h3>
+            <ul>
+                <li><strong>Basic Auth:</strong> Simple API keys sent via HTTP headers (low security).</li>
+                <li><strong>JWT (JSON Web Tokens):</strong> Stateless, scalable tokens including specific scopes (e.g., <code>User.Read</code>) to allow granular <strong>Role-Based Access Control (RBAC)</strong>. JWTs should map roles to permissions (e.g., readers can call <code>readFile</code>, writers can call <code>writeFile</code>).</li>
+                <li><strong>OAuth 2.1 Flow:</strong> Decouples credentials via IdP. Flow: <code>401 Unauthorized</code> → <strong>Protected Resource Metadata (PRM) (RFC 9728)</strong> → Discover scopes/IdP URI → Token. <em>Anti-Pattern:</em> Blindly forwarding client tokens without validating audience.</li>
+                <li><strong>CSRF Protection:</strong> Proxies executing OAuth flows must generate a cryptographically secure <code>state</code> parameter, store it server-side, and validate strictly on callback redirect.</li>
+            </ul>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Identity & MCPOps</h3>
+                <ul>
+                    <li><strong>Least Privilege:</strong> Servers must execute actions under the <em>specific identity</em> of the user, not generic accounts. Use granular OAuth scopes.</li>
+                    <li><strong>MCPOps (Observability):</strong> Every <code>tools/call</code> request must be logged with <strong>user session ID, prompt ID, and latency</strong>. Integrate with Prometheus/Grafana TraceQL for real-time monitoring.</li>
+                </ul>
+            </div>
+            
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-server"></i></div>Resilience Mechanisms</h3>
+                <p>Put MCP web servers behind API Gateways to implement:</p>
+                <ul>
+                    <li><strong>Load Balancing:</strong> Distribute traffic.</li>
+                    <li><strong>Rate Limiting:</strong> Prevent token/cost abuse, and stop agents entering infinite ReAct loops (accidental DoS).</li>
+                    <li><strong>Circuit Breakers:</strong> Fail gracefully if backends go down.</li>
+                    <li><strong>Server Isolation:</strong> Use K8s Network Policies to sandbox untrusted connectors.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="prose">
+            <h3>Common MCP Security Threats</h3>
+        </div>
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Prompt Injection</dt>
+                <dd>Attackers overriding instructions. <em>Mitigation:</em> Separate system control and user input channels, cleanse input, enforce explicit method selection.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Tool Poisoning</dt>
+                <dd>Compromised servers advertising harmful methods (e.g., <code>wipeDisk</code>). <em>Mitigation:</em> Schema validation at startup against a local allow-list; reject unknown methods.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Malicious Connectors</dt>
+                <dd>Untrusted connectors pointing to attacker servers. <em>Mitigation:</em> Pin connector URLs/certificate fingerprints; use Mutual TLS authentication.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>SSRF (Server-Side Request Forgery)</dt>
+                <dd>Cascade risk with excessive outbound network access. <em>Mitigation:</em> Kubernetes Network Policies to block egress; apply strict allowlists for outbound URLs.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Guardrails & Testing</dt>
+                <dd>AI behavior is unpredictable. <em>Mitigation:</em> Use <strong>MCPSafetyScanner</strong> CLI in CI/CD to probe exposed MCP methods with adversarial inputs. Audit for GDPR/HIPAA.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Human-in-the-Loop (HITL)</dt>
+                <dd>Require explicit user approval before executing irreversible or sensitive tools (e.g., delete, send).</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: MULTI-AGENT COLLABORATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="multi-agent">
+            <div class="section-divider-number">07</div>
+            <h2>Multi-Agent Collaboration</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-users-cog"></i></div>Agent-to-Agent (A2A) Model</h3>
+            <p>
+                Extends the MCP philosophy using specialized agents (e.g., a "Flight Agent" and a "Hotel Agent") rather than one monolithic agent. 
+                In A2A, agents advertise capabilities via <strong>Agent Cards</strong> (a JSON resume of abilities) and assign <strong>Tasks</strong> — the A2A equivalent of MCP's <code>tools/list</code> handshake.
+            </p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Selection Rule</th>
+                        <th>MCP</th>
+                        <th>A2A (Agent-to-Agent)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Architectural Boundary</td>
+                        <td>Vertical integration (Agent ↔ System)</td>
+                        <td>Horizontal orchestration (Agent ↔ Agent)</td>
+                    </tr>
+                    <tr>
+                        <td>Execution Flow</td>
+                        <td>Synchronous request/response (waits for schema-validated result)</td>
+                        <td>Asynchronous streaming (streams progress updates over long workflows)</td>
+                    </tr>
+                    <tr>
+                        <td>Primary Use Case</td>
+                        <td>Deterministic tasks (query DB, call API, read file)</td>
+                        <td>Cognitive reasoning, multi-step planning</td>
+                    </tr>
+                    <tr>
+                        <td>Production Pattern</td>
+                        <td>Used by sub-agents for low-level execution</td>
+                        <td>Meta-agent distributes tasks to sub-agents</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="glossary">
+            <div class="section-divider-number">08</div>
+            <h2>Glossary</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Separation of Concerns</dt>
+                <dd>LLM/generative AI logic lives on the client; data, tools, and business logic live on the server.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>JSON-RPC 2.0</dt>
+                <dd>The message format used for all MCP communication.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Tool</dt>
+                <dd>Executable function the AI can call — <em>model-controlled</em>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Resource</dt>
+                <dd>Static data or context the AI can read (similar to RAG) — <em>application-controlled</em>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Prompt</dt>
+                <dd>Pre-built templated message or workflow — <em>user-controlled</em>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Schema Validation</dt>
+                <dd>Rigorous JSON Schema validation (using jsonschema or Zod) enforced on the client side to reject malformed parameters.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context Manager</dt>
+                <dd>Allocates/releases server resources safely, even on error.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>ABAC</dt>
+                <dd>Attribute-Based Access Control — fine-grained access tied to user identity attributes.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>PRM</dt>
+                <dd>Protected Resource Metadata: OAuth 2.1 document (RFC 9728) advertising required scopes and IdP URI.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Semantic Layer</dt>
+                <dd>Enrichment applied to raw API responses before returning to the LLM (resolves keys, adds context, filters noise).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Token Passthrough</dt>
+                <dd>Anti-pattern: blindly forwarding client tokens to downstream APIs without validating audience (RFC 8707) — enables hijacking/replay attacks.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>MCPOps</dt>
+                <dd>Operational discipline for MCP deployments: audit logging, rate limiting, distributed tracing.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>AsyncExitStack</dt>
+                <dd>Python construct ensuring safe MCP subprocess teardown in Google ADK sessions.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+</body>
+
+</html>

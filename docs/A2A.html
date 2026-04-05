@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent2Agent Protocol (A2A) — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Open Standard Protocol
+                </div>
+                <h1>Agent2Agent Protocol (A2A)<br><em>Universal Language for Multi-Agent Systems</em></h1>
+                <p class="cover-subtitle">
+                    A comprehensive overview of the standardized protocol establishing a secure, HTTP-based communication channel between distinct AI agents to enable seamless collaboration and interoperability.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Backed By: <strong>Linux Foundation & 50+ Partners</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#definition" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Definition & Scope</span>
+                </a>
+                <a href="#architecture" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Core & Protocol Architecture</span>
+                </a>
+                <a href="#workflow" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Standard Workflow</span>
+                </a>
+                <a href="#capabilities" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Capabilities & Transports</span>
+                </a>
+                <a href="#workflows" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Advanced Collaborative Workflows</span>
+                </a>
+                <a href="#implementation" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Implementation & Security</span>
+                </a>
+                <a href="#glossary" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Glossary</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: DEFINITION & SCOPE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="definition">
+            <div class="section-divider-number">01</div>
+            <h2>Definition & Scope</h2>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-project-diagram"></i></div>What is A2A?</h3>
+            <p>
+                An open-source, standardized protocol establishing a secure, HTTP-based communication channel between distinct AI agents to enable seamless collaboration and interoperability. Originally spearheaded by Google Cloud, A2A was subsequently transitioned to the Linux Foundation as an open standard, garnering backing from over 50 major technology partners. 
+            </p>
+            <p>
+                A2A is the <strong>"universal language for multi-agent systems"</strong>; any compliant agent, regardless of its underlying framework (e.g., LangGraph, CrewAI, Google ADK), can communicate, delegate tasks, and share information.
+            </p>
+        </div>
+        
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>A2A Solves For</h4>
+                <p>Individual AI agents built on different frameworks operate in isolation → <strong>Multi-Agent Silo problem</strong> (lack of a common language hinders cohesive problem-solving). A2A provides a standardized framework telling an AI agent exactly how to dynamically discover other agents, what capabilities they offer, and how to negotiate UX and state.</p>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>MCP vs. A2A</strong></p>
+            <p>These two technologies are not competing — they are composable layers for production agentic systems:</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>MCP</th>
+                        <th>A2A</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Integration Focus</td>
+                        <td>Vertical integration (Agent ↔ System).</td>
+                        <td>Horizontal orchestration (Agent ↔ Agent).</td>
+                    </tr>
+                    <tr>
+                        <td>Execution Model</td>
+                        <td>Stateless, synchronous request/response for querying DBs, calling APIs, or reading files.</td>
+                        <td>Deeply stateful cognitive reasoning, multi-step planning, and delegation between specialized agents.</td>
+                    </tr>
+                    <tr>
+                        <td>Semantic Structures</td>
+                        <td><i class="fas fa-times table-cross"></i> Lacks semantic structures for peer negotiation, capability discovery, or long-running task management.</td>
+                        <td><i class="fas fa-check table-check"></i> Built specifically for capability discovery, state management, and long-running workflows.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-industry"></i></div>
+            <div class="callout-content">
+                <h4>Production Pattern</h4>
+                <p>An A2A meta-agent distributes tasks to specialized sub-agents, which then use MCP to execute deterministic actions.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ARCHITECTURE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="architecture">
+            <div class="section-divider-number">02</div>
+            <h2>Core & Protocol Architecture</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Core Architecture</strong></p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>User</dt>
+                <dd>Initiates the high-level request for agent assistance.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>A2A Client (Client Agent)</dt>
+                <dd>Formulates and communicates tasks. Acts on the user's behalf to discover capabilities and orchestrate the workflow.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>A2A Server (Remote Agent)</dt>
+                <dd>An AI agent or system providing an HTTP endpoint to process client requests. Operates as an "opaque" system — the client agent does not need to understand its internal operational details, framework choice (e.g., LangGraph vs. CrewAI vs. ADK), or model provider. This opacity makes true cross-vendor interoperability possible.</dd>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Protocol Architecture</strong></p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Canonical Data Model</dt>
+                <dd>All frameworks serialize internal state into the Canonical Data Model (<code>a2a.proto</code>) before transmission — this is what neutralizes framework incompatibility.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Abstract Operations</dt>
+                <dd>Defines the logic of task management and peer negotiation.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Protocol Bindings</dt>
+                <dd>Concrete implementation over HTTP/JSON-RPC.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: WORKFLOW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflow">
+            <div class="section-divider-number">03</div>
+            <h2>Standard Workflow</h2>
+        </div>
+
+        <div class="prose">
+            <p>A2A structures communication around asynchronous tasks (fundamental units of work for long-running processes) using JSON-RPC 2.0 over HTTP(S).</p>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Capability Discovery</h4>
+                <p>Client locates the remote agent's "Agent Card".</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Task Formulation</h4>
+                <p>Client agent evaluates the remote agent's skills and formulates a task request.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Execution Request</h4>
+                <p>Client agent sends the payload via <code>message/send</code> or <code>message/stream</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Collaboration & State</h4>
+                <p>Agents send messages preserving conversational threading and lineage.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Artifact Generation</h4>
+                <p>Tangible outputs of the task are streamed incrementally to the client.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: CAPABILITIES & TRANSPORTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="capabilities">
+            <div class="section-divider-number">04</div>
+            <h2>Capabilities & Transports</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Interaction Mechanisms (Transports)</h3>
+            <p>A2A provides four interaction methods suited to different task durations and resource profiles:</p>
+            <ul>
+                <li><strong>Synchronous Request/Response:</strong> Client uses <code>message/send</code> and actively waits for a complete response in a single exchange. Best for quick, immediate operations where latency is low and result is instantaneous.</li>
+                <li><strong>Asynchronous Polling:</strong> The client first calls <code>message/send</code>, receives a Task object with a <code>taskId</code> in a SUBMITTED or WORKING state, and then uses <code>tasks/get</code> to poll. Server acknowledges immediately with a working status and a <code>task_id</code>. Suitable for medium-duration tasks where a persistent connection is impractical.</li>
+                <li><strong>Streaming Updates (SSE):</strong> Client uses <code>message/stream</code>. Establishes a persistent, one-way Server-Sent Events connection. Remote agent pushes incremental updates with chunking parameters: <code>append: false</code> (new artifact), <code>append: true</code> (continuation), and <code>lastChunk: true</code> (termination). Best for tasks with observable progress.</li>
+                <li><strong>Push Notifications (Webhooks):</strong> For resource-intensive, long-running tasks spanning hours or days. Client registers a webhook URL upfront; the server sends async push notifications upon significant state changes — eliminating the need for any persistent connection.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Selection Rule</h4>
+                <p>Match the transport to the task duration. Using synchronous <code>message/send</code> for a 4-hour research task will timeout and lose state.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Core Capabilities</h3>
+            <p>A2A standardizes agent interactions through fundamental building blocks:</p>
+            <ul>
+                <li><strong>Agent Cards:</strong> The digital identity of an agent (JSON format). It defines identity, skills (e.g., <code>get_current_weather</code>), and capabilities (streaming, pushNotifications, stateTransitionHistory). Includes Content Negotiation (defaultInputModes/defaultOutputModes for MIME types).</li>
+                <li><strong>Agent Discovery:</strong> Clients find Agent Cards dynamically to understand available capabilities. Methods include:
+                    <ul>
+                        <li><strong>Well-Known URI:</strong> Standardized path (<code>/.well-known/agent.json</code>) enabling broad, automated discovery. Similar to how browsers discover SSL certificates.</li>
+                        <li><strong>Curated Registries:</strong> Centralized enterprise catalogs listing approved agents with access control. Enables governance.</li>
+                        <li><strong>Direct Configuration:</strong> Hardcoded or privately shared Agent Card URLs for closely coupled, trusted internal systems.</li>
+                        <li><strong>Authenticated Extended Card Pattern:</strong> Public card may signal <code>supportsAuthenticatedExtendedCard: true</code>. Clients authenticate via OAuth to retrieve sensitive skills via <code>GET /a2a/agent/authenticatedExtendedCard</code>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-photo-video"></i></div>
+            <div class="callout-content">
+                <h4>Modality Agnostic UX Negotiation</h4>
+                <p>A2A embraces natural, unstructured modalities. Message "parts" can contain text, generated images, or even negotiate UI capabilities (iframes, video, audio streaming, web forms) directly between agents.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ADVANCED WORKFLOWS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflows">
+            <div class="section-divider-number">05</div>
+            <h2>Advanced Collaborative Workflows</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-users-cog"></i></div>Workflow Patterns</h3>
+            <ul>
+                <li><strong>Hierarchical Structures:</strong> A supervisor agent dynamically delegates tasks to specialized worker agents based on their Agent Card capabilities, synthesizing their outputs into a unified result. The classic A2A production topology — mirrors how human organizations delegate work.</li>
+                <li><strong>Debate and Consensus:</strong> Multiple agents with varied perspectives, data sources, or model biases engage in structured discussion to evaluate options and converge on an informed decision. Eliminates single-model blind spots. Critical for high-stakes decisions (e.g., medical triage, financial risk assessment).</li>
+                <li><strong>Critic-Reviewer (Self-Correction):</strong> A producer agent generates a draft artifact; a separate, independent reviewer agent critically assesses it for safety, compliance, factual accuracy, and quality before the artifact is finalized. Architectural safeguard against hallucination propagating downstream in a pipeline.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: IMPLEMENTATION & SECURITY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="implementation">
+            <div class="section-divider-number">06</div>
+            <h2>Implementation & Security</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-laptop-code"></i></div>Architecture & Implementation</h3>
+                <ul>
+                    <li><strong>Ecosystem Support:</strong> Natively supported by major platforms including Google Cloud, LangChain, CrewAI, Atlassian, Salesforce, SAP, and MongoDB.</li>
+                    <li><strong>Google ADK Implementation:</strong> Developers implement A2A servers by:
+                        <ul>
+                            <li>Defining an AgentCard (JSON identity + capabilities declaration).</li>
+                            <li>Defining AgentSkills (specific callable capabilities with input/output schemas).</li>
+                            <li>Attaching an ADKAgentExecutor (bridges A2A Task lifecycle to the ADK agent's run loop).</li>
+                            <li>Exposing it via A2AStarletteApplication — an ASGI-compatible HTTP handler running on Uvicorn.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Security & Operations</h3>
+                <ul>
+                    <li><strong>Authentication & Authorization:</strong> Requirements are explicitly declared in the Agent Card.</li>
+                    <li><strong>Mutual TLS (mTLS):</strong> Required for enterprise-grade deployment to encrypt and authenticate connections, preventing unauthorized access and interception.</li>
+                    <li><strong>Comprehensive Audit Logs:</strong> All inter-agent communications must be meticulously recorded, detailing information flow and actions for accountability, troubleshooting, and security analysis.</li>
+                    <li><strong>Agent Card Access Control:</strong> Secure Agent Card endpoints through network restrictions and authentication if the card contains sensitive system topology data. Public-facing agents may expose cards openly; internal enterprise agents should require authenticated access.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-brain"></i></div>
+            <div class="callout-content">
+                <h4>Design Principle</h4>
+                <p>Embrace agentic capabilities. An agent is not just a "tool" — A2A allows collaboration in natural, unstructured modalities without forcing shared memory.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Security Anti-Pattern</h4>
+                <p>Secure credentials (OAuth 2.0 tokens, API keys) must always be passed via HTTP headers — never embedded in URLs (logged by proxies and web servers) or message bodies (persisted in Task history logs and potentially forwarded to downstream agents).</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-gem"></i></div>Value Proposition</h3>
+            <ul>
+                <li><strong>For Developers:</strong> Eliminates custom integration glue code and vendor lock-in. Build an agent once and allow it to connect with any other A2A protocol-compliant agent.</li>
+                <li><strong>For Enterprises:</strong> Multiplies productivity gains by breaking down silos, enabling specialized agents to securely work together across diverse enterprise platforms (e.g., Workday, Salesforce, SAP).</li>
+                <li><strong>For End-Users:</strong> Yields highly autonomous, unified experiences where complex goals (e.g., candidate sourcing, complex research) are orchestrated invisibly by a team of specialized AI experts.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="glossary">
+            <div class="section-divider-number">07</div>
+            <h2>Glossary</h2>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Core Concepts</h3>
+            <ul>
+                <li><strong>Client Agent:</strong> The orchestrating agent responsible for goal decomposition and Task delegation to remote specialists.</li>
+                <li><strong>Remote Agent (Specialist):</strong> Domain-specific agent that receives and executes Tasks autonomously within its area of expertise.</li>
+                <li><strong>Agent Card:</strong> JSON capability advertisement published by each agent — the A2A equivalent of MCP's <code>tools/list</code>; hosted at <code>/.well-known/agent.json</code>.</li>
+                <li><strong>Task:</strong> The fundamental unit of A2A work — stateful, asynchronous, and designed for long-running workflows.</li>
+                <li><strong>contextId:</strong> A persistent correlation identifier that preserves conversational threading and lineage across multiple asynchronous exchanges within a Task.</li>
+                <li><strong>Artifact:</strong> The structured output produced by a completed Task — passed to the next agent or returned to the user.</li>
+                <li><strong>A2A Endpoint:</strong> The HTTPS URL where an agent receives incoming Tasks; declared in its Agent Card.</li>
+                <li><strong>Agentspace:</strong> Google's unified enterprise interface for interacting with A2A-coordinated agent teams.</li>
+                <li><strong>AgentSkills:</strong> Structured capability declarations within an Agent Card defining specific callable functions with their input/output schemas — the A2A equivalent of MCP's Tool JSON Schema definitions. Example: <code>get_current_weather</code> with defined input/output modes.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-comments"></i></div>Communication Layer</h3>
+            <ul>
+                <li><strong>TextPart:</strong> Plain text or markdown content within a Task message.</li>
+                <li><strong>DataPart:</strong> Structured JSON payload within a Task message.</li>
+                <li><strong>FilePart:</strong> Binary content (image, PDF, audio, video) with explicit MIME type within a Task message.</li>
+                <li><strong>UX Negotiation:</strong> A2A mechanism where client agents declare UI capabilities so remote agents can tailor response format (iframes, video, web forms, plain text).</li>
+                <li><strong>TaskStatusUpdateEvent:</strong> SSE event reporting a Task's status transition.</li>
+                <li><strong>TaskArtifactUpdateEvent:</strong> SSE event delivering an intermediate or final artifact during Task execution.</li>
+                <li><strong>message/send:</strong> A2A method for synchronous task dispatch — client sends and actively waits for a complete response in a single exchange. Use for quick, low-latency operations.</li>
+                <li><strong>message/stream:</strong> A2A method for streaming task dispatch — establishes a persistent SSE connection for real-time incremental artifact and status delivery. Use for tasks with observable intermediate progress.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Transport Layer & Task Lifecycle</h3>
+            <ul>
+                <li><strong>Synchronous Request/Response (message/send):</strong> Single-exchange transport — client sends and waits for complete result. Best for immediate, low-latency operations.</li>
+                <li><strong>Asynchronous Polling (tasks/get):</strong> Server acknowledges with working status + <code>task_id</code>; client polls periodically using <code>tasks/get</code>. Best for medium-duration tasks where a persistent connection is impractical.</li>
+                <li><strong>Streaming Updates (message/stream):</strong> Persistent SSE connection; server pushes incremental updates in real time. Best for tasks with observable intermediate progress.</li>
+                <li><strong>Push Notifications (Webhooks):</strong> Client registers a callback URL; server fires async notifications on state changes. Best for long-running tasks spanning hours or days where maintaining any persistent connection is impractical.</li>
+                <li><strong><code>submitted</code>:</strong> Task received and queued by remote agent.</li>
+                <li><strong><code>working</code>:</strong> Remote agent actively executing the Task.</li>
+                <li><strong><code>input-required</code>:</strong> Remote agent paused — awaiting additional information (natural HITL pause point).</li>
+                <li><strong><code>completed</code>:</strong> Task successfully finished; Artifact available for consumption.</li>
+                <li><strong><code>failed</code>:</strong> Task terminated due to an unrecoverable error.</li>
+                <li><strong><code>cancelled</code>:</strong> Task terminated by client agent request.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>Security & Operations Concepts</h3>
+            <ul>
+                <li><strong>Agent Impersonation:</strong> Threat where an attacker hosts a malicious agent at a spoofed URL with a convincing Agent Card.</li>
+                <li><strong>Task Injection:</strong> Embedding malicious instructions inside Task message content to manipulate remote agent behavior.</li>
+                <li><strong>Privilege Escalation:</strong> Compromised agent attempting to expand OAuth scopes beyond original user grant in a chained pipeline.</li>
+                <li><strong>Agent Card TTL:</strong> Time-to-live enforcing periodic re-validation of cached Agent Card capability declarations.</li>
+                <li><strong>A2AOps:</strong> Operational discipline for A2A deployments — audit logging, latency tracking, Task SLA monitoring, distributed tracing.</li>
+                <li><strong>Task Depth Limit:</strong> Maximum allowed nesting level for agent delegation chains — prevents infinite orchestration loops.</li>
+                <li><strong>Artifact Chaining:</strong> Pattern where one agent's Task output becomes the next agent's Task input — enables pipeline architectures.</li>
+                <li><strong>Mutual TLS:</strong> Certificate-based mutual authentication between client and remote agents for high-security environments.</li>
+                <li><strong>HITL (Human-in-the-Loop):</strong> Explicit human approval mechanism triggered via <code>input-required</code> Task status before proceeding with sensitive or irreversible actions.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+</body>
+
+</html>

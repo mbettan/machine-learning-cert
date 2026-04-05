@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieval-Augmented Generation — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Study Notes — Certification Prep
+                </div>
+                <h1>Retrieval-Augmented Generation<br><em>Architectural Patterns</em></h1>
+                <p class="cover-subtitle">
+                    Comprehensive overview of RAG indexing, retrieval, generation, vectors, and agentic AI.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Level: <strong>Advanced</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#definitions" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Definitions & Architecture</span>
+                </a>
+                <a href="#indexing" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Stage 1: RAG Indexing</span>
+                </a>
+                <a href="#retrieval" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Stage 2 & 3: Retrieval & Gen</span>
+                </a>
+                <a href="#comparisons" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>RAG vs Fine-tuning</span>
+                </a>
+                <a href="#vectors" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Vectors & Similarity Search</span>
+                </a>
+                <a href="#algorithms" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Search Paradigms & Algorithms</span>
+                </a>
+                <a href="#agentic" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Agentic AI & LangGraph</span>
+                </a>
+                <a href="#graphs" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Knowledge Graphs (GraphRAG)</span>
+                </a>
+                <a href="#optimization" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Performance & Evaluation</span>
+                </a>
+                <a href="#advanced" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Advanced Concepts & Failures</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: DEFINITIONS & ARCHITECTURE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="definitions">
+            <div class="section-divider-number">01</div>
+            <h2>Definitions & Architecture</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-search-plus"></i></div>What is RAG?</h3>
+                <p>
+                    <strong>Retrieval-Augmented Generation (RAG)</strong> is one of the two dominating architectural patterns for context construction in AI applications (alongside Agentic AI). It functions analogously to <em>feature engineering</em> in classical ML by dynamically injecting external, task-specific information directly into the Large Language Model's context window at inference time. This combines the LLM's reasoning capabilities with external, proprietary data stores to generate highly accurate, factually grounded, and contextually relevant responses.
+                </p>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-check-circle"></i></div>What RAG Solves</h3>
+                <p>
+                    RAG solves for the limitations of static LLMs — training data cutoffs, lack of private enterprise data, and hallucinations. 
+                    Critically, fine-tuning teaches a model new behavioral styles and task formats, but <strong>does not reliably inject dynamic factual knowledge</strong> and cannot prevent hallucination on data that changes after training. RAG is the architecturally correct solution for <strong>factual grounding at inference time</strong> — injecting verifiable, source-attributed context directly into the prompt without retraining. It also improves token efficiency by supplying only the most relevant chunks per query.
+                </p>
+            </div>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-sitemap"></i> High-Level RAG Architecture Flow</div>
+            <div class="architecture-flow">
+                <div class="arch-node storage">Data Sources<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(PDFs, DBs)</span></div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-node process">Chunking &<br>Embedding</div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-node storage">Vector Database<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Index)</span></div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-node process">Semantic Search<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Retrieval)</span></div>
+            </div>
+            <div class="architecture-flow" style="margin-top:-10px">
+                <div class="arch-node input">User Question</div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-node process">Context Assembly<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Prompt)</span></div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-node process">Large Language Model<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Generation)</span></div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-node output">Final Answer</div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: STAGE 1 - RAG INDEXING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="indexing">
+            <div class="section-divider-number">02</div>
+            <h2>Stage 1: RAG Indexing (Offline Pre-processing)</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Loaders</dt>
+                <dd>Extract data from unstructured sources (PDFs, HTML, Word, JSON) using tools like LangChain Document Loaders.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Splitters (Chunking)</dt>
+                <dd>Break large texts into digestible chunks. <code>RecursiveCharacterTextSplitter</code> is preferred as it preserves semantic coherence by splitting on paragraphs, then sentences, then words.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Chunking Strategy: Overlapping</dt>
+                <dd>Adjacent chunks share a defined number of tokens at boundaries. Prevents the loss of critical context that sits at a chunk boundary; ensures complete thoughts split across chunks are captured.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Chunking Strategy: Semantic</dt>
+                <dd>Splits on logical/topical boundaries (paragraph shifts, section headers) rather than token count — ensures one complete thought per chunk.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Chunking Strategy: Hierarchical</dt>
+                <dd>Small "child" chunks are embedded/indexed for precise matching; metadata links retrieve the larger "parent" chunk for LLM context — decouples retrieval granularity from generation context size.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Embedding</dt>
+                <dd>Convert text chunks into high-dimensional mathematical representations (vectors) using models like OpenAI Embeddings or SentenceTransformers.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Vector Store</dt>
+                <dd>Store vectors and metadata in specialized databases (e.g., Chroma, FAISS, pgvector, Pinecone).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Contextual Retrieval</dt>
+                <dd>Chunk is augmented with metadata at indexing time (doc title, section summary, tags). Gives the embedding model richer signal during retrieval, dramatically improving precision and reducing hallucination.</dd>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Chunk Size Trade-off</h3>
+            <ul>
+                <li><strong>Smaller chunks</strong> → higher retrieval precision, more diverse results — but greater computational overhead and risk of losing surrounding context.</li>
+                <li><strong>Larger chunks</strong> → richer context per chunk, fewer retrieval calls — but lower precision and higher token cost injected into the LLM.</li>
+                <li><strong>Hard constraint:</strong> chunk size must not exceed the maximum context length of either the embedding model or the generative model — whichever is smaller.</li>
+                <li><strong>Overlapping chunks</strong> trade index size for boundary loss prevention.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: STAGE 2 & 3 - RETRIEVAL & GEN
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="retrieval">
+            <div class="section-divider-number">03</div>
+            <h2>Stage 2 & 3: Retrieval & Generation</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Retrieval (Real-time):</strong> The user query is vectorized using the same embedding model. A similarity search compares the query vector to stored vectors to find the Top-K most relevant chunks.</p>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-magic"></i></div>1. Query Transformation (Pre-Retrieval)</h3>
+                <p>Acts as a hallucination prevention layer:</p>
+                <ul>
+                    <li><strong>Query Rewriting:</strong> An AI model reformulates an ambiguous user query into a clearer, self-contained version before retrieval — directly reduces retrieval failure from poorly phrased inputs.</li>
+                    <li><strong>HyDE (Hypothetical Document Embeddings):</strong> The LLM generates a hypothetical ideal answer; that answer is embedded and used for retrieval instead of the raw query — bridges the vocabulary gap.</li>
+                    <li><strong>Multi-Query Retrieval:</strong> The LLM generates N alternative rephrasings of the query, runs parallel retrievals, and unions results — reduces single-query retrieval failure.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-sort-amount-up"></i></div>2. Reranking (Post-Retrieval)</h3>
+                <ul>
+                    <li>Top-K retrieved chunks are scored a second time by a <strong>Cross-Encoder</strong> model (e.g., Cohere Rerank, BGE-Reranker) that evaluates the <em>(query, chunk)</em> pair jointly.</li>
+                    <li>Unlike bi-encoders that embed independently, cross-encoders attend to both simultaneously, producing significantly more precise relevance scores.</li>
+                    <li>Only the Top-N chunks (N &lt; K) pass to the LLM. Can also rerank by recency for time-sensitive queries. Directly reduces hallucination by filtering topically similar but factually irrelevant chunks.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-comment-dots"></i></div>Stage 3: RAG Generation</h3>
+            <p>
+                The retrieved chunks are formatted and injected into a <strong>Prompt Template</strong> alongside the user query ("hydrating" the prompt). The LLM processes this context to generate a final, grounded answer.
+            </p>
+            <ul>
+                <li><strong>Source Citations:</strong> Production RAG systems append source citations (document title, chunk ID, page number) to generated responses — enabling human verification. This auditability is the key enterprise differentiator: RAG outputs are falsifiable, whereas bare LLM outputs are not.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Context Ordering (Lost-in-the-Middle)</h4>
+                <p>LLMs exhibit positional bias — they attend most strongly to content at the beginning and end of the context window and systematically underutilize middle content. <strong>Best practice:</strong> place highest-relevance chunks first and last. Failure to order context correctly causes hallucination despite successful retrieval — the correct answer exists in the context but the model ignores it.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: COMPARISONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="comparisons">
+            <div class="section-divider-number">04</div>
+            <h2>RAG vs Fine-tuning</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Best for</th>
+                        <th>Mechanism</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RAG</td>
+                        <td>Facts / Information</td>
+                        <td>Accessing up-to-date data, proprietary knowledge, grounding responses in retrieved evidence.</td>
+                    </tr>
+                    <tr>
+                        <td>Fine-tuning</td>
+                        <td>Form / Style</td>
+                        <td>Output format (JSON/YAML), brand voice, specialized jargon, instruction-following patterns.</td>
+                    </tr>
+                    <tr>
+                        <td>Both combined</td>
+                        <td>Production systems</td>
+                        <td>RAG supplies the facts; fine-tuning ensures the correct format and tone.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: VECTORS & SIMILARITY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="vectors">
+            <div class="section-divider-number">05</div>
+            <h2>Vectors & Similarity Search</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Vector Space (Latent Space):</strong> A mathematical construct where semantically similar concepts are located closer together. Distance between vectors determines relevance.</p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Euclidean (L2)</dt>
+                <dd>Shortest straight-line distance. Lower = more similar.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Dot Product (Inner Product)</dt>
+                <dd>Measures magnitude of projection. Higher positive = more similar.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Cosine Similarity</dt>
+                <dd>Measures the cosine of the angle between two vectors, ignoring magnitude. Ranges from −1 to 1; higher = more similar. Default metric in most vector stores for semantic search.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Cosine Distance</dt>
+                <dd>Calculated as <code>1 − Cosine Similarity</code>. Ranges from 0 to 2; lower = more similar. Used only when a distance metric is explicitly required by the algorithm.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: ALGORITHMS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="algorithms">
+            <div class="section-divider-number">06</div>
+            <h2>Search Paradigms & Algorithms</h2>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-search"></i></div>Search Paradigms</h3>
+            <ul>
+                <li><strong>Dense (Semantic) Search:</strong> Uses vector embeddings to match underlying meaning and context. Struggles with exact names, IDs, or acronyms and can return false positives.</li>
+                <li><strong>Sparse (Keyword) Search:</strong> Uses BM25, which evaluates exact term matches by combining: (1) <em>Term Frequency (TF)</em> with saturation; (2) <em>Inverse Document Frequency (IDF)</em> to boost rare terms; (3) <em>Document length normalization</em>. Highly effective for proper nouns and IDs; blind to synonyms.</li>
+                <li><strong>Hybrid Search:</strong> Fuses Dense and Sparse results to maximize both recall and precision.</li>
+            </ul>
+        </div>
+
+        <div class="formula-block">
+            <div class="formula-label">Reciprocal Rank Fusion (RRF)</div>
+            <div class="formula">RRF(d) = Σ 1/(k + rank_m(d))</div>
+            <div class="formula-description">Fuses results by rank position, not raw scores (necessary because BM25 scores are unbounded while cosine scores range -1 to 1). Constant k=60 smooths outlier rankings.</div>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>k-NN (k-Nearest Neighbors)</dt>
+                <dd>Brute-force, exact distance calculation. Highly accurate but computationally expensive; scales poorly (O(n*d)).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>ANN (Approximate Nearest Neighbors)</dt>
+                <dd>Sacrifices slight accuracy for massive speed gains using indexing structures.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>HNSW (HNSWlib)</dt>
+                <dd>Multi-layer proximity graph — upper layers for fast coarse navigation, lower layers for dense local precision. Best speed-accuracy tradeoff. O(log n) complexity.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>FAISS</dt>
+                <dd>Industry-standard ANN library by Facebook supporting IVF, PQ, and other methods. Powers production vector stores like Chroma and pgvector.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>IVF (Inverted File Index)</dt>
+                <dd>K-means clustering organizes vectors into clusters; search targets only nearest clusters — dramatically reduces search space without scanning all vectors.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>LSH (Locality-Sensitive Hashing)</dt>
+                <dd>Hashes similar vectors into the same buckets for fast candidate retrieval.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>PQ (Product Quantization)</dt>
+                <dd>Compresses vectors into lower-dimensional representations — reduces memory footprint and speeds distance computations.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Annoy & ScaNN</dt>
+                <dd>Annoy builds multiple binary trees. ScaNN is optimized for high-dimensional semantic search at production scale.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: AGENTIC AI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agentic">
+            <div class="section-divider-number">07</div>
+            <h2>Agentic AI & LangGraph</h2>
+        </div>
+        
+        <div class="prose">
+            <p>Agents transform LLMs from stateless responders to autonomous, reasoning systems capable of executing multi-step workflows (e.g., ReAct: Reason + Act). LangGraph supports both DAGs and cyclical graphs — cycles enable iterative reasoning loops (e.g., retrieve → grade → re-query).</p>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-project-diagram"></i></div>LangGraph Concepts</h3>
+                <ul>
+                    <li><strong>State:</strong> The agent's "scratchpad" (memory/message history) shared across all steps.</li>
+                    <li><strong>Nodes:</strong> Functions or tools the agent executes (e.g., search_web, retrieve_docs).</li>
+                    <li><strong>Edges:</strong> The control flow between nodes.</li>
+                    <li><strong>Conditional Edges:</strong> Decision points where the LLM routes the flow dynamically.</li>
+                    <li><strong>Tools & Toolkits:</strong> Executable functions the agent can invoke. LLMs are given Tool Schemas (inputs) and Descriptions to decide when/how to use them.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>CoALA Framework Memory</h3>
+                <p>Cognitive Architectures for Language Agents uses 4 memory types:</p>
+                <ul>
+                    <li><strong>Working Memory (Short-Term):</strong> The active workspace; holds immediate context.</li>
+                    <li><strong>Episodic Memory (Events):</strong> Case-based reasoning. Stores specific past experiences.</li>
+                    <li><strong>Semantic Memory (Facts):</strong> Factual knowledge base. Generally read-only to prevent hallucination-driven overwriting.</li>
+                    <li><strong>Procedural Memory (Skills):</strong> Encodes operational workflows/rules. Updated via Reflection (meta-prompting).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-users"></i></div>
+            <div class="callout-content">
+                <h4>Memory Scopes</h4>
+                <p><strong>Personal/User-Specific:</strong> Strictly isolated data tailored to individual preferences. <br>
+                <strong>Community/Public:</strong> Anonymized, aggregated insights shared across all users (e.g., discovering a universal troubleshooting fix).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: KNOWLEDGE GRAPHS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="graphs">
+            <div class="section-divider-number">08</div>
+            <h2>Knowledge Graphs (Graph-Based RAG)</h2>
+        </div>
+
+        <div class="prose">
+            <p>Surpasses flat vector stores by providing structured, navigable context built on <strong>directed property graphs</strong>.</p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Ontology</dt>
+                <dd>Formal representation of domain knowledge. Defined using languages like RDFS (basic taxonomies) and OWL (complex logical constraints and reasoning). Built via tools like Protégé.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Graph Components</dt>
+                <dd>Nodes (entities like AAPL, SEC), Edges (relationships like issuedBy, isRegulatedBy), and Properties.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Hybrid Embeddings</dt>
+                <dd>Flattens graph topology + text into rich descriptions (e.g., "Stock AAPL issued by Apple Inc. regulated by SEC") before vectorization.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Value Add</dt>
+                <dd>Enables multi-hop reasoning (connecting disparate facts A→B→C), guarantees traceability/explainability, and perfectly filters queries using strict schema logic (Cypher).</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: PERFORMANCE & EVALUATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="optimization">
+            <div class="section-divider-number">09</div>
+            <h2>Performance & Evaluation</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Semantic Caches (Interceptor Layer)</h3>
+                <p>Catches and serves repeat queries instantly, bypassing expensive LLM reasoning and generation steps. Reduces latency and inference costs.</p>
+                <ul>
+                    <li><strong>Entity Masking:</strong> Replaces specific values with variables (e.g., "AAPL price" -> "[TICKER] price") so one cache entry covers variations.</li>
+                    <li><strong>Cross-Encoder Verification:</strong> Secondary check to ensure cached query and new query have exact same intent.</li>
+                    <li><strong>Adaptive Thresholds:</strong> Strict (0.90) for high-stakes; looser (0.75) for exploratory.</li>
+                    <li><strong>Eviction Policies:</strong> Uses TTL and LRU with semantic decay to prevent Memory Bloat and Sclerosis.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-check-double"></i></div>Evaluation Frameworks (Ragas)</h3>
+                <p>Systematic, objective measurement against Ground Truth data (synthetically generated).</p>
+                <ul>
+                    <li><strong>Retrieval Metrics:</strong> Context Precision (signal-to-noise ratio), Context Recall.</li>
+                    <li><strong>Faithfulness:</strong> Proportion of claims directly entailed by retrieved context (primary anti-hallucination metric).</li>
+                    <li><strong>End-to-End:</strong> Factual Correctness, Semantic Similarity.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="formula-block">
+            <div class="formula-label">Ragas Faithfulness Score</div>
+            <div class="formula">Faithfulness = (# claims supported by context) ÷ (total # claims in answer)</div>
+            <div class="formula-description">A score of 1.0 = zero hallucination relative to the provided context. Identifies exactly how much the model 'drifted' beyond its grounded sources.</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: ADVANCED & FAILURES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="advanced">
+            <div class="section-divider-number">10</div>
+            <h2>Advanced Concepts & Failure Modes</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Multimodal RAG</dt>
+                <dd>CLIP embeddings encode both text and images into a shared vector space — enabling retrieval of relevant images, charts, or diagrams alongside text chunks.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Tabular RAG (Text-to-SQL)</dt>
+                <dd>Natural language query → LLM generates SQL → SQL executes against structured database → result injected into generation prompt. Answers over structured enterprise data without vectorization.</dd>
+            </div>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-expand-arrows-alt"></i></div>RAG vs. Long Context Windows</h3>
+            <p>Why RAG remains architecturally superior for production even with 1M+ token windows:</p>
+            <ul>
+                <li><strong>The "Lost-in-the-Middle" Phenomenon:</strong> Massive documents drastically increase the likelihood the LLM will hallucinate or forget middle information. RAG front-loads only the most relevant chunks.</li>
+                <li><strong>Token Efficiency and Cost:</strong> Sending a 500,000-token payload for every query is unscalable. RAG filters corpus down to a small, dense payload (e.g., 2,000 tokens).</li>
+                <li><strong>Inference Latency:</strong> As context size grows, Time to First Token (TTFT) degrades due to attention mechanisms scaling quadratically. RAG ensures sub-second latency.</li>
+                <li><strong>Dynamic Data & Tool Execution:</strong> Agentic RAG pulls in data on-demand; injecting entire database states exhausts the window.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-bug"></i></div>When RAGs Can Fail (and How to Fix Them)</h3>
+            <ul>
+                <li><strong>Vocabulary/Entity Mismatch:</strong> Sparse search misses synonyms, dense search misses exact names/numbers.<br>
+                    <span style="color:var(--mint)">↳ Fix:</span> <em>Hybrid Search + RRF</em>.</li>
+                <li><strong>Ambiguous Queries:</strong> Users ask vague questions lacking context.<br>
+                    <span style="color:var(--mint)">↳ Fix:</span> <em>Query Rewriting or HyDE</em>.</li>
+                <li><strong>Severed Context:</strong> Rigid token limits arbitrarily cut sentences in half.<br>
+                    <span style="color:var(--mint)">↳ Fix:</span> <em>Semantic Chunking and Hierarchical Chunking</em>.</li>
+                <li><strong>Context Drift / Hallucination:</strong> The LLM uses the right context but still invents outside facts.<br>
+                    <span style="color:var(--mint)">↳ Fix:</span> <em>Strict prompt guardrails and continuous evaluation (Ragas Faithfulness).</em></li>
+                <li><strong>Multi-Hop Reasoning Failure:</strong> Standard vectors cannot structurally connect related concepts across multiple documents.<br>
+                    <span style="color:var(--mint)">↳ Fix:</span> <em>GraphRAG / Knowledge Graphs (A → B → C).</em></li>
+                <li><strong>Semantic Cache Errors:</strong> Serving a cached answer for a visually similar but factually different query.<br>
+                    <span style="color:var(--mint)">↳ Fix:</span> <em>Entity Masking and Cross-Encoder Verification.</em></li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Hallucination Cause</th>
+                        <th>RAG Fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Indexing</td>
+                        <td>Missing context signal in chunks</td>
+                        <td>Contextual Retrieval</td>
+                    </tr>
+                    <tr>
+                        <td>Pre-Retrieval</td>
+                        <td>Ambiguous or narrow user query</td>
+                        <td>Query Rewriting / HyDE / Multi-Query</td>
+                    </tr>
+                    <tr>
+                        <td>Retrieval</td>
+                        <td>ANN returns approximate matches</td>
+                        <td>Reranking (Cross-Encoder)</td>
+                    </tr>
+                    <tr>
+                        <td>Context Assembly</td>
+                        <td>Correct chunk in ignored middle position</td>
+                        <td>Context Ordering</td>
+                    </tr>
+                    <tr>
+                        <td>Generation</td>
+                        <td>Model drifts beyond retrieved context</td>
+                        <td>Faithfulness score &lt; 1.0 / Guardrails</td>
+                    </tr>
+                    <tr>
+                        <td>Knowledge Freshness</td>
+                        <td>Static training data cutoff</td>
+                        <td>Real-time external memory injection</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+</body>
+
+</html>

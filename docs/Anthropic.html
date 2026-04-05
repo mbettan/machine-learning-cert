@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthropic Foundational Models — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Study Notes — Certification Prep
+                </div>
+                <h1>Anthropic Foundational Models<br><em>Reason-Based Alignment</em></h1>
+                <p class="cover-subtitle">
+                    Comprehensive overview of Anthropic's core philosophy, Constitutional AI, and model family.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Level: <strong>Advanced</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#philosophy" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Core Philosophy</span>
+                </a>
+                <a href="#cai" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Constitutional AI</span>
+                </a>
+                <a href="#reasoning" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>System 2 Reasoning</span>
+                </a>
+                <a href="#agentic" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Agentic Bifurcation</span>
+                </a>
+                <a href="#interpretability" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Interpretability & Steering</span>
+                </a>
+                <a href="#safety" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>AI Safety & MCP</span>
+                </a>
+                <a href="#glossary" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Glossary</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: PHILOSOPHY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="philosophy">
+            <div class="section-divider-number">01</div>
+            <h2>Core Philosophy</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-heart"></i></div>Core Philosophy</h3>
+            <p>
+                Anthropic focuses on <strong>reason-based alignment</strong>, <strong>agentic autonomy</strong>, and <strong>mechanistic interpretability</strong>.
+            </p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Legacy Baseline (Claude 2)</th>
+                        <th>Transitional (Claude 3.5 Family)</th>
+                        <th>Frontier Architecture (Claude 4.6)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Core Design</td>
+                        <td>Standard autoregressive LLM</td>
+                        <td>Multi-modal text & vision processor</td>
+                        <td>Hybrid reasoning engine</td>
+                    </tr>
+                    <tr>
+                        <td>Alignment</td>
+                        <td>High false-refusal rate</td>
+                        <td>Nuanced understanding</td>
+                        <td>Reason-based Constitutional resolution</td>
+                    </tr>
+                    <tr>
+                        <td>Context Window</td>
+                        <td>100k static tokens</td>
+                        <td>200k tokens</td>
+                        <td>1M tokens with Context Compaction</td>
+                    </tr>
+                    <tr>
+                        <td>Compute Routing</td>
+                        <td>Uniform allocation</td>
+                        <td>Nuanced allocation</td>
+                        <td>Adaptive Thinking (dynamic scaling)</td>
+                    </tr>
+                    <tr>
+                        <td>Interaction Limit</td>
+                        <td>Stateless text Ping-Pong</td>
+                        <td>Interactive Artifacts</td>
+                        <td>Agent Teams & Native Computer Use</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: CAI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="cai">
+            <div class="section-divider-number">02</div>
+            <h2>Constitutional AI</h2>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-exclamation-triangle"></i></div>The Compounding Costs of Human-Only Alignment</h3>
+            <p>Traditional RLHF (Reinforcement Learning from Human Feedback) relies entirely on human raters, creating systemic bottlenecks:</p>
+            <ul>
+                <li><strong>Epistemological Vulnerability (Sycophancy):</strong> Models trained strictly to maximize human approval learn to tell raters what they want to hear, sacrificing objective truth and rigorous deduction for polite agreement.</li>
+                <li><strong>Fragmented Reward Signals:</strong> Crowdsourced human values are notoriously inconsistent. Contradictory feedback leads to uneven moral guidelines and catastrophic alignment failures in edge cases.</li>
+                <li><strong>Compounded Latency:</strong> Human labeling simply cannot keep pace with the massive throughput required to train 2026 frontier models on multimodal datasets.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Projecting Values via Constitutional AI (CAI)</h3>
+            <p>Replaces human-bottlenecks with an explicit, reason-based "Constitution."</p>
+            <ul>
+                <li><strong>Broadly Safe:</strong> The absolute highest priority. The model must never undermine human mechanisms designed to oversee or halt AI operations.</li>
+                <li><strong>Broadly Ethical:</strong> Must maintain honesty and avoid dangerous actions.</li>
+                <li><strong>Compliant:</strong> Must follow specific directives regarding medical or cybersecurity advice.</li>
+                <li><strong>Genuinely Helpful:</strong> Only when the first three conditions are met does the model optimize for user helpfulness.</li>
+            </ul>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">Phase 1</div>
+                <h4>Supervised (Critique & Revision)</h4>
+                <p>The base model generates a response, critiques its own output against the Constitution, and autonomously generates a revised response (zero human intervention).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">Phase 2</div>
+                <h4>RLAIF (Reinforcement Learning from AI Feedback)</h4>
+                <p>An AI evaluator scores candidate responses using the Constitution. A preference model is trained from these AI scores, replacing human raters entirely and allowing alignment to scale with compute.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: REASONING & DEPLOYMENT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="reasoning">
+            <div class="section-divider-number">03</div>
+            <h2>System 2 Reasoning & Deployment</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-server"></i></div>Context Mechanics</h3>
+                <ul>
+                    <li><strong>Flat-Rate Pricing:</strong> Claude 4.6 generation maintains the same per-token rate regardless of context length (e.g., 9,000 vs 900,000 tokens).</li>
+                    <li><strong>Context Compaction API (compact_20260112):</strong> Even a 1M limit gets exhausted by persistent agents running for days. This new server-side protocol automatically compresses early conversation history into a dense "compaction block," allowing agents to run indefinitely without context rot or systemic timeouts.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Claude Deployment Matrix</h3>
+                <ul>
+                    <li><strong>Claude Haiku 4.5:</strong> Optimized for inference speed. Target use cases: triage and real-time support. Cost: $1/MTok.</li>
+                    <li><strong>Claude Sonnet 4.6:</strong> Mid-tier model. Target use cases: autonomous software engineering and multi-agent workflow orchestration. Cost: $3/MTok. (1M tokens GA)</li>
+                    <li><strong>Claude Opus 4.6:</strong> Maximum capacity reasoning model. Target use cases: theoretical mathematics, strategic planning, and complex multi-agent oversight. Cost: $5/MTok.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>System 2 Reasoning: "Adaptive Thinking"</h3>
+            <p>The legacy "Adaptive Thinking" mode (where developers statically allocated a token budget) has been replaced by native "Adaptive Thinking".</p>
+            <ul>
+                <li><strong>Autonomous Scaling:</strong> The model autonomously evaluates the complexity of an incoming request and dynamically scales its reasoning depth before outputting a response.</li>
+                <li><strong>The /effort Parameter:</strong> Developers can override this via the API by assigning four distinct effort levels (<em>low, medium, high, max</em>). You can force Opus to use max compute for an algorithmic proof, or dial Sonnet down to low for simple classification to save latency.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: AGENTIC
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agentic">
+            <div class="section-divider-number">04</div>
+            <h2>Agentic Bifurcation: Code vs. Cowork</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Claude Code (Developer Layer)</dt>
+                <dd>A terminal-based CLI. Operates deeply within the local system architecture, capable of spinning up parallel sub-agents to execute complex, repository-wide refactoring.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Claude Cowork (Knowledge Worker Layer)</dt>
+                <dd>A secure, desktop-based GUI operating in an isolated Virtual Machine. Requires no coding familiarity. Targeted for long-running desktop automation (bulk file org, app-to-app data extraction), though its reliance on visual/screenshot parsing consumes higher token volumes.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Zoom Action (Computer Use)</dt>
+                <dd>To handle high-resolution IDEs, the 2025 API update introduced a zoom action, allowing Claude to request a localized, full-resolution crop of a specific screen coordinate.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: INTERPRETABILITY & STEERING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="interpretability">
+            <div class="section-divider-number">05</div>
+            <h2>Interpretability & Steering</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-search"></i></div>Opening the Black Box</h3>
+                <ul>
+                    <li><strong>Sparse Autoencoders (SAEs):</strong> Anthropic decompiles dense neural activations into readable features (e.g., "immunology" or "sycophancy").</li>
+                    <li><strong>The Stream Algorithm (Oct 2025):</strong> Addresses previous computational limitations of scaling SAEs to massive context windows. The algorithm hierarchically prunes 97% to 99% of irrelevant token interactions, achieving near-linear time complexity and allowing developers to trace <em>why</em> a model made a decision for up to 100k tokens.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-sliders-h"></i></div>Behavioral Vaccination</h3>
+                <p>Because internal features are mapped, they can be manually manipulated to secure the model.</p>
+                <ul>
+                    <li><strong>Persona Vectors:</strong> By extracting the specific neural vectors responsible for character traits, engineers actively monitor the model's "mood" during deployment. If the activation state drifts toward "hallucination" or "evil," the system detects the trajectory before the output is generated.</li>
+                    <li><strong>Behavioral Vaccination:</strong> During fine-tuning, researchers intentionally steer the model toward undesirable personas (artificially dosing it with "toxicity"). By forcing these states, the model builds a natural resilience, designed to reduce the likelihood of "alignment faking" (a sleeper agent hiding its true intent) during real-world deployment.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: SAFETY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="safety">
+            <div class="section-divider-number">06</div>
+            <h2>AI Safety & MCP</h2>
+        </div>
+        
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Operationalizes safety via the Responsible Scaling Policy.</p>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>AI Safety Levels (ASL) Framework</h3>
+                <ul>
+                    <li><strong>ASL-2 (The Baseline):</strong> Models exhibit dangerous theoretical knowledge but lack practical autonomy. Secured via automated red-teaming.</li>
+                    <li><strong>ASL-3 (The Opus 4 Trigger):</strong> Triggered when models demonstrate advanced proficiency in workflows associated with CBRN (Chemical, Biological, Radiological, Nuclear) threats.</li>
+                    <li><strong>ASL-3 Defenses:</strong>
+                        <ul>
+                            <li><strong>Constitutional Classifiers:</strong> Specialized, low-latency sentinel LLMs that monitor input/output streams to proactively block harmful CBRN workflows.</li>
+                            <li><strong>Weight Security:</strong> Mandates 2-Party Authorization (2PA) for infrastructure access and strict Egress Bandwidth Controls to throttle network traffic, ensuring security systems have time to detect and terminate illicit multi-gigabyte weight exfiltration by state-level threat actors.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>Model Context Protocol (MCP)</h3>
+                <p>Replacing bespoke API wrappers with a universal integration standard.</p>
+                <ul>
+                    <li><strong>Universal Interface:</strong> MCP uses a standardized JSON-RPC 2.0 interface. Developers write an integration once, and any MCP-aware model can instantly discover and use it (e.g., GitHub, Stripe, internal databases).</li>
+                    <li><strong>Automatic Discovery & Chaining:</strong> Claude automatically fetches a live catalog of a server’s methods and schemas. Multiple MCP servers can be chained together in a single natural-language prompt to execute complex, multi-step workflows.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-eye"></i></div>Multimodal RAG & Vision Pipelines</h3>
+                <p>Fusing document search, semantic understanding, and image analysis.</p>
+                <ul>
+                    <li><strong>Contextual Retrieval:</strong> Combines standard vector embeddings (e.g., FAISS nearest-neighbor indexing) with BM25 keyword filtering to reduce retrieval failures in domain-specific corpora.</li>
+                    <li><strong>Multimodal Fusion:</strong> Claude can process text, code snippets, and UI screenshots simultaneously in a single prompt. It maps variables in the code directly to visual elements in the screenshot to pinpoint layout mismatches or errors.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>Auditing & Securing MCP Workflows</h3>
+                <p>Securing the agentic surface against real-world execution risks.</p>
+                <ul>
+                    <li><strong>Threat Mitigations:</strong> Defends against Prompt Injection (via strict separation of system/user channels) and Tool Poisoning (via strict schema validation and method whitelisting).</li>
+                    <li><strong>MCPSafetyScanner:</strong> An automated auditing tool that acts as an AI penetration tester. It hammers exposed MCP endpoints with adversarial JSON-RPC requests to catch schema violations and path-traversal attempts before deployment.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="glossary">
+            <div class="section-divider-number">07</div>
+            <h2>Glossary</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item"><dt>RLHF</dt><dd>Reinforcement Learning from Human Feedback — foundational but limited alignment technique.</dd></div>
+            <div class="definition-item"><dt>CAI</dt><dd>Constitutional AI — Anthropic's reason-based alignment methodology using a defined Constitution.</dd></div>
+            <div class="definition-item"><dt>RLAIF</dt><dd>Reinforcement Learning from AI Feedback — AI-scored preference model replacing human raters.</dd></div>
+            <div class="definition-item"><dt>Adaptive Thinking</dt><dd>Dynamic reasoning depth scaling; replaces fixed-budget Extended Thinking.</dd></div>
+            <div class="definition-item"><dt>MCP</dt><dd>Model Context Protocol — a universal, JSON-RPC 2.0-based standard connecting AI models to external tools and datasets.</dd></div>
+            <div class="definition-item"><dt>MCPSafetyScanner</dt><dd>An automated agentic tool that audits MCP servers using adversarial testing to identify security vulnerabilities.</dd></div>
+            <div class="definition-item"><dt>Context Compaction</dt><dd>Lossy server-side summarization of conversation history to prevent context overflow.</dd></div>
+            <div class="definition-item"><dt>FAISS</dt><dd>Facebook AI Similarity Search — a library for efficient similarity search and clustering of dense vectors, used in RAG pipelines.</dd></div>
+            <div class="definition-item"><dt>Prompt Caching</dt><dd>Server-side storage of static context prefixes to reduce redundant computation (up to 90% cost savings and 2x faster latency).</dd></div>
+            <div class="definition-item"><dt>RAG</dt><dd>Retrieval-Augmented Generation — a technique that retrieves relevant document fragments at query time to supply factual context to the model.</dd></div>
+            <div class="definition-item"><dt>SAE</dt><dd>Sparse Autoencoder — decompiles superposition into human-readable feature vectors.</dd></div>
+            <div class="definition-item"><dt>Feature Clamping</dt><dd>Manually elevating or suppressing specific neural feature activations to control behavior.</dd></div>
+            <div class="definition-item"><dt>Persona Vectors</dt><dd>Low-rank vectors representing character traits; used for monitoring and behavioral vaccination.</dd></div>
+            <div class="definition-item"><dt>Stream Algorithm</dt><dd>Hierarchical pruning technique enabling near-linear interpretability analysis.</dd></div>
+            <div class="definition-item"><dt>ASL</dt><dd>AI Safety Level — capability-gated security framework under the RSP.</dd></div>
+            <div class="definition-item"><dt>RSP</dt><dd>Responsible Scaling Policy — Anthropic's governance framework for safe capability deployment.</dd></div>
+            <div class="definition-item"><dt>Constitutional Classifiers</dt><dd>Sentinel LLMs monitoring input/output streams for CBRN threat patterns.</dd></div>
+            <div class="definition-item"><dt>2PA</dt><dd>Two-Party Authorization — dual human approval required for critical infrastructure access.</dd></div>
+            <div class="definition-item"><dt>TTL</dt><dd>Time-to-Live — cache duration (5-minute or 1-hour options).</dd></div>
+            <div class="definition-item"><dt>TTFT</dt><dd>Time-to-First-Token — primary latency metric.</dd></div>
+            <div class="definition-item"><dt>Computer Use API</dt><dd>Tool enabling Claude to view and control desktop environments via screenshot analysis.</dd></div>
+            <div class="definition-item"><dt>Claude Code</dt><dd>CLI-based developer tool for autonomous codebase management and agent team orchestration.</dd></div>
+            <div class="definition-item"><dt>Claude Cowork</dt><dd>GUI-based desktop automation tool for non-technical knowledge workers.</dd></div>
+            <div class="definition-item"><dt>Artifacts</dt><dd>Stateful interactive UI windows rendered alongside chat for code and visual output.</dd></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+</body>
+
+</html>

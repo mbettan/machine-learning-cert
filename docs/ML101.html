@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML 101 — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Study Notes — Certification Prep
+                </div>
+                <h1>Machine Learning 101<br><em>Comprehensive Guide</em></h1>
+                <p class="cover-subtitle">
+                    Definition: Process of combining inputs to produce useful predictions on never-before-seen data.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Level: <strong>Foundational to Advanced</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#definitions" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Definitions & Scope</span>
+                </a>
+                <a href="#workflow" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Standard Workflow (10 Steps)</span>
+                </a>
+                <a href="#problem-types" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>ML Problem Types</span>
+                </a>
+                <a href="#data-ops" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Data Extraction & Prep</span>
+                </a>
+                <a href="#troubleshooting" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Troubleshooting (Over/Underfitting)</span>
+                </a>
+                <a href="#evaluation" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Model Evaluation Metrics</span>
+                </a>
+                <a href="#serving" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Serving & Monitoring</span>
+                </a>
+                <a href="#personas" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>User Personas</span>
+                </a>
+                <a href="#neural-networks" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Neural Networks</span>
+                </a>
+                <a href="#glossary" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Comprehensive Glossary</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: DEFINITIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="definitions">
+            <div class="section-divider-number">01</div>
+            <h2>Definitions & Scope</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Artificial Intelligence (AI)</dt>
+                <dd>Computer think/act like humans.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Machine Learning (ML)</dt>
+                <dd>Scalably solve problems using data examples (not rules).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Deep Learning (DL)</dt>
+                <dd>Subtype that works even when the data consists of unstructured data, like images, speech, video, natural language text and so on. Approach based on Neural Networks.</dd>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Core Distinction</h4>
+                <p>The basic difference between Machine Learning and other techniques in AI is that in Machine Learning machines learn.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: WORKFLOW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflow">
+            <div class="section-divider-number">02</div>
+            <h2>Standard Workflow & Lifecycle</h2>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Problem Definition</h4>
+                <p>What business problem are you solving for? What is the outcome you want to achieve?</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Data Extraction</h4>
+                <p>Determine the data you need for training and testing your model based on the use case.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Data Preparation</h4>
+                <p>Your data needs to be properly formatted before and after data import (iteratively).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Model Training</h4>
+                <p>Set parameters and build your model.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Model Troubleshooting</h4>
+                <p>Troubleshoot the performance.</p>
+            </div>
+        </div>
+
+        <div class="process-flow" style="margin-top: 16px;">
+            <div class="process-step">
+                <div class="process-step-number">06</div>
+                <h4>Model Evaluation</h4>
+                <p>Review model metrics and performance.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">07</div>
+                <h4>Model Tuning</h4>
+                <p>Adjust parameters not learned from data.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">08</div>
+                <h4>Model Testing</h4>
+                <p>Try your model on test data.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">09</div>
+                <h4>Model Serving</h4>
+                <p>Make your model available to use.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">10</div>
+                <h4>Model Monitoring</h4>
+                <p>Keep your model accurate.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: PROBLEM TYPES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="problem-types">
+            <div class="section-divider-number">03</div>
+            <h2>ML Problem Types</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>Supervised Learning</h3>
+                <p>Learn from examples, apply label to data.</p>
+                <ul>
+                    <li><strong>Binary classification model:</strong> predicts a binary outcome (one of two classes) → yes or no questions. Example: Credit card transactions (fraud or not).</li>
+                    <li><strong>Multi-class classification model:</strong> predicts one class from three or more discrete classes (one of a set). Example: segment customers into different personas.</li>
+                    <li><strong>Regression model:</strong> predicts a continuous value. Example: forecast customer spending over the next month.</li>
+                    <li><strong>Matrix Factorization:</strong> (matrix decomposition) used in recommender systems. Example: Netflix.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3>Unsupervised & Reinforcement</h3>
+                <p><strong>Unsupervised Learning:</strong> detect known patterns w/o examples.</p>
+                <ul>
+                    <li><strong>Clustering model:</strong> identifying similarities in groups.</li>
+                    <li><strong>Anomaly Detection:</strong> identifying abnormalities in data.</li>
+                </ul>
+                <br>
+                <p><strong>Reinforcement Learning:</strong></p>
+                <ul>
+                    <li>Learn from the environment via exploration and exploitation. Use positive/negative reinforcement to complete a task. Example: chess, maze, etc.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: DATA OPS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="data-ops">
+            <div class="section-divider-number">04</div>
+            <h2>Data Extraction & Preparation</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3>Data Extraction</h3>
+            <ul>
+                <li><strong>Select relevant features:</strong> A feature is an input attribute used for model training. Features are how your model identifies patterns to make predictions, so they need to be relevant to your problem.</li>
+                <li><strong>Include enough data:</strong> The more training examples you have, the better your outcome. Amount of example data required scales with the complexity of the problem you’re solving for.</li>
+                <li><strong>Capture variation:</strong> Your dataset should capture the diversity of your problem space. The more diverse examples a model sees during training, the more readily it can generalize to new or less common examples.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Data Preparation Pitfalls</h4>
+                <p><strong>Prevent data leakage:</strong> when you use input features during training that "leak" information about the target that you are trying to predict which is unavailable when the model is actually served. This can be detected when a feature that is highly correlated with the target column is included as one of the input features. Strong model performance during testing, but not when deployed in production.</p>
+                <p><strong>Prevent prediction-serving skew:</strong> avoiding a mismatch between the data or processing used during model training and what is available at prediction (inference) time.</p>
+                <p><strong>Clean up data:</strong> clean up missing, incomplete, and inconsistent data to improve data quality before using it for training purposes.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3>Model Training Fundamentals</h3>
+            <ul>
+                <li><strong>Feature engineering:</strong> transforming input features to be more useful for the models. e.g. mapping categories to buckets, normalizing between -1 and 1, removing null.</li>
+                <li><strong>Model selection and iterations.</strong></li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: TROUBLESHOOTING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="troubleshooting">
+            <div class="section-divider-number">05</div>
+            <h2>Model Troubleshooting</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-pink">
+                <h3>Underfitting</h3>
+                <p>Poor performance on training and test dataset.</p>
+                <ul>
+                    <li>Increase the complexity of model</li>
+                    <li>Increase the training time</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3>Overfitting</h3>
+                <p>Good perf on training, poor perf on test dataset.</p>
+                <ul>
+                    <li>Specific to the trained data, does not generalize.</li>
+                    <li><strong>Reasons:</strong> not enough training data, too many features (redundant), features not useful (noise).</li>
+                    <li><strong>Combat via:</strong> Regularization which limits information captured.</li>
+                    <li><strong>Combat via:</strong> Early Stopping (halting when validation loss increases).</li>
+                    <li><strong>Combat via:</strong> L1 / L2 Regularization.</li>
+                    <li><strong>Combat via:</strong> Dropout (randomly dropping nodes).</li>
+                    <li><strong>Combat via:</strong> Max-Norm Regularization.</li>
+                    <li><strong>Combat via:</strong> Data Augmentation (artificially boosting dataset diversity).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3>Bias</h3>
+                <p>Missing relationship between features and labels → training data is not generalized.</p>
+                <p><strong>Ideal state:</strong> Low bias, low variance.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3>Variance</h3>
+                <p>Sensitivity in small fluctuations in the training dataset → difference in a set of predictions.</p>
+                <p><strong>Ideal state:</strong> Low bias, low variance.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: EVALUATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="evaluation">
+            <div class="section-divider-number">06</div>
+            <h2>Model Evaluation</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Model evaluation metrics</strong> are based on how the model performed against a slice of your dataset (the test dataset).</p>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3>Classification Metrics</h3>
+            <p>Score thresholds to adjust the confusion matrix (true positive, true negative, false positive and false negative).</p>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>Accuracy</dt><dd>% of total true positive & true negative / total population.</dd></div>
+                <div class="definition-item"><dt>Precision</dt><dd>% of total positive class correctly classified by TP / (TP + FP).</dd></div>
+                <div class="definition-item"><dt>Recall</dt><dd>% of total actual positive labels identified by TP / (TP + FN).</dd></div>
+                <div class="definition-item"><dt>F1 score</dt><dd>2 * (Precision * Recall) / (Precision + Recall).</dd></div>
+                <div class="definition-item"><dt>AUC PR, AUC ROC, Log loss</dt><dd>Common classification performance metrics.</dd></div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>Regression Metrics</h3>
+            <p><strong>Mean squared error:</strong></p>
+            <ul>
+                <li>MAE (Mean Absolute Error)</li>
+                <li>RMSE (Root Mean Squared Error)</li>
+                <li>RMSLE (Root Mean Squared Logarithmic Error)</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3>Gradient Descent & Backpropagation</h3>
+            <ul>
+                <li><strong>Gradient Descent:</strong> technique to minimize the loss in a neural network by calculating gradient (slope) → optimal weight.</li>
+                <li><strong>Batch Gradient Descent:</strong> → slow large dataset.</li>
+                <li><strong>Stochastic Gradient Descent:</strong> → random process.</li>
+                <li><strong>Mini-Batch Gradient Descent:</strong> → mixed mode.</li>
+                <li><strong>Backpropagation:</strong> algorithm mapping from the input-output pair to calculate the gradient descent → efficient way.</li>
+            </ul>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-sliders-h"></i></div>
+            <div class="callout-content">
+                <h4>Model Tuning & Testing</h4>
+                <p><strong>Hyperparameter tuning:</strong> Adjusting the parameters of our models not from the data but the model (e.g., # layers, learning rate, etc.).</p>
+                <p><strong>Model Testing:</strong> Evaluating your model metrics is primarily how you can determine whether your model is ready to deploy, but you can also test it with new data. Try uploading new data to see if the model's predictions match your expectations. Based on the evaluation metrics or testing with new data, you may need to continue improving your model's performance.</p>
+                <p><em>Consideration: Never test with training data.</em></p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: SERVING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="serving">
+            <div class="section-divider-number">07</div>
+            <h2>Model Serving & Monitoring</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>Batch prediction</h3>
+                <p>Is useful for making many prediction requests at once. Batch prediction is asynchronous, meaning that the model will wait until it processes all of the prediction requests before returning the predicted values.</p>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3>Online prediction</h3>
+                <p>Is synchronous (real-time), meaning that it will quickly return a prediction, but only accepts one prediction request per API call. Online prediction is useful if your model is part of an application and parts of your system are dependent on a quick prediction turnaround.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3>Model Monitoring</h3>
+            <ul>
+                <li><strong>Metrics to monitor:</strong> traffic patterns, error rates, latency, resource utilization with Cloud Monitoring alerting.</li>
+                <li><strong>Data Skew:</strong> drift in the data over time → refresh models.</li>
+                <li>Watch for changes in dependencies upstream in the pipeline.</li>
+                <li>Assess model prediction quality.</li>
+                <li>Test for unfairness (bias unintentionally).</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: PERSONAS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="personas">
+            <div class="section-divider-number">08</div>
+            <h2>User Personas and User Stories</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item"><dt>Product Managers</dt><dd>Insights and objectives.</dd></div>
+            <div class="definition-item"><dt>Data Analyst</dt><dd>Query and analyze.</dd></div>
+            <div class="definition-item"><dt>Data Engineer</dt><dd>Get clean and useful data.</dd></div>
+            <div class="definition-item"><dt>Data Scientist</dt><dd>Models that work.</dd></div>
+            <div class="definition-item"><dt>ML Developer</dt><dd>Intelligent applications.</dd></div>
+            <div class="definition-item"><dt>ML Engineer</dt><dd>Models in production.</dd></div>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-cogs"></i></div>
+            <div class="callout-content">
+                <h4>ML Ops & Operationalize</h4>
+                <p>“DevOps” / automated operations for machine learning.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: NEURAL NETWORKS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="neural-networks">
+            <div class="section-divider-number">09</div>
+            <h2>Neural Networks</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3>Architecture & Components</h3>
+            <ul>
+                <li><strong>Neural Networks:</strong> = input layer + hidden layer to output. Model composed of layers, consisted of neurons.</li>
+                <li><strong>Neuron:</strong> node → combine input values to one output value.</li>
+                <li><strong>Epoch:</strong> single pass through training dataset.</li>
+                <li><strong>Weight:</strong> multiplication of input values.</li>
+                <li><strong>Bias:</strong> value of output given a weight of 0.</li>
+                <li><strong>Hidden layers:</strong> set of neurons operating from same input set.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3>Network Types</h3>
+            <ul>
+                <li><strong>Feedforward neural network (FFNN):</strong> information moves strictly forward from input to output.</li>
+                <li><strong>Recurrent neural network (RNN):</strong> optimized for sequential data, where previous runs feed into the next.</li>
+                <li><strong>Deep Neural networks:</strong> = generalization, many hidden layers.</li>
+                <li><strong>Wide Neural networks:</strong> = memorization, many features.</li>
+                <li><strong>Deep and Wide networks:</strong> generalization + memorization. Good fit for recommendation engines.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="glossary">
+            <div class="section-divider-number">10</div>
+            <h2>Glossary</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3>Core Concepts</h3>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>Inference</dt><dd>= scoring = predictions: applied trained model to unlabelled examples.</dd></div>
+                <div class="definition-item"><dt>Label</dt><dd>The variable we are predicting (target).</dd></div>
+                <div class="definition-item"><dt>Features</dt><dd>Input data used by the ML model.</dd></div>
+                <div class="definition-item"><dt>Feature Store</dt><dd>Rich feature repository to serve, share and re-use ML features.</dd></div>
+                <div class="definition-item"><dt>Training-Serving Skew</dt><dd>Mismatch between input features at training time and serving time.</dd></div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3>Data Splits</h3>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>Training Set</dt><dd>Labeled examples used to optimize the model.</dd></div>
+                <div class="definition-item"><dt>Validation Set</dt><dd>Disjoint subset used to adjust hyperparameters and prevent overfitting.</dd></div>
+                <div class="definition-item"><dt>Test Set</dt><dd>Subset used to provide final results on new data (contains labels, model never learns from them).</dd></div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3>3 Types of "Bias"</h3>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>Bias (Math)</dt><dd>Intercept or offset from an origin (the b in y = wx + b).</dd></div>
+                <div class="definition-item"><dt>Prediction Bias</dt><dd>Difference between average of predictions and average of labels in the dataset.</dd></div>
+                <div class="definition-item"><dt>Bias (Ethics/Fairness)</dt><dd>Unintentional unfairness or stereotyping in algorithms or data.</dd></div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>Neural Networks & Optimization</h3>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>FFNN</dt><dd>Neural network without recursive connections; information moves strictly forward.</dd></div>
+                <div class="definition-item"><dt>RNN</dt><dd>Network optimized for sequential data where previous runs feed into the next.</dd></div>
+                <div class="definition-item"><dt>Activation Functions</dt><dd>Mathematical functions (e.g. RELU, tanh) that introduce non-linearity.</dd></div>
+                <div class="definition-item"><dt>Optimizer</dt><dd>Operation that changes weights and biases to reduce loss e.g. Adagrad or Adam.</dd></div>
+                <div class="definition-item"><dt>Gradient Descent</dt><dd>Technique to minimize loss by calculating gradient (slope) to find optimal weight.</dd></div>
+                <div class="definition-item"><dt>Backpropagation</dt><dd>Efficient algorithm to calculate gradient descent in neural networks.</dd></div>
+                <div class="definition-item"><dt>Learning Rate</dt><dd>Rate at which optimizers adjust weights and biases; risks non-convergence if too high.</dd></div>
+                <div class="definition-item"><dt>Converge</dt><dd>State where loss stabilizes and the algorithm reaches an optimal answer.</dd></div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3>Preventing Overfitting in DNNs (Regularization)</h3>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>L1 Lasso Regularization</dt><dd>Penalizes absolute weight values; drives least useful features to 0.</dd></div>
+                <div class="definition-item"><dt>L2 Ridge Regression</dt><dd>Penalizes squared weights; keeps weights approximately equal in size.</dd></div>
+                <div class="definition-item"><dt>Dropouts methods</dt><dd>Randomly dropping nodes during training to improve generalization error.</dd></div>
+                <div class="definition-item"><dt>Early Stopping</dt><dd>Ending training when validation loss starts to increase to prevent overfitting.</dd></div>
+                <div class="definition-item"><dt>Max-Norm Regularization</dt><dd>Limiting the absolute magnitude of network weights.</dd></div>
+                <div class="definition-item"><dt>Data Augmentation</dt><dd>Transforming existing examples (e.g. rotating images) to artificially boost dataset diversity.</dd></div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3>Advanced Techniques & Data Processing</h3>
+            <div class="definition-grid">
+                <div class="definition-item"><dt>Ensemble Learning</dt><dd>Combining predictions from multiple distinct models to solve the same problem.</dd></div>
+                <div class="definition-item"><dt>Neural Architecture Search (NAS)</dt><dd>Automated approach to designing and selecting the best model ensemble.</dd></div>
+                <div class="definition-item"><dt>Embeddings</dt><dd>Mapping discrete objects (like words) to vectors of real numbers.</dd></div>
+                <div class="definition-item"><dt>One-Hot encoding</dt><dd>Mapping attribute values to a bit in a binary array.</dd></div>
+                <div class="definition-item"><dt>Normalization</dt><dd>Converting numeric values to a standard range, e.g. -1 and 1.</dd></div>
+                <div class="definition-item"><dt>Tensor</dt><dd>N-dimensional arrays of numbers; primary data structure in ML.</dd></div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        // Back to top visibility
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

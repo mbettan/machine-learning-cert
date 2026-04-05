@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI 101 — Study Notes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1HHVBBMHMS');
+    </script>
+</head>
+
+<body>
+    <a href="index.html" class="back-button">×</a>
+
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER SECTION
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-graduation-cap"></i>
+                    Study Notes — Certification Prep
+                </div>
+                <h1>Generative AI 101<br><em>Core Concepts</em></h1>
+                <p class="cover-subtitle">
+                    Comprehensive overview of Generative AI definitions, workflows, prompt engineering, risks, and glossary.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Level: <strong>Foundational</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#definitions" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Definitions & Scope</span>
+                </a>
+                <a href="#workflow" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Standard Workflow</span>
+                </a>
+                <a href="#ecosystem" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Ecosystem & Key Players</span>
+                </a>
+                <a href="#prompting" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Prompt Engineering</span>
+                </a>
+                <a href="#training" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>How Models are Trained</span>
+                </a>
+                <a href="#advanced-troubleshooting" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Advanced Tactics & Troubleshooting</span>
+                </a>
+                <a href="#agents-rag" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Agents & RAG</span>
+                </a>
+                <a href="#risks-ethics" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Risks, Ethics & Vulnerabilities</span>
+                </a>
+                <a href="#glossary" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Glossary</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: DEFINITIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="definitions">
+            <div class="section-divider-number">01</div>
+            <h2>Definitions & Scope</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-info-circle"></i></div>What is GenAI?</h3>
+            <p>
+                <strong>Generative AI (GenAI)</strong> encompasses machine learning models designed to generate novel content (text, images, audio, video, code) by predicting patterns from vast training datasets.
+            </p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>LLMs (Large Language Models)</dt>
+                <dd>The foundation of text-based GenAI. They use the <strong>Transformer architecture</strong> and <strong>Attention mechanisms</strong> to weigh the relevance of words across long contexts.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Multimodal models</dt>
+                <dd>Built from the ground up to process, understand, and generate across multiple modalities (text, images, audio) simultaneously. <em>Example: Google’s Gemini, OpenAI's GPT-4o.</em></dd>
+            </div>
+            <div class="definition-item">
+                <dt>Synthetic media</dt>
+                <dd>The umbrella term for AI-generated text, images, video, and data (replacing the narrower term "deepfake").</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: WORKFLOW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflow">
+            <div class="section-divider-number">02</div>
+            <h2>Standard Workflow</h2>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">1</div>
+                <h4>Define Objective</h4>
+                <p>What is the goal, audience, tone, and format of your output?</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">2</div>
+                <h4>Model Selection</h4>
+                <p>Choose the right tool for the task (e.g., text vs. multimodal vs. specialized SLM).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">3</div>
+                <h4>Prompt Engineering</h4>
+                <p>Craft clear, specific, contextual instructions.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">4</div>
+                <h4>Generation & Iteration</h4>
+                <p>Run the prompt, use feedback loops (thumbs up/down), and refine.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">5</div>
+                <h4>Troubleshooting</h4>
+                <p>Address lazy models, freezes, and confusing outputs by tweaking parameters.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">6</div>
+                <h4>Evaluation & Fact-checking</h4>
+                <p>Cross-reference outputs. GenAI is not infallible; human oversight is required.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">7</div>
+                <h4>Advanced Customization</h4>
+                <p>Use RAG, AI chaining, or fine-tuning for specialized topics.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">8</div>
+                <h4>Finalizing & Editing</h4>
+                <p>Harmonize tone, inject the human element, and verify originality.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">9</div>
+                <h4>Deployment & Ethics</h4>
+                <p>Add digital watermarks, cite sources, and monitor for model drift.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ECOSYSTEM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="ecosystem">
+            <div class="section-divider-number">03</div>
+            <h2>Ecosystem & Key Players</h2>
+        </div>
+
+        <div class="prose">
+            <p>The GenAI landscape goes far beyond a single chatbot. Selecting the right model depends on the task, budget, and privacy needs:</p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Google (Gemini)</dt>
+                <dd>Highly capable multimodal foundation models seamlessly integrated into ecosystems (Workspace, Search). DeepMind pioneers AI research (e.g., AlphaGo, Project Astra).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Anthropic (Claude)</dt>
+                <dd>Focuses on safety, large context windows, and "Constitutional AI" (aligning outputs to human rights/rules rather than just human feedback).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Meta (Llama)</dt>
+                <dd>The champion of open-weight models, making powerful LLMs accessible to developers worldwide for local deployment and fine-tuning.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>DeepSeek</dt>
+                <dd>Chinese startup proving that smaller, highly efficient architectures (using MoE) can rival massive proprietary models in reasoning and coding.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>OpenAI (ChatGPT/GPT-4)</dt>
+                <dd>Early pioneer of the commercial LLM chatbot and reasoning models (o1).</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: PROMPTING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="prompting">
+            <div class="section-divider-number">04</div>
+            <h2>Prompt Engineering & Frameworks</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Prompting Frameworks</h3>
+            <p>Reusable, structured templates designed to build consistent, high-quality prompts instead of starting from scratch. Common frameworks include:</p>
+            <ul>
+                <li><strong>ReAct (Reasoning + Acting):</strong> Forces the model to alternate between internal reasoning steps and external tool calls (e.g., <em>Thought: I need flight data &rarr; Action: Call Expedia API</em>). Essential for building AI agents.</li>
+                <li><strong>PACT:</strong> Defines the <strong>P</strong>ersona, <strong>A</strong>ction, <strong>C</strong>ontext, and <strong>T</strong>one. Best for marketing, copywriting, and maintaining brand consistency.</li>
+                <li><strong>WISER:</strong> Defines <strong>W</strong>ho (Persona), <strong>I</strong>nstruction (Main task), <strong>S</strong>ubtasks (Breaking it down), <strong>E</strong>xamples (Few-shot), and <strong>R</strong>eview (Self-correction). Best for highly complex, multi-step problem solving.</li>
+            </ul>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Prompt</dt>
+                <dd>A query or command entered into the UI. Natural human language is now a computer language, but you must still "think like a machine" to problem-solve.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Iterative Prompting</dt>
+                <dd>A flexible cycle of prompting, evaluating, and re-prompting until output is satisfactory.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Prompt Chaining</dt>
+                <dd>A fixed sequence of connected prompts where each step builds on the previous one to avoid confusing the model.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Meta-Prompts</dt>
+                <dd>Prompts about prompts (e.g., "Review my prompt and suggest improvements").</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Few-Shot Learning</dt>
+                <dd>Providing examples within the prompt to illustrate the desired format or style.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>System Prompt</dt>
+                <dd>Meta-instructions that define the model's persona, rules, and boundaries (e.g., "You are an expert editor. Never use passive voice.").</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Chain-of-Thought (CoT)</dt>
+                <dd>Asking the model to "think step-by-step" before answering, which drastically improves its logic and math capabilities.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Subtractive method</dt>
+                <dd>Best for content creators. Start with a simple, general prompt and issue follow-up prompts to subtract or refine elements (whittling away).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Additive method</dt>
+                <dd>Best for artists. Break the creative process into steps. Start with a background or base prompt, and iteratively add details, layers, and textures.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: TRAINING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="training">
+            <div class="section-divider-number">05</div>
+            <h2>How Models are Trained</h2>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-dumbbell"></i></div>Training Phases</h3>
+            <ul>
+                <li><strong>1. Pretraining:</strong> The model ingests massive, uncurated web data to learn language representation through self-supervised next-token prediction.</li>
+                <li><strong>2. Post-Training (alignment):</strong> Adapting the base model for specific tasks or safety:
+                    <ul>
+                        <li><strong>SFT (Supervised Fine-Tuning):</strong> Training the model on high-quality input-output pairs to teach it how to follow instructions.</li>
+                        <li><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> Humans rate model responses; the model learns a reward function to favor high-quality, safe outputs.</li>
+                        <li><strong>DPO (Direct Preference Optimization):</strong> A simpler, highly popular method that trains models directly on human preference pairs without needing a separate reward model.</li>
+                        <li><strong>RLAIF (AI Feedback):</strong> Using a highly capable AI (like Claude or Gemini) to evaluate and align another model, enabling massive scalability.</li>
+                    </ul>
+                </li>
+                <li><strong>3. Model distillation:</strong> Transferring the capabilities of a massive "Teacher" LLM to a smaller, more efficient "Student" model.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: ADVANCED TACTICS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="advanced-troubleshooting">
+            <div class="section-divider-number">06</div>
+            <h2>Advanced Tactics & Troubleshooting</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>AI Aggregation</dt>
+                <dd>Combining outputs of multiple independent GenAI models into a unified final product (e.g., using Claude for text, Chatgpt for images, Gemini for video).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Output stitching</dt>
+                <dd>Running multiple AI models in parallel on the same prompt, then manually "stitching" the best segments of each output together.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>AI chaining</dt>
+                <dd>Using the output of one GenAI tool as part or all of the input/prompt for another GenAI tool.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Multi-persona prompting</dt>
+                <dd>Instructing a single model to respond from multiple distinct perspectives (e.g., "Respond as a CEO, a designer, and a consumer").</dd>
+            </div>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-tools"></i></div>Troubleshooting</h3>
+            <ul>
+                <li><strong>The "Finger Problem":</strong> Visual anomalies (like 6 fingers) caused by unclear data patterns in the training set (overlapping hands/fingers in photos). Shows a lack of actual comprehension.</li>
+                <li><strong>Model/Data Drift:</strong> When a model’s training data ages out, making predictions less reliable or outdated. <em>Combat via: Retraining, fine-tuning, or utilizing search-augmented AI (like Perplexity).</em></li>
+                <li><strong>Overfitting (Memorization):</strong> When a model trains too closely on specific data and regurgitates training text word-for-word instead of generating novel ideas. <em>Combat via: adjusting temperature or using anti-plagiarism guardrails.</em></li>
+                <li><strong>Lazy Models:</strong> AI mimicking human behavior (e.g., refusals or degradation). When models inexplicably shorten their code or refuse complex tasks. <em>Combat via: Tipping, urgent timeframes, or threatening a "penalty".</em></li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: AGENTS & RAG
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agents-rag">
+            <div class="section-divider-number">07</div>
+            <h2>Agents & RAG</h2>
+        </div>
+
+        <div class="prose">
+            <p>Models are moving from passive text-generators to <strong>Autonomous Agents</strong> capable of pursuing goals flexibly.</p>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>AI Agents</dt>
+                <dd>Systems that perceive their environment, create plans, and execute actions (e.g., booking a calendar event, writing/running code in an IDE like Cursor).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>MCP (Model Context Protocol)</dt>
+                <dd>An open standard allowing secure, two-way connections between AI tools and external data sources (e.g., securely connecting Claude or Gemini to your company's internal Slack or Google Drive).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>A2A (Agent-to-Agent) / Multi-Agent Systems</dt>
+                <dd>Modern approach to complex orchestration. Instead of relying on one monolithic model, workflows are divided among a "swarm" of specialized micro-agents (e.g., a Research Agent, a Coding Agent, and a QA Agent). <em>How it works: Agents communicate autonomously, share memory/state, delegate sub-tasks, and review each other's work to execute highly complex, multi-step enterprise workflows.</em></dd>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>RAG & Context Augmentation</h3>
+            <p><strong>RAG (Retrieval-Augmented Generation):</strong> Bypasses the model's knowledge cutoff and drastically reduces hallucinations by grounding the AI in external, verified data.</p>
+            
+            <div class="architecture-flow">
+                <div class="arch-node input">User Query</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node process">Vector Search</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node storage">Retrieve Facts</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node output">LLM Synthesizes</div>
+            </div>
+
+            <ul>
+                <li><strong>How it works:</strong> User asks a question &rarr; System converts the query into a numerical vector &rarr; Searches a Vector Database (or the web) for semantic matches &rarr; Relevant facts are retrieved and injected into the prompt &rarr; The LLM synthesizes an accurate answer based <em>only</em> on that retrieved data.</li>
+                <li><strong>Vector Database:</strong> A specialized database that stores text/data as high-dimensional vectors, allowing the AI to search by "semantic similarity" (meaning) rather than exact keyword matches.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: RISKS & ETHICS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="risks-ethics">
+            <div class="section-divider-number">08</div>
+            <h2>Risks, Ethics & Vulnerabilities</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Risks & Vulnerabilities</h3>
+            <ul>
+                <li><strong>Hallucinations:</strong> When a model generates factually incorrect, nonsensical, or made-up responses. <em>Combat via: strict fact-checking, human-in-the-loop, and RAG.</em>
+                    <ul>
+                        <li><em>Extrinsic:</em> model invents facts not in source.</li>
+                        <li><em>Intrinsic:</em> model contradicts the provided source.</li>
+                    </ul>
+                </li>
+                <li><strong>Prompt Injection:</strong> An attacker embeds hidden instructions in a webpage or document. When an AI (like a summarizer bot) reads it, the AI is hijacked to execute the malicious instructions (a <em>zero-click exploit</em>).</li>
+                <li><strong>Jailbreaking:</strong> Intentionally tricking the AI into bypassing its safety guardrails (e.g., asking Gemini to adopt a "villain persona" to write malware).</li>
+                <li><strong>Data Poisoning & Slopsquatting:</strong> Attackers inject malicious data into public training sets, or register fake code packages matching names the AI frequently hallucinates.</li>
+                <li><strong>Memorization & Privacy:</strong> LLMs can accidentally memorize and regurgitate Personally Identifiable Information (PII) seen in training data.</li>
+                <li><strong>Detection & Provenance:</strong>
+                    <ul>
+                        <li><em>Watermarking:</em> Subtly biasing word choices (text) or tweaking pixels (images) to embed invisible AI signatures (e.g., Google DeepMind’s SynthID).</li>
+                        <li><em>C2PA (Content Provenance):</em> Attaching cryptographic metadata to files to show an audit trail of how the media was created/edited.</li>
+                    </ul>
+                </li>
+                <li><strong>Automation Bias:</strong> The dangerous human tendency to over-trust AI outputs without verifying them, especially critical in legal, medical, and coding environments. <em>Rule of thumb: AI is a collaborator, the human is the final reviewer.</em></li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Ethics, Quality & Human Oversight</h3>
+            <ul>
+                <li><strong>Human-in-the-loop:</strong> GenAI is a tool, not an autonomous creator. Human critical thinking, emotional intelligence, and editorial judgment are irreplaceable.</li>
+                <li><strong>Bias & fairness:</strong> Models can perpetuate societal prejudices found in training data. <em>Combat via: diverse input data and stringent review protocols.</em></li>
+                <li><strong>Copyright & plagiarism:</strong> GenAI can unintentionally copy existing works. <em>Combat via: Cross-referencing, avoiding "mimic this exact author" prompts, and independent verification.</em></li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION: GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="glossary">
+            <div class="section-divider-number">09</div>
+            <h2>Glossary (misc)</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Tokens</dt>
+                <dd>Bits of words, spaces, or characters that models process. (~4 characters = 1 token).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context window</dt>
+                <dd>The maximum memory limit of a model per interaction (Input prompt + generated response). If a model has a 128k context window, it will "forget" information pushed past that token limit.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Parameters</dt>
+                <dd>Numerical values used to assign weight and define connections in the neural network. Adjusting parameters changes how a model interprets data.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Temperature</dt>
+                <dd>A setting that controls output randomness. Low temperature (e.g., 0-0.3) = deterministic/focused. High temperature (e.g., 0.8-1.5) = highly creative/random.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Fine-Tuning</dt>
+                <dd>Upgrading a pre-trained model with domain-specific training data to master niche topics (e.g., medical or legal terminology).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>SLMs (Small Language Models)</dt>
+                <dd>Scaled-down, efficient models trained on highly focused datasets. Run on less powerful hardware.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Custom GPTs / GEMs / AI Assistants</dt>
+                <dd>Specialized apps built on top of an LLM tailored for distinct use cases with custom instructions and specific knowledge bases.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Digital Twins</dt>
+                <dd>Virtual, dynamic computer models of real-world objects or systems used for simulation and testing.</dd>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+</body>
+
+</html>

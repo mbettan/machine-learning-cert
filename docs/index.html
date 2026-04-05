@@ -59,6 +59,30 @@
             padding: 0;
         }
 
+        /* ── CUSTOM SCROLLBAR ── */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--purple) var(--obsidian);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--obsidian);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--purple);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--purple-hover);
+        }
+
         html {
             scroll-behavior: smooth;
         }
@@ -244,6 +268,33 @@
             overflow: hidden;
         }
 
+        /* Glow effect */
+        .product-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            background: radial-gradient(
+                600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+                rgba(255, 255, 255, 0.05),
+                transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .product-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Ensure card content is above glow */
+        .product-item > * {
+            position: relative;
+            z-index: 2;
+        }
+
         .product-item.active {
             display: block;
         }
@@ -328,7 +379,7 @@
             color: var(--mint); border-color: rgba(0, 232, 160, 0.3);
         }
         .product-item.google .download-link:hover, .product-item.google .infographic-link:hover {
-            background: var(--mint-dim); border-color: var(--mint); transform: translateY(-1px);
+            background: linear-gradient(135deg, transparent, rgba(0, 232, 160, 0.3)); border-color: var(--mint); transform: translateY(-1px);
         }
 
         /* FOUNDATION THEME */
@@ -352,7 +403,7 @@
             color: var(--amber); border-color: rgba(245, 158, 11, 0.3);
         }
         .product-item.foundation .download-link:hover, .product-item.foundation .infographic-link:hover {
-            background: var(--amber-dim); border-color: var(--amber); transform: translateY(-1px);
+            background: linear-gradient(135deg, transparent, rgba(245, 158, 11, 0.3)); border-color: var(--amber); transform: translateY(-1px);
         }
 
         /* ANTHROPIC THEME (Databricks Inspired) */
@@ -376,7 +427,7 @@
             color: #FF6B6B; border-color: rgba(255, 107, 107, 0.3);
         }
         .product-item.anthropic .download-link:hover, .product-item.anthropic .infographic-link:hover {
-            background: rgba(255, 107, 107, 0.12); border-color: #FF6B6B; transform: translateY(-1px);
+            background: linear-gradient(135deg, transparent, rgba(255, 107, 107, 0.3)); border-color: #FF6B6B; transform: translateY(-1px);
         }
 
         /* Audio */
@@ -456,11 +507,59 @@
             border: none;
             font-size: 1.6em;
             cursor: pointer;
-            color: var(--text-secondary);
+            color: var(--purple);
             transition: color 0.2s;
         }
 
         #pdf-close:hover {
+            color: var(--mint);
+        }
+
+        /* ── INFOGRAPHIC OVERLAY ── */
+        #infographic-container {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+        }
+
+        #infographic-inner {
+            position: relative;
+            width: 80%;
+            height: 90%;
+            margin: 5% auto;
+            background: #0F1320;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1em;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #infographic-inner img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        #infographic-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.6em;
+            cursor: pointer;
+            color: var(--purple);
+            transition: color 0.2s;
+            z-index: 1001;
+        }
+
+        #infographic-close:hover {
             color: var(--mint);
         }
 
@@ -507,16 +606,25 @@
                     <span class="badge">Foundation</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/ML101.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="ML101.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/ML101.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/ML101-v1.0..pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/ML101-v1.0.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/ML101-deck-v1.0..pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
                 <div class="audio-label"><i class="fas fa-headphones"></i> &nbsp;Podcast</div>
                 <audio controls>
-                    <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ML101.mp3" type="audio/mpeg">
+                    <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ML101-v1.0.mp3" type="audio/mpeg">
                 </audio>
             </li>
 
@@ -527,13 +635,19 @@
                     <span class="badge">Foundation</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/MCP-v1.0.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="MCP.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/MCP-v1.0.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/MCP-v1.0.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/MCP-deck-v1.0.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/MCP-v1.0.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/MCP-deck-v1.0.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -550,13 +664,19 @@
                     <span class="badge">Google</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/google/Google-Foundational-models-v1.0.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="Google.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/google/Google-Foundational-models-v1.0.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/google/Google-Foundational-models-v1.0.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/google/Google-Foundational-models-deck-v1.0.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/google/Google-Foundational-models-v1.0.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/google/Google-Foundational-models-deck-v1.0.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -573,13 +693,19 @@
                     <span class="badge">Anthropic</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/anthropic/Anthropic-foundational-models-v1.0.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="Anthropic.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/anthropic/Anthropic-foundational-models-v1.0.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/anthropic/Anthropic-foundational-models-v1.0.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/anthropic/Anthropic-foundational-models-deck-v1.0.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/anthropic/Anthropic-foundational-models-v1.0.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/anthropic/Anthropic-foundational-models-deck-v1.0.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -596,13 +722,19 @@
                     <span class="badge">Foundation</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/A2A-v1.0.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="A2A.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/A2A-v1.0.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/A2A-v1.0.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/A2A-deck-v1.0.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/A2A-v1.0.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/A2A-deck-v1.0.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -619,13 +751,19 @@
                     <span class="badge">Foundation</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/GenAI101v1.1.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="GenAI101.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/GenAI101v1.1.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/GenAI101v1.1.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/GenAI101-deck-v1.1.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/GenAI101v1.1.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/GenAI101-deck-v1.1.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -642,13 +780,19 @@
                     <span class="badge">Foundation</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/PromptEngineering-v1.1.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="PromptEngineering.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/PromptEngineering-v1.1.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/PromptEngineering-v1.1.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/PromptEngineering-deck-v1.1.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/PromptEngineering-v1.1.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/PromptEngineering-deck-v1.1.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -665,13 +809,19 @@
                     <span class="badge">Foundation</span>
                 </div>
                 <div class="card-actions">
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/RAG-v1.0.pdf" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                    <a href="RAG.html" class="download-link">
+                        <i class="fas fa-bolt"></i> Interactive
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/RAG-v1.0.jpg" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/RAG-v1.0.pdf"
+                        class="download-link" download>
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
-                    <a href="https://github.com/mbettan/machine-learning-cert/blob/main/foundation/RAG-deck-v1.0.pdf" class="download-link" download>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/RAG-v1.0.jpg"
+                        class="infographic-link">
+                        <i class="fas fa-image"></i> Infographic
+                    </a>
+                    <a href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/foundation/RAG-deck-v1.0.pdf"
+                        class="download-link" download>
                         <i class="fas fa-file-powerpoint"></i> Deck
                     </a>
                 </div>
@@ -689,10 +839,10 @@
                 </div>
                 <div class="card-actions">
                     <a href="#" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
                     <a href="#" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                        <i class="fas fa-image"></i> Infographic
                     </a>
                 </div>
                 <div class="audio-label"><i class="fas fa-headphones"></i> &nbsp;Podcast</div>
@@ -709,10 +859,10 @@
                 </div>
                 <div class="card-actions">
                     <a href="#" class="download-link" download>
-                        <i class="fas fa-file-pdf"></i> Study Notes
+                        <i class="fas fa-file-pdf"></i> Notes
                     </a>
                     <a href="#" class="infographic-link">
-                        <i class="fas fa-image"></i> Sketch
+                        <i class="fas fa-image"></i> Infographic
                     </a>
                 </div>
                 <div class="audio-label"><i class="fas fa-headphones"></i> &nbsp;Podcast</div>
@@ -731,9 +881,18 @@
         </div>
     </div>
 
+    <div id="infographic-container">
+        <div id="infographic-inner">
+            <button id="infographic-close"
+                onclick="document.getElementById('infographic-container').style.display='none';">×</button>
+            <img id="infographic-img" src="" alt="Infographic"
+                style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        </div>
+    </div>
+
     <footer>
         <p style="font-size: 0.75rem; max-width: 800px; margin: 0 auto 16px; color: var(--text-secondary); opacity: 0.8;">
-            <strong>DISCLAIMER:</strong> The audio files, slide decks, and infographics provided are for educational and informational purposes only and do not constitute professional advice. These materials were generated using NotebookLM, an AI model that may produce inaccurate, incomplete, or hallucinated information. You should do your own research and independently verify all facts before making any decisions.
+            <strong>DISCLAIMER:</strong> Some content was AI-generated. Please conduct your own research and independently verify all facts before relying on this information.
         </p>
         <p>
             Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank">Michaël Bettan</a> &nbsp;·&nbsp;
@@ -758,6 +917,126 @@
                 wrapper.className = 'audio-wrapper';
                 audio.parentNode.insertBefore(wrapper, audio);
                 wrapper.appendChild(audio);
+            });
+
+            // Infographic Modal Handler
+            const infographicContainer = document.getElementById('infographic-container');
+            const infographicImg = document.getElementById('infographic-img');
+            
+            document.querySelectorAll('.infographic-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const imgUrl = this.getAttribute('href');
+                    const title = this.closest('.product-item').querySelector('h3').innerText;
+                     
+                    // Set image source
+                    infographicImg.src = imgUrl;
+                    
+                    // Show modal
+                    infographicContainer.style.display = 'block';
+                    
+                    // Trigger Google Analytics Event
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'view_infographic', {
+                            'event_category': 'Engagement',
+                            'event_label': title,
+                            'value': 1
+                        });
+                    }
+                });
+            });
+
+            // PDF Modal Handler using PDF.js to avoid download buttons
+            const pdfContainer = document.getElementById('pdf-container');
+            const pdfViewer = document.getElementById('pdf-viewer');
+            const pdfClose = document.getElementById('pdf-close');
+            
+            // Set worker source
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+            
+            // One onclick
+            pdfClose.onclick = null;
+            pdfClose.addEventListener('click', function() {
+                pdfContainer.style.display = 'none';
+    pdfViewer.innerHTML = ''; // Clear content
+            });
+            
+            console.log('PDF Script running');
+            const links = document.querySelectorAll('a.download-link');
+            console.log('Found download links:', links.length);
+            
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                console.log('Link href:', href);
+                if (href && href.endsWith('.pdf')) {
+                    console.log('Attaching listener to PDF link:', href);
+                    link.addEventListener('click', function(e) {
+                        console.log('PDF link clicked:', href);
+                        e.preventDefault();
+                        const pdfUrl = href;
+                        const title = this.closest('.product-item').querySelector('h3').innerText;
+                         const isDeck = this.innerText.toLowerCase().includes('deck');
+                        
+                        // Clear viewer
+                        pdfViewer.innerHTML = '<div style="color: white; padding: 20px;">Loading PDF...</div>';
+                        
+                        // Show modal
+                        pdfContainer.style.display = 'block';
+                        
+                        // Load PDF using PDF.js
+                        pdfjsLib.getDocument(pdfUrl).promise.then(async pdfDoc => {
+                            pdfViewer.innerHTML = ''; // Clear loading text
+                            
+                            // Render all pages in order
+                            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                                const page = await pdfDoc.getPage(pageNum);
+                                const scale = 1.5;
+                                const viewport = page.getViewport({ scale: scale });
+                                
+                                const canvas = document.createElement('canvas');
+                                canvas.style.display = 'block';
+                                canvas.style.margin = '0 auto 20px auto';
+                                canvas.style.maxWidth = '100%';
+                                
+                                const ctx = canvas.getContext('2d');
+                                canvas.height = viewport.height;
+                                canvas.width = viewport.width;
+                                pdfViewer.appendChild(canvas);
+                                
+                                const renderContext = {
+                                    canvasContext: ctx,
+                                    viewport: viewport
+                                };
+                                await page.render(renderContext).promise;
+                            }
+                        }).catch(err => {
+                            console.error('Error loading PDF:', err);
+                            pdfViewer.innerHTML = `<div style="color: red; padding: 20px;">Error loading PDF: ${err.message}</div>`;
+                        });
+                        
+                        // Trigger Google Analytics Event
+                        if (typeof gtag === 'function') {
+                            gtag('event', isDeck ? 'view_deck' : 'view_pdf', {
+                                'event_category': 'Engagement',
+                                'event_label': title,
+                                'value': 1
+                            });
+                        }
+                    });
+                }
+            });
+
+            // Glow Effect for Cards (Vercel Style)
+            const cards = document.querySelectorAll('.product-item');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
             });
 
             const filterButtons = document.querySelectorAll('.filter-button');
