@@ -64,7 +64,7 @@
 /* ── CUSTOM SCROLLBAR ── */
 * {
     scrollbar-width: thin;
-    scrollbar-color: var(--purple) var(--obsidian);
+    scrollbar-color: var(--mint) var(--obsidian);
 }
 
 ::-webkit-scrollbar {
@@ -77,12 +77,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--purple);
+    background: var(--mint);
     border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--purple-hover);
+    background: var(--mint-hover);
 }
 
 /* ── BACK BUTTON ── */
@@ -203,11 +203,11 @@ body {
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--purple);
+    color: var(--mint);
     margin-bottom: 20px;
     padding: 6px 14px;
-    background: var(--purple-dim);
-    border: 1px solid rgba(184, 130, 255, 0.15);
+    background: var(--mint-dim);
+    border: 1px solid rgba(0, 232, 160, 0.15);
     border-radius: 100px;
 }
 
@@ -226,7 +226,7 @@ body {
 
 .cover h1 em {
     font-style: italic;
-    color: var(--purple);
+    color: var(--mint);
 }
 
 .cover-subtitle {
@@ -288,7 +288,7 @@ body {
 }
 
 .toc-header i {
-    color: var(--purple);
+    color: var(--mint);
     font-size: 1rem;
 }
 
@@ -322,9 +322,9 @@ body {
 }
 
 .toc-item:hover {
-    background: var(--purple-dim);
-    border-color: rgba(184, 130, 255, 0.12);
-    color: var(--purple);
+    background: var(--mint-dim);
+    border-color: rgba(0, 232, 160, 0.12);
+    color: var(--mint);
 }
 
 .toc-number {
@@ -343,9 +343,9 @@ body {
 }
 
 .toc-item:hover .toc-number {
-    color: var(--purple);
-    border-color: rgba(184, 130, 255, 0.2);
-    background: var(--purple-dim);
+    color: var(--mint);
+    border-color: rgba(0, 232, 160, 0.2);
+    background: var(--mint-dim);
 }
 
 .toc-dots {
