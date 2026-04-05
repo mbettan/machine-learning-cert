@@ -1414,7 +1414,7 @@ body {
 }
 
 .page-footer a {
-    color: var(--purple);
+    color: var(--mint);
     text-decoration: none;
 }
 
@@ -1434,7 +1434,7 @@ body {
     border-radius: 12px;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    color: var(--text-secondary);
+    color: var(--mint);
     cursor: pointer;
     display: flex;
     align-items: center;
