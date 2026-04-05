@@ -323,10 +323,11 @@
             </div>
             <div class="concept-card accent-blue">
                 <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>Model Context Protocol (MCP)</h3>
-                <p>Replacing bespoke API wrappers with a universal integration standard.</p>
+                <p>An emerging open standard providing a universal interface between LLMs, tools, and data.</p>
                 <ul>
-                    <li><strong>Universal Interface:</strong> MCP uses a standardized JSON-RPC 2.0 interface. Developers write an integration once, and any MCP-aware model can instantly discover and use it (e.g., GitHub, Stripe, internal databases).</li>
-                    <li><strong>Automatic Discovery & Chaining:</strong> Claude automatically fetches a live catalog of a server’s methods and schemas. Multiple MCP servers can be chained together in a single natural-language prompt to execute complex, multi-step workflows.</li>
+                    <li><strong>Universal Interface:</strong> Acting as the "USB-C" for AI, MCP uses a standardized JSON-RPC 2.0 interface. Developers write an integration once, and any MCP-aware model can instantly discover and use it.</li>
+                    <li><strong>Ecosystem State:</strong> Rapidly growing but early-stage ecosystem. One of the leading approaches for agent interoperability, though adoption is still fragmented.</li>
+                    <li><strong>Automatic Discovery & Chaining:</strong> Claude automatically fetches a live catalog of a server’s methods and schemas. Multiple MCP servers can be chained together in a single prompt to execute complex workflows.</li>
                 </ul>
             </div>
         </div>
@@ -342,8 +343,9 @@
             </div>
             <div class="concept-card accent-coral">
                 <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>Auditing & Securing MCP Workflows</h3>
-                <p>Securing the agentic surface against real-world execution risks.</p>
+                <p>MCP increases the attack surface and requires strict controls.</p>
                 <ul>
+                    <li><strong>Core Risks:</strong> Introduces risks like prompt injection, tool poisoning, data exfiltration, and privilege escalation.</li>
                     <li><strong>Threat Mitigations:</strong> Defends against Prompt Injection (via strict separation of system/user channels) and Tool Poisoning (via strict schema validation and method whitelisting).</li>
                     <li><strong>MCPSafetyScanner:</strong> An automated auditing tool that acts as an AI penetration tester. It hammers exposed MCP endpoints with adversarial JSON-RPC requests to catch schema violations and path-traversal attempts before deployment.</li>
                 </ul>
@@ -363,7 +365,7 @@
             <div class="definition-item"><dt>CAI</dt><dd>Constitutional AI — Anthropic's reason-based alignment methodology using a defined Constitution.</dd></div>
             <div class="definition-item"><dt>RLAIF</dt><dd>Reinforcement Learning from AI Feedback — AI-scored preference model replacing human raters.</dd></div>
             <div class="definition-item"><dt>Adaptive Thinking</dt><dd>Dynamic reasoning depth scaling; replaces fixed-budget Extended Thinking.</dd></div>
-            <div class="definition-item"><dt>MCP</dt><dd>Model Context Protocol — a universal, JSON-RPC 2.0-based standard connecting AI models to external tools and datasets.</dd></div>
+            <div class="definition-item"><dt>MCP</dt><dd>Model Context Protocol — an emerging open standard providing a universal interface between LLMs, tools, and data (early-stage ecosystem).</dd></div>
             <div class="definition-item"><dt>MCPSafetyScanner</dt><dd>An automated agentic tool that audits MCP servers using adversarial testing to identify security vulnerabilities.</dd></div>
             <div class="definition-item"><dt>Context Compaction</dt><dd>Lossy server-side summarization of conversation history to prevent context overflow.</dd></div>
             <div class="definition-item"><dt>FAISS</dt><dd>Facebook AI Similarity Search — a library for efficient similarity search and clustering of dense vectors, used in RAG pipelines.</dd></div>

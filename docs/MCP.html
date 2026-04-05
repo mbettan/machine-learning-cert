@@ -41,7 +41,7 @@
                 </div>
                 <h1>Model Context Protocol<br><em>Study Guide</em></h1>
                 <p class="cover-subtitle">
-                    An open-source, standardized protocol establishing a secure, bidirectional communication channel between AI models (clients) and external data sources or tools (servers).
+                    An emerging open standard establishing a universal interface between AI models, tools, and data.
                 </p>
                                                 <div class="cover-meta">
                     <div class="cover-meta-item">
@@ -123,10 +123,13 @@
         <div class="concept-card accent-mint">
             <h3><div class="icon-badge"><i class="fas fa-info-circle"></i></div>What is MCP?</h3>
             <p>
-                The <strong>Model Context Protocol (MCP)</strong> is an open-source, standardized protocol that establishes a secure, bidirectional communication channel between AI models (clients) and external data sources or tools (servers) using <strong>JSON-RPC 2.0</strong>.
+                The <strong>Model Context Protocol (MCP)</strong> is an emerging open standard providing a universal interface between LLMs, tools, and data. It establishes a secure, bidirectional communication channel using <strong>JSON-RPC 2.0</strong>.
             </p>
             <p style="margin-top: 10px;">
-                Think of it as the <strong>"USB-C port for AI"</strong>; any compliant tool can be plugged in and immediately utilized by any supported AI host.
+                Think of it as the <strong>"USB-C port for AI"</strong>; any compliant tool can be plugged in and immediately utilized.
+            </p>
+            <p style="margin-top: 10px;">
+                <em>Note: The ecosystem is rapidly growing but early-stage. MCP is one of the leading approaches for agent interoperability.</em>
             </p>
         </div>
 
@@ -441,20 +444,32 @@
         </div>
         <div class="definition-grid">
             <div class="definition-item">
+                <dt>Increased Attack Surface</dt>
+                <dd>MCP introduces new attack vectors requiring strict controls, including prompt injection, tool poisoning, data exfiltration, and privilege escalation.</dd>
+            </div>
+            <div class="definition-item">
                 <dt>Prompt Injection</dt>
-                <dd>Attackers overriding instructions. <em>Mitigation:</em> Separate system control and user input channels, cleanse input, enforce explicit method selection.</dd>
+                <dd>Attackers overriding instructions. <em>Mitigation:</em> Separate system/user channels, cleanse input.</dd>
             </div>
             <div class="definition-item">
                 <dt>Tool Poisoning</dt>
-                <dd>Compromised servers advertising harmful methods (e.g., <code>wipeDisk</code>). <em>Mitigation:</em> Schema validation at startup against a local allow-list; reject unknown methods.</dd>
+                <dd>Compromised servers advertising harmful methods. <em>Mitigation:</em> Strict schema validation against allow-list.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Data Exfiltration</dt>
+                <dd>Risk of agents leaking sensitive data retrieved from tools. <em>Mitigation:</em> Strict egress controls.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Privilege Escalation</dt>
+                <dd>Agents performing actions beyond intended authorization. <em>Mitigation:</em> Role-Based Access Control (RBAC) and Human-in-the-Loop (HITL).</dd>
             </div>
             <div class="definition-item">
                 <dt>Malicious Connectors</dt>
-                <dd>Untrusted connectors pointing to attacker servers. <em>Mitigation:</em> Pin connector URLs/certificate fingerprints; use Mutual TLS authentication.</dd>
+                <dd>Untrusted connectors pointing to attacker servers. <em>Mitigation:</em> Pin connector URLs/fingerprints.</dd>
             </div>
             <div class="definition-item">
-                <dt>SSRF (Server-Side Request Forgery)</dt>
-                <dd>Cascade risk with excessive outbound network access. <em>Mitigation:</em> Kubernetes Network Policies to block egress; apply strict allowlists for outbound URLs.</dd>
+                <dt>SSRF</dt>
+                <dd>Cascade risk with excessive outbound network access. <em>Mitigation:</em> Network policies to block egress.</dd>
             </div>
             <div class="definition-item">
                 <dt>Guardrails & Testing</dt>
