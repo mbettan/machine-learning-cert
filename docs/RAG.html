@@ -43,14 +43,26 @@
                 <p class="cover-subtitle">
                     Comprehensive overview of RAG indexing, retrieval, generation, vectors, and agentic AI.
                 </p>
-                <div class="cover-meta">
+                                                <div class="cover-meta">
                     <div class="cover-meta-item">
-                        <i class="fas fa-user"></i>
-                        <span>Author: <strong>Michaël Bettan</strong></span>
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Updated: <strong>April 2026</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-layer-group"></i>
-                        <span>Level: <strong>Advanced</strong></span>
+                        <span>Version: <strong>1.0</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>Category: <strong>RAG</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Reading Time: <strong>~11 min</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
             </div>
@@ -586,6 +598,37 @@
             </table>
         </div>
 
+        
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> Why is RAG still necessary even with models having massive context windows (1M+ tokens)?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Because massive windows increase "Lost-in-the-Middle" hallucinations, are unscalably expensive for every query, and degrade inference latency. RAG provides a small, dense payload.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> What is the difference between Dense (Semantic) Search and Sparse (Keyword) Search in RAG?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Dense search matches meaning and context using vectors but struggles with exact names/IDs. Sparse search (BM25) matches exact terms but is blind to synonyms.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> What does "Contextual Retrieval" involve at indexing time?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Augmenting chunks with metadata like document title, section summary, and tags to give the embedding model richer signal, improving precision.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
              FOOTER
              ═══════════════════════════════════════ -->
@@ -596,7 +639,27 @@
 
     </div>
 
-    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
 
 </body>
 

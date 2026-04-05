@@ -43,14 +43,26 @@
                 <p class="cover-subtitle">
                     Comprehensive overview of prompt engineering frameworks, tactics, taxonomy, and operationalization.
                 </p>
-                <div class="cover-meta">
+                                                <div class="cover-meta">
                     <div class="cover-meta-item">
-                        <i class="fas fa-user"></i>
-                        <span>Author: <strong>Michaël Bettan</strong></span>
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Updated: <strong>April 2026</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-layer-group"></i>
-                        <span>Level: <strong>Advanced</strong></span>
+                        <span>Version: <strong>1.0</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>Category: <strong>Prompting</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Reading Time: <strong>~8 min</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
             </div>
@@ -534,6 +546,37 @@
             </div>
         </div>
 
+        
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> What does the "Lost in the Middle" phenomenon refer to in LLMs?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">LLMs pay strict attention to the very beginning and very end of a massive prompt, but skim the middle. So critical constraints should be placed at the end.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> Why is "Prompt Chaining" preferred over creating a single "Mega-Prompt"?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Asking the model to perform multiple complex tasks simultaneously overloads attention and increases hallucinations. Breaking it into sequential prompts improves accuracy.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> What is the difference between Zero-Shot and Few-Shot prompting?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Zero-Shot relies purely on precise phrasing without examples. Few-Shot provides a limited set of demonstration pairs (input-output) to leverage pattern-matching.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
              FOOTER
              ═══════════════════════════════════════ -->
@@ -544,7 +587,27 @@
 
     </div>
 
-    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
 
 </body>
 

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Notes — IDD (Instruction-Driven Development) & SDD</title>
+    <link rel="icon" type="image/png"
+        href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/docs/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-scroll"></i>
+                    Study Notes — Development Methodology
+                </div>
+                <h1>Instruction-Driven<br><em>Development (IDD)</em></h1>
+                <p class="cover-subtitle">
+                    A structured methodology for AI-assisted software development — also known as
+                    Specification-Driven Development (SDD). Move beyond ad-hoc prompting to a disciplined,
+                    reproducible workflow where <strong>instructions are the blueprint</strong> and AI is the builder.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Updated: <strong>April 2026</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Version: <strong>1.0</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>Category: <strong>Foundation</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Reading Time: <strong>~18 min</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#s1" class="toc-item">
+                    <span class="toc-number">01</span>
+                    The Problem with Ad-Hoc Prompting
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s2" class="toc-item">
+                    <span class="toc-number">02</span>
+                    What is IDD / SDD?
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s3" class="toc-item">
+                    <span class="toc-number">03</span>
+                    The IDD Workflow (Step-by-Step)
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s4" class="toc-item">
+                    <span class="toc-number">04</span>
+                    Instruction Documents (Spec Anatomy)
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s5" class="toc-item">
+                    <span class="toc-number">05</span>
+                    IDD vs Vibe Coding vs Traditional
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s6" class="toc-item">
+                    <span class="toc-number">06</span>
+                    Real-World IDD Patterns
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s7" class="toc-item">
+                    <span class="toc-number">07</span>
+                    Tools, Templates &amp; Ecosystem
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s8" class="toc-item">
+                    <span class="toc-number">08</span>
+                    Key Takeaways &amp; Self-Assessment
+                    <span class="toc-dots"></span>
+                </a>
+            </div>
+        </nav>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 1: THE PROBLEM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s1">
+            <span class="section-divider-number">01</span>
+            <h2>The Problem with Ad-Hoc Prompting</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                Most developers using AI coding assistants today work in an <strong>ad-hoc, reactive mode</strong>:
+                they open a chat, type a prompt like "build me a login page," accept the output, and move to the next
+                thing. This works for simple tasks but breaks down for anything complex, team-based, or
+                production-grade.
+            </p>
+            <p>
+                The result? <strong>Inconsistent outputs</strong>, lost context between sessions, no reproducibility,
+                and code that works in isolation but fails when integrated. IDD solves this by treating AI interaction
+                as a <em>structured engineering process</em>, not a casual conversation.
+            </p>
+        </div>
+
+        <div class="three-columns">
+            <div class="concept-card accent-coral">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-random"></i></span>
+                    Inconsistency
+                </h3>
+                <p>The same prompt produces different results across sessions, models, or team members. No
+                    deterministic outputs.</p>
+            </div>
+
+            <div class="concept-card accent-amber">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-brain"></i></span>
+                    Context Loss
+                </h3>
+                <p>AI forgets previous decisions. Each session starts from zero. Architectural coherence degrades
+                    over time.</p>
+            </div>
+
+            <div class="concept-card accent-rose">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-users-slash"></i></span>
+                    No Collaboration
+                </h3>
+                <p>Prompts live in one developer's head. No shared understanding, no review process, no handoff
+                    protocol.</p>
+            </div>
+        </div>
+
+        <div class="callout danger">
+            <div class="callout-icon"><i class="fas fa-bug"></i></div>
+            <div class="callout-content">
+                <h4>The Ad-Hoc Spiral</h4>
+                <p>Without structure, each AI interaction accumulates subtle inconsistencies. By the time you notice,
+                    your codebase is a patchwork of individually-correct but collectively-incoherent components.
+                    This is the <strong>"death by a thousand prompts"</strong> anti-pattern.</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 2: WHAT IS IDD / SDD?
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s2">
+            <span class="section-divider-number">02</span>
+            <h2>What is IDD / SDD?</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                <strong>Instruction-Driven Development (IDD)</strong> — also called <strong>Specification-Driven
+                Development (SDD)</strong> — is a methodology where you write detailed, structured instructions
+                <em>before</em> engaging the AI. These instructions serve as the contract between human intent and
+                AI execution.
+            </p>
+            <p>
+                Think of it as <strong>TDD (Test-Driven Development) but for prompts</strong>: instead of writing
+                tests first then code, you write specifications first then let AI generate the implementation. The
+                spec is the single source of truth — versioned, reviewed, and shared across the team.
+            </p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card purple">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Spec = Source of Truth</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-value">3×</div>
+                <div class="stat-label">More Reproducible</div>
+            </div>
+            <div class="stat-card mint">
+                <div class="stat-value">↓60%</div>
+                <div class="stat-label">Rework Reduction</div>
+            </div>
+            <div class="stat-card blue">
+                <div class="stat-value">∀</div>
+                <div class="stat-label">Team-Scalable</div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-scroll"></i></span>
+                Core Philosophy of IDD
+            </h3>
+            <ul>
+                <li><strong>Spec First, Code Second:</strong> Write the instruction document before touching the AI — clarify what you want before asking for it</li>
+                <li><strong>Instructions as Artifacts:</strong> Specs are version-controlled, peer-reviewed, and reusable — they're as important as the code itself</li>
+                <li><strong>Deterministic Intent:</strong> The same instruction should produce functionally equivalent results regardless of when, where, or by whom it's executed</li>
+                <li><strong>Separation of Concerns:</strong> Human handles <em>what</em> and <em>why</em>; AI handles <em>how</em></li>
+                <li><strong>Iterative Refinement:</strong> Specs evolve through feedback loops — each iteration makes instructions more precise and AI output more reliable</li>
+            </ul>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>IDD vs SDD — Same Thing, Different Names</h4>
+                <p>The community uses both terms interchangeably. <strong>IDD (Instruction-Driven Development)</strong>
+                    emphasizes the instructional nature of prompts. <strong>SDD (Specification-Driven Development)</strong>
+                    emphasizes the formal specification. In practice, they describe the identical workflow.</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 3: THE IDD WORKFLOW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s3">
+            <span class="section-divider-number">03</span>
+            <h2>The IDD Workflow (Step-by-Step)</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                IDD follows a disciplined, phased workflow. Each phase has clear inputs, outputs, and quality gates.
+                The methodology can be applied to a single feature or an entire project.
+            </p>
+        </div>
+
+        <!-- Process Flow -->
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">PHASE 1</div>
+                <h4>Define</h4>
+                <p>Write the instruction document with requirements, constraints, and success criteria</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">PHASE 2</div>
+                <h4>Review</h4>
+                <p>Peer review the spec for clarity, completeness, and feasibility</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">PHASE 3</div>
+                <h4>Execute</h4>
+                <p>Feed the instruction to the AI and generate the implementation</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">PHASE 4</div>
+                <h4>Validate</h4>
+                <p>Compare output against spec. Run tests, review code, check constraints</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">PHASE 5</div>
+                <h4>Refine</h4>
+                <p>Update spec based on learnings, iterate until output meets all criteria</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">PHASE 6</div>
+                <h4>Archive</h4>
+                <p>Version the spec alongside code. Document patterns for reuse</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-tasks"></i></span>
+                Detailed Phase Breakdown
+            </h3>
+            <ol class="numbered-steps">
+                <li>
+                    <strong>Define the Instruction:</strong> Write a structured document containing: project context,
+                    functional requirements, non-functional requirements (performance, security), technical constraints
+                    (language, framework, patterns), file structure expectations, test requirements, and acceptance
+                    criteria.
+                </li>
+                <li>
+                    <strong>Review &amp; Validate the Spec:</strong> Have a teammate or second AI review the instruction for
+                    ambiguity, missing edge cases, contradictions, and completeness. Fix before executing.
+                </li>
+                <li>
+                    <strong>Execute with AI:</strong> Feed the instruction to your AI assistant. Use the spec as the
+                    primary context. Include relevant existing code as additional context. Ask the AI to explain its
+                    approach before generating.
+                </li>
+                <li>
+                    <strong>Validate Output Against Spec:</strong> Check every acceptance criterion. Run generated tests.
+                    Verify file structure matches spec. Check for security issues. If output diverges, determine if
+                    the spec or the output needs adjustment.
+                </li>
+                <li>
+                    <strong>Refine the Instruction:</strong> Based on what the AI got right and wrong, update the spec
+                    to be more precise. Remove ambiguity. Add constraints for areas where the AI made poor choices.
+                    This creates a feedback loop that improves future results.
+                </li>
+                <li>
+                    <strong>Archive &amp; Reuse:</strong> Commit the instruction alongside the code. Tag it with version.
+                    Create a template library of proven instructions for common patterns.
+                </li>
+            </ol>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-star"></i></div>
+            <div class="callout-content">
+                <h4>The Golden Rule of IDD</h4>
+                <p>If your instruction is ambiguous, the AI's output will be unpredictable. The quality of your
+                    specification directly determines the quality of the generated code. <strong>Invest time in the spec,
+                    save time in debugging.</strong></p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 4: INSTRUCTION DOCUMENT ANATOMY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s4">
+            <span class="section-divider-number">04</span>
+            <h2>Instruction Documents (Spec Anatomy)</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                The instruction document is the heart of IDD. It's not just a prompt — it's a <strong>structured
+                specification</strong> that gives the AI everything it needs to produce consistent, high-quality output.
+                Here's the anatomy of a well-crafted IDD instruction.
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Markdown — IDD Instruction Template</span>
+            </div>
+            <pre><span class="comment"># Instruction: [Feature Name]</span>
+<span class="comment">## Version: 1.0 | Date: 2025-07-15 | Author: [Name]</span>
+
+<span class="keyword">## 1. Context</span>
+<span class="variable">Project:</span> <span class="string">[Project name and brief description]</span>
+<span class="variable">Current State:</span> <span class="string">[What exists, what's the starting point]</span>
+<span class="variable">Goal:</span> <span class="string">[What this instruction should produce]</span>
+
+<span class="keyword">## 2. Functional Requirements</span>
+- <span class="function">FR-01:</span> <span class="string">[User can register with email and password]</span>
+- <span class="function">FR-02:</span> <span class="string">[System sends verification email on registration]</span>
+- <span class="function">FR-03:</span> <span class="string">[User can login and receive a JWT token]</span>
+
+<span class="keyword">## 3. Non-Functional Requirements</span>
+- <span class="function">NFR-01:</span> <span class="string">Response time &lt; 200ms for auth endpoints</span>
+- <span class="function">NFR-02:</span> <span class="string">Passwords hashed with bcrypt (cost factor 12)</span>
+- <span class="function">NFR-03:</span> <span class="string">Rate limiting: 5 login attempts per minute per IP</span>
+
+<span class="keyword">## 4. Technical Constraints</span>
+- Language: <span class="string">Python 3.12</span>
+- Framework: <span class="string">FastAPI</span>
+- Database: <span class="string">PostgreSQL via SQLAlchemy</span>
+- Auth: <span class="string">JWT with PyJWT</span>
+- Testing: <span class="string">pytest with &gt;80% coverage</span>
+
+<span class="keyword">## 5. File Structure</span>
+<span class="comment">src/</span>
+<span class="comment">  auth/</span>
+<span class="comment">    router.py     # API endpoints</span>
+<span class="comment">    service.py    # Business logic</span>
+<span class="comment">    models.py     # SQLAlchemy models</span>
+<span class="comment">    schemas.py    # Pydantic schemas</span>
+<span class="comment">  tests/</span>
+<span class="comment">    test_auth.py  # Unit + integration tests</span>
+
+<span class="keyword">## 6. Acceptance Criteria</span>
+- [ ] All FR items implemented and tested
+- [ ] All NFR constraints verified
+- [ ] No security vulnerabilities (no hardcoded secrets)
+- [ ] Code passes <span class="function">ruff</span> linting with zero warnings
+- [ ] README updated with setup instructions</pre>
+        </div>
+
+        <div class="definition-grid">
+            <dl class="definition-item">
+                <dt>Context Block</dt>
+                <dd>Gives the AI project awareness — what exists, what's the goal, and what constraints are inherited
+                    from previous decisions. This prevents the AI from making incompatible choices.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Functional Requirements</dt>
+                <dd>Numbered, testable statements of what the system must do. Each FR should be independently verifiable.
+                    Use "system shall" or "user can" language.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Non-Functional Requirements</dt>
+                <dd>Performance, security, scalability, and quality constraints. These are the guardrails that prevent
+                    the AI from taking shortcuts.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Technical Constraints</dt>
+                <dd>Locked-in technology choices: language version, framework, database, testing framework. Eliminates
+                    the AI's tendency to suggest whatever it "prefers."</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>File Structure</dt>
+                <dd>Explicit directory and file layout. Prevents the AI from creating its own (often inconsistent)
+                    project structure. Ensures the output fits into the existing codebase.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Acceptance Criteria</dt>
+                <dd>Checklist of verifiable conditions for "done." These are your quality gates — if any are unmet,
+                    the output needs refinement.</dd>
+            </dl>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 5: IDD VS OTHERS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s5">
+            <span class="section-divider-number">05</span>
+            <h2>IDD vs Vibe Coding vs Traditional</h2>
+        </div>
+
+        <!-- Versus Block -->
+        <div class="versus-block">
+            <div class="versus-side left">
+                <h4><i class="fas fa-comment-dots"></i> Vibe Coding</h4>
+                <ul>
+                    <li>Conversational, ad-hoc</li>
+                    <li>Intent lives in the developer's head</li>
+                    <li>Low overhead to start</li>
+                    <li>Hard to reproduce results</li>
+                    <li>No formal documentation</li>
+                    <li>Best for solo, fast iterations</li>
+                </ul>
+            </div>
+            <div class="versus-divider">vs</div>
+            <div class="versus-side right">
+                <h4><i class="fas fa-scroll"></i> IDD / SDD</h4>
+                <ul>
+                    <li>Structured, specification-first</li>
+                    <li>Intent lives in the document</li>
+                    <li>Higher upfront investment</li>
+                    <li>Reproducible and version-controlled</li>
+                    <li>Formal, reviewable specs</li>
+                    <li>Best for teams, production code</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Three-way comparison table -->
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Traditional Dev</th>
+                        <th>Vibe Coding</th>
+                        <th>IDD / SDD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Planning</td>
+                        <td>Requirements doc / tickets</td>
+                        <td>Mental model + ad-hoc prompts</td>
+                        <td>Structured instruction document</td>
+                    </tr>
+                    <tr>
+                        <td>Implementation</td>
+                        <td>Human writes all code</td>
+                        <td>AI generates, human reviews</td>
+                        <td>AI generates from spec, human validates</td>
+                    </tr>
+                    <tr>
+                        <td>Reproducibility</td>
+                        <td>High (deterministic)</td>
+                        <td>Low (prompt-dependent)</td>
+                        <td>High (spec is the contract)</td>
+                    </tr>
+                    <tr>
+                        <td>Team Scalability</td>
+                        <td>High (established processes)</td>
+                        <td>Low (tribal knowledge)</td>
+                        <td>High (shared specs)</td>
+                    </tr>
+                    <tr>
+                        <td>Speed</td>
+                        <td>Slow (manual coding)</td>
+                        <td>Very fast (but fragile)</td>
+                        <td>Fast (after initial spec investment)</td>
+                    </tr>
+                    <tr>
+                        <td>Quality Control</td>
+                        <td>Code review + CI</td>
+                        <td>Varies (often minimal)</td>
+                        <td>Spec review + output validation + CI</td>
+                    </tr>
+                    <tr>
+                        <td>Best For</td>
+                        <td>Critical systems, large teams</td>
+                        <td>Prototypes, solo exploration</td>
+                        <td>Production AI-assisted development</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="callout-content">
+                <h4>IDD is Vibe Coding's Adult Form</h4>
+                <p>IDD doesn't replace vibe coding — it <strong>matures</strong> it. Many teams start with vibe coding
+                    to explore ideas, then formalize their prompts into IDD specs once they decide to build for
+                    production. Think of it as: <span class="tag amber">Vibe Coding = Prototyping</span> →
+                    <span class="tag purple">IDD = Engineering</span>.</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 6: REAL-WORLD PATTERNS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s6">
+            <span class="section-divider-number">06</span>
+            <h2>Real-World IDD Patterns</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-layer-group"></i></span>
+                    Pattern: Layered Specs
+                </h3>
+                <p>Break complex projects into layers of instructions that reference each other:</p>
+                <ul>
+                    <li><strong>L0 — Project Spec:</strong> Overall architecture, tech stack, conventions</li>
+                    <li><strong>L1 — Module Specs:</strong> One per module (auth, billing, notifications)</li>
+                    <li><strong>L2 — Feature Specs:</strong> Individual features within a module</li>
+                    <li><strong>L3 — Task Specs:</strong> Atomic coding tasks (add endpoint, fix bug)</li>
+                    <li>Each level inherits constraints from the level above</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-blue">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-sync-alt"></i></span>
+                    Pattern: Spec-Test-Code Loop
+                </h3>
+                <p>Combine IDD with TDD for maximum confidence:</p>
+                <ul>
+                    <li><strong>Step 1:</strong> Write the instruction spec with acceptance criteria</li>
+                    <li><strong>Step 2:</strong> Generate tests first from the spec (AI writes tests)</li>
+                    <li><strong>Step 3:</strong> Generate implementation that passes those tests</li>
+                    <li><strong>Step 4:</strong> If tests fail, refine spec or implementation</li>
+                    <li>Tests become the executable validation of your spec</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-code-branch"></i></span>
+                    Pattern: Spec as PR Template
+                </h3>
+                <p>Use the instruction document as the pull request description:</p>
+                <ul>
+                    <li>Every PR starts with the IDD spec that generated the code</li>
+                    <li>Reviewers check code against spec, not just code quality</li>
+                    <li>Spec becomes part of the git history — full traceability</li>
+                    <li>Future developers understand <em>why</em> code was written this way</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-rose">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-book-open"></i></span>
+                    Pattern: Instruction Library
+                </h3>
+                <p>Build a reusable library of proven instruction templates:</p>
+                <ul>
+                    <li><span class="tag purple">auth-api.md</span> — Standard authentication endpoints</li>
+                    <li><span class="tag purple">crud-service.md</span> — Generic CRUD service template</li>
+                    <li><span class="tag purple">react-form.md</span> — Form component with validation</li>
+                    <li><span class="tag purple">data-pipeline.md</span> — ETL pipeline specification</li>
+                    <li>New team members can generate production-grade code from day one</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Architecture Diagram -->
+        <div class="diagram-block">
+            <div class="diagram-title">
+                <i class="fas fa-sitemap"></i>
+                IDD in the Development Lifecycle
+            </div>
+            <div class="architecture-flow">
+                <div class="arch-node input">
+                    <i class="fas fa-clipboard-list"></i><br>
+                    Requirements<br>
+                    <small>User stories</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node process">
+                    <i class="fas fa-scroll"></i><br>
+                    IDD Spec<br>
+                    <small>Instruction doc</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node storage">
+                    <i class="fas fa-users"></i><br>
+                    Spec Review<br>
+                    <small>Peer feedback</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node process">
+                    <i class="fas fa-robot"></i><br>
+                    AI Generation<br>
+                    <small>Code + Tests</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node danger">
+                    <i class="fas fa-microscope"></i><br>
+                    Validation<br>
+                    <small>vs Spec</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node output">
+                    <i class="fas fa-code-branch"></i><br>
+                    Merge<br>
+                    <small>PR + CI/CD</small>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 7: TOOLS & ECOSYSTEM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s7">
+            <span class="section-divider-number">07</span>
+            <h2>Tools, Templates &amp; Ecosystem</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-tools"></i></span>
+                Tools That Support IDD Workflows
+            </h3>
+            <ul>
+                <li><strong>Cursor Rules (.cursorrules):</strong> Project-level instruction files that persist context across sessions — the closest thing to native IDD support</li>
+                <li><strong>Claude Projects (System Prompts):</strong> Persistent project instructions that guide every interaction within a project workspace</li>
+                <li><strong>GitHub Copilot Instructions:</strong> Repository-level <code>.github/copilot-instructions.md</code> files that constrain Copilot's behavior</li>
+                <li><strong>Aider Conventions:</strong> <code>.aider.conf.yml</code> and convention files that encode project standards</li>
+                <li><strong>Windsurf Memories:</strong> Persistent project context that carries architecture decisions across sessions</li>
+                <li><strong>CLAUDE.md files:</strong> Project documentation files that Claude Code reads automatically for context</li>
+            </ul>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-file-alt"></i></span>
+                    Spec Storage Best Practices
+                </h3>
+                <ul>
+                    <li>Store specs in <code>/specs</code> or <code>/docs/idd</code> directory</li>
+                    <li>Use Markdown for portability and git-friendliness</li>
+                    <li>Name convention: <code>IDD-{module}-{feature}-v{version}.md</code></li>
+                    <li>Version alongside code — same branch, same PR</li>
+                    <li>Add a <code>SPEC_INDEX.md</code> listing all active specs</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-amber">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-check-double"></i></span>
+                    Spec Quality Checklist
+                </h3>
+                <ul>
+                    <li>Every requirement is <strong>testable</strong> (can verify pass/fail)</li>
+                    <li>No ambiguous language ("appropriate," "nice," "fast")</li>
+                    <li>Technical constraints are <strong>specific</strong> (versions, libraries)</li>
+                    <li>File structure is <strong>explicit</strong> (no room for AI improvisation)</li>
+                    <li>Edge cases and error handling are <strong>enumerated</strong></li>
+                    <li>A new team member could execute the spec without additional context</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Avoid Over-Specification</h4>
+                <p>There's a balance between thorough and excessive. If your spec is 10 pages for a 50-line function,
+                    you've gone too far. The spec should be <strong>proportional to complexity</strong>. For simple tasks,
+                    a few bullet points suffice. Reserve detailed specs for complex, team-critical, or security-sensitive
+                    features.</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 8: KEY TAKEAWAYS & QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s8">
+            <span class="section-divider-number">08</span>
+            <h2>Key Takeaways &amp; Self-Assessment</h2>
+        </div>
+
+        <div class="summary-block">
+            <h3><i class="fas fa-trophy"></i> Key Takeaways</h3>
+            <ul class="summary-list">
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>IDD/SDD</strong> is a structured methodology where you write detailed instruction
+                        documents <em>before</em> engaging the AI — the spec is the contract between human intent
+                        and AI execution.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>The workflow follows 6 phases: <span class="tag purple">Define</span> →
+                        <span class="tag purple">Review</span> → <span class="tag purple">Execute</span> →
+                        <span class="tag purple">Validate</span> → <span class="tag purple">Refine</span> →
+                        <span class="tag purple">Archive</span>.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>A good instruction document contains: <strong>Context, Functional Requirements, Non-Functional
+                        Requirements, Technical Constraints, File Structure, and Acceptance Criteria</strong>.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>IDD is the <strong>mature evolution of vibe coding</strong>: same AI-assisted approach, but
+                        with the discipline and reproducibility needed for production software.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Key patterns: <span class="tag mint">Layered Specs</span>,
+                        <span class="tag blue">Spec-Test-Code Loop</span>,
+                        <span class="tag amber">Spec as PR Template</span>, and
+                        <span class="tag purple">Instruction Library</span>.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>The <strong>golden rule</strong>: the quality of your specification directly determines
+                        the quality of the generated code. Invest in the spec, save in debugging.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Tools like <strong>Cursor Rules, Claude Projects, and CLAUDE.md files</strong> provide
+                        native support for persistent, project-level instructions — the infrastructure for IDD.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Quiz -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> What are the three main problems with ad-hoc AI prompting that
+                        IDD solves?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">1) <strong>Inconsistency</strong> — same prompt, different results.
+                            2) <strong>Context loss</strong> — AI forgets previous decisions.
+                            3) <strong>No collaboration</strong> — prompts live in one developer's head, can't be
+                            shared or reviewed.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> Name the 6 sections that make up a well-structured IDD
+                        instruction document.</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">1) Context, 2) Functional Requirements, 3) Non-Functional Requirements,
+                            4) Technical Constraints, 5) File Structure, 6) Acceptance Criteria.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Explain the "Spec-Test-Code Loop" pattern and why it's effective.</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Write the instruction spec → generate tests from the spec first →
+                            generate implementation that passes those tests → iterate if tests fail. It's effective
+                            because tests serve as the executable validation of the spec, ensuring the AI's output
+                            meets the documented requirements.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> How does IDD relate to Vibe Coding? Are they opposites?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">They're not opposites — IDD is the <strong>mature evolution</strong>
+                            of vibe coding. Both use AI-assisted development, but IDD adds structure, reproducibility,
+                            and team scalability. Many teams start with vibe coding to explore, then formalize with
+                            IDD for production.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> What is the "golden rule" of IDD, and what does it mean
+                        practically?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The golden rule: "The quality of your specification directly determines
+                            the quality of the generated code." Practically, this means ambiguous specs produce
+                            unpredictable code. Investing time in writing clear, complete, testable instructions saves
+                            significantly more time than debugging poorly-specified AI output.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> Name three tools that provide native support for IDD-style
+                        persistent instructions.</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">1) <strong>Cursor</strong> — .cursorrules files for project-level
+                            instructions. 2) <strong>Claude Projects</strong> — persistent system prompts per workspace.
+                            3) <strong>GitHub Copilot</strong> — .github/copilot-instructions.md for repository-level
+                            constraints. Also: Aider conventions, Windsurf Memories, CLAUDE.md files.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar-label">
+                <span>Study Progress — IDD / SDD Methodology</span>
+                <span>100%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p style="font-size: 0.72rem; max-width: 700px; margin: 0 auto 12px; opacity: 0.7;">
+                <strong>DISCLAIMER:</strong> These study notes are for educational purposes only. Methodologies and
+                tooling evolve rapidly in the AI-assisted development space. Always verify with primary sources.
+            </p>
+            <p>
+                Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank">Michaël Bettan</a> ·
+                <a href="https://mbettan.github.io/machine-learning-cert/" target="_blank">ML Certification Hub</a> ·
+                Licensed under <a href="https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE"
+                    target="_blank">Apache 2.0</a>
+            </p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"
+        aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+</html>

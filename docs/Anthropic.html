@@ -44,14 +44,26 @@
                 <p class="cover-subtitle">
                     Comprehensive overview of Anthropic's core philosophy, Constitutional AI, and model family.
                 </p>
-                <div class="cover-meta">
+                                                <div class="cover-meta">
                     <div class="cover-meta-item">
-                        <i class="fas fa-user"></i>
-                        <span>Author: <strong>Michaël Bettan</strong></span>
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Updated: <strong>April 2026</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-layer-group"></i>
-                        <span>Level: <strong>Advanced</strong></span>
+                        <span>Version: <strong>1.0</strong></span>
+                        </div>
+                        <div class="cover-meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span>Category: <strong>Anthropic</strong></span>
+                        </div>
+                        <div class="cover-meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Reading Time: <strong>~8 min</strong></span>
+                        </div>
+                        <div class="cover-meta-item">
+                            <i class="fas fa-user-edit"></i>
+                            <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
             </div>
@@ -219,7 +231,8 @@
                 <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Claude Deployment Matrix</h3>
                 <ul>
                     <li><strong>Claude Haiku 4.5:</strong> Optimized for inference speed. Target use cases: triage and real-time support. Cost: $1/MTok.</li>
-                    <li><strong>Claude Sonnet 4.6:</strong> Mid-tier model. Target use cases: autonomous software engineering and multi-agent workflow orchestration. Cost: $3/MTok. (1M tokens GA)</li>
+                    <li><strong>Claude Sonnet 4.6:</strong> Mid-tier model. Target use cases: autonomous software engineering and
+                        multi-agent workflow orchestration. Cost: $3/MTok. (1M tokens Beta)</li>
                     <li><strong>Claude Opus 4.6:</strong> Maximum capacity reasoning model. Target use cases: theoretical mathematics, strategic planning, and complex multi-agent oversight. Cost: $5/MTok.</li>
                 </ul>
             </div>
@@ -227,7 +240,8 @@
 
         <div class="concept-card accent-purple">
             <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>System 2 Reasoning: "Adaptive Thinking"</h3>
-            <p>The legacy "Adaptive Thinking" mode (where developers statically allocated a token budget) has been replaced by native "Adaptive Thinking".</p>
+            <p>The legacy "Extended Thinking" mode (where developers statically allocated a token budget) has been replaced by
+                native "Adaptive Thinking".</p>
             <ul>
                 <li><strong>Autonomous Scaling:</strong> The model autonomously evaluates the complexity of an incoming request and dynamically scales its reasoning depth before outputting a response.</li>
                 <li><strong>The /effort Parameter:</strong> Developers can override this via the API by assigning four distinct effort levels (<em>low, medium, high, max</em>). You can force Opus to use max compute for an algorithmic proof, or dial Sonnet down to low for simple classification to save latency.</li>
@@ -372,6 +386,42 @@
         </div>
 
         <!-- ═══════════════════════════════════════
+                     SELF ASSESSMENT QUESTIONS
+                     ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> What is "Constitutional AI" (CAI) and how does it differ from traditional
+                        RLHF?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">CAI uses an explicit, reason-based "Constitution" to align the model,
+                            replacing human raters in the evaluation phase with AI evaluators (RLAIF) to scale alignment with
+                            compute.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> What are the two layers in Anthropic's "Agentic Bifurcation"?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Claude Code (Developer Layer, CLI-based) and Claude Cowork (Knowledge Worker
+                            Layer, GUI-based).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> What is the purpose of "Sparse Autoencoders" (SAEs) in Anthropic's
+                        research?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">To decompile dense neural activations into readable features, opening the
+                            "black box" of AI to understand why a model made a decision.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
              FOOTER
              ═══════════════════════════════════════ -->
         <footer class="page-footer">
@@ -381,7 +431,27 @@
 
     </div>
 
-    <button class="back-to-top" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
+    
+    
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
 
 </body>
 

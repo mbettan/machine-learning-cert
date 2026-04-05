@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Notes — Vibe Coding & Swarm Prototyping</title>
+    <link rel="icon" type="image/png"
+        href="https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/docs/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <div class="cover-eyebrow">
+                    <i class="fas fa-bolt"></i>
+                    Study Notes — AI-Assisted Development
+                </div>
+                <h1>Vibe Coding &amp;<br><em>Swarm Prototyping</em></h1>
+                <p class="cover-subtitle">
+                    The definitive guide to AI-assisted development methodologies — from conversational code generation
+                    (Vibe Coding) to multi-agent parallel prototyping (Swarm Prototyping). Understand when to use each,
+                    their strengths, risks, and how they're reshaping software engineering.
+                </p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Updated: <strong>April 2026</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Version: <strong>1.0</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>Category: <strong>Foundation</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Reading Time: <strong>~15 min</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#section-1" class="toc-item">
+                    <span class="toc-number">01</span>
+                    What is Vibe Coding?
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-2" class="toc-item">
+                    <span class="toc-number">02</span>
+                    The Vibe Coding Spectrum
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-3" class="toc-item">
+                    <span class="toc-number">03</span>
+                    What is Swarm Prototyping?
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-4" class="toc-item">
+                    <span class="toc-number">04</span>
+                    Multi-Agent Architecture
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-5" class="toc-item">
+                    <span class="toc-number">05</span>
+                    Vibe Coding vs Swarm Prototyping
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-6" class="toc-item">
+                    <span class="toc-number">06</span>
+                    Tools &amp; Ecosystem
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-7" class="toc-item">
+                    <span class="toc-number">07</span>
+                    Risks, Limitations &amp; Best Practices
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#section-8" class="toc-item">
+                    <span class="toc-number">08</span>
+                    Key Takeaways &amp; Self-Assessment
+                    <span class="toc-dots"></span>
+                </a>
+            </div>
+        </nav>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 1: WHAT IS VIBE CODING?
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-1">
+            <span class="section-divider-number">01</span>
+            <h2>What is Vibe Coding?</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                <strong>Vibe Coding</strong> is an AI-assisted development approach where the developer describes what
+                they want in natural language, and an AI coding assistant generates the implementation. Coined by
+                <strong>Andrej Karpathy</strong> (co-founder of OpenAI) in early 2025, the term captures a paradigm
+                shift: instead of writing code character by character, you <em>converse</em> with an AI to produce
+                working software.
+            </p>
+            <p>
+                The developer's role shifts from <strong>typing code</strong> to <strong>describing intent</strong>,
+                <strong>reviewing output</strong>, and <strong>iterating through dialogue</strong>. You "vibe" with the
+                AI — expressing what you want, accepting suggestions, nudging direction, and occasionally correcting
+                course.
+            </p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card mint">
+                <div class="stat-value">10×</div>
+                <div class="stat-label">Faster Prototyping</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="stat-value">70%</div>
+                <div class="stat-label">Less Boilerplate</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-value">2025</div>
+                <div class="stat-label">Term Coined</div>
+            </div>
+            <div class="stat-card blue">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Use Cases</div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-comments"></i></span>
+                Core Principles of Vibe Coding
+            </h3>
+            <ul>
+                <li><strong>Natural Language First:</strong> You describe features, bugs, or architecture in plain English — the AI translates to code</li>
+                <li><strong>Conversational Iteration:</strong> Development happens through a dialogue loop: prompt → generate → review → refine</li>
+                <li><strong>Intent Over Syntax:</strong> Focus shifts from "how to write it" to "what should it do" and "why"</li>
+                <li><strong>AI as Pair Programmer:</strong> The AI acts as an always-available coding partner with broad knowledge</li>
+                <li><strong>Human as Architect:</strong> You make design decisions, the AI handles implementation details</li>
+            </ul>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Key Insight</h4>
+                <p>Vibe coding doesn't mean "no coding knowledge needed." The best vibe coders are experienced developers
+                    who leverage AI to amplify their expertise — they know <strong>what to ask for</strong>, how to
+                    <strong>evaluate the output</strong>, and when to <strong>intervene manually</strong>.</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 2: THE VIBE CODING SPECTRUM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-2">
+            <span class="section-divider-number">02</span>
+            <h2>The Vibe Coding Spectrum</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                Vibe coding isn't binary — it exists on a spectrum from fully AI-driven to human-led with AI assistance.
+                Understanding where you sit on this spectrum determines your workflow, risks, and tooling choices.
+            </p>
+        </div>
+
+        <div class="three-columns">
+            <div class="concept-card accent-coral">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-robot"></i></span>
+                    Full Autopilot
+                </h3>
+                <p>AI generates everything. Developer barely reads the code. Maximum speed, maximum risk.</p>
+                <ul>
+                    <li>Throwaway prototypes</li>
+                    <li>Hackathon demos</li>
+                    <li>Personal scripts</li>
+                    <li><strong>Risk:</strong> Very high</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-amber">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-handshake"></i></span>
+                    Collaborative Mode
+                </h3>
+                <p>Developer and AI co-create. Human reviews every block, steers architecture.</p>
+                <ul>
+                    <li>Feature development</li>
+                    <li>Internal tools</li>
+                    <li>MVPs for startups</li>
+                    <li><strong>Risk:</strong> Moderate</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-mint">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-user-check"></i></span>
+                    Human-Led + AI Assist
+                </h3>
+                <p>Developer writes core logic, AI handles boilerplate, tests, and docs.</p>
+                <ul>
+                    <li>Production systems</li>
+                    <li>Security-critical code</li>
+                    <li>Regulated industries</li>
+                    <li><strong>Risk:</strong> Low</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Karpathy's Own Warning</h4>
+                <p>Even Andrej Karpathy cautioned that vibe coding "is not for production systems" in its purest form.
+                    The more you move toward autopilot, the more you accumulate <strong>technical debt</strong> and
+                    <strong>hidden bugs</strong> you don't understand.</p>
+            </div>
+        </div>
+
+        <!-- Process Flow: How a Vibe Coding Session Works -->
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">STEP 1</div>
+                <h4>Describe</h4>
+                <p>Write a natural language prompt describing what you want to build</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">STEP 2</div>
+                <h4>Generate</h4>
+                <p>AI produces code, architecture, or a full working component</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">STEP 3</div>
+                <h4>Review</h4>
+                <p>Developer reads, tests, and evaluates the generated output</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">STEP 4</div>
+                <h4>Refine</h4>
+                <p>Provide follow-up prompts to fix issues, add features, or refactor</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">STEP 5</div>
+                <h4>Ship</h4>
+                <p>Integrate into project, add tests, document, and deploy</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 3: WHAT IS SWARM PROTOTYPING?
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-3">
+            <span class="section-divider-number">03</span>
+            <h2>What is Swarm Prototyping?</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                <strong>Swarm Prototyping</strong> takes vibe coding to the next level by deploying <strong>multiple AI
+                agents simultaneously</strong> to build different variants, components, or approaches in parallel. Instead
+                of one human conversing with one AI, you orchestrate a <em>swarm</em> of agents — each tackling a
+                different aspect of the problem — and then select, merge, or compose the best results.
+            </p>
+            <p>
+                Think of it as <strong>A/B testing during development</strong>: spawn 5 agents to build 5 different
+                implementations of the same feature, evaluate them all, and ship the winner. Or assign each agent a
+                different service in a microservices architecture and build the entire backend simultaneously.
+            </p>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-cubes"></i></span>
+                Key Characteristics of Swarm Prototyping
+            </h3>
+            <ul>
+                <li><strong>Parallel Execution:</strong> Multiple agents work concurrently on different tasks or variants</li>
+                <li><strong>Diverge-then-Converge:</strong> Generate many options, evaluate, select the best</li>
+                <li><strong>Specialization:</strong> Each agent can be optimized for a specific domain (frontend, backend, testing, security)</li>
+                <li><strong>Orchestration Layer:</strong> A coordinating agent or human manages the swarm, assigns tasks, and merges outputs</li>
+                <li><strong>Disposable Outputs:</strong> Most generated code is throwaway — the value is in finding the best approach quickly</li>
+                <li><strong>Scale-by-Agents:</strong> Add more agents to increase throughput, not more human hours</li>
+            </ul>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-expand-arrows-alt"></i></span>
+                    When to Use Swarm Prototyping
+                </h3>
+                <ul>
+                    <li>Exploring multiple architectural approaches</li>
+                    <li>Building proof-of-concepts under time pressure</li>
+                    <li>Hackathons and innovation sprints</li>
+                    <li>Generating UI/UX design variants</li>
+                    <li>Testing different algorithm implementations</li>
+                    <li>Building microservices in parallel</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-coral">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-times-circle"></i></span>
+                    When NOT to Use It
+                </h3>
+                <ul>
+                    <li>Tightly coupled systems requiring sequential design</li>
+                    <li>Regulated/compliance-critical software</li>
+                    <li>When integration costs exceed generation savings</li>
+                    <li>Projects requiring deep domain expertise the AI lacks</li>
+                    <li>When you can't evaluate quality of outputs</li>
+                    <li>Production systems without human code review</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 4: MULTI-AGENT ARCHITECTURE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-4">
+            <span class="section-divider-number">04</span>
+            <h2>Multi-Agent Architecture</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                Swarm prototyping relies on <strong>multi-agent systems (MAS)</strong> — architectures where independent
+                AI agents collaborate, compete, or work in parallel. The design of the agent swarm determines the quality,
+                speed, and reliability of the output.
+            </p>
+        </div>
+
+        <!-- Architecture Diagram -->
+        <div class="diagram-block">
+            <div class="diagram-title">
+                <i class="fas fa-sitemap"></i>
+                Swarm Prototyping Architecture
+            </div>
+            <div class="architecture-flow">
+                <div class="arch-node input">
+                    <i class="fas fa-user"></i><br>
+                    Human<br>
+                    <small>Orchestrator</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node process">
+                    <i class="fas fa-brain"></i><br>
+                    Coordinator<br>
+                    <small>Agent</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node storage">
+                    <i class="fas fa-project-diagram"></i><br>
+                    Task<br>
+                    <small>Decomposition</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node output">
+                    <i class="fas fa-cubes"></i><br>
+                    Agent Swarm<br>
+                    <small>N workers</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node process">
+                    <i class="fas fa-code-merge"></i><br>
+                    Merge &amp;<br>
+                    <small>Evaluate</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="definition-grid">
+            <dl class="definition-item">
+                <dt>Orchestrator Agent</dt>
+                <dd>The central coordinator that decomposes tasks, assigns work to specialized agents, and merges results. Can be human or AI.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Worker Agents</dt>
+                <dd>Specialized agents that execute specific tasks — e.g., one writes frontend, another writes backend, another writes tests.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Critic / Evaluator Agent</dt>
+                <dd>Reviews output from worker agents, scores quality, detects bugs, and recommends the best variant to proceed with.</dd>
+            </dl>
+            <dl class="definition-item">
+                <dt>Merger Agent</dt>
+                <dd>Combines outputs from multiple agents into a cohesive codebase, resolving conflicts and ensuring integration.</dd>
+            </dl>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-layer-group"></i></span>
+                Swarm Patterns
+            </h3>
+            <ul>
+                <li><strong>Fan-Out / Fan-In:</strong> One task → split among N agents → merge results. Classic map-reduce for code.</li>
+                <li><strong>Tournament:</strong> N agents compete on the same task → evaluator picks the winner</li>
+                <li><strong>Pipeline:</strong> Agents work sequentially — Agent 1 designs → Agent 2 implements → Agent 3 tests</li>
+                <li><strong>Specialization Grid:</strong> Each agent owns a domain (UI, API, DB, Auth) and works in parallel</li>
+                <li><strong>Ensemble:</strong> Multiple agents solve the same problem, outputs are merged/averaged for robustness</li>
+            </ul>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 5: VIBE CODING VS SWARM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-5">
+            <span class="section-divider-number">05</span>
+            <h2>Vibe Coding vs Swarm Prototyping</h2>
+        </div>
+
+        <!-- Versus Block -->
+        <div class="versus-block">
+            <div class="versus-side left">
+                <h4><i class="fas fa-comment-dots"></i> Vibe Coding</h4>
+                <ul>
+                    <li>One human + one AI agent</li>
+                    <li>Conversational, iterative</li>
+                    <li>Sequential development</li>
+                    <li>Human maintains full context</li>
+                    <li>Low overhead, fast start</li>
+                    <li>Best for focused tasks</li>
+                    <li>Output: single implementation</li>
+                </ul>
+            </div>
+            <div class="versus-divider">vs</div>
+            <div class="versus-side right">
+                <h4><i class="fas fa-cubes"></i> Swarm Prototyping</h4>
+                <ul>
+                    <li>One human + many AI agents</li>
+                    <li>Parallel, orchestrated</li>
+                    <li>Concurrent development</li>
+                    <li>Context split across agents</li>
+                    <li>Higher overhead, needs setup</li>
+                    <li>Best for exploration &amp; scale</li>
+                    <li>Output: multiple variants</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Vibe Coding</th>
+                        <th>Swarm Prototyping</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Agents</td>
+                        <td>Single AI assistant</td>
+                        <td>Multiple coordinated agents</td>
+                    </tr>
+                    <tr>
+                        <td>Speed</td>
+                        <td>Fast for single tasks</td>
+                        <td>Faster for complex, multi-part projects</td>
+                    </tr>
+                    <tr>
+                        <td>Exploration</td>
+                        <td>One path at a time</td>
+                        <td>Many paths simultaneously</td>
+                    </tr>
+                    <tr>
+                        <td>Complexity</td>
+                        <td>Low setup, easy to start</td>
+                        <td>Requires orchestration infrastructure</td>
+                    </tr>
+                    <tr>
+                        <td>Cost</td>
+                        <td>Low (one LLM session)</td>
+                        <td>Higher (N concurrent agents)</td>
+                    </tr>
+                    <tr>
+                        <td>Integration</td>
+                        <td>Code is naturally coherent</td>
+                        <td>Requires merge/integration step</td>
+                    </tr>
+                    <tr>
+                        <td>Best For</td>
+                        <td>Features, bug fixes, scripts</td>
+                        <td>Prototypes, architecture exploration, hackathons</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-star"></i></div>
+            <div class="callout-content">
+                <h4>They're Complementary, Not Competing</h4>
+                <p>In practice, most teams use both: <strong>Vibe Coding</strong> for day-to-day development and
+                    <strong>Swarm Prototyping</strong> for exploration phases, design sprints, or when faced with
+                    ambiguous requirements where multiple approaches need to be evaluated quickly.</p>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 6: TOOLS & ECOSYSTEM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-6">
+            <span class="section-divider-number">06</span>
+            <h2>Tools &amp; Ecosystem</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-keyboard"></i></span>
+                    Vibe Coding Tools
+                </h3>
+                <ul>
+                    <li><strong>Cursor:</strong> AI-native IDE with inline chat, auto-complete, and multi-file context</li>
+                    <li><strong>GitHub Copilot:</strong> Inline code suggestions integrated into VS Code, JetBrains, Neovim</li>
+                    <li><strong>Claude Code (Anthropic):</strong> Agentic command-line coding assistant with tool use</li>
+                    <li><strong>Windsurf (Codeium):</strong> AI IDE with "Cascade" flows for multi-step coding tasks</li>
+                    <li><strong>Gemini Code Assist:</strong> Google's AI coding assistant with Gemini models</li>
+                    <li><strong>Aider:</strong> Open-source CLI pair programmer for git-tracked projects</li>
+                    <li><strong>Replit Agent:</strong> Full-stack AI agent that builds and deploys apps from prompts</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-purple">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-network-wired"></i></span>
+                    Swarm / Multi-Agent Frameworks
+                </h3>
+                <ul>
+                    <li><strong>OpenAI Swarm:</strong> Lightweight framework for multi-agent orchestration and handoffs</li>
+                    <li><strong>CrewAI:</strong> Framework for orchestrating role-based AI agents with structured workflows</li>
+                    <li><strong>AutoGen (Microsoft):</strong> Multi-agent conversations with customizable agent roles</li>
+                    <li><strong>LangGraph:</strong> Graph-based agent orchestration with state management</li>
+                    <li><strong>MetaGPT:</strong> Multi-agent framework simulating a software company (PM, architect, engineer)</li>
+                    <li><strong>Vertex AI Agent Builder:</strong> Google Cloud's managed platform for building agent systems</li>
+                    <li><strong>Amazon Bedrock Agents:</strong> AWS managed multi-step agent orchestration</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Pseudo-code</span>
+            </div>
+            <pre><span class="comment"># Swarm Prototyping — Tournament Pattern</span>
+<span class="keyword">from</span> swarm <span class="keyword">import</span> Orchestrator, Agent, Evaluator
+
+<span class="variable">task</span> = <span class="string">"Build a REST API for user authentication with JWT"</span>
+
+<span class="comment"># Spawn 3 agents with different approaches</span>
+<span class="variable">agents</span> = [
+    Agent(<span class="variable">name</span>=<span class="string">"flask-agent"</span>,  <span class="variable">style</span>=<span class="string">"Flask + SQLAlchemy"</span>),
+    Agent(<span class="variable">name</span>=<span class="string">"fastapi-agent"</span>, <span class="variable">style</span>=<span class="string">"FastAPI + Pydantic"</span>),
+    Agent(<span class="variable">name</span>=<span class="string">"express-agent"</span>, <span class="variable">style</span>=<span class="string">"Express.js + Passport"</span>),
+]
+
+<span class="comment"># All agents work in parallel</span>
+<span class="variable">results</span> = Orchestrator.<span class="function">fan_out</span>(<span class="variable">task</span>, <span class="variable">agents</span>)
+
+<span class="comment"># Evaluator agent scores each implementation</span>
+<span class="variable">best</span> = Evaluator.<span class="function">rank</span>(<span class="variable">results</span>, <span class="variable">criteria</span>=[
+    <span class="string">"security"</span>, <span class="string">"code_quality"</span>, <span class="string">"test_coverage"</span>
+])
+
+<span class="function">print</span>(<span class="string">f"Winner: </span>{<span class="variable">best</span>.name}<span class="string"> — Score: </span>{<span class="variable">best</span>.score}<span class="string">"</span>)</pre>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 7: RISKS & BEST PRACTICES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-7">
+            <span class="section-divider-number">07</span>
+            <h2>Risks, Limitations &amp; Best Practices</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-exclamation-circle"></i></span>
+                    Risks &amp; Anti-Patterns
+                </h3>
+                <ul>
+                    <li><strong>Cargo Cult Coding:</strong> Accepting AI output without understanding it — code works but you can't debug or extend it</li>
+                    <li><strong>Hidden Technical Debt:</strong> AI generates "good enough" code that accumulates complexity silently</li>
+                    <li><strong>Security Blind Spots:</strong> AI may introduce vulnerabilities (SQL injection, XSS, hardcoded secrets)</li>
+                    <li><strong>Hallucinated APIs:</strong> AI invents function calls or library methods that don't exist</li>
+                    <li><strong>Context Window Overflow:</strong> Large projects exceed AI context limits, causing incoherent outputs</li>
+                    <li><strong>Skill Atrophy:</strong> Over-reliance on AI may erode fundamental programming skills over time</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-lime">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-shield-alt"></i></span>
+                    Best Practices
+                </h3>
+                <ul>
+                    <li><strong>Always Review:</strong> Read every line of generated code before committing — treat AI output as a draft</li>
+                    <li><strong>Test First:</strong> Write or generate tests before/alongside code — AI excels at test generation</li>
+                    <li><strong>Constrain Context:</strong> Provide clear, scoped prompts with architecture constraints</li>
+                    <li><strong>Version Everything:</strong> Git commit frequently — easy to rollback AI-generated changes</li>
+                    <li><strong>Security Scanning:</strong> Run SAST/DAST tools on all AI-generated code</li>
+                    <li><strong>Document Intent:</strong> Capture <em>why</em> you asked the AI for something, not just what it produced</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout danger">
+            <div class="callout-icon"><i class="fas fa-skull-crossbones"></i></div>
+            <div class="callout-content">
+                <h4>The "It Works" Trap</h4>
+                <p>The most dangerous outcome of vibe coding is code that <strong>appears to work perfectly</strong> but
+                    contains subtle logical errors, edge case failures, or security vulnerabilities that only manifest
+                    in production. Always ask: "Does it work, or does it <em>seem</em> to work?"</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3>
+                <span class="icon-badge"><i class="fas fa-clipboard-list"></i></span>
+                Production Readiness Checklist
+            </h3>
+            <ul class="checklist">
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Every line of AI-generated code has been read and understood by a human
+                </li>
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Unit tests cover critical paths — ideally also AI-generated and human-reviewed
+                </li>
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Security scan (SAST) run on all generated code — no hardcoded secrets or injection vectors
+                </li>
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Dependencies verified — all imported libraries/APIs actually exist and are correct versions
+                </li>
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Architecture documented — even if AI built it, a human must be able to maintain it
+                </li>
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Performance tested under expected load — AI often optimizes for correctness, not performance
+                </li>
+                <li>
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    Licensing verified — AI may generate code snippets from copyleft-licensed sources
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 8: KEY TAKEAWAYS & QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="section-8">
+            <span class="section-divider-number">08</span>
+            <h2>Key Takeaways &amp; Self-Assessment</h2>
+        </div>
+
+        <div class="summary-block">
+            <h3><i class="fas fa-trophy"></i> Key Takeaways</h3>
+            <ul class="summary-list">
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Vibe Coding</strong> is conversational AI-assisted development — one human, one AI, iterating
+                        through natural language to produce code. Coined by Andrej Karpathy in 2025.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Swarm Prototyping</strong> deploys multiple AI agents in parallel to explore different
+                        solutions, build components concurrently, or compete to find the best implementation.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Vibe coding exists on a <strong>spectrum</strong>: from full autopilot (high risk) to human-led
+                        with AI assist (production-ready). Choose your position based on context.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Key swarm patterns: <span class="tag mint">Fan-Out/Fan-In</span>,
+                        <span class="tag purple">Tournament</span>, <span class="tag amber">Pipeline</span>, and
+                        <span class="tag blue">Specialization Grid</span>.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>The biggest risk is the <strong>"It Works" trap</strong> — AI code that appears functional but
+                        contains hidden bugs, security issues, or maintainability problems.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Both approaches are <strong>complementary</strong>: use vibe coding for daily tasks, swarm
+                        prototyping for exploration and time-pressured innovation.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Always review, test, and secure</strong> AI-generated code. The human role shifts
+                        from writer to architect, reviewer, and quality gate.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Quiz -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> Who coined the term "Vibe Coding" and in what year?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Andrej Karpathy, co-founder of OpenAI, coined the term in early 2025
+                            to describe the practice of conversational AI-assisted code generation.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> What is the key difference between Vibe Coding and Swarm
+                        Prototyping?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Vibe Coding involves one human working with one AI agent conversationally.
+                            Swarm Prototyping orchestrates multiple AI agents working in parallel to explore different
+                            solutions or build different components simultaneously.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Name three swarm patterns and describe when you'd use each.</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">1) <strong>Fan-Out/Fan-In:</strong> Split a large task among agents, merge results — for decomposable projects.
+                            2) <strong>Tournament:</strong> Agents compete on the same task, evaluator picks the best — for algorithm selection.
+                            3) <strong>Specialization Grid:</strong> Each agent owns a domain (UI, API, DB) — for microservice architectures.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> What is the "It Works" trap, and how do you mitigate it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The "It Works" trap is when AI-generated code appears functional but
+                            contains hidden bugs, security vulnerabilities, or edge case failures. Mitigate by always
+                            reading every line, writing comprehensive tests, running security scans, and verifying all
+                            dependencies actually exist.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> On the Vibe Coding spectrum, what are the three modes and their
+                        appropriate use cases?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">1) <strong>Full Autopilot:</strong> Throwaway prototypes, hackathons, personal scripts (high risk).
+                            2) <strong>Collaborative Mode:</strong> Feature development, MVPs, internal tools (moderate risk).
+                            3) <strong>Human-Led + AI Assist:</strong> Production systems, security-critical code, regulated industries (low risk).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar-label">
+                <span>Study Progress — Vibe Coding &amp; Swarm Prototyping</span>
+                <span>100%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p style="font-size: 0.72rem; max-width: 700px; margin: 0 auto 12px; opacity: 0.7;">
+                <strong>DISCLAIMER:</strong> These study notes are for educational purposes only. AI-generated content
+                and tooling references may evolve rapidly. Always verify with primary sources.
+            </p>
+            <p>
+                Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank">Michaël Bettan</a> ·
+                <a href="https://mbettan.github.io/machine-learning-cert/" target="_blank">ML Certification Hub</a> ·
+                Licensed under <a href="https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE"
+                    target="_blank">Apache 2.0</a>
+            </p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"
+        aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+</html>
