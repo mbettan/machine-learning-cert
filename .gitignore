@@ -1,2 +1,44 @@
 .DS_Store
 **/.DS_Store
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Node modules
+node_modules/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# LaTeX artifacts
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Temporary/Generated files
+template.html
+updated_test.html
+*.pptx
+patch*.py
+interactive_rewrite.py
+verify_content.py
+
+# Agent artifacts
+.agents/
+
+# Package management (if not intended for repo)
+package.json
+package-lock.json
