@@ -382,7 +382,7 @@
                 <li><strong>Agent Cards:</strong> The digital identity of an agent (JSON format). It defines identity, skills (e.g., <code>get_current_weather</code>), and capabilities (streaming, pushNotifications, stateTransitionHistory). Includes Content Negotiation (defaultInputModes/defaultOutputModes for MIME types).</li>
                 <li><strong>Agent Discovery:</strong> Clients find Agent Cards dynamically to understand available capabilities. Methods include:
                     <ul>
-                        <li><strong>Well-Known URI:</strong> Standardized path (<code>/.well-known/agent.json</code>) enabling broad, automated discovery. Similar to how browsers discover SSL certificates.</li>
+                        <li><strong>Well-Known URI:</strong> Standardized path (<code>/.well-known/agent-card.json</code>, per RFC 8615) enabling broad, automated discovery. Similar to how browsers discover SSL certificates. <em>Trap: older tutorials show <code>agent.json</code> and <code>tasks/send</code>; the current spec uses <code>agent-card.json</code>, <code>message/send</code> and <code>message/stream</code>.</em></li>
                         <li><strong>Curated Registries:</strong> Centralized enterprise catalogs listing approved agents with access control. Enables governance.</li>
                         <li><strong>Direct Configuration:</strong> Hardcoded or privately shared Agent Card URLs for closely coupled, trusted internal systems.</li>
                         <li><strong>Authenticated Extended Card Pattern:</strong> Public card may signal <code>supportsAuthenticatedExtendedCard: true</code>. Clients authenticate via OAuth to retrieve sensitive skills via <code>GET /a2a/agent/authenticatedExtendedCard</code>.</li>
@@ -489,7 +489,7 @@
             <ul>
                 <li><strong>Client Agent:</strong> The orchestrating agent responsible for goal decomposition and Task delegation to remote specialists.</li>
                 <li><strong>Remote Agent (Specialist):</strong> Domain-specific agent that receives and executes Tasks autonomously within its area of expertise.</li>
-                <li><strong>Agent Card:</strong> JSON capability advertisement published by each agent — the A2A equivalent of MCP's <code>tools/list</code>; hosted at <code>/.well-known/agent.json</code>.</li>
+                <li><strong>Agent Card:</strong> JSON capability advertisement published by each agent — the A2A equivalent of MCP's <code>tools/list</code>; hosted at <code>/.well-known/agent-card.json</code>.</li>
                 <li><strong>Task:</strong> The fundamental unit of A2A work — stateful, asynchronous, and designed for long-running workflows.</li>
                 <li><strong>contextId:</strong> A persistent correlation identifier that preserves conversational threading and lineage across multiple asynchronous exchanges within a Task.</li>
                 <li><strong>Artifact:</strong> The structured output produced by a completed Task — passed to the next agent or returned to the user.</li>
@@ -522,10 +522,12 @@
                 <li><strong>Push Notifications (Webhooks):</strong> Client registers a callback URL; server fires async notifications on state changes. Best for long-running tasks spanning hours or days where maintaining any persistent connection is impractical.</li>
                 <li><strong><code>submitted</code>:</strong> Task received and queued by remote agent.</li>
                 <li><strong><code>working</code>:</strong> Remote agent actively executing the Task.</li>
-                <li><strong><code>input-required</code>:</strong> Remote agent paused — awaiting additional information (natural HITL pause point).</li>
-                <li><strong><code>completed</code>:</strong> Task successfully finished; Artifact available for consumption.</li>
-                <li><strong><code>failed</code>:</strong> Task terminated due to an unrecoverable error.</li>
-                <li><strong><code>cancelled</code>:</strong> Task terminated by client agent request.</li>
+                <li><strong><code>input-required</code>:</strong> <em>Interrupted.</em> Remote agent paused, awaiting additional information (natural HITL pause point).</li>
+                <li><strong><code>auth-required</code>:</strong> <em>Interrupted.</em> Authentication is required before the agent can proceed.</li>
+                <li><strong><code>completed</code>:</strong> <em>Terminal.</em> Task successfully finished; Artifact available for consumption.</li>
+                <li><strong><code>failed</code>:</strong> <em>Terminal.</em> Task finished with an unrecoverable error.</li>
+                <li><strong><code>canceled</code>:</strong> <em>Terminal.</em> Task canceled before completion (e.g., by client request).</li>
+                <li><strong><code>rejected</code>:</strong> <em>Terminal.</em> The agent decided not to perform the Task, at creation or later.</li>
             </ul>
         </div>
 

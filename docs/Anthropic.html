@@ -275,13 +275,14 @@
 
         <div class="concept-card accent-mint">
             <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Projecting Values via Constitutional AI (CAI)</h3>
-            <p>Replaces human-bottlenecks with an explicit, reason-based "Constitution."</p>
+            <p>Replaces human-bottlenecks with an explicit, reason-based "Constitution." When goals conflict, it sets a priority order:</p>
             <ul>
-                <li><strong>Broadly Safe:</strong> The absolute highest priority. The model must never undermine human mechanisms designed to oversee or halt AI operations.</li>
+                <li><strong>Broadly Safe:</strong> The highest priority. The model must never undermine human mechanisms designed to oversee or halt AI operations.</li>
                 <li><strong>Broadly Ethical:</strong> Must maintain honesty and avoid dangerous actions.</li>
-                <li><strong>Compliant:</strong> Must follow specific directives regarding medical or cybersecurity advice.</li>
-                <li><strong>Genuinely Helpful:</strong> Only when the first three conditions are met does the model optimize for user helpfulness.</li>
+                <li><strong>Compliant:</strong> Follows Anthropic's more specific guidelines (e.g., on medical or cybersecurity topics).</li>
+                <li><strong>Genuinely Helpful:</strong> Helpful to operators and users.</li>
             </ul>
+            <p><strong>Common trap:</strong> The ordering is <em>holistic, not strict</em>. Higher priorities generally win when goals conflict, but the model weighs them together rather than applying them as a rigid gate. Training-time alignment reduces broad harm; your product's domain-specific policies are still yours to enforce.</p>
         </div>
 
         <div class="process-flow">
@@ -330,8 +331,10 @@
                 native "Adaptive Thinking".</p>
             <ul>
                 <li><strong>Autonomous Scaling:</strong> The model autonomously evaluates the complexity of an incoming request and dynamically scales its reasoning depth before outputting a response.</li>
-                <li><strong>The /effort Parameter:</strong> Developers can override this via the API by assigning four distinct effort levels (<em>low, medium, high, max</em>). You can force Opus to use max compute for an algorithmic proof, or dial Sonnet down to low for simple classification to save latency.</li>
+                <li><strong>The effort Setting:</strong> Developers steer reasoning depth with an effort level (e.g., <em>low, medium, high, max</em>) instead of a token budget. You can push Opus to high effort for an algorithmic proof, or dial Sonnet down to low for simple classification to save latency and cost.</li>
+                <li><strong>API Shape:</strong> <code>thinking={"type": "adaptive"}</code> plus <code>output_config={"effort": "high"}</code>.</li>
             </ul>
+            <p><strong>Common trap:</strong> Manual extended thinking (<code>thinking={"type": "enabled", "budget_tokens": N}</code>) is deprecated on Claude Opus/Sonnet 4.6 and returns an <strong>HTTP 400</strong> on Claude 4.7 and later. Migrate by removing <code>budget_tokens</code>, setting the type to <code>adaptive</code>, and controlling depth with <code>effort</code>.</p>
         </div>
 
         <!-- ═══════════════════════════════════════

@@ -331,14 +331,14 @@
             <div class="callout-content">
                 <h4>Basic Optimization Tactics</h4>
                 <p><strong>Positive Framing:</strong> Tell the model what it <em>should</em> do rather than what it shouldn't. LLMs respond better to "Include X" than "Avoid Y."<br>
-                <strong>Prompt Versioning:</strong> Prompt engineering is highly iterative. Treat prompts like code. Document your attempts tracking Prompt text, Temperature, Top-P, Top-K, and Output.</p>
+                <strong>Prompt Versioning:</strong> Prompt engineering is highly iterative. Treat prompts like code. Document your attempts tracking Prompt text, model ID, sampling or effort settings, and Output.</p>
             </div>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>Prompt Caching</dt>
-                <dd>Place large static documents, system instructions, and few-shot examples at the very beginning of the prompt. Caching cuts costs by up to 90% and drastically speeds up inference.</dd>
+                <dd>Put stable content first (tools, system instructions, large documents, few-shot examples) and variable content last. The cache matches an exact prefix, so any change above a breakpoint forces a new cache write. On Claude, writes cost 1.25× base input (5-minute TTL, the default) or 2× (1-hour TTL). Reads cost about 0.1× (lower on some newer models). The 5-minute cache pays off after 1 read and the 1-hour cache after 2. Use automatic caching (one top-level <code>cache_control</code>) or explicit breakpoints on content blocks.</dd>
             </div>
             <div class="definition-item">
                 <dt>Prompt Security (Guardrails)</dt>
@@ -453,7 +453,7 @@
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>Temperature</dt>
-                <dd>Controls randomness. Use low temperature (0.1 - 0.3) for Logic, Math, and strict Formatting. Use high (0.7+) for Creativity.</dd>
+                <dd>Controls randomness. On models that expose it, use low temperature (0.1 - 0.3) for Logic, Math, and strict Formatting and high (0.7+) for Creativity. Model-dependent: see the Claude note below.</dd>
             </div>
             <div class="definition-item">
                 <dt>Top-P (Nucleus Sampling)</dt>
@@ -474,6 +474,15 @@
             <div class="definition-item">
                 <dt>Max Token Length</dt>
                 <dd>Restricts output length. Warning: Hitting the limit abruptly stops generation (causing broken JSON); it does not force the model to write more concisely.</dd>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-content">
+                <h4>Claude Note: Sampling Parameters Are Not Your Lever</h4>
+                <p>On Claude 4.7 and later models, setting <code>temperature</code>, <code>top_p</code>, or <code>top_k</code> to a non-default value returns an <strong>HTTP 400</strong>. Omit them and steer with the prompt (instructions, examples, output format) and the <code>effort</code> setting instead. On older Claude models, <code>temperature</code> and <code>top_k</code> are incompatible with thinking. Frequency and presence penalties are not Claude API parameters.<br>
+                <strong>Common trap:</strong> Low temperature does not make output deterministic. Test on structure and content, not exact strings.</p>
             </div>
         </div>
 
