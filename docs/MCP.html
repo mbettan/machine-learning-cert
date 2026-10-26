@@ -2,25 +2,111 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Context Protocol (MCP): Guide & Study Notes | ML Cert Hub</title>
-    <meta name="description" content="Learn about the Model Context Protocol (MCP), an open-source standard for secure, bidirectional communication between AI models and external data sources.">
-    <meta name="keywords" content="Model Context Protocol, MCP, AI Agents, JSON-RPC, AI protocol, Anthropic MCP">
-    <link rel="icon" type="image/png" href="logo.png">
+    <title>Model Context Protocol (MCP): Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Learn the Model Context Protocol (MCP), an open JSON-RPC 2.0 standard connecting AI agents to external tools, resources, and prompts over stdio and HTTP.">
+    <meta name="keywords" content="Model Context Protocol, MCP, JSON-RPC 2.0, AI Agents, Tools, Resources, Prompts, Sampling, Roots, Anthropic MCP, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/MCP.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Model Context Protocol (MCP): Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Learn the Model Context Protocol (MCP), an open JSON-RPC 2.0 standard connecting AI agents to external tools, resources, and prompts over stdio and HTTP.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/MCP.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Model Context Protocol (MCP) — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Model Context Protocol (MCP): Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Learn the Model Context Protocol (MCP), an open JSON-RPC 2.0 standard connecting AI agents to external tools, resources, and prompts over stdio and HTTP.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Model Context Protocol (MCP) — Study Guide by Michaël Bettan">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
 
-        gtag('config', 'G-1HHVBBMHMS');
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/MCP.html#article",
+                  "headline": "Model Context Protocol (MCP): Study Guide | ML Cert Hub",
+                  "name": "Model Context Protocol (MCP) Study Guide",
+                  "description": "Learn the Model Context Protocol (MCP), an open JSON-RPC 2.0 standard connecting AI agents to external tools, resources, and prompts over stdio and HTTP.",
+                  "keywords": "Model Context Protocol, MCP, JSON-RPC 2.0, AI Agents, Tools, Resources, Prompts, Sampling, Roots, Anthropic MCP, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/MCP.html",
+                  "inLanguage": "en",
+                  "version": "2.0",
+                  "dateModified": "2026-10-25",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Intermediate",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/MCP.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Model Context Protocol (MCP)",
+                              "item": "https://mbettan.github.io/machine-learning-cert/MCP.html"
+                        }
+                  ]
+            }
+      ]
+}
     </script>
 </head>
 

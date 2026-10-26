@@ -2,69 +2,167 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retrieval-Augmented Generation (RAG) Guide: Study Notes | ML Cert Hub</title>
-    <meta name="description" content="Detailed study notes on Retrieval-Augmented Generation (RAG) architecture, implementation, and best practices.">
-    <meta name="keywords" content="RAG, Retrieval-Augmented Generation, AI Search, LLM Context, Vector Database">
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-        gtag('config', 'G-1HHVBBMHMS');
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
+    <meta name="keywords" content="RAG, Retrieval-Augmented Generation, Hybrid Search, BM25, HNSW, ScaNN, Reciprocal Rank Fusion, RRF, Cross-Encoder Reranking, Agentic RAG, GraphRAG, Vertex AI, Anthropic Claude, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/RAG.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/RAG.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Retrieval-Augmented Generation (RAG) — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Retrieval-Augmented Generation (RAG) — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/RAG.html#article",
+                  "headline": "Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub",
+                  "name": "Retrieval-Augmented Generation (RAG) Study Guide",
+                  "description": "Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.",
+                  "keywords": "RAG, Retrieval-Augmented Generation, Hybrid Search, BM25, HNSW, ScaNN, Reciprocal Rank Fusion, RRF, Cross-Encoder Reranking, Agentic RAG, GraphRAG, Vertex AI, Anthropic Claude, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/RAG.html",
+                  "inLanguage": "en",
+                  "version": "3.0",
+                  "dateModified": "2026-10-25",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/RAG.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Retrieval-Augmented Generation (RAG)",
+                              "item": "https://mbettan.github.io/machine-learning-cert/RAG.html"
+                        }
+                  ]
+            }
+      ]
+}
     </script>
 </head>
 
 <body>
-    <a href="index.html" class="back-button">×</a>
 
     <div class="page-wrapper">
 
         <!-- ═══════════════════════════════════════
-             COVER SECTION
+             COVER / HERO
              ═══════════════════════════════════════ -->
         <section class="cover" id="top">
             <div class="cover-grid"></div>
             <div class="cover-content">
-                <div class="cover-eyebrow">
-                    <i class="fas fa-graduation-cap"></i>
-                    Study Notes — Certification Prep
-                </div>
-                <h1>Retrieval-Augmented Generation (RAG)<br><em>Study Guide</em></h1>
-                <p class="cover-subtitle">
-                    Comprehensive overview of RAG indexing, retrieval, generation, vectors, and agentic AI.
-                </p>
-                                                <div class="cover-meta">
-                    <div class="cover-meta-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Updated: <strong>May 2026</strong></span>
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
                     </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Retrieval-Augmented Generation <em>(RAG)</em></h1>
+                <p class="cover-subtitle">Applied AI Architect study guide covering context strategies, hybrid retrieval, Reciprocal Rank Fusion (RRF), cross-encoder reranking, untrusted context &amp; refusal gates, Agentic RAG &amp; memory, GraphRAG, Google Cloud RAG, federated vs. ingested architectures, ACL security, semantic caching, and evaluation.</p>
+                <div class="cover-meta">
                     <div class="cover-meta-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.1</strong></span>
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-tag"></i>
-                        <span>Category: <strong>RAG</strong></span>
+                        <span>Version: <strong>3.0</strong></span>
                     </div>
                     <div class="cover-meta-item">
-                        <i class="fas fa-clock"></i>
-                        <span>Reading Time: <strong>~13 min</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-user-edit"></i>
-                        <span>Author: <strong>Michaël Bettan</strong></span>
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Applied AI Architect / Foundation</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=rag" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: RAG Practice Quiz →</span>
+                </a>
             </div>
         </section>
 
@@ -77,208 +175,131 @@
                 <h2>Table of Contents</h2>
             </div>
             <div class="toc-columns">
-                <a href="#definitions" class="toc-item">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#when-to-use" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>Definitions & Architecture</span>
+                    <span>When to Use RAG &amp; Context Strategies</span>
+                </a>
+                <a href="#architecture" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Architecture: Offline vs. Online &amp; Paradigms</span>
                 </a>
                 <a href="#indexing" class="toc-item">
-                    <span class="toc-number">02</span>
-                    <span>Stage 1: RAG Indexing</span>
+                    <span class="toc-number">03</span>
+                    <span>Indexing: Parsing, Chunking &amp; Enrichment</span>
+                </a>
+                <a href="#embeddings" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Embeddings &amp; Vector Search</span>
                 </a>
                 <a href="#retrieval" class="toc-item">
-                    <span class="toc-number">03</span>
-                    <span>Stage 2 & 3: Retrieval & Gen</span>
-                </a>
-                <a href="#comparisons" class="toc-item">
-                    <span class="toc-number">04</span>
-                    <span>RAG vs Fine-tuning</span>
-                </a>
-                <a href="#vectors" class="toc-item">
                     <span class="toc-number">05</span>
-                    <span>Vectors & Similarity Search</span>
+                    <span>Retrieval: Hybrid Search, RRF &amp; Reranking</span>
                 </a>
-                <a href="#algorithms" class="toc-item">
+                <a href="#generation" class="toc-item">
                     <span class="toc-number">06</span>
-                    <span>Search Paradigms & Algorithms</span>
+                    <span>Generation: Untrusted Context &amp; Refusal Gates</span>
                 </a>
-                <a href="#agentic" class="toc-item">
+                <a href="#agentic-rag" class="toc-item">
                     <span class="toc-number">07</span>
-                    <span>Agentic AI & LangGraph</span>
+                    <span>Agentic RAG &amp; Three-Layer Agent Memory</span>
                 </a>
-                <a href="#graphs" class="toc-item">
+                <a href="#graphrag" class="toc-item">
                     <span class="toc-number">08</span>
-                    <span>Knowledge Graphs (GraphRAG)</span>
+                    <span>GraphRAG, Structured &amp; Multimodal Data</span>
                 </a>
-                <a href="#optimization" class="toc-item">
+                <a href="#google-cloud" class="toc-item">
                     <span class="toc-number">09</span>
-                    <span>Performance & Evaluation</span>
+                    <span>RAG on Google Cloud</span>
                 </a>
-                <a href="#advanced" class="toc-item">
+                <a href="#federated" class="toc-item">
                     <span class="toc-number">10</span>
-                    <span>Advanced Concepts & Failures</span>
+                    <span>Federated Retrieval vs. Ingested RAG</span>
+                </a>
+                <a href="#security" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Security, Access Control &amp; Fairness</span>
+                </a>
+                <a href="#freshness" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Freshness, Index Updates &amp; Migration</span>
+                </a>
+                <a href="#caching" class="toc-item">
+                    <span class="toc-number">13</span>
+                    <span>Semantic Caching &amp; Latency Budget</span>
+                </a>
+                <a href="#evaluation" class="toc-item">
+                    <span class="toc-number">14</span>
+                    <span>Evaluation, Grading Hierarchy &amp; Rollback Gates</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">15</span>
+                    <span>Common Failure Modes &amp; Fixes</span>
                 </a>
                 <a href="#resources" class="toc-item">
-                    <span class="toc-number">11</span>
-                    <span>Multimedia & Resources</span>
+                    <span class="toc-number">16</span>
+                    <span>Multimedia &amp; Deep Dive Resources</span>
                 </a>
             </div>
         </nav>
 
         <!-- ═══════════════════════════════════════
-             SECTION 01: DEFINITIONS & ARCHITECTURE
+             SECTION 00: OVERVIEW
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="definitions">
-            <div class="section-divider-number">01</div>
-            <h2>Definitions & Architecture</h2>
-        </div>
-
-        <div class="two-columns">
-            <div class="concept-card accent-mint">
-                <h3><div class="icon-badge"><i class="fas fa-search-plus"></i></div>What is RAG?</h3>
-                <p>
-                    <strong>Retrieval-Augmented Generation (RAG)</strong> is one of the two dominating architectural patterns for context construction in AI applications (alongside Agentic AI). It functions analogously to <em>feature engineering</em> in classical ML by dynamically injecting external, task-specific information directly into the Large Language Model's context window at inference time. This combines the LLM's reasoning capabilities with external, proprietary data stores to generate highly accurate, factually grounded, and contextually relevant responses.
-                </p>
-            </div>
-            <div class="concept-card accent-purple">
-                <h3><div class="icon-badge"><i class="fas fa-check-circle"></i></div>What RAG Solves</h3>
-                <p>
-                    RAG solves for the limitations of static LLMs — training data cutoffs, lack of private enterprise data, and hallucinations. 
-                    Critically, fine-tuning teaches a model new behavioral styles and task formats, but <strong>does not reliably inject dynamic factual knowledge</strong> and cannot prevent hallucination on data that changes after training. RAG is the architecturally correct solution for <strong>factual grounding at inference time</strong> — injecting verifiable, source-attributed context directly into the prompt without retraining. It also improves token efficiency by supplying only the most relevant chunks per query.
-                </p>
-            </div>
-        </div>
-
-        <div class="diagram-block">
-            <div class="diagram-title"><i class="fas fa-sitemap"></i> High-Level RAG Architecture Flow</div>
-            <div class="architecture-flow">
-                <div class="arch-node storage">Data Sources<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(PDFs, DBs)</span></div>
-                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="arch-node process">Chunking &<br>Embedding</div>
-                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="arch-node storage">Vector Database<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Index)</span></div>
-                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="arch-node process">Semantic Search<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Retrieval)</span></div>
-            </div>
-            <div class="architecture-flow" style="margin-top:-10px">
-                <div class="arch-node input">User Question</div>
-                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="arch-node process">Context Assembly<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Prompt)</span></div>
-                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="arch-node process">Large Language Model<br><span style="font-size: 0.7em; font-weight: normal; opacity: 0.7;">(Generation)</span></div>
-                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="arch-node output">Final Answer</div>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 02: STAGE 1 - RAG INDEXING
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="indexing">
-            <div class="section-divider-number">02</div>
-            <h2>Stage 1: RAG Indexing (Offline Pre-processing)</h2>
-        </div>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Loaders</dt>
-                <dd>Extract data from unstructured sources (PDFs, HTML, Word, JSON) using tools like LangChain Document Loaders.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Splitters (Chunking)</dt>
-                <dd>Break large texts into digestible chunks. <code>RecursiveCharacterTextSplitter</code> is preferred as it preserves semantic coherence by splitting on paragraphs, then sentences, then words.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Chunking Strategy: Overlapping</dt>
-                <dd>Adjacent chunks share a defined number of tokens at boundaries. Prevents the loss of critical context that sits at a chunk boundary; ensures complete thoughts split across chunks are captured.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Chunking Strategy: Semantic</dt>
-                <dd>Splits on logical/topical boundaries (paragraph shifts, section headers) rather than token count — ensures one complete thought per chunk.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Chunking Strategy: Hierarchical</dt>
-                <dd>Small "child" chunks are embedded/indexed for precise matching; metadata links retrieve the larger "parent" chunk for LLM context — decouples retrieval granularity from generation context size.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Embedding</dt>
-                <dd>Convert text chunks into high-dimensional mathematical representations (vectors) using models like OpenAI Embeddings or SentenceTransformers.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Vector Store</dt>
-                <dd>Store vectors and metadata in specialized databases (e.g., Chroma, FAISS, pgvector, Pinecone).</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Contextual Retrieval</dt>
-                <dd>Chunk is augmented with metadata at indexing time (doc title, section summary, tags). Gives the embedding model richer signal during retrieval, dramatically improving precision and reducing hallucination.</dd>
-            </div>
-        </div>
-
-        <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Chunk Size Trade-off</h3>
-            <ul>
-                <li><strong>Smaller chunks</strong> → higher retrieval precision, more diverse results — but greater computational overhead and risk of losing surrounding context.</li>
-                <li><strong>Larger chunks</strong> → richer context per chunk, fewer retrieval calls — but lower precision and higher token cost injected into the LLM.</li>
-                <li><strong>Hard constraint:</strong> chunk size must not exceed the maximum context length of either the embedding model or the generative model — whichever is smaller.</li>
-                <li><strong>Overlapping chunks</strong> trade index size for boundary loss prevention.</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 03: STAGE 2 & 3 - RETRIEVAL & GEN
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="retrieval">
-            <div class="section-divider-number">03</div>
-            <h2>Stage 2 & 3: Retrieval & Generation</h2>
-        </div>
-
-        <div class="prose">
-            <p><strong>Retrieval (Real-time):</strong> The user query is vectorized using the same embedding model. A similarity search compares the query vector to stored vectors to find the Top-K most relevant chunks.</p>
-        </div>
-
-        <div class="two-columns">
-            <div class="concept-card accent-purple">
-                <h3><div class="icon-badge"><i class="fas fa-magic"></i></div>1. Query Transformation (Pre-Retrieval)</h3>
-                <p>Acts as a hallucination prevention layer:</p>
-                <ul>
-                    <li><strong>Query Rewriting:</strong> An AI model reformulates an ambiguous user query into a clearer, self-contained version before retrieval — directly reduces retrieval failure from poorly phrased inputs.</li>
-                    <li><strong>HyDE (Hypothetical Document Embeddings):</strong> The LLM generates a hypothetical ideal answer; that answer is embedded and used for retrieval instead of the raw query — bridges the vocabulary gap.</li>
-                    <li><strong>Multi-Query Retrieval:</strong> The LLM generates N alternative rephrasings of the query, runs parallel retrievals, and unions results — reduces single-query retrieval failure.</li>
-                </ul>
-            </div>
-            <div class="concept-card accent-amber">
-                <h3><div class="icon-badge"><i class="fas fa-sort-amount-up"></i></div>2. Reranking (Post-Retrieval)</h3>
-                <ul>
-                    <li>Top-K retrieved chunks are scored a second time by a <strong>Cross-Encoder</strong> model (e.g., Cohere Rerank, BGE-Reranker) that evaluates the <em>(query, chunk)</em> pair jointly.</li>
-                    <li>Unlike bi-encoders that embed independently, cross-encoders attend to both simultaneously, producing significantly more precise relevance scores.</li>
-                    <li>Only the Top-N chunks (N &lt; K) pass to the LLM. Can also rerank by recency for time-sensitive queries. Directly reduces hallucination by filtering topically similar but factually irrelevant chunks.</li>
-                </ul>
-            </div>
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Core Mechanics</h2>
         </div>
 
         <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-comment-dots"></i></div>Stage 3: RAG Generation</h3>
-            <p>
-                The retrieved chunks are formatted and injected into a <strong>Prompt Template</strong> alongside the user query ("hydrating" the prompt). The LLM processes this context to generate a final, grounded answer.
-            </p>
-            <ul>
-                <li><strong>Source Citations:</strong> Production RAG systems append source citations (document title, chunk ID, page number) to generated responses — enabling human verification. This auditability is the key enterprise differentiator: RAG outputs are falsifiable, whereas bare LLM outputs are not.</li>
-            </ul>
+            <h3>
+                <div class="icon-badge"><i class="fas fa-book-open"></i></div>Definition
+            </h3>
+            <p><strong>Retrieval-Augmented Generation (RAG)</strong> pairs an LLM's parametric knowledge with an external retrieval system. At query time it finds the relevant passages, injects them into the prompt and asks the model to answer <strong>only from that context, with citations</strong>. The model is grounded on private, current data <strong>without fine-tuning</strong>, and every claim can be traced to a source.</p>
         </div>
 
-        <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Why It Exists (Standalone LLM Limits)
+                </h3>
+                <ul>
+                    <li><strong>Private data:</strong> The model doesn't know your wikis, tickets, contracts, or databases.</li>
+                    <li><strong>Freshness:</strong> Weights are frozen at the training cutoff.</li>
+                    <li><strong>Citations &amp; hallucination:</strong> The model can't cite its weights, and confabulates when facts are missing.</li>
+                    <li><strong>Scale &amp; cost:</strong> Stuffing everything into the prompt is expensive, slow, and loses facts "in the middle".</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-purple">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-gears"></i></div>Three Core Phases
+                </h3>
+                <ul>
+                    <li><strong>1. Retrieval:</strong> Finds the relevant chunks in an external store (the <strong>retriever</strong>: search and recall only).</li>
+                    <li><strong>2. Augmentation:</strong> Injects those chunks and the question into a prompt template (<strong>prompt hydration</strong>).</li>
+                    <li><strong>3. Generation:</strong> The LLM (the <strong>generator</strong>) reads, reasons, and writes a grounded, cited answer.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
-                <h4>Context Ordering (Lost-in-the-Middle)</h4>
-                <p>LLMs exhibit positional bias — they attend most strongly to content at the beginning and end of the context window and systematically underutilize middle content. <strong>Best practice:</strong> place highest-relevance chunks first and last. Failure to order context correctly causes hallucination despite successful retrieval — the correct answer exists in the context but the model ignores it.</p>
+                <h4>Mental Model</h4>
+                <p><strong>Fine-tuning</strong> is a semester of study that teaches a student <em>how</em> to think and speak like a specialist. <strong>RAG</strong> hands that student an <strong>open-book exam</strong> with exactly the right pages bookmarked.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 04: COMPARISONS
+             SECTION 01: WHEN TO USE RAG
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="comparisons">
-            <div class="section-divider-number">04</div>
-            <h2>RAG vs Fine-tuning</h2>
+        <div class="section-divider" id="when-to-use">
+            <div class="section-divider-number">01</div>
+            <h2>When to Use RAG (vs. Fine-Tuning, Long Context &amp; Live Tools)</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -286,275 +307,289 @@
                 <thead>
                     <tr>
                         <th>Approach</th>
-                        <th>Best for</th>
-                        <th>Mechanism</th>
+                        <th>Best For</th>
+                        <th>Update Speed</th>
+                        <th>Cost per Query</th>
+                        <th>Traceability</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>RAG</td>
-                        <td>Facts / Information</td>
-                        <td>Accessing up-to-date data, proprietary knowledge, grounding responses in retrieved evidence.</td>
-                    </tr>
-                    <tr>
                         <td>Fine-tuning</td>
-                        <td>Form / Style</td>
-                        <td>Output format (JSON/YAML), brand voice, specialized jargon, instruction-following patterns.</td>
+                        <td>Tone, format, behavior, output schemas</td>
+                        <td>Hours to weeks (retrain)</td>
+                        <td>Low inference, high training</td>
+                        <td><span class="table-cross">None:</span> facts can't be traced to weights</td>
                     </tr>
                     <tr>
-                        <td>Both combined</td>
-                        <td>Production systems</td>
-                        <td>RAG supplies the facts; fine-tuning ensures the correct format and tone.</td>
+                        <td>Long-context stuffing</td>
+                        <td>Whole-document reasoning on a small corpus</td>
+                        <td>Instant</td>
+                        <td>High: grows with prompt size</td>
+                        <td>Coarse</td>
+                    </tr>
+                    <tr>
+                        <td>Context caching</td>
+                        <td>Reusing a large, fixed prefix</td>
+                        <td>Minutes</td>
+                        <td>Lower (cached input discount)</td>
+                        <td>Coarse</td>
+                    </tr>
+                    <tr>
+                        <td>RAG</td>
+                        <td>Facts from large, changing, permissioned reference corpora</td>
+                        <td>Seconds to minutes (index update)</td>
+                        <td>Low: ~1.5k–3k relevant tokens</td>
+                        <td><span class="table-check"><strong>Exact</strong></span> (doc, chunk, page)</td>
+                    </tr>
+                    <tr>
+                        <td>Live tool call (API / SQL)</td>
+                        <td>Live transactional state (order status, inventory, balances, ticket queues)</td>
+                        <td><strong>Real-time</strong> (system of record)</td>
+                        <td>Low (1 API/DB call)</td>
+                        <td><span class="table-check"><strong>Exact</strong></span> (record ID + timestamp)</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- ═══════════════════════════════════════
-             SECTION 05: VECTORS & SIMILARITY
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="vectors">
-            <div class="section-divider-number">05</div>
-            <h2>Vectors & Similarity Search</h2>
+        <div class="concept-card accent-amber">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-compress-arrows-alt"></i></div>Why Long Context Alone Fails at Scale
+            </h3>
+            <p>Cost grows linearly with input tokens, time to first token grows with prompt length, recall degrades well before the advertised window is full (<strong>"lost in the middle"</strong>), and you cannot apply per-user ACLs or exact citations to one giant prompt. <strong>The production answer is often both:</strong> RAG narrows millions of documents to a few full sections (tens of thousands of tokens), then a long-context model reasons across them without fragmenting the evidence into tiny chunks.</p>
         </div>
 
-        <div class="prose">
-            <p><strong>Vector Space (Latent Space):</strong> A mathematical construct where semantically similar concepts are located closer together. Distance between vectors determines relevance.</p>
-        </div>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Euclidean (L2)</dt>
-                <dd>Shortest straight-line distance. Lower = more similar.</dd>
+        <div class="versus-block">
+            <div class="versus-side left">
+                <h4><i class="fas fa-file-lines"></i> Choose Long Context When…</h4>
+                <ul>
+                    <li>Corpus is small (under ~50K–200K tokens)</li>
+                    <li>Low query volume</li>
+                    <li>The task needs the <strong>whole</strong> document at once</li>
+                    <li>Ephemeral per-session uploads</li>
+                    <li>Simplicity matters more than cost</li>
+                </ul>
             </div>
-            <div class="definition-item">
-                <dt>Dot Product (Inner Product)</dt>
-                <dd>Measures magnitude of projection. Higher positive = more similar.</dd>
+            <div class="versus-divider">VS</div>
+            <div class="versus-side right">
+                <h4><i class="fas fa-magnifying-glass"></i> Choose RAG When…</h4>
+                <ul>
+                    <li>Corpus is large or unbounded</li>
+                    <li>High volume where unit cost and latency matter</li>
+                    <li>Questions target specific facts</li>
+                    <li>Shared corpus that changes continuously</li>
+                    <li>Citations, audit, and ACLs are mandatory</li>
+                </ul>
             </div>
-            <div class="definition-item">
-                <dt>Cosine Similarity</dt>
-                <dd>Measures the cosine of the angle between two vectors, ignoring magnitude. Ranges from −1 to 1; higher = more similar. Default metric in most vector stores for semantic search.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Cosine Distance</dt>
-                <dd>Calculated as <code>1 − Cosine Similarity</code>. Ranges from 0 to 2; lower = more similar. Used only when a distance metric is explicitly required by the algorithm.</dd>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 06: ALGORITHMS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="algorithms">
-            <div class="section-divider-number">06</div>
-            <h2>Search Paradigms & Algorithms</h2>
         </div>
 
         <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-search"></i></div>Search Paradigms</h3>
-            <ul>
-                <li><strong>Dense (Semantic) Search:</strong> Uses vector embeddings to match underlying meaning and context. Struggles with exact names, IDs, or acronyms and can return false positives.</li>
-                <li><strong>Sparse (Keyword) Search:</strong> Uses BM25, which evaluates exact term matches by combining: (1) <em>Term Frequency (TF)</em> with saturation; (2) <em>Inverse Document Frequency (IDF)</em> to boost rare terms; (3) <em>Document length normalization</em>. Highly effective for proper nouns and IDs; blind to synonyms.</li>
-                <li><strong>Hybrid Search:</strong> Fuses Dense and Sparse results to maximize both recall and precision.</li>
-            </ul>
+            <h3>
+                <div class="icon-badge"><i class="fas fa-layer-group"></i></div>Four Context Strategies &amp; the Working-Memory Cliff
+            </h3>
+            <p>No single strategy carries a production workload, so real systems combine all four:</p>
         </div>
 
-        <div class="formula-block">
-            <div class="formula-label">Reciprocal Rank Fusion (RRF)</div>
-            <div class="formula">RRF(d) = Σ 1/(k + rank_m(d))</div>
-            <div class="formula-description">Fuses results by rank position, not raw scores (necessary because BM25 scores are unbounded while cosine scores range -1 to 1). Constant k=60 smooths outlier rankings.</div>
-        </div>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>k-NN (k-Nearest Neighbors)</dt>
-                <dd>Brute-force, exact distance calculation. Highly accurate but computationally expensive; scales poorly (O(n*d)).</dd>
-            </div>
-            <div class="definition-item">
-                <dt>ANN (Approximate Nearest Neighbors)</dt>
-                <dd>Sacrifices slight accuracy for massive speed gains using indexing structures.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>HNSW (HNSWlib)</dt>
-                <dd>Multi-layer proximity graph — upper layers for fast coarse navigation, lower layers for dense local precision. Best speed-accuracy tradeoff. O(log n) complexity.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>FAISS</dt>
-                <dd>Industry-standard ANN library by Facebook supporting IVF, PQ, and other methods. Powers production vector stores like Chroma and pgvector.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>IVF (Inverted File Index)</dt>
-                <dd>K-means clustering organizes vectors into clusters; search targets only nearest clusters — dramatically reduces search space without scanning all vectors.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>LSH (Locality-Sensitive Hashing)</dt>
-                <dd>Hashes similar vectors into the same buckets for fast candidate retrieval.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>PQ (Product Quantization)</dt>
-                <dd>Compresses vectors into lower-dimensional representations — reduces memory footprint and speeds distance computations.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Annoy & ScaNN</dt>
-                <dd>Annoy builds multiple binary trees. ScaNN is optimized for high-dimensional semantic search at production scale.</dd>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 07: AGENTIC AI
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="agentic">
-            <div class="section-divider-number">07</div>
-            <h2>Agentic AI & LangGraph</h2>
-        </div>
-        
-        <div class="prose">
-            <p>Agents transform LLMs from stateless responders to autonomous, reasoning systems capable of executing multi-step workflows (e.g., ReAct: Reason + Act). LangGraph supports both DAGs and cyclical graphs — cycles enable iterative reasoning loops (e.g., retrieve → grade → re-query).</p>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Strategy</th>
+                        <th>What It Does</th>
+                        <th>Where It Breaks Down</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monolithic</td>
+                        <td>Packs all needed material into a single prompt; a stable <strong>monolithic prefix</strong> pairs well with prompt caching (Claude cached reads cost ~5–10% of standard input tokens)</td>
+                        <td>Multi-turn histories that grow every turn: token spend and latency rise linearly until the window quietly fills up</td>
+                    </tr>
+                    <tr>
+                        <td>Progressive</td>
+                        <td>Passes along only the state needed for the next turn; the standard choice for most production flows</td>
+                        <td>Long-horizon coherence, early-turn details dropped along the way, lower cache hit rates, and harder step-by-step replay during debugging</td>
+                    </tr>
+                    <tr>
+                        <td>Retrieval (RAG)</td>
+                        <td>Fetches a relevant slice just in time from a store too large to preload</td>
+                        <td>Cross-document synthesis, chunks that split tables or arguments, top-K recall misses; retrieval becomes a system to evaluate and maintain</td>
+                    </tr>
+                    <tr>
+                        <td>Compaction</td>
+                        <td>Condenses prior history at workflow boundaries or as the window fills</td>
+                        <td>Loses load-bearing specifics (IDs, exact figures, earlier rationale); <strong>effectively irreversible</strong>; measuring summary fidelity remains notoriously hard</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="two-columns">
-            <div class="concept-card accent-purple">
-                <h3><div class="icon-badge"><i class="fas fa-project-diagram"></i></div>LangGraph Concepts</h3>
-                <ul>
-                    <li><strong>State:</strong> The agent's "scratchpad" (memory/message history) shared across all steps.</li>
-                    <li><strong>Nodes:</strong> Functions or tools the agent executes (e.g., search_web, retrieve_docs).</li>
-                    <li><strong>Edges:</strong> The control flow between nodes.</li>
-                    <li><strong>Conditional Edges:</strong> Decision points where the LLM routes the flow dynamically.</li>
-                    <li><strong>Tools & Toolkits:</strong> Executable functions the agent can invoke. LLMs are given Tool Schemas (inputs) and Descriptions to decide when/how to use them.</li>
-                </ul>
+            <div class="concept-card accent-coral">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-mountain"></i></div>The Working-Memory Cliff
+                </h3>
+                <p>A context window behaves like a cliff edge, not a gentle slope—tokens inside the limit get full attention, while anything beyond it vanishes completely. Prompts that exceed the limit fail outright (<code>400</code> prompt too long), and requests that fit on input can still get cut off mid-reply (<code>model_context_window_exceeded</code>). Treat the window as a <strong>hard cap rather than a capacity goal</strong>: size your token budget for worst-case turn history + retrieved chunks + system instructions + reasoning scratchpad + safety headroom, bearing in mind that effective recall drops long before the token ceiling.</p>
             </div>
+
             <div class="concept-card accent-cyan">
-                <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>CoALA Framework Memory</h3>
-                <p>Cognitive Architectures for Language Agents uses 4 memory types:</p>
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-chart-line"></i></div>Three-Part Executive Tradeoff Framing
+                </h3>
+                <p>When pitching long context over RAG, always surface:</p>
                 <ul>
-                    <li><strong>Working Memory (Short-Term):</strong> The active workspace; holds immediate context.</li>
-                    <li><strong>Episodic Memory (Events):</strong> Case-based reasoning. Stores specific past experiences.</li>
-                    <li><strong>Semantic Memory (Facts):</strong> Factual knowledge base. Generally read-only to prevent hallucination-driven overwriting.</li>
-                    <li><strong>Procedural Memory (Skills):</strong> Encodes operational workflows/rules. Updated via Reflection (meta-prompting).</li>
+                    <li><strong>1. The upside:</strong> Simpler architecture, cross-document visibility.</li>
+                    <li><strong>2. Production-scale economics:</strong> Unit token cost × monthly traffic, adjusted for prompt caching on static prefixes.</li>
+                    <li><strong>3. Lock-in / reversal cost:</strong> The engineering effort required to retrofit retrieval later once prompts and workflows assume whole-document access.</li>
                 </ul>
             </div>
         </div>
 
-        <div class="callout info">
-            <div class="callout-icon"><i class="fas fa-users"></i></div>
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-compass"></i></div>
             <div class="callout-content">
-                <h4>Memory Scopes</h4>
-                <p><strong>Personal/User-Specific:</strong> Strictly isolated data tailored to individual preferences. <br>
-                <strong>Community/Public:</strong> Anonymized, aggregated insights shared across all users (e.g., discovering a universal troubleshooting fix).</p>
+                <h4>Rule of Thumb</h4>
+                <p>RAG supplies <strong>reference facts</strong>, fine-tuning shapes <strong>behavior</strong>, long context does <strong>deep reasoning</strong> over a pre-filtered set, and <strong>tool calls</strong> fetch <strong>live transactional state</strong>.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap: "Similarity Is Not Truth"</h4>
+                <p>Never put mutable transactional records (order tracking, stock levels, live pricing, account balances) into a vector index. Vector search surfaces outdated snapshots that the generator blends into a confident wrong answer—with normal latency and zero error signals. Tweaking chunk sizes, sync frequency, or cosine cutoffs cannot solve an architectural mismatch: keep static reference knowledge in <strong>RAG</strong> and read mutable state via <strong>live API calls against your authoritative database</strong>.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 08: KNOWLEDGE GRAPHS
+             SECTION 02: ARCHITECTURE
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="graphs">
-            <div class="section-divider-number">08</div>
-            <h2>Knowledge Graphs (Graph-Based RAG)</h2>
+        <div class="section-divider" id="architecture">
+            <div class="section-divider-number">02</div>
+            <h2>Architecture: Offline Indexing &amp; Online Answering</h2>
         </div>
 
-        <div class="prose">
-            <p>Surpasses flat vector stores by providing structured, navigable context built on <strong>directed property graphs</strong>.</p>
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-sitemap"></i> Offline Ingestion &amp; Indexing (Once per Change)</div>
+            <div class="architecture-flow">
+                <div class="arch-node input">Sources<br><small>PDF, Wiki, Tickets</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Parse<br><small>Layout, Tables, OCR</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Chunk &amp; Enrich<br><small>doc_id, date, acl</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Embed<br><small>RETRIEVAL_DOCUMENT</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node storage">Hybrid Index<br><small>Vectors + BM25</small></div>
+            </div>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Ontology</dt>
-                <dd>Formal representation of domain knowledge. Defined using languages like RDFS (basic taxonomies) and OWL (complex logical constraints and reasoning). Built via tools like Protégé.</dd>
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-bolt"></i> Online Retrieval &amp; Generation (Every Query)</div>
+            <div class="architecture-flow">
+                <div class="arch-node input">User Query<br><small>+ Auth Scope</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Rewrite &amp; Embed<br><small>RETRIEVAL_QUERY</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node storage">Hybrid Search<br><small>Pre-filtered Top-K</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">RRF + Rerank<br><small>Cross-Encoder Top-N</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node output">LLM Generator<br><small>Answer + Citations</small></div>
             </div>
-            <div class="definition-item">
-                <dt>Graph Components</dt>
-                <dd>Nodes (entities like AAPL, SEC), Edges (relationships like issuedBy, isRegulatedBy), and Properties.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Hybrid Embeddings</dt>
-                <dd>Flattens graph topology + text into rich descriptions (e.g., "Stock AAPL issued by Apple Inc. regulated by SEC") before vectorization.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Value Add</dt>
-                <dd>Enables multi-hop reasoning (connecting disparate facts A→B→C), guarantees traceability/explainability, and perfectly filters queries using strict schema logic (Cypher).</dd>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Steps</th>
+                        <th>Key Rule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Offline: ingest and index</td>
+                        <td>Parse → chunk → attach metadata (<code>doc_id</code>, <code>page</code>, <code>date</code>, <code>acl</code>) → embed → store vectors, text, and metadata</td>
+                        <td>Expensive work happens once, so online queries stay fast</td>
+                    </tr>
+                    <tr>
+                        <td>Online: retrieve and generate</td>
+                        <td>(Rewrite) → embed the query → hybrid search for top-K → rerank to top-N → build the prompt → generate with citations</td>
+                        <td>Embed queries with the <strong>same model and version</strong> as the corpus</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-cubes"></i></div>RAG Paradigms (Gao et al. Survey)
+            </h3>
+            <p>Understanding the progression from Naïve to Modular RAG clarifies where pre-retrieval, post-retrieval, and agentic orchestration sit:</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Paradigm</th>
+                        <th>Shape</th>
+                        <th>Adds</th>
+                        <th>Weakness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Naïve</td>
+                        <td><code>index → retrieve → generate</code></td>
+                        <td>Basic chunking + vector search</td>
+                        <td>Noisy context, low precision and recall</td>
+                    </tr>
+                    <tr>
+                        <td>Advanced</td>
+                        <td>Linear, with pre- and post-retrieval stages</td>
+                        <td>Query rewriting, hybrid search, reranking, compression</td>
+                        <td>Fixed one-shot path</td>
+                    </tr>
+                    <tr>
+                        <td>Modular</td>
+                        <td>Composable, non-linear modules</td>
+                        <td>Routing, iteration, memory, <strong>agentic loops</strong></td>
+                        <td>More complexity, latency, and evaluation cost</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap</h4>
+                <p><strong>Agentic RAG</strong> isn't a fourth official paradigm. It's an implementation of <strong>modular</strong> RAG in which an agent orchestrates the modules.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 09: PERFORMANCE & EVALUATION
+             SECTION 03: INDEXING
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="optimization">
-            <div class="section-divider-number">09</div>
-            <h2>Performance & Evaluation</h2>
+        <div class="section-divider" id="indexing">
+            <div class="section-divider-number">03</div>
+            <h2>Indexing: Parsing, Chunking &amp; Enrichment</h2>
         </div>
 
-        <div class="two-columns">
-            <div class="concept-card accent-amber">
-                <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Semantic Caches (Interceptor Layer)</h3>
-                <p>Catches and serves repeat queries instantly, bypassing expensive LLM reasoning and generation steps. Reduces latency and inference costs.</p>
-                <ul>
-                    <li><strong>Entity Masking:</strong> Replaces specific values with variables (e.g., "AAPL price" -> "[TICKER] price") so one cache entry covers variations.</li>
-                    <li><strong>Cross-Encoder Verification:</strong> Secondary check to ensure cached query and new query have exact same intent.</li>
-                    <li><strong>Adaptive Thresholds:</strong> Strict (0.90) for high-stakes; looser (0.75) for exploratory.</li>
-                    <li><strong>Eviction Policies:</strong> Uses TTL and LRU with semantic decay to prevent Memory Bloat and Sclerosis.</li>
-                </ul>
-            </div>
-            <div class="concept-card accent-mint">
-                <h3><div class="icon-badge"><i class="fas fa-check-double"></i></div>Evaluation Frameworks (Ragas)</h3>
-                <p>Systematic, objective measurement against Ground Truth data (synthetically generated).</p>
-                <ul>
-                    <li><strong>Retrieval Metrics:</strong> Context Precision (signal-to-noise ratio), Context Recall.</li>
-                    <li><strong>Faithfulness:</strong> Proportion of claims directly entailed by retrieved context (primary anti-hallucination metric).</li>
-                    <li><strong>End-to-End:</strong> Factual Correctness, Semantic Similarity.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="formula-block">
-            <div class="formula-label">Ragas Faithfulness Score</div>
-            <div class="formula">Faithfulness = (# claims supported by context) ÷ (total # claims in answer)</div>
-            <div class="formula-description">A score of 1.0 = zero hallucination relative to the provided context. Identifies exactly how much the model 'drifted' beyond its grounded sources.</div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 10: ADVANCED & FAILURES
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="advanced">
-            <div class="section-divider-number">10</div>
-            <h2>Advanced Concepts & Failure Modes</h2>
-        </div>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Multimodal RAG</dt>
-                <dd>CLIP embeddings encode both text and images into a shared vector space — enabling retrieval of relevant images, charts, or diagrams alongside text chunks.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Tabular RAG (Text-to-SQL)</dt>
-                <dd>Natural language query → LLM generates SQL → SQL executes against structured database → result injected into generation prompt. Answers over structured enterprise data without vectorization.</dd>
-            </div>
-        </div>
-
-        <div class="concept-card accent-coral">
-            <h3><div class="icon-badge"><i class="fas fa-expand-arrows-alt"></i></div>RAG vs. Long Context Windows</h3>
-            <p>Why RAG remains architecturally superior for production even with 1M+ token windows:</p>
+        <div class="concept-card accent-mint">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-file-Waveform"></i></div>Parsing Comes First
+            </h3>
+            <p>Bad parsing corrupts everything downstream, and silently: if a table is dropped or a scan is misread, the LLM won't complain—it will invent plausible facts.</p>
             <ul>
-                <li><strong>The "Lost-in-the-Middle" Phenomenon:</strong> Massive documents drastically increase the likelihood the LLM will hallucinate or forget middle information. RAG front-loads only the most relevant chunks.</li>
-                <li><strong>Token Efficiency and Cost:</strong> Sending a 500,000-token payload for every query is unscalable. RAG filters corpus down to a small, dense payload (e.g., 2,000 tokens).</li>
-                <li><strong>Inference Latency:</strong> As context size grows, Time to First Token (TTFT) degrades due to attention mechanisms scaling quadratically. RAG ensures sub-second latency.</li>
-                <li><strong>Dynamic Data & Tool Execution:</strong> Agentic RAG pulls in data on-demand; injecting entire database states exhausts the window.</li>
-            </ul>
-        </div>
-
-        <div class="concept-card accent-pink">
-            <h3><div class="icon-badge"><i class="fas fa-bug"></i></div>When RAGs Can Fail (and How to Fix Them)</h3>
-            <ul>
-                <li><strong>Vocabulary/Entity Mismatch:</strong> Sparse search misses synonyms, dense search misses exact names/numbers.<br>
-                    <span style="color:var(--mint)">↳ Fix:</span> <em>Hybrid Search + RRF</em>.</li>
-                <li><strong>Ambiguous Queries:</strong> Users ask vague questions lacking context.<br>
-                    <span style="color:var(--mint)">↳ Fix:</span> <em>Query Rewriting or HyDE</em>.</li>
-                <li><strong>Severed Context:</strong> Rigid token limits arbitrarily cut sentences in half.<br>
-                    <span style="color:var(--mint)">↳ Fix:</span> <em>Semantic Chunking and Hierarchical Chunking</em>.</li>
-                <li><strong>Context Drift / Hallucination:</strong> The LLM uses the right context but still invents outside facts.<br>
-                    <span style="color:var(--mint)">↳ Fix:</span> <em>Strict prompt guardrails and continuous evaluation (Ragas Faithfulness).</em></li>
-                <li><strong>Multi-Hop Reasoning Failure:</strong> Standard vectors cannot structurally connect related concepts across multiple documents.<br>
-                    <span style="color:var(--mint)">↳ Fix:</span> <em>GraphRAG / Knowledge Graphs (A → B → C).</em></li>
-                <li><strong>Semantic Cache Errors:</strong> Serving a cached answer for a visually similar but factually different query.<br>
-                    <span style="color:var(--mint)">↳ Fix:</span> <em>Entity Masking and Cross-Encoder Verification.</em></li>
+                <li><strong>Fast text extractors</strong> (e.g., <code>pypdf</code>) work for clean, digital, single-column PDFs. They return nothing on scans and scramble tables.</li>
+                <li><strong>Layout-aware parsers with OCR</strong> (Docling locally; Document AI, LlamaParse, or Gemini in the cloud) handle tables, multi-column layouts, and scans.</li>
+                <li><strong>Tiered pattern:</strong> Try the fast extractor; if it yields too little text or fails quality checks (lexical validity, character entropy, structural anchors—never raw word count alone), route the file to the layout/OCR parser, and hard-stop for human review if composite confidence remains low.</li>
+                <li><strong>Parser ≠ framework:</strong> Docling parses and chunks (stage 1 only); LlamaIndex orchestrates the whole pipeline (and defaults to <code>pypdf</code> unless configured otherwise).</li>
             </ul>
         </div>
 
@@ -562,119 +597,1329 @@
             <table class="comparison-table">
                 <thead>
                     <tr>
-                        <th>Stage</th>
-                        <th>Hallucination Cause</th>
-                        <th>RAG Fix</th>
+                        <th>Chunking Strategy</th>
+                        <th>How It Works</th>
+                        <th>Use When</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Indexing</td>
-                        <td>Missing context signal in chunks</td>
-                        <td>Contextual Retrieval</td>
+                        <td>Recursive character / fixed-size (baseline)</td>
+                        <td>Split on paragraphs, then lines, then words</td>
+                        <td>Default starting point for uniform text lacking structural markers</td>
                     </tr>
                     <tr>
-                        <td>Pre-Retrieval</td>
-                        <td>Ambiguous or narrow user query</td>
-                        <td>Query Rewriting / HyDE / Multi-Query</td>
+                        <td>Overlap</td>
+                        <td>Neighboring chunks share ~10–20%</td>
+                        <td>Facts that span boundaries</td>
                     </tr>
+                    <tr>
+                        <td>Semantic</td>
+                        <td>Split where embedding similarity between sentences drops (topic shift)</td>
+                        <td>Long, continuous narrative prose where fixed windows slice ideas in half</td>
+                    </tr>
+                    <tr>
+                        <td>Structure-aware</td>
+                        <td>Split Markdown by headings, source code by AST/function/class, and legal docs by clause; keep tables whole</td>
+                        <td>Codebases, docs with markup, manuals, tables</td>
+                    </tr>
+                    <tr>
+                        <td>Parent-child (hierarchical)</td>
+                        <td>Embed small children (128–256 tokens), return the larger parent (1–2K tokens)</td>
+                        <td>Precise matching <strong>and</strong> full context (clause-numbered contracts, policy docs)</td>
+                    </tr>
+                    <tr>
+                        <td>Proposition</td>
+                        <td>An LLM rewrites text into atomic facts</td>
+                        <td>High-precision factual lookup</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="versus-block">
+            <div class="versus-side left">
+                <h4><i class="fas fa-compress"></i> Small Chunks (100–256 Tokens)</h4>
+                <ul>
+                    <li><strong>Precision: High</strong> (focused semantic vector)</li>
+                    <li><strong>Context:</strong> Low (pronouns lose their referents)</li>
+                    <li><strong>Tokens per answer:</strong> Low — more sources fit</li>
+                    <li><strong>Main risk:</strong> Severed facts</li>
+                </ul>
+            </div>
+            <div class="versus-divider">VS</div>
+            <div class="versus-side right">
+                <h4><i class="fas fa-expand"></i> Large Chunks (1–2K Tokens)</h4>
+                <ul>
+                    <li><strong>Precision:</strong> Lower (one vector averages several topics)</li>
+                    <li><strong>Context: High</strong> (self-contained passages)</li>
+                    <li><strong>Tokens per answer:</strong> High — fewer sources fit</li>
+                    <li><strong>Main risk:</strong> Noise, lost in the middle</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-scissors"></i></div>
+            <div class="callout-content">
+                <h4>Hard Constraint: Embedding Token Limit</h4>
+                <p>A chunk must fit the embedding model's input limit (<strong>2,048 tokens</strong> for <code>gemini-embedding-001</code> and <code>text-embedding-005</code>). Because <code>autoTruncate=true</code> by default, longer chunks are <strong>silently truncated</strong>, and their tail is never searchable.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Index-Time Enrichment</th>
+                        <th>What It Adds</th>
+                        <th>Problem It Fixes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Metadata (<code>source</code>, <code>date</code>, <code>acl</code>, <code>region</code>, <code>is_latest</code>)</td>
+                        <td>Structured fields on every chunk</td>
+                        <td>Filtering, recency, access control</td>
+                    </tr>
+                    <tr>
+                        <td>Contextual headers (contextual retrieval)</td>
+                        <td>Document title, section path, and a short summary prepended before embedding <strong>and</strong> BM25</td>
+                        <td>Ambiguous chunks ("Revenue grew 12%": of whom, when?)</td>
+                    </tr>
+                    <tr>
+                        <td>doc2query</td>
+                        <td>LLM-generated questions each chunk answers</td>
+                        <td>Question vs. passage wording gap</td>
+                    </tr>
+                    <tr>
+                        <td>SPLADE</td>
+                        <td>Learned expansion terms in a sparse vector</td>
+                        <td>BM25's blindness to synonyms</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-heading"></i></div>Contextual Header (Before vs. After)
+                </h3>
+                <ul>
+                    <li><strong>Raw chunk:</strong> <em>"Revenue grew 12% over the previous quarter."</em> (Cannot match "ACME EMEA Q3 revenue" by meaning or keyword.)</li>
+                    <li><strong>Contextualized chunk:</strong> <em>"[ACME Corp 2025 annual report › EMEA results › Q3] ACME's EMEA revenue grew 12% over Q2 2025."</em> (Matches both dense and BM25!)</li>
+                    <li><strong>Cost optimization:</strong> Cache the full source document in the prompt prefix and run offline backfills through asynchronous <strong>batch APIs</strong> (~50% discount).</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-purple">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Enrichment Mechanics
+                </h3>
+                <ul>
+                    <li><strong>Match on the expansion, answer from the original:</strong> Generated text can be wrong, so always send the <strong>original</strong> chunk to the LLM.</li>
+                    <li><strong>Parent-child mechanics:</strong> Store <code>parent_id</code> on each child, <strong>deduplicate by parent</strong>, and ACL-check the parent too.</li>
+                    <li><strong>HyDE vs. Document Expansion:</strong> HyDE expands the <strong>query</strong> at runtime (latency on every request). Document expansion expands the <strong>corpus</strong> once at index time (cost at ingestion only).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: EMBEDDINGS & VECTOR SEARCH
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="embeddings">
+            <div class="section-divider-number">04</div>
+            <h2>Embeddings &amp; Vector Search</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-compass-drafting"></i></div>The Semantic Recall Role
+            </h3>
+            <p>An <strong>embedding</strong> is a dense vector (typically 768–3,072 dimensions) in which texts with similar meaning sit close together, regardless of wording. Don't just say vector search "stores embeddings"—its role is <strong>Stage 1 semantic recall</strong>, retrieving conceptually matching passages <strong>even when the user's wording shares zero keywords with the document wording</strong> (bridging the vocabulary gap where BM25 returns zero hits). The embedding model sets the <strong>ceiling</strong> on semantic recall: downstream prompt engineering can't rescue a poor vector space.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>What to Know</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Same model both sides</td>
+                        <td>Query and corpus vectors must come from the same model <strong>and version</strong>. Otherwise scores still compute, but rankings are near-random.</td>
+                    </tr>
+                    <tr>
+                        <td>Task types (Vertex AI)</td>
+                        <td><code>RETRIEVAL_DOCUMENT</code> (+ <code>title</code>) for chunks, <code>RETRIEVAL_QUERY</code> for queries. Unset defaults to <code>RETRIEVAL_QUERY</code>, so the corpus gets query-style vectors.</td>
+                    </tr>
+                    <tr>
+                        <td>Current models</td>
+                        <td><code>gemini-embedding-001</code> (3,072 dims) and <code>text-embedding-005</code> (768 dims); <code>output_dimensionality</code> truncates (Matryoshka), then renormalize.</td>
+                    </tr>
+                    <tr>
+                        <td>Similarity vs. distance</td>
+                        <td><strong>Cosine similarity</strong> (higher = closer; equals dot product on unit-normalized vectors) vs. <strong>semantic distance</strong> (lower = closer, e.g., <code>1 - cos</code> or L2). Watch cutoff direction: <code>similarity &gt;= τ</code> vs. <code>vector_distance_threshold &lt;= d_max</code>.</td>
+                    </tr>
+                    <tr>
+                        <td>Domain fit</td>
+                        <td>Benchmark on <strong>your</strong> labeled queries; leaderboards are only a shortlist. Add BM25 or an adaptor for jargon.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>ANN Index</th>
+                        <th>How It Works</th>
+                        <th>Strength</th>
+                        <th>Trade-Off</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Exact k-NN</td>
+                        <td>Compare with every vector</td>
+                        <td>100% recall</td>
+                        <td>Linear cost; unusable past ~10⁵ vectors</td>
+                    </tr>
+                    <tr>
+                        <td>HNSW</td>
+                        <td>Multi-layer proximity graph</td>
+                        <td>Best recall vs. latency</td>
+                        <td>High RAM</td>
+                    </tr>
+                    <tr>
+                        <td>IVF</td>
+                        <td>k-means clusters; search the nearest <code>n_probe</code></td>
+                        <td>Fast partitioning</td>
+                        <td>Recall drops if <code>n_probe</code> is too small</td>
+                    </tr>
+                    <tr>
+                        <td>PQ</td>
+                        <td>Compress sub-vectors to codebook IDs</td>
+                        <td>Large memory savings</td>
+                        <td>Lossy ranking</td>
+                    </tr>
+                    <tr>
+                        <td>ScaNN</td>
+                        <td>Google's anisotropic quantization</td>
+                        <td>Highest QPS; powers <strong>Vertex AI Vector Search</strong> and AlloyDB AI</td>
+                        <td>Tuning required</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-sliders"></i></div>Knobs, Quantization &amp; Scale-Out
+                </h3>
+                <ul>
+                    <li><strong>Tuning knobs:</strong> HNSW <code>ef_search</code> and IVF <code>n_probe</code>. Higher means more recall and more latency.</li>
+                    <li><strong>Quantization ladder:</strong> <code>float32</code> (1×) → <code>float16</code> (½) → <code>int8</code> (¼, default at 100M+ vectors) → PQ (~10–30× smaller) → binary (1/32). Pair heavy compression with <strong>oversample + full-precision rescoring</strong>.</li>
+                    <li><strong>Shards vs. replicas:</strong> Shards scale corpus size; replicas scale QPS and availability. Isolate mid-size tenants via <strong>namespaces/partitions</strong> and large/regulated tenants on <strong>dedicated shards</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-cyan">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-database"></i></div>Vector Store Landscape
+                </h3>
+                <p>Core ANN libraries (<strong>ScaNN</strong>, Meta <strong>FAISS</strong>) power three deployment tiers:</p>
+                <ul>
+                    <li><strong>1. Local embedded stores</strong> (Chroma) for fast prototyping.</li>
+                    <li><strong>2. Dedicated vector databases</strong> (Vertex AI Vector Search, Qdrant, Milvus, Pinecone, Weaviate) for high-scale ANN and payload filtering.</li>
+                    <li><strong>3. Vector-enabled operational stores</strong> (PostgreSQL <code>pgvector</code>, AlloyDB AI, BigQuery, Redis, Elasticsearch) keeping vectors and relational rows in one ACID system without dual-write sync lag.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-bullseye"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap: ANN Recall vs. Retrieval Recall</h4>
+                <p><strong>"ANN recall"</strong> (agreement with exact k-NN, fixed with <code>ef_search</code> / <code>n_probe</code>) isn't <strong>"retrieval recall"</strong> (agreement with human relevance labels, fixed with chunking, embeddings, and hybrid search). Diagnose which one is failing.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: RETRIEVAL
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="retrieval">
+            <div class="section-divider-number">05</div>
+            <h2>Retrieval: Hybrid Search, RRF &amp; Reranking</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-code-merge"></i></div>Hybrid Search Decision Rule
+            </h3>
+            <p>Match the index to <strong>query diversity</strong>. Hybrid retrieval justifies its added compute and rank-fusion step whenever traffic blends <strong>exact identifier or clause lookups</strong> (sparse BM25) with <strong>broad conceptual questions</strong> (dense vector). Frame the architecture as a three-way balance across <strong>quality, latency, and ongoing maintenance</strong> (the operational burden of keeping indexes synchronized as the corpus scales). Both searches run <strong>in parallel</strong> over the same metadata-pre-filtered corpus, and their ranked lists are merged via RRF.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Dense (Vector)</th>
+                        <th>Sparse (BM25)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matches</td>
+                        <td><strong>Semantic recall:</strong> meaning, synonyms, paraphrases (when user wording ≠ document wording)</td>
+                        <td><strong>Lexical recall:</strong> exact terms, IDs, SKUs, error codes, clause numbers, names</td>
+                    </tr>
+                    <tr>
+                        <td>Misses</td>
+                        <td>Rare exact strings (<code>ERR-409</code>, <code>§4.2(b)</code>)</td>
+                        <td>Synonyms ("car" vs. "automobile")</td>
+                    </tr>
+                    <tr>
+                        <td>Score Scale</td>
+                        <td>Cosine in [-1, 1]</td>
+                        <td>Unbounded [0, ∞)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="formula-block">
+            <div class="formula-label">Reciprocal Rank Fusion (RRF) — Rank-Only Score Merging</div>
+            <div class="formula">RRF(d) = ∑ [ 1 / (k + r_m(d)) ] &nbsp;&nbsp;(typically k = 60)</div>
+            <div class="formula-description">Raw cosine and BM25 scores can't be added (different scales). With k = 60: Chunk A (#1 in BM25, #50 in dense) scores 1/61 + 1/110 ≈ 0.0255. Chunk B (#3 in BM25, #2 in dense) scores 1/63 + 1/62 ≈ 0.0320. <strong>Chunk B wins</strong> because RRF rewards <strong>consensus</strong> across retrievers.</div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-code-branch"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap: Hybrid Search vs. RAG-Fusion</h4>
+                <p>Both use RRF, but fuse different lists. <strong>Hybrid search</strong> fuses <strong>retrievers</strong> (BM25 + dense) for one query. <strong>RAG-Fusion</strong> fuses results from <strong>several LLM-generated query variants</strong>.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Bi-Encoder (Vector Search — Stage 1)</th>
+                        <th>Cross-Encoder (Reranker — Stage 2)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Input</td>
+                        <td>Query and document encoded <strong>separately</strong></td>
+                        <td>Query + document encoded <strong>together</strong> (full cross-attention)</td>
+                    </tr>
+                    <tr>
+                        <td>Speed</td>
+                        <td>Fast: document vectors precomputed, ANN lookup</td>
+                        <td>Slow: one transformer pass per <code>(query, chunk)</code> pair</td>
+                    </tr>
+                    <tr>
+                        <td>Role &amp; Funnel Size</td>
+                        <td><strong>Stage 1 Recall</strong> over millions (top K ≈ 50–100 per retriever)</td>
+                        <td><strong>Stage 2 Precision:</strong> re-score RRF-fused pool (~100–150 → final top N ≈ 3–10)</td>
+                    </tr>
+                    <tr>
+                        <td>Examples</td>
+                        <td>SBERT, DPR, Vertex AI embeddings</td>
+                        <td>Vertex AI Ranking API, Cohere Rerank, BGE-Reranker</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-filter"></i></div>
+            <div class="callout-content">
+                <h4>Dynamic N, Pre-Generation Refusal Gate &amp; Precision Wording</h4>
+                <p>Stop adding chunks when the cross-encoder relevance score falls below a calibrated threshold <strong>τ</strong>, and <strong>abstain immediately</strong> if even the top-1 chunk falls below τ. In interviews/exams, never say <em>"re-rank with list"</em>—say <strong>"fuse parallel BM25 and dense lists via RRF, then re-score the fused candidates with a pairwise cross-encoder reranker."</strong></p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-wand-magic-sparkles"></i></div>Query Transformation (Pre-Retrieval)
+                </h3>
+                <ul>
+                    <li><strong>Query rewriting:</strong> Uses chat history to make follow-ups self-contained (<em>"How about Emily?"</em> → full question).</li>
+                    <li><strong>Routing:</strong> Sends query to the right backend (domain index, SQL, graph, web, or live API tool).</li>
+                    <li><strong>HyDE:</strong> LLM drafts a hypothetical answer; embed the <strong>draft</strong> and search with it.</li>
+                    <li><strong>Multi-query:</strong> 3–5 rephrasings of the <strong>same</strong> intent, fused with RRF.</li>
+                    <li><strong>Decomposition:</strong> Splits a <strong>multi-part or multi-hop</strong> question into sub-queries.</li>
+                    <li><strong>Self-query:</strong> LLM extracts a metadata filter + semantic query.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-coral">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-sliders"></i></div>Metadata Filtering (Pre-Filter vs. Post-Filter)
+                </h3>
+                <ul>
+                    <li><strong>Pre-filter (filtered ANN):</strong> Applied <strong>during</strong> the BM25 and ANN index scan. Returns K valid results; <strong>mandatory for ACLs (<code>acl_groups</code>) and excluding stale data (<code>is_latest = true</code>)</strong>. Vertex AI: <code>restricts</code> / <code>numeric_restricts</code>.</li>
+                    <li><strong>Post-filter:</strong> Global top-K, then drop non-matching results. Can return <strong>zero</strong> results (recall collapse); <strong>never acceptable as primary filter for ACLs or stale data</strong>.</li>
+                    <li><strong>Partition / namespace:</strong> Separate index per tenant, language, or region (hard isolation).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: GENERATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="generation">
+            <div class="section-divider-number">06</div>
+            <h2>Generation: Untrusted Context, Refusal Behavior &amp; Groundedness</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-shield-virus"></i></div>Untrusted Input Isolation &amp; Fail-Closed Screening
+                </h3>
+                <ul>
+                    <li><strong>Structural delimiters:</strong> Wrap each top-N chunk in <code>&lt;document&gt;</code> tags with its <code>Source ID</code> and <code>effective_date</code>. Instruct the LLM to treat <code>&lt;document&gt;</code> blocks strictly as <strong>untrusted passive data, never executable instructions</strong>.</li>
+                    <li><strong>Post-retrieval screening gate (fail-closed):</strong> Input guardrails only inspect the user's prompt prior to search, missing indirect prompt injections inside fetched passages or tool outputs. Run a classifier on retrieved chunks <strong>before prompt assembly</strong> and <strong>fail closed</strong> (halt rather than pass unscreened text) if the classifier errors or times out.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-blue">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-bolt-lightning"></i></div>Context Ordering &amp; Prompt-Cache Prefix
+                </h3>
+                <ul>
+                    <li><strong>Lost in the middle:</strong> Attention is strongest at the start and end of the prompt, so put the highest-ranked chunks there.</li>
+                    <li><strong>Prefix cache ordering:</strong> Because prefix caches evaluate <code>tools → system → messages</code> in order, keep static tool definitions, system instructions, and pinned docs in the cached prefix, and place <strong>dynamically retrieved RAG chunks + the user query at the uncached tail</strong> (never inject per-query chunks or timestamps into <code>system</code>).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Defense Layer</th>
+                        <th>Technique</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr>
                         <td>Retrieval</td>
-                        <td>ANN returns approximate matches</td>
-                        <td>Reranking (Cross-Encoder)</td>
+                        <td>Pre-filtered hybrid search + cross-encoder reranking, measured with <code>Recall@K</code></td>
                     </tr>
                     <tr>
-                        <td>Context Assembly</td>
-                        <td>Correct chunk in ignored middle position</td>
-                        <td>Context Ordering</td>
+                        <td>Pre-generation refusal gate</td>
+                        <td>If top cross-encoder score <code>&lt; τ</code>, short-circuit and return a deterministic refusal (<em>"No relevant documents found"</em>)</td>
                     </tr>
                     <tr>
-                        <td>Generation</td>
-                        <td>Model drifts beyond retrieved context</td>
-                        <td>Faithfulness score &lt; 1.0 / Guardrails</td>
+                        <td>Context &amp; security isolation</td>
+                        <td>Deduplicate; pre-filter stale versions (<code>is_latest = true</code>); pass <code>effective_date</code> to surface conflicts; wrap chunks in <code>&lt;document&gt;</code> tags as <strong>untrusted data</strong></td>
                     </tr>
                     <tr>
-                        <td>Knowledge Freshness</td>
-                        <td>Static training data cutoff</td>
-                        <td>Real-time external memory injection</td>
+                        <td>Post-retrieval screening gate</td>
+                        <td>Run a classifier on fetched passages and tool payloads prior to prompt assembly; <strong>fail closed</strong> on classifier error; cap chunks and tokens</td>
+                    </tr>
+                    <tr>
+                        <td>Prompt &amp; output</td>
+                        <td>Closed-world rule + explicit refusal instruction; low temperature; structured output with required <code>citations</code> checked in code</td>
+                    </tr>
+                    <tr>
+                        <td>Groundedness verification</td>
+                        <td>Claim-level entailment check: NLI model, LLM judge <strong>Faithfulness</strong>, or Vertex AI <strong>Check Grounding API</strong> (<code>support_score</code> 0–1)</td>
+                    </tr>
+                    <tr>
+                        <td>Post-generation refusal gate</td>
+                        <td>Below groundedness threshold → block answer and fall back to safe refusal (showing closest sources) or human review</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Citation Level</th>
+                        <th>Mechanism</th>
+                        <th>What It Guarantees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Level 1 (Weakest)</td>
+                        <td>Free-text <code>[n]</code> brackets</td>
+                        <td><span class="table-cross">Nothing:</span> numbers can be invented</td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Cite chunk IDs from the supplied set</td>
+                        <td>The source exists (IDs checked in code)</td>
+                    </tr>
+                    <tr>
+                        <td>Level 3</td>
+                        <td>Exact quote spans</td>
+                        <td>The quoted text exists (substring check)</td>
+                    </tr>
+                    <tr>
+                        <td>Level 4 (Strongest)</td>
+                        <td>Native grounding metadata</td>
+                        <td><span class="table-check">Claim-to-source mapping from the API:</span> Gemini <code>groundingMetadata</code> (chunks + supports), Claude Citations API (returns source spans without billing output tokens for quoted text)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-quote-right"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap: Citations ≠ Entailment</h4>
+                <p>"The answer has citations, so it's grounded." A citation proves the source <strong>exists</strong>, not that it <strong>supports</strong> the sentence. Always check entailment (sampled, or on every response for high-stakes flows). Refusal is a <strong>first-class safety feature</strong> enforced both before generation (reranker threshold τ) and after generation (groundedness check).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: AGENTIC RAG & AGENT MEMORY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agentic-rag">
+            <div class="section-divider-number">07</div>
+            <h2>Agentic RAG &amp; Three-Layer Agent Memory</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-robot"></i></div>Agentic RAG: Retrieval Inside the Reasoning Loop
+            </h3>
+            <p>A fixed pipeline fails silently when retrieval returns the wrong chunks. <strong>Agentic RAG</strong> places retrieval <em>inside</em> the reasoning loop so the agent decides <strong>when</strong> to search, <strong>what</strong> to query, whether the returned passages are trustworthy, and when to retry or switch tools.</p>
+            <ul>
+                <li><strong>1. Source validation:</strong> Inspect metadata (<code>effective_date</code>, doc type, authority) to drop superseded or low-trust hits (e.g., discarding an old blog post when a current policy doc is present).</li>
+                <li><strong>2. Conflict reconciliation:</strong> Detect contradictory figures across chunks (e.g., an early budget proposal vs. an audited financial report) and ground the answer in the authoritative record.</li>
+                <li><strong>3. Multi-hop decomposition &amp; synthesis:</strong> Split comparative or multi-part questions into separate targeted searches before synthesizing a structured comparison.</li>
+                <li><strong>4. Gap detection &amp; tool fallback:</strong> Recognize when the internal corpus lacks recent or external facts and invoke a live web search or API tool.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Agentic Pattern</th>
+                        <th>Mechanism</th>
+                        <th>Fixes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Corrective RAG (CRAG)</td>
+                        <td>A grader labels retrieval Correct / Ambiguous / Incorrect; Incorrect triggers query rewrite + web search</td>
+                        <td>Answering when the local index lacks the facts</td>
+                    </tr>
+                    <tr>
+                        <td>Self-RAG</td>
+                        <td>The generator emits reflection tokens: <code>[Retrieve]</code>, <code>[IsRel]</code>, <code>[IsSup]</code>, <code>[IsUse]</code></td>
+                        <td>Needless retrieval and unsupported claims</td>
+                    </tr>
+                    <tr>
+                        <td>Adaptive RAG</td>
+                        <td>A complexity router picks no retrieval, single-step, or iterative multi-hop</td>
+                        <td>Over-paying on simple queries, under-retrieving on hard ones</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Implementation Patterns
+                </h3>
+                <ul>
+                    <li><strong>1. Explicit state-machine graphs:</strong> e.g., LangGraph <code>StateGraph</code> carrying typed <code>question / documents / generation</code> state across deterministic <code>retrieve → grade/rewrite → generate</code> nodes for predictable control flow.</li>
+                    <li><strong>2. Autonomous tool-calling loops:</strong> e.g., LlamaIndex <code>ReActAgent</code> or Google ADK <code>Agent</code> wrapping a hybrid + cross-encoder reranked retriever as a callable <code>QueryEngineTool</code>.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-coral">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-gauge-high"></i></div>Guardrails &amp; Trajectory Evaluation
+                </h3>
+                <ul>
+                    <li><strong>Tool description quality:</strong> The model decides whether to call retrieval by reading the tool's <strong>description</strong>. If retrieval never fires, check the trace first and fix the tool description.</li>
+                    <li><strong>Hard iteration cap:</strong> Prevent runaway search loops and task drift; evaluate the <strong>trajectory</strong>, not just the final answer (Vertex AI <code>trajectory_*</code> metrics; ADK <code>tool_trajectory_avg_score</code>).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Memory Layer</th>
+                        <th>What It Holds</th>
+                        <th>Scope</th>
+                        <th>Typical Backing Store</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Short-term</td>
+                        <td>Current turn history and active working context</td>
+                        <td>Single session</td>
+                        <td>In-memory message list</td>
+                    </tr>
+                    <tr>
+                        <td>Episodic</td>
+                        <td>User preferences, past sessions, prior trajectories ("what was tried")</td>
+                        <td>Cross-session</td>
+                        <td>Key-value / session store; auto-extracted via <strong>Vertex AI Memory Bank</strong>, <strong>Mem0</strong> (auto fact extraction), or <strong>Zep</strong> (session-aware auto-summarization + entity extraction)</td>
+                    </tr>
+                    <tr>
+                        <td>Semantic</td>
+                        <td>Permanent domain knowledge searched by meaning</td>
+                        <td>Cross-session / global</td>
+                        <td>Vector store (Chroma locally; Vertex AI Vector Search, Qdrant, Pinecone, Weaviate, or <code>pgvector</code> in prod); keep <strong>separate collections</strong> for user preferences vs. domain facts</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-file-pen"></i></div>Persistent External Scratchpad (<code>Read → Refine → Repeat</code>) &amp; Salience Decay
+            </h3>
+            <ul>
+                <li><strong>Time-weighted salience decay:</strong> Score stored memories by both semantic similarity and <strong>recency / recall frequency</strong> so unreferenced old memories fade instead of competing with fresh context.</li>
+                <li><strong>Enforce <code>Read → Refine → Repeat</code> in the prompt:</strong> For long-horizon tasks, equip the agent with <code>read</code>/<code>write</code> tools backed by a section-keyed Markdown file (e.g., <code>scratchpad.md</code>). Instruct the agent to write its plan upfront, condense noisy tool calls into a few lines of state after each step, and <strong>explicitly re-read the scratchpad before acting</strong>—otherwise it ignores its notes and reacts only to the last chat message.</li>
+                <li><strong>Human-in-the-loop state sync ("resonance loop"):</strong> If the agent starts drifting mid-task, a human can open <code>scratchpad.md</code> and edit the plan directly rather than fighting the model with long corrective chat prompts; the agent picks up the aligned state on its next read, and can also resume from the file after a crash.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: GRAPHRAG & STRUCTURED DATA
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="graphrag">
+            <div class="section-divider-number">08</div>
+            <h2>GraphRAG, Structured &amp; Multimodal Data</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-project-diagram"></i></div>GraphRAG (Property Graphs &amp; Community Summaries)
+            </h3>
+            <p><strong>GraphRAG</strong> stores entities (nodes) and relationships (edges) next to—or instead of—vectors. Where vector similarity only floats topically related paragraphs to the top, a <strong>property graph</strong> (e.g., Neo4j queried via <strong>Text-to-Cypher</strong> in LlamaIndex <code>PropertyGraphIndex</code> or LangChain <code>GraphQA</code>) traverses explicit relational chains (<code>Person -[:WORKS_ON]-&gt; Project &lt;-[:FUNDS]- Org</code>) in a single deterministic hop, and builds <strong>corpus-wide summaries</strong> ("main themes across all Q3 filings") via community summaries. For purely relational queries (org charts, supply chains, legal discovery), traverse the graph directly rather than relying on vector similarity.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Vector RAG</th>
+                        <th>GraphRAG</th>
+                        <th>Hybrid (Vector + Graph)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Strength</td>
+                        <td>Local semantic match</td>
+                        <td>Multi-hop entity chains (org charts, supply chains, legal/financial links), global summaries</td>
+                        <td>Explicit relations + grounded passage quotes</td>
+                    </tr>
+                    <tr>
+                        <td>Cost</td>
+                        <td>Low to moderate</td>
+                        <td>High (entity/relation extraction, rigid schema &amp; graph upkeep, higher latency)</td>
+                        <td>Highest (two stores to sync)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-table"></i></div>Structured Data (Text-to-SQL)
+                </h3>
+                <p>Embeddings are bad at <code>SUM</code>, <code>AVG</code>, sorting, and joins. Route quantitative questions to <strong>Text-to-SQL</strong>: retrieve the relevant schema → generate <strong>read-only</strong> SQL → execute → put the exact result in the prompt. BigQuery and AlloyDB AI can also combine SQL filters and vector search in one query.</p>
+            </div>
+
+            <div class="concept-card accent-amber">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-images"></i></div>Multimodal RAG
+                </h3>
+                <p>Multimodal embeddings put text and images in one shared vector space, so a text query can retrieve architecture diagrams, charts, or schematics, which a multimodal generator (such as Gemini) then reads together with the text.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: RAG ON GOOGLE CLOUD
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="google-cloud">
+            <div class="section-divider-number">09</div>
+            <h2>RAG on Google Cloud</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Google Cloud Option</th>
+                        <th>What It Is (Effort · ACLs)</th>
+                        <th>Choose When</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Grounding with Google Search</td>
+                        <td>Gemini's built-in web grounding; exposed in ADK as the <code>google_search</code> tool (no effort · public web only)</td>
+                        <td>Current public facts, news</td>
+                    </tr>
+                    <tr>
+                        <td>Vertex AI Search</td>
+                        <td>Turnkey enterprise search and RAG (lowest · 100+ connectors, <strong>native ACLs</strong>)</td>
+                        <td>Enterprise search/chat fast, with SaaS permissions</td>
+                    </tr>
+                    <tr>
+                        <td>Vertex AI RAG Engine</td>
+                        <td>Managed, code-first RAG: <code>RagCorpus</code>, wired into ADK via <code>VertexAiRagMemoryService</code> with <code>similarity_top_k</code> and <code>vector_distance_threshold</code> (moderate · pluggable vector DBs)</td>
+                        <td>Control over chunking, embeddings, backend</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Pipeline</td>
+                        <td>Document AI + embeddings + <strong>Vector Search</strong> + your store (highest · you build <code>restricts</code>)</td>
+                        <td>Huge scale, custom rerankers, GraphRAG</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fab fa-google"></i> Google Cloud Reference RAG Stack</div>
+            <div class="architecture-flow">
+                <div class="arch-node input">Document AI<br><small>Layout Parsing</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Vertex Embeddings<br><small>gemini-embedding-001</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node storage">Vector Search (ScaNN)<br><small>+ Firestore / Bigtable</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Ranking API<br><small>Cross-Encoder</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node output">Gemini + Model Armor<br><small>&amp; Check Grounding API</small></div>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Naming Update</h4>
+                <p>Older exam material refers to <strong>PaLM 2</strong> and <strong>Matching Engine</strong>. Those are now <strong>Gemini</strong> and <strong>Vertex AI Vector Search</strong>. BigQuery and AlloyDB AI cover structured and in-database vector search.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: FEDERATED VS. INGESTED RAG
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="federated">
+            <div class="section-divider-number">10</div>
+            <h2>Federated Retrieval vs. Ingested RAG</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Ingested RAG (Copy into Your Index)</th>
+                        <th>Federated Retrieval (Query Live Sources)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Freshness</td>
+                        <td>Behind by the sync interval; needs change capture</td>
+                        <td><span class="table-check">Live</span> (as fresh as each source's own index)</td>
+                    </tr>
+                    <tr>
+                        <td>Access Control</td>
+                        <td>ACLs replicated onto chunks; must stay in sync</td>
+                        <td><span class="table-check">Source enforces native permissions</span> per user token</td>
+                    </tr>
+                    <tr>
+                        <td>Revocations</td>
+                        <td>Must be propagated; the lag is an exposure window</td>
+                        <td><span class="table-check">Immediate</span></td>
+                    </tr>
+                    <tr>
+                        <td>Data Copies</td>
+                        <td>Another copy of sensitive data to secure</td>
+                        <td>No copy, but <strong>query text goes to each third party</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Quality &amp; Ranking</td>
+                        <td><span class="table-check">Best:</span> your parsing, hybrid search, and reranker over one index</td>
+                        <td>Limited by each source's search; scores aren't comparable across sources</td>
+                    </tr>
+                    <tr>
+                        <td>Latency &amp; Availability</td>
+                        <td><span class="table-check">Predictable;</span> independent of sources</td>
+                        <td>Fan-out: tail latency = slowest source; outages drop sources</td>
+                    </tr>
+                    <tr>
+                        <td>Operations</td>
+                        <td>Pipelines, re-embedding, migrations</td>
+                        <td>Many APIs, OAuth tokens, quotas, schema changes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-scale-balanced"></i></div>
+            <div class="callout-content">
+                <h4>Rule of Thumb &amp; Hybrid Patterns</h4>
+                <p>Asked about <strong>quality and latency</strong>? <strong>Ingest.</strong> Asked about <strong>not copying data</strong> or <strong>live permissions/state</strong>? <strong>Federate.</strong> Both? Propose the <strong>hybrid</strong>: ingest stable, high-value corpora with ACL pre-filtering + live top-N permission re-check, and federate volatile or permission-complex systems. (Vertex AI Search connectors support both.)</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: SECURITY & ACCESS CONTROL
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="security">
+            <div class="section-divider-number">11</div>
+            <h2>Security, Access Control &amp; Fairness</h2>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3>
+                <div class="icon-badge"><i class="fas fa-lock"></i></div>Vector Similarity Is Permission-Blind
+            </h3>
+            <p>Decide authorization <strong>before</strong> the prompt is built: once a restricted chunk reaches the model, no system prompt instruction reliably stops it from leaking through paraphrase.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>ACL Strategy</th>
+                        <th>How It Works</th>
+                        <th>Strength</th>
+                        <th>Weakness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Early binding</td>
+                        <td>ACL groups copied onto chunk metadata; pre-filter in search</td>
+                        <td>Fast; always K authorized results</td>
+                        <td>Only as current as the last sync</td>
+                    </tr>
+                    <tr>
+                        <td>Late binding</td>
+                        <td>Check each candidate against the source at query time</td>
+                        <td>Always current</td>
+                        <td>Slower; can return zero results</td>
+                    </tr>
+                    <tr>
+                        <td>Hybrid (Recommended)</td>
+                        <td>Pre-filter + live re-check of the <strong>final top-N</strong> only</td>
+                        <td><span class="table-check">Fast and current</span></td>
+                        <td>More moving parts</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-user-shield"></i></div>ACL Hygiene &amp; Revocations
+                </h3>
+                <ul>
+                    <li><strong>Store group IDs, not user lists;</strong> resolve user → groups at query time (short cache TTL). Apply deny-overrides-allow; isolate <strong>tenants first</strong>.</li>
+                    <li><strong>Derived artifacts inherit the most restrictive source ACL:</strong> parent chunks, summaries, graph communities, caches, and memories.</li>
+                    <li><strong>Revocation fast-lane:</strong> Revoked access hides in chunk metadata, group caches, answer caches, chat history, and agent memory. Use a metadata-only <strong>ACL fast-lane</strong> (no re-embedding), webhook cache purges, and live top-N re-checks.</li>
+                    <li><strong>Cache keys must include permission scope</strong>, or the cache becomes an ACL bypass.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-purple">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-scale-unbalanced"></i></div>Fairness &amp; Replayable Decision Logs
+                </h3>
+                <ul>
+                    <li><strong>End-to-end fairness:</strong> Audit all four stages where demographic skew enters: <strong>(1) the indexed corpus</strong> (uneven coverage), <strong>(2) system-prompt framing</strong>, <strong>(3) few-shot demonstrations</strong>, and <strong>(4) downstream business routing</strong>. Slice evaluation metrics by demographic subgroup.</li>
+                    <li><strong>Replayable decision logs:</strong> Record the request payload, exact <strong>retrieved chunks</strong> (IDs, revision timestamps, text), generated response, and <strong>downstream branch taken</strong>, indexed by a correlation ID for deterministic replay (with field minimization, TTL caps, and RBAC).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Threat / Defense Layer</th>
+                        <th>Architectural Control (Cheap &amp; Fast First)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1. Deterministic filters (~1 ms)</td>
+                        <td>At ingestion and query time, strip hidden text, HTML comments, and zero-width characters; apply regex for known attack patterns.</td>
+                    </tr>
+                    <tr>
+                        <td>2. Small classifier (Model Armor)</td>
+                        <td>Screen the user prompt <strong>and</strong> every retrieved chunk/tool payload before prompt assembly. <strong>Fail closed:</strong> halt if it errors or times out.</td>
+                    </tr>
+                    <tr>
+                        <td>3. Isolated generation</td>
+                        <td>Wrap chunks in <code>&lt;document&gt;</code> delimiters as <strong>untrusted data</strong>; cap chunks and tokens per request.</td>
+                    </tr>
+                    <tr>
+                        <td>4. Output checks</td>
+                        <td>PII/DLP filtering, citation validation, and grounding check before the answer is returned.</td>
+                    </tr>
+                    <tr>
+                        <td>Confused deputy / excessive agency</td>
+                        <td><strong>Least privilege at the tool registry:</strong> read-only tools and credentials for RAG agents; no send/write tools. A system-prompt instruction is not a control.</td>
+                    </tr>
+                    <tr>
+                        <td>Index poisoning (fake documents injected)</td>
+                        <td>Ingestion approval, provenance verification, write-audit logs.</td>
+                    </tr>
+                    <tr>
+                        <td>Cascading injection in multi-agent flows</td>
+                        <td>Validate payloads at <strong>every</strong> agent handoff.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 11: MULTIMEDIA & RESOURCES
+             SECTION 12: FRESHNESS & MIGRATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="freshness">
+            <div class="section-divider-number">12</div>
+            <h2>Freshness, Index Updates &amp; Migration</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Update Mode</th>
+                        <th>Typical Lag</th>
+                        <th>Use For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Full rebuild</td>
+                        <td>Hours</td>
+                        <td>Small corpora, embedding-model changes</td>
+                    </tr>
+                    <tr>
+                        <td>Incremental batch</td>
+                        <td>Minutes to hours</td>
+                        <td>Most documents (policies, wikis)</td>
+                    </tr>
+                    <tr>
+                        <td>Streaming upsert/delete</td>
+                        <td>Seconds</td>
+                        <td>Fast-changing reference content (new tickets, KB articles), <strong>revocations</strong> (Vertex AI <code>STREAM_UPDATE</code>, required by RAG Engine)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-arrows-rotate"></i></div>Preventing Orphan &amp; Ghost Chunks
+                </h3>
+                <ul>
+                    <li><strong>Deterministic chunk IDs</strong> (<code>doc_id</code> + chunk index), and <strong>delete all of a document's old chunks before inserting the new version</strong> (preventing <strong>orphan chunks</strong>).</li>
+                    <li><strong>CDC tombstones:</strong> Propagate source deletes to evict <strong>ghost vectors</strong> and purge caches.</li>
+                    <li><strong>Content hashing:</strong> Re-embed only changed chunks; keep <code>is_latest</code> in metadata and pre-filter on it; run periodic reconciliation jobs.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-blue">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-shuffle"></i></div>Blue/Green Index Migration (7 Steps)
+                </h3>
+                <ul>
+                    <li><strong>1–2. Version &amp; backfill</strong> from raw documents (vectors cannot be converted between models).</li>
+                    <li><strong>3–5. Dual-write</strong> changes, evaluate offline on golden set (including ACLs), and run shadow/canary traffic.</li>
+                    <li><strong>6. Atomic alias swap:</strong> Switch the index alias and the <strong>query embedding model at the exact same moment</strong>.</li>
+                    <li><strong>7. Rollback readiness:</strong> Keep the old index warm and purge the semantic cache.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 13: SEMANTIC CACHING & LATENCY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="caching">
+            <div class="section-divider-number">13</div>
+            <h2>Semantic Caching &amp; Latency Budget</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-bolt"></i></div>Safe Semantic Answer Caching
+                </h3>
+                <p>Embed the incoming query and, if it's close enough to a past query, return the stored answer (~15 ms instead of ~1.2 s).</p>
+                <ul>
+                    <li><strong>Entity masking before embedding:</strong> <em>"AAPL revenue in Q3 2025"</em> → <code>[COMPANY] revenue in [PERIOD]</code>, keeping real values as exact-match keys so Q3 is never served for Q4.</li>
+                    <li><strong>Intent check:</strong> Light cross-encoder confirms the candidate hit means the same thing.</li>
+                    <li><strong>Thresholds by risk:</strong> Strict (≥ 0.90) for legal/financial, looser (≈ 0.75) for general FAQ.</li>
+                    <li><strong>Invalidation &amp; ACLs:</strong> TTL + document-update webhooks + full purge on model migration + <strong>ACL scope in the cache key</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-amber">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-memory"></i></div>Trap: Blaming the Prompt Cache
+                </h3>
+                <p><strong>Prefix prompt caching</strong> (such as Claude's prompt cache) only activates on <strong>byte-identical token prefixes</strong>, meaning it <strong>cannot return outdated retrieved passages</strong>: whenever retrieved chunks change, the prefix diverges and triggers a normal cache miss. "Stale prompt-cache hits" are a myth—turning off prefix caching during a quality regression just inflates latency and token spend without fixing the bug. Investigate corpus/retrieval drift instead. By contrast, the <em>semantic answer cache</em> <strong>can</strong> serve stale responses and requires explicit invalidation.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Online Pipeline Step (Cache Miss)</th>
+                        <th>Typical Latency</th>
+                        <th>Main Optimization Lever</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Auth + group resolution</td>
+                        <td>20–50 ms</td>
+                        <td>Cache group membership (short TTL)</td>
+                    </tr>
+                    <tr>
+                        <td>Cache lookup</td>
+                        <td>10–30 ms</td>
+                        <td>A hit skips everything below</td>
+                    </tr>
+                    <tr>
+                        <td>Query rewrite</td>
+                        <td>0 or 300–500 ms</td>
+                        <td><strong>Gate it:</strong> only for follow-ups or ambiguous queries</td>
+                    </tr>
+                    <tr>
+                        <td>Query embedding</td>
+                        <td>30–80 ms</td>
+                        <td>Same-region endpoint</td>
+                    </tr>
+                    <tr>
+                        <td>Parallel BM25 ‖ ANN</td>
+                        <td>60–150 ms</td>
+                        <td><code>ef_search</code> / <code>n_probe</code>, shard by tenant</td>
+                    </tr>
+                    <tr>
+                        <td>Cross-encoder rerank</td>
+                        <td>100–250 ms</td>
+                        <td>Fewer candidates (150 → 75), GPU batching</td>
+                    </tr>
+                    <tr>
+                        <td>LLM time to first token</td>
+                        <td>500–1,200 ms</td>
+                        <td>Fewer chunks (smaller N), prompt-cached prefix, smaller model; <strong>stream</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 14: EVALUATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="evaluation">
+            <div class="section-divider-number">14</div>
+            <h2>Evaluation, Grading Hierarchy &amp; Rollback Gates</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric Type</th>
+                        <th>Metric</th>
+                        <th>Focus &amp; What It Diagnoses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Reference-required (Offline Golden Set)</strong></td>
+                        <td><strong>Recall@K</strong>, Precision@K, MRR, nDCG@K</td>
+                        <td><strong>Retrieval:</strong> Did we find the right chunks in the top K (headline metric), and are they ranked well?</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reference-required (Offline Golden Set)</strong></td>
+                        <td><strong>Context Recall</strong>, <strong>Answer Correctness</strong></td>
+                        <td><strong>End-to-End (Ragas):</strong> Alignment with ground-truth answers in the golden set</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reference-free (Online)</strong></td>
+                        <td><strong>Faithfulness (Groundedness)</strong></td>
+                        <td><strong>Generation:</strong> Are answer claims entailed by retrieved context? (NLI, LLM judge, or Vertex <strong>Check Grounding API</strong> <code>support_score</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reference-free (Online)</strong></td>
+                        <td><strong>Context Relevance</strong>, <strong>Answer Relevance</strong></td>
+                        <td><strong>Generation:</strong> Does context support the query, and does the answer address the question without drift?</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reference-free (Online)</strong></td>
+                        <td><strong>Refusal Accuracy (Abstention)</strong></td>
+                        <td><strong>Safety:</strong> Share of unanswerable/unsupported queries where the system cleanly refuses instead of guessing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="formula-block">
+            <div class="formula-label">Faithfulness (Groundedness) &amp; The RAG Triad</div>
+            <div class="formula">Faithfulness = (Claims Supported by Context) / (Total Claims in Answer)</div>
+            <div class="formula-description"><strong>RAG Triad (TruLens):</strong> Context Relevance (query ↔ context), Groundedness (context ↔ answer), Answer Relevance (query ↔ answer). <strong>Trap:</strong> The RAG Triad has <strong>no recall metric</strong>—if retrieval returns one narrow chunk and the model summarizes it faithfully, all three Triad scores can be 1.0 while most of the answer is missing. Always pair with <strong>Recall@K</strong> on a golden dataset (200–500 SME-labeled questions including unanswerable, permission-restricted, and multi-turn cases; tune K on the Recall@K curve knee).</div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-layer-group"></i></div>Evaluation Grading Hierarchy
+                </h3>
+                <p>Default to the fastest deterministic check and escalate only when subjective judgment is needed:</p>
+                <ul>
+                    <li><strong>1. Deterministic code assertions first:</strong> JSON schema, valid citation IDs, regex/exact matches, length bounds—sub-millisecond, free, and immune to evaluator drift.</li>
+                    <li><strong>2. LLM-as-a-judge for open-ended quality:</strong> Explicit rubric, chain-of-thought <strong>prior</strong> to scoring, discrete categorical labels, structured JSON output, reference-fact grounding, and human alignment checks. Always score with a <strong>separate model family or tier</strong> from the generator to prevent <strong>self-preference bias</strong>.</li>
+                    <li><strong>3. Domain-expert human grading:</strong> Reserved for high-risk edge cases, novel failure modes, and curating the gold calibration set (including multi-turn, unanswerable, and ACL-restricted cases).</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-coral">
+                <h3>
+                    <div class="icon-badge"><i class="fas fa-traffic-light"></i></div>Per-Stratum Rollback Gates &amp; Hybrid Routing
+                </h3>
+                <p>Lock in pass/fail migration thresholds <strong>ahead of</strong> any model or index cutover, broken down <strong>by document category</strong> rather than relying on a blended mean.</p>
+                <ul>
+                    <li><strong>Example scenario:</strong> If a cheaper model hits <strong>0.86</strong> overall vs. <strong>0.94</strong> for the flagship model, but drops to <strong>0.71–0.74</strong> on two complex document classes against a <strong>0.85 per-class floor</strong>, block a full cutover.</li>
+                    <li><strong>Architectural fix:</strong> Route those two complex document classes to the flagship tier and send the remaining high-scoring volume to the cheaper tier.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 15: COMMON FAILURE MODES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">15</div>
+            <h2>Failure Modes &amp; Exam Traps</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Symptom / Scenario</th>
+                        <th>Root Cause → Correct Architectural Fix</th>
+                        <th>Tempting Wrong Answer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Answer misses half a table or condition</td>
+                        <td>Severed context → structure-aware or parent-child chunking, overlap</td>
+                        <td>Bigger LLM</td>
+                    </tr>
+                    <tr>
+                        <td>"What about him?" retrieves nothing useful</td>
+                        <td>Conversational query → query rewriting with chat history</td>
+                        <td>Raising top-K</td>
+                    </tr>
+                    <tr>
+                        <td>Exact codes or SKUs (<code>ERR-742</code>) not found</td>
+                        <td>Dense-only search → hybrid search (BM25 + dense) with RRF</td>
+                        <td>Larger embedding model</td>
+                    </tr>
+                    <tr>
+                        <td>High Recall@100, poor top-3 precision</td>
+                        <td>Bi-encoder imprecision → cross-encoder reranking</td>
+                        <td>Bigger chunks</td>
+                    </tr>
+                    <tr>
+                        <td>Fact buried in a long prompt is ignored</td>
+                        <td>Lost in the middle → fewer, better chunks at start and end</td>
+                        <td>Longer context window</td>
+                    </tr>
+                    <tr>
+                        <td>Long sessions fail or replies cut off</td>
+                        <td>Working-memory cliff → hard token budget, progressive state + compaction</td>
+                        <td>Bigger window</td>
+                    </tr>
+                    <tr>
+                        <td>Confident answer beyond the sources</td>
+                        <td>Gap filled from memory → context-only rule + abstain + grounding check</td>
+                        <td>Fine-tuning on the documents</td>
+                    </tr>
+                    <tr>
+                        <td>Multi-hop / relationship question fails</td>
+                        <td>Flat chunk search → query decomposition, agentic loop, or GraphRAG</td>
+                        <td>Raising top-K</td>
+                    </tr>
+                    <tr>
+                        <td>Agent loses its plan or recalls stale preferences</td>
+                        <td>Cluttered context, no decay → external <code>scratchpad.md</code> with <code>Read → Refine → Repeat</code> + memory decay</td>
+                        <td>Bigger window</td>
+                    </tr>
+                    <tr>
+                        <td>Outdated or deleted content still returned</td>
+                        <td>Ghost or orphan chunks → delete-before-insert, CDC tombstones, reconciliation job</td>
+                        <td>Post-filtering results</td>
+                    </tr>
+                    <tr>
+                        <td>Wrong live order status, stock, or balance</td>
+                        <td>Similarity ≠ truth → live API/SQL tool on the system of record</td>
+                        <td>Streaming upserts, faster sync</td>
+                    </tr>
+                    <tr>
+                        <td>Quality drifts with <strong>no code change</strong></td>
+                        <td>Corpus drift or silent model/prompt update → rerun golden evals, audit versions, reindex</td>
+                        <td>Disabling prompt caching, bigger model</td>
+                    </tr>
+                    <tr>
+                        <td>Rankings suddenly near-random</td>
+                        <td>Query/index embedded with different models → same model and version; atomic blue/green migration</td>
+                        <td>Retuning <code>ef_search</code></td>
+                    </tr>
+                    <tr>
+                        <td>User sees a document they shouldn't</td>
+                        <td>Post-filter, stale ACLs, unscoped cache → pre-filter + live top-N re-check + ACL-scoped cache keys</td>
+                        <td>"Don't reveal restricted data" prompt</td>
+                    </tr>
+                    <tr>
+                        <td>Instruction hidden in a retrieved doc hijacks the model</td>
+                        <td>Only user input screened → fail-closed chunk screening, delimiters, read-only tools</td>
+                        <td>Input guardrail only</td>
+                    </tr>
+                    <tr>
+                        <td>High RAG Triad scores, answers incomplete</td>
+                        <td>Triad has no recall → measure <strong>Recall@K</strong> on a golden set</td>
+                        <td>Tuning the generator</td>
+                    </tr>
+                    <tr>
+                        <td>Cached answer for the wrong entity or date</td>
+                        <td>Unmasked semantic cache → entity masking + cross-encoder intent check + webhook invalidation</td>
+                        <td>Exact-string cache</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 16: MULTIMEDIA & RESOURCES
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="resources">
-            <div class="section-divider-number">11</div>
-            <h2>Multimedia & Deep Dive Resources</h2>
+            <div class="section-divider-number">16</div>
+            <h2>Multimedia &amp; Deep Dive Resources</h2>
         </div>
 
         <div class="two-columns">
             <div class="concept-card accent-blue">
-                <h3><div class="icon-badge"><i class="fab fa-youtube"></i></div>RAG Architecture Video</h3>
-                <p>A comprehensive walkthrough of the RAG pipeline and real-world case study.</p>
-                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); position: relative; padding-bottom: 56.25%; height: 0;">
-                    <iframe src="https://www.youtube.com/embed/8TFOems982o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>RAG v3.0 Production Blueprint Video</h3>
+                <p>A comprehensive walkthrough of the RAG v3.0 production architecture, retrieval pipelines, and enterprise trade-offs.</p>
+                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                    <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/RAG-v3.0.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
                 </div>
             </div>
-            
+
             <div class="concept-card accent-pink">
-                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive</h3>
-                <p>Listen to an in-depth discussion on how RAG architecture fixes AI hallucinations.</p>
-                <div class="audio-label" style="margin-top: 15px;">RAG vs. Hallucinations</div>
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads (v3.0)</h3>
+                <p>Listen to the RAG v3.0 audio deep dive or view the study guide, slide deck, and architecture infographic.</p>
+                <div class="audio-label" style="margin-top: 15px;">Architecting Production RAG Systems (Podcast v3.0)</div>
                 <div class="audio-wrapper">
-                    <audio controls>
-                        <source src="RAG-v1.1.mp3" type="audio/mpeg">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/RAG-v3.0.mp3" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=rag" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive RAG Practice Quiz →</span>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-file-pdf"></i></div>RAG Engineering Blueprint</h3>
-            <p>Download the high-resolution engineering blueprint and study guide.</p>
-            <div style="display: flex; gap: 15px; margin-top: 15px;">
-                <a href="RAG-v1.1.pdf" class="toc-item" style="flex: 1; border: 1px solid var(--card-border);" target="_blank">
-                    <i class="fas fa-file-pdf" style="color: #FF6B6B;"></i>
-                    <span>Download Blueprint (PDF)</span>
-                </a>
-                <a href="RAG-v1.1.png" class="toc-item" style="flex: 1; border: 1px solid var(--card-border);" target="_blank">
-                    <i class="fas fa-image" style="color: var(--mint);"></i>
-                    <span>View Blueprint (Image)</span>
-                </a>
-            </div>
-            <div style="margin-top: 20px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
-                <img src="RAG-v1.1.png" alt="RAG Engineering Blueprint" style="width: 100%; height: auto; display: block;">
-            </div>
-        </div>
-        
         <!-- ═══════════════════════════════════════
              SELF ASSESSMENT QUESTIONS
              ═══════════════════════════════════════ -->
         <div class="quiz-block">
             <div class="quiz-header">
                 <i class="fas fa-question-circle"></i>
-                <h3>Self-Assessment Questions</h3>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
             </div>
             <div class="quiz-body">
                 <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> Why is RAG still necessary even with models having massive context windows (1M+ tokens)?</p>
+                    <p><span class="q-num">Q1.</span> Why should live order status, inventory counts, or account balances never be served from a RAG vector index?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Because massive windows increase "Lost-in-the-Middle" hallucinations, are unscalably expensive for every query, and degrade inference latency. RAG provides a small, dense payload.</span>
+                        <span class="answer-text">Because "similarity is not truth": vector search retrieves outdated text snapshots and the LLM blends them into a confident wrong answer with normal latency and zero error signals. Mutable transactional state must be queried via live API/SQL tool calls against the authoritative database.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> What is the difference between Dense (Semantic) Search and Sparse (Keyword) Search in RAG?</p>
+                    <p><span class="q-num">Q2.</span> Why can't raw BM25 and dense cosine similarity scores be added together directly, and how does Reciprocal Rank Fusion (RRF) solve this?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Dense search matches meaning and context using vectors but struggles with exact names/IDs. Sparse search (BM25) matches exact terms but is blind to synonyms.</span>
+                        <span class="answer-text">Cosine similarity is bounded in [-1, 1] while BM25 is unbounded [0, ∞), so raw score addition lets one retriever dominate. RRF merges candidate lists using only rank positions: RRF(d) = ∑ 1 / (k + r_m(d)) (with k = 60), rewarding consensus across retrievers before a cross-encoder reranker re-scores the top pool.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> What does "Contextual Retrieval" involve at indexing time?</p>
+                    <p><span class="q-num">Q3.</span> Why is post-filtering unacceptable for enforcing document ACLs or excluding superseded revisions (<code>is_latest = true</code>)?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Augmenting chunks with metadata like document title, section summary, and tags to give the embedding model richer signal, improving precision.</span>
+                        <span class="answer-text">Post-filtering retrieves a global top-K first and then drops unauthorized or stale chunks, which can leave zero valid results (recall collapse) and leak document existence via timing. Always apply metadata pre-filtering inside the ANN and BM25 index scan, paired with a live ACL re-check on the final top-N chunks.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> Input guardrails inspect the user's prompt before search. Why does that leave an enterprise RAG or agent workflow vulnerable, and what is the fix?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Adversarial instructions hidden inside retrieved documents or tool responses bypass input guardrails (indirect prompt injection). Place a fail-closed post-retrieval screening classifier over fetched chunks and tool payloads before prompt hydration, wrap chunks in &lt;document&gt; tags as untrusted passive data, and remove write-capable tools from the generation step.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> RAG quality gradually degrades over three months with zero code changes and green latency/error dashboards. Someone blames stale prompt-cache hits. Are they right?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">No. Prefix prompt caching only triggers on byte-identical token prefixes—if retrieved chunks change, the prefix changes and causes a normal cache miss. Gradual degradation without code changes points to corpus/retrieval drift or an unannounced model update; diagnose by running the golden evaluation suite (Recall@K, Faithfulness) and auditing corpus growth.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> When evaluating a cheaper generator model for migration, overall Faithfulness is 0.86 (vs. 0.94 flagship), but two complex legal document classes score 0.72 against a 0.85 per-stratum floor. What should the architect do?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Block a full cutover based on the per-stratum rollback gate, and implement hybrid model routing: route the two complex legal document classes to the flagship model while sending the remaining high-scoring categories to the cheaper model.</span>
                     </div>
                 </div>
             </div>
@@ -690,8 +1935,7 @@
 
     </div>
 
-    <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
-
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
     <script>
         const backToTopBtn = document.getElementById('backToTop');
@@ -703,7 +1947,7 @@
             answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
         });
 
-        document.querySelectorAll('.toc-item').forEach(link => {
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));

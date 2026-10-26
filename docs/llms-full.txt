@@ -1,0 +1,271 @@
+# Machine Learning Certification Hub
+
+> Open-source study hub created by Michaël Bettan for mastering AI/ML engineering and acing Google Cloud and Anthropic Claude certifications. Provides interactive HTML study guides, architecture diagrams, comparison tables, and self-assessment drills.
+
+## Overview
+
+- **Site URL**: https://mbettan.github.io/machine-learning-cert/
+- **Author**: Michaël Bettan (https://www.linkedin.com/in/mbettan/ · https://github.com/mbettan)
+- **License**: Apache-2.0 (https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE)
+
+## Interactive Study Guides (HTML)
+
+- [Retrieval-Augmented Generation (RAG) v3.0](https://mbettan.github.io/machine-learning-cert/RAG.html): Context strategies (RAG vs. Long Context vs. Fine-Tuning vs. Prompt Caching vs. Live Tools), chunking, dense/sparse/hybrid retrieval (`BM25` + `HNSW`/`ScaNN`), Reciprocal Rank Fusion (`RRF`), cross-encoder reranking, untrusted context & refusal gates, Agentic RAG & memory, GraphRAG, Google Cloud RAG (Vertex AI Search, Vector Search, AlloyDB/pgvector), federated vs. ingested architectures, ACL security, semantic caching, and RAG triad evaluation (`RAGAS`).
+- [Agent Development Kit (ADK) v3.0](https://mbettan.github.io/machine-learning-cert/ADK.html): Open-source code-first framework for enterprise AI agents — `LlmAgent`, `Runner`, `SessionService`, deterministic workflow agents (`SequentialAgent`, `ParallelAgent`, `LoopAgent`), ADK 2.0 graph `Workflow` (`JoinNode`, `Event(route=...)`), multi-agent delegation (`sub_agents`, `AgentTool`, `RemoteA2aAgent`), scoped state & `VertexAiMemoryBankService`, `FunctionTool` & `output_schema`, `McpToolset` & A2A, progressive-disclosure `SkillToolset`, callback/plugin guardrails, HITL resilience (`ReflectAndRetryToolPlugin`), sandboxing (`GkeCodeExecutor`, Agent Identity), trajectory evaluation (`adk eval`, `adk conformance test`), and Agent Runtime / Cloud Run / GKE deployment.
+- [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html): Open JSON-RPC 2.0 standard connecting AI hosts/clients to external MCP servers via `Resources`, `Prompts`, `Tools`, `Sampling`, and `Roots` over `stdio` and Streamable HTTP/SSE transports.
+- [Agent2Agent (A2A) Protocol](https://mbettan.github.io/machine-learning-cert/A2A.html): Open multi-agent interoperability standard (Linux Foundation) covering `.well-known/agent.json` Agent Cards, capability discovery, Task lifecycle states, Artifacts, streaming (`SendStreamingMessage`), and push notifications.
+- [Machine Learning 101 (ML101)](https://mbettan.github.io/machine-learning-cert/ML101.html): Supervised, unsupervised, and reinforcement learning, regression vs. classification, loss functions (`MSE`, `MAE`, cross-entropy), gradient descent, overfitting/regularization (`L1`/`L2`, dropout), confusion matrix metrics (`Precision`, `Recall`, `F1`, `ROC-AUC`), and deep neural networks (`CNN`, `RNN`, `Transformer`).
+- [Generative AI 101 (GenAI101)](https://mbettan.github.io/machine-learning-cert/GenAI101.html): Foundation model lifecycle, tokenization, self-attention, decoding parameters (`temperature`, `top-k`, `top-p`), adaptation spectrum (prompting, RAG, PEFT/LoRA, RLHF/DPO), hallucination mitigation, and AI safety/governance.
+- [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html): Zero-shot/few-shot prompting, Chain-of-Thought (`CoT`), Self-Consistency, Tree-of-Thoughts (`ToT`), `ReAct`, system prompt architecture, structured JSON outputs, and prompt injection defenses.
+- [Google Foundational Models](https://mbettan.github.io/machine-learning-cert/Google.html): Gemini model family (Ultra, Pro, Flash, Nano), multimodal reasoning, Imagen, Chirp, Veo, Codey, Med-PaLM/AlphaFold specialized models, Vertex AI platform, and safety filters.
+- [Anthropic Foundational Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html): Claude model family (Opus, Sonnet, Haiku), Constitutional AI (`RLAIF`), harmlessness/helpfulness/honesty (`HHH`), extended thinking, tool use, computer use, and prompt caching.
+- [Vibe Coding & Swarm Prototyping](https://mbettan.github.io/machine-learning-cert/vibecoding.html): Conversational AI-assisted software development (Vibe Coding) vs. parallel multi-agent exploration (Swarm Prototyping), risk profiles, verification gates, and production handoff.
+- [Instruction-Driven Development (IDD / SDD)](https://mbettan.github.io/machine-learning-cert/idd.html): Specification-Driven Development workflow where living markdown specs (`SPEC.md`), architecture rules, and automated acceptance verification drive deterministic AI code generation.
+
+## Interactive Practice Quizzes
+
+- [Retrieval-Augmented Generation (RAG) v3.0 Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=rag): 22 scenario-based multiple-choice questions with instant distractor diagnostics and study guide deep links.
+- [Agent Development Kit (ADK) v3.0 Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adk): 25 scenario-based multiple-choice questions covering all 16 ADK v3.0 sections with instant distractor diagnostics and study guide deep links.
+
+## Links
+
+- [Landing Page & Interactive Resource Viewers](https://mbettan.github.io/machine-learning-cert/)
+- [Concise Index (`llms.txt`)](https://mbettan.github.io/machine-learning-cert/llms.txt)
+- [Sitemap](https://mbettan.github.io/machine-learning-cert/sitemap.xml)
+
+---
+
+# Curriculum Syllabus & Section Outline (By Study Guide)
+
+## [Retrieval-Augmented Generation (RAG v3.0)](https://mbettan.github.io/machine-learning-cert/RAG.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/RAG.html
+- **Summary**: Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.
+- **Core Sections**:
+  - Overview & Core Mechanics
+  - When to Use RAG (vs. Fine-Tuning, Long Context & Live Tools)
+  - Architecture: Offline Indexing & Online Answering
+  - Indexing: Parsing, Chunking & Enrichment
+  - Embeddings & Vector Search
+  - Retrieval: Hybrid Search, RRF & Reranking
+  - Generation: Untrusted Context, Refusal Behavior & Groundedness
+  - Agentic RAG & Three-Layer Agent Memory
+  - GraphRAG, Structured & Multimodal Data
+  - RAG on Google Cloud
+  - Federated Retrieval vs. Ingested RAG
+  - Security, Access Control & Fairness
+  - Freshness, Index Updates & Migration
+  - Semantic Caching & Latency Budget
+  - Evaluation, Grading Hierarchy & Rollback Gates
+  - Failure Modes & Exam Traps
+  - Multimedia & Deep Dive Resources
+- **Key Topics & Subsections**: Definition · Why It Exists (Standalone LLM Limits) · Three Core Phases · Why Long Context Alone Fails at Scale · Four Context Strategies & the Working-Memory Cliff · The Working-Memory Cliff · Three-Part Executive Tradeoff Framing · RAG Paradigms (Naive, Advanced & Modular) · Parsing Comes First · Contextual Header (Before vs. After) · Enrichment Mechanics · The Semantic Recall Role · Knobs, Quantization & Scale-Out · Vector Store Landscape · Hybrid Search Decision Rule · Query Transformation (Pre-Retrieval) · Metadata Filtering (Pre-Filter vs. Post-Filter) · Untrusted Input Isolation & Fail-Closed Screening · Context Ordering & Prompt-Cache Prefix · Agentic RAG: Retrieval Inside the Reasoning Loop · Implementation Patterns · Guardrails & Trajectory Evaluation · Persistent External Scratchpad ( Read → Refine → Repeat ) & Salience Decay · GraphRAG (Property Graphs & Community Summaries) · Structured Data (Text-to-SQL)
+- **Sample Self-Assessment Questions**:
+  - Q1. Why should live order status, inventory counts, or account balances never be served from a RAG vector index?
+  - Q2. Why can't raw BM25 and dense cosine similarity scores be added together directly, and how does Reciprocal Rank Fusion (RRF) solve this?
+  - Q3. Why is post-filtering unacceptable for enforcing document ACLs or excluding superseded revisions ( is_latest = true )?
+  - Q4. Input guardrails inspect the user's prompt before search. Why does that leave an enterprise RAG or agent workflow vulnerable, and what is the fix?
+  - Q5. RAG quality gradually degrades over three months with zero code changes and green latency/error dashboards. Someone blames stale prompt-cache hits. Are they right?
+  - Q6. When evaluating a cheaper generator model for migration, overall Faithfulness is 0.86 (vs. 0.94 flagship), but two complex legal document classes score 0.72 against a 0.85 per-stratum floor. What should the architect do?
+
+## [Agent Development Kit (ADK v3.0)](https://mbettan.github.io/machine-learning-cert/ADK.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/ADK.html
+- **Summary**: Master Google Agent Development Kit (ADK v3.0): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP & A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.
+- **Core Sections**:
+  - Overview & Core Mechanics
+  - When to Use ADK (vs. a Single Call, a Workflow or Another Framework)
+  - Runtime Architecture: Agent, Runner and SessionService
+  - Agent Types and Deterministic Control Flow
+  - Multi-Agent Delegation: Transfer, AgentTool and Remote Agents
+  - Graph Workflows (ADK 2.0), Planners and Custom Agents
+  - State, Sessions and Memory
+  - Tools and Structured Output
+  - MCP and A2A Integration
+  - Skills and Progressive Disclosure
+  - Callbacks, Plugins and Guardrails
+  - Human-in-the-Loop, Resilience and Durability
+  - Context Engineering and Performance
+  - Security and Sandboxing
+  - Evaluation and Observability
+  - Deployment, Live Streaming and Developer Tooling
+  - Failure Modes and Exam Traps
+  - Multimedia & Deep Dive Resources
+- **Key Topics & Subsections**: Rule 0 & Agent Theater Litmus Test · SDK vs. ADK · Agent, BaseLlm, Runner, SessionService, MemoryService, ArtifactService, App · Context Objects & Event Ledger · LlmAgent, SequentialAgent, ParallelAgent, LoopAgent, Custom BaseAgent · InstructionProvider & Silent LoopAgent Exit · sub_agents Transfer vs. AgentTool vs. RemoteA2aAgent · Single-Parent Rule & ADK 2.0 Sub-Agent Modes (chat, task, single_turn) · ADK 2.0 Workflow Graph, Event(route=...), JoinNode, RequestInput · BuiltInPlanner & PlanReActPlanner · State Key Scopes (session, user:, app:, temp:) · VertexAiMemoryBankService vs. VertexAiRagMemoryService vs. Document Grounding · FunctionTool, Gemini Built-In Tool Constraints & output_schema · McpToolset, Managed GCP MCP & A2A · SkillToolset 3-Tier Progressive Disclosure · 8 Callback Hooks, BasePlugin Order & Tool-Boundary PII Scrubbing · Tool Confirmation, LongRunningFunctionTool, ResumabilityConfig & 3-Layer Recovery Ladder (HttpRetryOptions, ReflectAndRetryToolPlugin, on_model_error_callback) · static_instruction vs. instruction, include_contents='none', EventsCompactionConfig, ContextCacheConfig · Code Executors (BuiltIn, AgentEngineSandbox, GkeCodeExecutor gVisor sandbox) & Agent Identity · adk eval, adk conformance test, Trajectory Match Types & Informational Efficiency Metrics · Agent Runtime, Cloud Run Ambient Agents & runner.run_live() Bidirectional Audio/Video Streaming
+- **Sample Self-Assessment Questions**:
+  - Q1. Why does storing conversation state on an Agent instance cause cross-user data leaks under concurrent traffic, and how does ADK solve this?
+  - Q2. What happens when a LoopAgent(max_iterations=3) reaches its iteration ceiling without any tool setting escalate = True, and how do you prevent an unapproved draft from reaching the next step in an outer SequentialAgent?
+  - Q3. When delegating to a specialist, how does sub_agents=[specialist] differ from wrapping the specialist in AgentTool(agent=specialist)?
+  - Q4. Why is scrubbing PII only inside after_model_callback insufficient when an agent queries external customer APIs or support tickets?
+  - Q5. An agent uses ReflectAndRetryToolPlugin(max_retries=3) and returns {"status": "error", "error_message": "..."} dictionaries from its tools, yet the plugin never triggers a retry. Why?
+  - Q6. Why does returning on the first if event.is_final_response(): inside a runner.run_async(...) loop return an incomplete answer in a multi-agent pipeline?
+
+## [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/MCP.html
+- **Summary**: Learn the Model Context Protocol (MCP), an open JSON-RPC 2.0 standard connecting AI agents to external tools, resources, and prompts over stdio and HTTP.
+- **Core Sections**:
+  - Definition & Value Proposition
+  - Architecture & Workflow
+  - Core Capabilities
+  - Transports & Execution
+  - Implementation Guide
+  - Security & Operations (Production)
+  - Multi-Agent Collaboration
+  - Glossary
+- **Key Topics & Subsections**: What is MCP? · What Problem Does It Solve? · MCP Server · MCP Client · The Host · Standard Workflow · Resources (Data Sources) · Tools (External Actions) · Prompts (Workflows) · Just-In-Time (JIT) Discovery · Transports · Advanced Interactive Workflows · Deterministic Tool Design (Agentic Success) · Authentication & Authorization · Identity & MCPOps · Resilience Mechanisms · Common MCP Security Threats · Agent-to-Agent (A2A) Model
+- **Sample Self-Assessment Questions**:
+  - Q1. What are the three core capabilities exposed by an MCP server?
+  - Q2. What is the difference between MCP and A2A (Agent-to-Agent)?
+  - Q3. Why should API keys NOT be hardcoded in the MCP client configuration file?
+
+## [Agent2Agent (A2A) Protocol](https://mbettan.github.io/machine-learning-cert/A2A.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/A2A.html
+- **Summary**: Explore the Agent2Agent (A2A) protocol for multi-agent interoperability: Agent Cards, capability discovery, task lifecycles, artifacts, and streaming.
+- **Core Sections**:
+  - Definition & Scope
+  - Core & Protocol Architecture
+  - Standard Workflow
+  - Capabilities & Transports
+  - Advanced Collaborative Workflows
+  - Implementation & Security
+  - Glossary
+- **Key Topics & Subsections**: What is A2A? · Interaction Mechanisms (Transports) · Core Capabilities · Workflow Patterns · Architecture & Implementation · Security & Operations · Value Proposition · Core Concepts · Communication Layer · Transport Layer & Task Lifecycle · Security & Operations Concepts
+- **Sample Self-Assessment Questions**:
+  - Q1. What is the core philosophy of the A2A model?
+  - Q2. What are "Agent Cards" in the A2A framework?
+  - Q3. What is the difference between sequential and parallel swarm execution?
+
+## [Machine Learning 101 (ML101)](https://mbettan.github.io/machine-learning-cert/ML101.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/ML101.html
+- **Summary**: Comprehensive study notes on Machine Learning fundamentals: supervised, unsupervised, and reinforcement learning, evaluation metrics, and neural networks.
+- **Core Sections**:
+  - Definitions & Scope
+  - Standard Workflow & Lifecycle
+  - ML Problem Types
+  - Data Extraction & Preparation
+  - Model Troubleshooting
+  - Model Evaluation
+  - Model Serving & Monitoring
+  - User Personas and User Stories
+  - Neural Networks
+  - Glossary
+- **Key Topics & Subsections**: Supervised Learning · Unsupervised & Reinforcement · Data Extraction · Model Training Fundamentals · Underfitting · Overfitting · Bias · Variance · Classification Metrics · Regression Metrics · Gradient Descent & Backpropagation · Batch prediction · Online prediction · Model Monitoring · Architecture & Components · Network Types · Core Concepts · Data Splits · 3 Types of "Bias" · Neural Networks & Optimization · Preventing Overfitting in DNNs (Regularization) · Advanced Techniques & Data Processing
+- **Sample Self-Assessment Questions**:
+  - Q1. What is the difference between Overfitting and Underfitting?
+  - Q2. What is "Data Leakage" in machine learning?
+  - Q3. What is the difference between Supervised and Unsupervised learning?
+
+## [Generative AI 101 (GenAI101)](https://mbettan.github.io/machine-learning-cert/GenAI101.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/GenAI101.html
+- **Summary**: Foundational study guide to Generative AI: transformer architecture, tokenization, decoding parameters, LoRA/PEFT fine-tuning, RLHF/DPO, and AI safety.
+- **Core Sections**:
+  - Definitions & Scope
+  - Standard Workflow
+  - Ecosystem & Key Players
+  - Prompt Engineering & Frameworks
+  - How Models are Trained
+  - Advanced Tactics & Troubleshooting
+  - Agents & RAG
+  - Risks, Ethics & Vulnerabilities
+  - Glossary (misc)
+- **Key Topics & Subsections**: What is GenAI? · Prompting Frameworks · Training Phases · Troubleshooting · RAG & Context Augmentation · Risks & Vulnerabilities · Ethics, Quality & Human Oversight
+- **Sample Self-Assessment Questions**:
+  - Q1. What is the core difference between pre-training and fine-tuning?
+  - Q2. What is "Prompt Injection"?
+  - Q3. What does "Temperature" control in an LLM?
+
+## [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/PromptEngineering.html
+- **Summary**: Master Prompt Engineering for LLMs: zero-shot and few-shot prompting, Chain-of-Thought, ReAct, Tree-of-Thoughts, structured outputs, and injection defense.
+- **Core Sections**:
+  - Definitions & Scope
+  - TCREI Framework
+  - Prompt Anatomy & Structure
+  - Optimization & Technical Tactics
+  - Prompt Chaining (Pipeline Generation)
+  - Advanced Prompting Tactics
+  - Agentic Frameworks (Autonomous)
+  - Advanced Parameter Tuning
+  - Prompting Taxonomy
+  - Advanced Thought & Structural Patterns
+  - Task-Specific Prompt Blueprints
+  - Emergent Roles & Enterprise LLMOps
+- **Key Topics & Subsections**: Prompt Engineering · Type of Prompts · "Lost in the Middle" · Avoid the "Mega-Prompt" · Zero & Few-Shot · Thought Generation · Evaluation · 5-Stage Maturity Model · Prompt vs. Tuning
+- **Sample Self-Assessment Questions**:
+  - Q1. What does the "Lost in the Middle" phenomenon refer to in LLMs?
+  - Q2. Why is "Prompt Chaining" preferred over creating a single "Mega-Prompt"?
+  - Q3. What is the difference between Zero-Shot and Few-Shot prompting?
+
+## [Google Foundational Models](https://mbettan.github.io/machine-learning-cert/Google.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/Google.html
+- **Summary**: Study guide on Google Cloud foundational models and Vertex AI: Gemini Ultra, Pro, Flash, and Nano, Imagen, Veo, Chirp, multimodal AI, and governance.
+- **Core Sections**:
+  - Core Definition & Architecture
+  - Ecosystem Tiers
+  - Gemini 3.1 & Context Mechanics
+  - Generation Models
+  - Gemini Audio, Live API & Embeddings
+  - Gemma Architecture
+  - Safety & Security
+  - Scientific & Specialized Models
+- **Key Topics & Subsections**: Definition: Native Multimodality · Architecture · Gemini 3.1 Pro preview & "Deep think" paradigm · Context mechanics & tokenization · Lyria 3 (audio & music generation) · Nano Banana 2 (Gemini 3.1 Flash image) · Veo 3.1 (video generation) · Gemini Audio · Gemini multimodal live API · Gemini embedding 2 · Gemma 3 architecture · RecurrentGemma (Griffin architecture) · Safety & security: SynthID framework · AlphaFold 3 (generative molecular simulation) · AlphaGeometry 2 (neuro-symbolic reasoning) · Model references
+- **Sample Self-Assessment Questions**:
+  - Q1. What is the core architectural shift in Gemini compared to previous generation models?
+  - Q2. What is the SynthID framework used for?
+  - Q3. What is the difference between Gemini Nano and Gemini Flash?
+
+## [Anthropic Foundational Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/Anthropic.html
+- **Summary**: Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), Constitutional AI (RLAIF), extended thinking, tool use, and prompt caching.
+- **Core Sections**:
+  - Core Philosophy
+  - Constitutional AI
+  - System 2 Reasoning & Deployment
+  - Agentic Bifurcation: Code vs. Cowork
+  - Interpretability & Steering
+  - AI Safety & MCP
+  - Glossary
+- **Key Topics & Subsections**: Core Philosophy · The Compounding Costs of Human-Only Alignment · Projecting Values via Constitutional AI (CAI) · Context Mechanics · Claude Deployment Matrix · System 2 Reasoning: "Adaptive Thinking" · Opening the Black Box · Behavioral Vaccination · AI Safety Levels (ASL) Framework · Model Context Protocol (MCP) · Multimodal RAG & Vision Pipelines · Auditing & Securing MCP Workflows
+- **Sample Self-Assessment Questions**:
+  - Q1. What is "Constitutional AI" (CAI) and how does it differ from traditional RLHF?
+  - Q2. What are the two layers in Anthropic's "Agentic Bifurcation"?
+  - Q3. What is the purpose of "Sparse Autoencoders" (SAEs) in Anthropic's research?
+
+## [Vibe Coding & Swarm Prototyping](https://mbettan.github.io/machine-learning-cert/vibecoding.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/vibecoding.html
+- **Summary**: Compare Vibe Coding and Swarm Prototyping for AI-assisted software engineering: conversational code generation, parallel multi-agent workflows, and risks.
+- **Core Sections**:
+  - What is Vibe Coding?
+  - The Vibe Coding Spectrum
+  - What is Swarm Prototyping?
+  - Multi-Agent Architecture
+  - Vibe Coding vs Swarm Prototyping
+  - Tools & Ecosystem
+  - Risks, Limitations & Best Practices
+  - Key Takeaways & Self-Assessment
+- **Key Topics & Subsections**: Core Principles of Vibe Coding · Full Autopilot · Collaborative Mode · Human-Led + AI Assist · Key Characteristics of Swarm Prototyping · When to Use Swarm Prototyping · When NOT to Use It · Swarm Patterns · Vibe Coding Tools · Swarm / Multi-Agent Frameworks · Risks & Anti-Patterns · Best Practices · Production Readiness Checklist · Key Takeaways
+- **Sample Self-Assessment Questions**:
+  - Q1. Who coined the term "Vibe Coding" and in what year?
+  - Q2. What is the key difference between Vibe Coding and Swarm Prototyping?
+  - Q3. Name three swarm patterns and describe when you'd use each.
+  - Q4. What is the "It Works" trap, and how do you mitigate it?
+  - Q5. On the Vibe Coding spectrum, what are the three modes and their appropriate use cases?
+
+## [Instruction-Driven Development (IDD / SDD)](https://mbettan.github.io/machine-learning-cert/idd.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/idd.html
+- **Summary**: Master Instruction-Driven Development (IDD) and Specification-Driven Development (SDD): reproducible AI coding workflows using living markdown specifications.
+- **Core Sections**:
+  - The Problem with Ad-Hoc Prompting
+  - What is IDD / SDD?
+  - The IDD Workflow (Step-by-Step)
+  - Instruction Documents (Spec Anatomy)
+  - IDD vs Vibe Coding vs Traditional
+  - Real-World IDD Patterns
+  - Tools, Templates & Ecosystem
+  - Key Takeaways & Self-Assessment
+- **Key Topics & Subsections**: Inconsistency · Context Loss · No Collaboration · Core Philosophy of IDD · Detailed Phase Breakdown · Pattern: Layered Specs · Pattern: Spec-Test-Code Loop · Pattern: Spec as PR Template · Pattern: Instruction Library · Tools That Support IDD Workflows · Spec Storage Best Practices · Spec Quality Checklist · Key Takeaways
+- **Sample Self-Assessment Questions**:
+  - Q1. What are the three main problems with ad-hoc AI prompting that IDD solves?
+  - Q2. Name the 6 sections that make up a well-structured IDD instruction document.
+  - Q3. Explain the "Spec-Test-Code Loop" pattern and why it's effective.
+  - Q4. How does IDD relate to Vibe Coding? Are they opposites?
+  - Q5. What is the "golden rule" of IDD, and what does it mean practically?
+  - Q6. Name three tools that provide native support for IDD-style persistent instructions.

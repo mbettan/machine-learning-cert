@@ -1,0 +1,732 @@
+{
+  "topic_id": "adk",
+  "title": "Agent Development Kit (ADK)",
+  "guide_url": "ADK.html",
+  "questions": [
+    {
+      "id": "adk-q-01",
+      "section": "When to Use ADK & Agent Theater",
+      "guide_anchor": "when-to-use",
+      "question": "A team splits a single document-summarization prompt into four persona LlmAgents ('Analyst', 'Strategist', 'Editor', 'Synthesizer') that all share the same read-only context and have zero external tools or human approval gates. Latency doubles and token spend quadruples with no accuracy gain. Which architectural principle was violated?",
+      "options": [
+        {
+          "text": "The \"agent theater\" litmus test: multi-agent is justified only when sub-agents have independent tools, private data boundaries, an independent verifier role, or human-gated steps.",
+          "correct": true
+        },
+        {
+          "text": "The single-parent rule: ADK forbids connecting more than three persona LlmAgents inside a single SequentialAgent pipeline without a JoinNode.",
+          "correct": false,
+          "why_wrong": "SequentialAgent allows any number of distinct sub-agents; the single-parent rule only prevents the same agent instance from being attached to two parent agents."
+        },
+        {
+          "text": "The SDK vs. ADK boundary: persona summarization without tools must be implemented with ParallelAgent and VertexAiMemoryBankService to avoid token inflation.",
+          "correct": false,
+          "why_wrong": "Running four persona prompts in ParallelAgent still multiplies token spend ~4x without adding new tools, private data, or independent verification."
+        },
+        {
+          "text": "The ReWOO planning constraint: persona agents require PlanReActPlanner tags on every turn or the Runner re-executes their system instructions twice.",
+          "correct": false,
+          "why_wrong": "PlanReActPlanner structures reasoning tags for single-agent planning; the 4x cost increase comes from passing the transcript across four unnecessary LLM calls."
+        }
+      ],
+      "explanation": "Rule 0 starts with a single LLM call and adds workflows or multi-agent architectures only when evals prove the simpler approach fails. Under the 'agent theater' litmus test, splitting one prompt into multiple persona agents without independent tools, private data boundaries, an independent verifier role (`include_contents='none'` + external check), or human-gated steps costs ~4x the tokens and 1.5–2.5x the latency for marginal gains.",
+      "key_takeaway": "Avoid 'agent theater': use multiple agents only when sub-agents need distinct tools, private data, an independent verifier, or human gates."
+    },
+    {
+      "id": "adk-q-02",
+      "section": "When to Use ADK & Agent Theater",
+      "guide_anchor": "when-to-use",
+      "question": "A developer argues that Google's Gen AI SDK (`google-genai`) already supports automatic function calling in Python, so ADK provides no additional runtime capability for a multi-user production customer-support agent. What critical capabilities does `google-genai` lack that ADK supplies?",
+      "options": [
+        {
+          "text": "Persistent SessionService state, an Event ledger, multi-agent delegation, callbacks/plugins, evals, and deployment.",
+          "correct": true
+        },
+        {
+          "text": "Support for JSON Schema tool declarations, multimodal audio/video inputs, and configurable safety_settings on Gemini 3.8 models.",
+          "correct": false,
+          "why_wrong": "The Gen AI SDK (`google-genai`) natively supports JSON Schema function declarations, multimodal inputs, and `safety_settings` directly on model calls."
+        },
+        {
+          "text": "The ability to execute more than one Python function call per user prompt without manually parsing raw HTTP multipart responses.",
+          "correct": false,
+          "why_wrong": "`google-genai` includes a short in-process automatic function-calling helper (10 calls by default), so single-turn tool execution is not what separates ADK from the SDK."
+        },
+        {
+          "text": "Server-side execution of `google_search` grounding and `BuiltInCodeExecutor` sandboxes inside a single Gemini API request.",
+          "correct": false,
+          "why_wrong": "Gemini built-in tools (`google_search`, server-side code execution) run inside the model API itself and are accessible from `google-genai` as well as ADK."
+        }
+      ],
+      "explanation": "'SDK' != 'ADK'. While `google-genai` is a model API client that can run a short in-process function-calling loop and hold in-memory chat history, it has no persistent `SessionService` isolated by `app_name`/`user_id`/`session_id`, no commit-then-resume `Event` ledger, no multi-agent transfers, no guardrail callbacks/plugins, no trajectory evaluator (`adk eval`), and no managed deployment runtime.",
+      "key_takeaway": "`google-genai` is a model client; ADK supplies persistent sessions, the Event ledger, multi-agent routing, callbacks, evals, and deployment."
+    },
+    {
+      "id": "adk-q-03",
+      "section": "Runtime Architecture & Primitives",
+      "guide_anchor": "runtime-architecture",
+      "question": "Under concurrent production traffic, Customer A occasionally sees order details fetched during Customer B's conversation. Code review reveals a single module-level `root_agent = LlmAgent(...)` where a custom helper stores fetched records on `root_agent.recent_orders = [...]`. What is the root cause and fix?",
+      "options": [
+        {
+          "text": "Keep `Agent` stateless and store per-user data in `SessionService` via `tool_context.state` (app/user/session).",
+          "correct": true
+        },
+        {
+          "text": "Instantiate a fresh `LlmAgent` and `McpToolset` subprocess inside every FastAPI request handler and destroy both after `run_async()` finishes.",
+          "correct": false,
+          "why_wrong": "ADK is designed so one stateless `Agent` instance safely serves all concurrent users; re-creating agents and MCP subprocesses per request adds severe latency and resource churn."
+        },
+        {
+          "text": "Keep `root_agent.recent_orders` on the `Agent` object but wrap `runner.run_async()` in a global `asyncio.Lock()` so only one user runs at a time.",
+          "correct": false,
+          "why_wrong": "Serializing all traffic with a global lock collapses concurrency and still leaves Customer A's data on `root_agent.recent_orders` for the next user who acquires the lock."
+        },
+        {
+          "text": "Set `include_contents='none'` on `root_agent` so the model ignores attributes attached to the Python `LlmAgent` instance across turns.",
+          "correct": false,
+          "why_wrong": "`include_contents='none'` only omits prior `session.events` from the LLM request; it does not prevent Python code from reading shared attributes mutated on the `Agent` singleton."
+        }
+      ],
+      "explanation": "ADK separates the stateless `Agent` specification from the stateful `SessionService`. Attaching conversation state to the `Agent` instance causes cross-user data bleed under concurrent requests. All working state belongs in `SessionService`, partitioned by the 3-tier isolation keys `app_name -> user_id -> session_id` and mutated via `Event` deltas.",
+      "key_takeaway": "`Agent` instances must remain completely stateless; store conversation state in `SessionService` partitioned by `app_name`, `user_id`, and `session_id`."
+    },
+    {
+      "id": "adk-q-04",
+      "section": "Runtime Architecture & Primitives",
+      "guide_anchor": "runtime-architecture",
+      "question": "A team migrates an ADK application from `InMemorySessionService` to `DatabaseSessionService(db_url='postgresql+asyncpg://...')`. Standard chat turns persist across container restarts, but tools configured with `FunctionTool(fn, require_confirmation=True)` now fail when pausing for approval. Why?",
+      "options": [
+        {
+          "text": "Because built-in tool confirmation (require_confirmation) is only supported by InMemorySessionService, not persistent databases.",
+          "correct": true
+        },
+        {
+          "text": "`DatabaseSessionService` requires a synchronous `psycopg2` connection string whenever human-in-the-loop tool confirmation events are serialized.",
+          "correct": false,
+          "why_wrong": "`DatabaseSessionService` strictly requires an async SQLAlchemy driver (`sqlite+aiosqlite` or `postgresql+asyncpg`); switching to a sync driver fails at startup."
+        },
+        {
+          "text": "`require_confirmation=True` only works when `VertexAiRagMemoryService` is attached to the `Runner` alongside `DatabaseSessionService`.",
+          "correct": false,
+          "why_wrong": "`MemoryService` handles cross-session recall and has no role in pausing or resuming in-flight tool confirmation events."
+        },
+        {
+          "text": "The `app_name` passed to `DatabaseSessionService` must be set to a numeric Vertex AI Reasoning Engine resource ID for confirmation to work.",
+          "correct": false,
+          "why_wrong": "Requiring a Reasoning Engine ID as `app_name` applies to `VertexAiSessionService`, and built-in tool confirmation is unsupported on `VertexAiSessionService` as well."
+        }
+      ],
+      "explanation": "While swapping `InMemorySessionService` for `DatabaseSessionService` (with an async driver like `postgresql+asyncpg`) or `VertexAiSessionService` works with zero agent code changes for normal turns, ADK's built-in tool confirmation (`require_confirmation` / `request_confirmation`) is documented as supported only by `InMemorySessionService`. Production durable approvals should use `LongRunningFunctionTool` or an external ticket/webhook workflow.",
+      "key_takeaway": "Built-in tool confirmation is `InMemorySessionService`-only; use `LongRunningFunctionTool` or external approval workflows with persistent session stores."
+    },
+    {
+      "id": "adk-q-05",
+      "section": "Agent Types & Control Flow",
+      "guide_anchor": "agent-types",
+      "question": "In a `SequentialAgent(sub_agents=[LoopAgent(name='refine', max_iterations=3, sub_agents=[writer, critic]), publisher])`, the `critic` calls `exit_loop` (`tool_context.actions.escalate = True`) when the draft passes. However, when the draft fails all 3 rounds, `publisher` still publishes the flawed draft! How should you prevent this?",
+      "options": [
+        {
+          "text": "Set `tool_context.state[\"temp:approved\"] = True` in `exit_loop` and check it in `publisher`s `before_agent_callback`.",
+          "correct": true
+        },
+        {
+          "text": "Wrap the `SequentialAgent` in a Python `try / except TimeoutError` block to catch the exception raised when `LoopAgent` hits `max_iterations`.",
+          "correct": false,
+          "why_wrong": "`LoopAgent` exits silently when `max_iterations` is reached—it never raises `TimeoutError` or halts the outer `SequentialAgent`."
+        },
+        {
+          "text": "Set `disallow_transfer_to_parent=True` on the `critic` agent so `LoopAgent` refuses to hand control to `publisher` after round 3.",
+          "correct": false,
+          "why_wrong": "`disallow_transfer_to_parent` only restricts LLM-driven `transfer_to_agent` calls; deterministic workflow agents (`LoopAgent`, `SequentialAgent`) do not use LLM transfers."
+        },
+        {
+          "text": "Remove `max_iterations=3` from `LoopAgent` and rely on `RunConfig(max_llm_calls=500)` to abort the entire invocation cleanly.",
+          "correct": false,
+          "why_wrong": "Removing `max_iterations` risks burning hundreds of LLM calls on an unsolvable draft before hitting the hard run ceiling."
+        }
+      ],
+      "explanation": "A `LoopAgent` stops either when a sub-agent/tool sets `escalate = True` or when `max_iterations` trips. Critically, reaching `max_iterations` is a silent exit—no exception is raised—so the next step in an enclosing `SequentialAgent` (`publisher`) executes regardless. Recording `tool_context.state['temp:approved'] = True` in `exit_loop` and gating `publisher` with `before_agent_callback` distinguishes true convergence from iteration exhaustion.",
+      "key_takeaway": "`LoopAgent` exits silently at `max_iterations`; set `state['temp:approved'] = True` in your exit tool and gate downstream steps via `before_agent_callback`."
+    },
+    {
+      "id": "adk-q-06",
+      "section": "Agent Types & Control Flow",
+      "guide_anchor": "agent-types",
+      "question": "An engineer adds a few-shot JSON example `Return JSON like {\"order_id\": 123, \"status\": \"shipped\"}` directly inside an `LlmAgent`'s `instruction` string. At runtime, ADK raises `KeyError: '\"order_id\"'` before calling the model. What is the cleanest fix?",
+      "options": [
+        {
+          "text": "Pass a callable `InstructionProvider` (`def build_prompt(ctx: ReadonlyContext) -> str:`) to skip `{var}` templating.",
+          "correct": true
+        },
+        {
+          "text": "Escape every literal curly brace in the `instruction` string by doubling it (`{{\"order_id\": 123}}`) just like Python's `str.format()`.",
+          "correct": false,
+          "why_wrong": "ADK's regex state template substitution matches `{identifier}` patterns and does not use Python `str.format()` double-brace escaping rules."
+        },
+        {
+          "text": "Move the JSON example into `output_key` so ADK parses the curly braces as a Pydantic schema instead of a session state variable.",
+          "correct": false,
+          "why_wrong": "`output_key` is simply the string key name under which the agent's final response is saved in `session.state`, not a prompt field."
+        },
+        {
+          "text": "Pre-populate `session.state['\"order_id\"'] = 123` inside `after_model_callback` so the template resolver finds the key.",
+          "correct": false,
+          "why_wrong": "Instruction resolution runs before the model call (`before_model_callback`), and populating fake keys for arbitrary JSON snippets is brittle."
+        }
+      ],
+      "explanation": "When `instruction` is a plain string, ADK scans it for `{key}` placeholders to inject values from `session.state` (or `{artifact.name}` from artifacts). Literal braces in JSON examples, regexes, or code snippets can trigger `KeyError` when they match variable syntax. Passing a function `def build_prompt(ctx: ReadonlyContext) -> str:` (`InstructionProvider`) bypasses automatic `{var}` templating and lets you read `ctx.state.get(...)` explicitly.",
+      "key_takeaway": "Use an `InstructionProvider` callable (`def prompt(ctx: ReadonlyContext) -> str:`) whenever instructions contain literal `{...}` JSON or regex syntax."
+    },
+    {
+      "id": "adk-q-07",
+      "section": "Multi-Agent Delegation",
+      "guide_anchor": "multi-agent",
+      "question": "A root `coordinator` agent needs a `tax_calculator` specialist to compute VAT and return the structured figure to `coordinator` so `coordinator` can finish drafting the client invoice. When `tax_calculator` is placed in `coordinator.sub_agents`, `tax_calculator` replies directly to the end user and takes over the chat. How should this be wired?",
+      "options": [
+        {
+          "text": "Wrap tax_calculator in AgentTool(agent=tax_calculator) on coordinator.tools (or use ADK 2.0 mode='task' to return results).",
+          "correct": true
+        },
+        {
+          "text": "Keep `tax_calculator` in `coordinator.sub_agents` in `mode='chat'` and add 'Never speak to the user' to `tax_calculator.instruction`.",
+          "correct": false,
+          "why_wrong": "In `sub_agents` (`mode='chat'`), `transfer_to_agent` hands conversation ownership to the child agent; prompt wording cannot turn a handoff into a function return."
+        },
+        {
+          "text": "Wrap `tax_calculator` in `RemoteA2aAgent` pointing to `localhost` so its `output_key` state deltas are blocked from reaching `coordinator`.",
+          "correct": false,
+          "why_wrong": "Adding network serialization via A2A is unnecessary for an in-process helper, and `coordinator` actually wants the calculated result returned."
+        },
+        {
+          "text": "Set `disallow_transfer_to_peers=True` on `tax_calculator` so control automatically bounces back to `coordinator` before any text is emitted.",
+          "correct": false,
+          "why_wrong": "`disallow_transfer_to_peers=True` only prevents a child from transferring to sibling sub-agents; the child still answers the user on the current turn."
+        }
+      ],
+      "explanation": "`sub_agents` (LLM transfer via `transfer_to_agent`) hands control of the conversation to the specialist, which answers the user next. Wrapping the specialist in `AgentTool(agent=tax_calculator)` (or using ADK 2.0 `mode='single_turn'`) invokes the child like a function call in an isolated child session, forwards any `output_key` state/artifact deltas to the parent, and returns the output to `coordinator` as a tool response.",
+      "key_takeaway": "Use `AgentTool(agent=...)` (or ADK 2.0 `mode='single_turn'`) when the parent must retain control after getting a sub-result; use `sub_agents` for full handoffs."
+    },
+    {
+      "id": "adk-q-08",
+      "section": "Multi-Agent Delegation",
+      "guide_anchor": "multi-agent",
+      "question": "A developer defines a shared `compliance_checker = LlmAgent(name='compliance', ...)` and attaches that same instance to `sub_agents` on both `loan_workflow` and `card_workflow`. At import time, ADK raises a `ValueError` stating that `compliance` already has a parent agent. What is the correct fix?",
+      "options": [
+        {
+          "text": "Use a factory function or `compliance_checker.clone()` so each parent workflow gets its own agent instance.",
+          "correct": true
+        },
+        {
+          "text": "Pass `allow_multiple_parents=True` on `LlmAgent(name='compliance', ...)` so the Runner shares one parent pointer across both workflows.",
+          "correct": false,
+          "why_wrong": "`LlmAgent` has no `allow_multiple_parents` parameter; ADK enforces a strict single-parent tree hierarchy for `sub_agents`."
+        },
+        {
+          "text": "Register `compliance_checker` inside `App(plugins=[compliance_checker])` instead of `sub_agents` so every workflow inherits it.",
+          "correct": false,
+          "why_wrong": "`App(plugins=[...])` only accepts `BasePlugin` subclasses that hook lifecycle callbacks, not `LlmAgent` instances."
+        },
+        {
+          "text": "Set `include_contents='none'` on `compliance_checker` to disable parent tree validation during `SequentialAgent` initialization.",
+          "correct": false,
+          "why_wrong": "`include_contents='none'` controls conversation history injection at runtime and does not bypass the single-parent check at agent construction time."
+        }
+      ],
+      "explanation": "ADK enforces a single-parent rule across the agent tree: an `Agent` instance can appear in only one parent's `sub_agents` list because the runtime uses `agent.parent_agent` for hierarchy resolution and transfer scoping. To reuse a specialist across multiple workflows, create a factory function (`def create_compliance_agent() -> LlmAgent:`), call `agent.clone()`, or wrap it as a tool.",
+      "key_takeaway": "Each `Agent` instance can belong to only one parent's `sub_agents` list; use factory functions or `agent.clone()` to reuse specialists across workflows."
+    },
+    {
+      "id": "adk-q-09",
+      "section": "Graph Workflows (ADK 2.0) & Planners",
+      "guide_anchor": "graph-workflows",
+      "question": "In an ADK 2.0 `Workflow(edges=[...])`, a classifier node needs to route urgent outage tickets to `urgent_agent` and routine questions to `standard_agent`, while another part of the graph fans out to two parallel research nodes and merges their outputs into a single dictionary. Which ADK 2.0 primitives accomplish both?",
+      "options": [
+        {
+          "text": "Return `Event(output=..., route=\"urgent_agent\")` for branching, and pair tuple fan-out with a `JoinNode`.",
+          "correct": true
+        },
+        {
+          "text": "Use `Annotated[list, operator.add]` state reducers on a shared `TypedDict` state schema and call `add_conditional_edges()` on `Workflow`.",
+          "correct": false,
+          "why_wrong": "`Annotated[..., operator.add]` reducers and `add_conditional_edges()` are LangGraph `StateGraph` APIs; ADK has no state reducers and uses `Workflow(edges=[...])`."
+        },
+        {
+          "text": "Raise `RouteException('urgent_agent')` inside the classifier function and wire a `ParallelAgent` without distinct `output_key` names.",
+          "correct": false,
+          "why_wrong": "ADK 2.0 routes conditionally by returning `Event(route=...)`, not by raising exceptions, and parallel branches without distinct keys or a `JoinNode` overwrite each other."
+        },
+        {
+          "text": "Call `transfer_to_agent(agent_name='urgent_agent')` inside the plain Python `FunctionNode` and merge parallel branches via `EventsCompactionConfig`.",
+          "correct": false,
+          "why_wrong": "`transfer_to_agent` is an LLM tool for `LlmAgent` handoffs, not a `FunctionNode` graph edge primitive, and `EventsCompactionConfig` summarizes old session events."
+        }
+      ],
+      "explanation": "In ADK 2.0's unified graph engine (`Workflow(edges=[...])`), a node routes conditionally along named edges by returning `Event(output=..., route='target_node')`. For parallel fan-out and fan-in, an edge tuple `(source, ('branch_a', 'branch_b'))` runs branches concurrently and a `JoinNode` synchronizes them into `dict[node_id, output]` without requiring LangGraph-style state reducers.",
+      "key_takeaway": "ADK 2.0 `Workflow` uses `Event(route=...)` for conditional branching and tuple fan-out + `JoinNode` for parallel synchronization."
+    },
+    {
+      "id": "adk-q-10",
+      "section": "State, Sessions & Memory",
+      "guide_anchor": "state-memory",
+      "question": "A developer fetches a session via `session = await session_service.get_session(...)`, mutates `session.state['user:tier'] = 'platinum'` directly in Python, and later wonders why the update is missing from the audit trail and vanishes from PostgreSQL (`DatabaseSessionService`). What went wrong?",
+      "options": [
+        {
+          "text": "Mutating get_session() modifies a read-only snapshot and bypasses the event ledger, so no state_delta is recorded or persisted.",
+          "correct": true
+        },
+        {
+          "text": "The `user:` prefix is read-only in ADK and can only be populated by `VertexAiMemoryBankService.add_session_to_memory(session)`.",
+          "correct": false,
+          "why_wrong": "`user:` state is fully writable through the event system (`tool_context.state['user:tier'] = 'platinum'`); `MemoryService` is a separate semantic store."
+        },
+        {
+          "text": "`DatabaseSessionService` strips all prefixed keys (`user:`, `app:`, `temp:`) before committing; only unprefixed keys persist to SQL.",
+          "correct": false,
+          "why_wrong": "`DatabaseSessionService` persists unprefixed, `user:`, and `app:` keys across restarts; only `temp:` keys are stripped at the end of the invocation."
+        },
+        {
+          "text": "Direct mutations on `session.state` require calling `session.flush_sync()` before `runner.run_async()` yields its first `Event`.",
+          "correct": false,
+          "why_wrong": "`Session` has no `flush_sync()` method; ADK persists state changes exclusively when `SessionService.append_event()` commits an `Event`'s `state_delta`."
+        }
+      ],
+      "explanation": "In ADK, `get_session()` returns a snapshot that must be treated as read-only. Mutating `session.state` directly in application code bypasses `SessionService.append_event()`, so no `state_delta` is recorded in the event ledger and nothing is written to `DatabaseSessionService` or `VertexAiSessionService`. Always write state via `output_key`, `tool_context.state`, `callback_context.state`, or `EventActions(state_delta={...})`.",
+      "key_takeaway": "Never mutate `get_session().state` directly; write state through `tool_context.state`, `callback_context.state`, `output_key`, or `EventActions(state_delta=...)`."
+    },
+    {
+      "id": "adk-q-11",
+      "section": "State, Sessions & Memory",
+      "guide_anchor": "state-memory",
+      "question": "A user told a travel agent in Session 1, 'I am vegetarian,' and in Session 4 says, 'I eat fish now (pescatarian).' Which ADK memory service automatically extracts these facts from session transcripts and consolidates the contradiction so future sessions recall the updated dietary preference?",
+      "options": [
+        {
+          "text": "`VertexAiMemoryBankService` via `await memory_service.add_session_to_memory(session)` (`GenerateMemories`).",
+          "correct": true
+        },
+        {
+          "text": "`VertexAiRagMemoryService` with `vector_distance_threshold=0.95`, which overwrites older session chunks inside the RAG Engine corpus.",
+          "correct": false,
+          "why_wrong": "`VertexAiRagMemoryService` indexes raw session transcripts for similarity search (where lower `vector_distance_threshold` = closer) and never consolidates contradictions."
+        },
+        {
+          "text": "`InMemoryMemoryService` paired with `PreloadMemoryTool`, which runs regex deduplication over `temp:` state keys across restarts.",
+          "correct": false,
+          "why_wrong": "`InMemoryMemoryService` is a keyword matcher for local testing that loses all data on restart and performs no LLM fact extraction or consolidation."
+        },
+        {
+          "text": "`VertexAiSearchTool` configured with `bypass_multi_tools_limit=True` over an enterprise SharePoint data store.",
+          "correct": false,
+          "why_wrong": "`VertexAiSearchTool` grounds agents over shared enterprise document repositories, not per-user conversational memory across sessions."
+        }
+      ],
+      "explanation": "`VertexAiMemoryBankService` uses an LLM under the hood (`GenerateMemories` triggered by `add_session_to_memory(session)`) to extract meaningful user facts from raw session events and consolidate updates when preferences change over time. By contrast, `VertexAiRagMemoryService` performs vector similarity search over raw transcript chunks without reconciling contradictions, and `add_memory(...)` (`CreateMemory`) writes verbatim entries unless consolidation is enabled.",
+      "key_takeaway": "Use `VertexAiMemoryBankService` (`add_session_to_memory`) for LLM-extracted, consolidated user facts that update as preferences evolve."
+    },
+    {
+      "id": "adk-q-12",
+      "section": "Tools & Structured Output",
+      "guide_anchor": "tools-output",
+      "question": "An `LlmAgent` on Gemini needs to call both the built-in `google_search` grounding tool and two custom Python `FunctionTool`s (`lookup_crm`, `create_draft`) during the same workflow. When all three are passed in `tools=[google_search, lookup_crm, create_draft]`, the API rejects the request or fails during sub-agent transfers. What is the supported ADK pattern?",
+      "options": [
+        {
+          "text": "Use `GoogleSearchTool(bypass_multi_tools_limit=True)` or wrap the `google_search` specialist in `AgentTool`.",
+          "correct": true
+        },
+        {
+          "text": "Convert `lookup_crm` and `create_draft` into synchronous generator functions and set `output_schema` on the root `LlmAgent`.",
+          "correct": false,
+          "why_wrong": "Generator functions and `output_schema` do not lift the Gemini API restriction on mixing server-side built-in tools with custom function declarations."
+        },
+        {
+          "text": "Place `google_search` inside a `sub_agents` transfer target with `mode='chat'` and disable `tool_filter` on the parent coordinator.",
+          "correct": false,
+          "why_wrong": "Because `sub_agents` transfer injects the `transfer_to_agent` function tool into the request, built-in tools inside `sub_agents` still collide unless wrapped in `AgentTool` or `bypass_multi_tools_limit=True`."
+        },
+        {
+          "text": "Wrap `google_search` inside `LongRunningFunctionTool` so the Runner executes the search outside the Gemini model invocation.",
+          "correct": false,
+          "why_wrong": "`google_search` is a Gemini server-side built-in tool executed inside the model call itself, not a Python callable that can be wrapped in `LongRunningFunctionTool`."
+        }
+      ],
+      "explanation": "Gemini built-in tools (`google_search`, `VertexAiSearchTool`, `BuiltInCodeExecutor`) execute server-side inside the model call and historically cannot be mixed in the same request as custom `FunctionTool` declarations (including ADK's injected `transfer_to_agent`). ADK solves this by either setting `bypass_multi_tools_limit=True` on `GoogleSearchTool` / `VertexAiSearchTool` or isolating the built-in tool on its own `LlmAgent` wrapped in `AgentTool(agent=...)`.",
+      "key_takeaway": "To mix Gemini built-in tools (`google_search`, `VertexAiSearchTool`) with custom tools, set `bypass_multi_tools_limit=True` or wrap the built-in agent in `AgentTool`."
+    },
+    {
+      "id": "adk-q-13",
+      "section": "Tools & Structured Output",
+      "guide_anchor": "tools-output",
+      "question": "A Python `FunctionTool` queries an internal inventory API. When an SKU is out of stock or the SKU code has a typo, the function raises `ValueError('SKU not found')`, which immediately terminates the agent's turn with an unhandled 500 error instead of letting the model correct the SKU or inform the user. How should the tool be written?",
+      "options": [
+        {
+          "text": "Return a structured dictionary like `{'status': 'error', 'error_message': 'SKU not found: ...'}` instead of raising an exception.",
+          "correct": true
+        },
+        {
+          "text": "Raise `SystemExit(0)` inside the tool so the `Runner` silently skips the tool call and marks `event.is_final_response() = True`.",
+          "correct": false,
+          "why_wrong": "Raising `SystemExit` terminates the Python process itself rather than returning a recoverable observation to the model."
+        },
+        {
+          "text": "Remove all type hints and docstrings from the Python function so the model passes raw strings that bypass validation checks.",
+          "correct": false,
+          "why_wrong": "ADK relies on type hints and docstrings to generate the JSON schema and tool description; removing them degrades tool selection and argument accuracy."
+        },
+        {
+          "text": "Return an empty string `''` on every failure so the LLM assumes the item is in stock and continues without retrying.",
+          "correct": false,
+          "why_wrong": "Returning an ambiguous empty string hides the failure reason and causes the model to hallucinate success rather than self-correcting or escalating."
+        }
+      ],
+      "explanation": "An uncaught exception inside a tool aborts the step (unless intercepted by `on_tool_error_callback` or `ReflectAndRetryToolPlugin`). For expected domain failures (missing file, invalid SKU, rate limit), tools should return a structured error dictionary (`{'status': 'error', 'error_message': '...'}`) so the `Runner` serializes it as a `FunctionResponse` event and the LLM can fix its arguments, try an alternate tool, or explain the issue to the user.",
+      "key_takeaway": "Return structured error dicts (`{'status': 'error', 'error_message': '...'}`) from tools instead of raising exceptions so the model can recover."
+    },
+    {
+      "id": "adk-q-14",
+      "section": "MCP & A2A Integration",
+      "guide_anchor": "mcp-a2a",
+      "question": "An enterprise platform connects an ADK agent to a shared remote MCP server that exposes 35 database and admin tools, and also delegates cross-organization fraud checks to a partner company's agent. Which combination of ADK primitives and safety rules is correct?",
+      "options": [
+        {
+          "text": "Use `McpToolset` with `StreamableHTTPConnectionParams` and an explicit `tool_filter` allowlist for the MCP server, and wrap the partner agent in `RemoteA2aAgent` with artifact validation.",
+          "correct": true
+        },
+        {
+          "text": "Use `McpToolset` with `StdioConnectionParams` (`npx`) in multi-tenant production and `tool_filter='read_*'` glob patterns to block admin tools.",
+          "correct": false,
+          "why_wrong": "`StdioConnectionParams` spawns a local subprocess (meant for local dev, not shared remote services), and `tool_filter` accepts a list of exact tool names or a `ReadonlyContext` predicate, not glob strings."
+        },
+        {
+          "text": "Use `RemoteA2aAgent` to directly import the partner agent's internal `FunctionTool` schemas and rely on your local `before_tool_callback` to govern its internal tool calls.",
+          "correct": false,
+          "why_wrong": "A2A is an opaque horizontal protocol that exposes only the remote Agent Card (`/.well-known/agent-card.json`), tasks, and artifacts—never internal tools—and remote agents run outside your callbacks."
+        },
+        {
+          "text": "Instantiate `McpToolset` inside an `async def create_agent():` factory coroutine in `agent.py` and omit `tool_filter` in favor of a read-only system prompt.",
+          "correct": false,
+          "why_wrong": "Defining `McpToolset` inside an async factory breaks `adk deploy` startup, and system prompt instructions cannot replace deterministic `tool_filter` allowlisting."
+        }
+      ],
+      "explanation": "MCP is vertical (agent-to-tools/data) and A2A is horizontal (agent-to-agent). For production remote MCP servers, use `McpToolset` with `StreamableHTTPConnectionParams`, restrict exposed tools via `tool_filter=[...]` (exact list or predicate, plus `tool_name_prefix` to avoid collisions), and define toolsets synchronously at module level in `agent.py`. For cross-org agents, use `RemoteA2aAgent` and validate every returned artifact because remote agents execute outside your ADK callbacks.",
+      "key_takeaway": "Pair `McpToolset` (`StreamableHTTPConnectionParams` + `tool_filter` allowlist) for remote tools with `RemoteA2aAgent` (plus artifact validation) for cross-org agents."
+    },
+    {
+      "id": "adk-q-15",
+      "section": "Skills & Progressive Disclosure",
+      "guide_anchor": "skills",
+      "question": "An engineering assistant has 40 specialized runbooks (each 400 lines of instructions plus helper scripts). Stuffing all 40 runbooks into the system prompt consumes 60,000 tokens on every turn and degrades tool accuracy. How does `SkillToolset` solve this, and what is required for bundled scripts?",
+      "options": [
+        {
+          "text": "Load L1 metadata first, fetch L2 `SKILL.md` via `load_skill`, and run non-interactive JSON L3 scripts in a sandbox.",
+          "correct": true
+        },
+        {
+          "text": "It embeds all 40 `SKILL.md` files into `VertexAiRagMemoryService` at startup and runs interactive `input()` bash prompts inside the host process.",
+          "correct": false,
+          "why_wrong": "`SkillToolset` uses deterministic 3-tier progressive disclosure (`list_skills` -> `load_skill` -> `load_skill_resource`/`run_skill_script`), and interactive stdin scripts hang in headless containers."
+        },
+        {
+          "text": "It converts every markdown heading in `SKILL.md` into a separate `FunctionTool` schema so all 160 tools appear in the initial model request.",
+          "correct": false,
+          "why_wrong": "Exposing 160 tools upfront would overwhelm the model's tool-selection budget (> ~16 tools); `SkillToolset` exposes only a small fixed set of discovery/loading tools."
+        },
+        {
+          "text": "It uses `EventsCompactionConfig` to compress the 40 runbooks into a 500-token summary inside `static_instruction` before the first turn.",
+          "correct": false,
+          "why_wrong": "`EventsCompactionConfig` summarizes old conversation events in long sessions; compressing procedural runbooks upfront would lose exact step-by-step instructions and scripts."
+        }
+      ],
+      "explanation": "`SkillToolset` implements 3-tier progressive disclosure: Tier L1 exposes only YAML frontmatter (`name` + `description`, ~60 tokens/skill) via `list_skills`; Tier L2 loads the full `SKILL.md` body on demand via `load_skill`; and Tier L3 loads `references/` or `assets/` via `load_skill_resource` and executes `scripts/` via `run_skill_script` (which requires a sandboxed `code_executor` and non-interactive scripts that support `--help` and print structured JSON to stdout).",
+      "key_takeaway": "`SkillToolset` keeps prompts lean via L1/L2/L3 progressive disclosure; bundled scripts must be non-interactive, print JSON, and run in a `code_executor`."
+    },
+    {
+      "id": "adk-q-16",
+      "section": "Callbacks, Plugins & Guardrails",
+      "guide_anchor": "callbacks-guardrails",
+      "question": "A healthcare agent calls `fetch_patient_record(patient_id)` and summarizes the chart. A security engineer writes a regex SSN scrubber in `after_model_callback`, assuming no SSNs will ever be exposed or stored. Why does a compliance audit still find raw SSNs in Cloud Trace and `session.events`?",
+      "options": [
+        {
+          "text": "Because raw tool outputs reach the LLM and session.events before after_model_callback runs, bypassing tool-boundary scrubbing.",
+          "correct": true
+        },
+        {
+          "text": "`after_model_callback` only appends a new `Event` to the session without replacing the model's `LlmResponse`; use `after_agent_callback` instead.",
+          "correct": false,
+          "why_wrong": "This reverses the two hooks: `after_model_callback` *does* replace `LlmResponse`, whereas `after_agent_callback` only appends an extra `Content` event."
+        },
+        {
+          "text": "Agent-level callbacks are ignored whenever an `App` is run via `Runner.run_async()`; callbacks only fire under `adk web`.",
+          "correct": false,
+          "why_wrong": "Agent-level and plugin callbacks execute identically across `Runner.run_async()`, `adk web`, `adk api_server`, and deployed runtimes."
+        },
+        {
+          "text": "`after_model_callback` must return `None` to replace the response; returning an `LlmResponse` object tells ADK to keep the original unredacted text.",
+          "correct": false,
+          "why_wrong": "Returning `None` from `after_model_callback` leaves the model output unchanged; returning a new `LlmResponse` replaces it."
+        }
+      ],
+      "explanation": "If you only redact PII in `after_model_callback`, the raw output of `fetch_patient_record` has already been committed as a `FunctionResponse` event in `session.events`, sent to the external LLM API context, and captured in OpenTelemetry spans. Scrub PII at the tool boundary—`after_tool_callback` (returning a sanitized `dict` before the tool result is persisted or sent to the LLM) and `before_tool_callback`—keep `after_model_callback` as the final output backstop, and set `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`.",
+      "key_takeaway": "Redact PII at the tool boundary (`after_tool_callback` and `before_tool_callback`) before raw tool output enters model context and `session.events`."
+    },
+    {
+      "id": "adk-q-17",
+      "section": "Callbacks, Plugins & Guardrails",
+      "guide_anchor": "callbacks-guardrails",
+      "question": "A platform team registers an organization-wide security `BasePlugin` on `App(name='ops', root_agent=root, plugins=[sec_plugin])`, while an individual sub-agent also defines its own `before_tool_callback`. In what order do these hooks execute, and what happens when `sec_plugin.before_tool_callback` returns a `dict`?",
+      "options": [
+        {
+          "text": "Plugin hooks run before agent hooks; returning a `dict` skips the agent hook and tool, using that `dict` as the result.",
+          "correct": true
+        },
+        {
+          "text": "Agent-level callbacks run before plugin callbacks; returning a `dict` from the plugin merges its keys into the tool's input `args` dictionary.",
+          "correct": false,
+          "why_wrong": "Plugin hooks execute *before* agent-level hooks so org-wide policies cannot be bypassed by individual agents, and returning a `dict` skips the tool rather than mutating `args`."
+        },
+        {
+          "text": "Both callbacks run in parallel via `asyncio.gather()`, and the tool still executes unless one of the callbacks raises `PermissionError`.",
+          "correct": false,
+          "why_wrong": "Callbacks run sequentially in a deterministic chain, and returning a non-`None` value (`dict` for `before_tool_callback`) cleanly short-circuits tool execution without raising."
+        },
+        {
+          "text": "Registering `plugins=[...]` on `App` is ignored unless the same plugin list is also passed to every child `LlmAgent` constructor.",
+          "correct": false,
+          "why_wrong": "`App(plugins=[...])` automatically applies the plugin's hooks across the entire agent hierarchy (`root_agent` and all nested `sub_agents`)."
+        }
+      ],
+      "explanation": "Plugins (`BasePlugin` registered on `App(plugins=[...])`) enforce cross-cutting guardrails, logging, and retry policies across every agent, model, and tool in the app. Plugin callbacks execute **before** agent-level callbacks, and the first callback to return a non-`None` value (`types.Content`, `LlmResponse`, or `dict`) short-circuits the remaining callbacks in that phase and skips the underlying agent, model, or tool call.",
+      "key_takeaway": "`App(plugins=[...])` hooks run before agent-level callbacks, and returning a non-`None` value immediately short-circuits the step."
+    },
+    {
+      "id": "adk-q-18",
+      "section": "HITL, Resilience & Durability",
+      "guide_anchor": "hitl-resilience",
+      "question": "Following ADK's tool design rules, a team writes all tools to return `{'status': 'error', 'error_message': '...'}` instead of raising exceptions, and registers `ReflectAndRetryToolPlugin(max_retries=3)` on their `App`. In testing, when a tool returns an error dict, the plugin never retries the tool call. Why?",
+      "options": [
+        {
+          "text": "It only intercepts raised exceptions by default; override `extract_error_from_result` to detect error dicts.",
+          "correct": true
+        },
+        {
+          "text": "`ReflectAndRetryToolPlugin` only retries HTTP 429 and 503 errors from the Gemini model endpoint, not `FunctionTool` failures.",
+          "correct": false,
+          "why_wrong": "Model HTTP 429/503 retries are handled by `HttpRetryOptions` on the `Gemini` model; `ReflectAndRetryToolPlugin` specifically targets tool execution errors."
+        },
+        {
+          "text": "`ReflectAndRetryToolPlugin` requires `ResumabilityConfig(is_resumable=True)` and `VertexAiSessionService` before it can emit retry prompts.",
+          "correct": false,
+          "why_wrong": "`ReflectAndRetryToolPlugin` operates in-turn via plugin tool callbacks and works with any `SessionService` regardless of `ResumabilityConfig`."
+        },
+        {
+          "text": "The plugin only activates when `throw_exception_if_retry_exceeded=True` and `max_retries` is set to at least 5.",
+          "correct": false,
+          "why_wrong": "Changing `max_retries` or `throw_exception_if_retry_exceeded` does not change how the plugin detects whether a returned dict represents an error."
+        }
+      ],
+      "explanation": "ADK's recovery stack has three layers: `HttpRetryOptions` for transport 429/503 errors, `ReflectAndRetryToolPlugin` for LLM-guided tool argument self-correction, and `on_model_error_callback` for model failover. By default, `ReflectAndRetryToolPlugin` hooks `on_tool_error_callback` (raised exceptions); to make it trigger on structured error dictionaries (`{'status': 'error', ...}`) returned via `after_tool_callback`, subclass `ReflectAndRetryToolPlugin` and override `extract_error_from_result`.",
+      "key_takeaway": "Override `extract_error_from_result` on `ReflectAndRetryToolPlugin` when your tools return structured `{'status': 'error'}` dicts instead of raising."
+    },
+    {
+      "id": "adk-q-19",
+      "section": "Context Engineering & Performance",
+      "guide_anchor": "context-performance",
+      "question": "An agent has a 12,000-token system prompt containing static policy manuals plus `{current_time}` and `{user_tier}` placeholders at the very top of its `instruction` string. Although `ContextCacheConfig` is enabled on `App`, Cloud Monitoring shows a 0% prefix cache hit rate across turns. How should you fix this?",
+      "options": [
+        {
+          "text": "Move the 12,000-token static manual into `static_instruction` and keep dynamic `{...}` keys in `instruction`.",
+          "correct": true
+        },
+        {
+          "text": "Pass `ContextCacheConfig(min_tokens=100)` directly to the `LlmAgent(...)` constructor instead of registering it on `App`.",
+          "correct": false,
+          "why_wrong": "`ContextCacheConfig` is an `App`-level setting, not an `LlmAgent` constructor parameter, and lowering `min_tokens` cannot cache a prefix whose first line changes every second."
+        },
+        {
+          "text": "Enable `EventsCompactionConfig(compaction_interval=1, overlap_size=0)` so the system instruction is rewritten after every turn.",
+          "correct": false,
+          "why_wrong": "`EventsCompactionConfig` summarizes older conversation events in `session.events`; it does not separate static instructions from dynamic state placeholders."
+        },
+        {
+          "text": "Set `include_contents='none'` on the agent so Gemini caches the dynamic `{current_time}` string across different timestamps.",
+          "correct": false,
+          "why_wrong": "Prefix caching requires byte-identical leading tokens; as long as `{current_time}` sits at the start of the prompt, the prefix changes on every request even with `include_contents='none'`."
+        }
+      ],
+      "explanation": "LLM context caching only reuses KV states for an exact, unchanging token prefix. Placing dynamic state variables (`{current_time}`, `{user_tier}`) at the top of `instruction` invalidates the entire prefix on every turn. `LlmAgent` provides `static_instruction` for stable, cacheable content (placed before dynamic instructions) and `instruction` for dynamic `{state_key}` templates appended after the cached prefix.",
+      "key_takeaway": "Put stable prompt content in `static_instruction` and dynamic `{state_key}` placeholders in `instruction` to preserve `ContextCacheConfig` prefix hits."
+    },
+    {
+      "id": "adk-q-20",
+      "section": "Security & Sandboxing",
+      "guide_anchor": "security-sandboxing",
+      "question": "A multi-agent system runs on GKE and executes untrusted Python data-analysis scripts generated by an `LlmAgent`. Meanwhile, a sibling agent deployed on Vertex AI Agent Runtime needs its own least-privilege IAM principal in Cloud Audit Logs without sharing a service account with other agents in the project. Which settings should be used?",
+      "options": [
+        {
+          "text": "Configure `GkeCodeExecutor(executor_type=\"sandbox\")` (pre-warmed gVisor Agent Sandbox) on GKE, and provision a dedicated Google Cloud Agent Identity (`principal://...`) on Agent Runtime.",
+          "correct": true
+        },
+        {
+          "text": "Use `UnsafeLocalCodeExecutor` inside a read-only GKE Pod and pass a shared project Editor service account key JSON via `app:` state.",
+          "correct": false,
+          "why_wrong": "`UnsafeLocalCodeExecutor` runs `exec()` directly in the host container process with full access to process memory/secrets, and storing service account keys in `app:` state violates zero-trust security."
+        },
+        {
+          "text": "Use `BuiltInCodeExecutor` to query private VPC databases from GKE and configure `RemoteA2aAgent` mTLS cards as IAM principals.",
+          "correct": false,
+          "why_wrong": "`BuiltInCodeExecutor` runs server-side inside Gemini with no network or VPC access, and A2A Agent Cards do not create Google Cloud IAM `principal://` identities."
+        },
+        {
+          "text": "Use `GkeCodeExecutor(executor_type='job')` for sub-second pre-warmed startup and `ToolContext.request_credential` to assign a permanent IAM principal to the agent.",
+          "correct": false,
+          "why_wrong": "Legacy `executor_type='job'` cold-starts a new Kubernetes Job per execution (slow), and `request_credential` performs OAuth 2.0 user delegation rather than provisioning an IAM Agent Identity."
+        }
+      ],
+      "explanation": "For GKE-hosted agents executing untrusted code, `GkeCodeExecutor` with `executor_type='sandbox'` uses pre-warmed gVisor Agent Sandboxes for kernel-level isolation and sub-second startup (replacing legacy per-run Kubernetes Jobs). For tool authentication on Agent Runtime, ADK supports three identity models: **Agent Identity** (`principal://...` per-agent IAM principal for least-privilege access and distinct audit trails), **Service Account** (shared workload identity), and **OAuth 2.0 user delegation** (`ToolContext.request_credential`).",
+      "key_takeaway": "Use `GkeCodeExecutor(executor_type='sandbox')` (gVisor) for GKE code isolation and Agent Identity (`principal://...`) for per-agent IAM on Agent Runtime."
+    },
+    {
+      "id": "adk-q-21",
+      "section": "Evaluation & Observability",
+      "guide_anchor": "evaluation",
+      "question": "A CI pipeline runs `adk eval` with `test_config.json`. Two issues arise: (1) an agent that calls `get_weather('Paris')` and `get_events('Paris')` in reverse order fails `tool_trajectory_avg_score`, and (2) adding `\"tool_call_count_v1\": 5` under `criteria` causes `adk eval` to error out before running any tests. How do you fix both?",
+      "options": [
+        {
+          "text": "Set `match_type: \"ANY_ORDER\"` on `tool_trajectory_avg_score` and enforce call budgets via `custom_metrics`.",
+          "correct": true
+        },
+        {
+          "text": "Lower `response_match_score` to `0.2` and move `tool_call_count_v1` into `RunConfig(max_llm_calls=5)` inside `test_config.json`.",
+          "correct": false,
+          "why_wrong": "`response_match_score` grades lexical ROUGE-1 text overlap (not tool order), and `RunConfig` is not a valid criterion block in `test_config.json`."
+        },
+        {
+          "text": "Switch from `adk eval` to `adk conformance record` in CI so `EXACT` trajectory matching ignores tool ordering and enforces `tool_call_count_v1`.",
+          "correct": false,
+          "why_wrong": "`adk conformance record` only records baseline trajectories; `adk conformance test` verifies conformance, and `tool_call_count_v1` remains `INFORMATIONAL` everywhere."
+        },
+        {
+          "text": "Replace `tool_trajectory_avg_score` with `hallucinations_v1` and set `token_usage_v1: 1000` as the threshold criterion instead.",
+          "correct": false,
+          "why_wrong": "`hallucinations_v1` checks groundedness rather than tool selection, and `token_usage_v1` is also an `INFORMATIONAL`-only metric that rejects thresholds."
+        }
+      ],
+      "explanation": "`tool_trajectory_avg_score` defaults to `match_type: 'EXACT'`, which requires identical tool calls in the exact order with zero extras; when parallel or independent tools can run in any order, configure `match_type: 'ANY_ORDER'` (or `'IN_ORDER'` if extras are allowed between ordered steps). Furthermore, ADK's built-in efficiency metrics (`tool_call_count_v1`, `inference_call_count_v1`, `token_usage_v1`, `invocation_duration_v1`) are strictly `INFORMATIONAL`—setting a threshold on them in `test_config.json` raises an error. Enforce call budgets or forbidden-tool gates via a Python function in `custom_metrics` (`code_config.name`).",
+      "key_takeaway": "Use `IN_ORDER` / `ANY_ORDER` when tool order can vary, and use `custom_metrics` (`code_config.name`) to fail builds on call counts or forbidden tools."
+    },
+    {
+      "id": "adk-q-22",
+      "section": "Evaluation & Observability",
+      "guide_anchor": "evaluation",
+      "question": "After refactoring custom `before_tool_callback` guardrails and state-routing logic, a team wants to verify in CI in under 5 seconds that the harness still produces the exact same tool calls and state transitions—without paying for live LLM calls or suffering from model sampling variance. Which ADK CLI command is built for this?",
+      "options": [
+        {
+          "text": "`adk conformance test --mode=replay` run against golden trajectories captured via `adk conformance record`.",
+          "correct": true
+        },
+        {
+          "text": "`adk eval` configured with `multi_turn_task_success_v1` and `UserSimulatorProvider` at `temperature=0`.",
+          "correct": false,
+          "why_wrong": "`UserSimulatorProvider` and `multi_turn_task_success_v1` make live LLM calls for both the simulated user and the judge model, incurring cost, latency, and variance."
+        },
+        {
+          "text": "`adk api_server --otel_to_cloud` paired with `final_response_match_v2` semantic LLM-as-judge grading.",
+          "correct": false,
+          "why_wrong": "`adk api_server` starts a FastAPI server and `final_response_match_v2` invokes an LLM judge over live model generations."
+        },
+        {
+          "text": "`adk run --replay` using `InMemoryMemoryService` to cache raw HTTP responses across git branches.",
+          "correct": false,
+          "why_wrong": "`adk run` is an interactive terminal chat CLI and `InMemoryMemoryService` is a session memory store, not a deterministic conformance replay engine."
+        }
+      ],
+      "explanation": "ADK provides four ways to evaluate agents: `adk web` (interactive Eval tab), `adk eval` (CLI rubric/trajectory grading), `AgentEvaluator.evaluate(...)` in `pytest`, and **`adk conformance test`**. Running `adk conformance test --mode=replay` replays recorded model responses from `adk conformance record` baselines to deterministically verify harness logic, callbacks, and state deltas in seconds with zero live LLM calls (`--mode=live` tests live model drift).",
+      "key_takeaway": "Use `adk conformance record` and `adk conformance test --mode=replay` to deterministically regression-test agent harness and callback logic without live LLM calls."
+    },
+    {
+      "id": "adk-q-23",
+      "section": "Deployment, Live Streaming & CLI",
+      "guide_anchor": "deployment",
+      "question": "A developer writes a FastAPI endpoint that runs a 3-step `SequentialAgent` (`researcher -> analyst -> writer`, where `writer` uses `BuiltInPlanner(ThinkingConfig(include_thoughts=True))`) via `async for event in runner.run_async(...): if event.is_final_response(): return event.content.parts[0].text`. Why does the endpoint return `researcher`'s raw notes or internal thinking trace instead of `writer`'s final report?",
+      "options": [
+        {
+          "text": "Because every sub-agent emits is_final_response() == True on completion, exiting early with unfiltered p.thought == True parts.",
+          "correct": true
+        },
+        {
+          "text": "`runner.run_async()` yields events in reverse chronological order (`writer` first, `researcher` last) unless `StreamingMode.SSE` is enabled.",
+          "correct": false,
+          "why_wrong": "`run_async()` yields events in forward chronological order as each sub-agent runs; returning on the first `is_final_response()` exits right after `researcher` finishes."
+        },
+        {
+          "text": "`SequentialAgent` requires calling `runner.run_live()` with a `LiveRequestQueue` whenever `BuiltInPlanner` is attached to any sub-agent.",
+          "correct": false,
+          "why_wrong": "`run_live()` is exclusively for bidirectional audio/video streaming sessions; `BuiltInPlanner` thinking tokens work normally on `run_async()`."
+        },
+        {
+          "text": "`is_final_response()` returns `True` on every intermediate `FunctionCall` event unless `skip_summarization=True` is set on the `Runner`.",
+          "correct": false,
+          "why_wrong": "`is_final_response()` is `False` on `FunctionCall` and `FunctionResponse` events; it returns `True` at the end of *each* sub-agent's turn in a multi-agent workflow."
+        }
+      ],
+      "explanation": "In a multi-agent workflow (`SequentialAgent`, `LoopAgent`, `sub_agents`), **every** sub-agent emits its own `event.is_final_response() == True` when it finishes its step. Returning on the first `is_final_response()` exits the generator after step 1 (`researcher`). In addition, when `BuiltInPlanner` is enabled with `include_thoughts=True`, `event.content.parts` includes internal reasoning parts where `p.thought == True`. Always drain the `run_async()` loop to the end and join text from parts where `not getattr(p, 'thought', False)`.",
+      "key_takeaway": "In multi-agent runs, drain the entire `run_async()` stream (do not `return` on the first `is_final_response()`) and filter out `p.thought == True` parts."
+    },
+    {
+      "id": "adk-q-24",
+      "section": "Failure Modes & Exam Traps",
+      "guide_anchor": "failure-modes",
+      "question": "A voice-assistant team sets `RunConfig(streaming_mode=StreamingMode.BIDI, response_modalities=['AUDIO'])` and calls `runner.run_async(...)` in Python ADK to build a real-time interruptible voice agent, while another team deploys an event-driven Pub/Sub alert triage agent. Both setups fail to behave as expected. What is the correct pairing?",
+      "options": [
+        {
+          "text": "Use `runner.run_live()` with `LiveRequestQueue` for audio, and `adk deploy cloud_run --trigger_sources=\"pubsub,eventarc\"`.",
+          "correct": true
+        },
+        {
+          "text": "Keep `runner.run_async()` with `StreamingMode.BIDI` but switch the audio codec to base64 MP3, and deploy the Pub/Sub listener using `adk web --pubsub`.",
+          "correct": false,
+          "why_wrong": "In Python ADK, `StreamingMode.BIDI` on `run_async()` is a silent no-op regardless of audio encoding, and `adk web` is a local browser debugging UI, not a Pub/Sub deployment target."
+        },
+        {
+          "text": "Use `LongRunningFunctionTool` to stream bidirectional audio frames over `run_async()`, and use `VertexAiRagMemoryService` to poll Pub/Sub topics.",
+          "correct": false,
+          "why_wrong": "`LongRunningFunctionTool` pauses for async ticket/human completion rather than streaming real-time audio, and `VertexAiRagMemoryService` is a session memory store."
+        },
+        {
+          "text": "Call `to_a2a(agent)` for low-latency microphone streaming and set `ResumabilityConfig(is_resumable=True)` to automatically subscribe to Eventarc triggers.",
+          "correct": false,
+          "why_wrong": "`to_a2a` exposes JSON-RPC/HTTPS agent-to-agent endpoints, and `ResumabilityConfig` resumes interrupted invocations rather than provisioning Cloud Run Eventarc triggers."
+        }
+      ],
+      "explanation": "In Python ADK, passing `StreamingMode.BIDI` to `runner.run_async()` is a silent no-op (`run_async` only supports `StreamingMode.SSE` for server-sent token streaming). Bidirectional audio/video streaming with barge-in (`event.interrupted == True`) requires `runner.run_live(user_id=..., session_id=..., live_request_queue=LiveRequestQueue(), run_config=RunConfig(response_modalities=['AUDIO']))`. For ambient (event-driven) agents triggered by Cloud Pub/Sub or Eventarc, deploy to Cloud Run with `adk deploy cloud_run --trigger_sources='pubsub,eventarc'`.",
+      "key_takeaway": "Use `runner.run_live()` with `LiveRequestQueue` for bidirectional audio/video streaming, and `adk deploy cloud_run --trigger_sources='pubsub,eventarc'` for ambient agents."
+    },
+    {
+      "id": "adk-q-25",
+      "section": "Tools & Structured Output",
+      "guide_anchor": "tools-output",
+      "question": "A developer sets output_schema=FinancialReport on a tool-using ReAct agent. However, on this model and SDK configuration, setting an output_schema disables the agent's ability to call its query_database tool. What is the standard ADK architectural fix?",
+      "options": [
+        {
+          "text": "Place the tool-using agent first in a SequentialAgent, followed by a stateless formatter agent with output_schema and include_contents='none'.",
+          "correct": true
+        },
+        {
+          "text": "Wrap the query_database tool inside an AgentTool and set output_schema=FinancialReport on the child agent instead of the parent coordinator.",
+          "correct": false,
+          "why_wrong": "If the child agent has output_schema configured, it will suffer from the exact same inability to invoke the underlying database tool."
+        },
+        {
+          "text": "Attach PlanReActPlanner to the agent so it forces the JSON schema into the /*FINAL_ANSWER*/ tag without using native structured output.",
+          "correct": false,
+          "why_wrong": "While PlanReActPlanner structures reasoning tags in plain text, it does not enforce strict JSON schema validation like the native output_schema parameter."
+        },
+        {
+          "text": "Convert the Pydantic schema into a few-shot JSON example inside the instruction string and remove the output_schema parameter from the agent.",
+          "correct": false,
+          "why_wrong": "Few-shot prompting reduces formatting mistakes but cannot guarantee strict schema compliance; the two-agent SequentialAgent pattern guarantees valid JSON without breaking tools."
+        }
+      ],
+      "explanation": "When enabling structured output (output_schema) conflicts with native tool calling or multi-turn tool trajectories, decouple tool execution from formatting: use a SequentialAgent where Step 1 calls tools and writes findings to session state, and Step 2 is a stateless formatter agent configured with output_schema and include_contents='none'.",
+      "key_takeaway": "Decouple tool calling from strict schema formatting using a SequentialAgent followed by a stateless formatter agent (include_contents='none' + output_schema)."
+    }
+  ]
+}

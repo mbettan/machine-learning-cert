@@ -42,3 +42,11 @@ verify_content.py
 # Package management (if not intended for repo)
 package.json
 package-lock.json
+
+# Archived study guide versions & local build/verification tooling
+foundation/archive/
+docs/*-print.html
+scripts/
+QUIZ_SPEC.md
+render_pdf.js
+

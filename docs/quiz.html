@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Practice Quiz | Machine Learning Certification Hub</title>
+    <meta name="description" content="Interactive practice quiz with scenario-based multiple-choice questions, instant explanations, distractor diagnostics, and study guide deep links.">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/quiz.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="quiz-app">
+    <a href="#content" class="skip-link visually-hidden">Skip to quiz content</a>
+
+    <div class="page-wrapper quiz-wrapper">
+        <header class="quiz-top-header">
+            <nav aria-label="Breadcrumb" class="quiz-nav-row">
+                <a href="index.html" class="quiz-back-link">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <span>Back to Hub</span>
+                </a>
+                <a id="quiz-guide-link" href="RAG.html" class="quiz-guide-pill">
+                    <i class="fas fa-book-open" aria-hidden="true"></i>
+                    <span id="quiz-guide-label">Open Study Guide</span>
+                </a>
+            </nav>
+
+            <div class="quiz-hero">
+                <div class="quiz-eyebrow" id="quiz-eyebrow">Interactive Practice Drill</div>
+                <h1 id="quiz-title">Loading Practice Quiz…</h1>
+                <p id="quiz-subtitle">Select an option (or press keys 1–4 / A–D) for instant feedback and distractor diagnostics.</p>
+            </div>
+        </header>
+
+        <main id="content" tabindex="-1">
+            <!-- Session Controls & Live Score Bar -->
+            <div class="quiz-session-bar" role="status" aria-live="polite">
+                <div class="quiz-stats-group">
+                    <span class="quiz-stat-pill" id="quiz-progress-pill">Loading…</span>
+                    <span class="quiz-stat-pill stat-correct" id="quiz-correct-pill">0 Correct</span>
+                    <span class="quiz-stat-pill stat-missed" id="quiz-missed-pill">0 Missed</span>
+                </div>
+
+                <div class="quiz-actions-group">
+                    <label for="quiz-section-select" class="visually-hidden">Filter by section</label>
+                    <select id="quiz-section-select" class="quiz-select">
+                        <option value="all">All Sections</option>
+                    </select>
+
+                    <button type="button" id="quiz-retry-missed-btn" class="quiz-action-btn btn-amber" hidden>
+                        <i class="fas fa-redo" aria-hidden="true"></i>
+                        <span id="quiz-retry-missed-label">Retry Missed (0)</span>
+                    </button>
+
+                    <button type="button" id="quiz-reshuffle-btn" class="quiz-action-btn">
+                        <i class="fas fa-random" aria-hidden="true"></i>
+                        <span>Reshuffle / Restart</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Retry Missed Mode Banner -->
+            <div class="quiz-retry-banner" id="quiz-retry-banner" hidden>
+                <span><i class="fas fa-redo" aria-hidden="true"></i> Retry mode — re-testing only the questions you missed.</span>
+                <button type="button" id="quiz-exit-retry-btn" class="quiz-action-btn">Exit Retry Mode</button>
+            </div>
+
+            <!-- End-of-Quiz Completion Summary -->
+            <section class="quiz-complete-box" id="quiz-complete-box" aria-labelledby="quiz-complete-heading" hidden>
+                <h2 id="quiz-complete-heading"><i class="fas fa-flag-checkered" aria-hidden="true"></i> Quiz Complete</h2>
+                <p class="quiz-complete-score" id="quiz-complete-score"></p>
+                <p class="quiz-complete-detail" id="quiz-complete-detail"></p>
+                <div class="quiz-complete-actions">
+                    <button type="button" id="quiz-complete-retry-btn" class="quiz-action-btn btn-amber">
+                        <i class="fas fa-redo" aria-hidden="true"></i>
+                        <span>Retry Missed</span>
+                    </button>
+                    <button type="button" id="quiz-complete-restart-btn" class="quiz-action-btn">
+                        <i class="fas fa-random" aria-hidden="true"></i>
+                        <span>Reshuffle &amp; Restart</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Active Question Card -->
+            <article class="mcq-card" id="mcq-card" aria-labelledby="mcq-question-text">
+                <div class="mcq-card-meta">
+                    <span class="mcq-badge badge-topic" id="mcq-topic-badge">RAG</span>
+                    <span class="mcq-badge badge-section" id="mcq-section-badge">Section</span>
+                </div>
+
+                <h2 class="mcq-question" id="mcq-question-text" tabindex="-1">Loading question…</h2>
+
+                <ul class="mcq-options-list" id="mcq-options-list" role="list"></ul>
+
+                <!-- Instant Feedback Box (Revealed on Answer) -->
+                <div class="mcq-feedback-box" id="mcq-feedback-box" hidden>
+                    <div class="mcq-feedback-banner" id="mcq-feedback-banner"></div>
+
+                    <div class="mcq-feedback-section">
+                        <h3>Why Correct</h3>
+                        <p id="mcq-explanation-text"></p>
+                    </div>
+
+                    <div class="mcq-feedback-section" id="mcq-distractor-section">
+                        <h3 id="mcq-distractor-heading">Why Distractors Fail</h3>
+                        <ul class="mcq-distractor-list" id="mcq-distractor-list" role="list"></ul>
+                    </div>
+
+                    <div class="mcq-takeaway-box">
+                        <strong class="mcq-takeaway-label">Key Takeaway:</strong>
+                        <span id="mcq-takeaway-text"></span>
+                    </div>
+
+                    <div class="mcq-feedback-footer">
+                        <a id="mcq-deep-link" href="RAG.html" class="mcq-review-link">
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                            <span>Review This Concept in the Study Guide</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Prev / Next Controls -->
+                <div class="mcq-footer-nav">
+                    <button type="button" id="mcq-prev-btn" class="quiz-nav-btn">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        <span>Previous</span>
+                    </button>
+                    <span class="mcq-kbd-hint">Keys: 1–4 / A–D to answer · ← / → to navigate</span>
+                    <button type="button" id="mcq-next-btn" class="quiz-nav-btn btn-primary">
+                        <span>Next Question</span>
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </article>
+
+            <!-- 1..N Question Navigator Strip -->
+            <nav aria-label="Question navigator" class="mcq-strip-wrapper">
+                <ul class="mcq-strip-list" id="mcq-strip-list" role="list"></ul>
+            </nav>
+        </main>
+
+        <footer class="page-footer">
+            <p>Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank" rel="noopener noreferrer">Michaël Bettan</a> · <a href="index.html">Machine Learning Certification Hub</a></p>
+        </footer>
+    </div>
+
+    <script src="quiz.js" defer></script>
+</body>
+
+</html>
