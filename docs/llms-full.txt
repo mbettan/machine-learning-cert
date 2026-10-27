@@ -10,8 +10,8 @@
 
 ## Interactive Study Guides (HTML)
 
-- [Retrieval-Augmented Generation (RAG) v3.0](https://mbettan.github.io/machine-learning-cert/RAG.html): Context strategies (RAG vs. Long Context vs. Fine-Tuning vs. Prompt Caching vs. Live Tools), chunking, dense/sparse/hybrid retrieval (`BM25` + `HNSW`/`ScaNN`), Reciprocal Rank Fusion (`RRF`), cross-encoder reranking, untrusted context & refusal gates, Agentic RAG & memory, GraphRAG, Google Cloud RAG (Vertex AI Search, Vector Search, AlloyDB/pgvector), federated vs. ingested architectures, ACL security, semantic caching, and RAG triad evaluation (`RAGAS`).
-- [Agent Development Kit (ADK) v3.0](https://mbettan.github.io/machine-learning-cert/ADK.html): Open-source code-first framework for enterprise AI agents — `LlmAgent`, `Runner`, `SessionService`, deterministic workflow agents (`SequentialAgent`, `ParallelAgent`, `LoopAgent`), ADK 2.0 graph `Workflow` (`JoinNode`, `Event(route=...)`), multi-agent delegation (`sub_agents`, `AgentTool`, `RemoteA2aAgent`), scoped state & `VertexAiMemoryBankService`, `FunctionTool` & `output_schema`, `McpToolset` & A2A, progressive-disclosure `SkillToolset`, callback/plugin guardrails, HITL resilience (`ReflectAndRetryToolPlugin`), sandboxing (`GkeCodeExecutor`, Agent Identity), trajectory evaluation (`adk eval`, `adk conformance test`), and Agent Runtime / Cloud Run / GKE deployment.
+- [Retrieval-Augmented Generation (RAG)](https://mbettan.github.io/machine-learning-cert/RAG.html): Context strategies (RAG vs. Long Context vs. Fine-Tuning vs. Prompt Caching vs. Live Tools), chunking, dense/sparse/hybrid retrieval (`BM25` + `HNSW`/`ScaNN`), Reciprocal Rank Fusion (`RRF`), cross-encoder reranking, untrusted context & refusal gates, Agentic RAG & memory, GraphRAG, Google Cloud RAG (Vertex AI Search, Vector Search, AlloyDB/pgvector), federated vs. ingested architectures, ACL security, semantic caching, and RAG triad evaluation (`RAGAS`).
+- [Agent Development Kit (ADK)](https://mbettan.github.io/machine-learning-cert/ADK.html): Open-source code-first framework for enterprise AI agents — `LlmAgent`, `Runner`, `SessionService`, deterministic workflow agents (`SequentialAgent`, `ParallelAgent`, `LoopAgent`), ADK 2.0 graph `Workflow` (`JoinNode`, `Event(route=...)`), multi-agent delegation (`sub_agents`, `AgentTool`, `RemoteA2aAgent`), scoped state & `VertexAiMemoryBankService`, `FunctionTool` & `output_schema`, `McpToolset` & A2A, progressive-disclosure `SkillToolset`, callback/plugin guardrails, HITL resilience (`ReflectAndRetryToolPlugin`), sandboxing (`GkeCodeExecutor`, Agent Identity), trajectory evaluation (`adk eval`, `adk conformance test`), and Agent Runtime / Cloud Run / GKE deployment.
 - [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html): Open JSON-RPC 2.0 standard connecting AI hosts/clients to external MCP servers via `Resources`, `Prompts`, `Tools`, `Sampling`, and `Roots` over `stdio` and Streamable HTTP/SSE transports.
 - [Agent2Agent (A2A) Protocol](https://mbettan.github.io/machine-learning-cert/A2A.html): Open multi-agent interoperability standard (Linux Foundation) covering `.well-known/agent-card.json` Agent Cards, capability discovery, Task lifecycle states, Artifacts, streaming (`SendStreamingMessage`), and push notifications.
 - [Machine Learning 101 (ML101)](https://mbettan.github.io/machine-learning-cert/ML101.html): Supervised, unsupervised, and reinforcement learning, regression vs. classification, loss functions (`MSE`, `MAE`, cross-entropy), gradient descent, overfitting/regularization (`L1`/`L2`, dropout), confusion matrix metrics (`Precision`, `Recall`, `F1`, `ROC-AUC`), and deep neural networks (`CNN`, `RNN`, `Transformer`).
@@ -19,13 +19,17 @@
 - [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html): Zero-shot/few-shot prompting, Chain-of-Thought (`CoT`), Self-Consistency, Tree-of-Thoughts (`ToT`), `ReAct`, system prompt architecture, structured JSON outputs, and prompt injection defenses.
 - [Google Foundational Models](https://mbettan.github.io/machine-learning-cert/Google.html): Gemini model family (Ultra, Pro, Flash, Nano), multimodal reasoning, Imagen, Chirp, Veo, Codey, Med-PaLM/AlphaFold specialized models, Vertex AI platform, and safety filters.
 - [Anthropic Foundational Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html): Claude model family (Opus, Sonnet, Haiku), Constitutional AI (`RLAIF`), harmlessness/helpfulness/honesty (`HHH`), extended thinking, tool use, computer use, and prompt caching.
+- [Claude Platform & API](https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html): Building on the Claude API — Messages API request shape, system-prompt altitude, the tool-use loop (`tool_use` / `tool_result`, `tool_use_id`, `is_error`, `tool_choice`), agent scaling & programmatic tool calling (`CodeMode` in V8 isolates), `stop_reason` handling (including `refusal`, `max_tokens`, `model_context_window_exceeded`), streaming events, structured outputs, adaptive thinking with `effort`, 4 context strategies (`Write / Select / Compress / Isolate`), context rot taxonomy (`poisoning / confusion / clash`), multi-agent context contracts, compaction and prompt caching, Message Batches, retriable vs. terminal errors, evals and cost levers, deployment platforms (Claude API, Amazon Bedrock, Google Cloud Vertex AI, Microsoft Foundry), data residency, model-ID pinning, and security for API apps.
+- [Claude Code & Agent SDK](https://mbettan.github.io/machine-learning-cert/ClaudeCode.html): Claude Code and the Claude Agent SDK — execution surfaces (worktrees, cloud web/mobile, `/teleport`), Deep Agent 4-pillar architecture, permission modes and allow/ask/deny rules, settings and `CLAUDE.md` memory precedence, context rot & `/clear` vs `/compact`, `/output-style` & `/statusline`, Spec-Driven Development (`SPEC.md` + `TodoWrite`), hooks (`PreToolUse`, exit-code semantics), subagents & wave scaling, skills (`SKILL.md`, 3-level progressive disclosure), plugins and marketplaces, MCP configuration (`.mcp.json` scopes, env expansion), headless CI (`claude -p --bare`, `/install-github-app`, `/rewind` checkpointing), team rollout with managed settings, Agent SDK `settingSources`, and Managed Agents.
 - [Vibe Coding & Swarm Prototyping](https://mbettan.github.io/machine-learning-cert/vibecoding.html): Conversational AI-assisted software development (Vibe Coding) vs. parallel multi-agent exploration (Swarm Prototyping), risk profiles, verification gates, and production handoff.
 - [Instruction-Driven Development (IDD / SDD)](https://mbettan.github.io/machine-learning-cert/idd.html): Specification-Driven Development workflow where living markdown specs (`SPEC.md`), architecture rules, and automated acceptance verification drive deterministic AI code generation.
 
 ## Interactive Practice Quizzes
 
-- [Retrieval-Augmented Generation (RAG) v3.0 Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=rag): 22 scenario-based multiple-choice questions with instant distractor diagnostics and study guide deep links.
-- [Agent Development Kit (ADK) v3.0 Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adk): 25 scenario-based multiple-choice questions covering all 16 ADK v3.0 sections with instant distractor diagnostics and study guide deep links.
+- [Retrieval-Augmented Generation (RAG) Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=rag): 22 scenario-based multiple-choice questions with instant distractor diagnostics and study guide deep links.
+- [Agent Development Kit (ADK) Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adk): 25 scenario-based multiple-choice questions covering all 16 ADK sections with instant distractor diagnostics and study guide deep links.
+- [Claude Platform & API Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-api): 32 scenario-based multiple-choice questions covering all 14 Claude API sections with instant distractor diagnostics and study guide deep links.
+- [Claude Code & Agent SDK Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-code): 32 scenario-based multiple-choice questions covering all 13 Claude Code sections with instant distractor diagnostics and study guide deep links.
 
 ## Links
 
@@ -37,9 +41,9 @@
 
 # Curriculum Syllabus & Section Outline (By Study Guide)
 
-## [Retrieval-Augmented Generation (RAG v3.0)](https://mbettan.github.io/machine-learning-cert/RAG.html)
+## [Retrieval-Augmented Generation (RAG)](https://mbettan.github.io/machine-learning-cert/RAG.html)
 - **Canonical URL**: https://mbettan.github.io/machine-learning-cert/RAG.html
-- **Summary**: Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.
+- **Summary**: Master Retrieval-Augmented Generation (RAG): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.
 - **Core Sections**:
   - Overview & Core Mechanics
   - When to Use RAG (vs. Fine-Tuning, Long Context & Live Tools)
@@ -67,9 +71,9 @@
   - Q5. RAG quality gradually degrades over three months with zero code changes and green latency/error dashboards. Someone blames stale prompt-cache hits. Are they right?
   - Q6. When evaluating a cheaper generator model for migration, overall Faithfulness is 0.86 (vs. 0.94 flagship), but two complex legal document classes score 0.72 against a 0.85 per-stratum floor. What should the architect do?
 
-## [Agent Development Kit (ADK v3.0)](https://mbettan.github.io/machine-learning-cert/ADK.html)
+## [Agent Development Kit (ADK)](https://mbettan.github.io/machine-learning-cert/ADK.html)
 - **Canonical URL**: https://mbettan.github.io/machine-learning-cert/ADK.html
-- **Summary**: Master Google Agent Development Kit (ADK v3.0): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP & A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.
+- **Summary**: Master Google Agent Development Kit (ADK): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP & A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.
 - **Core Sections**:
   - Overview & Core Mechanics
   - When to Use ADK (vs. a Single Call, a Workflow or Another Framework)
@@ -214,20 +218,125 @@
 
 ## [Anthropic Foundational Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html)
 - **Canonical URL**: https://mbettan.github.io/machine-learning-cert/Anthropic.html
-- **Summary**: Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), Constitutional AI (RLAIF), extended thinking, tool use, and prompt caching.
+- **Summary**: Study guide on Anthropic's core philosophy, the 3-Layer Claude Ecosystem Map, Constitutional AI (RLAIF & holistic weighting), Mechanistic Interpretability (SAEs & Behavioral Vaccination), and Responsible Scaling Policy (RSP & ASL-3).
 - **Core Sections**:
-  - Core Philosophy
-  - Constitutional AI
-  - System 2 Reasoning & Deployment
-  - Agentic Bifurcation: Code vs. Cowork
-  - Interpretability & Steering
-  - AI Safety & MCP
-  - Glossary
-- **Key Topics & Subsections**: Core Philosophy · The Compounding Costs of Human-Only Alignment · Projecting Values via Constitutional AI (CAI) · Context Mechanics · Claude Deployment Matrix · System 2 Reasoning: "Adaptive Thinking" · Opening the Black Box · Behavioral Vaccination · AI Safety Levels (ASL) Framework · Model Context Protocol (MCP) · Multimodal RAG & Vision Pipelines · Auditing & Securing MCP Workflows
+  - Core Philosophy & The 3-Layer Claude Ecosystem Map
+  - Constitutional AI (CAI) & Alignment
+  - Mechanistic Interpretability & Steering
+  - Frontier Safety: Responsible Scaling Policy (RSP) & ASL Framework
+  - Focused Glossary & Self-Assessment
+- **Key Topics & Subsections**: Core Philosophy & Frontier Evolution · The 3-Layer Claude Ecosystem Map (End-User Entry Points / Cowork GUI VM, Builder & Engineering Interfaces, Cloud Delivery Routes) · Specialized Study Guides Routing Map · The Compounding Costs of Human-Only Alignment · Projecting Values via Constitutional AI (CAI) · Holistic Weighting Rule · Sparse Autoencoders (SAEs) & Stream Algorithm · Persona Vectors & Behavioral Vaccination · AI Safety Levels (ASL-2 / ASL-3) · Constitutional Classifiers & Two-Party Authorization (2PA)
 - **Sample Self-Assessment Questions**:
-  - Q1. What is "Constitutional AI" (CAI) and how does it differ from traditional RLHF?
-  - Q2. What are the two layers in Anthropic's "Agentic Bifurcation"?
-  - Q3. What is the purpose of "Sparse Autoencoders" (SAEs) in Anthropic's research?
+  - Q1. What are the three layers of the Claude Ecosystem Map, and how do Claude Code and Cowork differ?
+  - Q2. How does Constitutional AI (CAI) resolve conflicting principles across its four priority tiers?
+  - Q3. How do Sparse Autoencoders (SAEs), the Stream Algorithm, and Behavioral Vaccination work together?
+  - Q4. What triggers AI Safety Level 3 (ASL-3) under the Responsible Scaling Policy, and what two defense mechanisms does it mandate?
+
+## [Claude Platform & API](https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html
+- **Summary**: Build production apps on the Claude API: Messages API shape, system-prompt altitude, the tool-use loop, agent scaling & programmatic tool calling (CodeMode in V8 isolates), stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, 4 context strategies (Write / Select / Compress / Isolate), context rot taxonomy, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.
+- **Core Sections**:
+  - Overview & Mental Model
+  - Model Family, Effort & Choosing a Model
+  - Messages API: Request Shape and Roles
+  - The Tool-Use Loop
+  - stop_reason Values and Handling
+  - Streaming Events
+  - Structured Outputs
+  - Adaptive Thinking
+  - Context Window, Compaction and Prompt Caching
+  - Message Batches
+  - Errors and Retries
+  - Evals and Cost Levers
+  - Deploying: Platforms, Data Residency and Model-ID Pinning
+  - Security for API Apps
+  - Failure Modes and Find the Defect
+  - Glossary, Practice Quiz & Related Guides
+- **Sample Self-Assessment Questions**:
+  - Q1. Claude returns two tool_use blocks in one response. How must the next request be structured?
+  - Q2. How do max_tokens and model_context_window_exceeded differ, and what happens when the input alone is too large?
+  - Q3. Why is a refusal not handled by your retry logic, and what should the app do?
+  - Q4. In a streaming handler, when is it safe to parse tool input and when is it safe to commit the turn?
+
+## [Claude Code & Agent SDK](https://mbettan.github.io/machine-learning-cert/ClaudeCode.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/ClaudeCode.html
+- **Summary**: Claude Code and the Claude Agent SDK in depth: execution surfaces (worktrees, cloud web/mobile, /teleport), Deep Agent 4-pillar architecture, permission modes and allow/deny rules, settings and CLAUDE.md precedence, context rot & /clear vs /compact, /output-style & /statusline, Spec-Driven Development (SPEC.md + TodoWrite), hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI (/install-github-app, /rewind), team rollout with managed settings, and Managed Agents.
+- **Core Sections**:
+  - Overview, Agent Loop & Surfaces
+  - Permission Modes & Allow / Ask / Deny Rules
+  - Settings & Memory Precedence
+  - Which Mechanism Carries Which Rule
+  - Hooks & Exit-Code Semantics
+  - Subagents
+  - Skills & Progressive Disclosure
+  - Plugins & Marketplaces
+  - MCP in Claude Code
+  - Headless & CI Use
+  - Team Rollout, Distribution & Spend Controls
+  - Claude Agent SDK
+  - Managed Agents & Agent Wiring Paths
+  - Failure Modes & Find the Defect
+  - Glossary, Practice Quiz & Self-Assessment
+- **Sample Self-Assessment Questions**:
+  - Q1. Why does `deny: ["Write(/etc/**)"]` fail to block `Write("/etc/hosts")`, and what is the exact rule that blocks it?
+  - Q2. Why does a `PreToolUse` hook matching `Read` fail to stop a user who types `Summarize @.env`, and how do you block both?
+  - Q3. What happens when a subagent frontmatter includes `disallowedTools: Bash(git push *)`?
+  - Q4. What is the security risk of running `claude -p` on an untrusted PR branch without `--bare`, and where does `--json-schema` output appear?
+
+## [Agentic Design Patterns (ADP)](https://mbettan.github.io/machine-learning-cert/ADP.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/ADP.html
+- **Summary**: Vendor-neutral architectural blueprint for enterprise agentic systems: 4-Decision Architectural Order, 3-Bucket Work Decomposition (Deterministic Code vs. Probabilistic LLM vs. Human Review), 5-Factor Work-Shape Matrix, the 5 Canonical Workflows, Autonomous Agent Primitives, 4-Tier CoALA Memory, and Multi-Agent Topologies with typed HandoffContracts.
+- **Core Sections**:
+  - Overview: Orchestration vs. Autonomy
+  - Architectural Triage & Task Decomposition
+  - The 5-Factor Work-Shape Pattern Matrix
+  - The 5 Canonical Workflow Patterns
+  - Autonomous Agent Primitives
+  - Memory Architecture & Context Budget
+  - Multi-Agent Topologies & Handoffs
+  - Anti-Patterns, Failure Modes & Pre-Launch Checklist
+  - Self-Assessment Scenarios & Reference Glossary
+- **Sample Self-Assessment Questions**:
+  - Q1. Why should exact fee calculations and RBAC checks never be delegated to an LLM prompt?
+  - Q2. How do Parallelization (Sectioning) and Orchestrator-Workers differ when decomposing subtasks?
+  - Q3. Why must an Evaluator-Optimizer critic run in a fresh cold context rather than sharing the generator's conversation history?
+  - Q4. Why should subagents receive scoped task inputs and return a typed HandoffContract instead of sharing the coordinator's full message history?
+
+## [AI Evals, Observability & FinOps](https://mbettan.github.io/machine-learning-cert/AIEvalsAndOps.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/AIEvalsAndOps.html
+- **Summary**: Production engineering for probabilistic AI systems: 3-Tier Grading Hierarchy (Deterministic Code → Calibrated LLM-as-Judge → Human Calibration), `pass@k` vs. `pass^k`, 4-Level Agent Test Pyramid & integration seams, OpenTelemetry distributed tracing & drift detection, 4-Layer Resilience Stack, Shadow Mode vs. 4-Element A/B Testing, heavy-tail sizing, ~15× multi-agent multiplier, and 4-Step Enterprise ROI math.
+- **Core Sections**:
+  - Evaluation Strategy & The 3-Tier Grading Hierarchy
+  - Non-Deterministic Metrics: pass@k vs. pass^k
+  - The 4-Level Agent Test Pyramid & Integration Seams
+  - Observability, Distributed Tracing & Drift Detection
+  - Production Resilience Stack & Fault Isolation
+  - Safe Rollouts: Shadow Mode vs. 4-Element A/B Testing
+  - Token Economics, Heavy-Tail Sizing & 4-Step Enterprise ROI
+  - Production Failure Modes, Glossary & Self-Assessment
+- **Sample Self-Assessment Questions**:
+  - Q1. Why does a workflow with 90% single-turn accuracy succeed only ~59% of the time on pass^5, and when is pass^k required over pass@k?
+  - Q2. How can every prompt component score >95% in isolation while end-to-end production runs fail at 62%?
+  - Q3. What four biases affect LLM-as-Judge graders, and how do you mitigate them and validate calibration?
+  - Q4. What four steps make up an honest enterprise AI ROI calculation, and why does omitting the human-review tax invalidate the business case?
+
+## [AI Guardrails, Safety & Enterprise Governance](https://mbettan.github.io/machine-learning-cert/AIGovernance.html)
+- **Canonical URL**: https://mbettan.github.io/machine-learning-cert/AIGovernance.html
+- **Summary**: Defense-in-depth safety, oversight, fairness, privacy, and governance lifecycle: Trained Alignment vs. App Guardrails, 4-Tier Trust Hierarchy & Lethal Trifecta defense, 3×2 Guardrail Matrix (fail-closed), Stakes-Based HITL Routing (Automation Bias & Consent Fatigue), 4D AI Fluency & Verification Checklist, 4 Fairness Injection Points & Subgroup Disaggregation, 3 Transparency Audiences, ZDR vs. No-Training & HIPAA BAA per-feature scoping, and Enterprise Governance (4 Discovery Categories, Reversal-Cost Tradeoffs, ADRs, Evidenced Control Register).
+- **Core Sections**:
+  - Trained Alignment vs. Application-Layer Guardrails
+  - The 3×2 Defense-in-Depth Guardrail Matrix
+  - Stakes-Based Human-in-the-Loop (HITL) Architecture
+  - The 4D AI Fluency & Output Verification Framework
+  - Algorithmic Fairness, Bias Injection Points & Subgroup Auditing
+  - Multi-Audience Transparency & Explainability
+  - Data Boundaries, Privacy & Regulatory Compliance
+  - Enterprise Governance Lifecycle: Scoping, Tradeoffs, ADRs & Control Registers
+- **Sample Self-Assessment Questions**:
+  - Q1. Why is routing human review solely by model confidence scores dangerous for irreversible tool calls?
+  - Q2. How do you run a model-based input guardrail in parallel with main inference without leaking unsafe tokens or executing unverified tools?
+  - Q3. How does Zero Data Retention (ZDR) differ from a standard commercial no-training guarantee, and why do stateful features like the Files API require per-feature BAA/ZDR scoping?
+  - Q4. What four elements must every architectural tradeoff statement include, and why is an ADR incomplete without rejected alternatives?
 
 ## [Vibe Coding & Swarm Prototyping](https://mbettan.github.io/machine-learning-cert/vibecoding.html)
 - **Canonical URL**: https://mbettan.github.io/machine-learning-cert/vibecoding.html

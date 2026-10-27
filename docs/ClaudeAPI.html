@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Platform &amp; API: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.">
+    <meta name="keywords" content="Claude API, Anthropic API, Messages API, tool use, tool_use_id, stop_reason, streaming, structured outputs, adaptive thinking, effort, prompt caching, compaction, Message Batches, Amazon Bedrock, Vertex AI, Microsoft Foundry, data residency, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Claude Platform &amp; API: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Claude Platform &amp; API — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Claude Platform &amp; API: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Claude Platform &amp; API — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html#article",
+                  "headline": "Claude Platform & API: Study Guide | ML Cert Hub",
+                  "name": "Claude Platform & API Study Guide",
+                  "description": "Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.",
+                  "keywords": "Claude API, Anthropic API, Messages API, tool use, tool_use_id, stop_reason, streaming, structured outputs, adaptive thinking, effort, prompt caching, compaction, Message Batches, Amazon Bedrock, Vertex AI, Microsoft Foundry, data residency, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-10-25",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Claude Platform & API",
+                              "item": "https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Claude Platform <em>&amp; API</em></h1>
+                <p class="cover-subtitle">Production engineering on the Claude Messages API: choosing a model and effort level, request shape and roles, the tool-use loop and its pairing rules, <code>stop_reason</code> handling, streaming events, structured outputs, adaptive thinking, context windows, compaction and prompt caching, Message Batches, retriable vs. terminal errors, evals and cost levers, deployment platforms and data residency, and security for apps that read untrusted content.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Anthropic / Applied AI</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=claude-api" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Claude API Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#models" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Model Family, Effort &amp; Model Choice</span>
+                </a>
+                <a href="#messages-api" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Messages API: Request Shape &amp; Roles</span>
+                </a>
+                <a href="#tool-use" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>The Tool-Use Loop</span>
+                </a>
+                <a href="#stop-reasons" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>stop_reason Values &amp; Handling</span>
+                </a>
+                <a href="#streaming" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Streaming Events</span>
+                </a>
+                <a href="#structured-outputs" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Structured Outputs</span>
+                </a>
+                <a href="#adaptive-thinking" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Adaptive Thinking</span>
+                </a>
+                <a href="#context-caching" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Context Window, Compaction &amp; Caching</span>
+                </a>
+                <a href="#batches" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Message Batches</span>
+                </a>
+                <a href="#errors-retries" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Errors &amp; Retries</span>
+                </a>
+                <a href="#evals-cost" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Evals &amp; Cost Levers</span>
+                </a>
+                <a href="#deployment" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Deployment, Residency &amp; Pinning</span>
+                </a>
+                <a href="#security" class="toc-item">
+                    <span class="toc-number">13</span>
+                    <span>Security for API Apps</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">14</span>
+                    <span>Failure Modes &amp; Find the Defect</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">15</span>
+                    <span>Glossary, Quiz &amp; Related Guides</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Definition</h3>
+            <p>The Claude API is a <strong>stateless</strong> HTTP interface. The core endpoint, <code>POST /v1/messages</code>, takes the whole conversation (system prompt, alternating <code>user</code>/<code>assistant</code> turns, tool definitions) and returns one assistant message made of typed <strong>content blocks</strong> plus a <code>stop_reason</code> and token <code>usage</code>. Official SDKs (Python, TypeScript, Go, Java and others) wrap the same API and add retries, streaming helpers and types.</p>
+        </div>
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>What your code owns</h3>
+            <p>The API remembers nothing between calls and never runs your tools. Your application owns <strong>history</strong> (what to resend, prune or compact), <strong>tool execution</strong> (and authorization), <strong>branching on <code>stop_reason</code></strong>, <strong>retries</strong>, <strong>validation</strong> of outputs, and <strong>cost/latency instrumentation</strong>. Almost every exam-style defect is one of these responsibilities done wrong.</p>
+        </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental model</h4>
+                <p>Treat every response as a <strong>state transition</strong>: read <code>stop_reason</code> first, then decide whether to show text, run tools, continue, compact, fall back or stop. Code that reads <code>content[0].text</code> without checking <code>stop_reason</code> is the root of most production bugs.</p>
+            </div>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Build the request</h4>
+                <p>Model ID, <code>max_tokens</code>, system, messages, tools, optional thinking/effort and output format.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Call (sync, stream or batch)</h4>
+                <p>Pick the transport by who is waiting and how much work there is.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Branch on stop_reason</h4>
+                <p><code>end_turn</code>, <code>tool_use</code>, <code>max_tokens</code>, <code>refusal</code>, and the rest.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Append &amp; loop</h4>
+                <p>Append the assistant turn unchanged, add tool results, repeat until done.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: MODELS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="models">
+            <div class="section-divider-number">01</div>
+            <h2>1. Model Family, Effort &amp; Choosing a Model</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Tier</th><th>Profile</th><th>Typical fit</th><th>Watch out</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Haiku</strong></td><td>Fastest, lowest cost per token</td><td>High-volume classification, routing, extraction, real-time triage, sub-agent workers</td><td>Validate on your eval set before trusting it on nuanced steps</td></tr>
+                    <tr><td><strong>Sonnet</strong></td><td>Balanced capability, speed and cost</td><td><strong>Default starting point</strong> for most apps and agents, coding, tool use</td><td>Don't upgrade the whole pipeline when only one step fails</td></tr>
+                    <tr><td><strong>Opus</strong></td><td>Most capable, slowest, highest cost</td><td>Hardest reasoning, long multi-step agent work, planning, review of critical output</td><td>Paying top-tier prices on steps a smaller tier passes</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>Two independent levers</h3>
+            <ul>
+                <li><strong>Model tier</strong> sets the capability ceiling and the price per token.</li>
+                <li><strong>Reasoning depth</strong> is a per-request setting: adaptive thinking plus <code>output_config.effort</code> (<code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code>; the accepted set varies by model).</li>
+                <li>Tune them separately. A smaller tier at higher effort can beat a larger tier at low effort on some tasks, and vice versa; only an eval tells you which.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-scale-balanced"></i></div>Selection rule &amp; Planner → Executor routing</h3>
+            <ul>
+                <li>Start on the balanced tier with the least reasoning that passes.</li>
+                <li>Move <strong>individual steps</strong> up or down only on eval evidence; route easy vs. hard inputs to different tiers.</li>
+                <li><strong>Planner → Executor tier routing (Spec-Driven pattern):</strong> Use <strong>Opus</strong> for the read-only architectural specification and ambiguity-resolution pass, then start a <strong>fresh context window</strong> on <strong>Sonnet</strong> with only the finalized spec for implementation and tool-heavy execution (and <strong>Haiku</strong> for bounded read-only search workers).</li>
+                <li>Treat every model or effort swap as a release: pinned ID, baseline comparison, rollback target.</li>
+                <li>Turn thinking off or effort down on high-volume classifiers: thinking tokens are billed as output.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Sampling parameters on current models</h3>
+            <p>On Claude 4.7 and later, setting <code>temperature</code>, <code>top_p</code> or <code>top_k</code> to any non-default value returns <strong>HTTP 400</strong>. Steer behavior with prompting, examples, structured outputs and effort instead. Even on older models where <code>temperature: 0</code> is accepted, output was <strong>never fully deterministic</strong>: test properties, not exact strings.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>"Use the best model everywhere" is still a tier decision, just the most expensive one. And "set temperature to 0 for consistency" fails twice: it 400s on the newest models and never guaranteed identical text anyway.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: MESSAGES API
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="messages-api">
+            <div class="section-divider-number">02</div>
+            <h2>2. Messages API: Request Shape and Roles</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Field</th><th>Required?</th><th>What it does</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>model</code></td><td>Yes</td><td>Model ID. Pin a fixed ID in production (see §12).</td></tr>
+                    <tr><td><code>max_tokens</code></td><td>Yes</td><td>Cap on <strong>output</strong> tokens for this response. Does not create context room or fix validation errors.</td></tr>
+                    <tr><td><code>messages</code></td><td>Yes</td><td>Conversation as <code>user</code> / <code>assistant</code> turns; content is a string or an array of blocks.</td></tr>
+                    <tr><td><code>system</code></td><td>No</td><td><strong>Top-level</strong> system prompt (string or text blocks). There is no <code>"system"</code> role inside <code>messages</code>.</td></tr>
+                    <tr><td><code>tools</code> / <code>tool_choice</code></td><td>No</td><td>Tool definitions and how Claude may use them (§3).</td></tr>
+                    <tr><td><code>thinking</code> / <code>output_config</code></td><td>No</td><td>Adaptive thinking, <code>effort</code>, and <code>format</code> for structured outputs (§6–7).</td></tr>
+                    <tr><td><code>stream</code></td><td>No</td><td>Server-sent events instead of one JSON body (§5).</td></tr>
+                    <tr><td><code>stop_sequences</code></td><td>No</td><td>Custom strings that end generation (<code>stop_reason: "stop_sequence"</code>).</td></tr>
+                    <tr><td><code>inference_geo</code></td><td>No</td><td>First-party data residency: <code>"global"</code> (default) or <code>"us"</code> (§12).</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Input content blocks</dt>
+                <dd><code>text</code>, <code>image</code>, <code>document</code>, <code>tool_result</code> (in user turns); prior <code>text</code>, <code>tool_use</code>, <code>thinking</code>, <code>redacted_thinking</code> (in assistant turns you echo back).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Response object</dt>
+                <dd><code>id</code>, <code>role: "assistant"</code>, <code>content[]</code>, <code>stop_reason</code>, <code>stop_sequence</code>, <code>usage</code> (<code>input_tokens</code>, <code>output_tokens</code>, <code>cache_creation_input_tokens</code>, <code>cache_read_input_tokens</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Transport choice</dt>
+                <dd>User waiting + short answer → sync. User waiting + long answer → streaming. Many concurrent in-app calls → async client. Bulk offline work → Message Batches.</dd>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>System Prompt Altitude</th><th>What it looks like</th><th>Failure mode / why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Too specific (brittle state machine)</strong></td><td>Hardcoded <code>if/else</code> trees, exact regexes, rigid step-by-step tool sequences in prose</td><td>Breaks on the first edge case; move deterministic rules into code, hooks, or schema validators</td></tr>
+                    <tr><td><strong>Goldilocks zone (heuristics &amp; 4-step framework)</strong></td><td>Clear role/goal, tool-selection heuristics, and a 4-step operating loop (<strong>Explore</strong> → <strong>Plan</strong> → <strong>Confirm</strong> on ambiguity → <strong>Act &amp; Verify</strong>)</td><td>Gives the model strong guardrails while preserving flexibility to recover from unexpected tool outputs</td></tr>
+                    <tr><td><strong>Too vague (assumed shared context)</strong></td><td><em>"Be a helpful assistant and follow best practices"</em></td><td>Forces the model to guess domain rules, tool boundaries, and stopping criteria</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code class="language-python">import anthropic
+client = anthropic.Anthropic()          # reads ANTHROPIC_API_KEY from the environment
+
+resp = client.messages.create(
+    model=PINNED_MODEL_ID,
+    max_tokens=1024,
+    system="You are a support assistant for Acme. Answer only from the provided policy.",
+    messages=[
+        {"role": "user", "content": "Can I return an opened item?"},
+    ],
+)
+if resp.stop_reason == "end_turn":
+    answer = next(b.text for b in resp.content if b.type == "text")</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p><strong>Prefilling</strong> the final assistant turn to force a format is rejected with a 400 on Claude 4.6 and later. Use structured outputs (§6) instead. Also, <code>content[0]</code> is not always text: with thinking on, the first block is usually a <code>thinking</code> block. Select blocks by <code>type</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: TOOL USE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="tool-use">
+            <div class="section-divider-number">03</div>
+            <h2>3. The Tool-Use Loop</h2>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Define tools</h4>
+                <p><code>name</code>, <code>description</code> (what it does, when to use it and when <em>not</em> to), <code>input_schema</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Claude requests</h4>
+                <p>Response has <code>tool_use</code> blocks (each with an <code>id</code>) and <code>stop_reason: "tool_use"</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Your code executes</h4>
+                <p>Authorize, validate inputs, run. Add a human gate before irreversible actions.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Return results</h4>
+                <p>Append the assistant turn unchanged, then one user turn with a <code>tool_result</code> per call.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pairing rule</th><th>What breaks if you ignore it</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Every <code>tool_use</code> gets a <code>tool_result</code> whose <code>tool_use_id</code> equals the call's <code>id</code></td><td>400: result references an unknown ID, or a call is left unanswered</td></tr>
+                    <tr><td>Results go in the <strong>very next</strong> user message; nothing in between</td><td>400 on the next request</td></tr>
+                    <tr><td>In that user message, <code>tool_result</code> blocks come <strong>first</strong>; any text goes after them</td><td>Validation error, or the turn ends early</td></tr>
+                    <tr><td>Parallel calls in one turn are all answered in <strong>one</strong> user message</td><td>Orphaned calls; splitting results across turns fails</td></tr>
+                    <tr><td>Failures are returned as a <code>tool_result</code> with <code>is_error: true</code> and a short message</td><td>An empty string reads as "no data", so Claude confidently reports a false result</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code class="language-python">messages.append({"role": "assistant", "content": resp.content})   # echo unchanged
+results = []
+for block in resp.content:
+    if block.type == "tool_use":
+        try:
+            out = run_tool(block.name, block.input)                    # your authz + validation inside
+            results.append({"type": "tool_result", "tool_use_id": block.id, "content": out})
+        except ToolError as e:
+            results.append({"type": "tool_result", "tool_use_id": block.id,
+                            "content": f"lookup failed: {e.short}", "is_error": True})
+messages.append({"role": "user", "content": results})                # all results, one turn, first</code></pre>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>tool_choice</code></th><th>Behavior</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>{"type": "auto"}</code> (default)</td><td>Claude decides whether to call a tool</td><td>Add <code>"disable_parallel_tool_use": true</code> <strong>inside</strong> this object for at most one call per response</td></tr>
+                    <tr><td><code>{"type": "any"}</code></td><td>Must call some tool</td><td>Forced use: not allowed with manual extended thinking, and some of the newest models return 400</td></tr>
+                    <tr><td><code>{"type": "tool", "name": "..."}</code></td><td>Must call that tool</td><td>Same restrictions as <code>any</code>; prefer <code>auto</code> + <code>strict: true</code> or structured outputs where forcing is rejected</td></tr>
+                    <tr><td><code>{"type": "none"}</code></td><td>No tool calls</td><td>Tools stay defined (keeps the cache prefix stable)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-screwdriver-wrench"></i></div>Tool design &amp; multimodal <code>tool_result</code></h3>
+            <ul>
+                <li>Description = purpose + when to use + an <strong>exclusion</strong> sentence ("not for refunds").</li>
+                <li>Small, well-named tool set; overlapping tools cause wrong picks.</li>
+                <li>Mark truly required fields in <code>required</code>; use enums for closed sets.</li>
+                <li><code>strict: true</code> guarantees tool inputs match the schema.</li>
+                <li><strong>Multimodal <code>tool_result</code>:</strong> <code>content</code> can be an array of <code>text</code> and <code>image</code> blocks (e.g. Playwright browser screenshots), enabling closed-loop visual UI verification.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-server"></i></div>Client vs. server tools</h3>
+            <ul>
+                <li><strong>Client tools</strong>: you execute them and return <code>tool_result</code>.</li>
+                <li><strong>Server tools</strong> (e.g. web search): Anthropic executes them inside the turn.</li>
+                <li>A long server-tool loop can stop with <code>pause_turn</code>: send the assistant content back as-is to continue.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Architecture</th><th>How tools &amp; context are handled</th><th>Scaling limits &amp; best fit</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Workflow / Hybrid RAG</strong></td><td>Fixed code path; static chunking + embeddings + reranking injected before calling Claude</td><td>Predictable latency; fails on multi-hop code navigation (<em>under-retrieval</em>, <em>over-retrieval</em>, and <em>misaligned retrieval</em> across imports)</td></tr>
+                    <tr><td><strong>Shallow ReAct Loop / Standard MCP</strong></td><td>Single <code>messages[]</code> loop calling JSON tools one turn at a time</td><td><strong>4 scaling bottlenecks:</strong> (1) upfront tool-schema bloat, (2) <em>K</em>-turn sequential ping-pong latency &amp; repeated prefix billing, (3) pretraining mismatch (LLMs are trained on millions of real TypeScript/Python repos vs. synthetic JSON <code>tool_use</code> traces), and (4) JSON schemas cannot express loops, conditionals, or error-handling chains</td></tr>
+                    <tr><td><strong>Deep Agent Harness</strong> (e.g., Claude Code)</td><td>Explicit planning tool (<code>TodoWrite</code>) + isolated subagents + virtual/real filesystem (<code>Glob</code>/<code>Grep</code>/paginated <code>Read</code>)</td><td>Solves context crowding and goal drift over 10–100+ step tasks</td></tr>
+                    <tr><td><strong>Programmatic Tool Calling (CodeMode)</strong></td><td>Converts MCP tool schemas into a typed TypeScript API (<code>declare namespace</code>); LLM emits <strong>one TypeScript script</strong> run inside a <strong>network-isolated V8 isolate</strong> (~ms startup, no filesystem/env access) where tools are exposed as <strong>outbound RPC bindings</strong> (<code>await env.ServerName.toolName(...)</code>)</td><td>Collapses <em>K</em> sequential tool turns into <strong>1 LLM inference pass</strong> and keeps intermediate tool payloads inside V8 memory (out of the LLM context window) until <code>console.log</code> outputs the final distilled result</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>"Unknown <code>tool_use_id</code>" is a <strong>wiring</strong> bug, not a schema or description bug. And <code>disable_parallel_tool_use</code> is not a top-level request field: it lives inside <code>tool_choice</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: STOP REASONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="stop-reasons">
+            <div class="section-divider-number">04</div>
+            <h2>4. stop_reason Values and Handling</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>stop_reason</code></th><th>Meaning</th><th>Correct handling</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>end_turn</code></td><td>Natural finish</td><td>Use the response</td></tr>
+                    <tr><td><code>tool_use</code></td><td>Claude is calling one or more tools</td><td>Run them, return paired <code>tool_result</code>s, call again</td></tr>
+                    <tr><td><code>max_tokens</code></td><td>Hit <strong>your</strong> <code>max_tokens</code> cap (or the model maximum)</td><td>Raise the cap or continue the response; never parse truncated JSON as complete</td></tr>
+                    <tr><td><code>model_context_window_exceeded</code></td><td>Generation filled the <strong>context window</strong></td><td>Treat as truncated; prune/compact history before the next turn</td></tr>
+                    <tr><td><code>stop_sequence</code></td><td>One of your <code>stop_sequences</code> fired</td><td>Read <code>stop_sequence</code> to see which</td></tr>
+                    <tr><td><code>pause_turn</code></td><td>A long server-tool loop was paused</td><td>Send the assistant content back unchanged to continue</td></tr>
+                    <tr><td><code>refusal</code></td><td>Claude declined (safety classifiers)</td><td>Returned as <strong>HTTP 200</strong>. Read <code>stop_details</code>; don't blind-retry the same request; reset or rephrase the refused turn, or retry on a fallback model where offered</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-hand"></i></div>Refusals in practice</h3>
+            <ul>
+                <li><code>stop_details</code> can carry a policy <code>category</code> (may be <code>null</code>) and an explanation that isn't guaranteed stable.</li>
+                <li>Leaving the refused turn in history leads to <strong>continued refusals</strong>: remove or rephrase it, or clear history.</li>
+                <li>When streaming, the refusal arrives on the <code>message_delta</code> event; discard the partial turn.</li>
+                <li>An HTTP-status-only error check misses refusals entirely.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-ruler-horizontal"></i></div>max_tokens vs. context window</h3>
+            <ul>
+                <li><strong>Input alone</strong> larger than the window → 400 "prompt is too long", before any generation, on every model.</li>
+                <li>Input fits, but input + <code>max_tokens</code> exceeds the window → newer models accept it and stop with <code>model_context_window_exceeded</code> if they run out.</li>
+                <li>The API never silently drops old turns: history management is your job.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>A refusal is a content decision, not a transient error: exponential backoff on the same request just repeats it. And <code>max_tokens</code> limits output length only; raising it does nothing for an oversized prompt or a crowded context.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: STREAMING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="streaming">
+            <div class="section-divider-number">05</div>
+            <h2>5. Streaming Events</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Event (in order)</th><th>Carries</th><th>Handler action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>message_start</code></td><td>Message shell, initial usage</td><td>Open a buffer for the turn</td></tr>
+                    <tr><td><code>content_block_start</code></td><td>Block <code>index</code> and type (text, tool_use, thinking)</td><td>Start a per-index accumulator</td></tr>
+                    <tr><td><code>content_block_delta</code></td><td><code>text_delta</code>, <code>input_json_delta</code> (partial tool JSON), thinking deltas</td><td>Render text; <strong>append</strong> JSON fragments, don't parse yet</td></tr>
+                    <tr><td><code>content_block_stop</code></td><td>Block complete</td><td>Now parse tool input JSON and validate</td></tr>
+                    <tr><td><code>message_delta</code></td><td>Top-level changes: <code>stop_reason</code>, cumulative output usage</td><td>Branch on <code>stop_reason</code> (refusal, tool_use, max_tokens…)</td></tr>
+                    <tr><td><code>message_stop</code></td><td>Message complete</td><td><strong>Only now</strong> commit the assistant turn to history</td></tr>
+                    <tr><td><code>ping</code></td><td>Keep-alive</td><td>Ignore</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-stream"></i></div>Why stream</h3>
+            <ul>
+                <li>Improves <strong>perceived</strong> latency (time to first token) for a waiting user.</li>
+                <li>Recommended for long requests: very long non-streamed calls risk timeouts, and the Python SDK requires streaming above roughly 21k <code>max_tokens</code>.</li>
+                <li>Does <strong>not</strong> reduce total tokens, cost or request count.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-plug-circle-xmark"></i></div>Interrupted streams</h3>
+            <ul>
+                <li>"The read loop ended" ≠ "the message is complete". Only <code>message_stop</code> means complete.</li>
+                <li>On a drop, discard the partial turn and retry from the last complete turn.</li>
+                <li>SDK helpers (e.g. a final-message accumulator) do the bookkeeping for you.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Saving a half-streamed assistant turn leaves a malformed <code>tool_use</code> in history, and every later request fails validation, often surfacing only on retries. Parse tool input at <code>content_block_stop</code>; commit the turn at <code>message_stop</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: STRUCTURED OUTPUTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="structured-outputs">
+            <div class="section-divider-number">06</div>
+            <h2>6. Structured Outputs</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Approach</th><th>Guarantee</th><th>Use when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>System-prompt output styles</strong> (format/persona instructions in <code>system</code>, e.g. YAML/HTML/tutor style)</td><td>None: best effort (steers tone, verbosity, or non-JSON formats like YAML/Markdown)</td><td>Human-facing presentation or custom personas; <strong>never</strong> rely on prompt prose for downstream JSON parsers</td></tr>
+                    <tr><td><strong>JSON outputs</strong>: <code>output_config.format = {"type": "json_schema", "schema": {...}}</code></td><td>The response text parses and matches the schema (constrained decoding)</td><td>The answer itself must be machine-readable (extraction, classification, reports)</td></tr>
+                    <tr><td><strong>Strict tool use</strong>: <code>"strict": true</code> on a tool</td><td>Tool name and inputs match <code>input_schema</code></td><td>Agents whose tool calls feed real systems</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code class="language-python">resp = client.messages.create(
+    model=PINNED_MODEL_ID, max_tokens=1024,
+    messages=[{"role": "user", "content": email_text}],
+    output_config={"format": {"type": "json_schema", "schema": {
+        "type": "object",
+        "properties": {"name": {"type": "string"}, "demo_requested": {"type": "boolean"}},
+        "required": ["name", "demo_requested"],
+        "additionalProperties": False}}},
+)
+if resp.stop_reason == "end_turn":                      # check before parsing
+    data = json.loads(next(b.text for b in resp.content if b.type == "text"))</code></pre>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Production constraints</h3>
+            <ul>
+                <li><strong>Shape ≠ correctness.</strong> A schema-valid object can still hold a wrong date or a hallucinated value. Keep evals and business-rule validation.</li>
+                <li><strong>Still check <code>stop_reason</code>.</strong> A <code>refusal</code> or <code>max_tokens</code> stop can leave output that doesn't conform.</li>
+                <li><strong>First-call latency.</strong> A new schema is compiled on first use and then cached, so the first request is slower.</li>
+                <li>JSON outputs and strict tools can be used together in one request; both replace the old prefill trick, which newer models reject.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>When a parser breaks on "almost JSON", don't add a third paragraph of formatting instructions or a regex repair step. Move format enforcement into the API with <code>output_config.format</code> or <code>strict: true</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: ADAPTIVE THINKING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="adaptive-thinking">
+            <div class="section-divider-number">07</div>
+            <h2>7. Adaptive Thinking</h2>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>What changed</h3>
+            <p>The older <strong>extended thinking</strong> mode made you allocate a fixed token budget. <strong>Adaptive thinking</strong> lets the model judge how much to reason per request; you steer depth with <code>effort</code>.</p>
+            <ul>
+                <li>API shape: <code>thinking={"type": "adaptive"}</code> plus <code>output_config={"effort": "high"}</code>.</li>
+                <li>Manual <code>{"type": "enabled", "budget_tokens": N}</code> is deprecated on Claude 4.6 and returns <strong>400 on 4.7 and later</strong>.</li>
+                <li>Migration: drop <code>budget_tokens</code>, switch the type to <code>adaptive</code>, control depth with <code>effort</code>.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-eye"></i></div>Display and billing</h3>
+            <ul>
+                <li><code>thinking.display</code>: <code>"summarized"</code> returns readable summaries; <code>"omitted"</code> returns an empty thinking field.</li>
+                <li>You are billed for the <strong>full</strong> internal thinking as output tokens either way; display changes only what you see.</li>
+                <li>Higher effort is not always better: it adds latency and cost. Match effort to task difficulty.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Rule in tool-use loops</th><th>Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Echo the assistant message <strong>exactly</strong>, including <code>thinking</code> and <code>redacted_thinking</code> blocks, when you return tool results</td><td>Thinking blocks carry a cryptographic <code>signature</code>; editing, summarizing or filtering them gives a 400</td></tr>
+                    <tr><td>Keep one thinking configuration per assistant turn</td><td>A tool-use loop is one assistant turn; change settings only between turns</td></tr>
+                    <tr><td>Manual extended thinking allows only <code>tool_choice</code> <code>auto</code> or <code>none</code></td><td>Forced tool use is incompatible with manual mode</td></tr>
+                    <tr><td>To save context, prune or compact <strong>older completed</strong> turns</td><td>Never "save tokens" by stripping blocks from the active turn</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Changing <code>thinking</code> or <code>effort</code> between requests invalidates the messages prompt cache (and on some models the system and tool caches too). Pick a setting per workload and keep it stable.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: CONTEXT & CACHING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="context-caching">
+            <div class="section-divider-number">08</div>
+            <h2>8. Context Window, Compaction and Prompt Caching</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Context strategy (<em>Write / Select / Compress / Isolate</em>)</th><th>How</th><th>Use when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Prune (<code>Compress</code>)</strong></td><td>Drop or truncate old tool results and stale turns in your code</td><td>Tool outputs dominate the history</td></tr>
+                    <tr><td><strong>Context editing (<code>Compress</code>)</strong></td><td>Beta <code>context_management</code> edits that clear old tool uses (and thinking) server-side past a trigger</td><td>Long agent loops with bulky, one-time tool output</td></tr>
+                    <tr><td><strong>Compaction (<code>Compress</code>)</strong></td><td>Beta <code>context_management</code> edit <code>compact_20260112</code>: older history is summarized into a compaction block (default trigger 150k input tokens; optional <code>pause_after_compaction</code> returns <code>stop_reason: "compaction"</code>)</td><td>Persistent agents that run for hours or days</td></tr>
+                    <tr><td><strong>Progressive disclosure &amp; tool scoping (<code>Select</code>)</strong></td><td>Pass only relevant tools per turn or load skills/docs on demand via retrieval instead of dumping 50+ schemas up front</td><td>Large tool catalogs where schema tokens bloat every turn and degrade tool selection</td></tr>
+                    <tr><td><strong>Virtual filesystem offloading (<code>Write</code> + <code>Select</code>)</strong></td><td>Persist plans, scratchpads, and bulky intermediate results to external state/files; read back targeted slices</td><td>Multi-step tasks that must survive compaction without losing exact specs or artifacts</td></tr>
+                    <tr><td><strong>Sub-agent handoff (<code>Isolate</code>)</strong></td><td>Give a bounded sub-task its own fresh <code>messages[]</code> array; pass an explicit context contract and return only the synthesized answer + required raw artifacts</td><td>Exploration, deep search, or independent verification that would flood the main context</td></tr>
+                    <tr><td><strong>Measure</strong></td><td>Token-counting endpoint before sending; watch <code>usage</code></td><td>Always; production payloads are larger than test fixtures</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Diagnosis rule: Turn 1 vs. Turn 5+</h4>
+                <p>An agent that picks the wrong tool on <strong>Turn 1</strong> has a <strong>schema/description collision or tool bloat problem</strong> (too many overlapping tools; fix with <code>Select</code> / progressive disclosure or sharper descriptions). An agent that picks the right tool on turns 1–4 and the wrong one from <strong>Turn 5+</strong> does <em>not</em> have a schema problem: accumulated <code>tool_result</code> output is crowding out instructions (fix with <code>Compress</code> / prune / edit / compact, not by rewriting descriptions or raising <code>max_tokens</code>).</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-virus-slash"></i></div>Context Rot Taxonomy &amp; Recovery</h3>
+            <ul>
+                <li><strong>Context poisoning:</strong> A hallucination or faulty premise in an early turn (or tool output) is referenced repeatedly by later turns. <em>Warning:</em> Summarization/compaction <strong>preserves</strong> poisoned premises in condensed form—you must <strong>truncate/reset</strong> history prior to the bad turn.</li>
+                <li><strong>Context confusion:</strong> Unrelated documents, logs, or 50+ unused tool definitions dilute attention and degrade accuracy. Fix via <strong>tool scoping</strong> and <strong>progressive disclosure</strong>.</li>
+                <li><strong>Context clash:</strong> Contradictory instructions or superseded requirements accumulate across turns. Fix by consolidating state into a single external spec or resetting with a clean handoff.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Multi-Agent Context Contracts &amp; Builder–Reviewer</h3>
+            <ul>
+                <li><strong>Self-contained handoff:</strong> A subagent starts with a blank <code>messages[]</code> array—never assume it inherits parent conversation history.</li>
+                <li><strong>Raw artifact return:</strong> If a downstream step needs exact code, SQL, or JSON produced by a subagent, require the subagent to write it to a shared store/file or return it verbatim rather than returning a prose summary.</li>
+                <li><strong>Bounded waves &amp; when NOT to parallelize:</strong> Dispatch parallel subagents in bounded waves (e.g., <strong>3–5 concurrent calls</strong>) to avoid workspace 429s. Never parallelize sequential data dependencies or overlapping writes to the same state/record.</li>
+                <li><strong>Builder–Reviewer separation:</strong> Run verification/code review in a <strong>separate <code>messages.create()</code> call with a fresh <code>messages[]</code> array</strong> containing only the spec and candidate artifact—never ask the same context that generated the artifact to grade its own work.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>Prompt caching mechanics</h3>
+            <ul>
+                <li>Mark the end of a reusable prefix with <code>cache_control: {"type": "ephemeral"}</code>; up to <strong>4 breakpoints</strong> per request.</li>
+                <li>Prefix order is <code>tools</code> → <code>system</code> → <code>messages</code>. A change at one level invalidates that level and everything after it.</li>
+                <li>Cache hits need an <strong>identical</strong> prefix: static content first, dynamic content after the last breakpoint.</li>
+                <li>Default TTL is 5 minutes (refreshed on use); <code>"ttl": "1h"</code> is optional.</li>
+                <li>Track <code>cache_creation_input_tokens</code> vs. <code>cache_read_input_tokens</code> in <code>usage</code>.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-calculator"></i></div>Caching economics</h3>
+            <ul>
+                <li>Cache <strong>write</strong>: 1.25× base input (5-min TTL) or 2× (1-hour TTL).</li>
+                <li>Cache <strong>read</strong>: about 0.1× base input (lower on some newer models; check pricing).</li>
+                <li>Break-even: a 5-min entry pays off after 1 read; a 1-hour entry after 2 reads.</li>
+                <li>Also cuts time to first token on long prefixes.</li>
+                <li>Silent invalidators: editing tool definitions, changing <code>tool_choice</code>, toggling images, changing thinking/effort, or swapping <code>system</code> output styles mid-session (invalidates both <code>system</code> and downstream <code>messages</code> caches).</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>A 0% hit rate with a timestamp, user ID or ticket text placed <em>before</em> the breakpoint. Each request writes a new entry and never reads one. A longer TTL only makes those writes cost more; move the dynamic text after the breakpoint.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: BATCHES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="batches">
+            <div class="section-divider-number">09</div>
+            <h2>9. Message Batches</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>What it is</dt>
+                <dd>An asynchronous endpoint that accepts many Messages requests in one submission and processes them in the background at <strong>50% of standard price</strong> (input and output).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Limits</dt>
+                <dd>Capped at <strong>256 MB total payload or 100,000 requests</strong> per batch (whichever threshold is reached first). Most batches finish within an hour; anything not done in <strong>24 hours</strong> expires.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>custom_id</code></dt>
+                <dd>Required, unique per request (1–64 chars, letters, digits, <code>_</code>, <code>-</code>). Results can come back <strong>in any order</strong>, so match on <code>custom_id</code>, never on position.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Lifecycle</dt>
+                <dd>Create → poll until <code>processing_status</code> is <code>ended</code> → fetch results (each succeeded, errored, canceled or expired). Results stay downloadable for 29 days.</dd>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Workload</th><th>Best transport</th><th>Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nightly classification of 40k tickets, read next morning</td><td><strong>Message Batches</strong></td><td>Half price, no rate-limit fight, latency doesn't matter</td></tr>
+                    <tr><td>Chat UI with long answers</td><td>Streaming</td><td>A person is waiting; perceived latency</td></tr>
+                    <tr><td>Backend fan-out of a few hundred calls per user action</td><td>Async client with bounded concurrency</td><td>Needs results in seconds</td></tr>
+                    <tr><td>Same 5k-token instructions on every batched item</td><td>Batches + prompt caching</td><td>The discounts can be combined</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Splitting a list into chunks and calling <code>messages.create()</code> per item is <strong>not</strong> batching: it is serial synchronous traffic that hits rate limits. Smaller chunks or more backoff don't change that; the Batches API does.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: ERRORS & RETRIES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="errors-retries">
+            <div class="section-divider-number">10</div>
+            <h2>10. Errors and Retries</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Status / type</th><th>Class</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>400 <code>invalid_request_error</code> (bad shape, prompt too long, unsupported param, spend limit you set)</td><td>Terminal</td><td>Fix the request; retrying the same body fails identically</td></tr>
+                    <tr><td>401 authentication · 403 permission · 404 not found</td><td>Terminal</td><td>Fix key, permissions or model ID; fail fast</td></tr>
+                    <tr><td>402 <code>billing_error</code> · 413 <code>request_too_large</code></td><td>Terminal</td><td>Fix billing; shrink the payload below the endpoint's size limit</td></tr>
+                    <tr><td>429 <code>rate_limit_error</code></td><td>Retriable</td><td>Wait <code>retry-after</code>, then backoff + jitter. A spend-cap 429 has <strong>no</strong> <code>retry-after</code> and keeps failing</td></tr>
+                    <tr><td>500 <code>api_error</code> · 504 <code>timeout_error</code></td><td>Retriable</td><td>Exponential backoff; for 504 on long requests, stream instead</td></tr>
+                    <tr><td>529 <code>overloaded_error</code></td><td>Retriable</td><td>Backoff with jitter; consider a fallback model in the orchestration layer</td></tr>
+                    <tr><td>HTTP 200 + <code>stop_reason: "refusal"</code></td><td>Not an HTTP error</td><td>Content decision: handle as in §4, don't backoff-retry</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>SDK defaults</h3>
+            <ul>
+                <li>Official SDKs retry connection errors, 408, 409, 429 and ≥500 <strong>2 times by default</strong> with short exponential backoff, honoring <code>retry-after</code>.</li>
+                <li>Configure with <code>max_retries</code> (client-wide or per request); <code>0</code> disables.</li>
+                <li>Log the <code>request-id</code> response header for support.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Reliability placement</h3>
+            <ul>
+                <li><strong>Retry</strong>: next to the call, owned by <em>one</em> layer.</li>
+                <li><strong>Circuit breaker</strong>: at the service boundary, on aggregate error rate.</li>
+                <li><strong>Fallback</strong> (other tier, cached answer, human queue): in orchestration.</li>
+                <li><strong>Budgets</strong>: max turns / tool calls per agent run.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Wrapping SDK calls in your own 5-attempt loop with default SDK settings gives up to 15 attempts per request against a rate limit. One layer owns retries. And a bare <code>except Exception: pass</code> retries 400s pointlessly while hiding the real error.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: EVALS & COST
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="evals-cost">
+            <div class="section-divider-number">11</div>
+            <h2>11. Evals and Cost Levers</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Output shape</th><th>Grader</th><th>Catches / misses</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Label, number, enum, JSON field</td><td>Exact match / code assertion</td><td>Cheap, deterministic; can't judge free text</td></tr>
+                    <tr><td>Structured object, tool trajectory</td><td>Code checks on properties (fields, ranges, expected/forbidden tools, call counts)</td><td>Robust to wording; misses tone and nuance</td></tr>
+                    <tr><td>Free-text answer, summary, tone</td><td>LLM judge with a rubric</td><td>Scales; must be calibrated against human labels</td></tr>
+                    <tr><td>High-stakes or novel behavior</td><td>Human review</td><td>Gold standard; slow and costly</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-gavel"></i></div>Eval discipline</h3>
+            <ul>
+                <li>Define "done" first: success criteria, failure handling, cost and latency budgets.</li>
+                <li>Golden set = representative inputs + edge cases + adversarial cases; refresh it whenever prompt, model or retrieval changes.</li>
+                <li>Judge rules: reasoning <strong>before</strong> the score, anchored score bands, preferably a different model than the one graded, agreement checked against human labels.</li>
+                <li>Change one variable per run; read per-case diffs, not just the mean.</li>
+                <li>Assert properties, never exact strings: output varies even when correct.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Cost lever</th><th>Effect</th><th>Number / rule</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Model tier per step</td><td>Largest price driver</td><td>Start balanced; move steps on eval evidence</td></tr>
+                    <tr><td>Effort / thinking</td><td>Thinking billed as output</td><td>Low or off for classifiers and routers</td></tr>
+                    <tr><td>Prompt caching</td><td>Cheaper repeated prefixes, faster first token</td><td>Write 1.25× / 2×, read ≈0.1×</td></tr>
+                    <tr><td>Message Batches</td><td>Half price for offline work</td><td>50%, ≤24 h</td></tr>
+                    <tr><td>Context size</td><td>Every resent token is billed again</td><td>Prune, edit, compact; count tokens</td></tr>
+                    <tr><td>Call count / fan-out</td><td>Multi-agent runs multiply tokens</td><td>Fan out only for truly independent subtasks</td></tr>
+                    <tr><td>Streaming</td><td>Perceived latency only</td><td>No cost change</td></tr>
+                    <tr><td>US-only residency (first party)</td><td>Premium</td><td>1.1× on Claude 4.6+ with <code>inference_geo: "us"</code></td></tr>
+                    <tr><td>Workspace spend caps &amp; rate limits</td><td>Hard blast-radius control per team/env</td><td>Separate workspaces + monthly spend limits in Console (<code>settings/limits</code>); spend-cap 429s have <strong>no</strong> <code>retry-after</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Quoting the per-call cost of a pilot. Instrument tokens, latency and errors per call from day one, multiply by production volume, size for the heavy tail and p95 rather than the median, and set the reliability floor before tuning cost.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: DEPLOYMENT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="deployment">
+            <div class="section-divider-number">12</div>
+            <h2>12. Deploying: Platforms, Data Residency and Model-ID Pinning</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Platform</th><th>Operated by / identity</th><th>Residency control</th><th>Pick it when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Claude API</strong> (first party)</td><td>Anthropic; API keys and workspaces</td><td><code>inference_geo</code>: <code>"global"</code> (default) or <code>"us"</code> (1.1×), Claude 4.6+ only. <strong>No EU-only value</strong>; older models 400 on the param</td><td>No binding cloud or EU constraint; newest features and betas first</td></tr>
+                    <tr><td><strong>Claude Platform on AWS</strong></td><td>Anthropic-operated, AWS billing</td><td>Same <code>global</code> / <code>us</code> geographies</td><td>First-party features with AWS procurement</td></tr>
+                    <tr><td><strong>Amazon Bedrock</strong></td><td>AWS-operated; IAM, AWS bill</td><td>Global endpoint, single-region endpoints, or geographic inference profiles (e.g. <code>eu.</code>-prefixed IDs); regional costs 10% more</td><td>Workload and compliance posture already live in AWS</td></tr>
+                    <tr><td><strong>Google Cloud (Vertex AI)</strong></td><td>Google-operated; Cloud IAM and billing</td><td>Global, multi-region (<code>us</code> / <code>eu</code>) or regional (some models); 10% premium off global</td><td>Workload and compliance posture already in Google Cloud; EU residency</td></tr>
+                    <tr><td><strong>Microsoft Foundry</strong></td><td>Anthropic-operated, on Azure</td><td>Varies by deployment type</td><td>Customer standardised on Azure</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-thumbtack"></i></div>Model-ID pinning</h3>
+            <ul>
+                <li><strong>Claude 4.6 and later</strong>: the dateless ID (e.g. <code>claude-sonnet-4-6</code>) <em>is</em> a fixed snapshot; updates ship under new IDs.</li>
+                <li><strong>Earlier models</strong>: dated IDs (<code>claude-haiku-4-5-20251001</code>); the short alias moves to the newest dated snapshot.</li>
+                <li>Platform formats differ: Bedrock <code>anthropic.claude-…</code> (dated models end in <code>-v1:0</code>; optionally <code>global.</code> / <code>us.</code> / <code>eu.</code> prefixed), Google Cloud <code>…@YYYYMMDD</code> for dated models and the API format from 4.6 on.</li>
+                <li>Every ID has its own deprecation and retirement date.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-route"></i></div>Release discipline</h3>
+            <ul>
+                <li>Pin the full model ID in config, not code.</li>
+                <li>Keep the previous pin as the rollback target.</li>
+                <li>Promote a new model only when evals meet or beat the pinned baseline.</li>
+                <li>Feature availability differs by platform: verify each beta or tool you depend on.</li>
+                <li>Measure latency from the customer's region with a real payload; compare total cost (fees, egress, integration), not just token price.</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>"Inference must stay in the EU" cannot be met with first-party <code>inference_geo</code> (global or US only). Use Bedrock regional/EU routing or the Google Cloud <code>eu</code> multi-region, decided at scoping because residency is pass/fail. Encryption at rest does not change where inference runs.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 13: SECURITY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="security">
+            <div class="section-divider-number">13</div>
+            <h2>13. Security for API Apps</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Risk</th><th>Control that actually bounds it</th><th>Not enough on its own</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Indirect prompt injection via fetched pages, emails, files or tool output</td><td>Treat tool/fetched content as <strong>data</strong>; delimit it; scan it before it enters context; isolate readers from action tools</td><td>Filtering only the user's prompt</td></tr>
+                    <tr><td>Excessive agency (agent sends, deletes, pays)</td><td>Least privilege at the <strong>tool registry</strong>: remove tools the task doesn't need; read-only credentials</td><td>"Never send email" in the system prompt</td></tr>
+                    <tr><td>Side-effecting tool misuse</td><td>Deterministic authorization in your code <strong>before</strong> execution (allowlist, caller identity, amount scope), failing closed; human approval for irreversible actions</td><td>An output filter that runs after the tool already executed</td></tr>
+                    <tr><td>Forged identity ("I am an admin")</td><td>Inject verified role and tenant server-side from your auth layer</td><td>Asking the model to verify the claim</td></tr>
+                    <tr><td>Malformed or hostile tool inputs</td><td><code>strict: true</code> plus server-side validation; parameterised queries; fixed write paths</td><td>Trusting model-generated arguments</td></tr>
+                    <tr><td>Leaked secrets and PII</td><td>Keys in env/secret manager, never in prompts; pass reference IDs, not raw PII; per-tenant keys or workspaces</td><td>"Don't reveal secrets" instructions</td></tr>
+                    <tr><td>Unsafe rendering of model output</td><td>Escape or sanitize before display; never execute model HTML/JS</td><td>Assuming model output is trusted</td></tr>
+                    <tr><td>Programmatic tool calling / LLM-generated code</td><td>Run generated code inside a capability-restricted sandbox (e.g., <strong>V8 isolate</strong> with zero ambient network, filesystem, or env-var access; only explicit outbound RPC bindings)</td><td>Running LLM-generated Python/JS on the host or passing raw API credentials into the sandbox</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-file-shield"></i></div>Compliance scoping</h3>
+            <ul>
+                <li>Data retention, zero-data-retention and BAA eligibility vary <strong>by feature and by platform</strong>: confirm each feature you plan to use.</li>
+                <li>"No training on API data" is not the same as zero retention.</li>
+                <li>Audit-log every tool call and decision (request, response, context, outcome) with a shared trace ID.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>"All our users are trusted employees, so injection isn't a risk." The attacker is whoever wrote the web page, email or document the agent reads. Prompt rules and bigger models are probabilistic; capability removal and pre-action authorization are not.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 14: FAILURE MODES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">14</div>
+            <h2>14. Failure Modes and Find the Defect</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Symptom / scenario</th><th>Root cause → correct fix</th><th>Tempting wrong answer</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>"tool_result references unknown tool_use_id"</td><td>Result ID ≠ call ID, or result not in the next user turn → echo <code>block.id</code>; results first in the next message</td><td>Rewriting the tool description</td></tr>
+                    <tr><td>400 after "trimming" history to save tokens with thinking on</td><td>Thinking block edited/dropped, signature mismatch → echo turns unchanged; compact older turns</td><td>Raising <code>max_tokens</code></td></tr>
+                    <tr><td>Validation error only on retries after a dropped stream</td><td>Half-streamed turn saved → commit at <code>message_stop</code>; discard partial turns</td><td>Changing the tool schema</td></tr>
+                    <tr><td>Correct tool on turns 1–4, wrong tool from turn 5</td><td>Context crowded by tool output → prune, edit or compact; measure tokens</td><td>Clarifying descriptions or raising <code>max_tokens</code></td></tr>
+                    <tr><td>Agent repeats a hallucinated API path even after context compaction</td><td><strong>Context poisoning</strong> survived summarization → truncate/reset history to before the poisoned turn</td><td>Running compaction again or lowering temperature</td></tr>
+                    <tr><td>Orchestrator spawns a subagent to generate a config file, gets "Completed!" back, and lacks the actual config</td><td>Subagent returned a summary instead of the raw artifact → require verbatim output or write to a shared store/file</td><td>Increasing the subagent's <code>max_tokens</code></td></tr>
+                    <tr><td>Agent with 40 MCP tools suffers 12-turn sequential tool ping-pong and 80k schema tokens per turn</td><td>Standard ReAct loop bottleneck → use progressive tool disclosure (<code>Select</code>) or programmatic tool calling (V8 isolate)</td><td>Switching to a larger model tier</td></tr>
+                    <tr><td>Model says "no orders found" during a DB outage</td><td>Failure returned as <code>""</code> → <code>tool_result</code> with <code>is_error: true</code></td><td>"Never say no orders found" in the prompt</td></tr>
+                    <tr><td>Answer silently missing; logs show HTTP 200</td><td><code>stop_reason: "refusal"</code> or <code>max_tokens</code> not checked → branch on <code>stop_reason</code></td><td>Retrying on HTTP status only</td></tr>
+                    <tr><td>Same refusal repeats every turn</td><td>Refused turn kept in history → remove/rephrase it or reset</td><td>Exponential backoff</td></tr>
+                    <tr><td>Nightly job hits 429 every night</td><td>Sync loop over items → Message Batches + <code>custom_id</code></td><td>Smaller chunks</td></tr>
+                    <tr><td>Batch results attached to the wrong tickets</td><td>Matched by position → match on <code>custom_id</code></td><td>Sorting results by timestamp</td></tr>
+                    <tr><td>429 storms despite "retries"</td><td>Own loop stacked on SDK retries → one retry owner, honor <code>retry-after</code>, jitter</td><td>More attempts</td></tr>
+                    <tr><td>400 after model upgrade on <code>temperature</code> / <code>budget_tokens</code></td><td>Unsupported on 4.7+ → omit sampling params; adaptive thinking + effort</td><td>Lowering the values</td></tr>
+                    <tr><td>0% cache hit rate</td><td>Dynamic text before the breakpoint, or tool_choice/effort changing per call → static prefix first, stable settings</td><td>1-hour TTL</td></tr>
+                    <tr><td>Parser breaks after an upstream release; can't roll back</td><td>Moving alias → pin the full ID, keep prior pin, eval-gate promotion</td><td>Adding parser retries</td></tr>
+                    <tr><td>EU-only residency requirement on first-party API</td><td><code>inference_geo</code> has no EU value → Bedrock/Google Cloud EU routing</td><td><code>inference_geo: "us"</code> + encryption</td></tr>
+                    <tr><td>Summarizer agent forwards a thread externally</td><td>Injection via fetched email + unneeded send tool → treat content as data; remove the tool</td><td>Stricter user-input regex</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-bug"></i></div>Find the defect: a migrated tool-use turn</h3>
+            <p>This code ran on an older model. After moving to a Claude 4.7+ pinned ID it fails or misbehaves. Find at least three defects before revealing.</p>
+        </div>
+
+        <pre><code class="language-python">resp = client.messages.create(
+    model=NEW_PINNED_ID, max_tokens=4096,
+    temperature=0,                                            # (a)
+    thinking={"type": "enabled", "budget_tokens": 8000},      # (b)
+    tools=TOOLS, messages=messages,
+)
+messages.append({"role": "assistant",                         # (c)
+                 "content": [b for b in resp.content if b.type != "thinking"]})
+call = next(b for b in resp.content if b.type == "tool_use")
+try:
+    out = run_tool(call.name, call.input)
+except Exception:
+    out = ""                                                  # (d)
+messages.append({"role": "user", "content": [
+    {"type": "text", "text": "Here is the result:"},          # (e)
+    {"type": "tool_result", "tool_use_id": call.id, "content": out},
+]})</code></pre>
+
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-bug"></i>
+                <h3>Reveal the Fixes (Click)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Fixes.</span> What must change, and why?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><strong>(a)</strong> Remove <code>temperature</code>: non-default sampling values return 400 on Claude 4.7+. Steer with the prompt instead. <strong>(b)</strong> Replace the manual budget with <code>thinking={"type": "adaptive"}</code> and <code>output_config={"effort": "high"}</code>; <code>budget_tokens</code> returns 400 on 4.7+. <strong>(c)</strong> Append <code>resp.content</code> unchanged: filtering thinking blocks breaks the signature check on the next call. <strong>(d)</strong> Return failures as a <code>tool_result</code> with <code>is_error: true</code> and a short message, never <code>""</code>. <strong>(e)</strong> Put <code>tool_result</code> blocks first; text after. Bonus: check <code>resp.stop_reason == "tool_use"</code> before looking for a call, and loop over <em>all</em> <code>tool_use</code> blocks in case of parallel calls.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 15: RESOURCES & GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">15</div>
+            <h2>Glossary, Practice Quiz &amp; Related Guides</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Content block</dt>
+                <dd>Typed unit of a message: <code>text</code>, <code>image</code>, <code>document</code>, <code>tool_use</code>, <code>tool_result</code>, <code>thinking</code>, <code>redacted_thinking</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>stop_reason</dt>
+                <dd>Why generation stopped: <code>end_turn</code>, <code>tool_use</code>, <code>max_tokens</code>, <code>stop_sequence</code>, <code>pause_turn</code>, <code>refusal</code>, <code>model_context_window_exceeded</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>tool_use_id</dt>
+                <dd>Field on a <code>tool_result</code> that must equal the <code>id</code> of the <code>tool_use</code> block it answers.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>is_error</dt>
+                <dd>Flag on a <code>tool_result</code> telling Claude the tool failed, so it can retry, ask, or stop instead of trusting empty data.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>tool_choice</dt>
+                <dd><code>auto</code> (default), <code>any</code>, <code>tool</code>, <code>none</code>; holds <code>disable_parallel_tool_use</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Strict tool use</dt>
+                <dd><code>strict: true</code> on a tool: inputs are guaranteed to match its <code>input_schema</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>output_config.format</dt>
+                <dd>JSON outputs: constrains the response text to a JSON schema.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Adaptive thinking</dt>
+                <dd><code>thinking: {type: "adaptive"}</code>; the model sizes its own reasoning, steered by <code>output_config.effort</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Effort</dt>
+                <dd>Per-request reasoning depth: <code>low</code> → <code>max</code> (set varies by model). Higher = slower and costlier.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Signature</dt>
+                <dd>Cryptographic field on thinking blocks; any edit makes the next request fail.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>message_stop</dt>
+                <dd>Final streaming event; the only safe point to commit a streamed turn.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>input_json_delta</dt>
+                <dd>Streaming fragment of tool input JSON; parse only at <code>content_block_stop</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Cache breakpoint</dt>
+                <dd><code>cache_control</code> marker ending a reusable prefix; up to 4 per request; TTL 5m (default) or 1h.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Compaction</dt>
+                <dd>Server-side summarization of older context into a compaction block so long-running agents keep going.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>4 Context Strategies</dt>
+                <dd><code>Write</code> (persist outside context), <code>Select</code> (progressive disclosure/scoped tools), <code>Compress</code> (prune/edit/compact), and <code>Isolate</code> (subagents with clean <code>messages[]</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context Rot Taxonomy</dt>
+                <dd><em>Context poisoning</em> (hallucinated premise survives compaction; requires reset), <em>Context confusion</em> (unrelated docs/tools dilute attention), and <em>Context clash</em> (contradictory turns).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Programmatic tool calling</dt>
+                <dd>CodeMode pattern where the model writes a typed script executed in a capability-restricted V8 isolate to chain multiple RPC calls in a single inference turn.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>custom_id</dt>
+                <dd>Your unique key per batched request; the only reliable way to match out-of-order results.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>inference_geo</dt>
+                <dd>First-party residency parameter: <code>global</code> or <code>us</code> (Claude 4.6+).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Pinned model ID</dt>
+                <dd>An ID whose underlying model never changes; the unit of release and rollback.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Indirect prompt injection</dt>
+                <dd>Instructions hidden in content the app reads (pages, emails, tool output) rather than typed by the user.</dd>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Architecting Claude Platform &amp; API Video</h3>
+                <p>A visual walkthrough of the Messages API request/response lifecycle, tool-use loops, adaptive thinking &amp; effort, SSE streaming, prompt caching, server-side compaction, and multi-cloud deployment.</p>
+                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                    <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeAPI-v1.0.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                </div>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the Claude Platform &amp; API audio deep dive, or open the 2-column study guide PDF, the 23-slide Architecting Claude deck, and the AI API Architecture Overview infographic in the Hub Viewer.</p>
+                <div class="audio-label" style="margin-top: 15px;">Production Engineering with the Claude API (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeAPI-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=claude-api" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive Claude API Practice Quiz →</span>
+                    </a>
+                </div>
+                <ul style="margin-top: 16px;">
+                    <li><a href="ClaudeCode.html">Claude Code</a>: configuration, hooks, CLAUDE.md, skills, plugins, Agent SDK, Managed Agents.</li>
+                    <li><a href="Anthropic.html">Anthropic</a>: philosophy, Constitutional AI, interpretability and safety.</li>
+                    <li><a href="PromptEngineering.html">Prompt Engineering</a>: prompt anatomy and techniques.</li>
+                    <li><a href="MCP.html">MCP</a> and <a href="RAG.html">RAG</a>: tool protocols and retrieval pipelines.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> Claude returns two <code>tool_use</code> blocks in one response. How must the next request be structured?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Append the assistant message unchanged, then a single user message whose content starts with two <code>tool_result</code> blocks, each with the matching <code>tool_use_id</code> (any text goes after them). Failed calls use <code>is_error: true</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> How do <code>max_tokens</code> and <code>model_context_window_exceeded</code> differ, and what happens when the input alone is too large?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>max_tokens</code> means the output hit your cap; raise it or continue. <code>model_context_window_exceeded</code> means generation filled the context window; treat it as truncated and shrink history. An input that alone exceeds the window is rejected with a 400 before generation.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Why is a refusal not handled by your retry logic, and what should the app do?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">It arrives as HTTP 200 with <code>stop_reason: "refusal"</code>, so status-based retry never sees it, and resending the same request repeats it. Read <code>stop_details</code>, remove or rephrase the refused turn (or reset history), or retry on a fallback model where offered.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> In a streaming handler, when is it safe to parse tool input and when is it safe to commit the turn?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Accumulate <code>input_json_delta</code> fragments and parse at that block's <code>content_block_stop</code>. Commit the assistant turn to history only after <code>message_stop</code>; on a dropped stream, discard the partial turn.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> A team migrates to a Claude 4.7+ model and gets 400s. The request sets <code>temperature: 0.2</code> and <code>thinking: {type: "enabled", budget_tokens: 6000}</code>. What changes?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Omit the sampling parameter and steer with prompting. Replace manual thinking with <code>thinking: {type: "adaptive"}</code> plus <code>output_config: {effort: ...}</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> A prompt with a 6k-token static system prompt shows 0% cache reads. The breakpoint is on a system block that begins with today's date. Fix?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Move the date (and any per-request text) after the last breakpoint so the cached prefix is byte-identical across requests; keep <code>tool_choice</code>, tools and effort stable too. A longer TTL would only raise write costs.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> An EU insurer requires inference to stay in the EU. Which deployment choices satisfy it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Not first-party <code>inference_geo</code>, which supports only <code>global</code> or <code>us</code>. Use Amazon Bedrock regional/EU routing or the Google Cloud <code>eu</code> multi-region (both carry a regional premium), pin the model ID, and verify feature availability on that platform.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> Your code wraps each SDK call in its own five-attempt retry loop. What's wrong?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The SDK already retries retriable errors twice by default and honors <code>retry-after</code>, so attempts multiply against a rate limit. Let one layer own retries (or set <code>max_retries</code>), fail fast on 4xx terminal errors, and put fallbacks in orchestration.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

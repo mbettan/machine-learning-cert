@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code &amp; Agent SDK: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.">
+    <meta name="keywords" content="Claude Code, Claude Agent SDK, Claude Managed Agents, CLAUDE.md, permission modes, hooks, PreToolUse, subagents, Agent Skills, SKILL.md, plugins, marketplaces, MCP, .mcp.json, managed settings, headless, agentic coding, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/ClaudeCode.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Claude Code &amp; Agent SDK: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ClaudeCode.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Claude Code &amp; Agent SDK — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Claude Code &amp; Agent SDK: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Claude Code &amp; Agent SDK — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html#article",
+                  "headline": "Claude Code & Agent SDK: Study Guide | ML Cert Hub",
+                  "name": "Claude Code & Agent SDK Study Guide",
+                  "description": "Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.",
+                  "keywords": "Claude Code, Claude Agent SDK, Claude Managed Agents, CLAUDE.md, permission modes, hooks, PreToolUse, subagents, Agent Skills, SKILL.md, plugins, marketplaces, MCP, .mcp.json, managed settings, headless, agentic coding, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-10-25",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Claude Code & Agent SDK",
+                              "item": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Claude Code <em>&amp; Agent SDK</em></h1>
+                <p class="cover-subtitle">Configuring and governing Claude's agent harness: the agentic loop, permission modes and allow/ask/deny rules, settings and CLAUDE.md precedence, deterministic hooks, isolated and fork subagents, progressive-disclosure skills, plugins and marketplaces, MCP scopes and policy filtering, headless CI runs, team rollout with managed settings, the Agent SDK, and hosted Managed Agents.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Anthropic / Applied AI</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=claude-code" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Claude Code Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview, Agent Loop &amp; Surfaces</span>
+                </a>
+                <a href="#permissions" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Permission Modes &amp; Rules</span>
+                </a>
+                <a href="#settings-memory" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Settings &amp; Memory Precedence</span>
+                </a>
+                <a href="#mechanisms" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Which Mechanism Carries Which Rule</span>
+                </a>
+                <a href="#hooks" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Hooks &amp; Exit Codes</span>
+                </a>
+                <a href="#subagents" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Subagents</span>
+                </a>
+                <a href="#skills" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Skills &amp; Progressive Disclosure</span>
+                </a>
+                <a href="#plugins" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Plugins &amp; Marketplaces</span>
+                </a>
+                <a href="#mcp" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>MCP in Claude Code</span>
+                </a>
+                <a href="#headless" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Headless &amp; CI Use</span>
+                </a>
+                <a href="#team-rollout" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Team Rollout &amp; Spend Controls</span>
+                </a>
+                <a href="#agent-sdk" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Claude Agent SDK</span>
+                </a>
+                <a href="#managed-agents" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Managed Agents &amp; Wiring Paths</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">13</span>
+                    <span>Failure Modes &amp; Find the Defect</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">14</span>
+                    <span>Glossary, Quiz &amp; Self-Assessment</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview, Agent Loop &amp; Surfaces</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>Definition</h3>
+                <p><strong>Claude Code</strong> is Anthropic's agentic coding tool. It reads your codebase, edits files, runs commands, and verifies its own work through a tool-using loop. The same harness ships as a library, the <strong>Claude Agent SDK</strong>, so you can embed that loop in your own process. <strong>Claude Managed Agents</strong> runs a comparable stateful loop on Anthropic's infrastructure.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>The agentic loop</h3>
+                <p>Every task cycles through three blended phases: <strong>gather context</strong> (search, read) → <strong>take action</strong> (edit, run) → <strong>verify results</strong> (tests, diffs), repeating until done. Each tool result informs the next step, and you can interrupt at any point. Hooks, skills, subagents, and MCP all plug into specific phases of this loop.</p>
+            </div>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Gather context</h4>
+                <p><code>CLAUDE.md</code>, <code>.claude/rules/</code>, and auto-memory <code>MEMORY.md</code> load; Claude searches and reads files, or delegates noisy exploration to a subagent.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Permission check</h4>
+                <p><code>PreToolUse</code> hooks run first → <code>deny</code> → <code>ask</code> → protected/critical-path checks → <code>allow</code> → active permission mode → <code>PermissionRequest</code> hooks → prompt or SDK <code>canUseTool</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Take action</h4>
+                <p>Edits, shell commands, MCP tool calls, or skill invocations execute (optionally inside OS-level <code>/sandbox</code> isolation).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Verify</h4>
+                <p><code>PostToolUse</code> / <code>FileChanged</code> hooks format or audit; Claude runs tests and reads results before <code>Stop</code> hooks evaluate completion.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>Surfaces: CLI, Worktrees, Cloud/Web &amp; Teleport, Cowork, and Agent SDK</h3>
+            <div class="definition-grid">
+                <div class="definition-item">
+                    <dt>Claude Code (CLI, IDE &amp; Worktrees)</dt>
+                    <dd>Available in the terminal CLI, Desktop Code tab, VS Code / JetBrains extensions, Slack, and CI/CD. <strong>Local Worktrees (<code>--worktree</code> / <code>-w</code>):</strong> creates an isolated checkout under <code>.claude/worktrees/&lt;name&gt;</code> sharing git history on your machine; <strong>does not copy gitignored files</strong> (<code>node_modules</code>, <code>.env</code>, <code>venv</code>), requiring dependency setup or a <code>SessionStart</code> hook.</dd>
+                </div>
+                <div class="definition-item">
+                    <dt>Cloud/Web (<code>claude.ai/code</code>) &amp; Teleport</dt>
+                    <dd>Runs in an Anthropic-managed cloud VM cloned from GitHub (survives laptop sleep; <strong>Mobile is 100% cloud-only</strong>). Prefix a CLI prompt with <strong><code>&amp; &lt;prompt&gt;</code></strong> to dispatch a background cloud session. Use <strong><code>/teleport</code></strong> (<code>/tp</code> or <code>claude --teleport &lt;id&gt;</code>) for <strong>one-way Cloud → Local terminal</strong> handoff (requires clean local git state; local sessions cannot be pushed to web).</dd>
+                </div>
+                <div class="definition-item">
+                    <dt>Cowork, Dispatch &amp; Agent SDK</dt>
+                    <dd><strong>Cowork</strong> runs desktop knowledge work in an app-hosted VM; <strong>Dispatch</strong> hands off tasks from mobile/web to desktop. The <strong>Claude Agent SDK</strong> embeds the same loop, tools, permissions, hooks, and subagents as a TypeScript or Python library in your own process.</dd>
+                </div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-cubes-stacked"></i></div>Deep Agent 4-Pillar Architecture &amp; the 4 Context Strategies</h3>
+            <p>Claude Code goes beyond a shallow single-loop ReAct agent by combining <strong>four architectural pillars</strong> mapped to the <strong>four context engineering strategies</strong> (<em>Write, Select, Compress, Isolate</em>):</p>
+            <ul>
+                <li><strong>1. Explicit Planning Tool (<code>TodoWrite</code> / <code>TodoRead</code>) [Write]:</strong> Externalizes a live checklist in agent state so multi-step plans survive context window pressure and tool failures without goal drift.</li>
+                <li><strong>2. Hierarchical Sub-Agents (<code>Task</code> / <code>Agent</code>) [Isolate]:</strong> Spawns child agents in fresh context windows for noisy search or independent checks, returning only a distilled summary to the parent.</li>
+                <li><strong>3. Filesystem as External Context Engine [Write &amp; Select]:</strong> Avoids static RAG chunking failures (<em>under-retrieval</em>, <em>over-retrieval</em>, and <em>misaligned retrieval</em> across imports) by navigating live code via <code>Glob</code> (paths), <code>Grep</code> (ripgrep regex), and paginated <code>Read(file_path, offset, limit)</code>, plus writing durable state to disk (<code>CLAUDE.md</code>, <code>SPEC.md</code>, <code>MEMORY.md</code>).</li>
+                <li><strong>4. Detailed System Prompt Heuristics + Compaction [Compress]:</strong> Built-in tool-selection heuristics and <code>/compact</code> (or <code>/clear</code>) keep active context inside the high-recall attention budget.</li>
+            </ul>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental model</h4>
+                <p>The model <em>proposes</em>; the harness <em>disposes</em>. Anything written in <code>CLAUDE.md</code> or <code>.claude/rules/</code> is advisory guidance the model weighs. Anything in <code>settings.json</code> permission rules, hooks, or managed policy is enforced deterministically by the client regardless of what the model decides.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: PERMISSIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="permissions">
+            <div class="section-divider-number">01</div>
+            <h2>1. Permission Modes &amp; Allow / Ask / Deny Rules</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">A permission mode sets the session's baseline for what runs without prompting. Rules then carve specific tools, paths, or commands in or out. Set the starting mode with <code>--permission-mode</code> or <code>permissions.defaultMode</code> (interactive CLI defaults to <code>auto</code> on supported plans in v2.1.283+; project <code>.claude/settings.json</code> and <code>.claude/settings.local.json</code> <strong>ignore</strong> <code>defaultMode: "auto"</code> and <code>"bypassPermissions"</code>).</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mode</th><th>Runs without asking</th><th>Still prompts / blocked</th><th>Use when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong><code>default</code></strong> (<code>manual</code>)</td><td>File reads + built-in read-only shell commands (<code>ls</code>, <code>pwd</code>, <code>git status</code>/<code>diff</code>/<code>log</code>, <code>rg</code>, <code>find</code> without <code>-exec</code>/<code>-delete</code>) in working dirs</td><td>Every file edit, mutating shell command, and path outside working directories</td><td>Sensitive repos; reviewing every mutating action</td></tr>
+                    <tr><td><strong><code>acceptEdits</code></strong></td><td>Everything in <code>default</code> + CWD file edits and basic file-manipulation utilities (<code>sed</code>, <code>cp</code>, <code>mv</code>, <code>mkdir</code>, <code>rmdir</code>, <code>touch</code>, <code>rm</code>)</td><td>Other Bash commands, paths outside CWD, <strong>protected repo paths</strong>, and critical-path <code>rm</code></td><td>Iterating on code you are reviewing</td></tr>
+                    <tr><td><strong><code>plan</code></strong> (<code>Shift+Tab</code> / <code>/plan</code>)</td><td>File reads, read-only shell commands, and read-only subagents (<code>Explore</code>, <code>Plan</code>)</td><td>All file edits and mutating commands until plan approval (<code>PreToolUse</code> <code>"allow"</code> does <strong>not</strong> bypass <code>plan</code> mode's edit block)</td><td><strong>4-step Spec-Driven workflow:</strong> Explore → Ask clarifying questions → Draft spec → Execute after approval</td></tr>
+                    <tr><td><strong><code>auto</code></strong></td><td>Actions approved by a background safety classifier; <strong>strips broad <code>allow</code> rules</strong> (<code>Bash(*)</code>, <code>Bash(python*)</code>, <code>Bash(node*)</code>, <code>Agent</code>) on entry</td><td>Classifier-flagged actions (curl-pipe-sh, prod deploys, force push, mass delete), protected paths, deny/ask rules; falls back to <code>default</code> if prerequisites fail</td><td>Long interactive tasks where prompt fatigue is the problem (disable org-wide via <code>"disableAutoMode": "disable"</code>)</td></tr>
+                    <tr><td><strong><code>dontAsk</code></strong></td><td>Reads in working directories and explicitly pre-approved (<code>allow</code>) tools</td><td>Anything that would prompt is silently <strong>denied</strong> (<code>PermissionRequest</code> hooks and SDK <code>canUseTool</code> are skipped)</td><td>Locked-down CI, scripts, and background jobs</td></tr>
+                    <tr><td><strong><code>bypassPermissions</code></strong></td><td>All tools and commands except the hard guardrails in the next column</td><td>Explicit <code>deny</code> rules, explicit <code>ask</code> rules, <code>PreToolUse</code> hook denials, <strong>protected repo paths</strong>, and <strong>critical-path <code>rm</code>/<code>rmdir</code></strong></td><td>Isolated containers and disposable VMs only (disable org-wide via <code>"disableBypassPermissionsMode": "disable"</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap: <code>acceptEdits</code> + protected paths</h4>
+                <p><code>acceptEdits</code> also pre-approves CWD shell file utilities (<code>sed</code>, <code>cp</code>, <code>mv</code>, <code>rm</code>) — pair it with <code>deny: ["Bash(rm *)"]</code> when deletions must stay gated. Conversely, writes to <strong>protected repo paths</strong> (<code>.git</code>, <code>.claude</code>, <code>.vscode</code>, <code>.idea</code>, <code>.husky</code>, <code>.mcp.json</code>, shell profiles) are checked <strong>before</strong> <code>permissions.allow</code>, so putting <code>Edit(.claude/**)</code> in <code>allow</code> never pre-approves writes there, and even <code>bypassPermissions</code> still prompts on them.</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-scale-balanced"></i></div>Rule evaluation &amp; path anchors</h3>
+                <ul>
+                    <li><strong>Order:</strong> <code>PreToolUse</code> hooks → <strong><code>deny</code> → <code>ask</code> → protected/critical-path checks → <code>allow</code></strong> → active mode → <code>PermissionRequest</code> hooks → prompt / <code>canUseTool</code>. First match in <code>deny → ask → allow</code> wins <em>regardless of specificity</em>.</li>
+                    <li><strong>Bare vs scoped <code>deny</code>:</strong> Bare tool names in <code>deny</code> (<code>"Bash"</code>, <code>"WebFetch"</code>, <code>"mcp__*"</code>, <code>"Agent(Explore)"</code>) <strong>remove the tool from context entirely</strong>; scoped rules (<code>"Bash(rm *)"</code>) keep the tool in context and block matching calls.</li>
+                    <li><strong><code>Read</code> &amp; <code>Edit</code> only:</strong> Only <code>Read(...)</code> and <code>Edit(...)</code> accept path globs. <strong><code>Edit(...)</code> governs <code>Edit</code>, <code>Write</code>, and <code>NotebookEdit</code></strong> — <code>Write(path)</code> and <code>Glob(path)</code> rules <strong>never match</strong>!</li>
+                    <li><strong>Path prefix anchors:</strong> <code>//path</code> = <strong>absolute filesystem root</strong> (<code>Read(//etc/**)</code>); <code>~/path</code> = <code>$HOME</code>; single <code>/path</code> = relative to <code>&lt;cwd&gt;</code> in project/local settings <strong>or <code>~/.claude/</code> in <code>~/.claude/settings.json</code></strong> (not root!); <code>./path</code> or <code>path</code> = CWD.</li>
+                    <li><strong>Cross-tool coupling:</strong> <code>Read(path)</code> in <code>deny</code> also blocks <code>Edit</code>/<code>Write</code> and <code>@file</code> prompt mentions; <code>Edit(path)</code> in <code>allow</code> also grants <code>Read</code>. <code>WebFetch(domain:*)</code> in <code>allow</code> also opens all network hosts to sandboxed Bash!</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>MCP rules &amp; OS sandboxing (<code>/sandbox</code>)</h3>
+                <ul>
+                    <li><code>mcp__&lt;server&gt;__&lt;tool&gt;</code> targets one tool; <code>mcp__&lt;server&gt;</code> or <code>mcp__&lt;server&gt;__*</code> targets all tools on that server; <code>mcp__github__get_*</code> wildcards the tool suffix.</li>
+                    <li><strong>Never use <code>(...)</code> on <code>mcp__</code> rules</strong> in settings files (skipped with a startup warning), and unanchored <code>"*"</code> or <code>"mcp__*"</code> in <code>allow</code> is skipped.</li>
+                    <li><strong>Permission rules vs OS sandboxing:</strong> Permission rules gate <em>which tool calls Claude invokes</em>; OS sandboxing (<code>sandbox.enabled: true</code>; Seatbelt on macOS, <code>bubblewrap</code> on Linux/WSL2) restricts <em>child process filesystem and network access</em>.</li>
+                    <li>With <code>sandbox.autoAllowBashIfSandboxed: true</code>, sandboxed Bash commands run without prompting. Failed sandbox commands may retry with <code>dangerouslyDisableSandbox: true</code> (prompting the user) unless <code>"allowUnsandboxedCommands": false</code> enforces strict sandboxing.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — .claude/settings.json (team-shared; requires workspace trust dialog for allow rules)</span>
+            </div>
+            <pre>{
+  <span class="variable">"permissions"</span>: {
+    <span class="variable">"defaultMode"</span>: <span class="string">"acceptEdits"</span>,
+    <span class="variable">"allow"</span>: [<span class="string">"Bash(npm run *)"</span>, <span class="string">"Edit(/src/**)"</span>, <span class="string">"mcp__github__get_*"</span>],
+    <span class="variable">"ask"</span>:   [<span class="string">"Bash(git push *)"</span>],
+    <span class="variable">"deny"</span>:  [<span class="string">"Read(./.env)"</span>, <span class="string">"Read(//etc/**)"</span>, <span class="string">"Bash(rm *)"</span>, <span class="string">"mcp__github__delete_repo"</span>]
+  }
+}</pre>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap: Bash prefix matching vs hard boundaries</h4>
+                <p>Bash patterns match command <em>prefixes</em>, so <code>deny: ["Bash(git push *)"]</code> does not match <code>git -C . push</code>. For a hard boundary, combine deny rules with a <code>PreToolUse</code> hook and OS-level sandboxing (<code>sandbox.enabled: true</code>).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: SETTINGS & MEMORY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="settings-memory">
+            <div class="section-divider-number">02</div>
+            <h2>2. Settings &amp; Memory Precedence</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Precedence (high → low)</th><th>Where</th><th>Who it affects</th><th>Typical content</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Managed</strong></td><td>Server-managed, MDM/OS policy, or <code>managed-settings.json</code> (+ <code>managed-settings.d/*.json</code>)</td><td>Everyone the org deploys to; nothing below overrides a managed key</td><td>Security policy, compliance, model/plugin/MCP locks</td></tr>
+                    <tr><td><strong>2. Command line</strong></td><td><code>--settings &lt;file-or-json&gt;</code> and CLI flags (<code>--permission-mode</code>, <code>--allowedTools</code>)</td><td>This session only</td><td>One-off overrides, CI flags</td></tr>
+                    <tr><td><strong>3. Project local</strong></td><td><code>.claude/settings.local.json</code> (<strong>always at git repo root</strong>, even from subdirs/worktrees)</td><td>You, this repository (gitignored)</td><td>Personal overrides, local testing</td></tr>
+                    <tr><td><strong>4. Shared project</strong></td><td><code>.claude/settings.json</code></td><td>Everyone who clones the repo</td><td>Team permissions, hooks, plugins, <code>env</code></td></tr>
+                    <tr><td><strong>5. User</strong></td><td><code>~/.claude/settings.json</code></td><td>You, every project</td><td>Personal defaults and rules</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Merge rule</h4>
+                <p><strong>Arrays merge across layers; scalars override.</strong> Permission rule arrays from every layer combine (<code>deny → ask → allow</code>), so a <code>deny</code> at any layer still blocks. A scalar <code>model</code> in managed settings is only a starting default; the hard locks are <code>availableModels</code> (allowlist) and <code>deniedModels</code> (denylist, which wins over <code>availableModels</code>).</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Memory / instruction source</th><th>Location &amp; loading behavior</th><th>Shared with</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Managed policy <code>CLAUDE.md</code></strong></td><td>OS system path (<code>/Library/Application Support/ClaudeCode/CLAUDE.md</code> on macOS, <code>/etc/claude-code/CLAUDE.md</code> on Linux/WSL, <code>C:\Program Files\ClaudeCode\CLAUDE.md</code> on Windows) or <code>"claudeMd"</code> string in <code>managed-settings.json</code>; <strong>cannot be excluded</strong></td><td>Whole organization</td></tr>
+                    <tr><td><strong>User <code>CLAUDE.md</code> &amp; rules</strong></td><td><code>~/.claude/CLAUDE.md</code> and <code>~/.claude/rules/*.md</code> (loaded at session start before project files)</td><td>Only you, all projects</td></tr>
+                    <tr><td><strong>Project <code>CLAUDE.md</code> &amp; <code>AGENTS.md</code></strong></td><td><code>./CLAUDE.md</code> or <code>./.claude/CLAUDE.md</code> (plus <code>AGENTS.md</code> when active); discovered upward from CWD and loaded in <strong>root-to-CWD order</strong> at launch. Subdirectory <code>CLAUDE.md</code> files load <strong>lazily on demand</strong> when files in that subtree are read/edited</td><td>Team, via source control</td></tr>
+                    <tr><td><strong>Path-scoped <code>.claude/rules/*.md</code></strong></td><td>Discovered recursively in <code>.claude/rules/</code>. Rules <strong>without</strong> <code>paths:</code> load at launch; rules <strong>with</strong> <code>paths: ["src/api/**/*.ts"]</code> load on demand when matching files are read</td><td>Team, via source control</td></tr>
+                    <tr><td><strong>Local <code>CLAUDE.local.md</code></strong></td><td><code>./CLAUDE.local.md</code> (gitignored; appended after <code>CLAUDE.md</code> in each directory)</td><td>Only you, this project</td></tr>
+                    <tr><td><strong>Auto memory (<code>MEMORY.md</code>)</strong></td><td><code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code> (plus topic files). Claude writes notes itself; <strong>first 200 lines or 25 KB</strong> of <code>MEMORY.md</code> load at startup (toggle via <code>/memory</code>, <code>"autoMemoryEnabled": false</code>, or <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code>)</td><td>Only you, per git repo (shared across worktrees)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-file-lines"></i></div>Loading, imports, <code>/init</code> &amp; monorepo rules</h3>
+                <ul>
+                    <li>Target <strong>under 200 lines</strong> per <code>CLAUDE.md</code>: longer files cost context and reduce adherence.</li>
+                    <li><strong><code>/init</code> &amp; <code># &lt;rule&gt;</code> shortcut:</strong> <code>/init</code> scans the repo to bootstrap a starter <code>CLAUDE.md</code> (treat as a draft to prune); starting a prompt with <strong><code># &lt;rule&gt;</code></strong> appends an instruction to your chosen <code>CLAUDE.md</code> tier.</li>
+                    <li><code>@path/to/file</code> imports expand at launch (max 5 hops) and <strong>do not save context tokens</strong>.</li>
+                    <li>Skip noisy ancestor files in monorepos via <code>"claudeMdExcludes": ["**/monorepo/CLAUDE.md"]</code>.</li>
+                    <li><code>--add-dir</code> loads skills/commands/agents from extra directories, but <strong>not</strong> <code>CLAUDE.md</code> or <code>.claude/rules/</code> unless <code>CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1</code>.</li>
+                    <li>Audit instruction bloat/conflicts with <strong><code>/doctor prompt-audit</code></strong> and inspect token usage with <code>/context</code>. (Note: <strong><code>.claudeignore</code> does not exist</strong> — use <code>permissions.deny: ["Read(...)"]</code>.)</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-folder-tree"></i></div>Subdir lazy-load trap, <code>AGENTS.md</code> &amp; <code>.claude/rules/</code></h3>
+                <ul>
+                    <li><strong>Subdirectory <code>CLAUDE.md</code> lazy-load trap:</strong> When launched at repo root, <code>frontend/CLAUDE.md</code> does <strong>not</strong> load at startup — it loads lazily only when Claude reads/edits inside <code>frontend/</code>. Use <code>.claude/rules/frontend.md</code> with <code>paths: ["frontend/**"]</code> for deterministic glob-triggered rules.</li>
+                    <li><strong><code>AGENTS.md</code> + <code>CLAUDE.local.md</code> trap:</strong> Under default <code>auto</code> project instructions, creating <code>CLAUDE.local.md</code> switches detection to <code>claude-md</code> only and <strong>silently stops loading <code>AGENTS.md</code></strong> unless <code>/config</code> → <em>Project instructions</em> is set to <code>claude-md-and-agents-md</code>.</li>
+                    <li><code>.claude/rules/*.md</code> files are discovered recursively; scope comes <strong>only</strong> from <code>paths:</code> YAML frontmatter. A file in <code>.claude/rules/db/</code> without <code>paths:</code> loads at launch for every task.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-biohazard"></i></div>Context Rot Taxonomy &amp; <code>/clear</code> vs <code>/compact</code></h3>
+                <ul>
+                    <li><strong>Context poisoning:</strong> A hallucination, wrong file path, or failed assumption enters the conversation history and gets repeatedly referenced on later turns. <strong>Exam trap:</strong> <code>/compact</code> summarizes the current conversation — which <strong>preserves poisoned assumptions inside the summary</strong>! When a session suffers from context poisoning or switches to an unrelated task, run <strong><code>/clear</code></strong> (or <code>/rewind</code> prior to the bad turn).</li>
+                    <li><strong>Context confusion:</strong> Unrelated file dumps and verbose <code>Bash</code> outputs crowd the attention window; fix by delegating exploration to subagents and using <code>/compact &lt;focus&gt;</code> when switching phases.</li>
+                    <li><strong>Context clash:</strong> Contradictory instructions across <code>CLAUDE.md</code> files or multi-turn requirements cause unpredictable adherence; audit with <code>/doctor prompt-audit</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Output Styles (<code>/output-style</code>) &amp; Status Line (<code>/statusline</code>)</h3>
+                <ul>
+                    <li><strong><code>/output-style</code> (modifies system prompt):</strong> Unlike <code>CLAUDE.md</code> (appended as a user message after the system prompt), <code>/output-style</code> <strong>directly replaces or swaps Claude Code's system prompt</strong>. Built-ins: <strong><code>Default</code></strong> (standard SWE), <strong><code>Explanatory</code></strong> (educational <em>"Insights"</em> callouts), and <strong><code>Learning</code></strong> (collaborative mode that leaves <code>TODO(human)</code> markers). Custom styles in <code>~/.claude/output-styles/*.md</code> or <code>.claude/output-styles/*.md</code> strip default SWE instructions unless frontmatter sets <code>keep-coding-instructions: true</code> (saved to <code>.claude/settings.local.json</code> as <code>outputStyle</code>).</li>
+                    <li><strong><code>/statusline</code> (zero-token UI telemetry):</strong> Configures a shell command in <code>settings.json</code> (<code>"statusLine": {"type": "command", "command": "..."}</code>) that receives live session JSON on <code>stdin</code> (<code>model</code>, <code>workspace</code>, <code>cost</code>, and <code>transcript_path</code> pointing to <code>~/.claude/projects/&lt;encoded-cwd&gt;/&lt;uuid&gt;.jsonl</code>) and renders a terminal footer at <strong>zero LLM token cost</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>MCP "local scope" ≠ local settings. A local-scoped MCP server lives in <code>~/.claude.json</code> under the project entry, while local <em>settings</em> live in <code>.claude/settings.local.json</code> at the git repository root.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: WHICH MECHANISM
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="mechanisms">
+            <div class="section-divider-number">03</div>
+            <h2>3. Which Mechanism Carries Which Rule</h2>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule</h4>
+                <p>Ask two questions: <strong>must it hold 100% of the time?</strong> (then settings rules or a hook, never prose) and <strong>does it matter for every task?</strong> (then always-on; otherwise on-demand). Pick the lowest-context mechanism that satisfies both.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>You need…</th><th>Use</th><th>Why not the alternatives</th><th>Context cost</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Conventions for every task (test command, build steps)</td><td><strong><code>CLAUDE.md</code></strong></td><td>A hook can't express style; a skill may not trigger</td><td>Every session; dilutes past ~200 lines</td></tr>
+                    <tr><td>Guidance only for <code>src/db/**</code></td><td><strong><code>.claude/rules/db.md</code> with <code>paths:</code></strong></td><td>In <code>CLAUDE.md</code> it wastes tokens on unrelated tasks</td><td>Only when matching files are touched</td></tr>
+                    <tr><td>Block a tool, path, <code>@file</code> mention, or command prefix, always</td><td><strong><code>permissions.deny</code></strong> (managed if org-wide)</td><td><code>CLAUDE.md</code> is advisory; <code>PreToolUse</code> skips <code>@file</code> mentions</td><td>Zero (bare tool deny even removes tool schema)</td></tr>
+                    <tr><td>Inspect/rewrite args or block dynamically before a tool runs</td><td><strong><code>PreToolUse</code> hook</strong> (exit <code>2</code> or <code>permissionDecision: "deny"</code>)</td><td>Permission rules match globs/prefixes, not payload content</td><td>Near-zero (only injected reason/context)</td></tr>
+                    <tr><td>Deterministic side effect after edits (formatter, linter, audit)</td><td><strong><code>PostToolUse</code> hook</strong> (or <strong><code>FileChanged</code></strong> if edited via <code>Bash</code>)</td><td>Instructions get skipped; <code>PreToolUse</code> fires before disk write</td><td>Near-zero</td></tr>
+                    <tr><td>Wide codebase search or independent parallel check</td><td><strong>Subagent</strong> (<code>.claude/agents/</code>)</td><td>Main context fills with throwaway file reads</td><td>Isolated window; returns summary only</td></tr>
+                    <tr><td>Repeatable workflow or slash playbook (<code>/release</code>)</td><td><strong>Skill</strong> (<code>SKILL.md</code>; add <code>disable-model-invocation: true</code> for side effects)</td><td>In <code>CLAUDE.md</code> you pay for the full playbook every session</td><td>Description only (or zero if manual-only) until invoked</td></tr>
+                    <tr><td>Replace the default SWE persona (e.g. tutor, PM, security architect)</td><td><strong>Output style</strong> (<code>/output-style</code> or <code>.claude/output-styles/*.md</code>)</td><td><code>CLAUDE.md</code> adds to the SWE system prompt instead of replacing it</td><td>Replaces default system prompt tokens</td></tr>
+                    <tr><td>Live model, branch, or token/cost HUD in the terminal</td><td><strong>Status line</strong> (<code>/statusline</code> in <code>settings.json</code>)</td><td>Asking Claude or running hooks wastes tokens/turns</td><td><strong>Zero</strong> (runs out-of-band on <code>stdin</code> JSON)</td></tr>
+                    <tr><td>Multi-step task &amp; spec tracking across context compactions</td><td><strong><code>TodoWrite</code> / <code>TodoRead</code> + on-disk <code>SPEC.md</code></strong></td><td>Conversational plans get lost or distorted during <code>/compact</code></td><td>Minimal structured state / on-demand file read</td></tr>
+                    <tr><td>Ship skills, agents, hooks &amp; MCP across many repos</td><td><strong>Plugin</strong> via a marketplace</td><td>Copy-pasted <code>.claude/</code> folders drift across repos</td><td>Per bundled component</td></tr>
+                    <tr><td>Org policy users cannot override</td><td><strong>Managed settings</strong> (+ managed <code>CLAUDE.md</code> for guidance)</td><td>Project/user files can be edited locally</td><td>Zero</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>How mechanisms combine across scopes</h3>
+                <ul>
+                    <li><strong><code>CLAUDE.md</code> &amp; <code>.claude/rules/</code> — Additive:</strong> Every matching file across all layers loads into context simultaneously.</li>
+                    <li><strong><code>Permissions</code> &amp; <code>Hooks</code> — Merge &amp; most-restrictive wins:</strong> Permission rules merge across all settings files (<code>deny &gt; ask &gt; allow</code>). Hooks from <strong>every</strong> active layer register and execute <strong>in parallel</strong> on matching events; <code>PreToolUse</code> decisions resolve by <strong><code>deny &gt; defer &gt; ask &gt; allow</code></strong>.</li>
+                    <li><strong><code>Subagents</code>, <code>Skills</code>, &amp; <code>MCP servers</code> — Override by name:</strong> Only one definition wins when names collide (plugins use <code>plugin:name</code> namespaces). <strong>Precedence trap:</strong> Subagents resolve <strong><code>managed &gt; --agents &gt; project &gt; user &gt; plugin</code></strong> (<strong>project beats user</strong>), whereas Skills resolve <strong><code>managed &gt; user &gt; project &gt; nested &gt; plugin &gt; synced</code></strong> (<strong>user beats project</strong>), and MCP servers resolve <strong><code>local &gt; project &gt; user</code></strong>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-compass-drafting"></i></div>Spec-Driven Development (SDD) &amp; Two-Phase Model Switching</h3>
+                <ul>
+                    <li><strong>Phase 1 — Architect (Opus + <code>plan</code> mode):</strong> Start in <code>plan</code> mode (<code>Shift+Tab</code>) on <strong>Opus</strong> to explore the repo, resolve ambiguities via clarifying questions, and write a comprehensive specification to disk (<code>SPEC.md</code>).</li>
+                    <li><strong>Phase 2 — Builder (<code>/clear</code> + Sonnet + <code>@SPEC.md</code>):</strong> Run <strong><code>/clear</code></strong> to wipe exploration noise, switch to <strong>Sonnet</strong> (<code>/model sonnet</code>) for fast, cost-effective execution, and pass <code>@SPEC.md</code> as the clean source of truth (pairing UI tasks with Playwright MCP for visual self-verification).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: HOOKS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="hooks">
+            <div class="section-divider-number">04</div>
+            <h2>4. Hooks &amp; Exit-Code Semantics</h2>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>What a hook is, wildcard matchers &amp; the 5 handler types</h3>
+            <p>A lifecycle handler configured in <code>settings.json</code> (user, project, local, or managed policy), a plugin's <code>hooks/hooks.json</code>, or a <strong>skill/subagent YAML frontmatter</strong> (<code>hooks:</code>). Hooks receive event JSON on <strong>stdin</strong> (<code>session_id</code>, <code>cwd</code>, <code>hook_event_name</code>, plus tool fields <code>tool_name</code>, <code>tool_input</code>).</p>
+            <ul>
+                <li><strong>5 handler types:</strong> <code>"command"</code> (shell/exec script; supports <code>"async": true</code> for background side effects), <code>"http"</code> (POSTs event JSON to a URL), <code>"mcp_tool"</code> (invokes a configured MCP server tool), <code>"prompt"</code> (single-turn fast LLM check returning <code>{"ok": true|false, "reason": "..."}</code>), and <code>"agent"</code> (multi-turn verifier subagent with <code>Read</code>/<code>Grep</code>/<code>Glob</code>, up to 50 turns).</li>
+                <li><strong>Wildcard matcher &amp; synchronous latency:</strong> Omitting <code>matcher</code>, or setting <code>"matcher": ""</code> or <code>"*"</code>, acts as a <strong>wildcard matching every tool call</strong>. Because synchronous hooks block the agentic loop on every match, scope matchers tightly (<code>"Edit|Write"</code>) or set <code>"async": true</code> on non-blocking telemetry/logging commands.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Exit code</th><th>Meaning</th><th>Effect on the event</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong><code>0</code></strong></td><td>Success / allow</td><td>Event proceeds. <code>stdout</code> is parsed for JSON decision fields (<code>hookSpecificOutput</code>, <code>decision</code>, <code>continue</code>). Plain-text <code>stdout</code> is added to Claude's context <strong>only</strong> on <code>SessionStart</code>, <code>Setup</code>, <code>UserPromptSubmit</code>, and <code>PostModelSwitch</code>. Exit <code>0</code> without JSON does <em>not</em> bypass permission prompts.</td></tr>
+                    <tr><td><strong><code>2</code></strong></td><td><strong>Blocking error</strong></td><td><strong>Blocks</strong> the action (on blockable events). <code>stderr</code> is fed back to Claude as the block reason; any JSON on <code>stdout</code> is <strong>ignored</strong>.</td></tr>
+                    <tr><td><strong><code>1</code> or other non-zero</strong> (no valid JSON)</td><td><strong>Non-blocking error (fail-open default)</strong></td><td><strong>Exam trap:</strong> <code>exit 1</code> without valid hook JSON logs <code>stderr</code> as a warning and <strong>lets the tool call proceed</strong> — <strong>unless <code>"onFailure": "block"</code></strong> is set on the <code>command</code>/<code>http</code> hook (which turns non-zero exits, non-2xx HTTP responses, and <strong>timeouts</strong> into blocks). <em>(If <code>stdout</code> contains valid hook JSON, Claude Code applies the JSON decision and ignores the exit code; <code>WorktreeCreate</code>/<code>WorktreeRemove</code> fail on any non-zero exit.)</em></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Event</th><th>Fires when</th><th>Matcher</th><th>Exit <code>2</code> / JSON block effect</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>PreToolUse</code></td><td>Before a tool call executes in <strong>every</strong> mode (<strong>skips <code>@file</code> prompt mentions</strong>)</td><td>Tool name (<code>Bash</code>, <code>Edit|Write</code>, <code>mcp__srv__tool</code>) + optional <code>if</code> (<code>"Bash(rm *)"</code>)</td><td><span class="table-check">✅</span> <strong>Blocks</strong> tool call; <code>stderr</code> or <code>permissionDecisionReason</code> sent to Claude</td></tr>
+                    <tr><td><code>PermissionRequest</code></td><td>Before a permission dialog shows (or before <code>-p</code>/background auto-deny outside <code>dontAsk</code>)</td><td>Tool name</td><td><span class="table-check">✅</span> Denies via <code>hookSpecificOutput.decision.behavior: "allow"|"deny"</code></td></tr>
+                    <tr><td><code>PostToolUse</code></td><td>Immediately after a tool succeeds (<code>Edit|Write</code> misses <code>Bash</code> file edits)</td><td>Tool name</td><td><span class="table-cross">❌</span> Cannot undo execution; feeds <code>stderr</code> / <code>decision: "block"</code> reason to Claude or redacts output via <code>updatedToolOutput</code></td></tr>
+                    <tr><td><code>PostToolUseFailure</code></td><td>After a tool execution throws or exits non-zero (not permission/schema rejections)</td><td>Tool name</td><td><span class="table-cross">❌</span> Feeds <code>stderr</code> / <code>additionalContext</code> to Claude alongside the tool error</td></tr>
+                    <tr><td><code>UserPromptSubmit</code></td><td>User submits a prompt, before Claude processes it</td><td><em>(none)</em></td><td><span class="table-check">✅</span> <strong>Blocks</strong> prompt processing and erases the prompt from context</td></tr>
+                    <tr><td><code>Stop</code> / <code>SubagentStop</code></td><td>Main agent (<code>Stop</code>) or subagent (<code>SubagentStop</code>) finishes its turn</td><td><em>(none)</em> for <code>Stop</code>; agent <code>name</code> for <code>SubagentStop</code></td><td><span class="table-check">✅</span> <strong>Prevents stopping</strong> and resumes work (check <code>.stop_hook_active</code> on <code>stdin</code>; hard cap of <strong>8 consecutive continuations</strong>)</td></tr>
+                    <tr><td><code>SubagentStart</code></td><td>Subagent spawns or resumes</td><td>Agent <code>name</code> (<code>Explore</code>, custom)</td><td><span class="table-cross">❌</span> Cannot block spawn; injects <code>additionalContext</code> into the subagent</td></tr>
+                    <tr><td><code>SessionStart</code> / <code>Setup</code></td><td>Session starts (<code>SessionStart</code>) or <code>--init</code>/<code>--maintenance</code> runs (<code>Setup</code>)</td><td><code>startup|resume|clear|compact</code> (<code>SessionStart</code>); <code>init|maintenance</code> (<code>Setup</code>)</td><td><span class="table-cross">❌</span> Cannot block; <code>stdout</code> / <code>additionalContext</code> added to context; <strong><code>$CLAUDE_ENV_FILE</code></strong> available to persist <code>export</code> vars</td></tr>
+                    <tr><td><code>PreCompact</code></td><td>Before context compaction (<code>PostCompact</code> fires after)</td><td><code>manual|auto</code></td><td><span class="table-check">✅</span> <strong>Blocks compaction</strong> (<code>exit 2</code> or <code>decision: "block"</code>)</td></tr>
+                    <tr><td><code>ConfigChange</code></td><td>Settings, managed policy, or skill file changes mid-session</td><td><code>user_settings|project_settings|local_settings|policy_settings|skills</code></td><td><span class="table-check">✅</span> <strong>Blocks</strong> config change from taking effect (<strong>except</strong> <code>policy_settings</code>, which cannot be blocked)</td></tr>
+                    <tr><td><code>FileChanged</code> / <code>CwdChanged</code></td><td>Watched file changes on disk (<code>Edit</code>, <code>Bash</code>, or external) / directory changes</td><td>Literal <code>|</code>-separated filenames (<code>.envrc|.env</code>) for <code>FileChanged</code></td><td><span class="table-cross">❌</span> Cannot block; catches <code>Bash</code> file edits missed by <code>PostToolUse(Edit|Write)</code>; <strong><code>$CLAUDE_ENV_FILE</code></strong> available</td></tr>
+                    <tr><td><code>WorktreeCreate</code> / <code>WorktreeRemove</code></td><td><code>--worktree</code> or <code>isolation: worktree</code> subagent creates/removes worktree</td><td><em>(none)</em></td><td><span class="table-check">✅</span> Replaces default <code>git worktree</code> (e.g. SVN/Mercurial); <code>WorktreeCreate</code> prints path on <code>stdout</code> (any non-zero exit fails)</td></tr>
+                    <tr><td><code>Notification</code> / <code>SessionEnd</code></td><td>User alert (<code>permission_prompt</code>, <code>idle_prompt</code>) / session close (1.5s timeout)</td><td>Notification type / exit reason</td><td><span class="table-cross">❌</span> Cannot block; alerting and cleanup only</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-dots"><span></span><span></span><span></span></div>
+                    <span class="code-block-lang">JSON — fail-closed PreToolUse hook registration</span>
+                </div>
+                <pre>{
+  <span class="variable">"hooks"</span>: {
+    <span class="variable">"PreToolUse"</span>: [{
+      <span class="variable">"matcher"</span>: <span class="string">"Bash"</span>,
+      <span class="variable">"hooks"</span>: [{
+        <span class="variable">"type"</span>: <span class="string">"command"</span>,
+        <span class="variable">"if"</span>: <span class="string">"Bash(rm *)"</span>,
+        <span class="variable">"onFailure"</span>: <span class="string">"block"</span>,
+        <span class="variable">"command"</span>: <span class="string">"${CLAUDE_PROJECT_DIR}/.claude/hooks/no-rm.sh"</span>
+      }]
+    }]
+  }
+}</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-dots"><span></span><span></span><span></span></div>
+                    <span class="code-block-lang">Bash — no-rm.sh</span>
+                </div>
+                <pre><span class="comment">#!/bin/bash</span>
+cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
+<span class="keyword">if</span> [[ <span class="string">"$cmd"</span> == rm* ]]; <span class="keyword">then</span>
+  echo <span class="string">"Blocked: rm is not allowed"</span> &gt;&amp;2
+  <span class="keyword">exit</span> 2   <span class="comment"># block; stderr goes to Claude</span>
+<span class="keyword">fi</span>
+<span class="keyword">exit</span> 0     <span class="comment"># no decision; normal flow</span></pre>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-code"></i></div>Structured JSON on <code>stdout</code> (exit <code>0</code>)</h3>
+                <ul>
+                    <li><strong><code>PreToolUse</code> (<code>hookSpecificOutput</code>):</strong> <code>permissionDecision</code> resolves across parallel hooks by <strong><code>"deny" &gt; "defer" &gt; "ask" &gt; "allow"</code></strong>. <code>"deny"</code> blocks in <strong>every</strong> mode including <code>bypassPermissions</code>; <code>"defer"</code> pauses headless <code>-p</code>/SDK runs with <code>stop_reason: "tool_deferred"</code> for later <code>--resume</code>; <code>"allow"</code> bypasses normal prompts (unless matched by <code>permissions.deny</code>/<code>ask</code> or blocked by <code>plan</code> mode).</li>
+                    <li><strong><code>updatedInput</code> &amp; <code>additionalContext</code>:</strong> <code>updatedInput</code> replaces the <strong>entire</strong> <code>tool_input</code> object (omitted keys are dropped; permission rules re-evaluate against the rewritten input). <code>additionalContext</code> must be nested <strong>inside <code>hookSpecificOutput</code></strong> alongside <code>hookEventName</code>.</li>
+                    <li><strong><code>PermissionRequest</code> vs <code>PostToolUse</code>/<code>Stop</code>:</strong> <code>PermissionRequest</code> uses <code>hookSpecificOutput.decision.behavior</code> (<code>"allow"|"deny"</code>); <code>PostToolUse</code>, <code>Stop</code>, <code>UserPromptSubmit</code>, <code>PreCompact</code>, and <code>ConfigChange</code> use top-level <code>{"decision": "block", "reason": "..."}</code> (plus <code>updatedToolOutput</code> on <code>PostToolUse</code>).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-route"></i></div><code>@file</code> bypass, portable paths &amp; <code>$CLAUDE_ENV_FILE</code></h3>
+                <ul>
+                    <li><strong><code>@file</code> mention bypass trap:</strong> <code>PreToolUse</code> on <code>Read</code> does <strong>not</strong> fire when a user types <code>@.env</code> in their prompt (Claude Code inlines <code>@file</code> directly without calling <code>Read</code>). Block both with <code>permissions.deny: ["Read(./.env)"]</code> (or <code>CLAUDE_CODE_DISABLE_FILE_MENTIONS=1</code>).</li>
+                    <li><strong>Portable paths:</strong> Use <code>${CLAUDE_PROJECT_DIR}</code> in repo hooks and <code>${CLAUDE_PLUGIN_ROOT}</code> (code) / <code>${CLAUDE_PLUGIN_DATA}</code> (persistent state) in plugin hooks.</li>
+                    <li><strong>Environment persistence (<code>$CLAUDE_ENV_FILE</code>):</strong> Append <code>export KEY=VAL</code> to <code>$CLAUDE_ENV_FILE</code> inside <code>SessionStart</code>, <code>Setup</code>, <code>CwdChanged</code>, or <code>FileChanged</code> hooks to persist env vars across subsequent <code>Bash</code> calls.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: SUBAGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="subagents">
+            <div class="section-divider-number">05</div>
+            <h2>5. Subagents</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-people-group"></i></div>5-level scope precedence &amp; plugin restrictions</h3>
+                <p>Specialized assistants with their <strong>own context window</strong>, system prompt, tool set, and optional model/permission mode.</p>
+                <ul>
+                    <li><strong>Precedence (highest → lowest):</strong> <strong>1. Managed</strong> (<code>.claude/agents/</code>) → <strong>2. <code>--agents '{...}'</code> CLI flag</strong> → <strong>3. Project</strong> (<code>.claude/agents/&lt;name&gt;.md</code>) → <strong>4. User</strong> (<code>~/.claude/agents/&lt;name&gt;.md</code>) → <strong>5. Plugin</strong> (<code>agents/&lt;name&gt;.md</code>, invoked as <code>plugin:agent</code>).</li>
+                    <li><strong>Contrast with Skills:</strong> For subagents, <strong>Project overrides User</strong>; for skills, <strong>User overrides Project</strong>.</li>
+                    <li><strong>Plugin security restriction:</strong> Plugin subagents <strong>ignore</strong> <code>hooks</code>, <code>mcpServers</code>, and <code>permissionMode</code> in frontmatter.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-box-open"></i></div>Built-in vs Custom vs Fork (<code>/subtask</code>)</h3>
+                <ul>
+                    <li><strong><code>Explore</code> (Haiku) &amp; <code>Plan</code>:</strong> <strong>Read-only</strong>, <strong>skip root <code>CLAUDE.md</code> and git status</strong>, and are <strong>one-shot</strong> (return no <code>agentId</code>, <strong>cannot be resumed</strong>).</li>
+                    <li><strong><code>general-purpose</code> &amp; Custom subagents:</strong> Load <code>CLAUDE.md</code> (unless <code>omitClaudeMd: true</code>), start in a <strong>fresh context window</strong> (no parent conversation history), and return an <code>agentId</code> that <strong>can be resumed</strong> via <code>SendMessage</code>.</li>
+                    <li><strong>Fork subagent (<code>/subtask</code>):</strong> Unlike standard subagents, a fork <strong>inherits the parent's full conversation history, system prompt, tools, and model</strong>, and <strong>shares the parent's prompt cache</strong> (up to depth 2).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">YAML — .claude/agents/security-auditor.md frontmatter</span>
+            </div>
+            <pre>---
+<span class="variable">name</span>: <span class="string">security-auditor</span>
+<span class="variable">description</span>: <span class="string">Audits diffs for OWASP issues. Use proactively after code changes.</span>
+<span class="variable">tools</span>: <span class="string">Read, Grep, Glob</span>              <span class="comment"># allowlist (omit to inherit all tools; no Agent = cannot spawn subagents)</span>
+<span class="variable">disallowedTools</span>: <span class="string">Write, Edit, Agent</span>  <span class="comment"># applied FIRST (Trap: Bash(git push *) strips ALL of Bash! Use permissions.deny)</span>
+<span class="variable">model</span>: <span class="string">sonnet</span>                        <span class="comment"># Per-call Agent(model) &gt; frontmatter &gt; CLAUDE_CODE_SUBAGENT_MODEL &gt; parent model</span>
+<span class="variable">permissionMode</span>: <span class="string">plan</span>                 <span class="comment"># default | acceptEdits | auto | dontAsk | plan | bypassPermissions</span>
+<span class="variable">maxTurns</span>: <span class="string">15</span>                         <span class="comment"># returns partial result on limit; resumable via SendMessage</span>
+<span class="variable">skills</span>: [<span class="string">owasp-checklist</span>]            <span class="comment"># preloads FULL skill body at startup (max 32; skips disable-model-invocation: true)</span>
+<span class="variable">mcpServers</span>: [<span class="string">github</span>, {<span class="variable">playwright</span>: {<span class="variable">type</span>: <span class="string">stdio</span>, <span class="variable">command</span>: <span class="string">npx</span>, <span class="variable">args</span>: [<span class="string">"-y"</span>, <span class="string">"@playwright/mcp"</span>]}}] <span class="comment"># string reuses parent; inline is subagent-only</span>
+<span class="variable">memory</span>: <span class="string">project</span>                      <span class="comment"># user | project | local -&gt; .claude/agent-memory/&lt;name&gt;/MEMORY.md (200 lines/25KB) + auto-enables Read/Write/Edit</span>
+<span class="variable">hooks</span>:                               <span class="comment"># subagent-scoped (Stop auto-converts to SubagentStop; requires folder trust even in -p)</span>
+  <span class="variable">PreToolUse</span>: [{<span class="variable">matcher</span>: <span class="string">"Bash"</span>, <span class="variable">hooks</span>: [{<span class="variable">type</span>: <span class="string">command</span>, <span class="variable">command</span>: <span class="string">"${CLAUDE_PROJECT_DIR}/scripts/check.sh"</span>}]}]
+<span class="variable">isolation</span>: <span class="string">worktree</span>                  <span class="comment"># temporary git worktree; auto-cleaned if no changes</span>
+<span class="variable">background</span>: <span class="keyword">true</span>                     <span class="comment"># runs concurrently; cannot prompt interactively (AskUserQuestion fails)</span>
+<span class="variable">omitClaudeMd</span>: <span class="keyword">true</span>                   <span class="comment"># skips user/project/local CLAUDE.md (managed policy CLAUDE.md still loads)</span>
+---</pre>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-file-contract"></i></div>Context contracts: <code>description</code> vector &amp; raw artifacts</h3>
+                <ul>
+                    <li><strong>Dual role of <code>description</code> (prompt-injection vector):</strong> A subagent's <code>description</code> is loaded into the <strong>main agent's system prompt</strong> so the parent knows when to delegate, whereas the markdown body is seen <strong>only</strong> by the subagent. Untrusted <code>.claude/agents/*.md</code> files can inject instructions into the parent via <code>description</code> before the subagent is ever invoked!</li>
+                    <li><strong>Summary-only return / missing raw artifact trap:</strong> A subagent's intermediate tool calls stay inside its isolated window; <strong>only its final text response returns to the parent</strong>. If the parent needs generated code or structured data, the subagent must either write it to disk (<code>Write</code>/<code>Edit</code>) or include the verbatim artifact/diff in its final response.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Wave scaling (3–5), Builder–Reviewer &amp; when NOT to parallelize</h3>
+                <ul>
+                    <li><strong>Wave-based scaling ("Infinite Agentic Loop"):</strong> Orchestrate large parallel generation in <strong>waves of 3–5 concurrent subagents</strong> (each writing to distinct output paths) so the parent's context doesn't overflow when collecting results.</li>
+                    <li><strong>Builder–Reviewer separation:</strong> An agent reviewing code it just wrote in the same context suffers from confirmation bias; spawn a separate read-only subagent (<code>security-auditor</code>) to review the diff cold.</li>
+                    <li><strong>5 anti-patterns where parallel agents/worktrees fail:</strong> (1) overlapping edits to the same files, (2) sequential data dependencies (Step B needs Step A's schema), (3) small single-file tasks where worktree/spawn overhead exceeds work, (4) ambiguous/unverified specs (multiplies rework by <em>N</em>), and (5) tight shared stateful resources (single local DB port).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common traps: <code>disallowedTools</code> specifiers &amp; <code>permissionMode</code></h4>
+                <p>1. Putting a specifier in subagent <code>disallowedTools</code> — such as <code>disallowedTools: Bash(git push *)</code> — <strong>removes the entire <code>Bash</code> tool</strong> from the subagent. Keep <code>Bash</code> in <code>tools</code> and block specific commands via <code>permissions.deny</code> or a <code>PreToolUse</code> hook.<br>2. If the parent session runs in <code>bypassPermissions</code>, <code>acceptEdits</code>, <code>auto</code>, or <code>plan</code>, the parent mode <strong>overrides</strong> the subagent's <code>permissionMode</code>; a subagent setting <code>permissionMode: bypassPermissions</code> is <strong>ignored</strong> unless the parent session is already in <code>bypassPermissions</code>.<br>3. Under <code>claude --agent</code>, <code>tools: Agent(worker, researcher)</code> allowlists which subagents can be spawned; session-wide, block specific subagents via <code>permissions.deny: ["Agent(Explore)"]</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: SKILLS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="skills">
+            <div class="section-divider-number">06</div>
+            <h2>6. Skills &amp; Progressive Disclosure</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>3-Level Progressive Disclosure &amp; Token Budgets</h3>
+                <ul>
+                    <li><strong>Level 1 — Metadata (~100 tokens/skill at startup):</strong> Only YAML frontmatter <code>name</code> and <code>description</code> (+ <code>when_to_use</code>, max <strong>1,536 chars</strong> combined; total listing cap = <strong>1% of context window</strong> via <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code>) load at startup. <strong>YAML boundary trap:</strong> Trigger phrases placed in a <code>## When to Use</code> section inside the markdown body (below the closing <code>---</code>) are <strong>invisible</strong> to Claude before activation!</li>
+                    <li><strong>Level 2 — <code>SKILL.md</code> body (&lt; 5,000 tokens on activation):</strong> Loaded only when invoked; after <code>/compact</code>, active skills re-attach up to <strong>5,000 tokens/skill (25,000 total)</strong>.</li>
+                    <li><strong>Level 3 — Bundled <code>scripts/</code>, <code>references/</code>, <code>assets/</code> (0 token cost for script code):</strong> Claude reads reference docs on demand and executes helper scripts via <code>Bash</code> (only script <code>stdout</code>/<code>stderr</code> enters context). <strong>Silent fallback trap:</strong> If a bundled script exits non-zero, Claude may silently fall back to guessing in-context unless <code>SKILL.md</code> instructs it to halt/fix and surface <code>stderr</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-folder-open"></i></div>6 scopes &amp; precedence (high → low)</h3>
+                <ul>
+                    <li><strong>1. Enterprise</strong> (<code>managed-settings</code>)</li>
+                    <li><strong>2. Personal</strong> (<code>~/.claude/skills/&lt;name&gt;/SKILL.md</code>)</li>
+                    <li><strong>3. Project</strong> (<code>.claude/skills/&lt;name&gt;/SKILL.md</code>)</li>
+                    <li><strong>4. Nested</strong> (<code>&lt;subdir&gt;/.claude/skills/</code>, auto-discovered on demand)</li>
+                    <li><strong>5. Plugin</strong> (<code>&lt;plugin&gt;/skills/&lt;name&gt;/SKILL.md</code>, namespaced <code>/plugin:skill</code>)</li>
+                    <li><strong>6. Synced <code>claude.ai</code></strong> (<code>~/.claude/skills/synced/</code>, invoked as <code>/anthropic-skills:&lt;name&gt;</code>)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Frontmatter / Syntax</th><th>Effect &amp; exam traps</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>description</code> + <code>when_to_use</code></td><td>Trigger text shown in context (combined cap: <strong>1,536 chars</strong>; put the primary trigger phrase first)</td></tr>
+                    <tr><td><code>disable-model-invocation: true</code></td><td><strong>Manual-only (<code>/name</code>):</strong> description is <strong>omitted from context</strong> (zero token cost until invoked), Claude cannot invoke it via the <code>Skill</code> tool, and subagents cannot preload it. Use for side-effecting playbooks (<code>/deploy</code>, <code>/release</code>)</td></tr>
+                    <tr><td><code>user-invocable: false</code></td><td>Model-invocable background knowledge; hidden from the <code>/</code> menu (description stays in context)</td></tr>
+                    <tr><td><code>allowed-tools</code></td><td><strong>Pre-approves</strong> listed tools while the skill runs (does <strong>not</strong> restrict available tools; clears on next user turn)</td></tr>
+                    <tr><td><code>context: fork</code> + <code>agent</code></td><td>Runs the skill in an <strong>isolated subagent with no conversation history</strong> (<code>agent: Explore</code> also skips <code>CLAUDE.md</code>, so <code>SKILL.md</code> must be self-contained)</td></tr>
+                    <tr><td><code>paths</code> / <code>hooks</code> / <code>model</code> / <code>effort</code> / <code>shell</code></td><td><code>paths:</code> restricts auto-activation to matching file globs; <code>hooks:</code> registers skill-scoped lifecycle hooks</td></tr>
+                    <tr><td><code>$ARGUMENTS</code>, <code>$ARGUMENTS[N]</code>, <code>$N</code></td><td>Substitutes arguments passed to <code>/skill-name arg0 arg1</code> (appends <code>ARGUMENTS: ...</code> if omitted from body; also supports <code>${CLAUDE_SKILL_DIR}</code> and <code>${CLAUDE_SESSION_ID}</code>)</td></tr>
+                    <tr><td><code>!`command`</code> preprocessing</td><td>Shell command inside <code>!`...`</code> runs <strong>before</strong> the skill prompt reaches Claude and inlines its <code>stdout</code>. <strong>Trap:</strong> it <strong>never shows a permission prompt</strong> — outside <code>auto</code> mode, an unapproved command or any non-zero exit code <strong>aborts the entire skill invocation</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Surface</th><th>How a custom skill reaches it</th><th>Frontmatter &amp; sync rules</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Claude Code CLI / Desktop / IDE</strong></td><td>Filesystem scopes + <code>claude.ai</code> downward sync (<code>~/.claude/skills/synced/</code>)</td><td>Full Claude Code frontmatter (<code>allowed-tools</code>, <code>context: fork</code>, <code>hooks</code>, <code>argument-hint</code>). <strong>One-way sync:</strong> <code>claude.ai</code> skills sync <em>down</em> to Claude Code, but local <code>.claude/skills/</code> <strong>never</strong> sync <em>up</em> to <code>claude.ai</code> or the API</td></tr>
+                    <tr><td><strong>Agent SDK</strong></td><td><code>.claude/skills/</code> when <code>setting_sources</code> includes <code>"project"</code>/<code>"user"</code>, or preloaded per subagent via <code>skills</code></td><td>Full body injected at startup when listed in subagent <code>skills: [...]</code></td></tr>
+                    <tr><td><strong>Claude API (<code>/v1/skills</code>)</strong></td><td>Uploaded via Skills API (<code>skill_id</code> in <code>container.skills</code> + <code>code_execution</code> tool; <strong>workspace-wide</strong>, pin version in prod)</td><td>Runs in Anthropic's networkless container. <strong>Strict schema trap:</strong> API <code>/v1/skills</code> accepts <strong>only</strong> <code>name</code>, <code>description</code>, <code>license</code>, <code>compatibility</code>, <code>metadata</code>, <code>allowed-tools</code> — uploading a <code>SKILL.md</code> with <code>argument-hint</code>, <code>disable-model-invocation</code>, <code>context</code>, or <code>hooks</code> fails validation</td></tr>
+                    <tr><td><strong>Managed Agents</strong></td><td>Attached to the Agent definition (<code>skills: [...]</code>)</td><td>Runs in the session's cloud or self-hosted environment</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: PLUGINS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="plugins">
+            <div class="section-divider-number">07</div>
+            <h2>7. Plugins &amp; Marketplaces</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Plugin anatomy &amp; cache vs data dirs</h3>
+                <ul>
+                    <li>Manifest at <code>.claude-plugin/plugin.json</code> (<code>name</code>, <code>version</code>, <code>description</code>); component folders (<code>skills/</code>, <code>commands/</code>, <code>agents/</code>, <code>hooks/hooks.json</code>, <code>.mcp.json</code>, <code>.lsp.json</code>, <code>settings.json</code>) live at the <strong>plugin root</strong>, never inside <code>.claude-plugin/</code>. (Plugin <code>settings.json</code> only supports the <code>agent</code> key.)</li>
+                    <li><strong><code>${CLAUDE_PLUGIN_ROOT}</code> vs <code>${CLAUDE_PLUGIN_DATA}</code>:</strong> Installed plugins are copied into a read-only versioned cache (<code>~/.claude/plugins/cache/...</code>) that <code>${CLAUDE_PLUGIN_ROOT}</code> points to — <strong>anything written inside <code>${CLAUDE_PLUGIN_ROOT}</code> is wiped on update</strong>. Store persistent state, SQLite DBs, or <code>node_modules</code> in <strong><code>${CLAUDE_PLUGIN_DATA}</code></strong> (<code>~/.claude/plugins/data/&lt;id&gt;/</code>), which survives updates.</li>
+                    <li><strong>Version bump rule:</strong> <code>version</code> in <code>plugin.json</code> overrides <code>marketplace.json</code> <code>version</code> and git SHAs. Pushing commits without bumping <code>plugin.json</code> <code>version</code> causes <code>claude plugin update</code> to skip fetching.</li>
+                    <li>Declare install-time secrets in <code>userConfig</code> with <code>"sensitive": true</code> (stored in OS keychain, exposed as <code>${CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;}</code>).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-store"></i></div>Marketplace governance &amp; granular install</h3>
+                <ul>
+                    <li><strong>Granular catalog (<code>.claude-plugin/marketplace.json</code>):</strong> Maps multiple named plugins inside a single repository so developers can install <strong>individual skills, subagents, or MCP servers</strong> via <code>/plugin</code> without loading the entire repo's context overhead.</li>
+                    <li><code>extraKnownMarketplaces</code>: pre-registers org catalogs (<code>github</code>, <code>git</code>, <code>url</code>, <code>npm</code>, <code>file</code>).</li>
+                    <li><code>enabledPlugins</code>: <code>"plugin@marketplace": true</code> force-enables a plugin in managed settings (users cannot disable it); <code>false</code> blocks it.</li>
+                    <li><code>strictKnownMarketplaces</code>: allowlist of marketplace sources (<code>[]</code> blocks <strong>every</strong> marketplace, including the official directory); <code>blockedMarketplaces</code> blocklists specific sources.</li>
+                    <li><code>disableSideloadFlags: true</code>: blocks <code>--plugin-dir</code> CLI sideloading (which bypasses marketplace allowlists).</li>
+                    <li><code>strictPluginOnlyCustomization: true</code> (or selective <code>strictCategories: ["hooks", "mcp"]</code>): blocks non-managed local/user/project customizations so only managed settings and approved plugins can define hooks, skills, agents, or MCP servers.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — managed-settings.json (curated plugin rollout)</span>
+            </div>
+            <pre>{
+  <span class="variable">"strictKnownMarketplaces"</span>: [ { <span class="variable">"source"</span>: <span class="string">"github"</span>, <span class="variable">"repo"</span>: <span class="string">"acme-corp/plugins"</span> } ],
+  <span class="variable">"extraKnownMarketplaces"</span>: {
+    <span class="variable">"acme-tools"</span>: { <span class="variable">"source"</span>: { <span class="variable">"source"</span>: <span class="string">"github"</span>, <span class="variable">"repo"</span>: <span class="string">"acme-corp/plugins"</span> } }
+  },
+  <span class="variable">"enabledPlugins"</span>: { <span class="string">"secure-review@acme-tools"</span>: <span class="keyword">true</span> },
+  <span class="variable">"disableSideloadFlags"</span>: <span class="keyword">true</span>,
+  <span class="variable">"strictPluginOnlyCustomization"</span>: <span class="keyword">true</span>
+}</pre>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: MCP
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="mcp">
+            <div class="section-divider-number">08</div>
+            <h2>8. MCP in Claude Code</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Claude Code acts as an MCP Host that spawns one dedicated MCP Client per configured server (<strong>strict 1:1 Client–Server relationship</strong>). Add servers via <code>claude mcp add --transport http &lt;name&gt; &lt;url&gt;</code> or <code>claude mcp add --transport stdio &lt;name&gt; -- &lt;cmd&gt; [args...]</code>.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Scope (<code>--scope</code>)</th><th>Stored in</th><th>Precedence &amp; sharing</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Session (<code>--mcp-config</code>)</strong></td><td>CLI flag <code>--mcp-config &lt;file-or-json&gt;</code></td><td><strong>0th (ephemeral session override)</strong>; additive to other scopes unless paired with <strong><code>--strict-mcp-config</code></strong> (which ignores all user/project/local MCP servers)</td></tr>
+                    <tr><td><strong><code>local</code></strong> <em>(default for <code>claude mcp add</code>)</em></td><td><code>~/.claude.json</code> under <code>projects["&lt;path&gt;"].mcpServers</code></td><td><strong>1st (highest persistent)</strong>; private to you in this project</td></tr>
+                    <tr><td><strong><code>project</code></strong></td><td><code>.mcp.json</code> at the repo root (committed to git)</td><td><strong>2nd</strong>; shared with the team (prompts for approval before first use; approval saved in gitignored <code>.claude/settings.local.json</code> via <code>enabledMcpjsonServers</code>)</td></tr>
+                    <tr><td><strong><code>user</code></strong></td><td><code>~/.claude.json</code> top-level <code>mcpServers</code></td><td><strong>3rd (lowest)</strong>; private to you across all projects</td></tr>
+                    <tr><td><strong>Plugin MCP</strong></td><td><code>&lt;plugin&gt;/.mcp.json</code> or inline in <code>plugin.json</code></td><td>Lifecycle tied to plugin; tools named <strong><code>mcp__plugin_&lt;plugin&gt;_&lt;server&gt;__&lt;tool&gt;</code></strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Managed MCP: Provisioning vs Filtering</h3>
+                <ul>
+                    <li><strong>1. Exclusive file provisioning (<code>managed-mcp.json</code>):</strong> Deploying <code>managed-mcp.json</code> at the OS system path gives IT <strong>exclusive control</strong> — users cannot add, modify, or use <em>any</em> MCP servers from <code>.mcp.json</code>, <code>~/.claude.json</code>, or plugins. (To provision remote <code>http</code>/<code>sse</code> org servers <em>without</em> wiping user servers, use <code>managedMcpServers</code> in server-managed/MDM settings.)</li>
+                    <li><strong>2. Policy filtering (<code>allowedMcpServers</code> / <code>deniedMcpServers</code>):</strong> In <code>managed-settings.json</code>, entries match by <code>{"serverName": "..."}</code>, <code>{"serverCommand": [...]}</code> (exact stdio array), or <code>{"serverUrl": "https://*.corp.com/*"}</code>. Denylist always wins.</li>
+                    <li><strong><code>serverUrl</code> trap:</strong> Once <em>any</em> <code>serverUrl</code> entry appears in <code>allowedMcpServers</code>, remote HTTP/SSE servers must match a <code>serverUrl</code> pattern (<code>serverName</code> entries stop matching remote servers!).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-key"></i></div><code>${VAR}</code> expansion &amp; Tool Search</h3>
+                <ul>
+                    <li><code>${VAR}</code> and <code>${VAR:-default}</code> expand in <code>command</code>, <code>args</code>, <code>env</code>, <code>url</code>, and <code>headers</code>. Unset variables without defaults send the literal <code>${VAR}</code> string.</li>
+                    <li><strong>Credential variable strip:</strong> <code>ANTHROPIC_API_KEY</code> and <code>CLAUDE_CODE_*</code> auth vars resolve to <strong>empty string</strong> in remote HTTP/SSE <code>url</code>/<code>headers</code> (causing 401). Use a custom env var name like <code>${SEARCH_MCP_TOKEN}</code>.</li>
+                    <li><strong>MCP Tool Search (<code>ENABLE_TOOL_SEARCH</code>):</strong> By default (<code>true</code>/unset), all MCP tool schemas are <strong>deferred</strong> behind <code>ToolSearch</code> (set <code>"alwaysLoad": true</code> on a server in <code>.mcp.json</code> to preload its schemas). <code>auto</code> defers at 10% context (<code>auto:&lt;N&gt;</code> for custom <code>%</code>); <code>false</code> preloads all schemas up front.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — .mcp.json (project scope, committed)</span>
+            </div>
+            <pre>{
+  <span class="variable">"mcpServers"</span>: {
+    <span class="variable">"code-search"</span>: {
+      <span class="variable">"type"</span>: <span class="string">"http"</span>,
+      <span class="variable">"url"</span>: <span class="string">"${SEARCH_BASE_URL:-https://search.internal.example.com}/mcp"</span>,
+      <span class="variable">"headers"</span>: { <span class="variable">"Authorization"</span>: <span class="string">"Bearer ${SEARCH_MCP_TOKEN}"</span> },
+      <span class="variable">"alwaysLoad"</span>: <span class="keyword">true</span>
+    }
+  }
+}</pre>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: HEADLESS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="headless">
+            <div class="section-divider-number">09</div>
+            <h2>9. Headless, CI/CD, Checkpointing &amp; GitHub Actions (<code>claude -p</code>)</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Flag</th><th>Effect &amp; CI nuances</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>-p</code> / <code>--print</code></td><td>Non-interactive execution. <strong>Default mode behavior:</strong> plain <code>claude -p</code> (with no SDK <code>canUseTool</code> or <code>--permission-prompt-tool</code>) runs in <code>default</code> mode and <strong>immediately auto-denies</strong> any unapproved tool call (<code>PermissionRequest</code> hooks still get a chance to approve before denial unless mode is <code>dontAsk</code>).</td></tr>
+                    <tr><td><code>--bare</code></td><td><strong>Clean-room CI mode:</strong> skips auto-discovery of <code>CLAUDE.md</code>, auto-memory, hooks, plugins, skills, and <code>.mcp.json</code>; ignores OAuth/keychain login (requires <code>ANTHROPIC_API_KEY</code> or cloud creds). Explicit <code>--settings &lt;file&gt;</code>, <code>--mcp-config &lt;file&gt;</code>, <code>--plugin-dir</code>, and <code>--add-dir</code> still work.</td></tr>
+                    <tr><td><code>--output-format text|json|stream-json</code></td><td><code>json</code> returns a single summary object (<code>result</code>, <code>session_id</code>, <code>total_cost_usd</code>, <code>subtype</code>); <code>stream-json</code> emits newline-delimited JSON events (<code>--include-partial-messages</code> streams token deltas; <code>--verbose</code> includes full turn events).</td></tr>
+                    <tr><td><code>--json-schema '&lt;schema&gt;'</code></td><td>Enforces JSON Schema output after the agent finishes tool calls. <strong>Trap:</strong> the validated JSON object is returned in <strong><code>.structured_output</code></strong> (<code>jq '.structured_output'</code>), <strong>not</strong> <code>.result</code>! Check <code>.subtype == "error_max_structured_output_retries"</code> on schema failure.</td></tr>
+                    <tr><td><code>--allowedTools</code> vs <code>--tools</code></td><td><code>--allowedTools "Edit(/src/**),Bash(npm test *)"</code> pre-approves matching calls (<code>permissions.deny</code> still wins); <code>--tools "Read,Grep"</code> restricts which built-in tools exist in context (<code>""</code> disables all built-ins).</td></tr>
+                    <tr><td><code>--max-turns &lt;N&gt;</code> / <code>--max-budget-usd &lt;N&gt;</code> / <code>--fallback-model &lt;m&gt;</code></td><td>Caps agentic iterations (exits with <code>subtype: "error_max_turns"</code>), caps API spend, and auto-switches models when the primary model is overloaded (<code>529</code>).</td></tr>
+                    <tr><td><code>--system-prompt</code> vs <code>--append-system-prompt</code></td><td><code>--system-prompt</code> replaces the default Claude Code prompt <strong>and drops the automatic git status/branch snapshot</strong>; <code>--append-system-prompt</code> (or <code>--append-system-prompt-file</code>) preserves defaults + git snapshot.</td></tr>
+                    <tr><td><code>--continue</code> (<code>-c</code>), <code>--resume &lt;id&gt;</code> (<code>-r</code>), <code>--fork-session</code>, <code>--no-session-persistence</code>, <code>--worktree</code> (<code>-w</code>)</td><td>Continue/resume prior sessions, branch into a new session ID (<code>--fork-session</code>), skip writing transcripts to <code>~/.claude/projects/</code> (<code>--no-session-persistence</code>), or isolate the run in a git worktree (<code>-w</code>).</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fab fa-github"></i></div>GitHub Actions Integration (<code>/install-github-app</code>)</h3>
+                <ul>
+                    <li><strong>Setup &amp; prerequisites:</strong> Run <strong><code>/install-github-app</code></strong> interactively in the CLI (requires authenticated <code>gh</code> CLI and <strong>repository admin permissions</strong>) to install the Claude GitHub App, configure repo secrets (<code>CLAUDE_CODE_OAUTH_TOKEN</code> or <code>ANTHROPIC_API_KEY</code>), and open a PR adding <code>.github/workflows/claude.yml</code> (<code>@claude</code> mentions on issues/PRs create isolated <code>claude/issue/&lt;N&gt;</code> branches — never pushing directly to <code>main</code>) and <code>claude-code-review.yml</code> (automated PR diff reviews).</li>
+                    <li><strong>Ephemeral CI runner trap:</strong> GitHub Actions runners are fresh checkouts — gitignored <code>CLAUDE.local.md</code>, <code>.claude/settings.local.json</code>, and <code>~/.claude/projects/.../memory/MEMORY.md</code> <strong>do not exist in CI</strong>. Any rule or skill that PR review agents must follow must be committed to <code>CLAUDE.md</code>, <code>.claude/rules/</code>, or <code>.claude/skills/</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-clock-rotate-left"></i></div>Checkpointing &amp; <code>/rewind</code> (<code>Esc+Esc</code>)</h3>
+                <ul>
+                    <li><strong>3 restore modes (30-day retention):</strong> Claude Code automatically snapshots tracked files before every user prompt and file-editing tool call. Press <code>Esc</code> twice (<code>Esc+Esc</code>) or run <strong><code>/rewind</code></strong> to pick a prior turn and restore: (1) <em>Conversation and code</em>, (2) <em>Conversation only</em> (keep disk edits, rewind context), or (3) <em>Code only</em> (revert disk edits, keep error lessons in context).</li>
+                    <li><strong>Critical <code>Bash</code> side-effect trap:</strong> Checkpointing and <code>/rewind</code> (as well as SDK <code>rewind_files()</code>) track <strong>only</strong> changes made through file-editing tools (<code>Edit</code>, <code>Write</code>, <code>NotebookEdit</code>). They <strong>never undo <code>Bash</code> side-effects</strong> (such as <code>rm</code>, <code>mv</code>, <code>sed -i</code>, <code>git commit</code>, package installs, or DB migrations) — use git or backups to recover from destructive shell commands.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Critical CI security trap: <code>-p</code> without <code>--bare</code> on untrusted PRs</h4>
+                <p>When running <code>claude -p</code> on an untrusted PR checkout <em>without</em> <code>--bare</code>, project <code>permissions.allow</code> rules and subagent frontmatter hooks are skipped, <strong>but repository <code>.claude/settings.json</code> hooks and <code>.mcp.json</code> stdio servers execute automatically without a workspace trust dialog!</strong> Always pass <code>--bare</code> (or <code>--settings '{"disableAllHooks": true}'</code> + <code>--strict-mcp-config</code>) when running <code>-p</code> against untrusted code.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: TEAM ROLLOUT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="team-rollout">
+            <div class="section-divider-number">10</div>
+            <h2>10. Team Rollout, Distribution &amp; Spend Controls</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Managed delivery source</th><th>Precedence &amp; OS path / mechanism</th><th>Key constraints</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Server-managed / Gateway</strong></td><td><code>claude.ai</code> Admin Console (Teams/Enterprise) or self-hosted LLM Gateway</td><td>Fetched at startup + polled hourly (<code>forceRemoteSettingsRefresh: true</code> fails closed if fetch fails). <strong>Applies ONLY to <code>claude.ai</code> OAuth sessions</strong> — bypassed if a user sets <code>ANTHROPIC_API_KEY</code>, runs <code>--bare</code>, or uses Bedrock/Vertex/Foundry (lock auth via <code>"forceLoginMethod": "claudeai"</code> + <code>"forceLoginOrgUUID"</code> in file/MDM policy). Delivers <strong>one policy for the entire org</strong>.</td></tr>
+                    <tr><td><strong>2. MDM / OS Registry</strong></td><td>macOS plist (<code>com.anthropic.claudecode</code>) · Windows <code>HKLM\SOFTWARE\Policies\Anthropic\ClaudeCode</code></td><td>Enforced by OS device management; supports per-group targeting via MDM device profiles.</td></tr>
+                    <tr><td><strong>3. File-based (<code>managed-settings.json</code> + <code>managed-settings.d/*.json</code>)</strong></td><td><strong>macOS:</strong> <code>/Library/Application Support/ClaudeCode/</code><br><strong>Linux / WSL:</strong> <code>/etc/claude-code/</code><br><strong>Windows:</strong> <code>C:\Program Files\ClaudeCode\</code> <em>(legacy <code>C:\ProgramData\ClaudeCode\</code> is ignored)</em></td><td>Drop-in files in <code>managed-settings.d/*.json</code> merge <strong>alphabetically</strong> on top of <code>managed-settings.json</code> (use <code>00-base.json</code>, <code>10-sec.json</code>). Verify active sources with <code>/status</code>.</td></tr>
+                    <tr><td><strong>4. Windows User Registry</strong></td><td><code>HKCU\SOFTWARE\Policies\Anthropic\ClaudeCode</code></td><td>Lowest managed source.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>Intra-managed precedence &amp; lockdown keys</h3>
+                <ul>
+                    <li><strong><code>managedSourcesBehavior</code> trap:</strong> Defaults to <strong><code>"first-wins"</code></strong> — if Server-managed settings (Source 1) are non-empty, Claude Code <strong>completely ignores</strong> MDM (Source 2) and local <code>managed-settings.json</code> files (Source 3)! Set <code>"managedSourcesBehavior": "merge"</code> in the highest active managed source to combine them.</li>
+                    <li><code>allowManagedPermissionRulesOnly: true</code>: ignores <code>allow</code>, <code>ask</code>, and <code>deny</code> rules from user, project, local, <code>--settings</code>, and <code>--allowedTools</code>.</li>
+                    <li><code>allowManagedHooksOnly: true</code>: blocks user, project, and unforced plugin hooks (<strong>SDK callback hooks and hooks from plugins force-enabled in managed <code>enabledPlugins</code> still run</strong>).</li>
+                    <li><code>allowManagedMcpServersOnly: true</code>: restricts <code>allowedMcpServers</code> to managed settings (<strong><code>deniedMcpServers</code> still merges from all layers</strong>).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-chart-line"></i></div>Spend visibility (<code>/usage</code> vs <code>/cost</code>) &amp; rate protection</h3>
+                <ul>
+                    <li><strong>Claude Pro / Max / Teams / Enterprise (Subscription):</strong> Monitor rolling plan quota via <strong><code>/usage</code></strong> (<code>/cost</code> is for API key billing only); Admin Console analytics + OpenTelemetry (<code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code>) + per-user/org spend limits.</li>
+                    <li><strong>Claude Console (API keys):</strong> Monitor per-session token/dollar spend via <strong><code>/cost</code></strong> (or live via <code>/statusline</code>). Dedicated <strong>"Claude Code"</strong> workspace auto-created on first <code>claude login</code>; <strong>workspace spend limits &amp; workspace rate limits</strong> isolate developer usage from production API traffic.</li>
+                    <li><strong>Bedrock / Vertex / Foundry:</strong> Cloud billing + OTel metrics (<code>claude_code.cost.usage</code>, <code>claude_code.token.usage</code>); pair with an <strong>LLM Gateway (e.g. LiteLLM)</strong> for per-user virtual keys, spend caps, and rate limits.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: AGENT SDK
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agent-sdk">
+            <div class="section-divider-number">11</div>
+            <h2>11. Claude Agent SDK</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-box"></i></div><code>query()</code> vs <code>ClaudeSDKClient</code> &amp; sessions</h3>
+                <ul>
+                    <li><strong>Packages:</strong> TypeScript <code>@anthropic-ai/claude-agent-sdk</code> · Python <code>claude-agent-sdk</code> (replaces <code>claude-code-sdk</code>).</li>
+                    <li><strong><code>query(prompt, options)</code>:</strong> Starts a fresh session per call unless you pass <code>continue_conversation=True</code> (<code>continue: true</code>), <code>resume=session_id</code> (from <code>ResultMessage.session_id</code>), or <code>resume=session_id, fork_session=True</code> (<code>forkSession: true</code>). <strong>Fork trap:</strong> <code>fork_session</code> branches the conversation transcript <strong>only</strong>, not the filesystem — pair with <code>enable_file_checkpointing=True</code> + <code>rewind_files(user_message_id)</code> to restore disk state.</li>
+                    <li><strong><code>ClaudeSDKClient</code> (Python):</strong> Reuses one subprocess across multiple turns and supports <code>await client.interrupt()</code> (<strong>must drain buffered messages</strong> up to the interrupted turn's <code>ResultMessage</code> before sending the next query). TypeScript calls methods directly on the <code>Query</code> handle returned by <code>query()</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div><code>setting_sources</code> / <code>settingSources</code></h3>
+                <ul>
+                    <li><strong>Omitted (default):</strong> Loads <code>user</code>, <code>project</code>, and <code>local</code> settings, <code>CLAUDE.md</code>, skills, agents, and hooks, <strong>just like the CLI</strong>. <em>(If top-level <code>skills</code> is set while <code>setting_sources</code> is omitted, only <code>user</code> and <code>project</code> load; <code>local</code> is dropped.)</em></li>
+                    <li><strong><code>[]</code> (empty list):</strong> Disables <code>user</code>, <code>project</code>, and <code>local</code> filesystem settings and <code>CLAUDE.md</code>.</li>
+                    <li><strong>Multi-tenant trap — what <code>setting_sources=[]</code> STILL loads:</strong> (1) <strong>Managed policy settings</strong>, (2) <strong><code>~/.claude.json</code></strong> global state (isolate via <code>CLAUDE_CONFIG_DIR</code> in <code>env</code>), (3) <strong>Auto memory</strong> at <code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code> (disable via <strong><code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code></strong> in <code>env</code> or <code>autoMemoryEnabled: false</code>), and (4) <strong><code>claude.ai</code> MCP connectors</strong> (pass <strong><code>strict_mcp_config=True</code></strong> / <code>strictMcpConfig: true</code>).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Option (Python / TS)</th><th>What it controls &amp; critical SDK traps</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>tools</code> / <code>tools</code></td><td><strong>Tool availability in context</strong> (<code>["Read", "Grep"]</code>, or <code>[]</code> to strip all built-in tools so Claude only sees MCP tools).</td></tr>
+                    <tr><td><code>allowed_tools</code> / <code>allowedTools</code></td><td><strong>Pre-approves</strong> matching calls at Step 2; unlisted tools remain in context and fall through to <code>permission_mode</code> / <code>can_use_tool</code>. Has <strong>no effect</strong> in <code>bypassPermissions</code>.</td></tr>
+                    <tr><td><code>disallowed_tools</code> / <code>disallowedTools</code></td><td>Bare names (<code>"Bash"</code>, <code>"*"</code>) <strong>remove the tool from context</strong>; scoped rules (<code>"Bash(rm *)"</code>) keep the tool in context and <strong>deny matching calls at Step 2 in every mode</strong>, including <code>bypassPermissions</code>. File-write rules must use <code>Edit(//abs/path)</code> (<code>Write(...)</code> never matches).</td></tr>
+                    <tr><td><code>permission_mode</code> / <code>permissionMode</code></td><td><code>"default"</code>, <code>"acceptEdits"</code>, <code>"plan"</code>, <code>"auto"</code>, <code>"dontAsk"</code>, <code>"bypassPermissions"</code>. In TypeScript, <code>"bypassPermissions"</code> throws unless <strong><code>allowDangerouslySkipPermissions: true</code></strong> is also set.</td></tr>
+                    <tr><td><code>can_use_tool</code> / <code>canUseTool</code></td><td>Async callback <code>(tool_name, input_data, context) -&gt; PermissionResultAllow | PermissionResultDeny</code>. Fires <strong>only</strong> when the harness would prompt; <strong>never fires</strong> in <code>dontAsk</code>, <code>bypassPermissions</code>, or for tools matched by <code>allowed_tools</code> (TS emits <code>CLAUDE_SDK_CAN_USE_TOOL_SHADOWED</code>).</td></tr>
+                    <tr><td><code>hooks</code> / <code>hooks</code></td><td>In-process callbacks (<code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, <code>SubagentStop</code>, <code>UserPromptSubmit</code>). Unlike command hooks, <strong>SDK callback hooks block on timeout</strong>.</td></tr>
+                    <tr><td><code>mcp_servers</code> + <code>create_sdk_mcp_server</code></td><td>Register external or <strong>in-process custom tools</strong> (<code>@tool</code> + <code>create_sdk_mcp_server(name="srv", tools=[fn])</code>; TS <code>tool()</code> + <code>createSdkMcpServer()</code>). Expose in <code>allowed_tools</code> as <strong><code>mcp__&lt;srv&gt;__&lt;tool&gt;</code></strong>. Returning <code>{"content": [...], "is_error": True}</code> feeds recoverable tool errors back to Claude.</td></tr>
+                    <tr><td><code>agents</code> / <code>agents</code> (<code>AgentDefinition</code>)</td><td>Programmatic subagents (include <code>"Agent"</code> in top-level <code>allowed_tools</code>). <strong>Python SDK quirk:</strong> multi-word fields on <code>AgentDefinition</code> (<code>disallowedTools</code>, <code>mcpServers</code>, <code>maxTurns</code>, <code>permissionMode</code>, <code>initialPrompt</code>) use <strong>camelCase</strong> even in Python!</td></tr>
+                    <tr><td><code>output_format</code> / <code>outputFormat</code></td><td><code>{"type": "json_schema", "schema": ...}</code> → validated payload in <code>ResultMessage.structured_output</code>. Requires <strong>JSON Schema draft-07</strong> (in Zod 4+, pass <code>z.toJSONSchema(schema, { target: "draft-7" })</code> — default <code>2020-12</code> is rejected).</td></tr>
+                    <tr><td><code>env</code> / <code>env</code></td><td><strong>Python vs TypeScript trap:</strong> In Python, <code>options.env</code> <strong>merges</strong> onto the process environment; in TypeScript, <code>options.env</code> <strong>replaces</strong> <code>process.env</code> completely — always spread <code>{ ...process.env, MY_VAR: "1" }</code> in TS or <code>PATH</code> is wiped and the CLI fails with <code>ENOENT</code>!</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: MANAGED AGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="managed-agents">
+            <div class="section-divider-number">12</div>
+            <h2>12. Managed Agents &amp; Agent Wiring Paths</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 18px; color: var(--text-secondary);">All Managed Agents endpoints require the beta header <strong><code>managed-agents-2026-04-01</code></strong> (set automatically by <code>client.beta.agents</code> / <code>environments</code> / <code>sessions</code>).</p>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>1. Agent (<code>POST /v1/agents</code>)</dt>
+                <dd>Versioned server-side definition (<code>model</code>, <code>system</code> string — no <code>CLAUDE.md</code> hierarchy, <code>tools</code>, <code>mcp_servers</code>, <code>skills</code>). Built-in sandbox tools use <strong><code>{"type": "agent_toolset_20260401"}</code></strong> (in <code>/workspace</code>); custom tools (<code>{"type": "custom", ...}</code>) pause the session and emit <strong><code>agent.custom_tool_use</code></strong> over SSE until your backend runs the logic and posts <strong><code>user.custom_tool_result</code></strong>. Per-tool <code>permission_policy</code> (<code>always_allow</code>, <code>always_ask</code>, <code>auto</code>) gates execution via <strong><code>user.tool_confirmation</code></strong>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>2. Environment (<code>POST /v1/environments</code>)</dt>
+                <dd>Anthropic-managed cloud container (<code>type: "cloud"</code>, configurable <code>networking: {"type": "limited"}</code> domain allowlists) or self-hosted runner on your infrastructure.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>3. Session (<code>POST /v1/sessions</code>)</dt>
+                <dd>Binds a pinned <code>agent</code> version + <code>environment_id</code>, mounted <code>resources</code> (<code>file</code>, <code>github_repository</code>, <code>memory_store</code>), <strong><code>vault_ids</code></strong> (Vaults inject MCP/API credentials into outbound headers outside the container so raw secrets never enter the sandbox), and spend <code>budget</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>4. Events (<code>POST /v1/sessions/{id}/events</code>)</dt>
+                <dd>Bidirectional SSE stream (<code>user.message</code>, <code>agent.message</code>, <code>agent.custom_tool_use</code> → <code>user.custom_tool_result</code>, <code>user.tool_confirmation</code>, and <code>session.status_idle</code> with <code>stop_reason.type == "end_turn"</code>).</dd>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Wiring path</th><th>Who runs the loop</th><th>You own</th><th>Pick when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Raw Messages API loop</strong></td><td>Your code</td><td>Tool execution, state, retries, context compaction</td><td>Custom loop control, minimal dependencies, strict ZDR / HIPAA BAA compliance</td></tr>
+                    <tr><td><strong>Claude Agent SDK</strong></td><td>SDK in your process</td><td>Compute/container hosting, filesystem isolation, storage</td><td>You want Claude Code's built-in tools/hooks/subagents while keeping execution in your VPC (eligible for ZDR / HIPAA BAA when using eligible API endpoints)</td></tr>
+                    <tr><td><strong>Claude Managed Agents</strong></td><td>Anthropic server-side</td><td>Agent config, custom tool handlers, session lifecycle</td><td>Long-running cloud sandbox sessions without managing container infra, <strong>and no ZDR or HIPAA BAA requirement</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Compliance trap: ZDR &amp; HIPAA BAA</h4>
+                <p><strong>Managed Agents is stateful by design</strong> (storing conversation history, container state, and outputs server-side) and <strong>cannot be used under a HIPAA BAA or Zero Data Retention (ZDR) agreement</strong>. When handling regulated PHI or ZDR-governed data, execute the loop yourself via the Agent SDK or Messages API on a BAA/ZDR-qualified endpoint. <em>(Note: while standard web/consumer Claude Code is excluded from ZDR, <strong>Claude Code on Claude Enterprise</strong> provides a dedicated ZDR option for qualifying enterprise organizations.)</em></p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 13: FAILURE MODES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">13</div>
+            <h2>13. Failure Modes &amp; Find the Defect</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Symptom / scenario</th><th>Root cause → correct fix</th><th>Tempting wrong answer</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>Edit(.claude/**)</code> in <code>allow</code> or <code>bypassPermissions</code> still prompts on <code>.claude/settings.json</code></td><td>Protected repo paths (<code>.git</code>, <code>.claude</code>, <code>.vscode</code>, <code>.idea</code>, <code>.husky</code>, <code>.mcp.json</code>) are checked <strong>before</strong> <code>allow</code> rules and even in <code>bypassPermissions</code></td><td>Adding a broader <code>Edit(**)</code> allow rule</td></tr>
+                    <tr><td><code>Write(/etc/hosts)</code> slips past <code>deny: ["Write(/etc/**)"]</code></td><td>File-write rules must use <strong><code>Edit(...)</code></strong> (<code>Write(...)</code> never matches), and a single <code>/</code> anchors to CWD/<code>~/.claude/</code> → use <strong><code>Edit(//etc/**)</code></strong></td><td>Changing the glob to <code>Write(/etc/*)</code></td></tr>
+                    <tr><td><code>PreToolUse</code> hook on <code>Read</code> blocks <code>Read(.env)</code>, but typing <code>@.env</code> in prompt leaks <code>.env</code></td><td><code>@file</code> mentions are inlined before the prompt without calling <code>Read</code> → add <strong><code>permissions.deny: ["Read(./.env)"]</code></strong> (or <code>CLAUDE_CODE_DISABLE_FILE_MENTIONS=1</code>)</td><td>Switching the hook from <code>PreToolUse</code> to <code>UserPromptSubmit</code> regex</td></tr>
+                    <tr><td>Guard hook exits <code>1</code> or times out and the destructive command still runs</td><td>Exit <code>1</code> (without JSON) and command/HTTP timeouts fail open → exit <strong><code>2</code></strong> with <code>stderr</code> reason and set <strong><code>"onFailure": "block"</code></strong> on the hook</td><td>Moving the guard to <code>PostToolUse</code></td></tr>
+                    <tr><td>Subagent with <code>disallowedTools: Bash(git push *)</code> loses all <code>Bash</code> access</td><td>Any specifier in subagent <code>disallowedTools</code> removes the <strong>entire</strong> underlying tool → keep <code>Bash</code> in <code>tools</code> and block <code>git push</code> via <code>permissions.deny</code> or <code>PreToolUse</code></td><td>Wrapping the specifier in quotes</td></tr>
+                    <tr><td>Adding <code>CLAUDE.local.md</code> causes Claude Code to stop following <code>AGENTS.md</code></td><td>Default <code>auto</code> project-instructions setting switches to <code>claude-md</code> only when <code>CLAUDE.local.md</code> exists → set <code>/config</code> Project instructions to <code>claude-md-and-agents-md</code></td><td>Copying <code>AGENTS.md</code> into <code>.claudeignore</code></td></tr>
+                    <tr><td>Skill with <code>!`gh pr view`</code> aborts immediately in <code>default</code> mode</td><td><code>!`cmd`</code> preprocessing never prompts; unapproved commands outside <code>auto</code> mode or non-zero exits abort the skill → pre-approve <code>Bash(gh pr view *)</code> in <code>allow</code></td><td>Adding <code>gh</code> to skill <code>allowed-tools</code> (only applies <em>after</em> <code>SKILL.md</code> loads)</td></tr>
+                    <tr><td>Plugin SQLite DB inside <code>${CLAUDE_PLUGIN_ROOT}</code> is wiped on update, or update never fetches new commits</td><td><code>${CLAUDE_PLUGIN_ROOT}</code> is wiped on update and <code>plugin.json</code> <code>version</code> wasn't bumped → store state in <strong><code>${CLAUDE_PLUGIN_DATA}</code></strong> and bump <code>version</code> in <code>plugin.json</code></td><td>Putting <code>"version"</code> only in <code>marketplace.json</code></td></tr>
+                    <tr><td>Remote HTTP MCP server blocked despite <code>{"serverName": "sentry"}</code> in <code>allowedMcpServers</code></td><td>Once <em>any</em> <code>serverUrl</code> entry exists in <code>allowedMcpServers</code>, remote servers must match a <code>serverUrl</code> pattern → add <code>{"serverUrl": "https://*.sentry.io/*"}</code></td><td>Adding <code>mcp__sentry__*</code> to <code>permissions.allow</code></td></tr>
+                    <tr><td><code>claude -p --json-schema</code> returns empty <code>.result</code> in CI, or untrusted PR executes repo hooks</td><td>Schema output is in <strong><code>.structured_output</code></strong> (not <code>.result</code>), and <code>-p</code> without <code>--bare</code> auto-runs repo <code>.claude/settings.json</code> hooks → read <code>.structured_output</code> and pass <strong><code>--bare</code></strong></td><td>Running <code>claude -p</code> in <code>default</code> mode without <code>--bare</code></td></tr>
+                    <tr><td>Local <code>managed-settings.json</code> on macOS ignored after admin enables Server-managed settings</td><td><code>managedSourcesBehavior</code> defaults to <code>"first-wins"</code> (Server &gt; MDM &gt; File) → set <strong><code>"managedSourcesBehavior": "merge"</code></strong> in the server-managed config</td><td>Moving the file to <code>/etc/claude-code/</code> on macOS</td></tr>
+                    <tr><td>Multi-tenant SDK app with <code>setting_sources=[]</code> leaks memory or fails with <code>ENOENT</code> in TS when setting <code>options.env</code></td><td><code>setting_sources=[]</code> still loads auto-memory (<code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code>), <code>~/.claude.json</code> (<code>CLAUDE_CONFIG_DIR</code>), and claude.ai MCP (<code>strict_mcp_config=True</code>); TS <code>options.env</code> replaces <code>process.env</code> (<code>{...process.env, ...}</code>)</td><td>Passing <code>mcp_servers={}</code> without <code>strict_mcp_config=True</code></td></tr>
+                    <tr><td>Running <code>/compact</code> after Claude hallucinates a non-existent API still repeats the hallucination</td><td><strong>Context poisoning:</strong> <code>/compact</code> summarizes the current conversation, preserving poisoned assumptions in the summary → run <strong><code>/clear</code></strong> (or <code>/rewind</code> to a turn before the hallucination)</td><td>Running <code>/compact</code> a second time with a shorter prompt</td></tr>
+                    <tr><td>Skill with detailed triggers under <code>## When to Use</code> in <code>SKILL.md</code> body never auto-triggers</td><td>Only YAML frontmatter (<code>description</code> + <code>when_to_use</code> above the closing <code>---</code>) loads at Level 1 startup → move trigger keywords into YAML frontmatter <code>description</code></td><td>Adding <code>user-invocable: true</code> to frontmatter</td></tr>
+                    <tr><td>Running <code>/rewind</code> (Code only) after a failed migration script leaves deleted files and DB tables broken</td><td>Checkpointing tracks <strong>only</strong> <code>Edit</code>/<code>Write</code>/<code>NotebookEdit</code> changes and <strong>never undoes <code>Bash</code> side-effects</strong> → use <code>git checkout</code> / DB rollbacks for <code>Bash</code> mutations</td><td>Using <em>Conversation and code</em> restore mode in <code>/rewind</code></td></tr>
+                    <tr><td>Subagent generates a 300-line module and says "Done!", but parent agent can't find the code</td><td>Subagents return <strong>only their final summary message</strong> to the parent → have the subagent write the file to disk (<code>Write</code>/<code>Edit</code>) or return the verbatim code/path</td><td>Increasing the parent agent's <code>max_tokens</code></td></tr>
+                    <tr><td>Tests fail immediately inside a new <code>--worktree</code> (<code>-w</code>) session with <code>Cannot find module</code></td><td>Git worktrees do <strong>not</strong> copy gitignored files (<code>node_modules</code>, <code>.env</code>, <code>venv</code>) → run dependency install / copy <code>.env</code> (or automate via a <code>SessionStart</code> hook)</td><td>Passing <code>--add-dir node_modules</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-bug"></i></div>Find the defect: a team's "secure" setup</h3>
+            <p>A team commits the following and believes <code>.env</code> is completely blocked, warehouse MCP tools are auto-approved, and their CI JSON schema script is safe. Find four defects before revealing.</p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">.claude/settings.json + .claude/hooks/block-env.sh + .mcp.json + CI script</span>
+            </div>
+            <pre><span class="comment">// .claude/settings.json</span>
+{
+  <span class="variable">"permissions"</span>: { <span class="variable">"allow"</span>: [<span class="string">"mcp__*"</span>, <span class="string">"Edit(.claude/**)"</span>], <span class="variable">"deny"</span>: [<span class="string">"Write(/.env*)"</span>] },
+  <span class="variable">"hooks"</span>: { <span class="variable">"PreToolUse"</span>: [{ <span class="variable">"matcher"</span>: <span class="string">"Read"</span>,
+    <span class="variable">"hooks"</span>: [{ <span class="variable">"type"</span>: <span class="string">"command"</span>, <span class="variable">"command"</span>: <span class="string">"/Users/alex/repo/.claude/hooks/block-env.sh"</span> }] }] }
+}
+<span class="comment"># .claude/hooks/block-env.sh</span>
+f=$(jq -r <span class="string">'.tool_input.file_path'</span>)
+<span class="keyword">if</span> [[ <span class="string">"$f"</span> == *.env* ]]; <span class="keyword">then</span> echo <span class="string">"blocked"</span> &gt;&amp;2; <span class="keyword">exit</span> 1; <span class="keyword">fi</span>
+<span class="comment">// .mcp.json</span>
+{ <span class="variable">"mcpServers"</span>: { <span class="variable">"warehouse"</span>: { <span class="variable">"type"</span>: <span class="string">"http"</span>, <span class="variable">"url"</span>: <span class="string">"https://wh.internal.example.com/mcp"</span>,
+    <span class="variable">"headers"</span>: { <span class="variable">"Authorization"</span>: <span class="string">"Bearer ${ANTHROPIC_API_KEY}"</span> } } } }
+<span class="comment"># CI script</span>
+claude -p <span class="string">"Extract release notes"</span> --json-schema <span class="string">'{"type":"object","properties":{"tag":{"type":"string"}}}'</span> --output-format json | jq -r <span class="string">'.result.tag'</span></pre>
+        </div>
+
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-magnifying-glass"></i>
+                <h3>Reveal the Four Fixes (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Fix 1.</span> Why are all three permission rules broken?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>"mcp__*"</code> in <code>allow</code> is unanchored and skipped (use <code>"mcp__warehouse__query"</code>); <code>"Edit(.claude/**)"</code> in <code>allow</code> never bypasses protected-path prompts on <code>.claude/</code>; and <code>"Write(/.env*)"</code> in <code>deny</code> <strong>never matches</strong> because file-write rules must use <code>Edit(...)</code> (and <code>Read(./.env*)</code> in <code>deny</code> is needed to block both <code>Read</code>/<code>Edit</code>/<code>Write</code> and <code>@.env</code> prompt mentions).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Fix 2.</span> Why do <code>.env</code> reads still succeed and why does the hook break on other machines?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>block-env.sh</code> exits <strong><code>1</code></strong> (non-blocking fail-open) instead of <strong><code>2</code></strong>, lacks <code>"onFailure": "block"</code>, misses <code>@.env</code> prompt mentions, and hardcodes <code>/Users/alex/...</code> instead of <code>${CLAUDE_PROJECT_DIR}</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Fix 3.</span> Why does the warehouse MCP server return <code>401 Unauthorized</code>?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Built-in credential variables like <code>ANTHROPIC_API_KEY</code> resolve to an <strong>empty string</strong> in remote MCP <code>url</code>/<code>headers</code>. Reference a custom variable name (<code>"Bearer ${WAREHOUSE_MCP_TOKEN}"</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Fix 4.</span> Why does the CI pipeline print <code>null</code> for the schema output?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>--json-schema</code> places the validated JSON object in <strong><code>.structured_output.tag</code></strong>, not <code>.result.tag</code> (and untrusted PR runs should also pass <code>--bare</code> + <code>--permission-mode dontAsk</code>).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 14: RESOURCES, GLOSSARY & QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">14</div>
+            <h2>Glossary, Practice Quiz &amp; Self-Assessment</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item"><dt>Permission evaluation order</dt><dd><code>PreToolUse</code> hooks → <code>deny</code> → <code>ask</code> → protected/critical-path checks → <code>allow</code> → permission mode → <code>PermissionRequest</code> hooks → prompt / <code>canUseTool</code>.</dd></div>
+            <div class="definition-item"><dt>Protected paths</dt><dd><code>.git</code>, <code>.claude</code>, <code>.vscode</code>, <code>.idea</code>, <code>.husky</code>, <code>.mcp.json</code>, shell profiles — checked before <code>allow</code> rules and still prompt in <code>bypassPermissions</code>.</dd></div>
+            <div class="definition-item"><dt><code>Edit(//path)</code> vs <code>Read(/path)</code></dt><dd>Only <code>Read</code> and <code>Edit</code> take path globs (<code>Edit</code> covers <code>Edit</code>/<code>Write</code>/<code>NotebookEdit</code>); <code>//</code> = filesystem root, single <code>/</code> = <code>&lt;cwd&gt;</code> or <code>~/.claude/</code>.</dd></div>
+            <div class="definition-item"><dt>Auto memory (<code>MEMORY.md</code>)</dt><dd>Claude-written notes at <code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code> (first 200 lines / 25 KB loaded at startup; disable via <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code>).</dd></div>
+            <div class="definition-item"><dt><code>PreToolUse</code> decisions</dt><dd><code>hookSpecificOutput.permissionDecision</code>: <strong><code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></strong> across parallel hooks, plus <code>updatedInput</code> and <code>additionalContext</code>.</dd></div>
+            <div class="definition-item"><dt><code>"onFailure": "block"</code></dt><dd>Hook setting that converts non-zero exits (like <code>exit 1</code> without JSON), HTTP errors, and timeouts from fail-open warnings into hard blocks.</dd></div>
+            <div class="definition-item"><dt>Fork (<code>/subtask</code>) vs Subagent</dt><dd>Standard subagents get a fresh context window; a fork inherits parent conversation history, tools, model, and prompt cache (up to depth 2).</dd></div>
+            <div class="definition-item"><dt><code>${CLAUDE_PLUGIN_ROOT}</code> vs <code>DATA</code></dt><dd><code>ROOT</code> is the read-only versioned cache wiped on update; <code>DATA</code> (<code>~/.claude/plugins/data/&lt;id&gt;/</code>) persists state across plugin updates.</dd></div>
+            <div class="definition-item"><dt><code>managed-mcp.json</code> vs <code>allowedMcpServers</code></dt><dd><code>managed-mcp.json</code> provisions an exclusive system-wide server set; <code>allowedMcpServers</code> / <code>deniedMcpServers</code> filter servers by <code>serverName</code>, <code>serverCommand</code>, or <code>serverUrl</code>.</dd></div>
+            <div class="definition-item"><dt><code>--bare</code> (<code>claude -p</code>)</dt><dd>Clean-room headless flag that skips <code>CLAUDE.md</code>, auto-memory, hooks, plugins, skills, <code>.mcp.json</code>, and OAuth/keychain.</dd></div>
+            <div class="definition-item"><dt><code>managedSourcesBehavior</code></dt><dd>Intra-managed rule: defaults to <code>"first-wins"</code> (<code>Server/Gateway &gt; MDM/HKLM &gt; File + managed-settings.d/*.json &gt; HKCU</code>); set <code>"merge"</code> to combine.</dd></div>
+            <div class="definition-item"><dt><code>tools</code> vs <code>allowed_tools</code> (SDK)</dt><dd><code>tools</code> controls built-in tool <strong>availability</strong> in context (<code>tools=[]</code> strips all built-ins); <code>allowed_tools</code> only <strong>pre-approves</strong> calls at Step 2.</dd></div>
+            <div class="definition-item"><dt><code>setting_sources=[]</code> (SDK)</dt><dd>Skips <code>user</code>/<code>project</code>/<code>local</code> files, but <strong>still loads</strong> managed policy, <code>~/.claude.json</code>, auto-memory (<code>MEMORY.md</code>), and <code>claude.ai</code> MCP connectors.</dd></div>
+            <div class="definition-item"><dt><code>create_sdk_mcp_server</code></dt><dd>Builds an in-process SDK MCP server from <code>@tool</code> functions; pre-approve in <code>allowed_tools</code> as <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>.</dd></div>
+            <div class="definition-item"><dt><code>agent_toolset_20260401</code> &amp; Vaults</dt><dd>Managed Agents built-in container toolset (<code>/workspace</code>), paired with <code>agent.custom_tool_use</code> (VPC tools) and <code>vault_ids</code> (server-side secret injection).</dd></div>
+            <div class="definition-item"><dt>Deep Agent 4 Pillars</dt><dd>(1) Explicit planning (<code>TodoWrite</code>/<code>TodoRead</code>), (2) Hierarchical subagents, (3) Filesystem as external context engine, and (4) System prompt heuristics.</dd></div>
+            <div class="definition-item"><dt>Context Rot Taxonomy</dt><dd><em>Context poisoning</em> (hallucinations locked into history; requires <code>/clear</code>, not <code>/compact</code>), <em>Context confusion</em> (tool bloat), and <em>Context clash</em> (conflicting rules).</dd></div>
+            <div class="definition-item"><dt><code>/output-style</code> vs <code>/statusline</code></dt><dd><code>/output-style</code> replaces the SWE system prompt (<code>Default</code>, <code>Explanatory</code>, <code>Learning</code>, custom); <code>/statusline</code> renders live JSON telemetry on <code>stdin</code> at 0 token cost.</dd></div>
+            <div class="definition-item"><dt><code>/rewind</code> (<code>Esc+Esc</code>) &amp; <code>/teleport</code></dt><dd><code>/rewind</code> restores code/conversation from checkpoints but <strong>never undoes <code>Bash</code> side-effects</strong>; <code>/teleport</code> pulls a cloud <code>claude.ai/code</code> session into your local terminal.</dd></div>
+        </div>
+
+        <div class="two-columns" style="margin-top: 22px;">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Claude Code &amp; Agent SDK Architecture Blueprint Video</h3>
+                <p>A visual walkthrough of the Claude Code agentic loop, permission evaluation order, hooks, subagents, progressive-disclosure skills, plugins, MCP scopes, and Managed Agents.</p>
+                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                    <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeCode-v1.0.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                </div>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the Claude Code &amp; Agent SDK audio deep dive, or open the 2-column study guide PDF, the 20-slide Claude Code Architecture Blueprint deck, and the Agent SDK Architecture Map infographic in the Hub Viewer.</p>
+                <div class="audio-label" style="margin-top: 15px;">How to Safely Harness Claude Code &amp; Agent SDK (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeCode-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=claude-code" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive Claude Code Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> Why does <code>deny: ["Write(/etc/**)"]</code> fail to block <code>Write("/etc/hosts")</code>, and what is the exact rule that blocks it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Two reasons: (1) only <code>Read(...)</code> and <code>Edit(...)</code> accept file-path patterns (<code>Edit</code> governs <code>Edit</code>, <code>Write</code>, and <code>NotebookEdit</code>; <code>Write(...)</code> never matches), and (2) a single leading slash <code>/</code> anchors to <code>&lt;cwd&gt;</code> or <code>~/.claude/</code>, not the filesystem root. Use <code>deny: ["Edit(//etc/**)"]</code> with a double slash <code>//</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> Why does a <code>PreToolUse</code> hook matching <code>Read</code> fail to stop a user who types <code>Summarize @.env</code>, and how do you block both?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Claude Code inlines <code>@file</code> prompt mentions directly while building the prompt without invoking the <code>Read</code> tool, so <code>PreToolUse</code> never fires. Add <code>Read(./.env)</code> to <code>permissions.deny</code> (which blocks <code>Read</code>, <code>Edit</code>/<code>Write</code>, and <code>@file</code> mentions) or set <code>CLAUDE_CODE_DISABLE_FILE_MENTIONS=1</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> What happens when a subagent frontmatter includes <code>disallowedTools: Bash(git push *)</code>?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The subagent loses the <strong>entire <code>Bash</code> tool</strong>, because any specifier in subagent <code>disallowedTools</code> strips the whole underlying tool. Keep <code>Bash</code> in <code>tools</code> and block <code>git push</code> via <code>permissions.deny</code> or a <code>PreToolUse</code> hook.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> How does scope precedence differ between Subagents and Skills when a user-level and project-level definition share the same name?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">For Subagents, <strong>project beats user</strong> (<code>managed &gt; --agents &gt; project &gt; user &gt; plugin</code>). For Skills, <strong>user beats project</strong> (<code>managed &gt; user &gt; project &gt; nested &gt; plugin &gt; synced</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> In a plugin, why shouldn't a hook write a SQLite database inside <code>${CLAUDE_PLUGIN_ROOT}</code>?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>${CLAUDE_PLUGIN_ROOT}</code> points to the read-only versioned plugin cache, which is wiped and replaced whenever the plugin updates. Store persistent state in <code>${CLAUDE_PLUGIN_DATA}</code> (<code>~/.claude/plugins/data/&lt;id&gt;/</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> What is the security risk of running <code>claude -p</code> on an untrusted PR branch without <code>--bare</code>, and where does <code>--json-schema</code> output appear?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Without <code>--bare</code>, <code>claude -p</code> executes repository <code>.claude/settings.json</code> hooks and <code>.mcp.json</code> stdio servers automatically without a workspace trust dialog. When using <code>--json-schema</code> with <code>--output-format json</code>, the validated payload is in <code>.structured_output</code>, not <code>.result</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> In the Agent SDK, what four things can still load even when you pass <code>setting_sources=[]</code>?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">(1) Managed policy settings, (2) <code>~/.claude.json</code> global state (isolate via <code>CLAUDE_CONFIG_DIR</code>), (3) auto-memory at <code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code> (disable via <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code>), and (4) <code>claude.ai</code> MCP connectors (suppress via <code>strict_mcp_config=True</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> In Claude Managed Agents, how do you run a proprietary tool inside your own VPC while keeping third-party MCP credentials out of the cloud container?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Declare the VPC tool as <code>{"type": "custom", ...}</code> on the Agent so the session pauses and emits <code>agent.custom_tool_use</code> over SSE (your VPC executes it and posts <code>user.custom_tool_result</code>), and attach a Vault via <code>vault_ids</code> on the Session so MCP auth headers are injected server-side outside the sandbox.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

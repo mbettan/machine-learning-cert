@@ -1,0 +1,935 @@
+{
+  "topic_id": "claude-api",
+  "title": "Claude Platform & API",
+  "guide_url": "ClaudeAPI.html",
+  "questions": [
+    {
+      "id": "claude-api-q-01",
+      "section": "Model Family & Effort",
+      "guide_anchor": "models",
+      "question": "A support-ticket router runs 2 million short classification calls a month on the top-tier model with high effort. An eval shows the balanced tier at low effort matches its accuracy on this step. Spend is the main complaint. What is the best change?",
+      "options": [
+        {
+          "text": "Move only the routing step to the cheaper tier at low effort, pin the new ID, and keep the old pin as the rollback target.",
+          "correct": true
+        },
+        {
+          "text": "Keep the top-tier model but set temperature to 0 so answers are shorter and the monthly bill drops.",
+          "correct": false,
+          "why_wrong": "Non-default temperature returns 400 on Claude 4.7+ and never controlled length or cost; the tier and effort are the real price drivers."
+        },
+        {
+          "text": "Move every step in the pipeline to the smallest tier, since one step proved a smaller model is good enough.",
+          "correct": false,
+          "why_wrong": "One step's eval says nothing about the others; tier changes are made per step on eval evidence, not wholesale."
+        },
+        {
+          "text": "Keep the current model but raise max_tokens so each call finishes in one pass and costly retries are avoided.",
+          "correct": false,
+          "why_wrong": "max_tokens caps output length; it doesn't lower the per-token price of an oversized tier or the thinking spend."
+        }
+      ],
+      "explanation": "Model tier and reasoning effort are independent levers. The eval shows a cheaper tier at low effort passes this specific step, so move that step only and treat the swap as a release with a pinned ID and a rollback target. Sampling knobs are rejected on the newest models and max_tokens only caps output.",
+      "key_takeaway": "Change tier or effort per step on eval evidence, and treat each swap as a pinned, reversible release."
+    },
+    {
+      "id": "claude-api-q-02",
+      "section": "Model Family & Effort",
+      "guide_anchor": "models",
+      "question": "A regression suite compares Claude's reply to a stored golden string and fails about 30% of runs, although reviewers say every reply is correct. The team proposes pinning temperature to 0 on their Claude 4.7+ model. What should they do instead?",
+      "options": [
+        {
+          "text": "Set temperature to 0 and top_k to 1 together, which forces greedy decoding and identical text on every run.",
+          "correct": false,
+          "why_wrong": "Both parameters return 400 on Claude 4.7+, and even where accepted, temperature 0 never guaranteed identical outputs."
+        },
+        {
+          "text": "Assert required properties such as parsed fields and value ranges, and grade meaning with a calibrated LLM judge.",
+          "correct": true
+        },
+        {
+          "text": "Switch the whole suite to streaming so the reply is assembled the same way and compares equal on each run.",
+          "correct": false,
+          "why_wrong": "Streaming changes delivery, not the sampled content; the wording still varies between runs."
+        },
+        {
+          "text": "Move to the most capable tier, which returns the same wording for identical prompts on every call.",
+          "correct": false,
+          "why_wrong": "No tier is deterministic; larger models vary their wording just like smaller ones."
+        }
+      ],
+      "explanation": "Generation is sampled, so correct answers vary in wording. Newest models reject non-default sampling parameters with a 400, and temperature 0 never guaranteed identical output on older models. Test properties of the output and use a model-graded eval for meaning.",
+      "key_takeaway": "Test properties and meaning, never exact strings; sampling knobs are rejected on Claude 4.7+ anyway."
+    },
+    {
+      "id": "claude-api-q-03",
+      "section": "Messages API",
+      "guide_anchor": "messages-api",
+      "question": "A developer ports code from another vendor and sends messages=[{\"role\": \"system\", ...}, {\"role\": \"user\", ...}] to the Messages API. The request is rejected. What is the correct fix?",
+      "options": [
+        {
+          "text": "Rename the role to \"developer\", which the Messages API uses for operator-level instructions.",
+          "correct": false,
+          "why_wrong": "There is no developer role in the Messages API; turns are only user and assistant."
+        },
+        {
+          "text": "Move the instructions to the top-level system field and keep messages as user and assistant turns.",
+          "correct": true
+        },
+        {
+          "text": "Prepend the instructions to an assistant turn at the end so they act as a prefill for the reply.",
+          "correct": false,
+          "why_wrong": "Prefilling the final assistant turn is rejected on Claude 4.6+, and it isn't how system prompts work."
+        },
+        {
+          "text": "Send the system text once in a separate first request, since the API keeps it for all of the following calls.",
+          "correct": false,
+          "why_wrong": "The API is stateless; nothing from an earlier call is remembered, so the instructions must be in every request."
+        }
+      ],
+      "explanation": "The Messages API takes the system prompt as a top-level system parameter. The messages array alternates user and assistant turns. The API is stateless, so the system prompt and history must be sent on every call.",
+      "key_takeaway": "System instructions go in the top-level system field; messages hold only user and assistant turns."
+    },
+    {
+      "id": "claude-api-q-04",
+      "section": "Messages API",
+      "guide_anchor": "messages-api",
+      "question": "After enabling adaptive thinking, a service that returns resp.content[0].text starts throwing attribute errors on some calls even though the model's answers look fine in logs. What is the most likely cause?",
+      "options": [
+        {
+          "text": "The thinking setting doubled the response size, so the text block was truncated before it reached the parser.",
+          "correct": false,
+          "why_wrong": "Truncation would show stop_reason max_tokens, and it doesn't explain an attribute error on the first block."
+        },
+        {
+          "text": "The first content block is now often a thinking block, so the code must select blocks by type, not by index.",
+          "correct": true
+        },
+        {
+          "text": "Adaptive thinking moves the answer into a separate output_text field at the top level of the response.",
+          "correct": false,
+          "why_wrong": "There is no such field; the answer remains a text block inside content."
+        },
+        {
+          "text": "The SDK version is too old to parse adaptive thinking, so it returns an empty content list.",
+          "correct": false,
+          "why_wrong": "The logs show content arriving; the bug is assuming position 0 is always text."
+        }
+      ],
+      "explanation": "A response is an array of typed content blocks. With thinking on, a thinking block usually comes before the text block. Select blocks by their type and branch on stop_reason before reading text.",
+      "key_takeaway": "Never assume content[0] is text; select content blocks by type."
+    },
+    {
+      "id": "claude-api-q-05",
+      "section": "Tool-Use Loop",
+      "guide_anchor": "tool-use",
+      "question": "An agent calls get_order_status with the right arguments. Your code runs it and sends back the result, and the next request fails with an error saying a tool_result references an unknown tool_use_id. What is the targeted fix?",
+      "options": [
+        {
+          "text": "Add an exclusion line to the tool description so Claude stops calling it for refund questions.",
+          "correct": false,
+          "why_wrong": "The call itself was correct; descriptions affect tool selection, not how results are matched."
+        },
+        {
+          "text": "Copy the exact id from the assistant's tool_use block into the result's tool_use_id field.",
+          "correct": true
+        },
+        {
+          "text": "Add order_id to the input schema's required array so the call always includes the key.",
+          "correct": false,
+          "why_wrong": "The arguments were already right; the schema has nothing to do with result pairing."
+        },
+        {
+          "text": "Raise max_tokens so the tool result has room to fit inside the next response.",
+          "correct": false,
+          "why_wrong": "max_tokens caps output length; it doesn't affect request validation."
+        }
+      ],
+      "explanation": "Tool results are matched to calls by ID, not by position or name. Each tool_result must carry the tool_use_id equal to the id of the tool_use block it answers, in the very next user turn.",
+      "key_takeaway": "Echo the tool_use id exactly as tool_use_id; it is a wiring bug, not a schema bug."
+    },
+    {
+      "id": "claude-api-q-06",
+      "section": "Tool-Use Loop",
+      "guide_anchor": "tool-use",
+      "question": "A tool wrapper catches a database timeout and returns an empty string as the tool_result. Claude then tells the user \"you have no orders.\" What is the root fix?",
+      "options": [
+        {
+          "text": "Add \"never say a customer has no orders\" to the system prompt to block the false statement.",
+          "correct": false,
+          "why_wrong": "A prompt rule doesn't tell the model the tool failed; it still reads the empty result as valid data."
+        },
+        {
+          "text": "Retry the tool inside the wrapper until it returns a non-empty value before replying.",
+          "correct": false,
+          "why_wrong": "Unbounded retries burn time and budget and may never succeed during an outage."
+        },
+        {
+          "text": "Return a tool_result with is_error set to true and a short message describing the failure.",
+          "correct": true
+        },
+        {
+          "text": "Switch to a larger model so it can infer that an empty result during business hours is suspicious.",
+          "correct": false,
+          "why_wrong": "No model can tell a silent failure from real empty data; the signal must be explicit."
+        }
+      ],
+      "explanation": "An empty success looks like real data. Setting is_error on the tool_result tells Claude the call failed so it can retry, ask for help or stop. Prompt wording and bigger models can't recover a signal that was never sent.",
+      "key_takeaway": "Send tool failures back as tool_result with is_error: true, never as an empty string."
+    },
+    {
+      "id": "claude-api-q-07",
+      "section": "Tool-Use Loop",
+      "guide_anchor": "tool-use",
+      "question": "A workflow must call at most one tool per response because each call charges a customer card. A developer adds disable_parallel_tool_use: true at the top level of the request and still sees two calls in one turn. What is wrong?",
+      "options": [
+        {
+          "text": "The flag belongs inside the tool_choice object, for example {\"type\": \"auto\", \"disable_parallel_tool_use\": true}.",
+          "correct": true
+        },
+        {
+          "text": "The flag only takes effect when tool_choice is none, which also stops Claude from calling any tool in the turn.",
+          "correct": false,
+          "why_wrong": "With none no tools are called at all; the flag is an option on auto, any or tool choices."
+        },
+        {
+          "text": "Parallel calls can't be limited by the API, so the charge step must be removed from the tools list.",
+          "correct": false,
+          "why_wrong": "The API does support limiting calls to one per response via tool_choice."
+        },
+        {
+          "text": "The flag requires a stop sequence after each tool_use block to cut the response short.",
+          "correct": false,
+          "why_wrong": "Stop sequences end text generation; they are not how parallel tool use is controlled."
+        }
+      ],
+      "explanation": "disable_parallel_tool_use is a field of the tool_choice object, not a top-level request parameter. With type auto and the flag set to true, Claude emits at most one tool call per response and can still answer in plain text.",
+      "key_takeaway": "disable_parallel_tool_use lives inside tool_choice, not at the top level of the request."
+    },
+    {
+      "id": "claude-api-q-08",
+      "section": "stop_reason Handling",
+      "guide_anchor": "stop-reasons",
+      "question": "A chat assistant's monitoring shows no HTTP errors, yet some users get a blank answer. The handler checks the HTTP status, then reads the first text block. Logs show stop_reason: \"refusal\" on those turns. What should the application do?",
+      "options": [
+        {
+          "text": "Retry the same request with exponential backoff, because refusals are transient classifier noise.",
+          "correct": false,
+          "why_wrong": "A refusal is a content decision; resending the same request typically repeats it."
+        },
+        {
+          "text": "Branch on stop_reason, read stop_details, and remove or rephrase the refused turn before continuing.",
+          "correct": true
+        },
+        {
+          "text": "Treat it as a 5xx error and open the circuit breaker for that model until the observed error rate falls.",
+          "correct": false,
+          "why_wrong": "Refusals come back as HTTP 200 and say nothing about service health."
+        },
+        {
+          "text": "Raise max_tokens so the model has room to finish the answer it started before stopping.",
+          "correct": false,
+          "why_wrong": "A refusal isn't truncation; more output budget changes nothing."
+        }
+      ],
+      "explanation": "Refusals arrive as HTTP 200 with stop_reason refusal, so status checks miss them. Handle them on stop_reason: inspect stop_details, and reset context by removing or rephrasing the refused turn, since keeping it in history causes continued refusals. A fallback model retry may be offered.",
+      "key_takeaway": "A refusal is HTTP 200: branch on stop_reason and reset the refused turn instead of backoff-retrying."
+    },
+    {
+      "id": "claude-api-q-09",
+      "section": "stop_reason Handling",
+      "guide_anchor": "stop-reasons",
+      "question": "A long research session on a newer model returns an answer that stops mid-sentence with no exception. max_tokens was set very high. Which stop_reason do you expect, and what is the fix?",
+      "options": [
+        {
+          "text": "max_tokens; raise the max_tokens value again so the response has more room to finish on the next attempt.",
+          "correct": false,
+          "why_wrong": "The cap was already high; the limit reached was the context window, which max_tokens can't enlarge."
+        },
+        {
+          "text": "model_context_window_exceeded; treat the output as truncated and prune or compact the history.",
+          "correct": true
+        },
+        {
+          "text": "end_turn; the API silently dropped the oldest turns and the model lost track of its answer.",
+          "correct": false,
+          "why_wrong": "The API never silently drops turns; history management is the application's job."
+        },
+        {
+          "text": "refusal; a classifier stopped the answer partway, so the request should be reworded.",
+          "correct": false,
+          "why_wrong": "Nothing in the scenario suggests a policy issue; the session simply filled the window."
+        }
+      ],
+      "explanation": "On newer models, when input plus max_tokens exceeds the window the request is accepted, and if generation runs out of room it stops with model_context_window_exceeded. Treat it as truncated and shrink the history. An input that alone exceeds the window would have been rejected with a 400 up front.",
+      "key_takeaway": "max_tokens = your output cap; model_context_window_exceeded = the window filled. Fix the latter by shrinking history."
+    },
+    {
+      "id": "claude-api-q-10",
+      "section": "stop_reason Handling",
+      "guide_anchor": "stop-reasons",
+      "question": "An app uses a server tool such as web search. Some responses come back with stop_reason: \"pause_turn\" and an incomplete answer. What should the handler do?",
+      "options": [
+        {
+          "text": "Treat it as a failure, log it and show the user a generic error message for that turn.",
+          "correct": false,
+          "why_wrong": "pause_turn is a normal state, not an error; the turn can simply be continued."
+        },
+        {
+          "text": "Send the assistant content back unchanged in the next request so the model can continue the turn.",
+          "correct": true
+        },
+        {
+          "text": "Strip the server tool blocks from the response and resend only the partial answer text as an assistant prefill.",
+          "correct": false,
+          "why_wrong": "Editing the content breaks the turn, and prefill is rejected on Claude 4.6+."
+        },
+        {
+          "text": "Switch tool_choice to none for the next call so the model stops searching and answers directly.",
+          "correct": false,
+          "why_wrong": "That abandons the paused work; the documented action is to pass the content back to continue."
+        }
+      ],
+      "explanation": "pause_turn means a long-running server-tool loop reached its iteration limit. Return the assistant content as-is in a follow-up request and the model continues where it left off.",
+      "key_takeaway": "On pause_turn, send the assistant content back unchanged to continue the turn."
+    },
+    {
+      "id": "claude-api-q-11",
+      "section": "Streaming",
+      "guide_anchor": "streaming",
+      "question": "Operators retry an answer that streamed halfway when the network dropped. Every retry is rejected with a validation error pointing at a malformed tool_use block in an earlier assistant turn. The tool schema hasn't changed in weeks. What is the root cause?",
+      "options": [
+        {
+          "text": "The input schema lacks a required array, so partial arguments were accepted into the history.",
+          "correct": false,
+          "why_wrong": "The schema didn't change; the malformed block came from saving an incomplete stream."
+        },
+        {
+          "text": "The handler saved the turn when its read loop ended instead of waiting for message_stop.",
+          "correct": true
+        },
+        {
+          "text": "Parallel tool use was enabled, so two calls in one turn overwrote each other's JSON fragments.",
+          "correct": false,
+          "why_wrong": "Each block streams under its own index; parallel calls don't corrupt each other."
+        },
+        {
+          "text": "The tool description doesn't say when not to call it, so Claude produced an invalid call.",
+          "correct": false,
+          "why_wrong": "Descriptions affect selection, not whether a saved turn is structurally complete."
+        }
+      ],
+      "explanation": "Only message_stop means the message is complete. Saving on loop exit stored a half-built tool_use block, and every later request carrying that history fails. Parse tool input at content_block_stop, commit at message_stop, and discard partial turns.",
+      "key_takeaway": "Commit a streamed turn only after message_stop; discard partial turns on interruption."
+    },
+    {
+      "id": "claude-api-q-12",
+      "section": "Streaming",
+      "guide_anchor": "streaming",
+      "question": "A streaming handler calls json.loads on every input_json_delta to show tool arguments live, and it crashes on most tool calls. What should it do instead?",
+      "options": [
+        {
+          "text": "Accumulate the partial_json fragments per block index and parse once at content_block_stop.",
+          "correct": true
+        },
+        {
+          "text": "Turn on strict tool use so that each streamed fragment is guaranteed to be a complete JSON document.",
+          "correct": false,
+          "why_wrong": "strict guarantees the final input matches the schema; fragments are still partial by design."
+        },
+        {
+          "text": "Parse the fragments at message_start, when the full tool input is first announced.",
+          "correct": false,
+          "why_wrong": "message_start carries only the message shell; tool input arrives later as deltas."
+        },
+        {
+          "text": "Disable streaming for tool calls, since partial JSON makes streamed tool use unsupported.",
+          "correct": false,
+          "why_wrong": "Streamed tool use is supported; you just buffer fragments until the block completes."
+        }
+      ],
+      "explanation": "Tool input streams as input_json_delta fragments that are not valid JSON on their own. Buffer them per content block index and parse at content_block_stop.",
+      "key_takeaway": "Buffer input_json_delta fragments; parse tool input only at content_block_stop."
+    },
+    {
+      "id": "claude-api-q-13",
+      "section": "Structured Outputs",
+      "guide_anchor": "structured-outputs",
+      "question": "A lead-extraction service tells Claude to \"return only JSON\" and repairs broken output with regex. Parse failures still hit 2% of calls, and prefilling \"{\" now returns 400 on the new model. Which change fixes this at the API level?",
+      "options": [
+        {
+          "text": "Add three more paragraphs of formatting rules and two worked examples of valid JSON output.",
+          "correct": false,
+          "why_wrong": "More prompting is still best effort; it lowers the failure rate but can't guarantee parseable output."
+        },
+        {
+          "text": "Send output_config.format with a json_schema, and check stop_reason before parsing the text block.",
+          "correct": true
+        },
+        {
+          "text": "Keep the prefill but move it into the system prompt so the new model accepts it as an instruction.",
+          "correct": false,
+          "why_wrong": "A system prompt instruction is not a prefill and gives no format guarantee."
+        },
+        {
+          "text": "Lower temperature to 0 so the model stops making formatting mistakes on edge-case emails.",
+          "correct": false,
+          "why_wrong": "Non-default temperature is rejected on Claude 4.7+, and it never guaranteed valid JSON."
+        }
+      ],
+      "explanation": "JSON outputs (output_config.format with a json_schema) constrain the response to the schema, replacing prompt-only formatting and the prefill trick that Claude 4.6+ rejects. Still check stop_reason, since a refusal or max_tokens stop may not conform.",
+      "key_takeaway": "Enforce format with output_config.format (or strict tools), and still check stop_reason before parsing."
+    },
+    {
+      "id": "claude-api-q-14",
+      "section": "Structured Outputs",
+      "guide_anchor": "structured-outputs",
+      "question": "After switching to structured outputs, an invoice extractor returns schema-valid JSON on 100% of calls. Finance still finds wrong due dates on about 3% of invoices. What is the best next step?",
+      "options": [
+        {
+          "text": "Nothing at the API level; schema-valid output proves the extraction is correct, so audit the invoices.",
+          "correct": false,
+          "why_wrong": "A schema checks shape, not truth; a valid date field can hold the wrong date."
+        },
+        {
+          "text": "Add strict: true to every tool so the extracted values are validated against the real invoices.",
+          "correct": false,
+          "why_wrong": "strict validates tool inputs against a schema; it can't check values against source documents."
+        },
+        {
+          "text": "Build a labelled eval set with tricky invoices and add business-rule checks on the extracted values.",
+          "correct": true
+        },
+        {
+          "text": "Switch to the largest tier, because structured outputs only guarantee correctness on top-tier models.",
+          "correct": false,
+          "why_wrong": "No tier makes schema validity imply correctness; you need graded evals."
+        }
+      ],
+      "explanation": "Structured outputs guarantee shape, not correctness. Find and fix value errors with a labelled eval set covering edge cases plus deterministic business-rule validation.",
+      "key_takeaway": "Schema-valid is not correct: keep graded evals and value checks after adopting structured outputs."
+    },
+    {
+      "id": "claude-api-q-15",
+      "section": "Adaptive Thinking",
+      "guide_anchor": "adaptive-thinking",
+      "question": "After migrating to a Claude 4.7+ model, requests fail with HTTP 400. The payload includes thinking: {type: \"enabled\", budget_tokens: 10000}. What is the correct fix?",
+      "options": [
+        {
+          "text": "Lower budget_tokens below max_tokens so the thinking budget fits inside the output cap.",
+          "correct": false,
+          "why_wrong": "Manual budgets are not accepted on these models at any value."
+        },
+        {
+          "text": "Use thinking: {type: \"adaptive\"} and control depth with output_config.effort.",
+          "correct": true
+        },
+        {
+          "text": "Remove max_tokens so the thinking budget can grow as large as it needs.",
+          "correct": false,
+          "why_wrong": "max_tokens is required and isn't the cause of the error."
+        },
+        {
+          "text": "Add an extended-thinking beta header so the manual budget is accepted again.",
+          "correct": false,
+          "why_wrong": "This isn't beta gating; manual budgets were removed in favor of adaptive thinking."
+        }
+      ],
+      "explanation": "Manual extended thinking with budget_tokens is deprecated on Claude 4.6 and rejected on 4.7 and later. Use adaptive thinking and steer reasoning depth with the effort setting.",
+      "key_takeaway": "On Claude 4.7+, replace budget_tokens with thinking type adaptive plus output_config.effort."
+    },
+    {
+      "id": "claude-api-q-16",
+      "section": "Adaptive Thinking",
+      "guide_anchor": "adaptive-thinking",
+      "question": "A multi-turn agent with adaptive thinking strips thinking blocks from each assistant turn before appending it, to save tokens. The next request after a tool call fails. What is the fix?",
+      "options": [
+        {
+          "text": "Lower effort to low so fewer thinking blocks are produced and none need to be removed.",
+          "correct": false,
+          "why_wrong": "The request fails because blocks were removed, not because there were too many."
+        },
+        {
+          "text": "Replace each thinking block with a short plain-text summary placed in the same position in the turn.",
+          "correct": false,
+          "why_wrong": "Editing or replacing blocks breaks the signature check just like deleting them."
+        },
+        {
+          "text": "Raise max_tokens so the thinking blocks fit in the response without being stripped.",
+          "correct": false,
+          "why_wrong": "max_tokens controls output length, not context room or validation."
+        },
+        {
+          "text": "Echo the assistant turn unchanged, and save context by pruning or compacting older turns.",
+          "correct": true
+        }
+      ],
+      "explanation": "Thinking blocks carry a signature. When you return tool results, the assistant message, including thinking and redacted_thinking blocks, must come back exactly as received. Manage context by pruning or compacting older completed turns.",
+      "key_takeaway": "Pass thinking blocks back unmodified in tool loops; save context elsewhere."
+    },
+    {
+      "id": "claude-api-q-17",
+      "section": "Context & Caching",
+      "guide_anchor": "context-caching",
+      "question": "A policy agent picks the right tool for turns 1–4, with each result about 2,400 tokens. From turn 5 on it keeps calling the wrong tool, and sessions end with no result. Which change fixes this most directly?",
+      "options": [
+        {
+          "text": "Rewrite the description of the tool it should have picked so the choice is clearer.",
+          "correct": false,
+          "why_wrong": "Turns 1–4 show the descriptions already work; the failure appears only as context grows."
+        },
+        {
+          "text": "Prune or clear old tool results and compact the history before the context fills.",
+          "correct": true
+        },
+        {
+          "text": "Increase max_tokens so the model has more room to reason about which tool fits.",
+          "correct": false,
+          "why_wrong": "max_tokens caps output only; it doesn't free context taken by old tool results."
+        },
+        {
+          "text": "Turn on maximum effort for every turn so the model reasons harder about tool choice.",
+          "correct": false,
+          "why_wrong": "More thinking adds tokens to an already crowded context and doesn't remove the cause."
+        }
+      ],
+      "explanation": "Correct choices early and wrong ones later point to context crowding by accumulated tool output, not a schema problem. Prune old results, use context editing, or compact, and measure tokens.",
+      "key_takeaway": "Right tool early, wrong tool later means context overflow: prune or compact, don't rewrite schemas."
+    },
+    {
+      "id": "claude-api-q-18",
+      "section": "Context & Caching",
+      "guide_anchor": "context-caching",
+      "question": "A support bot marks its 6,000-token system prompt with cache_control, but usage shows zero cache reads. The system prompt begins with a line containing the current timestamp. What fixes it?",
+      "options": [
+        {
+          "text": "Switch the cache TTL from 5 minutes to 1 hour so the cache entry survives between consecutive requests.",
+          "correct": false,
+          "why_wrong": "The prefix changes every request, so nothing is ever read; a 1-hour TTL just makes writes cost 2× instead of 1.25×."
+        },
+        {
+          "text": "Move the timestamp after the last cache breakpoint so the cached prefix is identical each time.",
+          "correct": true
+        },
+        {
+          "text": "Submit the traffic through Message Batches, which caches system prompts automatically.",
+          "correct": false,
+          "why_wrong": "Batches discount price but don't fix a prefix that changes on every request."
+        },
+        {
+          "text": "Shorten the system prompt below the minimum length so caching is skipped and costs fall.",
+          "correct": false,
+          "why_wrong": "That gives up the savings entirely instead of fixing the prefix."
+        }
+      ],
+      "explanation": "Caching needs a byte-identical prefix up to the breakpoint. Dynamic text before the breakpoint creates a new cache write on every call and no reads. Put static content first and dynamic content after the last breakpoint.",
+      "key_takeaway": "Static content before the breakpoint, dynamic content after it; a longer TTL doesn't fix a changing prefix."
+    },
+    {
+      "id": "claude-api-q-19",
+      "section": "Context & Caching",
+      "guide_anchor": "context-caching",
+      "question": "An agent's cache hit rate drops sharply after a refactor. The static prefix is unchanged, but the code now picks tool_choice and effort per request based on the user's question. What explains the drop?",
+      "options": [
+        {
+          "text": "Prompt caching only works when tool_choice is auto and no effort setting is sent at all.",
+          "correct": false,
+          "why_wrong": "Caching works with any settings; it breaks only when the settings change between requests."
+        },
+        {
+          "text": "The 5-minute TTL is too short for agents, so entries expire between turns regardless of settings.",
+          "correct": false,
+          "why_wrong": "The prefix and traffic didn't change, so TTL doesn't explain a drop tied to the refactor."
+        },
+        {
+          "text": "Changing tool_choice or effort between requests invalidates the messages cache segment.",
+          "correct": true
+        },
+        {
+          "text": "Choosing tools per request needs a fifth cache breakpoint, which the API doesn't allow.",
+          "correct": false,
+          "why_wrong": "Breakpoint count isn't the issue; the varying settings invalidate the cache."
+        }
+      ],
+      "explanation": "The cache follows the tools → system → messages hierarchy. Changing tool_choice, toggling images, or changing thinking or effort invalidates the messages cache (and sometimes earlier levels). Keep these settings stable per workload or place breakpoints before the variation point.",
+      "key_takeaway": "Varying tool_choice, thinking or effort per call silently invalidates the prompt cache."
+    },
+    {
+      "id": "claude-api-q-20",
+      "section": "Message Batches",
+      "guide_anchor": "batches",
+      "question": "A nightly job classifies 40,000 tickets by splitting them into chunks of 500 and calling the Messages endpoint once per ticket. It hits rate limits every night, and nobody reads results until morning. What is the best redesign?",
+      "options": [
+        {
+          "text": "Make the chunks smaller and add exponential backoff between them to stay under the limit.",
+          "correct": false,
+          "why_wrong": "It is still one synchronous call per ticket, so it keeps fighting rate limits at full price."
+        },
+        {
+          "text": "Submit the tickets through Message Batches and match each result to its ticket by custom_id.",
+          "correct": true
+        },
+        {
+          "text": "Stream every response so each connection is released sooner and throughput goes up.",
+          "correct": false,
+          "why_wrong": "Streaming helps a waiting user's perceived latency; it doesn't cut request count or cost."
+        },
+        {
+          "text": "Concatenate all tickets into one request on the largest context window and split the output.",
+          "correct": false,
+          "why_wrong": "It won't fit, fails as a whole, and mixes thousands of tasks in one context."
+        }
+      ],
+      "explanation": "Chunked loops are still serial synchronous calls. Message Batches process up to 100,000 requests asynchronously at half price, usually within an hour; anything unfinished after 24 hours expires. Results can arrive in any order, so match on custom_id.",
+      "key_takeaway": "Offline bulk work goes through Message Batches (50% off, ≤24 h), matched by custom_id."
+    },
+    {
+      "id": "claude-api-q-21",
+      "section": "Message Batches",
+      "guide_anchor": "batches",
+      "question": "A batch of 10,000 summaries completes, and the team writes results back by iterating over them in order and assigning each to the ticket at the same index. Spot checks find summaries attached to the wrong tickets. What is the fix?",
+      "options": [
+        {
+          "text": "Sort the results by completion timestamp before writing them back to the tickets.",
+          "correct": false,
+          "why_wrong": "Completion order has nothing to do with submission order; timestamps don't identify the ticket."
+        },
+        {
+          "text": "Submit smaller batches of 100 so the results come back in the same order they were sent.",
+          "correct": false,
+          "why_wrong": "Order isn't guaranteed at any batch size."
+        },
+        {
+          "text": "Set each request's custom_id to the ticket ID and join results to tickets on custom_id.",
+          "correct": true
+        },
+        {
+          "text": "Re-run the batch with streaming enabled so each result is delivered in submission order.",
+          "correct": false,
+          "why_wrong": "Streaming isn't how batch results are delivered, and it wouldn't guarantee order."
+        }
+      ],
+      "explanation": "Batch results may come back out of request order. Each request carries a unique custom_id (up to 64 letters, digits, underscores or hyphens) that you use to match results to inputs.",
+      "key_takeaway": "Never match batch results by position; use a unique custom_id per request."
+    },
+    {
+      "id": "claude-api-q-22",
+      "section": "Errors & Retries",
+      "guide_anchor": "errors-retries",
+      "question": "A service uses the official SDK with default settings and also wraps every call in its own 5-attempt retry loop. During a traffic peak it gets 429s and the rate-limit pressure gets worse. What is the best change?",
+      "options": [
+        {
+          "text": "Raise the custom loop to 10 attempts so each request eventually gets through the limit.",
+          "correct": false,
+          "why_wrong": "More attempts on top of the SDK's own retries multiply load against the limit."
+        },
+        {
+          "text": "Let one layer own retries, honor retry-after, and use capped exponential backoff with jitter.",
+          "correct": true
+        },
+        {
+          "text": "Treat every 429 as terminal and fail fast, because rate limits mean the key is misconfigured.",
+          "correct": false,
+          "why_wrong": "A rate-limit 429 is retriable after waiting; failing fast drops recoverable work."
+        },
+        {
+          "text": "Switch the service to streaming so the server counts fewer requests per minute.",
+          "correct": false,
+          "why_wrong": "Streaming doesn't reduce the number of requests."
+        }
+      ],
+      "explanation": "The SDKs already retry connection errors, 408, 409, 429 and 5xx twice by default with backoff and honor retry-after. A second loop multiplies attempts. Choose one retry owner (or adjust max_retries) and back off with jitter.",
+      "key_takeaway": "SDKs retry twice by default; don't stack your own loop on top. One layer owns retries."
+    },
+    {
+      "id": "claude-api-q-23",
+      "section": "Errors & Retries",
+      "guide_anchor": "errors-retries",
+      "question": "An on-call engineer is writing the retry policy for a Claude integration. Which classification of responses is correct?",
+      "options": [
+        {
+          "text": "Retry 400, 429 and 529 with backoff; fail fast on 500 because it means Anthropic has a bug.",
+          "correct": false,
+          "why_wrong": "A 400 is a malformed request that fails identically on retry, while a 500 is transient and should be retried."
+        },
+        {
+          "text": "Retry 429, 500 and 529 with backoff; fail fast on 400, 401, 403 and 404; branch on refusal separately.",
+          "correct": true
+        },
+        {
+          "text": "Retry every non-200 response the same way, and also retry any 200 whose stop_reason is refusal.",
+          "correct": false,
+          "why_wrong": "Terminal 4xx errors can't succeed on retry, and refusals need context changes, not resends."
+        },
+        {
+          "text": "Fail fast on 429 and 529 because they mean the account is over budget, and retry 401 after refreshing the key.",
+          "correct": false,
+          "why_wrong": "429 and 529 are usually transient; a 401 means the credential is wrong and won't fix itself."
+        }
+      ],
+      "explanation": "Rate limits (429), server errors (500) and overload (529) are transient: retry with backoff and honor retry-after. Request, auth, permission and not-found errors are terminal. Refusals arrive as HTTP 200 and are handled on stop_reason. Note that a spend-cap 429 has no retry-after and keeps failing.",
+      "key_takeaway": "Retry 429/5xx/529 with backoff; fail fast on 400/401/403/404; handle refusals on stop_reason."
+    },
+    {
+      "id": "claude-api-q-24",
+      "section": "Evals & Cost",
+      "guide_anchor": "evals-cost",
+      "question": "A team uses an LLM judge to grade a summarization feature. The judge outputs a 1–10 score followed by its reasoning, and its scores rarely match what reviewers think. What should they change first?",
+      "options": [
+        {
+          "text": "Raise the pass threshold from 7 to 9 so only clearly excellent summaries pass the eval.",
+          "correct": false,
+          "why_wrong": "A stricter threshold on an uncalibrated judge just moves the noise."
+        },
+        {
+          "text": "Use exact string match against reference summaries instead, since it removes all judge variability from the score.",
+          "correct": false,
+          "why_wrong": "Exact match fails correct paraphrases; free text needs a semantic grader."
+        },
+        {
+          "text": "Require reasoning before the score, use anchored score bands, and calibrate against human labels.",
+          "correct": true
+        },
+        {
+          "text": "Grade with the same model that wrote the summaries so the judge understands its own style.",
+          "correct": false,
+          "why_wrong": "Self-grading risks bias; a different judge model is preferred."
+        }
+      ],
+      "explanation": "Judges are more reliable when they reason before scoring against anchored rubric bands, and their agreement must be checked against human-labelled cases before you trust their numbers.",
+      "key_takeaway": "Calibrate LLM judges: reasoning first, anchored bands, checked against human labels."
+    },
+    {
+      "id": "claude-api-q-25",
+      "section": "Evals & Cost",
+      "guide_anchor": "evals-cost",
+      "question": "A support assistant handles 50,000 calls a month. Every call sends the same 5,000-token instructions, about 300 tokens of user input and gets about 400 tokens back. Spend is over budget and time to first token is near the SLA. Which single change improves both?",
+      "options": [
+        {
+          "text": "Move to the largest model tier so fewer follow-up questions are needed in each customer conversation.",
+          "correct": false,
+          "why_wrong": "A larger tier costs more per token and is usually slower."
+        },
+        {
+          "text": "Raise max_tokens so responses always finish in one call without truncation.",
+          "correct": false,
+          "why_wrong": "It only raises the output ceiling; it doesn't touch the repeated 5,000-token prefix."
+        },
+        {
+          "text": "Split each call into two smaller requests so each one sends fewer tokens.",
+          "correct": false,
+          "why_wrong": "Two calls repeat the prefix and add a round trip."
+        },
+        {
+          "text": "Put a cache breakpoint after the static instructions so the prefix is read from cache.",
+          "correct": true
+        }
+      ],
+      "explanation": "The repeated prefix dominates input spend. Cache reads cost about 0.1× base input after a 1.25× write (5-minute TTL), and caching long prefixes also reduces time to first token.",
+      "key_takeaway": "Cache a large static prefix: writes 1.25×, reads about 0.1×, plus a faster first token."
+    },
+    {
+      "id": "claude-api-q-26",
+      "section": "Deployment",
+      "guide_anchor": "deployment",
+      "question": "A regulated EU insurer requires that call-transcript inference never leaves the EU. The team built a prototype on the first-party Claude API because they know it well. What should happen before build continues?",
+      "options": [
+        {
+          "text": "Set inference_geo to \"us\" and document the residency decision in the design record.",
+          "correct": false,
+          "why_wrong": "That pins inference to the US, which fails an EU-only rule."
+        },
+        {
+          "text": "Move the workload to Bedrock or Google Cloud using EU regional or multi-region routing.",
+          "correct": true
+        },
+        {
+          "text": "Keep the first-party API and add encryption of transcripts at rest in the EU region.",
+          "correct": false,
+          "why_wrong": "Encryption at rest doesn't change where inference runs."
+        },
+        {
+          "text": "Optimize latency first, then revisit residency during the contract review phase.",
+          "correct": false,
+          "why_wrong": "Residency is pass/fail and must be settled at scoping, not after the build."
+        }
+      ],
+      "explanation": "First-party inference_geo accepts only global or us. EU-only residency needs Amazon Bedrock regional/EU routing or the Google Cloud eu multi-region, which carry a regional premium.",
+      "key_takeaway": "First-party inference_geo is global or US only; EU-only residency means Bedrock or Google Cloud EU routing."
+    },
+    {
+      "id": "claude-api-q-27",
+      "section": "Deployment",
+      "guide_anchor": "deployment",
+      "question": "On an older model generation, a production parser starts failing on a missing JSON key after an upstream release. The app code didn't change, the config uses a short alias, and nobody can roll back. Which practice would have prevented this?",
+      "options": [
+        {
+          "text": "Pin the full dated model ID, keep the prior pin for rollback, and gate promotion on evals.",
+          "correct": true
+        },
+        {
+          "text": "Raise max_tokens so the model has more room to include the missing key somewhere in its JSON output.",
+          "correct": false,
+          "why_wrong": "The key went missing because the model changed, not because output was cut off."
+        },
+        {
+          "text": "Add parser retries so the call is repeated whenever the key is missing from the output.",
+          "correct": false,
+          "why_wrong": "Retries treat the symptom and leave the moving reference in place."
+        },
+        {
+          "text": "Move to a cheaper tier, because cheaper models are updated less often than larger ones.",
+          "correct": false,
+          "why_wrong": "Update cadence isn't tied to price; the fix is pinning, not tier."
+        }
+      ],
+      "explanation": "On pre-4.6 models, short aliases move to the newest dated snapshot, so upstream changes reach production silently. Pin a full ID, keep the prior pin as the rollback target, and promote only when evals meet the baseline. From Claude 4.6 on, the dateless ID is itself a fixed snapshot.",
+      "key_takeaway": "Pin full model IDs, keep the previous pin for rollback, and eval-gate every promotion."
+    },
+    {
+      "id": "claude-api-q-28",
+      "section": "Security",
+      "guide_anchor": "security",
+      "question": "An email-triage agent can read and send email. A user asks it to summarize the last 10 emails. Afterward, security finds it forwarded a thread to an external address. The user prompt was clean. What is the most effective fix?",
+      "options": [
+        {
+          "text": "Make the user-input regex stricter and add a jailbreak classifier on the user's message.",
+          "correct": false,
+          "why_wrong": "The attack came in through fetched email content, not the user's prompt."
+        },
+        {
+          "text": "Treat fetched email as data, screen it before it enters context, and remove send from this agent.",
+          "correct": true
+        },
+        {
+          "text": "Add \"never send email unless the user explicitly asks\" to the system prompt.",
+          "correct": false,
+          "why_wrong": "Injected text can override prompt rules; least privilege must be enforced in code."
+        },
+        {
+          "text": "Switch to a larger model, which is better at ignoring instructions hidden inside emails.",
+          "correct": false,
+          "why_wrong": "A stronger model is still probabilistic and leaves the dangerous capability in place."
+        }
+      ],
+      "explanation": "Indirect prompt injection arrives through content the agent reads. Treat it as data, screen it at ingestion, and remove capabilities the task doesn't need. A summarizer has no reason to hold a send tool.",
+      "key_takeaway": "Defend against indirect injection at ingestion and remove tools the task doesn't need."
+    },
+    {
+      "id": "claude-api-q-29",
+      "section": "Security",
+      "guide_anchor": "security",
+      "question": "A multi-tenant SaaS assistant sends all tenants through one API key. It grants data-export features when a user writes \"I am a premium customer.\" Which redesign fixes both the authorization and attribution weaknesses?",
+      "options": [
+        {
+          "text": "Add a stronger system-prompt rule telling Claude to ignore any claims about account tier.",
+          "correct": false,
+          "why_wrong": "It still leaves authorization to a prompt that users can manipulate."
+        },
+        {
+          "text": "Give Claude a CRM lookup tool and let it decide whether the user is really premium.",
+          "correct": false,
+          "why_wrong": "The model still makes the authorization decision; it should be deterministic code."
+        },
+        {
+          "text": "Inject the verified tier server-side and isolate tenants by separate keys or workspaces.",
+          "correct": true
+        },
+        {
+          "text": "Log all user turns so security can audit forged premium claims after the fact.",
+          "correct": false,
+          "why_wrong": "Logging detects abuse later; it doesn't prevent it or fix attribution."
+        }
+      ],
+      "explanation": "Identity and entitlements must come from your auth layer, injected server-side, never from what users type. Per-tenant keys or workspaces stop one tenant's spike from throttling others and make usage attributable.",
+      "key_takeaway": "Inject identity server-side and isolate tenants; never authorize from text in the user turn."
+    },
+    {
+      "id": "claude-api-q-30",
+      "section": "Failure Modes",
+      "guide_anchor": "failure-modes",
+      "question": "During a review you see this pattern: a single try/except Exception: pass wraps the API call in a five-pass loop, and the code then returns r.content[0].text. Which set of fixes addresses the real risks?",
+      "options": [
+        {
+          "text": "Increase the loop to ten passes and add a one-second sleep so transient errors have time to clear.",
+          "correct": false,
+          "why_wrong": "It still retries terminal 400s, stacks on SDK retries, and never checks stop_reason."
+        },
+        {
+          "text": "Replace the loop with streaming, which handles retries internally and always returns text.",
+          "correct": false,
+          "why_wrong": "Streaming doesn't classify errors or guarantee a text block."
+        },
+        {
+          "text": "Classify errors (retry 429/5xx, raise 4xx), raise when retries run out, and check stop_reason first.",
+          "correct": true
+        },
+        {
+          "text": "Keep the loop but log each exception, since swallowing errors is fine once they are recorded.",
+          "correct": false,
+          "why_wrong": "Logging doesn't stop pointless 400 retries or undefined results when every attempt fails."
+        }
+      ],
+      "explanation": "The pattern retries terminal errors, multiplies SDK retries, can leave r undefined when all attempts fail, and passes refusals or truncated output downstream because it ignores stop_reason. Classify errors, let one layer retry, fail loudly when out of budget, and branch on stop_reason.",
+      "key_takeaway": "Classify errors, let one layer retry, fail loudly, and branch on stop_reason before reading text."
+    },
+    {
+      "id": "claude-api-q-31",
+      "section": "Tool-Use Loop & Agent Scaling",
+      "guide_anchor": "tool-use",
+      "question": "An operations agent connects to 45 MCP tools (~90k schema tokens per turn) and often chains 10–15 sequential tool calls where each step filters a 50 KB JSON response before calling the next tool. Latency and input token spend are 8× over budget, and the model occasionally picks the wrong tool on Turn 1. Which architectural change best addresses both bottlenecks safely?",
+      "options": [
+        {
+          "text": "Enable parallel tool use with tool_choice: {\"type\": \"any\"} and run the generated glue code directly on the application host.",
+          "correct": false,
+          "why_wrong": "Parallel tool calls cannot chain sequential data dependencies, and executing LLM-generated code on the host exposes ambient network, filesystem, and secret access."
+        },
+        {
+          "text": "Use progressive tool disclosure (Select) or programmatic tool calling in a zero-trust V8 isolate with outbound RPC bindings.",
+          "correct": true
+        },
+        {
+          "text": "Keep all 45 tool schemas in every request but enable server-side compaction with a 20,000-token trigger so Turn-1 tool selection improves.",
+          "correct": false,
+          "why_wrong": "Compaction summarizes past conversation history after the trigger; it does not shrink Turn-1 tool-schema bloat or eliminate 15 sequential inference round-trips."
+        },
+        {
+          "text": "Switch the agent to Message Batches and set disable_parallel_tool_use: true so each tool call is billed at the 50% batch discount.",
+          "correct": false,
+          "why_wrong": "Message Batches is an asynchronous offline endpoint (up to 24 hours per batch), making it unsuitable for interactive multi-turn tool chaining."
+        }
+      ],
+      "explanation": "Exposing 45 MCP tools up front causes Turn-1 context confusion and bills ~90k schema tokens on every turn, while standard ReAct tool ping-pong pays a full inference round-trip for every intermediate filter step. Progressive tool disclosure (Select) scopes schemas to relevant tools, and programmatic tool calling (CodeMode) lets Claude write a typed script executed in a capability-restricted V8 isolate (no ambient network, filesystem, or env access; only explicit outbound RPC bindings) to chain calls and return only the final summary.",
+      "key_takeaway": "Fix Turn-1 tool bloat with progressive disclosure and collapse sequential tool ping-pong with programmatic tool calling in a V8 isolate."
+    },
+    {
+      "id": "claude-api-q-32",
+      "section": "Context & Caching",
+      "guide_anchor": "context-caching",
+      "question": "In a long-running coding agent, Turn 2 tool output contained a stale internal wiki page referencing a deprecated v1 endpoint. Even after server-side compaction (compact_20260112) summarizes the history at 150k tokens, the agent keeps generating code against the deprecated v1 endpoint, and its self-review step in the same conversation always approves the code. What fixes both issues?",
+      "options": [
+        {
+          "text": "Lower the compaction trigger to 50k tokens and append a stricter self-review rubric at the end of the same messages[] array.",
+          "correct": false,
+          "why_wrong": "Compacting earlier still summarizes the poisoned premise into the compaction block, and reviewing in the same messages[] array remains anchored to the builder's reasoning."
+        },
+        {
+          "text": "Truncate/reset history prior to the poisoned turn, and run review in a fresh messages[] call with only the spec and artifact.",
+          "correct": true
+        },
+        {
+          "text": "Switch to a 1-hour prompt cache TTL and set output_config.effort to \"max\" on the self-review turn in the existing conversation.",
+          "correct": false,
+          "why_wrong": "Cache TTL has no effect on context poisoning, and higher effort in the same polluted context still inherits the poisoned premise and confirmation bias."
+        },
+        {
+          "text": "Add a system-prompt output style midway through the session to switch the agent from Builder persona to Reviewer persona.",
+          "correct": false,
+          "why_wrong": "Mutating system mid-session invalidates both the system and messages prompt caches while leaving the poisoned history and builder turns inside messages[]."
+        }
+      ],
+      "explanation": "Context poisoning occurs when a hallucination or faulty premise in an early turn is referenced repeatedly; summarization/compaction preserves the poisoned premise in condensed form, so you must truncate or reset history prior to the bad turn. For verification, the Builder–Reviewer pattern requires a separate messages.create() call with a fresh messages[] array containing only the specification and candidate artifact so the reviewer is not biased by the builder's trajectory.",
+      "key_takeaway": "Compaction preserves context poisoning (reset prior to the bad turn), and Builder–Reviewer verification requires a fresh messages[] array."
+    }
+  ]
+}
