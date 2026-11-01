@@ -1,27 +1,28 @@
-# Machine Learning Certification Hub Repository
+# Machine Learning & Agentic AI Certification Hub
 
-This repository is your one-stop resource for acing machine learning certifications and mastering cloud-based machine learning tools. Whether you're a beginner or a seasoned pro, we've got you covered!
+Independent, open-source study guides, scenario-based practice quizzes, printable PDF study notes, infographics, slide decks, videos, and podcasts covering vendor-neutral AI foundations alongside **Anthropic Claude** and **Google Cloud** agentic AI platforms.
 
-You can access the website on [https://mbettan.github.io/machine-learning-cert/](https://mbettan.github.io/machine-learning-cert/) 
- 
-Here's what awaits you:
-- Comprehensive Study Notes: Concise, informative, and easy-to-understand notes covering a wide range of machine learning topics. Organized by certification and cloud provider for easy navigation.
-- Engaging Podcast Episodes (powered by NotebookLM): Dive deeper into key concepts with our podcast series. Each episode offers expert insights, real-world examples, and practical tips.
-- Cloud-Specific Content: Master popular machine learning cloud platforms. Gain the knowledge and skills to leverage their powerful machine learning tools.
-- Community-Driven Contributions: We encourage contributions from the machine learning community. Help us keep the content fresh, relevant, and comprehensive!
+Live hub: [https://mbettan.github.io/machine-learning-cert/](https://mbettan.github.io/machine-learning-cert/)
 
-Certifications:
-- Google Cloud Professional Machine Learning Engineer
-- Google Cloud Generative AI Leader
+## Target Certifications
 
-Join the learning community!
-- Found a mistake? Open an issue to let us know! We appreciate your help in keeping the information accurate.
-- Want to contribute? Submit a pull request with your additions, corrections, or improvements.
-- Have a question? Start a discussion to connect with other learners and share your insights.
+- **Anthropic — Claude Certified Architect – Foundations (`CCAR-F`)**: Agentic Architecture & Orchestration, Tool Design & MCP Integration, Claude Code Configuration & Workflows, Prompt Engineering & Structured Output, and Context Management & Reliability.
+- **Google Cloud — Professional Agentic Architect (`PAA`)**: Low-Code Agent Builders (Gemini Enterprise, CX Agent Studio), Coding Agents (Antigravity, IDD, Vibe Coding), Custom Agents (ADK, A2A, MCP, Agent Platform), AgentOps Evaluation & Deployment, and Agent Identity, Security & Governance.
 
-Happy learning!
+## What's Inside
+
+- **23 Deep-Dive Study Guides** (`docs/*.html` + Markdown sources in `foundation/`, `anthropic/`, and `google/`): Decision tables, cross-vendor architecture patterns, failure modes, minimal runnable code examples, and glossaries cited to official public documentation.
+- **700+ Original Practice Questions** (`docs/quiz.html` + `docs/quiz/*.json`): Scenario and troubleshooting items with per-distractor `why_wrong` rationales, key takeaways, deep-linked guide sections, and official documentation references.
+- **Printable PDF Study Notes & Multimedia**: Two-column reference PDFs alongside optional NotebookLM-generated podcasts, videos, slide decks, and infographics.
+- **LLM-Ready Index**: Full `llms.txt`, `llms-full.txt`, and `docs/md/*.md` mirrors generated from `docs/catalog.json`.
+
+## Contributing & Feedback
+
+- **Found an issue or outdated API detail?** Open an issue with the guide name and section link.
+- **Want to suggest an improvement?** Submit a pull request or start a discussion.
 
 ## Disclaimer
-The audio files, slide decks, and infographics are generated using NotebookLM, an AI model that may produce inaccurate, incomplete, or hallucinated information. Please double-check the content against reliable sources.
 
-The study notes are based on publicly available documentation and may not be completely up-to-date or reflect all perspectives.
+The audio files, video overviews, slide decks, and infographics are generated using NotebookLM, an AI system that may produce inaccurate, incomplete, or hallucinated information. Always verify details against the written study guides and official vendor documentation.
+
+This project is an independent study resource and is not affiliated with, endorsed by, or sponsored by Anthropic or Google. All study guides and practice questions are original works grounded in publicly available documentation.

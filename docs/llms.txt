@@ -1,38 +1,114 @@
 # Machine Learning Certification Hub
 
-> Open-source study hub created by Michaël Bettan for mastering AI/ML engineering and acing Google Cloud and Anthropic Claude certifications. Provides interactive HTML study guides, architecture diagrams, comparison tables, and self-assessment drills.
+> Independent, open-source study guides, practice quizzes, infographics, decks, videos and podcasts on vendor-neutral AI foundations and on Google Cloud and Anthropic Claude agentic AI products.
 
-## Overview
+Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.
 
-- **Site URL**: https://mbettan.github.io/machine-learning-cert/
-- **Author**: Michaël Bettan (https://www.linkedin.com/in/mbettan/ · https://github.com/mbettan)
-- **License**: Apache-2.0 (https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE)
+Every study guide is published as an interactive HTML page and as a plain Markdown copy under `md/`. Practice quizzes run at `quiz.html?topic=<slug>`. Content is grouped as Foundation (vendor-neutral, by track), Google and Anthropic.
 
-## Interactive Study Guides (HTML)
+- Site: https://mbettan.github.io/machine-learning-cert/
+- Author: Michaël Bettan (https://www.linkedin.com/in/mbettan/ · https://github.com/mbettan)
+- License: Apache-2.0 (https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE)
+- Full text of all guides: https://mbettan.github.io/machine-learning-cert/llms-full.txt
 
-- [Retrieval-Augmented Generation (RAG)](https://mbettan.github.io/machine-learning-cert/RAG.html): Context strategies (RAG vs. Long Context vs. Fine-Tuning vs. Prompt Caching vs. Live Tools), chunking, dense/sparse/hybrid retrieval (`BM25` + `HNSW`/`ScaNN`), Reciprocal Rank Fusion (`RRF`), cross-encoder reranking, untrusted context & refusal gates, Agentic RAG & memory, GraphRAG, Google Cloud RAG (Vertex AI Search, Vector Search, AlloyDB/pgvector), federated vs. ingested architectures, ACL security, semantic caching, and RAG triad evaluation (`RAGAS`).
-- [Agent Development Kit (ADK)](https://mbettan.github.io/machine-learning-cert/ADK.html): Open-source code-first framework for enterprise AI agents — `LlmAgent`, `Runner`, `SessionService`, deterministic workflow agents (`SequentialAgent`, `ParallelAgent`, `LoopAgent`), ADK 2.0 graph `Workflow` (`JoinNode`, `Event(route=...)`), multi-agent delegation (`sub_agents`, `AgentTool`, `RemoteA2aAgent`), scoped state & `VertexAiMemoryBankService`, `FunctionTool` & `output_schema`, `McpToolset` & A2A, progressive-disclosure `SkillToolset`, callback/plugin guardrails, HITL resilience (`ReflectAndRetryToolPlugin`), sandboxing (`GkeCodeExecutor`, Agent Identity), trajectory evaluation (`adk eval`, `adk conformance test`), and Agent Runtime / Cloud Run / GKE deployment.
-- [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html): Open JSON-RPC 2.0 standard connecting AI hosts/clients to external MCP servers via `Resources`, `Prompts`, `Tools`, `Sampling`, and `Roots` over `stdio` and Streamable HTTP/SSE transports.
-- [Agent2Agent (A2A) Protocol](https://mbettan.github.io/machine-learning-cert/A2A.html): Open multi-agent interoperability standard (Linux Foundation) covering `.well-known/agent-card.json` Agent Cards, capability discovery, Task lifecycle states, Artifacts, streaming (`SendStreamingMessage`), and push notifications.
-- [Machine Learning 101 (ML101)](https://mbettan.github.io/machine-learning-cert/ML101.html): Supervised, unsupervised, and reinforcement learning, regression vs. classification, loss functions (`MSE`, `MAE`, cross-entropy), gradient descent, overfitting/regularization (`L1`/`L2`, dropout), confusion matrix metrics (`Precision`, `Recall`, `F1`, `ROC-AUC`), and deep neural networks (`CNN`, `RNN`, `Transformer`).
-- [Generative AI 101 (GenAI101)](https://mbettan.github.io/machine-learning-cert/GenAI101.html): Foundation model lifecycle, tokenization, self-attention, decoding parameters (`temperature`, `top-k`, `top-p`), adaptation spectrum (prompting, RAG, PEFT/LoRA, RLHF/DPO), hallucination mitigation, and AI safety/governance.
-- [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html): Zero-shot/few-shot prompting, Chain-of-Thought (`CoT`), Self-Consistency, Tree-of-Thoughts (`ToT`), `ReAct`, system prompt architecture, structured JSON outputs, and prompt injection defenses.
-- [Google Foundational Models](https://mbettan.github.io/machine-learning-cert/Google.html): Gemini model family (Ultra, Pro, Flash, Nano), multimodal reasoning, Imagen, Chirp, Veo, Codey, Med-PaLM/AlphaFold specialized models, Vertex AI platform, and safety filters.
-- [Anthropic Foundational Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html): Core philosophy, the 3-Layer Claude Ecosystem Map (End-User Entry Points including Cowork GUI VM, Builder & Engineering Interfaces, and Cloud Delivery Routes), Constitutional AI (`RLAIF`, 4-tier priority hierarchy & holistic weighting), Mechanistic Interpretability (Sparse Autoencoders, Stream Algorithm, Persona Vectors, Behavioral Vaccination), and Responsible Scaling Policy (`RSP`, `ASL-2`/`ASL-3` CBRN triggers, Constitutional Classifiers, Two-Party Authorization).
-- [Claude Platform & API](https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html): Building on the Claude API — Messages API request shape, system-prompt altitude, the tool-use loop (`tool_use` / `tool_result`, `tool_use_id`, `is_error`, `tool_choice`), agent scaling & programmatic tool calling (`CodeMode` in V8 isolates), `stop_reason` handling (including `refusal`, `max_tokens`, `model_context_window_exceeded`), streaming events, structured outputs, adaptive thinking with `effort`, 4 context strategies (`Write / Select / Compress / Isolate`), context rot taxonomy (`poisoning / confusion / clash`), multi-agent context contracts, compaction and prompt caching, Message Batches, retriable vs. terminal errors, evals and cost levers, deployment platforms (Claude API, Amazon Bedrock, Google Cloud Vertex AI, Microsoft Foundry), data residency, model-ID pinning, and security for API apps.
-- [Claude Code & Agent SDK](https://mbettan.github.io/machine-learning-cert/ClaudeCode.html): Claude Code and the Claude Agent SDK — execution surfaces (worktrees, cloud web/mobile, `/teleport`), Deep Agent 4-pillar architecture, permission modes and allow/ask/deny rules, settings and `CLAUDE.md` memory precedence, context rot & `/clear` vs `/compact`, `/output-style` & `/statusline`, Spec-Driven Development (`SPEC.md` + `TodoWrite`), hooks (`PreToolUse`, exit-code semantics), subagents & wave scaling, skills (`SKILL.md`, 3-level progressive disclosure), plugins and marketplaces, MCP configuration (`.mcp.json` scopes, env expansion), headless CI (`claude -p --bare`, `/install-github-app`, `/rewind` checkpointing), team rollout with managed settings, Agent SDK `settingSources`, and Managed Agents.
-- [Vibe Coding & Swarm Prototyping](https://mbettan.github.io/machine-learning-cert/vibecoding.html): Conversational AI-assisted software development (Vibe Coding) vs. parallel multi-agent exploration (Swarm Prototyping), risk profiles, verification gates, and production handoff.
-- [Instruction-Driven Development (IDD / SDD)](https://mbettan.github.io/machine-learning-cert/idd.html): Specification-Driven Development workflow where living markdown specs (`SPEC.md`), architecture rules, and automated acceptance verification drive deterministic AI code generation.
+## Foundation: AI Fundamentals
 
-## Interactive Practice Quizzes
+- [ML 101](https://mbettan.github.io/machine-learning-cert/ML101.html): ML fundamentals: problem types, data prep and leakage, over/underfitting, evaluation metrics, serving and monitoring, neural networks. — Markdown: [ML101.md](https://mbettan.github.io/machine-learning-cert/md/ML101.md) · Practice quiz: [quiz.html?topic=ml101](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=ml101) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
+- [Generative AI 101](https://mbettan.github.io/machine-learning-cert/GenAI101.html): GenAI 101 v3.0: Sparse MoE, LLM vs. SLM & MaaS vs. VPC selection, System 2 reasoning (thinking_level & Adaptive Thinking), L0–L4 agents & 5-Layer Protocol Stack. — Markdown: [GenAI101.md](https://mbettan.github.io/machine-learning-cert/md/GenAI101.md) · Practice quiz: [quiz.html?topic=genai101](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=genai101) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
+- [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html): Explicit criteria & false-positive control, contrast few-shot pairs, Adaptive Thinking & effort, strict JSON schemas & tool_choice, validation-retry loops, batch SLAs & multi-pass review. — Markdown: [PromptEngineering.md](https://mbettan.github.io/machine-learning-cert/md/PromptEngineering.md) · Practice quiz: [quiz.html?topic=prompt-engineering](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=prompt-engineering) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
 
-- [Retrieval-Augmented Generation (RAG) Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=rag): 22 scenario-based multiple-choice questions with instant distractor diagnostics and study guide deep links.
-- [Agent Development Kit (ADK) Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adk): 25 scenario-based multiple-choice questions covering all 16 ADK sections with instant distractor diagnostics and study guide deep links.
-- [Claude Platform & API Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-api): 32 scenario-based multiple-choice questions covering all 14 Claude API sections with instant distractor diagnostics and study guide deep links.
-- [Claude Code & Agent SDK Practice Quiz](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-code): 32 scenario-based multiple-choice questions covering all 13 Claude Code sections with instant distractor diagnostics and study guide deep links.
+## Foundation: Agent Architecture & Protocols
 
-## Links
+- [Agentic Design Patterns](https://mbettan.github.io/machine-learning-cert/ADP.html): Core agent patterns: prompt chaining, routing, parallelization, reflection, tool use, planning, multi-agent orchestration and human-in-the-loop. — Markdown: [ADP.md](https://mbettan.github.io/machine-learning-cert/md/ADP.md) · Practice quiz: [quiz.html?topic=adp](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adp) · Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
+- [Context Engineering & Reliability](https://mbettan.github.io/machine-learning-cert/ContextEngineering.html): Context budgets, pinned facts, compaction, sessions vs. state vs. memory, subagent briefs, structured errors, validation loops, escalation, calibrated review and provenance. — Markdown: [ContextEngineering.md](https://mbettan.github.io/machine-learning-cert/md/ContextEngineering.md) · Practice quiz: [quiz.html?topic=context-engineering](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=context-engineering) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
+- [Agent Development Kit (ADK)](https://mbettan.github.io/machine-learning-cert/ADK.html): Multi-language agent framework (Python, TS, Go, Java, Kotlin): LlmAgent, ManagedAgent (Interactions API), ADK 2.0 Workflows, Gemini 4 Argon routing, MCP/A2A, Skills, eval, and Agent Runtime. — Markdown: [ADK.md](https://mbettan.github.io/machine-learning-cert/md/ADK.md) · Practice quiz: [quiz.html?topic=adk](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adk) · Exam relevance: Google Professional Agentic Architect (core)
+- [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html): Vendor-neutral MCP guide: primitives, resource catalogs, tool descriptions, structured isError handling, transports, server scoping, OAuth and security. — Markdown: [MCP.md](https://mbettan.github.io/machine-learning-cert/md/MCP.md) · Practice quiz: [quiz.html?topic=mcp](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=mcp) · Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
+- [Agent2Agent (A2A)](https://mbettan.github.io/machine-learning-cert/A2A.html): Open A2A v1.0 & agentic interoperability: Agent Cards, task lifecycle, AgentTool vs A2A boundaries, A2UI/AG-UI/MCP UI generative UI, and AP2/x402 commerce. — Markdown: [A2A.md](https://mbettan.github.io/machine-learning-cert/md/A2A.md) · Practice quiz: [quiz.html?topic=a2a](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=a2a) · Exam relevance: Google Professional Agentic Architect (core)
 
-- [Landing Page & Interactive Resource Viewers](https://mbettan.github.io/machine-learning-cert/)
-- [Extended Curriculum Syllabus (`llms-full.txt`)](https://mbettan.github.io/machine-learning-cert/llms-full.txt)
+## Foundation: Knowledge & Retrieval
+
+- [Retrieval-Augmented Generation (RAG)](https://mbettan.github.io/machine-learning-cert/RAG.html): Chunking, dense/sparse/hybrid retrieval, reranking, agentic RAG, GraphRAG, access control, caching and RAG evaluation. — Markdown: [RAG.md](https://mbettan.github.io/machine-learning-cert/md/RAG.md) · Practice quiz: [quiz.html?topic=rag](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=rag) · Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
+- [Knowledge Engineering](https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html): Turn raw enterprise data into clean, traceable, permission-aware agent knowledge: parsing, chunking, provenance, hybrid & graph indexes, typed tools. — Markdown: [KnowledgeEngineering.md](https://mbettan.github.io/machine-learning-cert/md/KnowledgeEngineering.md) · Practice quiz: [quiz.html?topic=knowledge-engineering](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=knowledge-engineering) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
+
+## Foundation: AgentOps & Responsible AI
+
+- [AgentOps: Evals, Observability & Cost](https://mbettan.github.io/machine-learning-cert/AgentOps.html): 3-tier evals & autoraters, pass@k vs. pass^k, OpenTelemetry gen_ai.* tracing, shadow/A/B rollouts, feedback flywheels, runtimes & heavy-tail FinOps. — Markdown: [AgentOps.md](https://mbettan.github.io/machine-learning-cert/md/AgentOps.md) · Practice quiz: [quiz.html?topic=agent-ops](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=agent-ops) · Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
+- [Responsible AI: Guardrails, Safety & Governance](https://mbettan.github.io/machine-learning-cert/ResponsibleAI.html): Alignment vs. application guardrails, prompt-injection defenses, human-in-the-loop routing, fairness audits, privacy and governance controls. — Markdown: [ResponsibleAI.md](https://mbettan.github.io/machine-learning-cert/md/ResponsibleAI.md) · Practice quiz: [quiz.html?topic=responsible-ai](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=responsible-ai) · Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
+
+## Foundation: Agentic Coding Practices
+
+- [Vibe Coding](https://mbettan.github.io/machine-learning-cert/vibecoding.html): Vibe coding spectrum, swarm prototyping & worktrees, Claude Code/Antigravity/Cloud Workstations/GKE sandboxes, and PoC-verified security remediation. — Markdown: [vibecoding.md](https://mbettan.github.io/machine-learning-cert/md/vibecoding.md) · Practice quiz: [quiz.html?topic=vibe-coding](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=vibe-coding) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
+- [Spec-Driven Development (IDD)](https://mbettan.github.io/machine-learning-cert/idd.html): Spec-first engineering (IDD/SDD): 6-phase workflow, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude hooks & agents-cli eval gates. — Markdown: [idd.md](https://mbettan.github.io/machine-learning-cert/md/idd.md) · Practice quiz: [quiz.html?topic=idd](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=idd) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
+
+## Google
+
+Google models and Google Cloud agent products.
+
+- [Gemini & Google Models](https://mbettan.github.io/machine-learning-cert/Google.html): Gemini 4 Argon, Gemini 3.8 Flash/Live/TTS, Model Garden MaaS vs self-hosted, agentic routing, Interactions API, Gemma 4, Nano Banana 2.1, Veo 3.1 & SynthID. — Markdown: [Google.md](https://mbettan.github.io/machine-learning-cert/md/Google.md) · Practice quiz: [quiz.html?topic=google](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=google) · Exam relevance: Google Professional Agentic Architect (supporting)
+- [Gemini Enterprise & Low-Code Agents](https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html): Gemini Enterprise (ex-Agentspace): editions, grounding, Workflow Builder, ADK/A2A registration, governance, CX Agent Studio flows & handoff, low vs pro-code. — Markdown: [GeminiEnterprise.md](https://mbettan.github.io/machine-learning-cert/md/GeminiEnterprise.md) · Practice quiz: [quiz.html?topic=gemini-enterprise](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=gemini-enterprise) · Exam relevance: Google Professional Agentic Architect (core)
+- [Antigravity & Agents CLI](https://mbettan.github.io/machine-learning-cert/Antigravity.html): Google Antigravity (App, agy CLI, IDE, SDK): customizations, subagents, sandboxing, Cloud Workstations and Agents CLI to build, eval and deploy ADK agents. — Markdown: [Antigravity.md](https://mbettan.github.io/machine-learning-cert/md/Antigravity.md) · Practice quiz: [quiz.html?topic=antigravity](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=antigravity) · Exam relevance: Google Professional Agentic Architect (core)
+- [Agent Platform: Build, Retrieve & Run](https://mbettan.github.io/machine-learning-cert/AgentPlatform.html): Gemini Enterprise Agent Platform: Managed Agents API, Agent Runtime, Sessions, Memory Bank, retrieval, 2-step simulation, observability & prompt optimization. — Markdown: [AgentPlatform.md](https://mbettan.github.io/machine-learning-cert/md/AgentPlatform.md) · Practice quiz: [quiz.html?topic=agent-platform](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=agent-platform) · Exam relevance: Google Professional Agentic Architect (core)
+- [Agent Platform: Identity, Security & Governance](https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html): Secure and govern Google Cloud agents: Agent Identity, auth manager, PAB, Agent Gateway & Registry, Model Armor, VPC-SC, CMEK, audit logs and HITL. — Markdown: [AgentPlatformSecurity.md](https://mbettan.github.io/machine-learning-cert/md/AgentPlatformSecurity.md) · Practice quiz: [quiz.html?topic=agent-platform-security](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=agent-platform-security) · Exam relevance: Google Professional Agentic Architect (core)
+
+## Anthropic
+
+Claude models, the Claude API, Claude Code and the Claude Agent SDK.
+
+- [Anthropic & Claude Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html): Claude 4.6/4.7+ family & ecosystem, Adaptive Thinking (effort tiers), Constitutional AI (RLAIF), mechanistic interpretability (SAEs) & RSP ASL-3. — Markdown: [Anthropic.md](https://mbettan.github.io/machine-learning-cert/md/Anthropic.md) · Practice quiz: [quiz.html?topic=anthropic](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=anthropic) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
+- [Claude Platform & API](https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html): Production Claude API engineering: tool use, structured outputs and schema design, validation loops, caching, batches, review and calibration. — Markdown: [ClaudeAPI.md](https://mbettan.github.io/machine-learning-cert/md/ClaudeAPI.md) · Practice quiz: [quiz.html?topic=claude-api](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-api) · Exam relevance: Claude Certified Architect – Foundations (core)
+- [Claude Code](https://mbettan.github.io/machine-learning-cert/ClaudeCode.html): Claude Code in depth: permissions, CLAUDE.md hierarchy, hooks, subagents, skills, slash commands, plan mode, built-in tools, MCP, CI review and Vertex AI. — Markdown: [ClaudeCode.md](https://mbettan.github.io/machine-learning-cert/md/ClaudeCode.md) · Practice quiz: [quiz.html?topic=claude-code](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-code) · Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
+- [Claude Agent SDK](https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html): Claude Agent SDK and agent orchestration: loops, stop_reason, subagents, hooks, sessions, tool errors, escalation, provenance and Managed Agents. — Markdown: [ClaudeAgentSDK.md](https://mbettan.github.io/machine-learning-cert/md/ClaudeAgentSDK.md) · Practice quiz: [quiz.html?topic=claude-agent-sdk](https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-agent-sdk) · Exam relevance: Claude Certified Architect – Foundations (core)
+
+## Exam mapping: Google Cloud Professional Agentic Architect (PAA)
+
+Official exam page: https://cloud.google.com/learn/certification/agentic-architect
+
+- [Agentic Design Patterns](https://mbettan.github.io/machine-learning-cert/ADP.html): core
+- [Agent Development Kit (ADK)](https://mbettan.github.io/machine-learning-cert/ADK.html): core
+- [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html): core
+- [Agent2Agent (A2A)](https://mbettan.github.io/machine-learning-cert/A2A.html): core
+- [Retrieval-Augmented Generation (RAG)](https://mbettan.github.io/machine-learning-cert/RAG.html): core
+- [AgentOps: Evals, Observability & Cost](https://mbettan.github.io/machine-learning-cert/AgentOps.html): core
+- [Responsible AI: Guardrails, Safety & Governance](https://mbettan.github.io/machine-learning-cert/ResponsibleAI.html): core
+- [Gemini Enterprise & Low-Code Agents](https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html): core
+- [Antigravity & Agents CLI](https://mbettan.github.io/machine-learning-cert/Antigravity.html): core
+- [Agent Platform: Build, Retrieve & Run](https://mbettan.github.io/machine-learning-cert/AgentPlatform.html): core
+- [Agent Platform: Identity, Security & Governance](https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html): core
+- [ML 101](https://mbettan.github.io/machine-learning-cert/ML101.html): supporting
+- [Generative AI 101](https://mbettan.github.io/machine-learning-cert/GenAI101.html): supporting
+- [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html): supporting
+- [Context Engineering & Reliability](https://mbettan.github.io/machine-learning-cert/ContextEngineering.html): supporting
+- [Knowledge Engineering](https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html): supporting
+- [Vibe Coding](https://mbettan.github.io/machine-learning-cert/vibecoding.html): supporting
+- [Spec-Driven Development (IDD)](https://mbettan.github.io/machine-learning-cert/idd.html): supporting
+- [Gemini & Google Models](https://mbettan.github.io/machine-learning-cert/Google.html): supporting
+- [Anthropic & Claude Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html): supporting
+- [Claude Code](https://mbettan.github.io/machine-learning-cert/ClaudeCode.html): supporting
+
+## Exam mapping: Claude Certified Architect – Foundations (CCAR-F)
+
+Official exam page: https://anthropic-partners.skilljar.com/claude-certified-architect-foundations-certification
+
+- [Prompt Engineering](https://mbettan.github.io/machine-learning-cert/PromptEngineering.html): core
+- [Agentic Design Patterns](https://mbettan.github.io/machine-learning-cert/ADP.html): core
+- [Context Engineering & Reliability](https://mbettan.github.io/machine-learning-cert/ContextEngineering.html): core
+- [Model Context Protocol (MCP)](https://mbettan.github.io/machine-learning-cert/MCP.html): core
+- [Retrieval-Augmented Generation (RAG)](https://mbettan.github.io/machine-learning-cert/RAG.html): core
+- [AgentOps: Evals, Observability & Cost](https://mbettan.github.io/machine-learning-cert/AgentOps.html): core
+- [Responsible AI: Guardrails, Safety & Governance](https://mbettan.github.io/machine-learning-cert/ResponsibleAI.html): core
+- [Anthropic & Claude Models](https://mbettan.github.io/machine-learning-cert/Anthropic.html): core
+- [Claude Platform & API](https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html): core
+- [Claude Code](https://mbettan.github.io/machine-learning-cert/ClaudeCode.html): core
+- [Claude Agent SDK](https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html): core
+- [ML 101](https://mbettan.github.io/machine-learning-cert/ML101.html): supporting
+- [Generative AI 101](https://mbettan.github.io/machine-learning-cert/GenAI101.html): supporting
+- [Knowledge Engineering](https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html): supporting
+- [Vibe Coding](https://mbettan.github.io/machine-learning-cert/vibecoding.html): supporting
+- [Spec-Driven Development (IDD)](https://mbettan.github.io/machine-learning-cert/idd.html): supporting
+
+## Optional
+
+- [Full text of every guide (llms-full.txt)](https://mbettan.github.io/machine-learning-cert/llms-full.txt): concatenated Markdown sources
+- [Card catalog (catalog.json)](https://mbettan.github.io/machine-learning-cert/catalog.json): machine-readable list of guides, tracks, exam mapping and assets
 - [Sitemap](https://mbettan.github.io/machine-learning-cert/sitemap.xml)
+- [Hub landing page](https://mbettan.github.io/machine-learning-cert/)

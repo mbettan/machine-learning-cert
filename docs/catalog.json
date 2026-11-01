@@ -1,0 +1,476 @@
+{
+  "$comment": "Single source of truth for the hub cards, llms.txt, llms-full.txt, md/ copies, sitemap and JSON-LD. Rebuild with: python3 scripts/build_site_meta.py",
+  "site": {
+    "name": "Machine Learning Certification Hub",
+    "base_url": "https://mbettan.github.io/machine-learning-cert/",
+    "raw_base": "https://raw.githubusercontent.com/mbettan/machine-learning-cert/main/",
+    "media_base": "https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/",
+    "author": "Michaël Bettan",
+    "summary": "Independent, open-source study guides, practice quizzes, infographics, decks, videos and podcasts on vendor-neutral AI foundations and on Google Cloud and Anthropic Claude agentic AI products."
+  },
+  "owners": [
+    {
+      "id": "foundation",
+      "label": "Foundation",
+      "description": "Vendor-neutral patterns, open standards and open-source frameworks."
+    },
+    {
+      "id": "google",
+      "label": "Google",
+      "description": "Google models and Google Cloud agent products."
+    },
+    {
+      "id": "anthropic",
+      "label": "Anthropic",
+      "description": "Claude models, the Claude API, Claude Code and the Claude Agent SDK."
+    }
+  ],
+  "tracks": [
+    {
+      "id": "ai-fundamentals",
+      "label": "AI Fundamentals"
+    },
+    {
+      "id": "agent-architecture",
+      "label": "Agent Architecture & Protocols"
+    },
+    {
+      "id": "knowledge-retrieval",
+      "label": "Knowledge & Retrieval"
+    },
+    {
+      "id": "agentops-responsible-ai",
+      "label": "AgentOps & Responsible AI"
+    },
+    {
+      "id": "agentic-coding",
+      "label": "Agentic Coding Practices"
+    }
+  ],
+  "certs": [
+    {
+      "id": "agentic-architect",
+      "label": "Google Professional Agentic Architect",
+      "full_name": "Google Cloud Professional Agentic Architect (PAA)",
+      "vendor": "google",
+      "official_url": "https://cloud.google.com/learn/certification/agentic-architect"
+    },
+    {
+      "id": "ccar-f",
+      "label": "Claude Certified Architect – Foundations",
+      "full_name": "Claude Certified Architect – Foundations (CCAR-F)",
+      "vendor": "anthropic",
+      "official_url": "https://anthropic-partners.skilljar.com/claude-certified-architect-foundations-certification"
+    }
+  ],
+  "entries": [
+    {
+      "page": "ML101.html",
+      "title": "ML 101",
+      "description": "ML fundamentals: problem types, data prep and leakage, over/underfitting, evaluation metrics, serving and monitoring, neural networks.",
+      "owner": "foundation",
+      "track": "ai-fundamentals",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "supporting"
+      },
+      "quiz": "ml101",
+      "source_md": "foundation/ML101-v2.0.md",
+      "assets": {
+        "notes": "foundation/ML101-v2.0.pdf",
+        "infographic": "foundation/ML101-v1.1.png",
+        "deck": "foundation/ML101-deck-v1.1.pdf",
+        "video": "https://youtu.be/siV0RMdK_DA",
+        "audio": "foundation/ML101-v1.1.mp3"
+      },
+      "order": 10
+    },
+    {
+      "page": "GenAI101.html",
+      "title": "Generative AI 101",
+      "description": "GenAI 101 v3.0: Sparse MoE, LLM vs. SLM & MaaS vs. VPC selection, System 2 reasoning (thinking_level & Adaptive Thinking), L0–L4 agents & 5-Layer Protocol Stack.",
+      "owner": "foundation",
+      "track": "ai-fundamentals",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "supporting"
+      },
+      "quiz": "genai101",
+      "source_md": "foundation/GenAI101-v3.0.md",
+      "assets": {
+        "notes": "foundation/GenAI101-v2.0.pdf",
+        "infographic": "foundation/GenAI101-v1.2.png",
+        "deck": "foundation/GenAI101-deck-v1.2.pdf",
+        "video": "https://youtu.be/pQvnEq6ESok",
+        "audio": "foundation/GenAI-v1.2.mp3"
+      },
+      "order": 20
+    },
+    {
+      "page": "PromptEngineering.html",
+      "title": "Prompt Engineering",
+      "description": "Explicit criteria & false-positive control, contrast few-shot pairs, Adaptive Thinking & effort, strict JSON schemas & tool_choice, validation-retry loops, batch SLAs & multi-pass review.",
+      "owner": "foundation",
+      "track": "ai-fundamentals",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "core"
+      },
+      "quiz": "prompt-engineering",
+      "source_md": "foundation/PromptEngineering-v3.0.md",
+      "assets": {
+        "notes": "foundation/PromptEngineering-v3.0.pdf",
+        "infographic": "foundation/PromptEngineering-v1.2.png",
+        "deck": "foundation/PromptEngineering-deck-v1.2.pdf",
+        "video": "https://youtu.be/knHPmfV-YOw",
+        "audio": "foundation/PromptEngineering-v1.2.mp3"
+      },
+      "order": 30
+    },
+    {
+      "page": "ADP.html",
+      "title": "Agentic Design Patterns",
+      "description": "Core agent patterns: prompt chaining, routing, parallelization, reflection, tool use, planning, multi-agent orchestration and human-in-the-loop.",
+      "owner": "foundation",
+      "track": "agent-architecture",
+      "certs": {
+        "agentic-architect": "core",
+        "ccar-f": "core"
+      },
+      "quiz": "adp",
+      "source_md": "foundation/ADP-v1.0.md",
+      "assets": {
+        "notes": "foundation/ADP-v1.0.pdf"
+      },
+      "order": 40
+    },
+    {
+      "page": "ContextEngineering.html",
+      "title": "Context Engineering & Reliability",
+      "description": "Context budgets, pinned facts, compaction, sessions vs. state vs. memory, subagent briefs, structured errors, validation loops, escalation, calibrated review and provenance.",
+      "owner": "foundation",
+      "track": "agent-architecture",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "core"
+      },
+      "quiz": "context-engineering",
+      "source_md": "foundation/ContextEngineering-v1.0.md",
+      "assets": {
+        "notes": "foundation/ContextEngineering-v1.0.pdf"
+      },
+      "order": 45
+    },
+    {
+      "page": "ADK.html",
+      "title": "Agent Development Kit (ADK)",
+      "description": "Multi-language agent framework (Python, TS, Go, Java, Kotlin): LlmAgent, ManagedAgent (Interactions API), ADK 2.0 Workflows, Gemini 4 Argon routing, MCP/A2A, Skills, eval, and Agent Runtime.",
+      "owner": "foundation",
+      "track": "agent-architecture",
+      "certs": {
+        "agentic-architect": "core"
+      },
+      "badge": "Open-source",
+      "quiz": "adk",
+      "source_md": "foundation/ADK-v2.0.md",
+      "assets": {
+        "notes": "foundation/ADK-v1.0.pdf",
+        "infographic": "foundation/ADK-v1.0.png",
+        "deck": "foundation/ADK-deck-v1.0.pdf",
+        "video": "foundation/ADK-v1.0.mp4",
+        "audio": "foundation/ADK-v1.0.mp3"
+      },
+      "order": 50
+    },
+    {
+      "page": "MCP.html",
+      "title": "Model Context Protocol (MCP)",
+      "description": "Vendor-neutral MCP guide: primitives, resource catalogs, tool descriptions, structured isError handling, transports, server scoping, OAuth and security.",
+      "owner": "foundation",
+      "track": "agent-architecture",
+      "certs": {
+        "agentic-architect": "core",
+        "ccar-f": "core"
+      },
+      "quiz": "mcp",
+      "source_md": "foundation/MCP-v2.0.md",
+      "assets": {
+        "notes": "foundation/MCP-v2.0.pdf",
+        "infographic": "foundation/MCP-v1.1.png",
+        "deck": "foundation/MCP-deck-v1.1.pdf",
+        "video": "https://youtu.be/xTFwnaoX1U0",
+        "audio": "foundation/MCP-v1.1.mp3"
+      },
+      "order": 60
+    },
+    {
+      "page": "A2A.html",
+      "title": "Agent2Agent (A2A)",
+      "description": "Open A2A v1.0 & agentic interoperability: Agent Cards, task lifecycle, AgentTool vs A2A boundaries, A2UI/AG-UI/MCP UI generative UI, and AP2/x402 commerce.",
+      "owner": "foundation",
+      "track": "agent-architecture",
+      "certs": {
+        "agentic-architect": "core"
+      },
+      "quiz": "a2a",
+      "source_md": "foundation/A2A-v2.0.md",
+      "assets": {
+        "notes": "foundation/A2A-v1.0.pdf",
+        "infographic": "foundation/A2A-v1.1.png",
+        "deck": "foundation/A2A-deck-v1.1.pdf",
+        "video": "https://youtu.be/CKI288L-EPg",
+        "audio": "foundation/A2A-v1.1.mp3"
+      },
+      "order": 70
+    },
+    {
+      "page": "RAG.html",
+      "title": "Retrieval-Augmented Generation (RAG)",
+      "description": "Chunking, dense/sparse/hybrid retrieval, reranking, agentic RAG, GraphRAG, access control, caching and RAG evaluation.",
+      "owner": "foundation",
+      "track": "knowledge-retrieval",
+      "certs": {
+        "agentic-architect": "core",
+        "ccar-f": "core"
+      },
+      "quiz": "rag",
+      "source_md": "foundation/RAG-v3.0.md",
+      "assets": {
+        "notes": "foundation/RAG-v3.0.pdf",
+        "infographic": "foundation/RAG-v3.0.png",
+        "deck": "foundation/RAG-deck-v3.0.pdf",
+        "video": "foundation/RAG-v3.0.mp4",
+        "audio": "foundation/RAG-v3.0.mp3"
+      },
+      "order": 80
+    },
+    {
+      "page": "KnowledgeEngineering.html",
+      "title": "Knowledge Engineering",
+      "description": "Turn raw enterprise data into clean, traceable, permission-aware agent knowledge: parsing, chunking, provenance, hybrid & graph indexes, typed tools.",
+      "owner": "foundation",
+      "track": "knowledge-retrieval",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "supporting"
+      },
+      "quiz": "knowledge-engineering",
+      "source_md": "foundation/KnowledgeEngineering-v1.0.md",
+      "assets": {},
+      "order": 90
+    },
+    {
+      "page": "AgentOps.html",
+      "title": "AgentOps: Evals, Observability & Cost",
+      "description": "3-tier evals & autoraters, pass@k vs. pass^k, OpenTelemetry gen_ai.* tracing, shadow/A/B rollouts, feedback flywheels, runtimes & heavy-tail FinOps.",
+      "owner": "foundation",
+      "track": "agentops-responsible-ai",
+      "certs": {
+        "agentic-architect": "core",
+        "ccar-f": "core"
+      },
+      "quiz": "agent-ops",
+      "source_md": "foundation/AgentOps-v2.0.md",
+      "assets": {
+        "notes": "foundation/AgentOps-v1.0.pdf"
+      },
+      "order": 100
+    },
+    {
+      "page": "ResponsibleAI.html",
+      "title": "Responsible AI: Guardrails, Safety & Governance",
+      "description": "Alignment vs. application guardrails, prompt-injection defenses, human-in-the-loop routing, fairness audits, privacy and governance controls.",
+      "owner": "foundation",
+      "track": "agentops-responsible-ai",
+      "certs": {
+        "agentic-architect": "core",
+        "ccar-f": "core"
+      },
+      "quiz": "responsible-ai",
+      "source_md": "foundation/ResponsibleAI-v1.0.md",
+      "assets": {
+        "notes": "foundation/ResponsibleAI-v1.0.pdf"
+      },
+      "order": 110
+    },
+    {
+      "page": "vibecoding.html",
+      "title": "Vibe Coding",
+      "description": "Vibe coding spectrum, swarm prototyping & worktrees, Claude Code/Antigravity/Cloud Workstations/GKE sandboxes, and PoC-verified security remediation.",
+      "owner": "foundation",
+      "track": "agentic-coding",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "supporting"
+      },
+      "quiz": "vibe-coding",
+      "source_md": "foundation/VibeCoding-v3.0.md",
+      "assets": {
+        "notes": "foundation/VibeCoding-v2.0.pdf"
+      },
+      "order": 120
+    },
+    {
+      "page": "idd.html",
+      "title": "Spec-Driven Development (IDD)",
+      "description": "Spec-first engineering (IDD/SDD): 6-phase workflow, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude hooks & agents-cli eval gates.",
+      "owner": "foundation",
+      "track": "agentic-coding",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "supporting"
+      },
+      "quiz": "idd",
+      "source_md": "foundation/IDD-v3.0.md",
+      "assets": {
+        "notes": "foundation/IDD-v2.0.pdf"
+      },
+      "order": 130
+    },
+    {
+      "page": "Google.html",
+      "title": "Gemini & Google Models",
+      "description": "Gemini 4 Argon, Gemini 3.8 Flash/Live/TTS, Model Garden MaaS vs self-hosted, agentic routing, Interactions API, Gemma 4, Nano Banana 2.1, Veo 3.1 & SynthID.",
+      "owner": "google",
+      "certs": {
+        "agentic-architect": "supporting"
+      },
+      "quiz": "google",
+      "source_md": "google/Google-v3.0.md",
+      "assets": {
+        "notes": "google/Google-v2.0.pdf",
+        "infographic": "google/Google-Foundational-models-v1.1.png",
+        "deck": "google/Google-Foundational-models-deck-v1.1.pdf",
+        "video": "https://youtu.be/xqAqfWlWf70",
+        "audio": "google/Google-Foundational-models-v1.0.mp3"
+      },
+      "order": 140
+    },
+    {
+      "page": "GeminiEnterprise.html",
+      "title": "Gemini Enterprise & Low-Code Agents",
+      "description": "Gemini Enterprise (ex-Agentspace): editions, grounding, Workflow Builder, ADK/A2A registration, governance, CX Agent Studio flows & handoff, low vs pro-code.",
+      "owner": "google",
+      "certs": {
+        "agentic-architect": "core"
+      },
+      "quiz": "gemini-enterprise",
+      "source_md": "google/GeminiEnterprise-v1.0.md",
+      "assets": {},
+      "order": 150
+    },
+    {
+      "page": "Antigravity.html",
+      "title": "Antigravity & Agents CLI",
+      "description": "Google Antigravity (App, agy CLI, IDE, SDK): customizations, subagents, sandboxing, Cloud Workstations and Agents CLI to build, eval and deploy ADK agents.",
+      "owner": "google",
+      "certs": {
+        "agentic-architect": "core"
+      },
+      "quiz": "antigravity",
+      "source_md": "google/Antigravity-v1.0.md",
+      "assets": {},
+      "order": 160
+    },
+    {
+      "page": "AgentPlatform.html",
+      "title": "Agent Platform: Build, Retrieve & Run",
+      "description": "Gemini Enterprise Agent Platform: Managed Agents API, Agent Runtime, Sessions, Memory Bank, retrieval, 2-step simulation, observability & prompt optimization.",
+      "owner": "google",
+      "certs": {
+        "agentic-architect": "core"
+      },
+      "quiz": "agent-platform",
+      "source_md": "google/AgentPlatform-v2.0.md",
+      "assets": {},
+      "order": 170
+    },
+    {
+      "page": "AgentPlatformSecurity.html",
+      "title": "Agent Platform: Identity, Security & Governance",
+      "description": "Secure and govern Google Cloud agents: Agent Identity, auth manager, PAB, Agent Gateway & Registry, Model Armor, VPC-SC, CMEK, audit logs and HITL.",
+      "owner": "google",
+      "certs": {
+        "agentic-architect": "core"
+      },
+      "quiz": "agent-platform-security",
+      "source_md": "google/AgentPlatformSecurity-v1.0.md",
+      "assets": {},
+      "order": 180
+    },
+    {
+      "page": "Anthropic.html",
+      "title": "Anthropic & Claude Models",
+      "description": "Claude 4.6/4.7+ family & ecosystem, Adaptive Thinking (effort tiers), Constitutional AI (RLAIF), mechanistic interpretability (SAEs) & RSP ASL-3.",
+      "owner": "anthropic",
+      "certs": {
+        "ccar-f": "core",
+        "agentic-architect": "supporting"
+      },
+      "quiz": "anthropic",
+      "source_md": "anthropic/Anthropic-v2.0.md",
+      "assets": {
+        "notes": "anthropic/Anthropic-v2.0.pdf",
+        "infographic": "anthropic/Anthropic-foundational-models-v1.1.png",
+        "deck": "anthropic/Anthropic-foundational-models-deck-v1.1.pdf",
+        "video": "https://youtu.be/5JYaDEUmeOY",
+        "audio": "anthropic/Anthropic-foundational-models-v1.0.mp3"
+      },
+      "order": 190
+    },
+    {
+      "page": "ClaudeAPI.html",
+      "title": "Claude Platform & API",
+      "description": "Production Claude API engineering: tool use, structured outputs and schema design, validation loops, caching, batches, review and calibration.",
+      "owner": "anthropic",
+      "certs": {
+        "ccar-f": "core"
+      },
+      "quiz": "claude-api",
+      "source_md": "anthropic/ClaudeAPI-v1.0.md",
+      "assets": {
+        "notes": "anthropic/ClaudeAPI-v1.0.pdf",
+        "infographic": "anthropic/ClaudeAPI-v1.0.png",
+        "deck": "anthropic/ClaudeAPI-deck-v1.0.pdf",
+        "video": "anthropic/ClaudeAPI-v1.0.mp4",
+        "audio": "anthropic/ClaudeAPI-v1.0.mp3"
+      },
+      "order": 200
+    },
+    {
+      "page": "ClaudeCode.html",
+      "title": "Claude Code",
+      "description": "Claude Code in depth: permissions, CLAUDE.md hierarchy, hooks, subagents, skills, slash commands, plan mode, built-in tools, MCP, CI review and Vertex AI.",
+      "owner": "anthropic",
+      "certs": {
+        "agentic-architect": "supporting",
+        "ccar-f": "core"
+      },
+      "quiz": "claude-code",
+      "source_md": "anthropic/ClaudeCode-v1.0.md",
+      "assets": {
+        "notes": "anthropic/ClaudeCode-v1.0.pdf",
+        "infographic": "anthropic/ClaudeCode-v1.0.png",
+        "deck": "anthropic/ClaudeCode-deck-v1.0.pdf",
+        "video": "anthropic/ClaudeCode-v1.0.mp4",
+        "audio": "anthropic/ClaudeCode-v1.0.mp3"
+      },
+      "order": 210
+    },
+    {
+      "page": "ClaudeAgentSDK.html",
+      "title": "Claude Agent SDK",
+      "description": "Claude Agent SDK and agent orchestration: loops, stop_reason, subagents, hooks, sessions, tool errors, escalation, provenance and Managed Agents.",
+      "owner": "anthropic",
+      "certs": {
+        "ccar-f": "core"
+      },
+      "quiz": "claude-agent-sdk",
+      "source_md": "anthropic/ClaudeAgentSDK-v1.0.md",
+      "assets": {
+        "notes": "anthropic/ClaudeAgentSDK-v1.0.pdf"
+      },
+      "order": 220
+    }
+  ]
+}
