@@ -1,0 +1,1458 @@
+{
+  "topic_id": "google",
+  "title": "Gemini & Google Models",
+  "guide_url": "Google.html",
+  "questions": [
+    {
+      "id": "google-q-01",
+      "section": "Core Definition & Architecture",
+      "guide_anchor": "definition",
+      "question": "A robotics team is migrating from a legacy pipeline that chains a speech-to-text model, a vision captioner, and a text-only LLM to a single Gemini foundational model. Which architectural property of Gemini directly eliminates the paralinguistic information loss and serial latency of the legacy pipeline?",
+      "options": [
+        {
+          "text": "Native multimodality (early fusion) projecting all modalities into a unified token space from pretraining.",
+          "correct": true
+        },
+        {
+          "text": "Late-fusion adapter layers that translate raw visual frames and acoustic spectrograms into English text summaries before attention.",
+          "correct": false,
+          "why_wrong": "Converting non-text inputs into intermediate text captions is the exact late-fusion bottleneck that strips acoustic tone and spatial nuance."
+        },
+        {
+          "text": "A dense text-first PaLM 2 transformer backbone where 100% of feed-forward parameters activate uniformly on every single input token.",
+          "correct": false,
+          "why_wrong": "PaLM 2 was a legacy dense text-first model that required bolted-on encoders rather than native early-fusion multimodality."
+        },
+        {
+          "text": "Running three isolated transformer models in parallel and merging their final output logits using a post-hoc keyword voting heuristic.",
+          "correct": false,
+          "why_wrong": "Ensembling separate unimodal models at the output layer prevents cross-modal attention across intermediate transformer layers."
+        }
+      ],
+      "explanation": "Gemini is engineered around native multimodality (early fusion): text, images, audio, video, code, and PDFs are projected into a unified token space from the start of pretraining and processed jointly by a Sparse Mixture-of-Experts (MoE) backbone, avoiding the latency, lost nuance, and cross-modal hallucinations of bolted-on encoders.",
+      "key_takeaway": "Early fusion projects all modalities into one shared token space from the beginning of training, enabling deep cross-modal reasoning.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-02",
+      "section": "Core Definition & Architecture",
+      "guide_anchor": "definition",
+      "question": "How does Gemini's Sparse Mixture-of-Experts (MoE) transformer backbone improve serving efficiency compared to the dense PaLM 2 architecture?",
+      "options": [
+        {
+          "text": "It conditionally routes each token to specialized expert subsets, decoupling total capacity from per-token FLOPs.",
+          "correct": true
+        },
+        {
+          "text": "It activates 100% of model weights on every token but quantizes all attention matrices to 1-bit binary values during pretraining.",
+          "correct": false,
+          "why_wrong": "Activating 100% of parameters per token describes a dense model; Sparse MoE achieves efficiency via conditional expert routing, not 1-bit quantization."
+        },
+        {
+          "text": "It replaces all transformer self-attention layers with a static lookup table that caches precomputed responses for common queries.",
+          "correct": false,
+          "why_wrong": "Gemini retains transformer self-attention paired with sparse MoE feed-forward routing rather than replacing attention with static lookup tables."
+        },
+        {
+          "text": "It offloads all visual and audio tokens to external client-side CPU encoders so the cloud model only processes ASCII text strings.",
+          "correct": false,
+          "why_wrong": "Gemini natively processes multimodal tokens inside its unified MoE backbone rather than stripping them into client-side ASCII text."
+        }
+      ],
+      "explanation": "In a dense model like PaLM 2, every parameter is activated for every token. Gemini's Sparse Mixture-of-Experts (MoE) architecture uses learned routing gates to dispatch each token only to a small subset of specialized expert feed-forward networks, allowing massive total parameter capacity while keeping active per-token compute and latency low.",
+      "key_takeaway": "Sparse MoE routing activates only a subset of specialized experts per token, decoupling total model parameters from per-token inference cost.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-03",
+      "section": "Core Definition & Architecture",
+      "guide_anchor": "definition",
+      "question": "During a failure analysis of a legacy late-fusion multimodal assistant, engineers notice that when a user says 'Yeah, great job' in a heavily sarcastic tone while showing a broken screen, the assistant replies 'Glad everything is working!'. Which late-fusion failure mode does this illustrate?",
+      "options": [
+        {
+          "text": "Inherent information loss and cross-modal hallucination from stripping paralinguistic cues into text transcripts.",
+          "correct": true
+        },
+        {
+          "text": "Context window overflow caused by encoding raw audio waveforms at 256,000 tokens per second inside the speech encoder.",
+          "correct": false,
+          "why_wrong": "Gemini encodes audio at a compact 32 tokens per second; the failure here is caused by intermediate text transcription losing vocal prosody."
+        },
+        {
+          "text": "Tournament sampling distortion introduced by the SynthID-Text cryptographic watermark during greedy decoding.",
+          "correct": false,
+          "why_wrong": "SynthID-Text watermarks output token distributions imperceptibly and has nothing to do with losing input vocal sarcasm."
+        },
+        {
+          "text": "KV-cache eviction caused by Gemma 3's 5:1 local-to-global interleaved sliding-window attention topology.",
+          "correct": false,
+          "why_wrong": "Interleaved attention is a memory optimization in Gemma 3, not the cause of paralinguistic loss in bolted-on ASR-to-LLM pipelines."
+        }
+      ],
+      "explanation": "Bolted-on late-fusion pipelines convert speech into plain text transcripts before passing them to the LLM, stripping paralinguistic cues like sarcasm, pitch, and hesitation, while the text model's dominant linguistic prior overrides conflicting visual evidence.",
+      "key_takeaway": "Cascaded ASR-to-LLM pipelines strip vocal intonation and sarcasm, whereas native multimodal models reason directly over acoustic and visual tokens.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-04",
+      "section": "Ecosystem Tiers",
+      "guide_anchor": "tiers",
+      "question": "A healthcare mobile app must summarize sensitive patient voice notes directly on Pixel smartphones while airplane mode is enabled, guaranteeing that zero audio or text ever traverses a network. Which Google model tier is purpose-built for this requirement?",
+      "options": [
+        {
+          "text": "Gemini Nano running locally on-device via Android AICore within strict mobile thermal and RAM envelopes.",
+          "correct": true
+        },
+        {
+          "text": "Gemini 3.1 Flash-Lite accessed via a regional Vertex AI REST endpoint with implicit context caching disabled.",
+          "correct": false,
+          "why_wrong": "Gemini Flash-Lite is a cloud-hosted model on Vertex AI and cannot execute offline in airplane mode without network connectivity."
+        },
+        {
+          "text": "Gemini 2.5 Pro configured with thinking_budget set to 128 tokens and VPC Service Controls enabled.",
+          "correct": false,
+          "why_wrong": "Gemini 2.5 Pro runs on cloud TPU infrastructure and requires network access, whereas Gemini Nano runs strictly on-device."
+        },
+        {
+          "text": "Gemini Ultra deployed on dedicated multi-node Google Cloud TPU v5p clusters with Provisioned Throughput.",
+          "correct": false,
+          "why_wrong": "Gemini Ultra is the largest data-center frontier tier and cannot run locally on mobile hardware."
+        }
+      ],
+      "explanation": "Gemini Nano is engineered specifically for on-device edge computing (such as Pixel devices via Android AICore and Chrome built-in AI), operating within tight memory and thermal constraints to deliver zero-latency, offline inference where data never leaves the user's device.",
+      "key_takeaway": "Choose Gemini Nano for offline, zero-latency on-device mobile or browser inference where sensitive data must remain on client hardware.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        }
+      ]
+    },
+    {
+      "id": "google-q-05",
+      "section": "Ecosystem Tiers",
+      "guide_anchor": "tiers",
+      "question": "An e-commerce platform needs to classify 80 million product support tickets per day into 40 routing tags with the lowest possible per-token cost and sub-second Time-to-First-Token (TTFT). Which Gemini model tier best fits this workload?",
+      "options": [
+        {
+          "text": "Gemini Flash-Lite (2.5 / 3.1 / 3.5 Flash-Lite) optimized for high-volume, cost-sensitive LLM traffic.",
+          "correct": true
+        },
+        {
+          "text": "Gemini 3.1 Pro configured with thinking_level set to HIGH to perform exhaustive System 2 chain-of-thought deduction on every ticket.",
+          "correct": false,
+          "why_wrong": "Using Gemini 3.1 Pro at HIGH thinking level adds substantial latency and token cost that is unnecessary for high-volume ticket routing."
+        },
+        {
+          "text": "Gemini Ultra running on multi-pod TPU clusters to maximize theoretical parameter capacity for simple tag classification.",
+          "correct": false,
+          "why_wrong": "Gemini Ultra is designed for frontier scientific and algorithmic challenges, making it prohibitively expensive and slow for bulk classification."
+        },
+        {
+          "text": "AlphaGeometry 2 paired with the DDAR symbolic engine to formally verify the routing category of each customer support message.",
+          "correct": false,
+          "why_wrong": "AlphaGeometry 2 is a specialized neuro-symbolic theorem prover for Olympiad geometry, not a general text classification model."
+        }
+      ],
+      "explanation": "Gemini Flash and Flash-Lite are engineered for extreme inference speed, fast Time-to-First-Token (TTFT), and minimal cost at massive scale, using knowledge distillation from larger teacher models to retain high accuracy on high-volume routing, extraction, and classification workloads.",
+      "key_takeaway": "Use Gemini Flash-Lite for massive-scale, latency- and cost-sensitive classification, extraction, and routing workloads.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        }
+      ]
+    },
+    {
+      "id": "google-q-06",
+      "section": "Ecosystem Tiers",
+      "guide_anchor": "tiers",
+      "question": "What training technique allows Gemini Flash models to achieve near-Pro reasoning and coding accuracy while maintaining a much smaller, faster serving footprint?",
+      "options": [
+        {
+          "text": "Knowledge distillation compressing larger teacher distributions into an efficient k-sparse student model.",
+          "correct": true
+        },
+        {
+          "text": "Replacing all neural network weights with deterministic SQL rules extracted from Google Search logs at inference time.",
+          "correct": false,
+          "why_wrong": "Gemini Flash is a neural Sparse MoE transformer trained via distillation, not a deterministic SQL rule engine."
+        },
+        {
+          "text": "Removing multimodal image, audio, and video tokenizers so the model can only accept 7-bit ASCII text inputs under 4K tokens.",
+          "correct": false,
+          "why_wrong": "Gemini Flash is natively multimodal with a 1M-token context window and supports text, image, audio, and video inputs."
+        },
+        {
+          "text": "Training exclusively on synthetic International Mathematical Olympiad geometry proofs generated by the DDAR symbolic engine.",
+          "correct": false,
+          "why_wrong": "Synthetic IMO geometry data trains AlphaGeometry 2, whereas Gemini Flash is distilled across broad multimodal and coding corpora."
+        }
+      ],
+      "explanation": "Gemini Flash models leverage knowledge distillation, where a larger frontier teacher model's rich probability distribution is compressed into a streamlined k-sparse student architecture, preserving high reasoning capability with fast TTFT and high throughput.",
+      "key_takeaway": "Knowledge distillation transfers frontier teacher capabilities into Gemini Flash for low-latency, high-throughput serving.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        }
+      ]
+    },
+    {
+      "id": "google-q-07",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "A regulated bank wants its new support agent to use Claude. Security requires IAM, billing, quotas, and audit logging to stay inside Google Cloud, and the platform team does not want to run any model infrastructure. What should the architect recommend?",
+      "options": [
+        {
+          "text": "Enable Claude as a partner model in Model Garden and call its managed, serverless API from the bank's own Google Cloud project.",
+          "correct": true
+        },
+        {
+          "text": "Download the Claude weights from Model Garden and self-deploy them on a dedicated GPU endpoint inside a private VPC network.",
+          "correct": false,
+          "why_wrong": "Claude is a proprietary partner model offered as a managed API. Its weights are not downloadable, so it cannot be self-deployed."
+        },
+        {
+          "text": "Run a small proxy service on GKE that forwards agent traffic to the vendor's public API using one shared API key for all agents.",
+          "correct": false,
+          "why_wrong": "This adds infrastructure the team wants to avoid. It also moves governance outside Google Cloud and replaces per-identity IAM with a shared secret."
+        },
+        {
+          "text": "Fine-tune an open Gemma model to imitate Claude-style answers and serve the tuned checkpoint from a Cloud Run service.",
+          "correct": false,
+          "why_wrong": "This swaps the required model for a different one and adds tuning and serving work. It does not meet the requirement to use Claude."
+        }
+      ],
+      "explanation": "Partner models such as Claude are offered in Model Garden as fully managed, serverless APIs. Using Google-managed Claude keeps data processing, IAM, quotas, billing, and request-response logging inside Google Cloud with no infrastructure to operate.",
+      "key_takeaway": "Need a partner model with Google Cloud governance and no infrastructure? Use it as a managed partner API from Model Garden.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-08",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "A team has fine-tuned an open-weight model and now has its own custom LoRA checkpoint. It must serve steady 24/7 traffic on a specific GPU type in one region. The team has no Kubernetes expertise. Which serving option fits best?",
+      "options": [
+        {
+          "text": "Call the open-model MaaS API for the same base model and pass the LoRA adapter file inside every request body.",
+          "correct": false,
+          "why_wrong": "MaaS serves standard catalog models through a managed API. Custom or fine-tuned weights require a self-deployed endpoint, not an adapter sent with each request."
+        },
+        {
+          "text": "Self-deploy the tuned checkpoint to a dedicated Agent Platform endpoint, choosing the machine type, accelerator, and region.",
+          "correct": true
+        },
+        {
+          "text": "Purchase Provisioned Throughput GSUs for Gemini Flash and route the fine-tuned open model's traffic through that reservation.",
+          "correct": false,
+          "why_wrong": "Provisioned Throughput reserves capacity for supported publisher models. It does not host your own custom open-weight checkpoint."
+        },
+        {
+          "text": "Create a new GKE Standard cluster with GPU node pools and manage the vLLM serving stack and autoscaling on Kubernetes.",
+          "correct": false,
+          "why_wrong": "This would work, but it adds a Kubernetes operations burden the team cannot support. A managed self-deployed endpoint meets the requirements with less effort."
+        }
+      ],
+      "explanation": "Self-deployed endpoints are the documented path when you need custom weights, dedicated hardware, and control over region. Steady, high-volume traffic also fits dedicated capacity. GKE adds control only when the team already runs Kubernetes or needs custom multi-host topologies.",
+      "key_takeaway": "Custom or fine-tuned open weights mean self-deploy. Prefer a managed endpoint over GKE unless you need Kubernetes-level control.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-09",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "During a hackathon, data scientists deployed five open models from Model Garden to dedicated endpoints. A month later, the cloud bill is high even though the endpoints received almost no traffic. What explains this, and what is the fix?",
+      "options": [
+        {
+          "text": "Open-model MaaS APIs charge a fixed monthly minimum for each enabled model, so disable the APIs for any model not in use.",
+          "correct": false,
+          "why_wrong": "MaaS is pay-per-token with no infrastructure to manage. The charges here come from dedicated self-deployed endpoints, not from MaaS."
+        },
+        {
+          "text": "Model Garden charges a catalog subscription for every model card viewed, so restrict console access to the Model Garden page.",
+          "correct": false,
+          "why_wrong": "Browsing the catalog is not billed. The cost comes from compute that stayed provisioned on the endpoints."
+        },
+        {
+          "text": "Self-deployed endpoints bill for their machines and accelerators while deployed, even when idle. Undeploy them, set an idle TTL, or use MaaS.",
+          "correct": true
+        },
+        {
+          "text": "Deploying an open model automatically buys a one-year Provisioned Throughput order, so cancel the order before the next billing cycle.",
+          "correct": false,
+          "why_wrong": "Provisioned Throughput is an explicit order you place yourself. It is also non-cancelable mid-term, so this explanation is wrong twice."
+        }
+      ],
+      "explanation": "With self-deployed open models, you pay for the compute resources hosting the model for as long as the endpoint is deployed. For sporadic use, undeploy, configure idle undeployment, or switch to a pay-per-token MaaS API.",
+      "key_takeaway": "Self-deployed endpoints cost money while idle. For sporadic or bursty use, MaaS pay-per-token is usually cheaper.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-10",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "A field-inspection app must summarize technician notes on rugged Android tablets used in basements with no connectivity. Policy says the notes must never leave the device. Which model choice satisfies these constraints?",
+      "options": [
+        {
+          "text": "Call Gemini Pro on the global endpoint, backed by a Provisioned Throughput order so that latency stays predictable.",
+          "correct": false,
+          "why_wrong": "Any cloud API needs connectivity and sends data off the device. Provisioned Throughput guarantees capacity, not offline operation."
+        },
+        {
+          "text": "Use Gemini Flash-Lite through Flex PayGo, because that discounted tier tolerates slow or unreliable networks.",
+          "correct": false,
+          "why_wrong": "Flex PayGo is still a cloud tier, just a latency-tolerant one. It cannot run offline, and the data still leaves the device."
+        },
+        {
+          "text": "Enable explicit context caching so the summarization prompt is stored once and network round trips are reduced.",
+          "correct": false,
+          "why_wrong": "Context caching cuts cost for repeated prefixes on cloud requests. It still needs connectivity and does not keep data on the device."
+        },
+        {
+          "text": "Run a small model such as Gemma on-device with Google AI Edge (e.g., LiteRT-LM), trading some capability for offline privacy.",
+          "correct": true
+        }
+      ],
+      "explanation": "Offline operation with on-device data residency points to a small language model running at the edge. Gemma models can run on Android, iOS, and web through Google AI Edge runtimes such as LiteRT-LM and MediaPipe LLM Inference. For a narrow task like summarization, an SLM is usually good enough.",
+      "key_takeaway": "Offline or data-must-stay-on-device requirements point to an on-device SLM (Gemma, Gemini Nano), not a cloud consumption tier.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-11",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "A support platform sends every message to Gemini Pro. Analysis shows about 90% of messages only need intent routing, while 10% need complex multi-step troubleshooting. Cost and latency are over budget. What should the architect do first?",
+      "options": [
+        {
+          "text": "Move all traffic to Flash-Lite and raise its thinking level to the maximum so it can also handle the complex cases.",
+          "correct": false,
+          "why_wrong": "A single small tier for everything risks failing the hard 10%. Maximum thinking on every request also gives back much of the latency savings."
+        },
+        {
+          "text": "Build a cascade: Flash-Lite handles routing and easy cases, and low-confidence or complex cases escalate to Flash or Pro, validated by evals.",
+          "correct": true
+        },
+        {
+          "text": "Buy Provisioned Throughput for Gemini Pro, since reserving capacity lowers the cost of each request compared with PayGo.",
+          "correct": false,
+          "why_wrong": "Provisioned Throughput reserves capacity for predictable latency. It is not a fix for an oversized model, and trivial routing would still run on Pro."
+        },
+        {
+          "text": "Fine-tune Gemini Pro to produce shorter answers, so each routing response uses fewer output tokens and finishes sooner.",
+          "correct": false,
+          "why_wrong": "Shorter outputs help a little, but every trivial routing call would still pay Pro's per-call cost and latency. Model size is the real problem."
+        }
+      ],
+      "explanation": "The selection rule is to use the smallest model that passes evals for each task. A router/cascade pattern sends high-volume easy work to a cheap, fast tier and escalates only the hard tail. This cuts cost and latency while keeping quality where it matters.",
+      "key_takeaway": "Mixed-difficulty traffic calls for a cascade: a cheap tier for the easy majority, escalating to a larger model only when needed.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-12",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "An insurer's claims agent gives outdated answers about policy wording that changes every week. An engineer proposes re-running supervised fine-tuning weekly on the latest documents. What is the better design?",
+      "options": [
+        {
+          "text": "Keep weekly supervised fine-tuning, but raise the adapter size so the model can memorize more of the policy text each run.",
+          "correct": false,
+          "why_wrong": "A larger adapter adds capacity to learn behavior, not a reliable source of fresh facts. Answers would still be stale between runs, and there would be no citations."
+        },
+        {
+          "text": "Ground the agent in the current policy documents with RAG or Agent Search, so updates apply without retraining and answers cite sources.",
+          "correct": true
+        },
+        {
+          "text": "Switch to preference tuning with pairs of correct and outdated answers, so the model learns to prefer the newest wording.",
+          "correct": false,
+          "why_wrong": "Preference tuning captures subjective quality preferences. It is not a way to inject changing factual knowledge."
+        },
+        {
+          "text": "Set the thinking level to HIGH so the model reasons more carefully about which policy wording is the most recent.",
+          "correct": false,
+          "why_wrong": "More reasoning cannot recover facts that are not in the model's context. The current wording has to be retrieved."
+        }
+      ],
+      "explanation": "On the customization ladder, grounding/RAG fixes what the model knows: fresh, private, or large-corpus facts, with citations. Tuning fixes how the model behaves: format, style, persona. Retraining weekly to track changing facts is costly and still leaves gaps.",
+      "key_takeaway": "Use RAG or grounding for changing knowledge and fine-tuning for behavior. Don't fine-tune to keep facts fresh.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-13",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "A ticket classifier must output exactly one of 30 labels. The current prompt carries 40 few-shot examples, is slow and expensive, and still sometimes returns verbose explanations. The team has about 2,000 well-labeled production examples. What is the best next step?",
+      "options": [
+        {
+          "text": "Supervised fine-tuning of a Flash-class model on the labeled examples in production format, then remove the few-shot block from the prompt.",
+          "correct": true
+        },
+        {
+          "text": "Increase the few-shot block to 200 examples so the model sees every label several times before it classifies each ticket.",
+          "correct": false,
+          "why_wrong": "This makes the prompt longer, slower, and more expensive, and it does not reliably remove the verbose, inconsistent outputs."
+        },
+        {
+          "text": "Run preference tuning alone on pairs of terse and verbose answers, skipping supervised fine-tuning, to reduce the verbosity.",
+          "correct": false,
+          "why_wrong": "Preference tuning targets subjective preferences, and Google recommends SFT first. A well-defined labeling task with labeled data is the textbook SFT case."
+        },
+        {
+          "text": "Index the 2,000 labeled tickets in a vector store and use RAG to retrieve similar tickets into every classification prompt.",
+          "correct": false,
+          "why_wrong": "Retrieval adds context and tokens, but the problem is output behavior and format consistency. Tuning fixes that more directly."
+        }
+      ],
+      "explanation": "Google's guidance: start with prompting. When prompts are inconsistent or need many examples, and you have labeled data (around 100 or more examples), supervised fine-tuning gives more consistent outputs. It also removes long few-shot prompts, which lowers latency and cost.",
+      "key_takeaway": "SFT fits well-defined tasks with labeled data. It improves consistency and lets you drop long few-shot prompts.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-14",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "A retailer's Gemini Flash agent has a steady weekday baseline with a strict latency SLO, plus short holiday spikes. Finance wants predictable spend for the baseline and does not want customers to see errors during spikes. How should consumption be configured?",
+      "options": [
+        {
+          "text": "Size Provisioned Throughput for the holiday peak and send the dedicated request-type header so that no traffic is billed as PayGo.",
+          "correct": false,
+          "why_wrong": "Sizing for the peak pays for idle capacity most of the year. The dedicated header also returns 429 errors once the quota is exceeded."
+        },
+        {
+          "text": "Stay on Standard PayGo only, since shared capacity always scales automatically and avoids any fixed-term financial commitment.",
+          "correct": false,
+          "why_wrong": "Standard PayGo uses shared capacity that can be throttled under contention. It gives no reserved capacity for a strict baseline SLO."
+        },
+        {
+          "text": "Buy Provisioned Throughput GSUs sized to the steady baseline and keep the default behavior, so spike overage spills over to PayGo.",
+          "correct": true
+        },
+        {
+          "text": "Send all agent traffic through batch inference to get the batch discount, and cache results for the real-time requests.",
+          "correct": false,
+          "why_wrong": "Batch inference is asynchronous with long turnaround times. It cannot serve a real-time agent with a latency SLO."
+        }
+      ],
+      "explanation": "Provisioned Throughput reserves GSUs for predictable latency and cost. By default, requests over quota spill over to pay-as-you-go instead of failing. Sizing PT to the steady baseline and letting spikes spill over balances cost and reliability.",
+      "key_takeaway": "Size Provisioned Throughput to steady-state load and let bursts spill over to PayGo. Use the dedicated header only if 429s are acceptable.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-15",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "A production agent calls a Gemini model using a '-preview' ID in one setting and a '-latest' alias in another. The team sees behavior shifts after silent alias updates, and one day requests start returning 404. What practice prevents this?",
+      "options": [
+        {
+          "text": "Keep the preview ID but move traffic to a regional endpoint, since preview models are served with higher priority there.",
+          "correct": false,
+          "why_wrong": "Preview and experimental models are served only from the global endpoint, and they are retired soon after the stable release."
+        },
+        {
+          "text": "Pin a stable model version ID, track its published retirement date, and run evals on the replacement before migrating.",
+          "correct": true
+        },
+        {
+          "text": "Use '-latest' aliases everywhere, so the agent always moves to the newest model automatically without code changes.",
+          "correct": false,
+          "why_wrong": "Google does not recommend '-latest' aliases for production, because the version they point to changes. That is the behavior drift the team is seeing."
+        },
+        {
+          "text": "Buy Provisioned Throughput for the preview model, since a reservation guarantees the model stays available for the term.",
+          "correct": false,
+          "why_wrong": "A reservation does not stop a model from retiring. Term fees still apply even if the model is discontinued."
+        }
+      ],
+      "explanation": "Stable versions (no suffix) are for production and have published retirement dates. Preview and experimental versions are unstable, limited to the global endpoint, and retired soon after the stable release. Calls to retired models return 404. Pin stable IDs and plan migrations with evals.",
+      "key_takeaway": "In production, pin stable Gemini version IDs, avoid -preview and -latest, and plan migrations before the retirement date.",
+      "doc_links": [
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "google-q-16",
+      "section": "Gemini 2.5, 3.1 & Context Mechanics",
+      "guide_anchor": "deepthink",
+      "question": "A backend team is upgrading an agentic coding service from Gemini 2.5 Flash to Gemini 3.1 Pro and Gemini 3.5 Flash on Vertex AI. When they pass both `thinking_budget=4096` and `thinking_level='HIGH'` in `ThinkingConfig`, the API returns `400 INVALID_ARGUMENT`. What is the correct configuration rule?",
+      "options": [
+        {
+          "text": "Use `thinking_level` on Gemini 3+ (supported levels vary by model) and drop `thinking_budget`, the 2.5-era control.",
+          "correct": true
+        },
+        {
+          "text": "Set `thinking_budget=0` on Gemini 2.5 Pro and Gemini 3.1 Pro simultaneously to force both models into deterministic greedy decoding.",
+          "correct": false,
+          "why_wrong": "Thinking cannot be turned off (`thinking_budget=0`) on Gemini 2.5 Pro, and `thinking_budget` is deprecated on Gemini 3+ models."
+        },
+        {
+          "text": "Use `thinking_level` exclusively on Gemini 2.5 models and `thinking_budget` exclusively on Gemini 3 and Gemini 4 Argon models.",
+          "correct": false,
+          "why_wrong": "This reverses the version mapping: Gemini 2.5 uses `thinking_budget` (an integer token cap) while Gemini 3+ uses discrete `thinking_level` values."
+        },
+        {
+          "text": "Pass `thinking_budget=-1` alongside `thinking_level='MINIMAL'` in every request so the model averages both parameters at runtime.",
+          "correct": false,
+          "why_wrong": "Specifying both `thinking_level` and `thinking_budget` in the same request is explicitly forbidden and triggers a 400 INVALID_ARGUMENT error."
+        }
+      ],
+      "explanation": "Gemini 2.5 models control internal reasoning via the integer `thinking_budget` parameter (where `0` disables thinking on 2.5 Flash/Flash-Lite, and `-1` enables dynamic budgeting). Gemini 3 and later models use discrete `thinking_level` values instead (for example LOW, MEDIUM, HIGH; MINIMAL only on some models), and sending both parameters in one request returns a 400 error.",
+      "key_takeaway": "Configure `thinking_budget` on Gemini 2.5 models and `thinking_level` (MINIMAL, LOW, MEDIUM, HIGH) on Gemini 3+ models—never both.",
+      "doc_links": [
+        {
+          "label": "Gemini Thinking & Reasoning",
+          "url": "https://ai.google.dev/gemini-api/docs/thinking"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
+    },
+    {
+      "id": "google-q-17",
+      "section": "Gemini 2.5, 3.1 & Context Mechanics",
+      "guide_anchor": "deepthink",
+      "question": "An enterprise legal assistant repeatedly queries the same 600-page regulatory corpus (450,000 tokens) across thousands of user questions over an 8-hour workday. The team wants a guaranteed cached-token discount on Gemini 2.5 Pro with a predictable 8-hour retention window. Which mechanism should they use?",
+      "options": [
+        {
+          "text": "Create an Explicit Context Cache (`cachedContents`) with an 8-hour TTL and reference it in each prompt.",
+          "correct": true
+        },
+        {
+          "text": "Rely solely on Implicit Caching with Zero Data Retention (ZDR) enabled, which guarantees a 100% free storage SLA for 30 days.",
+          "correct": false,
+          "why_wrong": "Enabling strict Zero Data Retention requires disabling caching, and implicit caching is opportunistic (up to 24h) rather than a developer-guaranteed TTL resource."
+        },
+        {
+          "text": "Fine-tune a custom Gemini 2.5 Pro checkpoint on the regulatory PDFs and attach an Explicit Context Cache to the tuned endpoint.",
+          "correct": false,
+          "why_wrong": "Explicit context caching is not supported on fine-tuned Gemini models (only eligible base models support explicit caching)."
+        },
+        {
+          "text": "Compress the 450,000 tokens into a single 128-dimensional Gemini Embedding vector and pass that vector into the system prompt.",
+          "correct": false,
+          "why_wrong": "An embedding vector is a dense numerical representation for similarity search and cannot reconstruct verbatim legal text inside a prompt."
+        }
+      ],
+      "explanation": "Explicit Context Caching (`cachedContents`) lets developers register large repeated contexts (text, video, audio, PDFs) with a custom Time-to-Live (TTL) beyond the default 60 minutes. It ensures a discount on input tokens that reference the cache, billed alongside hourly storage. Implicit caching is automatic, but cache hits (and so savings) aren't guaranteed.",
+      "key_takeaway": "Use Explicit Context Caching (`cachedContents`) with a custom TTL to guarantee a cached-token discount on repeated large prefixes.",
+      "doc_links": [
+        {
+          "label": "Gemini Thinking & Reasoning",
+          "url": "https://ai.google.dev/gemini-api/docs/thinking"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
+    },
+    {
+      "id": "google-q-18",
+      "section": "Gemini 2.5, 3.1 & Context Mechanics",
+      "guide_anchor": "deepthink",
+      "question": "A financial advisory firm wants Gemini to answer client questions using both breaking market news from the public web and internal compliance PDFs stored in Cloud Storage, without building a custom chunking, OCR, or vector-indexing pipeline. Which grounding configuration satisfies both needs?",
+      "options": [
+        {
+          "text": "Use Grounding with Google Search for live web news and Grounding with Agent Search (formerly Vertex AI Search) for the PDFs.",
+          "correct": true
+        },
+        {
+          "text": "Enable only Grounding with Google Search, which automatically crawls private Cloud Storage buckets behind VPC Service Controls.",
+          "correct": false,
+          "why_wrong": "Google Search grounding queries Google's public web index and cannot access private enterprise Cloud Storage buckets."
+        },
+        {
+          "text": "Use SynthID Tournament Sampling to inject private compliance PDFs into the model's output logit distribution at inference.",
+          "correct": false,
+          "why_wrong": "SynthID is an imperceptible watermarking framework for AI provenance, not an enterprise document retrieval or grounding system."
+        },
+        {
+          "text": "Deploy a standalone Chirp 3 recognizer with custom phrase adaptation to index the PDFs into a BigQuery table.",
+          "correct": false,
+          "why_wrong": "Chirp 3 is a Universal Speech Model for audio transcription in Speech-to-Text V2, not a document search or grounding engine."
+        }
+      ],
+      "explanation": "Agent Platform supports Grounding with Google Search for real-time public web facts and Grounding with Agent Search (formerly Vertex AI Search) for managed enterprise RAG, which handles ETL, OCR, parsing, chunking and IAM-governed retrieval over Google-managed data stores.",
+      "key_takeaway": "Use Grounding with Google Search for live public web data and Grounding with Vertex AI Search for managed enterprise document stores.",
+      "doc_links": [
+        {
+          "label": "Gemini Thinking & Reasoning",
+          "url": "https://ai.google.dev/gemini-api/docs/thinking"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        },
+        {
+          "label": "Grounding with Google Search",
+          "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/multimodal/ground-gemini"
+        }
+      ]
+    },
+    {
+      "id": "google-q-19",
+      "section": "Generative Media Models",
+      "guide_anchor": "generation",
+      "question": "A creative agency needs to generate a 4K storyboard where the same protagonists and product props retain their exact visual appearance across 8 iterative conversational edits, including accurate rendering of a real-world landmark and street signage. Which Vertex AI model is specifically architected for this workflow?",
+      "options": [
+        {
+          "text": "Nano Banana 2 (`gemini-3.1-flash-image`) or Nano Banana Pro, with reference images, multi-turn editing and Search grounding.",
+          "correct": true
+        },
+        {
+          "text": "Legacy imagegeneration@002 using a 480-token text-only prompt window and manual binary pixel masks for every edit turn.",
+          "correct": false,
+          "why_wrong": "Legacy imagegeneration endpoints are deprecated and lack multi-turn mask-free conversational editing, 14-object entity resolution, and Search grounding."
+        },
+        {
+          "text": "Lyria 3 Pro configured in instrumental mode with a 184-second temporal latent diffusion window and 48kHz stereo output.",
+          "correct": false,
+          "why_wrong": "Lyria 3 Pro is Google's audio and music generation model, not a 4K visual storyboard generator."
+        },
+        {
+          "text": "PaliGemma 3B running in zero-shot image captioning mode to convert the storyboard brief into bounding-box coordinates.",
+          "correct": false,
+          "why_wrong": "PaliGemma is an open vision-language model that takes images as input and outputs text/detections; it does not generate 4K images."
+        }
+      ],
+      "explanation": "Nano Banana 2 (`gemini-3.1-flash-image`) and Nano Banana Pro (`gemini-3-pro-image`) build image generation into the Gemini backbone. They accept reference images to keep characters and objects consistent across mask-free multi-turn edits, and can use Google Search grounding to render accurate text and real-world landmarks.",
+      "key_takeaway": "Nano Banana 2 / Nano Banana Pro support reference images, multi-turn mask-free editing, character consistency and Search grounding.",
+      "doc_links": [
+        {
+          "label": "Gemini Image & Media Generation",
+          "url": "https://ai.google.dev/gemini-api/docs/image-generation"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        },
+        {
+          "label": "Grounding with Google Search",
+          "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/multimodal/ground-gemini"
+        }
+      ]
+    },
+    {
+      "id": "google-q-20",
+      "section": "Generative Media Models",
+      "guide_anchor": "generation",
+      "question": "When generating an 8-second 4K clip in Veo 3.1 where a character walks across gravel while speaking, why do the crunching footsteps and lip movements align with the visual frames without running a separate post-production audio model?",
+      "options": [
+        {
+          "text": "Veo 3.1 uses joint latent diffusion, compressing video pixels and audio waveforms into one unified latent space.",
+          "correct": true
+        },
+        {
+          "text": "Veo 3.1 generates silent video frames first and then invokes Chirp 3 ASR and WaveNet TTS in a post-processing webhook.",
+          "correct": false,
+          "why_wrong": "Chirp 3 is speech-to-text, and Veo 3.1 does not bolt on a separate post-hoc audio pipeline—it denoises video and audio jointly."
+        },
+        {
+          "text": "Veo 3.1 retrieves pre-recorded stock Foley MP3 tracks from Google Search and stretches them to match the clip duration.",
+          "correct": false,
+          "why_wrong": "Veo 3.1 synthesizes audio natively inside its joint latent diffusion transformer rather than splicing stock MP3 files."
+        },
+        {
+          "text": "Veo 3.1 converts every video frame into a text description and passes it to Lyria 3 Clip to compose a 30-second song.",
+          "correct": false,
+          "why_wrong": "Lyria 3 is a standalone music generator; Veo 3.1 natively models synchronized dialogue, Foley, and video in one unified latent space."
+        }
+      ],
+      "explanation": "Unlike Veo 2 (which generated silent video), Veo 3.1 uses joint latent diffusion to simultaneously compress and denoise raw video pixels and raw audio waveforms inside a unified latent representation, producing emergent frame-accurate synchronization alongside spatio-temporal attention for object permanence.",
+      "key_takeaway": "Veo 3.1's joint latent diffusion denoises video pixels and audio waveforms together in one latent space for native audio-visual sync.",
+      "doc_links": [
+        {
+          "label": "Gemini Image & Media Generation",
+          "url": "https://ai.google.dev/gemini-api/docs/image-generation"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-21",
+      "section": "Gemini Audio, Chirp 2/3, Live API & Embeddings",
+      "guide_anchor": "audio-api",
+      "question": "A customer-service voice agent needs to let callers interrupt the assistant mid-sentence ('barge-in'), detect caller frustration from vocal tone, and trigger external order-lookup tools directly from live audio over a persistent connection. Which architecture should the team implement?",
+      "options": [
+        {
+          "text": "Gemini native audio with the Live API over stateful bidirectional WebSockets (WSS).",
+          "correct": true
+        },
+        {
+          "text": "Stateless HTTP POST polling every 5 seconds using Cloud Speech-to-Text BatchRecognize followed by text-only Gemini and WaveNet.",
+          "correct": false,
+          "why_wrong": "BatchRecognize is designed for asynchronous long-form files (1–60 minutes) and cascaded stateless polling prevents real-time barge-in and affective dialog."
+        },
+        {
+          "text": "A standalone MedSigLIP embedding endpoint connected to a REST webhook that converts caller audio into 896×896 image crops.",
+          "correct": false,
+          "why_wrong": "MedSigLIP encodes medical images and text into embeddings and cannot handle bidirectional voice streaming or tool calling."
+        },
+        {
+          "text": "Gemma 2 27B deployed in text-only mode with Logit Soft-Capping enabled over a unidirectional Server-Sent Events (SSE) stream.",
+          "correct": false,
+          "why_wrong": "Gemma 2 is a text-only model and unidirectional SSE cannot ingest continuous bidirectional audio/video streams with server-side VAD barge-in."
+        }
+      ],
+      "explanation": "The Gemini Live API (for example `gemini-3.8-live`) uses stateful bidirectional WebSockets (WSS) to stream raw 16-bit PCM audio, video frames and text together. It skips separate STT/TTS hops and supports server-side voice activity detection for barge-in, affective dialog and function calling from live audio.",
+      "key_takeaway": "The Gemini Live API uses stateful bidirectional WebSockets (WSS) with native audio, barge-in, affective dialog and tool calling.",
+      "doc_links": [
+        {
+          "label": "Gemini Multimodal Live API",
+          "url": "https://ai.google.dev/gemini-api/docs/live-api"
+        },
+        {
+          "label": "Gemini Audio & Speech Generation",
+          "url": "https://ai.google.dev/gemini-api/docs/speech-generation"
+        }
+      ]
+    },
+    {
+      "id": "google-q-22",
+      "section": "Gemini Audio, Chirp 2/3, Live API & Embeddings",
+      "guide_anchor": "audio-api",
+      "question": "A hospital contact center uses Google Cloud Speech-to-Text API V2 (`chirp_3`) to transcribe noisy emergency-room recordings containing proprietary drug names and strict `MM/DD/YYYY` date formatting rules. Which combination of Chirp 3 features addresses these requirements?",
+      "options": [
+        {
+          "text": "Enable `denoise_audio=True`, Model Adaptation phrase sets for drug names, and Custom Prompt formatting.",
+          "correct": true
+        },
+        {
+          "text": "Enable the Chirp 3 denoiser to strip overlapping background human voices and pass a 50,000-phrase adaptation dictionary.",
+          "correct": false,
+          "why_wrong": "Chirp 3's denoiser removes non-vocal noise (rain, traffic, music) but cannot remove background human voices, and adaptation caps at 1,000 phrases."
+        },
+        {
+          "text": "Use Speech-to-Text V1 legacy recognizer endpoints, since Chirp 3 is only available in V1 and does not support streaming or diarization.",
+          "correct": false,
+          "why_wrong": "Chirp 3 (`chirp_3`) is exclusively available in Cloud Speech-to-Text API V2 and supports StreamingRecognize, Recognize, BatchRecognize, and diarization."
+        },
+        {
+          "text": "Set `endpointing_sensitivity` to maximum silence delay so Chirp 3 translates the audio directly into 48kHz stereo music tracks.",
+          "correct": false,
+          "why_wrong": "`endpointing_sensitivity` controls latency vs. cutoff trade-offs in streaming ASR; Chirp 3 outputs text transcripts, not music tracks."
+        }
+      ],
+      "explanation": "Built on Google's 2B+ parameter Universal Speech Model (USM), Chirp 3 (`chirp_3`) in Speech-to-Text V2 provides a built-in denoiser (`denoise_audio=True` for environmental noise like traffic/rain/music), Model Adaptation phrase sets for domain terms, and Custom Prompt formatting (`CustomPromptConfig`) to enforce date/capitalization conventions.",
+      "key_takeaway": "Chirp 3 (STT V2) supports `denoise_audio=True`, Model Adaptation phrase sets, Custom Prompts, diarization and word timestamps.",
+      "doc_links": [
+        {
+          "label": "Gemini Multimodal Live API",
+          "url": "https://ai.google.dev/gemini-api/docs/live-api"
+        },
+        {
+          "label": "Gemini Audio & Speech Generation",
+          "url": "https://ai.google.dev/gemini-api/docs/speech-generation"
+        }
+      ]
+    },
+    {
+      "id": "google-q-23",
+      "section": "Gemini Audio, Chirp 2/3, Live API & Embeddings",
+      "guide_anchor": "audio-api",
+      "question": "An industrial field-service app lets technicians snap a photo of a damaged valve to query a single vector index and retrieve both the exact timestamp in an instructional repair video and the matching paragraph in a PDF manual, while cutting vector RAM usage by 75%. How do `gemini-embedding-2` and Matryoshka Representation Learning (MRL) enable this?",
+      "options": [
+        {
+          "text": "`gemini-embedding-2` maps all modalities into one vector space, and MRL truncates `output_dimensionality`.",
+          "correct": true
+        },
+        {
+          "text": "MRL trains four separate unimodal vector indexes and concatenates their 3,072-dimensional vectors into a 12,288-dimensional array.",
+          "correct": false,
+          "why_wrong": "Concatenating four 3,072-D vectors quadruples memory instead of shrinking it, and `gemini-embedding-2` uses a single unified vector space."
+        },
+        {
+          "text": "`gemini-embedding-2` requires converting all videos and images into text captions first because it only accepts SentencePiece text.",
+          "correct": false,
+          "why_wrong": "`gemini-embedding-2` is natively multimodal, directly encoding images, video segments (`fps`), audio tracks, and PDFs without text captioning."
+        },
+        {
+          "text": "MRL randomly drops 75% of tokens from the input document before embedding so the output vector remains fixed at 3,072 dimensions.",
+          "correct": false,
+          "why_wrong": "Matryoshka Representation Learning orders semantic importance across vector dimensions so the output vector itself can be truncated (e.g., to 768 or 256 dims)."
+        }
+      ],
+      "explanation": "Gemini Embedding (`gemini-embedding-001` and `gemini-embedding-2`) uses Matryoshka Representation Learning (MRL) so the leading dimensions carry the most critical semantic signal, allowing developers to set a smaller `output_dimensionality` (e.g., 768, 512, 256, or 128) with minimal recall loss. `gemini-embedding-2` projects text, images, audio, video, and PDFs into one L2-normalized vector space.",
+      "key_takeaway": "`gemini-embedding-2` unifies text, image, audio, video, and PDF vectors in one space, while MRL lets you truncate `output_dimensionality` to save RAM.",
+      "doc_links": [
+        {
+          "label": "Gemini Multimodal Live API",
+          "url": "https://ai.google.dev/gemini-api/docs/live-api"
+        },
+        {
+          "label": "Gemini Audio & Speech Generation",
+          "url": "https://ai.google.dev/gemini-api/docs/speech-generation"
+        }
+      ]
+    },
+    {
+      "id": "google-q-24",
+      "section": "Gemma Open-Weight & Edge Models",
+      "guide_anchor": "gemma",
+      "question": "A developer is deploying open-weight Gemma 3 12B on a single-GPU workstation to analyze high-resolution, wide-aspect panoramic receipts across a 128K-token conversation. How does Gemma 3 prevent aspect-ratio distortion on the images while keeping the 128K KV-cache memory footprint within GPU VRAM?",
+      "options": [
+        {
+          "text": "Pan & Scan 896×896 adaptive windowing (256 SigLIP soft tokens) plus a 5:1 local-to-global attention ratio.",
+          "correct": true
+        },
+        {
+          "text": "Squashing every panoramic image into a single 64×64 thumbnail and using uniform global self-attention across all 48 transformer layers.",
+          "correct": false,
+          "why_wrong": "Squashing non-square images destroys small text legibility, and uniform global attention across 128K tokens causes quadratic KV-cache VRAM exhaustion."
+        },
+        {
+          "text": "Replacing the SigLIP vision encoder with AlphaFold 3's Pairformer and storing the KV cache in an external Cloud SQL database.",
+          "correct": false,
+          "why_wrong": "Pairformer is AlphaFold 3's molecular trunk, whereas Gemma 3 uses a frozen 400M SigLIP Vision Transformer and 5:1 local/global attention."
+        },
+        {
+          "text": "Restricting Gemma 3 12B to English-only text inputs with a 2,048-token context limit and offloading images to Imagen 4.",
+          "correct": false,
+          "why_wrong": "Gemma 3 supports 140+ languages, a 128K context window, and native image understanding on 4B, 12B, and 27B variants."
+        }
+      ],
+      "explanation": "Gemma 3 uses a frozen 400M-parameter SigLIP Vision Transformer that condenses each image crop into 256 soft tokens, paired with Pan & Scan adaptive windowing (dynamically segmenting non-square/high-res images into 896×896 crops). To scale to 128K context without exhausting VRAM, it interleaves 5 local sliding-window attention layers (1,024 tokens) per 1 global attention layer.",
+      "key_takeaway": "Gemma 3 combines a 400M SigLIP encoder (256 soft tokens per 896×896 crop) with a 5:1 local-to-global attention ratio for 128K context efficiency.",
+      "doc_links": [
+        {
+          "label": "Google Gemma Open Models",
+          "url": "https://ai.google.dev/gemma/docs"
+        },
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        }
+      ]
+    },
+    {
+      "id": "google-q-25",
+      "section": "Gemma Open-Weight & Edge Models",
+      "guide_anchor": "gemma",
+      "question": "An embedded systems team wants to generate long diagnostic logs on a memory-constrained edge device where KV-cache growth is unacceptable, and they can tolerate a minor dip in exact 'needle-in-a-haystack' token lookup. Which model architecture should they select?",
+      "options": [
+        {
+          "text": "RecurrentGemma (Griffin architecture), using gated linear recurrence + local sliding-window attention.",
+          "correct": true
+        },
+        {
+          "text": "Gemma 2 27B with full global quadratic self-attention enabled on every layer to maximize KV-cache expansion.",
+          "correct": false,
+          "why_wrong": "Gemma 2 27B is a large server-grade transformer whose KV cache grows with sequence length, unlike RecurrentGemma's fixed-size recurrent state."
+        },
+        {
+          "text": "CodeGemma 7B configured in Fill-in-the-Middle (FIM) IDE completion mode with a 1M-token explicit context cache.",
+          "correct": false,
+          "why_wrong": "CodeGemma is a standard transformer for code completion/generation and still relies on growing KV caches rather than Griffin linear recurrence."
+        },
+        {
+          "text": "ShieldGemma 2 4B running as an input/output harm moderation classifier over short single-turn image prompts.",
+          "correct": false,
+          "why_wrong": "ShieldGemma 2 is an instruction-tuned safety policy classifier, not a long-sequence recurrent text generator."
+        }
+      ],
+      "explanation": "RecurrentGemma is built on DeepMind's Griffin architecture, replacing global quadratic self-attention with a hybrid of Real-Gated Linear Recurrence (RG-LRU) and local sliding-window attention. By maintaining a fixed-size recurrent state instead of an expanding KV cache, it achieves high long-sequence throughput and constant memory at the cost of a slight trade-off in exact needle-in-a-haystack retrieval.",
+      "key_takeaway": "RecurrentGemma (Griffin) uses gated linear recurrence + local attention for a fixed-size state and high long-sequence throughput at the edge.",
+      "doc_links": [
+        {
+          "label": "Google Gemma Open Models",
+          "url": "https://ai.google.dev/gemma/docs"
+        },
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        }
+      ]
+    },
+    {
+      "id": "google-q-26",
+      "section": "Gemma Open-Weight & Edge Models",
+      "guide_anchor": "gemma",
+      "question": "A platform team is assembling an open-weight toolkit on Vertex AI Model Garden: (1) a model to fine-tune for warehouse object detection and VQA, (2) a model to score user-uploaded images and prompts against safety policies, and (3) a model for IDE Fill-in-the-Middle code completion. Which trio of Gemma models maps to (1), (2), and (3)?",
+      "options": [
+        {
+          "text": "(1) PaliGemma / PaliGemma 2, (2) ShieldGemma / ShieldGemma 2, and (3) CodeGemma.",
+          "correct": true
+        },
+        {
+          "text": "(1) CodeGemma, (2) RecurrentGemma, and (3) DolphinGemma.",
+          "correct": false,
+          "why_wrong": "CodeGemma is for coding, RecurrentGemma is a recurrent text model, and DolphinGemma models marine mammal bioacoustics."
+        },
+        {
+          "text": "(1) TxGemma, (2) MedSigLIP, and (3) TranslateGemma.",
+          "correct": false,
+          "why_wrong": "TxGemma is for therapeutic drug discovery, MedSigLIP is for medical image/text embeddings, and TranslateGemma is for 55-language translation."
+        },
+        {
+          "text": "(1) ShieldGemma 2, (2) CodeGemma, and (3) PaliGemma 2.",
+          "correct": false,
+          "why_wrong": "This scrambles the roles: PaliGemma handles VQA/detection fine-tuning, ShieldGemma handles safety moderation, and CodeGemma handles FIM coding."
+        }
+      ],
+      "explanation": "Within the open-weight Gemma ecosystem: PaliGemma / PaliGemma 2 (SigLIP + Gemma) is designed for VQA, captioning, OCR, object detection, and segmentation fine-tuning; ShieldGemma / ShieldGemma 2 evaluates text and images against explicit harm policies; and CodeGemma (2B/7B) provides Fill-in-the-Middle (FIM) code completion and generation.",
+      "key_takeaway": "Use PaliGemma for VLM detection/VQA tuning, ShieldGemma for text/image safety moderation, and CodeGemma for FIM code completion.",
+      "doc_links": [
+        {
+          "label": "Google Gemma Open Models",
+          "url": "https://ai.google.dev/gemma/docs"
+        },
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        }
+      ]
+    },
+    {
+      "id": "google-q-27",
+      "section": "Safety, SynthID & Frontier Governance",
+      "guide_anchor": "safety",
+      "question": "A bad actor records a Lyria-generated song through a smartphone microphone from a laptop speaker (the 'analog hole'), strips all C2PA metadata headers from a Veo video, and copies a Gemini essay into a plain-text file. How does SynthID still detect AI provenance across all three artifacts?",
+      "options": [
+        {
+          "text": "Tournament sampling for text, psychoacoustic spectral embedding for audio, and latent pixel perturbation for video.",
+          "correct": true
+        },
+        {
+          "text": "It queries an external blockchain ledger that hashes the SHA-256 checksum of the original uncompressed file header.",
+          "correct": false,
+          "why_wrong": "Any re-encoding, cropping, or speaker-to-microphone re-recording completely alters a file's SHA-256 hash and strips metadata headers."
+        },
+        {
+          "text": "It inserts visible QR code watermarks into video corners and appends a spoken disclaimer at the end of every audio clip.",
+          "correct": false,
+          "why_wrong": "SynthID watermarks are strictly imperceptible to human eyes and ears and are embedded directly into tokens, spectrograms, and pixel latents."
+        },
+        {
+          "text": "It relies exclusively on C2PA EXIF manifests, which cannot be removed by screenshots, re-recording, or plain-text copying.",
+          "correct": false,
+          "why_wrong": "C2PA metadata is easily stripped by screenshots, plain-text copy-paste, or analog re-recording, which is why SynthID embeds into the signal itself."
+        }
+      ],
+      "explanation": "SynthID embeds imperceptible cryptographic signatures directly into the data representation at inference time: Tournament Sampling via a pseudo-random g-function for text logits; psychoacoustic spectral embedding in masked frequency bands for audio (surviving the speaker-to-microphone analog hole); and spatial-temporal latent manipulation for images and video (surviving cropping, filters, and compression).",
+      "key_takeaway": "SynthID watermarks text via Tournament Sampling, audio via psychoacoustic spectrograms, and images/video via spatial-temporal latents.",
+      "doc_links": [
+        {
+          "label": "Google DeepMind SynthID",
+          "url": "https://deepmind.google/technologies/synthid/"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "google-q-28",
+      "section": "Safety, SynthID & Frontier Governance",
+      "guide_anchor": "safety",
+      "question": "Under Google DeepMind's Frontier Safety Framework (FSF), what happens when automated evaluations indicate a frontier model is approaching an early-warning threshold for a Critical Capability Level (CCL) such as CBRN uplift or autonomous cyber-offense?",
+      "options": [
+        {
+          "text": "It triggers coupled Security Mitigations (weight security) and Deployment Mitigations (safety gates).",
+          "correct": true
+        },
+        {
+          "text": "The model weights are immediately released under an open-source license on Kaggle so the public can crowdsource bug fixes.",
+          "correct": false,
+          "why_wrong": "Releasing weights of a model approaching a CBRN or cyber-offense CCL would create irreversible proliferation risk; FSF mandates strict weight security."
+        },
+        {
+          "text": "The model's SentencePiece vocabulary is reduced from 256,000 tokens to 1,000 tokens to prevent it from spelling chemical formulas.",
+          "correct": false,
+          "why_wrong": "FSF does not lobotomize the tokenizer vocabulary; it enforces hardened infrastructure weight security and runtime deployment guardrails."
+        },
+        {
+          "text": "Only C2PA metadata headers are attached to API responses while all runtime safety classifiers and egress controls are disabled.",
+          "correct": false,
+          "why_wrong": "Metadata headers do not prevent CBRN uplift or weight theft; FSF requires both security (anti-exfiltration) and deployment (classifier/alignment) mitigations."
+        }
+      ],
+      "explanation": "Google DeepMind's Frontier Safety Framework (FSF) defines empirical Critical Capability Levels (CCLs) across CBRN uplift, autonomous cyber-offense, autonomous ML R&D/self-improvement, and deceptive alignment. Approaching a CCL threshold mandates both Security Mitigations (hardened weight storage, egress throttling, multi-party authorization) and Deployment Mitigations (safety fine-tuning, sentinel classifiers, staged access).",
+      "key_takeaway": "The Frontier Safety Framework (FSF) binds Critical Capability Levels (CCLs) to coupled weight-security and deployment mitigations.",
+      "doc_links": [
+        {
+          "label": "Google DeepMind SynthID",
+          "url": "https://deepmind.google/technologies/synthid/"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "google-q-29",
+      "section": "Scientific & Domain-Specialized Models",
+      "guide_anchor": "science",
+      "question": "How does AlphaFold 3 fundamentally redesign AlphaFold 2's architecture to predict joint 3D complexes of proteins, DNA, RNA, covalent modifications, and small-molecule drug ligands?",
+      "options": [
+        {
+          "text": "It replaces Evoformer with Pairformer, tokenizes ligands per atom, and uses a 3D Conditional Diffusion Module.",
+          "correct": true
+        },
+        {
+          "text": "It expands the Evoformer to require 10× deeper Multiple Sequence Alignments (MSAs) and uses a rigid amino-acid-only torsion module.",
+          "correct": false,
+          "why_wrong": "AlphaFold 3 reduces MSA reliance by replacing Evoformer with Pairformer and replaces the rigid amino-acid structure module with atomic diffusion."
+        },
+        {
+          "text": "It converts molecular SMILES strings into 896×896 images and passes them through a frozen 400M SigLIP Vision Transformer.",
+          "correct": false,
+          "why_wrong": "SigLIP is the vision encoder in Gemma 3 and PaliGemma; AlphaFold 3 operates directly on residue and individual atom tokens in 3D space."
+        },
+        {
+          "text": "It uses the DDAR symbolic deduction engine to prove crystal lattice symmetry without using any neural network parameters.",
+          "correct": false,
+          "why_wrong": "DDAR is the symbolic engine in AlphaGeometry 2 for Euclidean geometry proofs, not AlphaFold 3's molecular structure predictor."
+        }
+      ],
+      "explanation": "AlphaFold 3 replaces AlphaFold 2's MSA-heavy Evoformer with the leaner Pairformer (focusing on pairwise interactions), represents ligands and chemical modifications at extreme granularity (one token per atom), and replaces the deterministic structure module with a Conditional Diffusion Module that denoises a 3D cloud of random atom coordinates into a joint molecular complex.",
+      "key_takeaway": "AlphaFold 3 pairs the Pairformer trunk and single-atom ligand tokenization with a 3D Conditional Diffusion Module.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-30",
+      "section": "Scientific & Domain-Specialized Models",
+      "guide_anchor": "science",
+      "question": "Why does AlphaGeometry 2 achieve an 84% solve rate on International Mathematical Olympiad (IMO) geometry problems where pure LLMs hallucinate invalid steps and pure symbolic engines time out?",
+      "options": [
+        {
+          "text": "A Gemini neural model predicts auxiliary geometric constructs, while the DDAR symbolic engine verifies deductions.",
+          "correct": true
+        },
+        {
+          "text": "It renders each geometry diagram into a 4K video using Veo 3.1 and measures pixel angles using an optical flow CNN.",
+          "correct": false,
+          "why_wrong": "Measuring pixels cannot constitute a formal mathematical proof; AlphaGeometry 2 uses neuro-symbolic deduction (Gemini + DDAR)."
+        },
+        {
+          "text": "It translates Euclidean geometry theorems into x86 assembly instructions and optimizes them with AlphaDev reinforcement learning.",
+          "correct": false,
+          "why_wrong": "AlphaDev optimizes low-level CPU assembly sorting/hashing algorithms, whereas AlphaGeometry 2 proves Olympiad geometry theorems."
+        },
+        {
+          "text": "It searches Google's web index at runtime to retrieve human-written IMO answer keys using Vertex AI Grounding.",
+          "correct": false,
+          "why_wrong": "AlphaGeometry 2 solves unseen geometry problems from scratch without internet access via its Gemini + DDAR neuro-symbolic loop."
+        }
+      ],
+      "explanation": "Olympiad geometry proofs frequently require inventing new auxiliary constructions (such as adding a hidden point, line, or circle) that create an infinite branching factor for symbolic engines. AlphaGeometry 2 pairs a Gemini neural language model—which proposes high-probability auxiliary constructs—with the infallible DDAR (Deductive Database + Algebraic Rules) symbolic engine that exhaustively verifies the proof.",
+      "key_takeaway": "AlphaGeometry 2 pairs a Gemini neural model (proposing auxiliary constructs) with the DDAR symbolic engine (verifying rule-bound deductions).",
+      "doc_links": [
+        {
+          "label": "Agent Platform Model Garden",
+          "url": "https://docs.cloud.google.com/model-garden"
+        },
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-31",
+      "section": "Core Architecture & Modality Trade-Offs",
+      "guide_anchor": "definition",
+      "question": "A regulated wealth-management firm records advisor phone calls. Compliance rules mandate storing a deterministic, word-timestamped verbatim transcript with custom ticker-symbol adaptation and scrubbing client SSNs with Sensitive Data Protection (SDP) BEFORE any reasoning LLM sees the text. Which architecture should the architect choose?",
+      "options": [
+        {
+          "text": "Stream raw unredacted audio directly into `gemini-3.8-live` over WebSockets and ask the model in its system prompt to ignore spoken SSNs.",
+          "correct": false,
+          "why_wrong": "Prompt-only instructions do not prevent raw SSNs from entering the reasoning model's context, nor do they produce a deterministic pre-redacted compliance artifact."
+        },
+        {
+          "text": "A modular pipeline: transcribe with `chirp_3` (Model Adaptation + word timestamps), redact PII via SDP, then pass sanitized text to Gemini.",
+          "correct": true
+        },
+        {
+          "text": "Encode the entire 45-minute call into a single 256-dimensional `gemini-embedding-2` vector and ask `gemini-4-argon` to reconstruct the transcript.",
+          "correct": false,
+          "why_wrong": "Dense embeddings are lossy semantic vectors for similarity retrieval and cannot produce verbatim word-timestamped compliance transcripts."
+        },
+        {
+          "text": "Feed the audio into `veo-3.1-generate-001` joint latent diffusion to render lip-synced video frames before running Document AI OCR.",
+          "correct": false,
+          "why_wrong": "Veo 3.1 generates synthetic video/audio clips rather than transcribing or redacting regulated customer audio recordings."
+        }
+      ],
+      "explanation": "While native multimodal models (`gemini-3.8-live`) win on sub-second interactive voice UX and prosody, a modular perception pipeline (`Chirp 3` / `gemini-3.5-transcribe` -> deterministic SDP PII redaction -> text LLM) is the right architectural choice whenever regulations mandate auditable verbatim transcripts, custom phrase adaptation, and guaranteed PII removal prior to LLM reasoning.",
+      "key_takeaway": "Choose native multimodal for low-latency interactive prosody; choose modular ASR/OCR + SDP pipelines when pre-LLM PII redaction and verbatim audit artifacts are required.",
+      "doc_links": [
+        {
+          "label": "Chirp 3 Speech-to-Text V2",
+          "url": "https://cloud.google.com/speech-to-text/v2/docs/chirp-3-model"
+        },
+        {
+          "label": "Gemini Models Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        }
+      ]
+    },
+    {
+      "id": "google-q-32",
+      "section": "Active Ecosystem Tiers (Gemini 4 & 3.x)",
+      "guide_anchor": "tiers",
+      "question": "An enterprise engineering platform processes 50 million daily events: 85% are simple intent classifications, 14% are multi-step MCP coding/tool loops, and 1% are complex cross-repository architectural syntheses. Using Google's active October 2026 model lineup, how should the architect assign tiers?",
+      "options": [
+        {
+          "text": "Route 85% intent triage to `gemini-3.5-flash-lite`, 14% coding/tool loops to `gemini-3.8-flash`, and 1% frontier synthesis to `gemini-4-argon`.",
+          "correct": true
+        },
+        {
+          "text": "Send 100% of all 50 million daily requests to `gemini-4-argon` with `thinking_level='HIGH'` so only one model endpoint needs monitoring.",
+          "correct": false,
+          "why_wrong": "Routing trivial high-QPS intent classification through a frontier System-2 model wastes massive token budget and adds unnecessary latency."
+        },
+        {
+          "text": "Use retired `gemini-2.0-flash-lite` for triage, `palm-2` for coding loops, and a non-existent `gemini-4-carbon` SKU for synthesis.",
+          "correct": false,
+          "why_wrong": "Gemini 2.0 Flash-Lite and PaLM 2 are shut down, and Google's periodic-element Gemini 4 flagship is `gemini-4-argon`, not 'Carbon'."
+        },
+        {
+          "text": "Run `gemini-nano` in Android AICore on backend Linux servers for all 50M requests and use `lyria-3.5` for repository code synthesis.",
+          "correct": false,
+          "why_wrong": "Gemini Nano is an on-device mobile/client model rather than a cloud server tier, and Lyria 3.5 is a music-generation model."
+        }
+      ],
+      "explanation": "In Google's October 2026 lineup, `gemini-3.5-flash-lite` handles ultra-low-cost, high-QPS routing and classification; `gemini-3.8-flash` is the flagship high-velocity workhorse for coding and autonomous MCP tool loops; and `gemini-4-argon` (periodic-element naming) is reserved for the hardest frontier planning, math/science, and synthesis tasks.",
+      "key_takeaway": "Tier active Oct 2026 models by role: `gemini-3.5-flash-lite` (router/triage) -> `gemini-3.8-flash` (agentic workhorse) -> `gemini-4-argon` (frontier planner).",
+      "doc_links": [
+        {
+          "label": "Gemini API Models Catalog",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Agent Platform Google Models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/google-models"
+        }
+      ]
+    },
+    {
+      "id": "google-q-33",
+      "section": "Gemini 4 Argon, 3.x & Context Mechanics",
+      "guide_anchor": "deepthink",
+      "question": "A developer migrating an agent to `gemini-4-argon` configures `thinking_level='MINIMAL'`, sets `temperature=0.2`, and calls `cachedContents.create` to register an Explicit Context Cache. At runtime, the request fails and caching errors out. Which three `gemini-4-argon` rules explain this behavior?",
+      "options": [
+        {
+          "text": "`gemini-4-argon` requires integer `thinking_budget=0`, mandates `temperature=1.5`, and supports Explicit Caching only on GKE GPU nodes.",
+          "correct": false,
+          "why_wrong": "Passing `thinking_budget` to `gemini-4-argon` returns HTTP 400, sampling parameters are ignored, and Gemini cannot be self-hosted on GKE."
+        },
+        {
+          "text": "Only `LOW`/`MEDIUM`/`HIGH` thinking levels are valid (`MINIMAL` returns 400), custom `temperature` is ignored, and only Implicit Caching is supported.",
+          "correct": true
+        },
+        {
+          "text": "`gemini-4-argon` has a 32K maximum input window, disables all function calling, and requires fine-tuning via LoRA before caching works.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` features a unified 1,048,576-token window with full function calling, and neither explicit caching nor tuning is supported on it."
+        },
+        {
+          "text": "Explicit `cachedContents` works only over the Live API WebSocket endpoint on `gemini-4-argon` when `thinking_budget=-1` is supplied.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` supports neither the Live API nor `thinking_budget` nor explicit `cachedContents`."
+        }
+      ],
+      "explanation": "On `gemini-4-argon`, valid `thinking_level` values are strictly `LOW`, `MEDIUM` (default), and `HIGH` — passing `MINIMAL` or legacy `thinking_budget` returns HTTP `400 INVALID_ARGUMENT`. Custom sampling parameters (`temperature`, `top_p`, `top_k`) are ignored, and context caching is exclusively automatic durable Implicit Caching (4,096-token minimum; explicit `cachedContents` is unsupported).",
+      "key_takeaway": "On `gemini-4-argon`: use `thinking_level` `LOW`/`MEDIUM`/`HIGH` only (`MINIMAL` & `thinking_budget` -> 400), sampling params are ignored, and caching is implicit-only.",
+      "doc_links": [
+        {
+          "label": "Gemini 4 Argon Model Guide",
+          "url": "https://ai.google.dev/gemini-api/docs/models/gemini-4-argon"
+        },
+        {
+          "label": "Gemini 4 Argon on Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon"
+        }
+      ]
+    },
+    {
+      "id": "google-q-34",
+      "section": "Gemini 4 Argon, 3.x & Context Mechanics",
+      "guide_anchor": "deepthink",
+      "question": "A code-modernization agent running on `gemini-4-argon` ingests a 200,000-token legacy repository and needs to emit up to 400,000 tokens of refactored code and tests across a long-running job without hitting the 65,536-token single-response synchronous cap. How does `gemini-4-argon` support this?",
+      "options": [
+        {
+          "text": "It shares a unified 1,048,576-token pool and extends output past 65,536 via `GenerateContent` `continuation_token` or `Interactions API` `background=true`.",
+          "correct": true
+        },
+        {
+          "text": "It provides separate 2M input and 2M synchronous HTTP output pools in a single blocking REST call with `thinking_budget=0`.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` uses one unified 1,048,576-token budget across input + thinking + output, caps single sync responses at 65,536 tokens, and rejects `thinking_budget`."
+        },
+        {
+          "text": "It splits the repository into 480-token Imagen diffusion prompts and streams raw 24 kHz PCM waveforms back over the Live API.",
+          "correct": false,
+          "why_wrong": "Imagen is a text-to-image model and `gemini-4-argon` does not use the Live API for long-decode code synthesis."
+        },
+        {
+          "text": "It requires supervised LoRA fine-tuning on `gemini-4-argon` first, which unlocks unlimited synchronous non-streaming HTTP responses.",
+          "correct": false,
+          "why_wrong": "Managed tuning is not supported on `gemini-4-argon`, and non-streaming synchronous HTTP responses cap at 32,768 tokens without continuation or background mode."
+        }
+      ],
+      "explanation": "`gemini-4-argon` shares a unified `1,048,576`-token budget across input, thinking, tool calls, and output. While a single synchronous streaming call caps at `65,536` tokens (`32,768` non-streaming), long decodes can utilize the remaining budget up to 1M tokens via `continuation_token` on `GenerateContent` (`v1beta1`) or asynchronous `background=true` execution on the stateful `Interactions API` (`previous_interaction_id`).",
+      "key_takeaway": "`gemini-4-argon` unifies 1M tokens across input/thinking/output; exceed the 65K sync cap via `continuation_token` or `Interactions API` (`background=true`).",
+      "doc_links": [
+        {
+          "label": "Gemini 4 Argon Model Guide",
+          "url": "https://ai.google.dev/gemini-api/docs/models/gemini-4-argon"
+        },
+        {
+          "label": "Interactions API Guide",
+          "url": "https://ai.google.dev/gemini-api/docs/interactions"
+        }
+      ]
+    },
+    {
+      "id": "google-q-35",
+      "section": "Generative Media (Nano Banana, Omni, Veo, Lyria)",
+      "guide_anchor": "generation",
+      "question": "A media studio building on the Gemini API in October 2026 needs three capabilities: (1) GA native multimodal image generation & conversational editing with Priority PayGo, (2) fast instruction-driven video editing & keyframe extension with native audio, and (3) full-length structurally coherent songs. Which models match (1), (2), and (3)?",
+      "options": [
+        {
+          "text": "(1) Standalone `imagen-2`, (2) silent `veo-2.0-generate-001`, and (3) `chirp_3` batch speech recognition.",
+          "correct": false,
+          "why_wrong": "Imagen 2 is legacy, Veo 2 generates silent video rather than native-audio omni editing, and Chirp 3 is speech-to-text ASR rather than music generation."
+        },
+        {
+          "text": "(1) `gemini-nano-banana-2.1`, (2) `gemini-omni-1.1-flash`, and (3) `lyria-3.5`.",
+          "correct": true
+        },
+        {
+          "text": "(1) `codegemma-7b`, (2) `recurrentgemma-2b` Griffin state-space streaming, and (3) `gemini-embedding-001`.",
+          "correct": false,
+          "why_wrong": "CodeGemma, RecurrentGemma, and Gemini Embedding are coding, edge text, and vector-embedding models — none synthesize images, video, or music."
+        },
+        {
+          "text": "(1) `shieldgemma-2-4b`, (2) `gemini-3.5-transcribe`, and (3) `alphaproteo` protein-binder diffusion.",
+          "correct": false,
+          "why_wrong": "ShieldGemma 2 classifies safety harms, Gemini 3.5 Transcribe performs speech-to-text, and AlphaProteo designs protein binders."
+        }
+      ],
+      "explanation": "In the October 2026 Google lineup, Nano Banana 2.1 (`gemini-nano-banana-2.1`) is the GA flagship native image generator/editor supporting Priority PayGo; Gemini Omni 1.1 Flash (`gemini-omni-1.1-flash`) delivers fast video generation, editing, keyframe interpolation, and extension with native audio; and Lyria 3.5 (`lyria-3.5`) generates full-length songs with multi-section structural coherence.",
+      "key_takeaway": "Oct 2026 media flagships: `gemini-nano-banana-2.1` (native images), `gemini-omni-1.1-flash` / `Veo 3.1` (video + audio), and `lyria-3.5` (full-length music).",
+      "doc_links": [
+        {
+          "label": "Gemini API Models Catalog",
+          "url": "https://ai.google.dev/gemini-api/docs/models"
+        },
+        {
+          "label": "Agent Platform Google Models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/google-models"
+        }
+      ]
+    },
+    {
+      "id": "google-q-36",
+      "section": "Gemma 4 & Open-Weight Edge Models",
+      "guide_anchor": "gemma",
+      "question": "A defense contractor needs two open-weight models from the Gemma 4 family for an air-gapped environment: (1) a self-hosted GKE model with 26B-class reasoning capacity that activates only 4B parameters per token for low-latency tool loops, and (2) a compact laptop model ingesting text, image, video, and native audio in ~4B RAM. Which pair fits?",
+      "options": [
+        {
+          "text": "(1) Gemma 2 27B dense text-only checkpoint and (2) CodeGemma 2B Fill-in-the-Middle IDE completion model.",
+          "correct": false,
+          "why_wrong": "Gemma 2 27B activates all 27B parameters densely on text only, and CodeGemma 2B cannot ingest image, video, or native audio inputs."
+        },
+        {
+          "text": "(1) Proprietary `gemini-3.8-flash` weights downloaded to GKE and (2) `chirp_3` running offline inside a web browser.",
+          "correct": false,
+          "why_wrong": "Neither Gemini 3.8 Flash nor Chirp 3 is an open-weight downloadable checkpoint for air-gapped self-hosting."
+        },
+        {
+          "text": "(1) Gemma 4 `26B A4B MoE` on GKE and (2) Gemma 4 `E4B` (with Per-Layer Embeddings for multimodal + native audio) on the laptop.",
+          "correct": true
+        },
+        {
+          "text": "(1) `MedSigLIP` 800M vision encoder alone for SQL tool calling and (2) `AlphaChip` reinforcement-learning floorplanner on the laptop.",
+          "correct": false,
+          "why_wrong": "MedSigLIP is a medical image encoder rather than a generative tool-calling LLM, and AlphaChip is an ASIC chip-layout RL system."
+        }
+      ],
+      "explanation": "Gemma 4 introduces `26B A4B MoE` — a Sparse Mixture-of-Experts open-weight checkpoint with 26B total parameters but only 4B active per token for high-throughput, low-latency self-hosted serving — alongside edge-optimized `E2B` and `E4B` models that use Per-Layer Embeddings (PLE) to process text, images, video, and native audio within compact 2B–4B memory envelopes.",
+      "key_takeaway": "Gemma 4 spans `26B A4B MoE` (26B capacity at 4B active FLOPs), dense `31B`, and edge multimodal/audio `E2B`/`E4B` checkpoints.",
+      "doc_links": [
+        {
+          "label": "Gemma Open Models Documentation",
+          "url": "https://ai.google.dev/gemma/docs"
+        },
+        {
+          "label": "Agent Platform Open Models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        }
+      ]
+    },
+    {
+      "id": "google-q-37",
+      "section": "Scientific & Agentic Discovery Models",
+      "guide_anchor": "science",
+      "question": "Match each specialized Google DeepMind agentic system to its core mechanism: (1) synthesizing novel biomedical hypotheses via an Elo-rated multi-agent debate tournament, (2) discovering faster provably correct algorithms using Gemini + automated deterministic evaluators, and (3) Fairwind-gated defensive vulnerability discovery and patching.",
+      "options": [
+        {
+          "text": "(1) AI Co-Scientist, (2) AlphaEvolve, and (3) `gemini-4-argon-cyber-permissive` / CodeMender (with Computer Use disabled).",
+          "correct": true
+        },
+        {
+          "text": "(1) GraphCast weather GNN, (2) WaveNet raw-audio autoregression, and (3) PaliGemma 2 bounding-box segmentation.",
+          "correct": false,
+          "why_wrong": "GraphCast forecasts weather, WaveNet synthesizes speech waveforms, and PaliGemma 2 is an open vision-language model."
+        },
+        {
+          "text": "(1) AlphaChip TPU placement, (2) SynthID-Audio spectral watermarking, and (3) Lyria RealTime interactive music streaming.",
+          "correct": false,
+          "why_wrong": "None of these three systems perform biomedical hypothesis tournaments, evolutionary algorithm discovery, or Fairwind vulnerability patching."
+        },
+        {
+          "text": "(1) AlphaEvolve, (2) CodeMender, and (3) AI Co-Scientist with unrestricted Computer Use enabled on public endpoints.",
+          "correct": false,
+          "why_wrong": "This swaps all three systems, and `gemini-4-argon-cyber-permissive` is gated behind the Fairwind Program with Computer Use disabled."
+        }
+      ],
+      "explanation": "AI Co-Scientist runs a multi-agent Generate-Reflect-Rank-Evolve Elo tournament to formulate experimentally validated scientific hypotheses. AlphaEvolve pairs Gemini code synthesis with automated deterministic evaluators in an evolutionary loop to discover novel matrix-multiplication and systems algorithms. `gemini-4-argon-cyber-permissive` (gated via DeepMind's Fairwind Program with Computer Use disabled) and CodeMender power defensive vulnerability discovery, verification, and patching.",
+      "key_takeaway": "AI Co-Scientist = Elo hypothesis tournament; AlphaEvolve = evolutionary coding + deterministic evaluators; Fairwind Cyber / CodeMender = defensive vuln patching.",
+      "doc_links": [
+        {
+          "label": "Gemini 4 Argon & Fairwind Cyber",
+          "url": "https://ai.google.dev/gemini-api/docs/models/gemini-4-argon"
+        },
+        {
+          "label": "Google DeepMind Frontier Safety",
+          "url": "https://deepmind.google/discover/blog/"
+        }
+      ]
+    }
+  ]
+}

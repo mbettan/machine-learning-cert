@@ -13,9 +13,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Foundational Models & Vertex AI: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Study guide on Google Cloud foundational models and Vertex AI: Gemini Ultra, Pro, Flash, and Nano, Imagen, Veo, Chirp, multimodal AI, and governance.">
-    <meta name="keywords" content="Google Cloud AI, Gemini, Vertex AI, Imagen, Veo, Chirp, Foundational Models, Google AI Certification, Michael Bettan, Michaël Bettan">
+    <title>Gemini &amp; Google Models: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="October 2026 study guide on Gemini 4 Argon, Gemini 3.8 Flash/Live/TTS, 3.5 Flash-Lite, Model Garden (Google, Claude/DeepSeek MaaS, Gemma 4), Interactions API, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2, SynthID, AI Co-Scientist &amp; AlphaEvolve.">
+    <meta name="keywords" content="Gemini 4 Argon, gemini-4-argon, Gemini 4 Argon Cyber Permissive, Gemini 3.8 Flash, Gemini 3.8 Live, Gemini 3.8 Flash TTS, Gemini 3.5 Flash-Lite, Gemini 3.5 Transcribe, Interactions API, Model Garden, Provisioned Throughput, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2, Gemma 4, ShieldGemma 2, MedGemma, SynthID, Frontier Safety Framework, Fairwind Program, CodeMender, Antigravity Agent, Deep Research, AI Co-Scientist, AlphaEvolve, AlphaFold 3, AlphaGeometry 2, Gemini Robotics ER 2, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -32,25 +32,45 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Google Foundational Models & Vertex AI: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Study guide on Google Cloud foundational models and Vertex AI: Gemini Ultra, Pro, Flash, and Nano, Imagen, Veo, Chirp, multimodal AI, and governance.">
+    <meta property="og:title" content="Gemini &amp; Google Models: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="October 2026 study guide on Gemini 4 Argon, Gemini 3.8 Flash/Live, Model Garden, agentic model routing, Interactions API, Nano Banana 2.1, Gemini Omni 1.1 Flash, Lyria 3.5, Gemma 4, SynthID, AI Co-Scientist &amp; AlphaEvolve.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/Google.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Google Foundational Models — Study Guide by Michaël Bettan">
+    <meta property="og:image:alt" content="Gemini &amp; Google Models — Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Google Foundational Models & Vertex AI: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Study guide on Google Cloud foundational models and Vertex AI: Gemini Ultra, Pro, Flash, and Nano, Imagen, Veo, Chirp, multimodal AI, and governance.">
+    <meta name="twitter:title" content="Gemini &amp; Google Models: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="October 2026 study guide on Gemini 4 Argon, Gemini 3.8 Flash/Live, Model Garden, agentic model routing, Interactions API, Nano Banana 2.1, Gemini Omni 1.1 Flash, Lyria 3.5, Gemma 4, SynthID, AI Co-Scientist &amp; AlphaEvolve.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
-    <meta name="twitter:image:alt" content="Google Foundational Models — Study Guide by Michaël Bettan">
+    <meta name="twitter:image:alt" content="Gemini &amp; Google Models — Study Guide by Michaël Bettan">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media print {
+            .no-print,
+            .page-footer,
+            .back-to-top {
+                display: none !important;
+            }
+        }
+    </style>
 
     <script type="application/ld+json">
 {
@@ -62,16 +82,15 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/Google.html#article",
-                  "headline": "Google Foundational Models & Vertex AI: Study Guide | ML Cert Hub",
-                  "name": "Google Foundational Models Study Guide",
-                  "description": "Study guide on Google Cloud foundational models and Vertex AI: Gemini Ultra, Pro, Flash, and Nano, Imagen, Veo, Chirp, multimodal AI, and governance.",
-                  "keywords": "Google Cloud AI, Gemini, Vertex AI, Imagen, Veo, Chirp, Foundational Models, Google AI Certification, Michael Bettan, Michaël Bettan",
+                  "headline": "Gemini & Google Models: Study Guide | ML Cert Hub",
+                  "name": "Gemini & Google Models Study Guide",
+                  "description": "October 2026 study guide on Gemini 4 Argon, Gemini 3.8 Flash/Live/TTS, 3.5 Flash-Lite, Model Garden, Interactions API, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2, Gemma 4, SynthID, AI Co-Scientist & AlphaEvolve.",
+                  "keywords": "Gemini 4 Argon, gemini-4-argon, Gemini 4 Argon Cyber Permissive, Gemini 3.8 Flash, Gemini 3.8 Live, Gemini 3.8 Flash TTS, Gemini 3.5 Flash-Lite, Interactions API, Model Garden, Provisioned Throughput, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2, Gemma 4, ShieldGemma 2, MedGemma, SynthID, Frontier Safety Framework, CodeMender, AI Co-Scientist, AlphaEvolve, AlphaFold 3, AlphaGeometry 2, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/Google.html",
                   "inLanguage": "en",
-                  "version": "2.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-30",
                   "learningResourceType": "Study Guide",
-                  "educationalLevel": "Intermediate",
+                  "educationalLevel": "Advanced",
                   "author": {
                         "@type": "Person",
                         "@id": "https://github.com/mbettan#person",
@@ -100,7 +119,7 @@
                         {
                               "@type": "ListItem",
                               "position": 2,
-                              "name": "Google Foundational Models",
+                              "name": "Gemini & Google Models",
                               "item": "https://mbettan.github.io/machine-learning-cert/Google.html"
                         }
                   ]
@@ -108,11 +127,14 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/Google.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
     <a href="index.html" class="back-button">×</a>
-
 
     <div class="page-wrapper">
 
@@ -124,20 +146,16 @@
             <div class="cover-content">
                 <div class="cover-eyebrow">
                     <i class="fas fa-graduation-cap"></i>
-                    Study Notes — Certification Prep
+                    Study Notes — Certification Prep · v3.0
                 </div>
-                <h1>Google Foundational Models<br><em>Study Guide</em></h1>
+                <h1>Gemini &amp; Google Models<br><em>Study Guide</em></h1>
                 <p class="cover-subtitle">
-                    Comprehensive overview of Google's foundational AI architecture, generation models, audio pipelines, safety frameworks, and specialized scientific models.
+                    Comprehensive October 2026 technical reference on Google DeepMind &amp; Gemini Enterprise Agent Platform models: <strong>Gemini 4 Argon</strong> (periodic-element frontier naming, unified 1M token window, long decodes, implicit-only caching, Fairwind cyber tier), the <strong>Gemini 3.x</strong> lineup (<strong>3.8 Flash</strong>, <strong>3.5 Flash-Lite</strong>, <strong>3.8 Live</strong>, <strong>3.8 Flash TTS</strong>, <strong>3.5 Transcribe</strong>), Model Garden &amp; MaaS vs. self-hosted serving, multi-model agentic routing, <strong>Interactions API</strong> vs. <code>GenerateContent</code>, generative media (<strong>Nano Banana 2.1</strong>, <strong>Gemini Omni 1.1 Flash</strong>, <strong>Veo 3.1</strong>, <strong>Lyria 3.5</strong>), <strong>Chirp 3</strong> &amp; <strong>Gemini Embedding 2</strong>, <strong>Gemma 4</strong>, SynthID &amp; Frontier Safety Framework, and agentic discovery systems (<strong>AI Co-Scientist</strong>, <strong>AlphaEvolve</strong>, <strong>CodeMender</strong>, <strong>AlphaFold 3</strong>).
                 </p>
-                                                <div class="cover-meta">
+                <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>Updated: <strong>April 2026</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.0</strong></span>
+                        <span>Updated: <strong>October 2026 (v3.0)</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-tag"></i>
@@ -145,13 +163,17 @@
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-clock"></i>
-                        <span>Reading Time: <strong>~9 min</strong></span>
+                        <span>Reading Time: <strong>~18 min</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-user-edit"></i>
                         <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=google" class="cover-eyebrow no-print" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Gemini &amp; Google Models Practice Quiz →</span>
+                </a>
             </div>
         </section>
 
@@ -166,398 +188,456 @@
             <div class="toc-columns">
                 <a href="#definition" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>Core Definition & Architecture</span>
+                    <span>Core Architecture &amp; Modality Trade-Offs</span>
                 </a>
                 <a href="#tiers" class="toc-item">
                     <span class="toc-number">02</span>
-                    <span>Ecosystem Tiers</span>
+                    <span>Active Ecosystem Tiers (Gemini 4 &amp; 3.x)</span>
+                </a>
+                <a href="#model-garden" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Model Garden &amp; Serving Options</span>
+                </a>
+                <a href="#model-selection" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Agentic Model Routing &amp; Selection</span>
                 </a>
                 <a href="#deepthink" class="toc-item">
-                    <span class="toc-number">03</span>
-                    <span>Gemini 3.1 & Context Mechanics</span>
+                    <span class="toc-number">05</span>
+                    <span>Gemini 4 Argon, 3.x &amp; Context Mechanics</span>
                 </a>
                 <a href="#generation" class="toc-item">
-                    <span class="toc-number">04</span>
-                    <span>Generation Models</span>
+                    <span class="toc-number">06</span>
+                    <span>Generative Media (Nano Banana, Omni, Veo, Lyria)</span>
                 </a>
                 <a href="#audio-api" class="toc-item">
-                    <span class="toc-number">05</span>
-                    <span>Gemini Audio & APIs</span>
+                    <span class="toc-number">07</span>
+                    <span>Live API, 3.8 TTS, Chirp 3 &amp; Embedding 2</span>
                 </a>
                 <a href="#gemma" class="toc-item">
-                    <span class="toc-number">06</span>
-                    <span>Gemma Architecture</span>
+                    <span class="toc-number">08</span>
+                    <span>Gemma 4 &amp; Open-Weight Edge Models</span>
                 </a>
                 <a href="#safety" class="toc-item">
-                    <span class="toc-number">07</span>
-                    <span>Safety & Security</span>
+                    <span class="toc-number">09</span>
+                    <span>Safety, SynthID &amp; Frontier Governance</span>
                 </a>
                 <a href="#science" class="toc-item">
-                    <span class="toc-number">08</span>
-                    <span>Scientific & Specialized Models</span>
+                    <span class="toc-number">10</span>
+                    <span>Scientific &amp; Agentic Discovery Models</span>
                 </a>
             </div>
         </nav>
 
         <!-- ═══════════════════════════════════════
-             SECTION: DEFINITION & ARCHITECTURE
+             SECTION 01: DEFINITION & ARCHITECTURE
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="definition">
             <div class="section-divider-number">01</div>
-            <h2>Core Definition & Architecture</h2>
+            <h2>Core Architecture &amp; Modality Trade-Offs</h2>
         </div>
 
         <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-gem"></i></div>Definition: Native Multimodality</h3>
+            <h3><div class="icon-badge"><i class="fas fa-gem"></i></div>Native Multimodality (Early Fusion) &amp; Sparse MoE</h3>
             <p>
-                Google’s foundational AI models are built on native multimodality (early fusion). Instead of bolting separate vision or audio encoders onto a text model which causes lag, lost nuance, and hallucinations. All data types (text, image, audio, video, code) are projected into a unified, shared token space from the very beginning. This data is then processed by a singular Sparse Mixture-of-Experts (MoE) transformer backbone, enabling fluid, real-time agentic interaction and deep cross-modal reasoning.
+                Google’s Gemini foundational models are built on <strong>native multimodality (early fusion)</strong>. Instead of bolting separate vision or audio encoders onto a pretrained text-only LLM, all modalities — text, code, images, audio, video, and PDFs — project into a <strong>unified token space</strong> during pretraining and pass through a single <strong>Sparse Mixture-of-Experts (MoE)</strong> transformer backbone. Conditional routing activates only a specialized subset of expert networks per token, decoupling massive total knowledge capacity from active per-token FLOPs and Time-to-First-Token (TTFT) (replacing legacy dense <strong>PaLM 2</strong>).
             </p>
             <ul>
-                <li><strong>Inherent information loss:</strong> textual summaries of audio/video strip paralinguistic and spatial nuance</li>
-                <li><strong>Compounded latency:</strong> sequential isolated encoders create bottlenecks that preclude real-time agentic interaction</li>
-                <li><strong>Cross-modal hallucination:</strong> the text model's dominant training bias overrules visual/auditory input at late fusion layers</li>
+                <li><strong>Why late-fusion cascades fail interactive UX:</strong> converting audio/video into text captions strips paralinguistic cues (tone, sarcasm, urgency) and spatial-temporal alignment, compounds serial latency (<code>ASR → LLM → TTS</code>), and causes text-dominant hallucinations when modalities conflict.</li>
             </ul>
         </div>
 
-        <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Architecture</h3>
-            <ul>
-                <li>Moved from PaLM 2 (dense, text-first, required bolted-on Vision/Universal Speech encoders) to Gemini (natively multimodal, MoE routing).</li>
-                <li>MoE conditionally routes tokens to specialized "expert" subsets, decoupling total theoretical capacity from per-token compute costs.</li>
-            </ul>
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-scale-balanced"></i></div>
+            <div class="callout-content">
+                <h4>PAA Exam Trade-off — Native Multimodal vs. Modular Perception Pipelines</h4>
+                <p>Choose <strong>native multimodal</strong> (<code>gemini-3.8-live</code>, <code>gemini-4-argon</code> GA agentic video understanding) when sub-second conversational latency, prosody/visual nuance, or dynamic video zooming is critical. Choose a <strong>modular perception pipeline</strong> (<code>Chirp 3</code> / <code>gemini-3.5-transcribe</code> or <code>Document AI Layout Parser</code> → <strong>Sensitive Data Protection PII redaction</strong> → text LLM) when compliance requires <strong>auditable verbatim transcripts, deterministic PII scrubbing before reasoning, custom domain phrase adaptation</strong>, or caching extracted text across many downstream passes.</p>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: TIERS
+             SECTION 02: TIERS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="tiers">
             <div class="section-divider-number">02</div>
-            <h2>Ecosystem Tiers</h2>
+            <h2>Active Ecosystem Tiers (October 2026 Lineup)</h2>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-atom"></i></div>
+            <div class="callout-content">
+                <h4>Naming Milestone — Gemini 4 Periodic-Element Naming</h4>
+                <p>Starting with <strong>Gemini 4</strong>, Google transitioned frontier model naming to <strong>periodic-table elements</strong>, led by <strong>Gemini 4 Argon (<code>gemini-4-argon</code>, GA October 13, 2026)</strong> and Fairwind-allowlisted <strong>Gemini 4 Argon Cyber Permissive (<code>gemini-4-argon-cyber-permissive</code>)</strong> (note: periodic naming starts with <strong>Argon</strong> — there is no "Gemini 4 Carbon" model).</p>
+            </div>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
-                <dt>Gemini Nano</dt>
-                <dd>On-device edge computing (strict thermal/memory constraints like Pixel 9) → Zero-latency, offline processing.</dd>
+                <dt>On-Device Edge (Gemini Nano / Gemma 4 E2B–E4B)</dt>
+                <dd>Client-side inference under strict mobile/browser thermal, battery, and RAM limits (Android AICore, Chrome Built-in AI, LiteRT-LM) → zero cloud cost, offline resilience, and data never leaves the device.</dd>
             </div>
             <div class="definition-item">
-                <dt>Gemini Flash & Flash-Lite</dt>
-                <dd>Optimized for extreme inference speed and high-volume. Uses knowledge distillation (compressing larger models into a k-sparse distribution) → Ideal for fast TTFT (time-to-first-token).</dd>
+                <dt>Flash-Lite (Gemini 3.5 / 3.1 Flash-Lite)</dt>
+                <dd>Ultra-low-cost, highest-QPS cloud tier (<code>gemini-3.5-flash-lite</code>) engineered for front-door intent routing, inline guardrails, entity extraction, classification, and bulk enrichment.</dd>
             </div>
             <div class="definition-item">
-                <dt>Gemini Pro</dt>
-                <dd>The versatile workhorse balancing massive parameter capacity with efficient serving for complex multi-step reasoning.</dd>
+                <dt>Flash Workhorse (Gemini 3.8 Flash &amp; 3.8 Flash Cyber)</dt>
+                <dd>Flagship agentic loop workhorse (<code>gemini-3.8-flash</code>, plus <code>3.7</code> / <code>3.6</code> / <code>3.5 Flash</code>) trained via knowledge distillation for long-horizon coding, rapid MCP tool calling, and default <strong>CodeMender</strong> execution.</dd>
             </div>
             <div class="definition-item">
-                <dt>Gemini Ultra</dt>
-                <dd>Maximum-capacity frontier model running on extensive TPU clusters for the most complex scientific and algorithmic challenges.</dd>
+                <dt>Live, Speech &amp; TTS (Gemini 3.8 Live / TTS / 3.5 Transcribe)</dt>
+                <dd><code>gemini-3.8-live</code> &amp; <code>gemini-3.8-live-extended-thinking</code> for sub-second voice/video agents; <code>gemini-3.8-flash-tts</code> (130 languages) &amp; <code>flash-lite-tts</code>; <code>gemini-3.5-transcribe</code> &amp; <code>3.5-live-translate-preview</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Frontier Reasoning (Gemini 4 Argon &amp; 3.1 Pro Preview)</dt>
+                <dd><code>gemini-4-argon</code> delivers peak System-2 reasoning across unified 1M context, long decodes up to 1M tokens, GA agentic video understanding, computer use, formal math/science, legal/finance, and defensive cyber.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Managed Agent Endpoints (Antigravity &amp; Deep Research)</dt>
+                <dd>Task-level autonomous agents — <code>antigravity-preview-09-2026</code> (isolated Linux coding/browsing sandbox), <code>deep-research-preview-04-2026</code> / <code>deep-research-max</code>, and <strong>CodeMender</strong>.</dd>
             </div>
         </div>
 
+        <p class="prose" style="margin-top: 12px; margin-bottom: 24px; color: var(--text-secondary);"><strong>Lifecycle status:</strong> <strong>Gemini 2.5</strong> (<code>2.5 Pro</code>, <code>2.5 Flash</code>, <code>2.5 Flash-Lite</code>) remains in legacy support for existing workloads and managed SFT/preference tuning on Agent Platform, while new projects target <code>3.5 Flash-Lite</code>, <code>3.8 Flash</code>, and <code>4 Argon</code>. <strong>Gemini 2.0 Flash / Flash-Lite</strong>, <code>gemini-2.5-computer-use-preview-10-2025</code>, and <code>Gemini Robotics ER 1.6</code> are shut down.</p>
+
         <!-- ═══════════════════════════════════════
-             SECTION: DEEPTHINK & CONTEXT
+             SECTION 03: MODEL GARDEN & SERVING OPTIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="model-garden">
+            <div class="section-divider-number">03</div>
+            <h2>Model Garden &amp; Serving Options</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Agent Platform Model Garden</strong> (formerly Vertex AI Model Garden) is the single enterprise catalog of 200+ Google first-party, partner MaaS, and open-weight models governed by unified IAM, VPC-SC, org policies, and billing.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Family</th><th>Active Examples</th><th>How You Consume It</th><th>What You Pay For</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>First-party (Google)</strong></td><td>Gemini 4 Argon, Gemini 3.8 Flash, 3.5 Flash-Lite, 3.8 Live, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2</td><td>Fully managed serverless API only</td><td>Per token / media unit (PayGo) or reserved capacity (<strong>Provisioned Throughput</strong> GSUs)</td></tr>
+                    <tr><td><strong>Partner (MaaS)</strong></td><td><strong>Anthropic Claude</strong>, <strong>Mistral AI</strong>, <strong>DeepSeek</strong> (e.g., <code>DeepSeek-V4.1-Flash</code> 1M context preview)</td><td>Managed serverless MaaS API inside Google Cloud boundary</td><td>Per token (PayGo) or Provisioned Throughput where offered</td></tr>
+                    <tr><td><strong>Open-weight</strong></td><td><strong>Gemma 4</strong> (<code>E2B</code>, <code>E4B</code>, <code>26B A4B MoE</code>, <code>31B</code>), Gemma 3/3n, MedGemma, ShieldGemma 2, Llama, Qwen</td><td><strong>Either</strong> curated serverless MaaS API <strong>or</strong> self-deployed on dedicated Agent Platform endpoints / <strong>GKE</strong></td><td>MaaS: per token. Self-deployed: VM + GPU/TPU compute <strong>for every hour deployed</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-handshake"></i></div>Partner Models on Agent Platform (Claude Example)</h3>
+            <ul>
+                <li><strong>Google-managed Claude (<code>AnthropicVertex</code>):</strong> Serverless API inside Google Cloud's security boundary with IAM, VPC-SC, regional/global endpoints, Cloud Audit Logs, and GCP billing.</li>
+                <li><strong>Anthropic-managed Claude:</strong> Marketplace-billed access to Anthropic-native platform features via a <strong>separate</strong> Anthropic organization (settings, API keys, and ZDR do not carry over from an existing standalone Anthropic org).</li>
+                <li><strong>Governance:</strong> Use Organization Policies to restrict allowed partner models. When an exam prompt asks to <em>"use Claude while keeping IAM, billing, data residency, and audit inside Google Cloud"</em>, select Claude via Model Garden MaaS (see <a href="Anthropic.html">Anthropic &amp; Claude guide</a>).</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Criterion</th><th>MaaS (Managed API)</th><th>Self-Deployed Agent Platform Endpoint</th><th>Self-Deployed on GKE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Ops burden</strong></td><td>None. Google autoscales accelerators.</td><td>Low–medium. Prebuilt vLLM / TGI / SGLang containers, autoscaling, idle undeploy.</td><td>High. You operate Kubernetes, node pools, and serving stacks.</td></tr>
+                    <tr><td><strong>Custom / LoRA weights</strong></td><td>Base catalog checkpoints only</td><td>✅ Custom weights, LoRA adapters, custom containers</td><td>✅ Full control + dynamic multi-LoRA serving</td></tr>
+                    <tr><td><strong>Traffic shape</strong></td><td>Bursty, unpredictable, prototyping</td><td>Steady high volume (lower TCO at sustained QPS)</td><td>Steady high volume; many models packed across shared GPU/TPU clusters</td></tr>
+                    <tr><td><strong>Billing trap</strong></td><td>Pay strictly per token</td><td><strong>Billed while deployed, even at 0 QPS</strong> (set idle TTL or undeploy)</td><td>Billed for provisioned nodes / reservations</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: MODEL SELECTION FRAMEWORK
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="model-selection">
+            <div class="section-divider-number">04</div>
+            <h2>Agentic Model Routing &amp; Selection Framework</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Golden rule:</strong> pick the <strong>smallest, fastest, cheapest model that passes your golden evaluation set</strong>, and route dynamically across tiers per agent step rather than sending every turn to a frontier model.</p>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-route"></i></div>
+            <div class="callout-content">
+                <h4>Multi-Model Agentic Cascade &amp; Vertex AI Model Optimizer</h4>
+                <p>Use <strong>Gemini 3.5 Flash-Lite</strong> (or <strong>ShieldGemma 2</strong>) at the front door for sub-200ms intent routing, slot extraction, and guardrails → run your core MCP tool-calling and coding loops on <strong>Gemini 3.8 Flash</strong> → escalate only hard multi-step planning, conflict resolution, or repository synthesis to <strong>Gemini 4 Argon</strong> (or enable <strong>Vertex AI Model Optimizer</strong> to route automatically across Gemini tiers by cost/quality target).</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-cloud"></i></div>LLM vs. SLM &amp; Managed vs. Self-Hosted</h3>
+                <ul>
+                    <li><strong>LLM (4 Argon / 3.8 Flash) vs. SLM (Gemma 4 / Nano / 3.5 Flash-Lite):</strong> LLMs excel at zero-shot long-horizon planning and 1M context; SLMs win high-QPS narrow schemas, edge latency, and fully offline client privacy.</li>
+                    <li><strong>Managed API vs. Self-Hosted:</strong> Default to managed APIs for fastest time-to-market and bursty traffic; self-host only for custom weights, air-gapped/strict private data paths, or proven lower TCO at steady saturated GPU utilization.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-lock-open"></i></div>Open-Weight vs. Proprietary Lifecycle</h3>
+                <ul>
+                    <li><strong>Proprietary (Gemini, Claude):</strong> Peak frontier reasoning and managed safety, but subject to vendor retirement timelines (pin stable IDs, never <code>-latest</code>; retired IDs return <code>404</code>).</li>
+                    <li><strong>Open-weight (Gemma 4, Llama):</strong> Permanent weight control and zero forced retirement, <strong>but you own patching, scaling, and safety guardrails</strong> (wrap with <strong>Model Armor</strong> + <strong>ShieldGemma 2</strong>). Remember: open models can also be consumed serverless via Model Garden MaaS!</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Customization Rung</th><th>Use When</th><th>Key Rule &amp; Gemini 4 Constraint</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Prompt &amp; Context Engineering</strong></td><td>Baseline instructions, JSON schemas, dynamic few-shot (<strong>Example Store</strong>)</td><td>Start here; automate prompt iteration against evals with <strong>Agent Optimizer</strong></td></tr>
+                    <tr><td><strong>2. Grounding / RAG</strong></td><td>Missing, private, or frequently changing <strong>knowledge</strong> + citations</td><td>Fixes <em>what the model knows</em> without retraining (Agent Search, RAG Engine, Search Grounding)</td></tr>
+                    <tr><td><strong>3. Supervised Fine-Tuning (SFT)</strong></td><td>Consistent <strong>behavior</strong>: strict syntax, domain jargon, replacing long few-shot prompts</td><td>Parameter-efficient LoRA adapters on eligible Gemini 2.5/3.x &amp; Gemma models (<strong>not supported on <code>gemini-4-argon</code></strong>; tuned models also cannot use explicit caching)</td></tr>
+                    <tr><td><strong>4. Preference Tuning</strong></td><td>Nuanced tone/quality trade-offs hard to label as single targets</td><td>Train on <code>(prompt, preferred, dispreferred)</code> pairs after SFT</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Consumption Option</th><th>Best For</th><th>Key Behavior</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Standard PayGo</strong></td><td>Default variable traffic</td><td>Shared pool; subject to <code>429</code> contention during spikes</td></tr>
+                    <tr><td><strong>Priority PayGo</strong></td><td>Latency-critical bursts without term commitment</td><td>Per-request priority header on shared capacity (supported on <code>gemini-4-argon</code>, <code>3.8-flash</code>, <code>nano-banana-2.1</code>); absorbs PT overflow</td></tr>
+                    <tr><td><strong>Flex PayGo / Batch</strong></td><td>Latency-tolerant evals, labeling, overnight bulk pipelines</td><td>Discounted token rates (Batch offers deepest async discount)</td></tr>
+                    <tr><td><strong>Provisioned Throughput (PT)</strong></td><td>Production workloads needing guaranteed QPS/TPM &amp; p95 SLA</td><td>Reserve non-cancelable <strong>GSUs</strong> (1 wk–1 yr, same publisher). Spills over to PayGo by default; set <code>X-Vertex-AI-LLM-Request-Type: dedicated</code> to cap spend strictly or <code>shared</code> to bypass PT</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: GEMINI 4 ARGON, 3.X & CONTEXT
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="deepthink">
-            <div class="section-divider-number">03</div>
-            <h2>Gemini 3.1 & Context Mechanics</h2>
-        </div>
-
-        <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>Gemini 3.1 Pro preview & "Deep think" paradigm</h3>
-            <p>Google's apex reasoning model optimized for agentic workflows and complex problem-solving.</p>
-            <ul>
-                <li><strong>Dynamic thinking:</strong> Embeds controllable chain-of-thought directly into the inference pipeline via a thinking_level API parameter.</li>
-                <li><strong>System 2 reasoning:</strong> Does not immediately output the most probable token → Instead, it explores trajectories, executes internal code to test assumptions, and prunes erroneous paths.</li>
-                <li><strong>Context window:</strong> Supports a 1 million-token input context in production, scalable to 2 million tokens in specialized environments.</li>
-                <li><strong>Output limit:</strong> Features a 65,536-token output limit, a significant and frequently tested architectural detail.</li>
-                <li><strong>Grounding with Google Search</strong>
-                    <ul>
-                        <li>Dynamically injects real-time Search results into the context window at inference</li>
-                        <li>Reduces hallucination on time-sensitive factual queries</li>
-                        <li>Distinct from RAG because retrieval is handled by Google's index, not a developer-built vector store</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <div class="concept-card accent-cyan">
-            <h3><div class="icon-badge"><i class="fas fa-cogs"></i></div>Context mechanics & tokenization</h3>
-            <ul>
-                <li><strong>Text:</strong> 256,000-token vocabulary using SentencePiece unigram.</li>
-                <li><strong>Visual (images):</strong> Dynamic tiling. Scaled/cropped to 768x768 tiles; each deterministically maps to 258 tokens.</li>
-                <li><strong>Video:</strong> Parallel streams sampled at configurable rates (1 FPS = ~263 tokens per second). Can be compressed to 66-70 tokens for multi-hour context.</li>
-                <li><strong>Audio:</strong> Encoded continuously at a highly efficient fixed rate of 32 tokens per second.</li>
-                <li><strong>Timestamp</strong> tokens anchor parallel streams for perfect temporal coherence.</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION: GENERATION MODELS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="generation">
-            <div class="section-divider-number">04</div>
-            <h2>Generation Models</h2>
-        </div>
-
-        <div class="concept-card accent-pink">
-            <h3><div class="icon-badge"><i class="fas fa-music"></i></div>Lyria 3 (audio & music generation)</h3>
-            <ul>
-                <li>Abandons autoregressive token prediction (which causes statistical drift) in favor of temporal latent diffusion.</li>
-                <li><strong>Architecture:</strong> Autoencoder compresses 16-bit PCM waveforms into lower-dimensional latents → A transformer-based denoising network iteratively sculpts pure noise into 48kHz stereo waveforms.</li>
-                <li><strong>Tiers:</strong> Lyria 3 Clip (30-second rapid prototyping) and Lyria 3 Pro (184-second full compositions).</li>
-                <li><strong>Multimodal input:</strong> Accepts image inputs from developers to perform aesthetic extraction, generating a soundscape that matches the visual mood, demonstrating integration into the broader multimodal ecosystem.</li>
-                <li><strong>Deterministic structural control:</strong> Accepts explicit mathematical inputs (timestamps, intros, choruses, tempos like 120 BPM), plot intensity arcs, and high-fidelity expressive human vocals in multiple global languages → Outputs guarantee time-aligned lyrics.</li>
-            </ul>
-        </div>
-
-        <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-image"></i></div>Nano Banana 2 (Gemini 3.1 Flash image)</h3>
-            <ul>
-                <li><strong>Capabilities:</strong> 131,072 input token context. Ingests PDF references and maintains structural identity/fidelity of up to 14 objects natively. Outputs up to 4K resolution.</li>
-                <li><strong>Entity resolution:</strong> Maintains structural identity of up to 5 characters and 14 objects across multi-turn generation.</li>
-                <li><strong>Search grounding:</strong> Executes live web queries during generation to render accurate text (94% accuracy) and architectural landmarks → bypassing standard diffusion hallucination.</li>
-            </ul>
-        </div>
-
-        <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Veo 3.1 (video generation)</h3>
-            <ul>
-                <li><strong>Joint latent diffusion:</strong> Simultaneously compresses raw video pixels and raw audio waveforms into a single unified latent representation.</li>
-                <li><strong>Result:</strong> Emergent, perfect synchronization (e.g., footsteps align perfectly with visual impact) → without requiring a separate "bolted-on" audio track. Officially supports 4K resolution output and configurable native aspect ratios (16:9 landscape and 9:16 portrait).</li>
-                <li><strong>Temporal consistency:</strong> Uses spatial and temporal attention for robust object permanence → Occluded objects reappear correctly without morphing ("AI slop").</li>
-                <li><strong>Model variants:</strong> Veo 3.1 Fast (optimized for speed/price) and Veo 3.1 Lite (a highly scalable, developer-first API version).</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION: AUDIO, API & EMBEDDINGS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="audio-api">
             <div class="section-divider-number">05</div>
-            <h2>Gemini Audio, Live API & Embeddings</h2>
+            <h2>Gemini 4 Argon, Gemini 3.x &amp; Context Mechanics</h2>
         </div>
-        
-        <p class="prose" style="margin-bottom: 20px;">
-            A foundational model designed specifically for live voice-agent interactions, bypassing intermediate text generation for pure acoustic understanding.
-        </p>
 
-        <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Gemini Audio</h3>
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-atom"></i></div>Gemini 4 Argon (<code>gemini-4-argon</code>) Architecture &amp; Strict Constraints</h3>
             <ul>
-                <li><strong>Native Speech-to-Speech Architecture:</strong> Abandons traditional ASR/TTS pipelines (converting speech to text, processing, then back to speech) → Directly ingests and outputs audio, preserving rich acoustic nuances like tone, emotion, pacing, and intent that are typically lost in text transcription.</li>
-                <li><strong>Advanced function calling:</strong> Achieves a leading 71.5% score on ComplexFuncBench Audio 2. It reliably triggers multi-step external tool use (fetching live data) directly from spoken audio without awkward pauses or breaking the conversational flow.</li>
-                <li><strong>Live Speech Translation:</strong> Powers streaming speech-to-speech translation with native style transfer → Replicates the original speaker's exact intonation, pitch, and rhythm in the translated output to make cross-language dialogue feel less robotic 3. Supports both continuous ambient listening and dynamic two-way conversation switching.</li>
-                <li><strong>Instruction Adherence & Context:</strong> Features a 90% strict instruction adherence rate 1 3. Excels at multi-turn conversational consistency by natively retrieving context from earlier audio turns, utilizing built-in noise filtering for robust accuracy in loud or outdoor environments.</li>
-                <li><strong>Ecosystem integration:</strong> Powers the voice infrastructure for Gemini Live, Search Live, and the Google Translate app, while being accessible to developers via Vertex AI and Google AI Studio.</li>
+                <li><strong>Unified 1M Token Budget (<code>1,048,576</code> tokens):</strong> Shares a single 1M-token pool across <strong>input prompt + internal thinking + function calls + generated output</strong>.</li>
+                <li><strong>Long Decodes up to 1M Tokens:</strong> Default single sync response cap is <strong><code>65,536</code> tokens</strong> (<code>32,768</code> non-streaming HTTP), extendable up to the full <strong><code>1,048,576</code> budget (minus input)</strong> via <code>continuation_token</code> on <code>GenerateContent</code> (<code>v1beta1</code>) or server-side <code>background=true</code> on the <strong>Interactions API</strong>.</li>
+                <li><strong>Thinking Levels (<code>LOW</code> | <code>MEDIUM</code> | <code>HIGH</code>):</strong> Defaults to <code>MEDIUM</code>. Passing legacy integer <code>thinking_budget</code> <strong>OR</strong> <code>thinking_level="MINIMAL"</code> on <code>gemini-4-argon</code> returns <strong>HTTP <code>400 INVALID_ARGUMENT</code></strong>! (<code>MINIMAL</code> is valid on Gemini 3.x Flash; integer <code>thinking_budget</code> belongs to Gemini 2.5, where <code>2.5 Pro</code> minimum is 128 tokens.)</li>
+                <li><strong>Sampling Parameters Ignored:</strong> Custom <code>temperature</code>, <code>top_p</code>, and <code>top_k</code> values are ignored on <code>gemini-4-argon</code>.</li>
+                <li><strong>Implicit Caching Only &amp; Feature Matrix:</strong> Uses automatic durable <strong>implicit caching</strong> (4,096-token minimum, zero storage fee, up to 95% discount on Gemini API). <strong>Explicit <code>cachedContents</code>, Managed Tuning, Live API WebSockets, and direct RAG Engine generator binding are NOT supported on <code>gemini-4-argon</code>.</strong> Supports <strong>GA Agentic Video Understanding</strong>, <strong>Computer Use</strong>, Code Execution, MCP/Function Calling, and Grounding.</li>
+                <li><strong>Gemini 4 Argon Cyber Permissive (<code>gemini-4-argon-cyber-permissive</code>):</strong> Allowlisted via DeepMind's <strong>Fairwind Program</strong> (<code>global</code> &amp; <code>us</code>) for defensive vulnerability research, reverse engineering, and <strong>CodeMender</strong>; defaults to <code>HIGH</code> thinking and <strong>disables Computer Use</strong>.</li>
             </ul>
         </div>
 
         <div class="two-columns">
-            <div class="concept-card accent-coral">
-                <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Gemini multimodal live API</h3>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-arrows-rotate"></i></div><code>GenerateContent</code> vs. <code>Interactions API</code> &amp; Caching</h3>
                 <ul>
-                    <li>Shifts from stateless RESTful prompts to stateful, bidirectional WebSocket (WSS) connections.</li>
-                    <li>Streams raw 16-bit PCM audio, video frames, and text simultaneously.</li>
-                    <li><strong>Bypasses STT/TTS:</strong> Understands raw acoustic waveforms (tone, hesitation) → and outputs raw 24kHz audio.</li>
-                    <li>Supports "barge-in" (interrupting the model mid-sentence) → Affective dialog (mirroring emotional state).</li>
+                    <li><strong><code>GenerateContent</code>:</strong> Stateless client-managed turns (pass history + opaque <strong>Thought Signatures</strong> across tool loops; enable <code>include_thoughts=True</code> for UI summaries).</li>
+                    <li><strong><code>Interactions API</code> (<code>client.interactions.create</code>, Preview):</strong> Optional server-side state via <code>previous_interaction_id</code> + <code>background=true</code> for long-horizon decodes and Managed Agents.</li>
+                    <li><strong>Explicit Caching (<code>cachedContents</code>):</strong> Available on Gemini 2.5 and supported 3.x base models (60-min default TTL + hourly storage fee); disable all caching when strict <strong>Zero Data Retention (ZDR)</strong> applies.</li>
                 </ul>
             </div>
-            <div class="concept-card accent-mint">
-                <h3><div class="icon-badge"><i class="fas fa-vector-square"></i></div>Gemini embedding 2</h3>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-cogs"></i></div>Multimodal Tokenization Mechanics</h3>
                 <ul>
-                    <li>Natively multimodal unified vector space. Maps text, images, video, and audio into a single mathematical store.</li>
-                    <li><strong>Use case:</strong> Upload a picture of a broken part to query a vector store and instantly retrieve the exact timestamp of a relevant video tutorial and text manual.</li>
+                    <li><strong>Text:</strong> 256,000-token <strong>SentencePiece</strong> vocabulary.</li>
+                    <li><strong>Images:</strong> Dynamic <strong>768×768</strong> pixel tiling at <strong>258 tokens per tile</strong> (plus configurable resolution tiers).</li>
+                    <li><strong>Video:</strong> <strong>~263 tokens/sec at 1 FPS</strong> standard resolution (compressible to <strong>~66–70 tokens/sec</strong> for multi-hour recordings), enhanced by GA agentic zoom/re-sampling.</li>
+                    <li><strong>Audio:</strong> Fixed compact <strong>32 tokens per second</strong> interleaved with timestamp markers.</li>
                 </ul>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: GEMMA
+             SECTION 06: GENERATION MODELS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="gemma">
+        <div class="section-divider" id="generation">
             <div class="section-divider-number">06</div>
-            <h2>Gemma Architecture</h2>
-        </div>
-
-        <p class="prose" style="margin-bottom: 20px;">
-            Brings Gemini's core architecture to local, compute-constrained environments.
-        </p>
-
-        <div class="concept-card accent-cyan">
-            <h3><div class="icon-badge"><i class="fas fa-microchip"></i></div>Gemma 3 architecture</h3>
-            <ul>
-                <li><strong>Native multimodality:</strong> Uses a frozen 400M parameter SigLIP Vision Transformer to condense image matrices into 256 "soft tokens" prepended to text sequences.</li>
-                <li><strong>Adaptive windowing:</strong> Dynamically segments images into 896x896 crops during inference without forcing non-square distortion.</li>
-                <li><strong>Context window (128k tokens):</strong> Abandons uniform global attention for a 5:1 interleaving topology (5 layers of local sliding window self-attention [1024 tokens] to 1 layer of global self-attention) → Geometrically shrinks KV cache memory footprint.</li>
-            </ul>
+            <h2>Generative Media Models (Images, Video &amp; Music)</h2>
         </div>
 
         <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-project-diagram"></i></div>RecurrentGemma (Griffin architecture)</h3>
+            <h3><div class="icon-badge"><i class="fas fa-image"></i></div>Nano Banana 2.1 / Pro &amp; Imagen 3 / 4</h3>
             <ul>
-                <li>Replaces pure attention with a hybrid gated linear recurrence + local sliding window attention.</li>
-                <li>Uses a fixed-size internal state instead of expanding KV caches.</li>
-                <li><strong>Trade-off:</strong> Slight drop in needle-in-a-haystack retrieval → achieves substantially higher sampling throughput with drastically lower memory consumption for long sequences at the edge.</li>
+                <li><strong>Nano Banana 2.1 (<code>gemini-nano-banana-2.1</code>, GA + Priority PayGo):</strong> Flagship native Gemini image generator &amp; mask-free multi-turn conversational editor (replaces retired standalone <code>Imagen 4</code> on the developer Gemini API).</li>
+                <li><strong>Nano Banana 2 (<code>gemini-3.1-flash-image</code>), 2 Lite (<code>gemini-3.1-flash-lite-image</code>) &amp; Pro (<code>gemini-3-pro-image</code>):</strong> <strong>131,072-token</strong> context, up to <strong>4K resolution</strong>, Google Search-grounded typography/infographics, and up to <strong>14 reference images</strong> on Pro (5 character + 6 object + 3 style) for multi-turn identity preservation.</li>
+                <li><strong>Imagen 3 &amp; Imagen 4 (Agent Platform):</strong> Specialized latent-diffusion text-to-image endpoints (480-token prompt, up to 2K) with built-in <strong>SynthID</strong> and <strong>C2PA Content Credentials</strong>.</li>
             </ul>
         </div>
 
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Gemini Omni 1.1 Flash &amp; Veo 3.1</h3>
+                <ul>
+                    <li><strong>Gemini Omni 1.1 Flash (<code>gemini-omni-1.1-flash</code>):</strong> Fast native multimodal video generation, instruction-based video editing, keyframe interpolation, and clip extension with native audio.</li>
+                    <li><strong>Veo 3.1 (<code>Generate</code>, <code>Fast</code>, <code>Lite</code> — GA on Agent Platform):</strong> <strong>Joint latent diffusion</strong> synthesizing 4K 16:9 / 9:16 video and synchronized lip-sync/Foley audio in one shared latent space with strong object permanence (succeeding silent <strong>Veo 2</strong>).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-music"></i></div>Lyria 3.5, Lyria 3 &amp; RealTime</h3>
+                <ul>
+                    <li><strong>Temporal Latent Diffusion:</strong> Denoises compact 44.1–48 kHz stereo waveform latents without autoregressive drift.</li>
+                    <li><strong>Lineup:</strong> <strong>Lyria 3.5 (<code>lyria-3.5</code>)</strong> for full-length structurally coherent songs, <strong>Lyria 3 Pro</strong> (184s), <strong>Lyria 3 Clip</strong> (30s), <strong>Lyria RealTime (<code>lyria-realtime-exp</code>)</strong>, and <strong>Lyria 2</strong> — accepting text/image prompts, BPM/structure controls, and multilingual vocals with SynthID-Audio watermarking.</li>
+                </ul>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
-             SECTION: SAFETY
+             SECTION 07: AUDIO, API & EMBEDDINGS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="safety">
+        <div class="section-divider" id="audio-api">
             <div class="section-divider-number">07</div>
-            <h2>Safety & Security</h2>
+            <h2>Live API, 3.8 TTS, 3.5 Transcribe, Chirp 3 &amp; Embedding 2</h2>
         </div>
 
-        <div class="concept-card accent-pink">
-            <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Safety & security: SynthID framework</h3>
-            <p>Traditional metadata watermarks (C2PA) are easily stripped. SynthID embeds imperceptible cryptographic signatures directly into the data structures at inference.</p>
-            <ul>
-                <li><strong>Text:</strong> Tournament sampling → Uses a secure pseudo-random g-function to subtly skew the probability distribution (logits) of word choices.</li>
-                <li><strong>Audio:</strong> Psychoacoustic spectral embedding. Converts waveforms to spectrograms and hides data in frequencies where human hearing is weakest → Survives the "analog hole" (physical speaker to microphone re-recording).</li>
-                <li><strong>Video/image:</strong> Pixel-level latent manipulation. Distributed holistically across the spatial matrix or spatio-temporal volume → Survives cropping, color-filtering, and lossy compression.</li>
-            </ul>
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Gemini 3.8 Live &amp; Native Speech Models</h3>
+                <ul>
+                    <li><strong>Gemini 3.8 Live (<code>gemini-3.8-live</code>):</strong> Default stateful WebRTC/WebSocket native speech-to-speech &amp; video agent (16-bit PCM in → 24 kHz audio out) with server-side VAD <strong>barge-in</strong>, affective dialogue, and spoken function calling (71.5%+ ComplexFuncBench Audio).</li>
+                    <li><strong>Gemini 3.8 Live Extended Thinking (<code>gemini-3.8-live-extended-thinking</code>):</strong> Runs deep background reasoning asynchronously without stalling live spoken conversation.</li>
+                    <li><strong>Dedicated TTS, STT &amp; Live Translate:</strong> <strong>Gemini 3.8 Flash TTS</strong> (130 languages, studio voice design) &amp; <strong>Flash-Lite TTS</strong> (101 languages); <strong>Gemini 3.5 Transcribe</strong> (low-latency diarized STT with vocabulary biasing); <strong>Gemini 3.5 Live Translate</strong> (70+ language prosody-preserving S2S).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-wave-square"></i></div>Chirp 3 (Speech-to-Text V2) &amp; Gemini Embedding 2</h3>
+                <ul>
+                    <li><strong>Chirp 3 (<code>chirp_3</code>):</strong> Built on the <strong>2B+ parameter Universal Speech Model (USM)</strong> (12M+ hours, 100+ languages) for compliance ASR pipelines requiring <code>StreamingRecognize</code> / <code>BatchRecognize</code>, <strong>Model Adaptation</strong> (up to 1,000 custom phrases), <code>denoise_audio=True</code>, and word-level timestamps.</li>
+                    <li><strong>Gemini Embedding 2 (<code>gemini-embedding-2</code>) &amp; <code>gemini-embedding-001</code>:</strong> <code>gemini-embedding-2</code> is Google's <strong>first native multimodal Gemini embedding model</strong>, mapping text, code, images, audio, video, and PDFs into one shared space. Both use <strong>Matryoshka Representation Learning (MRL)</strong> for truncatable L2-normalized dimensions (e.g., 3,072 → 768 / 256).</li>
+                </ul>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: SCIENCE
+             SECTION 08: GEMMA
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="science">
+        <div class="section-divider" id="gemma">
             <div class="section-divider-number">08</div>
-            <h2>Scientific & Specialized Models</h2>
+            <h2>Gemma 4 &amp; Open-Weight Edge Models</h2>
         </div>
 
-        <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-flask"></i></div>AlphaFold 3 (generative molecular simulation)</h3>
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-microchip"></i></div>Gemma 4, Gemma 3n &amp; Gemma 3 Architecture</h3>
             <ul>
-                <li><strong>Shift in paradigm:</strong> Replaces the Evoformer with the Pairformer (reducing reliance on Multiple Sequence Alignments to focus on direct pairwise atom interactions).</li>
-                <li><strong>Tokenization:</strong> Operates at extreme granularity—one token per atom for chemical modifications and ligands.</li>
-                <li><strong>Conditional diffusion module:</strong> Replaces AF2's rigid deterministic structure module → Initializes a chaotic cloud of noise atoms and denoises them into a physically stable 3D molecular complex.</li>
+                <li><strong>Gemma 4 (<code>E2B</code>, <code>E4B</code>, <code>26B A4B MoE</code>, <code>31B</code>):</strong> Flagship open-weight family combining mobile-first <strong>Per-Layer Embeddings (PLE)</strong> on <code>E2B</code>/<code>E4B</code> (processing <strong>text, image, video, and native audio</strong> in a 2B–4B RAM envelope), an ultra-fast <strong>26B Sparse MoE activating only 4B parameters per token (<code>26B A4B</code>)</strong> for self-hosted agentic loops, and a dense <strong>31B</strong> checkpoint.</li>
+                <li><strong>Gemma 3 (1B–27B) &amp; Gemma 3n:</strong> Introduced <strong>128K context</strong>, 140+ languages, frozen 400M <strong>SigLIP</strong> vision encoding (256 soft tokens per <strong>896×896 Pan &amp; Scan</strong> crop), <strong>5:1 local-to-global interleaved attention</strong> (5 sliding-window 1,024-token layers per 1 global layer to shrink KV-cache RAM), and MatFormer parameter sharing.</li>
+                <li><strong>T5Gemma &amp; RecurrentGemma (Griffin):</strong> Open encoder-decoder checkpoints (<code>T5Gemma</code>) and hybrid <strong>Real-Gated Linear Recurrence (<code>RG-LRU</code>)</strong> models achieving constant fixed-size state memory on long edge streams.</li>
             </ul>
         </div>
 
         <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-square-root-variable"></i></div>AlphaGeometry 2 (neuro-symbolic reasoning)</h3>
-            <p>Solves IMO geometry problems (84% success rate) using a dual-engine architecture:</p>
+            <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Specialized Gemma Variants</h3>
             <ul>
-                <li><strong>Neural language model (Gemini):</strong> Heuristic/intuitive. Predicts mathematically probable auxiliary constructs (e.g., drawing an unstated bisecting line).</li>
-                <li><strong>Symbolic engine (DDAR):</strong> Rigid/infallible. Computes thousands of exhaustive rule-bound deductions to verify the proof.</li>
+                <li><strong>ShieldGemma 2 (4B) &amp; ShieldGemma (2B, 9B, 27B):</strong> Open text and image safety classifiers scoring prompts, completions, and synthetic/natural images against harm policies.</li>
+                <li><strong>MedGemma (4B, 27B), MedSigLIP (800M) &amp; TxGemma (2B–27B):</strong> Clinical text/radiology/pathology multimodal models (replacing legacy standalone <strong>MedLM</strong> alongside Gemini) and therapeutic small-molecule/biologic discovery models.</li>
+                <li><strong>PaliGemma 2 (3B–28B), CodeGemma (2B, 7B) &amp; FunctionGemma:</strong> Fine-tunable VLMs (detection/segmentation), IDE Fill-in-the-Middle (FIM) completion, and compact tool-calling adapters.</li>
             </ul>
         </div>
 
-        <div class="concept-card accent-mint" style="margin-bottom: 24px;">
-            <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Model references</h3>
+        <!-- ═══════════════════════════════════════
+             SECTION 09: SAFETY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="safety">
+            <div class="section-divider-number">09</div>
+            <h2>Safety, SynthID &amp; Frontier Governance</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-fingerprint"></i></div>SynthID Imperceptible Watermarking</h3>
+                <p>Paired with <strong>C2PA Content Credentials</strong>, <strong>SynthID</strong> embeds imperceptible statistical/cryptographic signatures directly into generated payloads so provenance survives metadata stripping:</p>
+                <ul>
+                    <li><strong>SynthID-Text:</strong> Seeded cryptographic <strong><em>g</em>-function tournament sampling</strong> skewing token choices without hurting fluency or perplexity.</li>
+                    <li><strong>SynthID-Audio:</strong> Psychoacoustic spectral embedding surviving MP3 compression and the <strong>"analog hole"</strong> (speaker playback re-recorded by mic).</li>
+                    <li><strong>SynthID-Image &amp; Video:</strong> Spatial-temporal latent perturbations resilient to cropping, filters, and transcoding.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Frontier Safety Framework (FSF) &amp; Model Armor</h3>
+                <ul>
+                    <li><strong>Critical Capability Levels (CCLs):</strong> Pre-deployment gating across <strong>CBRN uplift</strong>, <strong>Autonomous Cyber-Offense</strong> (why <code>gemini-4-argon-cyber-permissive</code> requires <strong>Fairwind Program</strong> vetting with Computer Use disabled), <strong>Autonomous ML R&amp;D</strong>, and <strong>Deceptive Alignment</strong>.</li>
+                    <li><strong>Mitigation Pillars:</strong> <strong>Security Mitigations</strong> (weight exfiltration hardening) + <strong>Deployment Mitigations</strong> (safety tuning, runtime sentinels, gated access).</li>
+                    <li><strong>Runtime Guardrails:</strong> Per-request <code>SafetySetting</code> thresholds + <strong>Vertex AI Model Armor</strong> + <strong>ShieldGemma 2</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: SCIENCE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="science">
+            <div class="section-divider-number">10</div>
+            <h2>Scientific &amp; Agentic Discovery Models</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-Dna"></i></div>Agentic Discovery: AI Co-Scientist, AlphaEvolve &amp; CodeMender</h3>
+                <ul>
+                    <li><strong>AI Co-Scientist:</strong> Multi-agent research tournament built on Gemini (<strong>Generate → Reflect → Rank → Evolve → Proximity → Meta-review</strong>) using Elo-rated self-play to synthesize experimentally validated biomedical hypotheses.</li>
+                    <li><strong>AlphaEvolve:</strong> Evolutionary coding agent pairing Gemini synthesis with deterministic automated evaluators to discover novel provably correct matrix-multiplication algorithms, math bounds, and Borg/TPU kernel optimizations.</li>
+                    <li><strong>CodeMender:</strong> Autonomous defensive cyber agent powered by <code>gemini-3.8-flash</code> and <code>gemini-4-argon</code> (<code>cm find / verify / fix</code>) for vulnerability discovery, sanitizer verification, and automated patching.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-flask"></i></div>AlphaFold 3, AlphaProteo &amp; AlphaGeometry 2</h3>
+                <ul>
+                    <li><strong>AlphaFold 3:</strong> Replaces Evoformer with a 48-block <strong>Pairformer</strong>, <strong>atomic-level tokenization</strong> for ligands/ions, and a <strong>3D Conditional Diffusion Module</strong> across proteins, DNA, RNA, ligands, and ions.</li>
+                    <li><strong>AlphaProteo:</strong> <em>De novo</em> generative design of high-affinity protein binders (3×–300× affinity improvement).</li>
+                    <li><strong>AlphaGeometry 2:</strong> Solves <strong>84% of IMO geometry problems</strong> via a neuro-symbolic loop pairing a <strong>Gemini</strong> auxiliary-construct generator with the infallible <strong>DDAR</strong> symbolic engine.</li>
+                </ul>
+            </div>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
-                <dt>SIMA 2 (generalist 3D agent)</dt>
-                <dd>An agent that plays, reasons, and learns with users in diverse virtual 3D worlds, functioning as a collaborative generalist agent rather than a purely autonomous one.</dd>
+                <dt>Gemini Robotics ER 2</dt>
+                <dd>Embodied Reasoning VLA model (<code>gemini-robotics-er-2-preview</code>, succeeding retired ER 1.6 &amp; RT-2) for 3D spatial pointing, grasp planning, and physical robot safety.</dd>
             </div>
             <div class="definition-item">
-                <dt>Genie 2 / 3 (world models)</dt>
-                <dd>Generates interactive, playable 2D and 3D environments from single-frame or textual prompts.</dd>
+                <dt>Genie 2 / 3 &amp; SIMA 2</dt>
+                <dd>Interactive physics-consistent 3D world models generated from single prompts (<code>Genie</code>) and generalist 3D virtual game/environment agents (<code>SIMA 2</code>).</dd>
             </div>
             <div class="definition-item">
-                <dt>AlphaFold 3 (biology)</dt>
-                <dd>Predicts joint molecular structures and interactions with atomic precision across all life’s molecules.</dd>
+                <dt>AlphaMissense &amp; DolphinGemma</dt>
+                <dd>Pathogenicity classification across 71M human missense variants and bioacoustic sequence modeling of wild dolphin vocalizations.</dd>
             </div>
             <div class="definition-item">
-                <dt>AlphaProteo (biology)</dt>
-                <dd>Designs novel, high-affinity protein binders for diverse target proteins to accelerate drug discovery.</dd>
+                <dt>GraphCast &amp; GenCast</dt>
+                <dd>10-day deterministic GNN (<code>GraphCast</code>) and 15-day probabilistic diffusion ensemble (<code>GenCast</code>) global weather and extreme-event forecasting.</dd>
             </div>
             <div class="definition-item">
-                <dt>AlphaMissense (biology)</dt>
-                <dd>Classifies missense mutations to identify pathogenic variants in the human genome.</dd>
+                <dt>AlphaTensor, AlphaDev &amp; AlphaCode 2</dt>
+                <dd>RL-discovered fast matrix multiplication, CPU-assembly C++ LLVM sorting/hashing routines, and execution-filtered competitive programming.</dd>
             </div>
             <div class="definition-item">
-                <dt>DolphinGemma (biology)</dt>
-                <dd>Specialized model for decoding and modeling complex animal communication patterns.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaGeometry 2 (mathematics)</dt>
-                <dd>Reasons through IMO-level geometry problems using a neuro-symbolic dual-engine approach.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaTensor (mathematics)</dt>
-                <dd>Discovers computationally efficient algorithms for fundamental matrix multiplication tasks.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaCode (programming)</dt>
-                <dd>Generates competitive-level code solutions through massive-scale sampling and filtering.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaDev (algorithms)</dt>
-                <dd>Utilizes reinforcement learning to discover faster sorting and hashing algorithms in assembly.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaGo / AlphaZero / MuZero</dt>
-                <dd>Frontier RL models achieving superhuman mastery in games without human intervention or known rules.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaStar (games)</dt>
-                <dd>First AI to defeat Grandmaster-level players in the complex real-time strategy game StarCraft II.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>GraphCast / GenCast (climate)</dt>
-                <dd>Provides high-resolution global weather forecasting and probabilistic extreme weather prediction.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaChip (hardware)</dt>
-                <dd>Optimizes superhuman chip layouts to accelerate hardware design cycles using RL.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AlphaQubit (quantum)</dt>
-                <dd>Applies AI to quantum error correction to improve the stability of quantum computations.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>PaLM 2 / USM / WaveNet</dt>
-                <dd>Foundational text-first, speech, and audio synthesis models serving as previous-generation baselines.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Phenaki (video)</dt>
-                <dd>Early research model for generating long, temporally consistent video sequences from text prompts.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Aeneas (humanities)</dt>
-                <dd>Restores missing text and dates damaged ancient inscriptions using neural sequence modeling.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>PaLM-SayCan / RT-2 / ALOHA</dt>
-                <dd>Advanced robotics models integrating language and vision for dexterous manipulation and planning.</dd>
+                <dt>AlphaChip, AlphaQubit &amp; Aeneas</dt>
+                <dd>RL TPU floorplan placement, recurrent transformer surface-code quantum error correction, and ancient epigraphic text restoration.</dd>
             </div>
         </div>
 
-
-        
         <!-- ═══════════════════════════════════════
-             SELF ASSESSMENT QUESTIONS
+             PRACTICE QUIZ CTA (WEB ONLY)
              ═══════════════════════════════════════ -->
-        <div class="quiz-block">
-            <div class="quiz-header">
-                <i class="fas fa-question-circle"></i>
-                <h3>Self-Assessment Questions</h3>
+        <div class="concept-card accent-mint no-print" style="margin-top: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Interactive Practice Quiz &amp; Companion Tracks</h3>
+            <p>Test your mastery of Gemini 4 Argon mechanics, Gemini 3.8 Flash/Live/TTS, multi-model agentic routing, Interactions API, Model Garden MaaS vs. self-hosted serving, Provisioned Throughput, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2, Gemma 4, SynthID, Frontier Safety Framework, AI Co-Scientist, AlphaEvolve, and AlphaFold 3.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
+                <a href="quiz.html?topic=google" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 240px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Take the practice quiz: Gemini &amp; Google Models →</span>
+                </a>
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 240px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                </a>
             </div>
-            <div class="quiz-body">
-                <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> What is the core architectural shift in Gemini compared to previous generation models?</p>
-                    <div class="quiz-answer">
-                        <span class="answer-text">Native multimodality (early fusion) where all data types are projected into a unified token space from the beginning, rather than bolting on separate encoders.</span>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> What is the SynthID framework used for?</p>
-                    <div class="quiz-answer">
-                        <span class="answer-text">To embed imperceptible cryptographic signatures directly into text, audio, image, and video data structures at inference to track AI provenance.</span>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> What is the difference between Gemini Nano and Gemini Flash?</p>
-                    <div class="quiz-answer">
-                        <span class="answer-text">Gemini Nano is optimized for on-device edge computing with zero latency, while Gemini Flash is optimized for extreme inference speed and high-volume serving in the cloud.</span>
-                    </div>
-                </div>
-            </div>
+            <ul style="margin-top: 16px;">
+                <li><a href="AgentPlatform.html">Agent Platform: Build, Retrieve &amp; Run</a>: Managed Agents API, Agent Runtime vs. Cloud Run vs. GKE, Context Engineering, 2-step simulation, and Agent Optimizer.</li>
+                <li><a href="ADK.html">Google Agent Development Kit (ADK)</a> &amp; <a href="A2A.html">A2A &amp; Interoperability</a>: multi-agent orchestration, MCP, A2UI, and AP2.</li>
+                <li><a href="Anthropic.html">Anthropic &amp; Claude Models</a>: Claude model family, also served as a managed partner model in Model Garden.</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -566,21 +646,20 @@
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>
 
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
 
-
     <script>
         const backToTopBtn = document.getElementById('backToTop');
         window.addEventListener('scroll', () => {
             backToTopBtn.classList.toggle('visible', window.scrollY > 400);
-        });
-
-        document.querySelectorAll('.quiz-answer').forEach(answer => {
-            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
         });
 
         document.querySelectorAll('.toc-item').forEach(link => {
