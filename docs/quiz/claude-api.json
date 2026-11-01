@@ -30,7 +30,17 @@
         }
       ],
       "explanation": "Model tier and reasoning effort are independent levers. The eval shows a cheaper tier at low effort passes this specific step, so move that step only and treat the swap as a release with a pinned ID and a rollback target. Sampling knobs are rejected on the newest models and max_tokens only caps output.",
-      "key_takeaway": "Change tier or effort per step on eval evidence, and treat each swap as a pinned, reversible release."
+      "key_takeaway": "Change tier or effort per step on eval evidence, and treat each swap as a pinned, reversible release.",
+      "doc_links": [
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        },
+        {
+          "label": "Claude Effort Parameter",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        }
+      ]
     },
     {
       "id": "claude-api-q-02",
@@ -59,7 +69,17 @@
         }
       ],
       "explanation": "Generation is sampled, so correct answers vary in wording. Newest models reject non-default sampling parameters with a 400, and temperature 0 never guaranteed identical output on older models. Test properties of the output and use a model-graded eval for meaning.",
-      "key_takeaway": "Test properties and meaning, never exact strings; sampling knobs are rejected on Claude 4.7+ anyway."
+      "key_takeaway": "Test properties and meaning, never exact strings; sampling knobs are rejected on Claude 4.7+ anyway.",
+      "doc_links": [
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        },
+        {
+          "label": "Claude Effort Parameter",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        }
+      ]
     },
     {
       "id": "claude-api-q-03",
@@ -70,7 +90,7 @@
         {
           "text": "Rename the role to \"developer\", which the Messages API uses for operator-level instructions.",
           "correct": false,
-          "why_wrong": "There is no developer role in the Messages API; turns are only user and assistant."
+          "why_wrong": "There is no developer role in the Messages API; renaming the role just trades one validation error for another."
         },
         {
           "text": "Move the instructions to the top-level system field and keep messages as user and assistant turns.",
@@ -87,8 +107,18 @@
           "why_wrong": "The API is stateless; nothing from an earlier call is remembered, so the instructions must be in every request."
         }
       ],
-      "explanation": "The Messages API takes the system prompt as a top-level system parameter. The messages array alternates user and assistant turns. The API is stateless, so the system prompt and history must be sent on every call.",
-      "key_takeaway": "System instructions go in the top-level system field; messages hold only user and assistant turns."
+      "explanation": "Instructions that apply from the first turn go in the top-level system parameter, and the messages array starts with a user turn. Newer models also accept a role \"system\" message inside messages, but only after a user turn, for instructions that become relevant later; it doesn't replace the top-level field. The API is stateless, so the system prompt and history are sent on every call.",
+      "key_takeaway": "Initial instructions go in the top-level system field; in-array system messages (newer models) only follow a user turn.",
+      "doc_links": [
+        {
+          "label": "Claude Messages API Guide",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+        },
+        {
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ]
     },
     {
       "id": "claude-api-q-04",
@@ -117,7 +147,17 @@
         }
       ],
       "explanation": "A response is an array of typed content blocks. With thinking on, a thinking block usually comes before the text block. Select blocks by their type and branch on stop_reason before reading text.",
-      "key_takeaway": "Never assume content[0] is text; select content blocks by type."
+      "key_takeaway": "Never assume content[0] is text; select content blocks by type.",
+      "doc_links": [
+        {
+          "label": "Claude Messages API Guide",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+        },
+        {
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ]
     },
     {
       "id": "claude-api-q-05",
@@ -146,7 +186,17 @@
         }
       ],
       "explanation": "Tool results are matched to calls by ID, not by position or name. Each tool_result must carry the tool_use_id equal to the id of the tool_use block it answers, in the very next user turn.",
-      "key_takeaway": "Echo the tool_use id exactly as tool_use_id; it is a wiring bug, not a schema bug."
+      "key_takeaway": "Echo the tool_use id exactly as tool_use_id; it is a wiring bug, not a schema bug.",
+      "doc_links": [
+        {
+          "label": "Claude Tool Use Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+        },
+        {
+          "label": "Handling Claude Tool Calls",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+        }
+      ]
     },
     {
       "id": "claude-api-q-06",
@@ -175,7 +225,17 @@
         }
       ],
       "explanation": "An empty success looks like real data. Setting is_error on the tool_result tells Claude the call failed so it can retry, ask for help or stop. Prompt wording and bigger models can't recover a signal that was never sent.",
-      "key_takeaway": "Send tool failures back as tool_result with is_error: true, never as an empty string."
+      "key_takeaway": "Send tool failures back as tool_result with is_error: true, never as an empty string.",
+      "doc_links": [
+        {
+          "label": "Claude Tool Use Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+        },
+        {
+          "label": "Handling Claude Tool Calls",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+        }
+      ]
     },
     {
       "id": "claude-api-q-07",
@@ -204,7 +264,17 @@
         }
       ],
       "explanation": "disable_parallel_tool_use is a field of the tool_choice object, not a top-level request parameter. With type auto and the flag set to true, Claude emits at most one tool call per response and can still answer in plain text.",
-      "key_takeaway": "disable_parallel_tool_use lives inside tool_choice, not at the top level of the request."
+      "key_takeaway": "disable_parallel_tool_use lives inside tool_choice, not at the top level of the request.",
+      "doc_links": [
+        {
+          "label": "Claude Tool Use Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+        },
+        {
+          "label": "Handling Claude Tool Calls",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+        }
+      ]
     },
     {
       "id": "claude-api-q-08",
@@ -233,7 +303,17 @@
         }
       ],
       "explanation": "Refusals arrive as HTTP 200 with stop_reason refusal, so status checks miss them. Handle them on stop_reason: inspect stop_details, and reset context by removing or rephrasing the refused turn, since keeping it in history causes continued refusals. A fallback model retry may be offered.",
-      "key_takeaway": "A refusal is HTTP 200: branch on stop_reason and reset the refused turn instead of backoff-retrying."
+      "key_takeaway": "A refusal is HTTP 200: branch on stop_reason and reset the refused turn instead of backoff-retrying.",
+      "doc_links": [
+        {
+          "label": "Claude Stop Reasons & Fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        },
+        {
+          "label": "Claude Refusals & Fallback Handling",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback"
+        }
+      ]
     },
     {
       "id": "claude-api-q-09",
@@ -262,7 +342,17 @@
         }
       ],
       "explanation": "On newer models, when input plus max_tokens exceeds the window the request is accepted, and if generation runs out of room it stops with model_context_window_exceeded. Treat it as truncated and shrink the history. An input that alone exceeds the window would have been rejected with a 400 up front.",
-      "key_takeaway": "max_tokens = your output cap; model_context_window_exceeded = the window filled. Fix the latter by shrinking history."
+      "key_takeaway": "max_tokens = your output cap; model_context_window_exceeded = the window filled. Fix the latter by shrinking history.",
+      "doc_links": [
+        {
+          "label": "Claude Stop Reasons & Fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        },
+        {
+          "label": "Claude Refusals & Fallback Handling",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback"
+        }
+      ]
     },
     {
       "id": "claude-api-q-10",
@@ -291,7 +381,17 @@
         }
       ],
       "explanation": "pause_turn means a long-running server-tool loop reached its iteration limit. Return the assistant content as-is in a follow-up request and the model continues where it left off.",
-      "key_takeaway": "On pause_turn, send the assistant content back unchanged to continue the turn."
+      "key_takeaway": "On pause_turn, send the assistant content back unchanged to continue the turn.",
+      "doc_links": [
+        {
+          "label": "Claude Stop Reasons & Fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        },
+        {
+          "label": "Claude Refusals & Fallback Handling",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback"
+        }
+      ]
     },
     {
       "id": "claude-api-q-11",
@@ -320,7 +420,17 @@
         }
       ],
       "explanation": "Only message_stop means the message is complete. Saving on loop exit stored a half-built tool_use block, and every later request carrying that history fails. Parse tool input at content_block_stop, commit at message_stop, and discard partial turns.",
-      "key_takeaway": "Commit a streamed turn only after message_stop; discard partial turns on interruption."
+      "key_takeaway": "Commit a streamed turn only after message_stop; discard partial turns on interruption.",
+      "doc_links": [
+        {
+          "label": "Claude Streaming Messages",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+        },
+        {
+          "label": "Claude Stop Reasons & Fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ]
     },
     {
       "id": "claude-api-q-12",
@@ -349,7 +459,17 @@
         }
       ],
       "explanation": "Tool input streams as input_json_delta fragments that are not valid JSON on their own. Buffer them per content block index and parse at content_block_stop.",
-      "key_takeaway": "Buffer input_json_delta fragments; parse tool input only at content_block_stop."
+      "key_takeaway": "Buffer input_json_delta fragments; parse tool input only at content_block_stop.",
+      "doc_links": [
+        {
+          "label": "Claude Streaming Messages",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/streaming"
+        },
+        {
+          "label": "Claude Stop Reasons & Fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        }
+      ]
     },
     {
       "id": "claude-api-q-13",
@@ -378,7 +498,17 @@
         }
       ],
       "explanation": "JSON outputs (output_config.format with a json_schema) constrain the response to the schema, replacing prompt-only formatting and the prefill trick that Claude 4.6+ rejects. Still check stop_reason, since a refusal or max_tokens stop may not conform.",
-      "key_takeaway": "Enforce format with output_config.format (or strict tools), and still check stop_reason before parsing."
+      "key_takeaway": "Enforce format with output_config.format (or strict tools), and still check stop_reason before parsing.",
+      "doc_links": [
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "label": "Claude Strict Tool Use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+        }
+      ]
     },
     {
       "id": "claude-api-q-14",
@@ -407,7 +537,17 @@
         }
       ],
       "explanation": "Structured outputs guarantee shape, not correctness. Find and fix value errors with a labelled eval set covering edge cases plus deterministic business-rule validation.",
-      "key_takeaway": "Schema-valid is not correct: keep graded evals and value checks after adopting structured outputs."
+      "key_takeaway": "Schema-valid is not correct: keep graded evals and value checks after adopting structured outputs.",
+      "doc_links": [
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "label": "Claude Strict Tool Use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+        }
+      ]
     },
     {
       "id": "claude-api-q-15",
@@ -436,7 +576,17 @@
         }
       ],
       "explanation": "Manual extended thinking with budget_tokens is deprecated on Claude 4.6 and rejected on 4.7 and later. Use adaptive thinking and steer reasoning depth with the effort setting.",
-      "key_takeaway": "On Claude 4.7+, replace budget_tokens with thinking type adaptive plus output_config.effort."
+      "key_takeaway": "On Claude 4.7+, replace budget_tokens with thinking type adaptive plus output_config.effort.",
+      "doc_links": [
+        {
+          "label": "Claude Adaptive & Extended Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+        },
+        {
+          "label": "Claude Effort Parameter",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        }
+      ]
     },
     {
       "id": "claude-api-q-16",
@@ -465,7 +615,17 @@
         }
       ],
       "explanation": "Thinking blocks carry a signature. When you return tool results, the assistant message, including thinking and redacted_thinking blocks, must come back exactly as received. Manage context by pruning or compacting older completed turns.",
-      "key_takeaway": "Pass thinking blocks back unmodified in tool loops; save context elsewhere."
+      "key_takeaway": "Pass thinking blocks back unmodified in tool loops; save context elsewhere.",
+      "doc_links": [
+        {
+          "label": "Claude Adaptive & Extended Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking"
+        },
+        {
+          "label": "Claude Effort Parameter",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        }
+      ]
     },
     {
       "id": "claude-api-q-17",
@@ -494,7 +654,17 @@
         }
       ],
       "explanation": "Correct choices early and wrong ones later point to context crowding by accumulated tool output, not a schema problem. Prune old results, use context editing, or compact, and measure tokens.",
-      "key_takeaway": "Right tool early, wrong tool later means context overflow: prune or compact, don't rewrite schemas."
+      "key_takeaway": "Right tool early, wrong tool later means context overflow: prune or compact, don't rewrite schemas.",
+      "doc_links": [
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ]
     },
     {
       "id": "claude-api-q-18",
@@ -523,7 +693,17 @@
         }
       ],
       "explanation": "Caching needs a byte-identical prefix up to the breakpoint. Dynamic text before the breakpoint creates a new cache write on every call and no reads. Put static content first and dynamic content after the last breakpoint.",
-      "key_takeaway": "Static content before the breakpoint, dynamic content after it; a longer TTL doesn't fix a changing prefix."
+      "key_takeaway": "Static content before the breakpoint, dynamic content after it; a longer TTL doesn't fix a changing prefix.",
+      "doc_links": [
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ]
     },
     {
       "id": "claude-api-q-19",
@@ -552,7 +732,17 @@
         }
       ],
       "explanation": "The cache follows the tools → system → messages hierarchy. Changing tool_choice, toggling images, or changing thinking or effort invalidates the messages cache (and sometimes earlier levels). Keep these settings stable per workload or place breakpoints before the variation point.",
-      "key_takeaway": "Varying tool_choice, thinking or effort per call silently invalidates the prompt cache."
+      "key_takeaway": "Varying tool_choice, thinking or effort per call silently invalidates the prompt cache.",
+      "doc_links": [
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ]
     },
     {
       "id": "claude-api-q-20",
@@ -581,7 +771,17 @@
         }
       ],
       "explanation": "Chunked loops are still serial synchronous calls. Message Batches process up to 100,000 requests asynchronously at half price, usually within an hour; anything unfinished after 24 hours expires. Results can arrive in any order, so match on custom_id.",
-      "key_takeaway": "Offline bulk work goes through Message Batches (50% off, ≤24 h), matched by custom_id."
+      "key_takeaway": "Offline bulk work goes through Message Batches (50% off, ≤24 h), matched by custom_id.",
+      "doc_links": [
+        {
+          "label": "Claude Message Batches",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+        },
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        }
+      ]
     },
     {
       "id": "claude-api-q-21",
@@ -610,7 +810,17 @@
         }
       ],
       "explanation": "Batch results may come back out of request order. Each request carries a unique custom_id (up to 64 letters, digits, underscores or hyphens) that you use to match results to inputs.",
-      "key_takeaway": "Never match batch results by position; use a unique custom_id per request."
+      "key_takeaway": "Never match batch results by position; use a unique custom_id per request.",
+      "doc_links": [
+        {
+          "label": "Claude Message Batches",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+        },
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        }
+      ]
     },
     {
       "id": "claude-api-q-22",
@@ -639,7 +849,17 @@
         }
       ],
       "explanation": "The SDKs already retry connection errors, 408, 409, 429 and 5xx twice by default with backoff and honor retry-after. A second loop multiplies attempts. Choose one retry owner (or adjust max_retries) and back off with jitter.",
-      "key_takeaway": "SDKs retry twice by default; don't stack your own loop on top. One layer owns retries."
+      "key_takeaway": "SDKs retry twice by default; don't stack your own loop on top. One layer owns retries.",
+      "doc_links": [
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        },
+        {
+          "label": "Claude API Rate Limits",
+          "url": "https://platform.claude.com/docs/en/api/rate-limits"
+        }
+      ]
     },
     {
       "id": "claude-api-q-23",
@@ -668,7 +888,17 @@
         }
       ],
       "explanation": "Rate limits (429), server errors (500) and overload (529) are transient: retry with backoff and honor retry-after. Request, auth, permission and not-found errors are terminal. Refusals arrive as HTTP 200 and are handled on stop_reason. Note that a spend-cap 429 has no retry-after and keeps failing.",
-      "key_takeaway": "Retry 429/5xx/529 with backoff; fail fast on 400/401/403/404; handle refusals on stop_reason."
+      "key_takeaway": "Retry 429/5xx/529 with backoff; fail fast on 400/401/403/404; handle refusals on stop_reason.",
+      "doc_links": [
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        },
+        {
+          "label": "Claude API Rate Limits",
+          "url": "https://platform.claude.com/docs/en/api/rate-limits"
+        }
+      ]
     },
     {
       "id": "claude-api-q-24",
@@ -697,7 +927,17 @@
         }
       ],
       "explanation": "Judges are more reliable when they reason before scoring against anchored rubric bands, and their agreement must be checked against human-labelled cases before you trust their numbers.",
-      "key_takeaway": "Calibrate LLM judges: reasoning first, anchored bands, checked against human labels."
+      "key_takeaway": "Calibrate LLM judges: reasoning first, anchored bands, checked against human labels.",
+      "doc_links": [
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        },
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        }
+      ]
     },
     {
       "id": "claude-api-q-25",
@@ -726,7 +966,17 @@
         }
       ],
       "explanation": "The repeated prefix dominates input spend. Cache reads cost about 0.1× base input after a 1.25× write (5-minute TTL), and caching long prefixes also reduces time to first token.",
-      "key_takeaway": "Cache a large static prefix: writes 1.25×, reads about 0.1×, plus a faster first token."
+      "key_takeaway": "Cache a large static prefix: writes 1.25×, reads about 0.1×, plus a faster first token.",
+      "doc_links": [
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        },
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        }
+      ]
     },
     {
       "id": "claude-api-q-26",
@@ -755,7 +1005,17 @@
         }
       ],
       "explanation": "First-party inference_geo accepts only global or us. EU-only residency needs Amazon Bedrock regional/EU routing or the Google Cloud eu multi-region, which carry a regional premium.",
-      "key_takeaway": "First-party inference_geo is global or US only; EU-only residency means Bedrock or Google Cloud EU routing."
+      "key_takeaway": "First-party inference_geo is global or US only; EU-only residency means Bedrock or Google Cloud EU routing.",
+      "doc_links": [
+        {
+          "label": "Claude Models on Google Cloud",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/overview"
+        },
+        {
+          "label": "Claude API OpenTelemetry Tracing",
+          "url": "https://platform.claude.com/docs/en/manage-claude/opentelemetry"
+        }
+      ]
     },
     {
       "id": "claude-api-q-27",
@@ -784,7 +1044,17 @@
         }
       ],
       "explanation": "On pre-4.6 models, short aliases move to the newest dated snapshot, so upstream changes reach production silently. Pin a full ID, keep the prior pin as the rollback target, and promote only when evals meet the baseline. From Claude 4.6 on, the dateless ID is itself a fixed snapshot.",
-      "key_takeaway": "Pin full model IDs, keep the previous pin for rollback, and eval-gate every promotion."
+      "key_takeaway": "Pin full model IDs, keep the previous pin for rollback, and eval-gate every promotion.",
+      "doc_links": [
+        {
+          "label": "Claude Models on Google Cloud",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/overview"
+        },
+        {
+          "label": "Claude API OpenTelemetry Tracing",
+          "url": "https://platform.claude.com/docs/en/manage-claude/opentelemetry"
+        }
+      ]
     },
     {
       "id": "claude-api-q-28",
@@ -813,7 +1083,21 @@
         }
       ],
       "explanation": "Indirect prompt injection arrives through content the agent reads. Treat it as data, screen it at ingestion, and remove capabilities the task doesn't need. A summarizer has no reason to hold a send tool.",
-      "key_takeaway": "Defend against indirect injection at ingestion and remove tools the task doesn't need."
+      "key_takeaway": "Defend against indirect injection at ingestion and remove tools the task doesn't need.",
+      "doc_links": [
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        },
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
     },
     {
       "id": "claude-api-q-29",
@@ -842,7 +1126,17 @@
         }
       ],
       "explanation": "Identity and entitlements must come from your auth layer, injected server-side, never from what users type. Per-tenant keys or workspaces stop one tenant's spike from throttling others and make usage attributable.",
-      "key_takeaway": "Inject identity server-side and isolate tenants; never authorize from text in the user turn."
+      "key_takeaway": "Inject identity server-side and isolate tenants; never authorize from text in the user turn.",
+      "doc_links": [
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        },
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        }
+      ]
     },
     {
       "id": "claude-api-q-30",
@@ -871,7 +1165,17 @@
         }
       ],
       "explanation": "The pattern retries terminal errors, multiplies SDK retries, can leave r undefined when all attempts fail, and passes refusals or truncated output downstream because it ignores stop_reason. Classify errors, let one layer retry, fail loudly when out of budget, and branch on stop_reason.",
-      "key_takeaway": "Classify errors, let one layer retry, fail loudly, and branch on stop_reason before reading text."
+      "key_takeaway": "Classify errors, let one layer retry, fail loudly, and branch on stop_reason before reading text.",
+      "doc_links": [
+        {
+          "label": "Claude Stop Reasons & Fallback",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
     },
     {
       "id": "claude-api-q-31",
@@ -885,7 +1189,7 @@
           "why_wrong": "Parallel tool calls cannot chain sequential data dependencies, and executing LLM-generated code on the host exposes ambient network, filesystem, and secret access."
         },
         {
-          "text": "Use progressive tool disclosure (Select) or programmatic tool calling in a zero-trust V8 isolate with outbound RPC bindings.",
+          "text": "Load tool schemas on demand (tool search or task-scoped tools) and use programmatic tool calling, so sandboxed code chains the calls and returns only the result.",
           "correct": true
         },
         {
@@ -899,8 +1203,18 @@
           "why_wrong": "Message Batches is an asynchronous offline endpoint (up to 24 hours per batch), making it unsuitable for interactive multi-turn tool chaining."
         }
       ],
-      "explanation": "Exposing 45 MCP tools up front causes Turn-1 context confusion and bills ~90k schema tokens on every turn, while standard ReAct tool ping-pong pays a full inference round-trip for every intermediate filter step. Progressive tool disclosure (Select) scopes schemas to relevant tools, and programmatic tool calling (CodeMode) lets Claude write a typed script executed in a capability-restricted V8 isolate (no ambient network, filesystem, or env access; only explicit outbound RPC bindings) to chain calls and return only the final summary.",
-      "key_takeaway": "Fix Turn-1 tool bloat with progressive disclosure and collapse sequential tool ping-pong with programmatic tool calling in a V8 isolate."
+      "explanation": "Exposing 45 tool schemas up front bills about 90k tokens on every turn and confuses turn-1 selection; loading schemas on demand (tool search, task-scoped tools, progressive disclosure) fixes that. Sequential filter steps pay a full inference per call; with programmatic tool calling Claude writes one script that runs in a sandbox (Anthropic's code execution container; third-party variants such as Code Mode use a V8 isolate), calls the tools in a loop, and only the final output enters the context window.",
+      "key_takeaway": "Fix turn-1 schema bloat by loading tools on demand; collapse sequential tool round-trips with sandboxed programmatic tool calling.",
+      "doc_links": [
+        {
+          "label": "Claude Tool Use Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+        },
+        {
+          "label": "Handling Claude Tool Calls",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+        }
+      ]
     },
     {
       "id": "claude-api-q-32",
@@ -929,7 +1243,446 @@
         }
       ],
       "explanation": "Context poisoning occurs when a hallucination or faulty premise in an early turn is referenced repeatedly; summarization/compaction preserves the poisoned premise in condensed form, so you must truncate or reset history prior to the bad turn. For verification, the Builder–Reviewer pattern requires a separate messages.create() call with a fresh messages[] array containing only the specification and candidate artifact so the reviewer is not biased by the builder's trajectory.",
-      "key_takeaway": "Compaction preserves context poisoning (reset prior to the bad turn), and Builder–Reviewer verification requires a fresh messages[] array."
+      "key_takeaway": "Compaction preserves context poisoning (reset prior to the bad turn), and Builder–Reviewer verification requires a fresh messages[] array.",
+      "doc_links": [
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-33",
+      "section": "Explicit Criteria & Few-Shot",
+      "guide_anchor": "prompt-criteria",
+      "question": "A code-review bot's \"comment accuracy\" category produces so many false positives that developers now ignore its security findings too. The team proposes adding \"only report findings you are highly confident about\" to the prompt. What should they do instead?",
+      "options": [
+        {
+          "text": "Add the confidence instruction and have the model print a 1–10 score on every finding so developers can filter out the low scores themselves.",
+          "correct": false,
+          "why_wrong": "Confidence wording doesn't define what qualifies, so precision barely moves; it also pushes filtering onto developers who already distrust the output."
+        },
+        {
+          "text": "Write explicit report/skip criteria with contrast examples, and pause the noisy category until its measured precision recovers.",
+          "correct": true
+        },
+        {
+          "text": "Move the reviewer to the most capable model tier with higher effort so it naturally becomes more careful about which comments it flags.",
+          "correct": false,
+          "why_wrong": "A bigger model with the same vague instruction still has no definition of what to report; the defect is the criteria, not capability."
+        },
+        {
+          "text": "Keep every category enabled but merge them into one list, so the accurate security findings outweigh the noisy comment findings overall.",
+          "correct": false,
+          "why_wrong": "Noise in one category erodes trust in all of them; merging hides per-category precision instead of fixing the cause."
+        }
+      ],
+      "explanation": "Vague confidence instructions don't improve precision because they don't say what counts. Categorical report/skip criteria plus contrast examples define the boundary, and temporarily disabling a high-noise category restores trust while its criteria are rewritten and re-measured.",
+      "key_takeaway": "Fix false positives with explicit categorical criteria and examples, not 'be confident' wording; pause noisy categories while you fix them.",
+      "doc_links": [
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        },
+        {
+          "label": "Increasing Output Consistency",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-34",
+      "section": "Explicit Criteria & Few-Shot",
+      "guide_anchor": "prompt-criteria",
+      "question": "A recipe extractor has detailed instructions, yet results for informal amounts such as \"a pinch\" or \"a couple of cups\" vary between runs and the quantity field is sometimes empty. What is the most effective next step?",
+      "options": [
+        {
+          "text": "Add another paragraph listing every informal unit seen so far, each with its exact gram or millilitre conversion, so the model can look every one of them up.",
+          "correct": false,
+          "why_wrong": "Rule lists only match what was enumerated; examples teach a judgment that generalizes to phrasings nobody listed."
+        },
+        {
+          "text": "Make the quantity a required number in the schema so the model can no longer leave it empty in any response it returns.",
+          "correct": false,
+          "why_wrong": "Requiring a value the source may not state pushes the model to fabricate one, and it still doesn't show how to read informal amounts."
+        },
+        {
+          "text": "Add a few varied, tagged examples showing how informal amounts are extracted, including an explicit null when no quantity is stated.",
+          "correct": true
+        },
+        {
+          "text": "Set temperature to 0 so the same informal phrase is always converted identically across runs and the variance disappears.",
+          "correct": false,
+          "why_wrong": "Non-default temperature returns 400 on Claude 4.7+, and consistency of a wrong interpretation is not correctness."
+        }
+      ],
+      "explanation": "Few-shot examples are the most reliable lever when instructions alone give inconsistent results. Relevant, diverse examples in <example> tags show both the format and the judgment for ambiguous inputs, including when to return null rather than guess.",
+      "key_takeaway": "When instructions give inconsistent output, add a few varied, tagged examples that show the judgment, including explicit nulls.",
+      "doc_links": [
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        },
+        {
+          "label": "Increasing Output Consistency",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-35",
+      "section": "Structured Outputs",
+      "guide_anchor": "structured-outputs",
+      "question": "A pipeline receives scanned documents that may be invoices, receipts or contracts, each with its own extraction tool. With default settings Claude sometimes answers in prose instead of calling any tool. The pinned model accepts forced tool use. Which setting fits best?",
+      "options": [
+        {
+          "text": "Set tool_choice to {\"type\": \"any\"} so Claude must call one of the extraction tools while still choosing the one that matches.",
+          "correct": true
+        },
+        {
+          "text": "Set tool_choice to {\"type\": \"tool\", \"name\": \"extract_invoice\"} for every document so the output is always structured, whatever the type.",
+          "correct": false,
+          "why_wrong": "Forcing the invoice schema onto receipts and contracts produces wrong or invented fields; the document type is unknown up front."
+        },
+        {
+          "text": "Keep tool_choice auto and add \"always respond in JSON\" to the system prompt so prose answers stop appearing in the results.",
+          "correct": false,
+          "why_wrong": "With auto, Claude may still reply in text; prompt prose is best effort and gives no structural guarantee."
+        },
+        {
+          "text": "Set tool_choice to {\"type\": \"none\"} and parse the JSON that Claude writes in its text reply after each document.",
+          "correct": false,
+          "why_wrong": "none disables tool calls entirely, so you lose the schema-validated tool input and are back to parsing free text."
+        }
+      ],
+      "explanation": "auto lets the model answer in text; any requires a tool call but lets Claude pick which; a named tool forces one schema. With several schemas and an unknown document type, any guarantees structured output without forcing the wrong schema.",
+      "key_takeaway": "Unknown document type with several extraction tools: tool_choice any. A specific mandatory step: force that named tool.",
+      "doc_links": [
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "label": "Claude Strict Tool Use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-36",
+      "section": "Structured Outputs",
+      "guide_anchor": "structured-outputs",
+      "question": "An invoice extractor's schema marks po_number as a required string. About 40% of invoices have no PO number, and auditors keep finding plausible PO numbers that don't exist. What is the best fix?",
+      "options": [
+        {
+          "text": "Add a retry loop that asks again until the returned PO number matches the company's PO format regular expression.",
+          "correct": false,
+          "why_wrong": "The value is absent from the source, so retries just produce a format-valid fabrication that passes the regex."
+        },
+        {
+          "text": "Put an enum of every known PO number in the schema so that only real values can ever be produced by the model.",
+          "correct": false,
+          "why_wrong": "The list changes constantly and an enum still forces a pick when no PO exists, so fabrication continues in another form."
+        },
+        {
+          "text": "Drop strict tool use and switch to free-text answers so the model can explain in its own words whenever the PO number is missing.",
+          "correct": false,
+          "why_wrong": "Losing the schema guarantee creates parsing problems; the defect is the required field, fixed by making it nullable."
+        },
+        {
+          "text": "Make po_number nullable or optional, instruct \"use null if not stated\", and check null rates on invoices known to lack one.",
+          "correct": true
+        }
+      ],
+      "explanation": "A required field that the source often lacks pushes the model to satisfy the schema by inventing a value. Nullable (or optional) fields make 'not stated' a valid answer, and an explicit instruction plus measurement confirms nulls appear where they should.",
+      "key_takeaway": "Fields the source may lack should be nullable or optional; required fields with absent data invite fabrication.",
+      "doc_links": [
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "label": "Claude Strict Tool Use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-37",
+      "section": "Validation & Retry",
+      "guide_anchor": "validation-retry",
+      "question": "An extractor uses strict tool use. Code validation finds that in 6% of documents the line items sum to 1,140 while stated_total says 1,240. In other documents the total appears only on a remittance page that is never sent. Which retry policy is right?",
+      "options": [
+        {
+          "text": "Retry the sum mismatches with the document, failed output and exact error; flag the missing-page cases or fetch the page instead of retrying.",
+          "correct": true
+        },
+        {
+          "text": "Retry every validation failure up to five times with the message \"be more careful\" until all documents pass validation.",
+          "correct": false,
+          "why_wrong": "Generic feedback gives little to correct, and for absent data the loop eventually returns an invented total that passes."
+        },
+        {
+          "text": "Do nothing: strict tool use guarantees schema compliance, so these extractions are already correct by construction.",
+          "correct": false,
+          "why_wrong": "Strict schemas eliminate syntax and type errors, not semantic ones such as sums that don't match or missing information."
+        },
+        {
+          "text": "Remove line items from the schema entirely so the extracted total can never disagree with them, which ends these validation failures for good.",
+          "correct": false,
+          "why_wrong": "That hides the signal; comparing a calculated total with the stated total is exactly how semantic errors are caught."
+        }
+      ],
+      "explanation": "Retry with specific error feedback works when the source can resolve the error, such as an arithmetic slip or misread digit. It cannot help when the information is absent from the input; then the right move is to flag, fetch the missing source or route to review.",
+      "key_takeaway": "Retry with specific errors for fixable mistakes; never retry for information that isn't in the input.",
+      "doc_links": [
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-38",
+      "section": "Validation & Retry",
+      "guide_anchor": "validation-retry",
+      "question": "Developers dismiss about 30% of an AI reviewer's findings, and nobody can tell which review rules cause the dismissals. What design change enables systematic analysis?",
+      "options": [
+        {
+          "text": "Ask the reviewer to attach a longer natural-language justification to every finding so developers dismiss fewer of them.",
+          "correct": false,
+          "why_wrong": "Free-text justifications can't be aggregated, and they don't reveal which criteria generate the false positives."
+        },
+        {
+          "text": "Run the reviewer twice and post only the findings that both runs agree on, discarding any finding that appears once.",
+          "correct": false,
+          "why_wrong": "A systematically bad criterion agrees with itself across runs; this adds cost without showing which rules are noisy."
+        },
+        {
+          "text": "Add a detected_pattern field to each finding and group dismissals by pattern to find, then rewrite, the noisy criteria.",
+          "correct": true
+        },
+        {
+          "text": "Remove the dismiss button so developers must answer every finding in detail before the pull request can be merged.",
+          "correct": false,
+          "why_wrong": "This suppresses the feedback signal and adds friction, further eroding trust instead of diagnosing the cause."
+        }
+      ],
+      "explanation": "A structured detected_pattern field names the construct behind each finding. Aggregating dismissals by that field turns developer feedback into data that shows which criteria produce false positives, so those prompts can be rewritten and re-measured.",
+      "key_takeaway": "Tag findings with detected_pattern so dismissals can be analyzed per pattern and noisy criteria fixed.",
+      "doc_links": [
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        },
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-39",
+      "section": "Long-Session Facts",
+      "guide_anchor": "long-session-facts",
+      "question": "A support agent handles multi-issue sessions of 40+ turns. After rolling summarization is enabled, it misquotes refund amounts and deadlines. Each order lookup returns about 45 fields, of which 5 matter. What is the best change?",
+      "options": [
+        {
+          "text": "Summarize more often and tell the summarizer to \"preserve every important detail\" so amounts and dates survive each pass.",
+          "correct": false,
+          "why_wrong": "Summaries still paraphrase numbers and dates; exact facts need a structured store your code owns, outside the summary."
+        },
+        {
+          "text": "Keep a code-maintained case-facts block re-injected every turn, and trim each order lookup to its relevant fields before appending it.",
+          "correct": true
+        },
+        {
+          "text": "Send only the latest user message on each turn so the prompt stays short and focused on the current customer question.",
+          "correct": false,
+          "why_wrong": "The API is stateless; dropping history loses commitments and coherence rather than preserving facts."
+        },
+        {
+          "text": "Move to a model with a larger context window and keep the full 45-field lookups in history for maximum completeness and accuracy.",
+          "correct": false,
+          "why_wrong": "Bloated tool output keeps crowding the context and burying facts mid-input; a bigger window doesn't fix summary loss."
+        }
+      ],
+      "explanation": "Progressive summarization condenses exact amounts, dates and IDs into vague text. A persistent case-facts block maintained by code keeps them authoritative, and trimming tool outputs to relevant fields stops irrelevant data from accumulating on every turn.",
+      "key_takeaway": "Keep exact transactional facts in a code-owned case-facts block and trim tool outputs before they enter history.",
+      "doc_links": [
+        {
+          "label": "Claude Context Compaction",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
+        },
+        {
+          "label": "Claude Memory Tool",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-40",
+      "section": "Long-Session Facts",
+      "guide_anchor": "long-session-facts",
+      "question": "A synthesis step receives instructions at the top followed by 12 concatenated subagent reports (about 60k tokens). Reviewers notice that findings from the middle reports are often missing from the final answer. What should the team change?",
+      "options": [
+        {
+          "text": "Raise max_tokens on the synthesis call so the model has more room to cover every report in its final answer.",
+          "correct": false,
+          "why_wrong": "max_tokens caps output length; it does nothing about how reliably the model uses content buried mid-input."
+        },
+        {
+          "text": "Shuffle the order of the reports on every run so that no report stays in the middle position for long.",
+          "correct": false,
+          "why_wrong": "Randomizing position makes omissions unpredictable instead of fixing them; structure and placement are the fix."
+        },
+        {
+          "text": "Ask each subagent to return longer, more detailed prose with its full reasoning so its findings stand out more clearly in the combined input.",
+          "correct": false,
+          "why_wrong": "Longer prose makes the input bigger and the middle harder to use; structured, concise outputs help downstream synthesis."
+        },
+        {
+          "text": "Put the reports first and the instructions last, open with a key-findings summary, and give each report an explicit header or tag.",
+          "correct": true
+        }
+      ],
+      "explanation": "Long inputs show a lost-in-the-middle effect. Anthropic's long-context guidance puts long documents at the top and the query at the end; leading with a key-findings summary and clear section headers or XML tags further reduces omissions.",
+      "key_takeaway": "Mitigate lost-in-the-middle: documents first, query last, a summary up front and clear headers per source.",
+      "doc_links": [
+        {
+          "label": "Claude Context Compaction",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
+        },
+        {
+          "label": "Claude Memory Tool",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-41",
+      "section": "Multi-Pass Review",
+      "guide_anchor": "multi-pass-review",
+      "question": "A contract-drafting pipeline asks the drafting session to check its own clauses, and lawyers keep finding issues it approved. The proposed fix is to send the full drafting transcript, including the drafter's reasoning, to a larger model tier for review. What actually makes the review independent?",
+      "options": [
+        {
+          "text": "A separate call with a fresh messages list holding only the spec, the rubric and the draft; the same model can run it.",
+          "correct": true
+        },
+        {
+          "text": "The larger tier itself: a more capable reviewer overrides the drafter's reasoning even while it reads the full transcript.",
+          "correct": false,
+          "why_wrong": "Independence comes from context, not tier; the transcript still anchors the reviewer to the drafter's own rationale."
+        },
+        {
+          "text": "Keeping review in the drafting session but raising effort to max, so the model reconsiders each clause more deeply.",
+          "correct": false,
+          "why_wrong": "The drafting context keeps its own reasoning in view, and more thinking doesn't remove that anchor."
+        },
+        {
+          "text": "Passing the reviewer a summary of the drafter's reasoning instead of the transcript, so it knows why each clause exists.",
+          "correct": false,
+          "why_wrong": "A reasoning summary still carries the drafter's rationale into review; the reviewer should judge the draft against the spec alone."
+        }
+      ],
+      "explanation": "Self-review is weak because the generating context keeps its own reasoning and tends to defend it. Independence comes from context: a new request whose messages hold only the spec or rubric and the artifact. The reviewer can be the same model; a different tier is optional and doesn't help if the generator's reasoning comes along.",
+      "key_takeaway": "Reviewer independence comes from a fresh context (spec + artifact only), not from a bigger or different model.",
+      "doc_links": [
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        },
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-42",
+      "section": "Human Review & Calibration",
+      "guide_anchor": "human-review",
+      "question": "An extraction pipeline reports 97% overall field accuracy, and leadership wants to stop human review of high-confidence extractions. The model emits per-field confidence scores that were never checked against labels. What should happen first?",
+      "options": [
+        {
+          "text": "Approve the change, because 97% comfortably beats the 95% target and the confidence scores already filter out the weak extractions.",
+          "correct": false,
+          "why_wrong": "An aggregate can hide failing segments, and uncalibrated self-reported confidence isn't a reliable filter yet."
+        },
+        {
+          "text": "Check accuracy per document type and field, calibrate thresholds on labeled validation data, and keep stratified sampling.",
+          "correct": true
+        },
+        {
+          "text": "Review only low-confidence items from now on and stop sampling high-confidence ones so reviewer time is saved.",
+          "correct": false,
+          "why_wrong": "Without sampling auto-approved items you never measure their error rate or notice new error patterns."
+        },
+        {
+          "text": "Sample 1% of all documents at random for review each week, regardless of document type, field or source system.",
+          "correct": false,
+          "why_wrong": "Plain random sampling under-samples rare document types; stratify by segment to measure each one."
+        }
+      ],
+      "explanation": "A high headline accuracy rate can hide weak extraction quality on rarer form layouts or individual fields. Validate per segment, calibrate field-level confidence thresholds against labeled data, and keep stratified random sampling of high-confidence items to track error rates and drift.",
+      "key_takeaway": "Before cutting human review, check accuracy per segment, calibrate confidence on labeled data and keep stratified sampling.",
+      "doc_links": [
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        },
+        {
+          "label": "Reducing Hallucinations in Claude",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+        }
+      ]
+    },
+    {
+      "id": "claude-api-q-43",
+      "section": "Message Batches",
+      "guide_anchor": "batches",
+      "question": "A team must deliver extraction results within 30 hours of each document's arrival and wants the 50% Message Batches discount. Which plan is sound?",
+      "options": [
+        {
+          "text": "Submit one batch per day at midnight, since most batches finish within an hour and 30 hours is then easy to meet.",
+          "correct": false,
+          "why_wrong": "There's no latency SLA: a document arriving after midnight can wait about 24 h plus up to 24 h of processing, about 48 h."
+        },
+        {
+          "text": "Use batches, but let each request run its multi-step database tool loop inside the batch to finish extraction.",
+          "correct": false,
+          "why_wrong": "Your code can't execute tools mid-request in a batch; each request returns one response, so multi-turn tool loops need sync calls."
+        },
+        {
+          "text": "Submit a batch every 4 hours (worst case 4 + 24 = 28 h), match results by custom_id, and resubmit only failed requests.",
+          "correct": true
+        },
+        {
+          "text": "Submit every 4 hours and, whenever any single request fails, resubmit the entire batch so that all results stay together in one file.",
+          "correct": false,
+          "why_wrong": "Resubmitting everything re-bills successful requests; resubmit only the failed custom_ids, with fixes where needed."
+        }
+      ],
+      "explanation": "Batches cost half price but have a processing window of up to 24 hours and no latency guarantee. The submission interval plus 24 hours must fit inside the SLA, results are matched by custom_id, and only failed requests are resubmitted.",
+      "key_takeaway": "Batch SLA math: submission interval + 24 h must fit the SLA; resubmit only failures by custom_id.",
+      "doc_links": [
+        {
+          "label": "Claude Message Batches",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+        },
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        }
+      ]
     }
   ]
 }

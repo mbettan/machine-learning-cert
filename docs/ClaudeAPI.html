@@ -14,8 +14,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claude Platform &amp; API: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.">
-    <meta name="keywords" content="Claude API, Anthropic API, Messages API, tool use, tool_use_id, stop_reason, streaming, structured outputs, adaptive thinking, effort, prompt caching, compaction, Message Batches, Amazon Bedrock, Vertex AI, Microsoft Foundry, data residency, Michael Bettan, Michaël Bettan">
+    <meta name="description" content="Build production apps on the Claude API: Messages API, explicit criteria and few-shot prompting, the tool-use loop, stop_reason handling, streaming, structured outputs and schema design, validation and retry loops, adaptive thinking, context and prompt caching, Message Batches, multi-pass review, human review calibration, errors, evals, deployment and security.">
+    <meta name="keywords" content="Claude API, Anthropic API, Messages API, tool use, tool_use_id, stop_reason, streaming, structured outputs, adaptive thinking, effort, prompt caching, compaction, Message Batches, few-shot prompting, JSON schema, validation retry, case facts, confidence calibration, Amazon Bedrock, Vertex AI, Microsoft Foundry, data residency, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -33,7 +33,7 @@
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Claude Platform &amp; API: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.">
+    <meta property="og:description" content="Build production apps on the Claude API: Messages API, explicit criteria and few-shot prompting, the tool-use loop, stop_reason handling, streaming, structured outputs and schema design, validation and retry loops, adaptive thinking, context and prompt caching, Message Batches, multi-pass review, human review calibration, errors, evals, deployment and security.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -42,7 +42,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Claude Platform &amp; API: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.">
+    <meta name="twitter:description" content="Build production apps on the Claude API: Messages API, explicit criteria and few-shot prompting, the tool-use loop, stop_reason handling, streaming, structured outputs and schema design, validation and retry loops, adaptive thinking, context and prompt caching, Message Batches, multi-pass review, human review calibration, errors, evals, deployment and security.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Claude Platform &amp; API — Study Guide by Michaël Bettan">
 
@@ -77,11 +77,11 @@
                   "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html#article",
                   "headline": "Claude Platform & API: Study Guide | ML Cert Hub",
                   "name": "Claude Platform & API Study Guide",
-                  "description": "Build production apps on the Claude API: Messages API shape, the tool-use loop, stop_reason handling, streaming events, structured outputs, adaptive thinking and effort, context windows, compaction and prompt caching, Message Batches, errors and retries, evals, cost, deployment platforms and security.",
-                  "keywords": "Claude API, Anthropic API, Messages API, tool use, tool_use_id, stop_reason, streaming, structured outputs, adaptive thinking, effort, prompt caching, compaction, Message Batches, Amazon Bedrock, Vertex AI, Microsoft Foundry, data residency, Michael Bettan, Michaël Bettan",
+                  "description": "Build production apps on the Claude API: Messages API, explicit criteria and few-shot prompting, the tool-use loop, stop_reason handling, streaming, structured outputs and schema design, validation and retry loops, adaptive thinking, context and prompt caching, Message Batches, multi-pass review, human review calibration, errors, evals, deployment and security.",
+                  "keywords": "Claude API, Anthropic API, Messages API, tool use, tool_use_id, stop_reason, streaming, structured outputs, adaptive thinking, effort, prompt caching, compaction, Message Batches, few-shot prompting, JSON schema, validation retry, case facts, confidence calibration, Amazon Bedrock, Vertex AI, Microsoft Foundry, data residency, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-27",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -120,6 +120,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/ClaudeAPI.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -143,7 +147,7 @@
                     <span>Certification Study Notes</span>
                 </div>
                 <h1>Claude Platform <em>&amp; API</em></h1>
-                <p class="cover-subtitle">Production engineering on the Claude Messages API: choosing a model and effort level, request shape and roles, the tool-use loop and its pairing rules, <code>stop_reason</code> handling, streaming events, structured outputs, adaptive thinking, context windows, compaction and prompt caching, Message Batches, retriable vs. terminal errors, evals and cost levers, deployment platforms and data residency, and security for apps that read untrusted content.</p>
+                <p class="cover-subtitle">Production engineering on the Claude Messages API: choosing a model and effort level, request shape and roles, explicit criteria and few-shot examples, the tool-use loop and its pairing rules, <code>stop_reason</code> handling, streaming events, structured outputs and schema design, validation and retry loops, adaptive thinking, context windows, compaction and prompt caching, preserving facts in long sessions, Message Batches, multi-pass review, retriable vs. terminal errors, evals and cost levers, human review and confidence calibration, deployment platforms and data residency, and security for apps that read untrusted content.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -182,56 +186,76 @@
                     <span class="toc-number">02</span>
                     <span>Messages API: Request Shape &amp; Roles</span>
                 </a>
-                <a href="#tool-use" class="toc-item">
+                <a href="#prompt-criteria" class="toc-item">
                     <span class="toc-number">03</span>
+                    <span>Explicit Criteria &amp; Few-Shot</span>
+                </a>
+                <a href="#tool-use" class="toc-item">
+                    <span class="toc-number">04</span>
                     <span>The Tool-Use Loop</span>
                 </a>
                 <a href="#stop-reasons" class="toc-item">
-                    <span class="toc-number">04</span>
+                    <span class="toc-number">05</span>
                     <span>stop_reason Values &amp; Handling</span>
                 </a>
                 <a href="#streaming" class="toc-item">
-                    <span class="toc-number">05</span>
+                    <span class="toc-number">06</span>
                     <span>Streaming Events</span>
                 </a>
                 <a href="#structured-outputs" class="toc-item">
-                    <span class="toc-number">06</span>
+                    <span class="toc-number">07</span>
                     <span>Structured Outputs</span>
                 </a>
+                <a href="#validation-retry" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Validation, Retry &amp; Feedback</span>
+                </a>
                 <a href="#adaptive-thinking" class="toc-item">
-                    <span class="toc-number">07</span>
+                    <span class="toc-number">09</span>
                     <span>Adaptive Thinking</span>
                 </a>
                 <a href="#context-caching" class="toc-item">
-                    <span class="toc-number">08</span>
+                    <span class="toc-number">10</span>
                     <span>Context Window, Compaction &amp; Caching</span>
                 </a>
+                <a href="#long-session-facts" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Preserving Facts in Long Sessions</span>
+                </a>
                 <a href="#batches" class="toc-item">
-                    <span class="toc-number">09</span>
+                    <span class="toc-number">12</span>
                     <span>Message Batches</span>
                 </a>
+                <a href="#multi-pass-review" class="toc-item">
+                    <span class="toc-number">13</span>
+                    <span>Multi-Instance &amp; Multi-Pass Review</span>
+                </a>
                 <a href="#errors-retries" class="toc-item">
-                    <span class="toc-number">10</span>
+                    <span class="toc-number">14</span>
                     <span>Errors &amp; Retries</span>
                 </a>
                 <a href="#evals-cost" class="toc-item">
-                    <span class="toc-number">11</span>
+                    <span class="toc-number">15</span>
                     <span>Evals &amp; Cost Levers</span>
                 </a>
+                <a href="#human-review" class="toc-item">
+                    <span class="toc-number">16</span>
+                    <span>Human Review &amp; Calibration</span>
+                </a>
                 <a href="#deployment" class="toc-item">
-                    <span class="toc-number">12</span>
+                    <span class="toc-number">17</span>
                     <span>Deployment, Residency &amp; Pinning</span>
                 </a>
                 <a href="#security" class="toc-item">
-                    <span class="toc-number">13</span>
+                    <span class="toc-number">18</span>
                     <span>Security for API Apps</span>
                 </a>
                 <a href="#failure-modes" class="toc-item">
-                    <span class="toc-number">14</span>
+                    <span class="toc-number">19</span>
                     <span>Failure Modes &amp; Find the Defect</span>
                 </a>
                 <a href="#resources" class="toc-item">
-                    <span class="toc-number">15</span>
+                    <span class="toc-number">20</span>
                     <span>Glossary, Quiz &amp; Related Guides</span>
                 </a>
             </div>
@@ -356,15 +380,15 @@
                     <tr><th>Field</th><th>Required?</th><th>What it does</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>model</code></td><td>Yes</td><td>Model ID. Pin a fixed ID in production (see §12).</td></tr>
+                    <tr><td><code>model</code></td><td>Yes</td><td>Model ID. Pin a fixed ID in production (see §17).</td></tr>
                     <tr><td><code>max_tokens</code></td><td>Yes</td><td>Cap on <strong>output</strong> tokens for this response. Does not create context room or fix validation errors.</td></tr>
                     <tr><td><code>messages</code></td><td>Yes</td><td>Conversation as <code>user</code> / <code>assistant</code> turns; content is a string or an array of blocks.</td></tr>
-                    <tr><td><code>system</code></td><td>No</td><td><strong>Top-level</strong> system prompt (string or text blocks). There is no <code>"system"</code> role inside <code>messages</code>.</td></tr>
-                    <tr><td><code>tools</code> / <code>tool_choice</code></td><td>No</td><td>Tool definitions and how Claude may use them (§3).</td></tr>
-                    <tr><td><code>thinking</code> / <code>output_config</code></td><td>No</td><td>Adaptive thinking, <code>effort</code>, and <code>format</code> for structured outputs (§6–7).</td></tr>
-                    <tr><td><code>stream</code></td><td>No</td><td>Server-sent events instead of one JSON body (§5).</td></tr>
+                    <tr><td><code>system</code></td><td>No</td><td><strong>Top-level</strong> system prompt (string or text blocks) for instructions that apply to the whole conversation. Newer models also accept <strong>mid-conversation</strong> <code>role: "system"</code> messages inside <code>messages</code>, placed <strong>after a user turn</strong>, to change instructions later without invalidating the cached prefix (check per-model support).</td></tr>
+                    <tr><td><code>tools</code> / <code>tool_choice</code></td><td>No</td><td>Tool definitions and how Claude may use them (§4).</td></tr>
+                    <tr><td><code>thinking</code> / <code>output_config</code></td><td>No</td><td>Adaptive thinking, <code>effort</code>, and <code>format</code> for structured outputs (§7, §9).</td></tr>
+                    <tr><td><code>stream</code></td><td>No</td><td>Server-sent events instead of one JSON body (§6).</td></tr>
                     <tr><td><code>stop_sequences</code></td><td>No</td><td>Custom strings that end generation (<code>stop_reason: "stop_sequence"</code>).</td></tr>
-                    <tr><td><code>inference_geo</code></td><td>No</td><td>First-party data residency: <code>"global"</code> (default) or <code>"us"</code> (§12).</td></tr>
+                    <tr><td><code>inference_geo</code></td><td>No</td><td>First-party data residency: <code>"global"</code> (default) or <code>"us"</code> (§17).</td></tr>
                 </tbody>
             </table>
         </div>
@@ -415,16 +439,95 @@ if resp.stop_reason == "end_turn":
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p><strong>Prefilling</strong> the final assistant turn to force a format is rejected with a 400 on Claude 4.6 and later. Use structured outputs (§6) instead. Also, <code>content[0]</code> is not always text: with thinking on, the first block is usually a <code>thinking</code> block. Select blocks by <code>type</code>.</p>
+                <p><strong>Prefilling</strong> the final assistant turn to force a format is rejected with a 400 on Claude 4.6 and later. Use structured outputs (§7) instead. Also, <code>content[0]</code> is not always text: with thinking on, the first block is usually a <code>thinking</code> block. Select blocks by <code>type</code>.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 03: TOOL USE
+             SECTION 03: EXPLICIT CRITERIA & FEW-SHOT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="prompt-criteria">
+            <div class="section-divider-number">03</div>
+            <h2>3. Explicit Criteria and Few-Shot Examples</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-bullseye"></i></div>Why it matters</h3>
+            <p>In review, triage and extraction pipelines, <strong>precision</strong> (how many reported items are real) decides whether people trust the output. Vague instructions produce noisy output; confidence wording does not fix it. Define <em>what qualifies</em>, then show it.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Vague instruction</th><th>Why it fails</th><th>Explicit replacement</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>"Check that comments are accurate"</td><td>Everything slightly imprecise gets flagged, so false positives pile up</td><td>"Flag a comment only when the behavior it claims <strong>contradicts</strong> what the code does"</td></tr>
+                    <tr><td>"Be conservative" / "Only report high-confidence findings"</td><td>Doesn't define the boundary; the model's notion of "confident" is unchanged, so precision barely moves</td><td>Categorical <strong>report / skip</strong> lists: report bugs, security flaws, data loss; skip style, naming, and patterns used consistently in the repo</td></tr>
+                    <tr><td>"Rate the severity"</td><td>Labels drift between runs and reviewers</td><td>A severity rubric with <strong>one concrete code example per level</strong> (critical / major / minor)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-handshake"></i></div>Precision and trust</h3>
+            <ul>
+                <li>One noisy category makes users ignore the accurate categories too. Measure precision <strong>per category</strong>, not just overall.</li>
+                <li>If one category is mostly noise, <strong>temporarily disable it</strong> (stop reporting it) while you rewrite its criteria and re-measure on an eval set; re-enable it once precision recovers.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-clone"></i></div>Few-shot (multishot) examples</h3>
+            <ul>
+                <li>The most reliable fix when detailed instructions still give inconsistent format or judgment.</li>
+                <li>Anthropic's prompting guidance: make examples relevant, diverse, and wrapped in <code>&lt;example&gt;</code> tags (inside <code>&lt;examples&gt;</code>); 3–5 examples usually work best.</li>
+                <li>Examples teach a <strong>judgment</strong> that generalizes to new cases; a rule list matches only what you enumerated.</li>
+                <li>Keep examples varied: near-identical examples get copied on surface features (length, wording, field order).</li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Use few-shot to…</th><th>What the examples show</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Handle <strong>ambiguous cases</strong> (which tool, escalate or not, is this a real gap)</td><td>The chosen action <strong>and why</strong> it beats the plausible alternative</td></tr>
+                    <tr><td>Fix <strong>output format</strong></td><td>The exact finding shape: location, issue, severity, suggested fix</td></tr>
+                    <tr><td>Cut <strong>false positives</strong></td><td>Contrast pairs: an acceptable pattern (not reported) next to a genuine issue (reported)</td></tr>
+                    <tr><td>Reduce <strong>extraction hallucination</strong></td><td>Correct extraction from varied layouts (inline citations vs. bibliography, informal amounts like "a couple of cups"), including an explicit <code>null</code> when a field is absent</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code class="language-xml">&lt;examples&gt;
+  &lt;example&gt;
+    &lt;code&gt;if user.is_admin or True:&lt;/code&gt;
+    &lt;finding&gt;{"location": "auth.py:42", "issue": "condition is always true, so the admin check is bypassed",
+              "severity": "critical", "suggested_fix": "remove 'or True'"}&lt;/finding&gt;
+  &lt;/example&gt;
+  &lt;example&gt;
+    &lt;code&gt;for i in range(len(items)):   # idiom used across this repo&lt;/code&gt;
+    &lt;finding&gt;none: style preference consistent with the codebase, not reported&lt;/finding&gt;
+  &lt;/example&gt;
+&lt;/examples&gt;</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Fixing a noisy reviewer by adding "only report findings you are very confident about". It doesn't define what counts. Write categorical criteria, add contrast examples, and measure precision per category.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: TOOL USE
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="tool-use">
-            <div class="section-divider-number">03</div>
-            <h2>3. The Tool-Use Loop</h2>
+            <div class="section-divider-number">04</div>
+            <h2>4. The Tool-Use Loop</h2>
         </div>
 
         <div class="process-flow">
@@ -521,7 +624,7 @@ messages.append({"role": "user", "content": results})                # all resul
                     <tr><td><strong>Workflow / Hybrid RAG</strong></td><td>Fixed code path; static chunking + embeddings + reranking injected before calling Claude</td><td>Predictable latency; fails on multi-hop code navigation (<em>under-retrieval</em>, <em>over-retrieval</em>, and <em>misaligned retrieval</em> across imports)</td></tr>
                     <tr><td><strong>Shallow ReAct Loop / Standard MCP</strong></td><td>Single <code>messages[]</code> loop calling JSON tools one turn at a time</td><td><strong>4 scaling bottlenecks:</strong> (1) upfront tool-schema bloat, (2) <em>K</em>-turn sequential ping-pong latency &amp; repeated prefix billing, (3) pretraining mismatch (LLMs are trained on millions of real TypeScript/Python repos vs. synthetic JSON <code>tool_use</code> traces), and (4) JSON schemas cannot express loops, conditionals, or error-handling chains</td></tr>
                     <tr><td><strong>Deep Agent Harness</strong> (e.g., Claude Code)</td><td>Explicit planning tool (<code>TodoWrite</code>) + isolated subagents + virtual/real filesystem (<code>Glob</code>/<code>Grep</code>/paginated <code>Read</code>)</td><td>Solves context crowding and goal drift over 10–100+ step tasks</td></tr>
-                    <tr><td><strong>Programmatic Tool Calling (CodeMode)</strong></td><td>Converts MCP tool schemas into a typed TypeScript API (<code>declare namespace</code>); LLM emits <strong>one TypeScript script</strong> run inside a <strong>network-isolated V8 isolate</strong> (~ms startup, no filesystem/env access) where tools are exposed as <strong>outbound RPC bindings</strong> (<code>await env.ServerName.toolName(...)</code>)</td><td>Collapses <em>K</em> sequential tool turns into <strong>1 LLM inference pass</strong> and keeps intermediate tool payloads inside V8 memory (out of the LLM context window) until <code>console.log</code> outputs the final distilled result</td></tr>
+                    <tr><td><strong>Code-orchestrated tool calling (Anthropic programmatic tool calling; Cloudflare Code Mode)</strong></td><td><strong>Anthropic programmatic tool calling:</strong> Claude writes Python that runs in Anthropic's code execution container; tools opt in via <code>allowed_callers</code>, and intermediate results stay out of context. <strong>Cloudflare Code Mode</strong> (separate third-party variant): converts MCP tool schemas into a typed TypeScript API (<code>declare namespace</code>); LLM emits <strong>one TypeScript script</strong> run inside a <strong>network-isolated V8 isolate</strong> (~ms startup, no filesystem/env access) where tools are exposed as <strong>outbound RPC bindings</strong> (<code>await env.ServerName.toolName(...)</code>)</td><td>Collapses <em>K</em> sequential tool turns into <strong>1 LLM inference pass</strong> and keeps intermediate tool payloads inside V8 memory (out of the LLM context window) until <code>console.log</code> outputs the final distilled result</td></tr>
                 </tbody>
             </table>
         </div>
@@ -535,11 +638,11 @@ messages.append({"role": "user", "content": results})                # all resul
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 04: STOP REASONS
+             SECTION 05: STOP REASONS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="stop-reasons">
-            <div class="section-divider-number">04</div>
-            <h2>4. stop_reason Values and Handling</h2>
+            <div class="section-divider-number">05</div>
+            <h2>5. stop_reason Values and Handling</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -588,11 +691,11 @@ messages.append({"role": "user", "content": results})                # all resul
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 05: STREAMING
+             SECTION 06: STREAMING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="streaming">
-            <div class="section-divider-number">05</div>
-            <h2>5. Streaming Events</h2>
+            <div class="section-divider-number">06</div>
+            <h2>6. Streaming Events</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -640,11 +743,11 @@ messages.append({"role": "user", "content": results})                # all resul
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 06: STRUCTURED OUTPUTS
+             SECTION 07: STRUCTURED OUTPUTS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="structured-outputs">
-            <div class="section-divider-number">06</div>
-            <h2>6. Structured Outputs</h2>
+            <div class="section-divider-number">07</div>
+            <h2>7. Structured Outputs</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -690,12 +793,146 @@ if resp.stop_reason == "end_turn":                      # check before parsing
             </div>
         </div>
 
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-file-export"></i></div>Extraction via tool use</h3>
+            <p>Define a tool whose <code>input_schema</code> <em>is</em> the record you want, then read the <code>tool_use</code> block's <code>input</code> (already a parsed object). Nothing has to be executed: the tool call is the output.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>tool_choice</code> for extraction</th><th>Guarantee</th><th>Use it when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>{"type": "auto"}</code></td><td>Claude may answer in <strong>text</strong> instead of calling the tool</td><td>You can tolerate a text reply, or the prompt states clearly when the tool applies</td></tr>
+                    <tr><td><code>{"type": "any"}</code></td><td>Must call <strong>one</strong> of the tools; Claude picks which</td><td>Several extraction schemas (invoice, receipt, contract) and the document type is unknown</td></tr>
+                    <tr><td><code>{"type": "tool", "name": "extract_metadata"}</code></td><td>Must call <strong>that</strong> tool</td><td>A specific extraction must run first (e.g. metadata before enrichment steps)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <ul>
+            <li>Forced choice (<code>any</code> / <code>tool</code>) errors with manual extended thinking, and some of the newest models reject it with a 400. There, use <code>auto</code> + <code>strict: true</code> + a prompt that says when to call the tool, or <code>output_config.format</code>.</li>
+            <li>Where forced use is accepted, the response starts with the tool call and contains no <code>thinking</code> block.</li>
+        </ul>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Schema design choice</th><th>Why</th><th>Example</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Put in <code>required</code> only fields every source contains</td><td>A required field the document lacks pushes the model to <strong>invent</strong> a value</td><td><code>invoice_number</code> required; <code>po_number</code> optional</td></tr>
+                    <tr><td>Make may-be-missing fields <strong>nullable</strong> (<code>"type": ["string", "null"]</code>)</td><td>"Not stated" becomes a valid answer instead of a fabrication</td><td><code>due_date</code> nullable + "use null if not stated". Required-but-nullable keeps the key always present</td></tr>
+                    <tr><td>Enum + <code>"other"</code> + a detail string</td><td>Extensible categories without losing information</td><td><code>category: [..., "other"]</code> + <code>category_detail</code></td></tr>
+                    <tr><td>Add an <code>"unclear"</code> enum value</td><td>The model can flag ambiguity instead of guessing</td><td><code>sentiment: [positive, negative, neutral, unclear]</code></td></tr>
+                    <tr><td>Put <strong>format-normalization rules</strong> in the prompt</td><td>The schema fixes types, not how messy source formats are rendered</td><td>"Dates as YYYY-MM-DD; amounts as numbers; weights in grams"</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code class="language-python">record_invoice = {
+    "name": "record_invoice", "strict": True,
+    "description": "Record fields from ONE invoice. Use null when a field is not stated.",
+    "input_schema": {"type": "object", "additionalProperties": False,
+        "properties": {
+            "invoice_number":  {"type": "string"},
+            "due_date":        {"type": ["string", "null"], "description": "YYYY-MM-DD, or null if absent"},
+            "category":        {"type": "string", "enum": ["hardware", "software", "services", "other"]},
+            "category_detail": {"type": ["string", "null"]},
+            "stated_total":    {"type": "number"}},
+        "required": ["invoice_number", "due_date", "category", "category_detail", "stated_total"]}}
+
+resp = client.messages.create(model=PINNED_MODEL_ID, max_tokens=1024, tools=[record_invoice],
+                              tool_choice={"type": "tool", "name": "record_invoice"},
+                              messages=[{"role": "user", "content": invoice_text}])
+record = next(b for b in resp.content if b.type == "tool_use").input   # dict, schema-valid</code></pre>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Strict-schema limits (verify against current docs)</h4>
+                <p>Objects need <code>additionalProperties: false</code>; numeric (<code>minimum</code>, <code>maximum</code>) and string-length constraints aren't supported (400), so enforce ranges in your validator; complexity caps include 20 strict tools per request, 24 optional parameters and 16 union-type (e.g. nullable) parameters across strict schemas. Enum capitalization isn't guaranteed: compare case-insensitively.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Marking every field <code>required</code> "for completeness". When the source lacks the value, a schema-valid but invented value comes back. Make it nullable or optional and say "null if not stated".</p>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
-             SECTION 07: ADAPTIVE THINKING
+             SECTION 08: VALIDATION, RETRY & FEEDBACK
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="validation-retry">
+            <div class="section-divider-number">08</div>
+            <h2>8. Validation, Retry and Feedback Loops</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Error class</th><th>Example</th><th>Removed by strict schema?</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Syntax / shape</strong></td><td>Broken JSON, wrong type, extra key</td><td><strong>Yes</strong> (strict tools, JSON outputs)</td><td>Nothing more to do</td></tr>
+                    <tr><td><strong>Semantic</strong></td><td>Line items don't sum to the total; value in the wrong field; impossible date</td><td><strong>No</strong></td><td>Validate in code → retry with error feedback → human review</td></tr>
+                    <tr><td><strong>Information absent</strong></td><td>The total is only in an attachment you didn't send</td><td><strong>No</strong>, and retries can't help</td><td>Return <code>null</code> / flag it, fetch the missing source, or route to a human</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>Retry with error feedback</h3>
+            <ul>
+                <li>The follow-up request carries the <strong>original document</strong>, the <strong>failed extraction</strong> and the <strong>specific validation errors</strong> ("line items sum to 1,140.00 but <code>stated_total</code> is 1,240.00; check for a missing line or misread digit").</li>
+                <li>Retries work for format mismatches, structural mistakes, misplaced fields and slips the source can resolve.</li>
+                <li>Retries <strong>fail</strong> when the information isn't in the input: pushing harder makes the model invent a value that passes your check. Cap attempts (1–2), then flag or route to review.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-magnifying-glass-chart"></i></div>Fields that make errors visible</h3>
+            <ul>
+                <li><strong><code>calculated_total</code> vs. <code>stated_total</code>:</strong> the model sums the line items <em>and</em> copies the printed total; your code compares them and flags mismatches.</li>
+                <li><strong><code>conflict_detected</code></strong> (boolean + note): the source contradicts itself (two different dates for one event). Report it; don't let the model pick one silently.</li>
+                <li><strong><code>detected_pattern</code></strong> on review findings: name the construct that triggered the finding (e.g. <code>string-built-sql</code>, <code>unchecked-return</code>). When developers dismiss findings, group dismissals by pattern to see which criteria cause false positives, then rewrite those criteria (§3).</li>
+            </ul>
+        </div>
+        </div>
+
+        <pre><code class="language-python">def extract_with_retry(doc, max_retries=2):
+    messages = [{"role": "user", "content": doc}]
+    for attempt in range(max_retries + 1):
+        resp = client.messages.create(model=PINNED_MODEL_ID, max_tokens=2048, tools=[record_invoice],
+                                      tool_choice={"type": "tool", "name": "record_invoice"}, messages=messages)
+        call = next(b for b in resp.content if b.type == "tool_use")
+        errors = validate(call.input)            # sums, ranges, cross-field business rules
+        if not errors:
+            return call.input
+        messages += [{"role": "assistant", "content": resp.content},
+                     {"role": "user", "content": [{"type": "tool_result", "tool_use_id": call.id, "is_error": True,
+                         "content": "Validation failed:\n" + "\n".join(errors) +
+                                    "\nRe-read the document and fix only these fields. Use null if the value is not in it."}]}]
+    return route_to_review(doc, call.input, errors)  # don't loop forever on absent data</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>"Retry up to five times until validation passes." If the value isn't in the source, the loop eventually produces a fabricated value that <em>passes</em>. Absent data is an input problem: flag it or fetch the source.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: ADAPTIVE THINKING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="adaptive-thinking">
-            <div class="section-divider-number">07</div>
-            <h2>7. Adaptive Thinking</h2>
+            <div class="section-divider-number">09</div>
+            <h2>9. Adaptive Thinking</h2>
         </div>
 
         <div class="two-columns">
@@ -741,11 +978,11 @@ if resp.stop_reason == "end_turn":                      # check before parsing
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 08: CONTEXT & CACHING
+             SECTION 10: CONTEXT & CACHING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="context-caching">
-            <div class="section-divider-number">08</div>
-            <h2>8. Context Window, Compaction and Prompt Caching</h2>
+            <div class="section-divider-number">10</div>
+            <h2>10. Context Window, Compaction and Prompt Caching</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -825,11 +1062,72 @@ if resp.stop_reason == "end_turn":                      # check before parsing
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 09: BATCHES
+             SECTION 11: PRESERVING FACTS IN LONG SESSIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="long-session-facts">
+            <div class="section-divider-number">11</div>
+            <h2>11. Preserving Critical Facts in Long Sessions</h2>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-clock-rotate-left"></i></div>The problem</h3>
+            <p>The API is stateless, so every request must carry the conversation. As sessions grow, the tempting fixes (summarize, compact, drop turns) quietly lose the <strong>exact</strong> facts the task depends on.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Risk</th><th>Symptom</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Progressive summarization</strong></td><td>"Refund of 1,240.18 for order A-7731, promised by 14 March" becomes "customer wants a refund"</td><td>Keep a persistent <strong>case facts</strong> block outside the summarized history</td></tr>
+                    <tr><td><strong>Tool-output bloat</strong></td><td>An order lookup returns 40+ fields when 5 matter; resent on every later turn</td><td><strong>Trim</strong> tool output to the relevant fields in your wrapper <em>before</em> appending the <code>tool_result</code></td></tr>
+                    <tr><td><strong>Lost in the middle</strong></td><td>Findings buried in the middle of a long aggregated input get skipped</td><td>Put a <strong>key-findings summary first</strong>; organize details under explicit section headers or XML tags</td></tr>
+                    <tr><td><strong>Partial history</strong></td><td>Only the latest user message is sent; the model loses commitments and context</td><td>Send the complete (or deliberately managed) history every request</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-clipboard-list"></i></div>Case facts block</h3>
+            <ul>
+                <li>Extract transactional facts (amounts, dates, order IDs, statuses, promised actions, the customer's stated expectation) into a structured block your <strong>code</strong> owns and updates when tools return new data.</li>
+                <li>Re-inject it on every request. For multi-issue sessions, keep one entry per issue keyed by order or ticket ID.</li>
+                <li>Place it after the last cache breakpoint so updates don't invalidate the cached static prefix (§10).</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Long inputs (lost-in-the-middle mitigation)</h3>
+            <ul>
+                <li>Models handle the start and end of a long input more reliably than the middle.</li>
+                <li>Anthropic's long-context guidance: put long documents <strong>at the top</strong> and the query and instructions <strong>at the end</strong> (tests showed up to ~30% better answers on complex multi-document inputs); wrap each document in <code>&lt;document&gt;</code> tags with source metadata.</li>
+                <li>When aggregating subagent or tool results, lead with a short summary of key findings, then the detail under headers.</li>
+                <li>Ask upstream agents to return <strong>structured data</strong> (key facts, dates, source locations, citations, relevance scores) rather than verbose prose and reasoning when the downstream context budget is tight. Orchestration patterns live in the <a href="ClaudeAgentSDK.html">Claude Agent SDK guide</a>.</li>
+            </ul>
+        </div>
+        </div>
+
+        <pre><code class="language-python">case_facts = {"customer_id": "C-1029",
+              "issues": {"A-7731": {"amount": 1240.18, "ask": "refund", "promised_by": "2026-03-14",
+                                    "status": "return label sent"}}}
+system = [{"type": "text", "text": STATIC_POLICY, "cache_control": {"type": "ephemeral"}},
+          {"type": "text", "text": "&lt;case_facts&gt;\n" + json.dumps(case_facts) + "\n&lt;/case_facts&gt;"}]</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Trusting compaction or a rolling summary to keep amounts, dates and IDs. Summaries paraphrase. Keep authoritative facts in a structured block your code maintains, and trim tool output at the source.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: BATCHES
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="batches">
-            <div class="section-divider-number">09</div>
-            <h2>9. Message Batches</h2>
+            <div class="section-divider-number">12</div>
+            <h2>12. Message Batches</h2>
         </div>
 
         <div class="definition-grid">
@@ -849,6 +1147,14 @@ if resp.stop_reason == "end_turn":                      # check before parsing
                 <dt>Lifecycle</dt>
                 <dd>Create → poll until <code>processing_status</code> is <code>ended</code> → fetch results (each succeeded, errored, canceled or expired). Results stay downloadable for 29 days.</dd>
             </div>
+            <div class="definition-item">
+                <dt>No latency SLA</dt>
+                <dd>"Most finish within an hour" is typical, not promised; under heavy demand more requests can expire at 24 hours.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>One response per request</dt>
+                <dd>A batched request can include tools and prior turns, but your code can't run a tool mid-request and hand back the result. If a result stops on <code>tool_use</code>, the next step needs a new request. Batches suit single-shot work; forced extraction tools (§7) fit because the <code>tool_use</code> input <em>is</em> the output.</dd>
+            </div>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -858,27 +1164,102 @@ if resp.stop_reason == "end_turn":                      # check before parsing
                 </thead>
                 <tbody>
                     <tr><td>Nightly classification of 40k tickets, read next morning</td><td><strong>Message Batches</strong></td><td>Half price, no rate-limit fight, latency doesn't matter</td></tr>
+                    <tr><td>Pre-merge PR check a developer is waiting on</td><td>Synchronous API</td><td>Blocking workflow; batch has no latency guarantee</td></tr>
+                    <tr><td>Agent that must query your database between steps</td><td>Synchronous tool loop</td><td>Batch can't run your tools mid-request</td></tr>
                     <tr><td>Chat UI with long answers</td><td>Streaming</td><td>A person is waiting; perceived latency</td></tr>
                     <tr><td>Backend fan-out of a few hundred calls per user action</td><td>Async client with bounded concurrency</td><td>Needs results in seconds</td></tr>
-                    <tr><td>Same 5k-token instructions on every batched item</td><td>Batches + prompt caching</td><td>The discounts can be combined</td></tr>
+                    <tr><td>Same 5k-token instructions on every batched item</td><td>Batches + prompt caching</td><td>The discounts can be combined (batch cache hits are best effort)</td></tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-gears"></i></div>Operating a batch pipeline</h3>
+            <ul>
+                <li><strong>Refine on a sample first:</strong> run the prompt on a representative sample, fix failures, <em>then</em> submit the large batch. First-pass success is what saves money.</li>
+                <li><strong>Resubmit only failures:</strong> collect <code>errored</code> / <code>expired</code> results by <code>custom_id</code> and resubmit just those, with fixes (e.g. split documents that exceeded the context window). Errored, canceled and expired requests aren't billed.</li>
+                <li><strong>SLA math:</strong> the worst case is <em>wait for the next submission + up to 24 h processing</em>. To promise results within 30 h of a document arriving, submit at least every 30 − 24 = 6 h, minus pre/post-processing time; a 4-hour cadence gives 4 + 24 = 28 h worst case.</li>
+            </ul>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>Splitting a list into chunks and calling <code>messages.create()</code> per item is <strong>not</strong> batching: it is serial synchronous traffic that hits rate limits. Smaller chunks or more backoff don't change that; the Batches API does.</p>
+                <p>Splitting a list into chunks and calling <code>messages.create()</code> per item is <strong>not</strong> batching: it is serial synchronous traffic that hits rate limits. Smaller chunks or more backoff don't change that; the Batches API does. And the reverse trap: moving a <strong>blocking</strong> check (pre-merge, user waiting) to batches for the 50% saving, which removes any latency guarantee.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 10: ERRORS & RETRIES
+             SECTION 13: MULTI-INSTANCE & MULTI-PASS REVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="multi-pass-review">
+            <div class="section-divider-number">13</div>
+            <h2>13. Multi-Instance and Multi-Pass Review</h2>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-user-check"></i></div>Why self-review is weak</h3>
+            <p>The session that generated an artifact keeps its own reasoning in context and tends to defend it. "Now review your work critically" in the same thread, or more thinking, doesn't remove that anchor.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>How</th><th>Use it for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Independent reviewer instance</strong></td><td>A separate <code>messages.create</code> with a fresh <code>messages</code> list holding only the spec/rubric and the artifact, <strong>without</strong> the generator's reasoning</td><td>Catching subtle bugs in generated code, contracts, extractions</td></tr>
+                    <tr><td><strong>Per-file local pass</strong></td><td>One focused request per file: local bugs, security, logic</td><td>Large PRs where a single prompt dilutes attention</td></tr>
+                    <tr><td><strong>Cross-file integration pass</strong></td><td>A separate pass over the per-file structured findings plus interfaces: data flow, contracts, consistency</td><td>Issues no single file shows; resolving contradictory local findings</td></tr>
+                    <tr><td><strong>Confidence-annotated verification</strong></td><td>Each finding carries a self-reported confidence; route by threshold</td><td>Sending low-confidence findings to humans; thresholds must be calibrated (§16)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Generate</h4>
+                <p>Builder session produces the artifact (code, extraction, report).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Local passes</h4>
+                <p>One fresh request per file; structured findings with <code>detected_pattern</code> and confidence.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Integration pass</h4>
+                <p>New request over the findings and interfaces: cross-file data flow and contradictions.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Route</h4>
+                <p>High-confidence findings auto-comment; low-confidence ones go to a human.</p>
+            </div>
+        </div>
+
+        <ul>
+            <li>Independence comes from <strong>context</strong>, not model choice; the reviewer can be the same model (a different tier is optional).</li>
+            <li>Per-file passes are independent, so run them in parallel: sync for pre-merge checks, Message Batches for overnight audits (§12).</li>
+            <li>See §10 (Builder–Reviewer separation) for the context contract, and the <a href="ClaudeAgentSDK.html">Claude Agent SDK guide</a> for orchestrating reviewers inside agent loops.</li>
+        </ul>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Reviewing a 30-file PR in one prompt, or asking the generating session to "double-check". The first dilutes attention and yields contradictory findings; the second inherits the generator's blind spots. Split into local + integration passes and use an independent instance.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 14: ERRORS & RETRIES
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="errors-retries">
-            <div class="section-divider-number">10</div>
-            <h2>10. Errors and Retries</h2>
+            <div class="section-divider-number">14</div>
+            <h2>14. Errors and Retries</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -893,7 +1274,7 @@ if resp.stop_reason == "end_turn":                      # check before parsing
                     <tr><td>429 <code>rate_limit_error</code></td><td>Retriable</td><td>Wait <code>retry-after</code>, then backoff + jitter. A spend-cap 429 has <strong>no</strong> <code>retry-after</code> and keeps failing</td></tr>
                     <tr><td>500 <code>api_error</code> · 504 <code>timeout_error</code></td><td>Retriable</td><td>Exponential backoff; for 504 on long requests, stream instead</td></tr>
                     <tr><td>529 <code>overloaded_error</code></td><td>Retriable</td><td>Backoff with jitter; consider a fallback model in the orchestration layer</td></tr>
-                    <tr><td>HTTP 200 + <code>stop_reason: "refusal"</code></td><td>Not an HTTP error</td><td>Content decision: handle as in §4, don't backoff-retry</td></tr>
+                    <tr><td>HTTP 200 + <code>stop_reason: "refusal"</code></td><td>Not an HTTP error</td><td>Content decision: handle as in §5, don't backoff-retry</td></tr>
                 </tbody>
             </table>
         </div>
@@ -927,11 +1308,11 @@ if resp.stop_reason == "end_turn":                      # check before parsing
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 11: EVALS & COST
+             SECTION 15: EVALS & COST
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="evals-cost">
-            <div class="section-divider-number">11</div>
-            <h2>11. Evals and Cost Levers</h2>
+            <div class="section-divider-number">15</div>
+            <h2>15. Evals and Cost Levers</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -987,11 +1368,55 @@ if resp.stop_reason == "end_turn":                      # check before parsing
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 12: DEPLOYMENT
+             SECTION 16: HUMAN REVIEW & CALIBRATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="human-review">
+            <div class="section-divider-number">16</div>
+            <h2>16. Human Review and Confidence Calibration</h2>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-chart-pie"></i></div>The core risk</h3>
+            <p>An aggregate number hides segment failures. "97% field accuracy" can mean 99% on typed invoices and 70% on handwritten receipts, or one field (say <code>tax_id</code>) failing everywhere. Slice accuracy by <strong>document type × field</strong> before you reduce human review.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Practice</th><th>How</th><th>What it prevents</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Segmented accuracy</strong></td><td>Report accuracy per document type, per field, per source</td><td>Automating a segment that quietly fails</td></tr>
+                    <tr><td><strong>Field-level confidence</strong></td><td>The model outputs a confidence per field (alongside <code>"unclear"</code> / <code>conflict_detected</code> flags)</td><td>One document-level score hiding one bad field</td></tr>
+                    <tr><td><strong>Calibration on labeled data</strong></td><td>On a labeled validation set, measure real accuracy per confidence band; set thresholds per field / doc type where accuracy meets the target</td><td>Trusting raw self-reported confidence, which isn't calibrated until checked</td></tr>
+                    <tr><td><strong>Risk-based routing</strong></td><td>Low confidence, conflicts, ambiguous or contradictory sources → human queue, highest-risk first</td><td>Spending scarce reviewer time on easy items</td></tr>
+                    <tr><td><strong>Stratified random sampling</strong></td><td>Keep sampling <strong>auto-approved, high-confidence</strong> items within each stratum (doc type, field, source)</td><td>Unmeasured error rates and missed new error patterns or drift; plain random sampling under-samples rare types</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Feedback loop</h4>
+                <p>Reviewer corrections become labeled data → recalibrate thresholds, add few-shot examples for the new error patterns (§3), extend the eval set (§15).</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>"Overall accuracy is 97%, so remove human review", or "review only low-confidence items". The first ignores segments; the second never measures errors among auto-approved items. Validate per segment, calibrate thresholds on labeled data, and keep stratified sampling running.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 17: DEPLOYMENT
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="deployment">
-            <div class="section-divider-number">12</div>
-            <h2>12. Deploying: Platforms, Data Residency and Model-ID Pinning</h2>
+            <div class="section-divider-number">17</div>
+            <h2>17. Deploying: Platforms, Data Residency and Model-ID Pinning</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -1040,11 +1465,11 @@ if resp.stop_reason == "end_turn":                      # check before parsing
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 13: SECURITY
+             SECTION 18: SECURITY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="security">
-            <div class="section-divider-number">13</div>
-            <h2>13. Security for API Apps</h2>
+            <div class="section-divider-number">18</div>
+            <h2>18. Security for API Apps</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -1083,11 +1508,11 @@ if resp.stop_reason == "end_turn":                      # check before parsing
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 14: FAILURE MODES
+             SECTION 19: FAILURE MODES
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="failure-modes">
-            <div class="section-divider-number">14</div>
-            <h2>14. Failure Modes and Find the Defect</h2>
+            <div class="section-divider-number">19</div>
+            <h2>19. Failure Modes and Find the Defect</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -1102,7 +1527,7 @@ if resp.stop_reason == "end_turn":                      # check before parsing
                     <tr><td>Correct tool on turns 1–4, wrong tool from turn 5</td><td>Context crowded by tool output → prune, edit or compact; measure tokens</td><td>Clarifying descriptions or raising <code>max_tokens</code></td></tr>
                     <tr><td>Agent repeats a hallucinated API path even after context compaction</td><td><strong>Context poisoning</strong> survived summarization → truncate/reset history to before the poisoned turn</td><td>Running compaction again or lowering temperature</td></tr>
                     <tr><td>Orchestrator spawns a subagent to generate a config file, gets "Completed!" back, and lacks the actual config</td><td>Subagent returned a summary instead of the raw artifact → require verbatim output or write to a shared store/file</td><td>Increasing the subagent's <code>max_tokens</code></td></tr>
-                    <tr><td>Agent with 40 MCP tools suffers 12-turn sequential tool ping-pong and 80k schema tokens per turn</td><td>Standard ReAct loop bottleneck → use progressive tool disclosure (<code>Select</code>) or programmatic tool calling (V8 isolate)</td><td>Switching to a larger model tier</td></tr>
+                    <tr><td>Agent with 40 MCP tools suffers 12-turn sequential tool ping-pong and 80k schema tokens per turn</td><td>Standard ReAct loop bottleneck → use progressive tool disclosure (<code>Select</code>) or code-orchestrated tool calling (Anthropic programmatic tool calling, or Code Mode in a V8 isolate)</td><td>Switching to a larger model tier</td></tr>
                     <tr><td>Model says "no orders found" during a DB outage</td><td>Failure returned as <code>""</code> → <code>tool_result</code> with <code>is_error: true</code></td><td>"Never say no orders found" in the prompt</td></tr>
                     <tr><td>Answer silently missing; logs show HTTP 200</td><td><code>stop_reason: "refusal"</code> or <code>max_tokens</code> not checked → branch on <code>stop_reason</code></td><td>Retrying on HTTP status only</td></tr>
                     <tr><td>Same refusal repeats every turn</td><td>Refused turn kept in history → remove/rephrase it or reset</td><td>Exponential backoff</td></tr>
@@ -1114,6 +1539,12 @@ if resp.stop_reason == "end_turn":                      # check before parsing
                     <tr><td>Parser breaks after an upstream release; can't roll back</td><td>Moving alias → pin the full ID, keep prior pin, eval-gate promotion</td><td>Adding parser retries</td></tr>
                     <tr><td>EU-only residency requirement on first-party API</td><td><code>inference_geo</code> has no EU value → Bedrock/Google Cloud EU routing</td><td><code>inference_geo: "us"</code> + encryption</td></tr>
                     <tr><td>Summarizer agent forwards a thread externally</td><td>Injection via fetched email + unneeded send tool → treat content as data; remove the tool</td><td>Stricter user-input regex</td></tr>
+                    <tr><td>Code reviewer floods PRs with style nits; developers start ignoring real bugs</td><td>Vague criteria → categorical report/skip rules + contrast few-shot examples; disable the noisiest category while fixing it</td><td>"Only report high-confidence findings"</td></tr>
+                    <tr><td>Extractor returns plausible but invented <code>po_number</code> values</td><td>Field is <code>required</code> but often absent → nullable/optional + "null if not stated"</td><td>More retries</td></tr>
+                    <tr><td>Retry loop never fixes <code>total</code>; the value is only in an attachment that wasn't sent</td><td>Information absent → stop retrying; flag, fetch the source or route to review</td><td>Raising the retry cap</td></tr>
+                    <tr><td>Support agent forgets the refund amount and deadline after 30 turns</td><td>Rolling summary dropped exact facts → persistent case-facts block; trim tool outputs</td><td>Switching to a bigger model</td></tr>
+                    <tr><td>97% overall accuracy, but handwritten receipts are often wrong</td><td>Aggregate hides segments → accuracy per doc type × field; stratified sampling; calibrated thresholds</td><td>Removing human review</td></tr>
+                    <tr><td>Pre-merge check moved to Message Batches; developers wait hours</td><td>Batch has no latency SLA → sync API for blocking checks, batch for overnight</td><td>Polling the batch more often</td></tr>
                 </tbody>
             </table>
         </div>
@@ -1157,10 +1588,10 @@ messages.append({"role": "user", "content": [
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 15: RESOURCES & GLOSSARY
+             SECTION 20: RESOURCES & GLOSSARY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="resources">
-            <div class="section-divider-number">15</div>
+            <div class="section-divider-number">20</div>
             <h2>Glossary, Practice Quiz &amp; Related Guides</h2>
         </div>
 
@@ -1231,7 +1662,7 @@ messages.append({"role": "user", "content": [
             </div>
             <div class="definition-item">
                 <dt>Programmatic tool calling</dt>
-                <dd>CodeMode pattern where the model writes a typed script executed in a capability-restricted V8 isolate to chain multiple RPC calls in a single inference turn.</dd>
+                <dd>Anthropic feature where Claude writes Python that runs in the code execution container and calls your tools (opted in via <code>allowed_callers</code>), so chained calls and intermediate results stay out of the context window. Cloudflare Code Mode is a separate third-party variant (TypeScript in a V8 isolate with RPC bindings).</dd>
             </div>
             <div class="definition-item">
                 <dt>custom_id</dt>
@@ -1248,6 +1679,54 @@ messages.append({"role": "user", "content": [
             <div class="definition-item">
                 <dt>Indirect prompt injection</dt>
                 <dd>Instructions hidden in content the app reads (pages, emails, tool output) rather than typed by the user.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Few-shot (multishot) examples</dt>
+                <dd>A few varied, tagged input → output examples that teach format and judgment for ambiguous cases.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Explicit criteria</dt>
+                <dd>Categorical report/skip rules (with examples per severity) that replace vague "be careful / be confident" wording.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Nullable field</dt>
+                <dd>Schema type such as <code>["string", "null"]</code> so "not stated" is a valid answer instead of a fabricated value.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Retry with error feedback</dt>
+                <dd>Re-asking with the document, the failed output and the specific validation errors; useless when the data is absent.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>calculated_total / stated_total</dt>
+                <dd>Paired fields (computed vs. printed) whose mismatch your code flags as a semantic error.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>detected_pattern</dt>
+                <dd>Field naming the construct behind a finding, so dismissals can be analyzed by pattern.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Case facts block</dt>
+                <dd>Structured, code-maintained facts (amounts, dates, IDs, statuses) re-injected every request outside summarized history.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Lost in the middle</dt>
+                <dd>Long-input effect where content in the middle is used less reliably than the start and end.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Independent reviewer</dt>
+                <dd>A separate API call with a fresh context (spec + artifact only) instead of self-review.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Multi-pass review</dt>
+                <dd>Per-file local passes followed by a cross-file integration pass.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Stratified sampling</dt>
+                <dd>Sampling auto-approved items within each segment (doc type, field) to keep measuring error rates.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Calibrated confidence</dt>
+                <dd>Confidence thresholds set from measured accuracy on a labeled validation set, per field or segment.</dd>
             </div>
         </div>
 
@@ -1284,6 +1763,7 @@ messages.append({"role": "user", "content": [
                     </a>
                 </div>
                 <ul style="margin-top: 16px;">
+                    <li><a href="ClaudeAgentSDK.html">Claude Agent SDK</a>: agent loops, subagents and orchestration on top of the API.</li>
                     <li><a href="ClaudeCode.html">Claude Code</a>: configuration, hooks, CLAUDE.md, skills, plugins, Agent SDK, Managed Agents.</li>
                     <li><a href="Anthropic.html">Anthropic</a>: philosophy, Constitutional AI, interpretability and safety.</li>
                     <li><a href="PromptEngineering.html">Prompt Engineering</a>: prompt anatomy and techniques.</li>
@@ -1358,6 +1838,10 @@ messages.append({"role": "user", "content": [
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>
