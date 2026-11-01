@@ -13,9 +13,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Code &amp; Agent SDK: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.">
-    <meta name="keywords" content="Claude Code, Claude Agent SDK, Claude Managed Agents, CLAUDE.md, permission modes, hooks, PreToolUse, subagents, Agent Skills, SKILL.md, plugins, marketplaces, MCP, .mcp.json, managed settings, headless, agentic coding, Michael Bettan, Michaël Bettan">
+    <title>Claude Code: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Claude Code in depth: permissions, CLAUDE.md hierarchy, hooks, subagents, skills, slash commands, plan mode, built-in tools, MCP, CI review and Vertex AI.">
+    <meta name="keywords" content="Claude Code, CLAUDE.md, .claude/rules, permission modes, hooks, PreToolUse, subagents, Agent Skills, SKILL.md, slash commands, plan mode, Grep, Glob, plugins, marketplaces, MCP, .mcp.json, managed settings, headless, claude -p, code review, Vertex AI, agentic coding, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -32,19 +32,19 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Claude Code &amp; Agent SDK: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.">
+    <meta property="og:title" content="Claude Code: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Claude Code in depth: permissions, CLAUDE.md hierarchy, hooks, subagents, skills, slash commands, plan mode, built-in tools, MCP, CI review and Vertex AI.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ClaudeCode.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Claude Code &amp; Agent SDK — Study Guide by Michaël Bettan">
+    <meta property="og:image:alt" content="Claude Code — Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Claude Code &amp; Agent SDK: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.">
+    <meta name="twitter:title" content="Claude Code: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Claude Code in depth: permissions, CLAUDE.md hierarchy, hooks, subagents, skills, slash commands, plan mode, built-in tools, MCP, CI review and Vertex AI.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
-    <meta name="twitter:image:alt" content="Claude Code &amp; Agent SDK — Study Guide by Michaël Bettan">
+    <meta name="twitter:image:alt" content="Claude Code — Study Guide by Michaël Bettan">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,13 +75,13 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html#article",
-                  "headline": "Claude Code & Agent SDK: Study Guide | ML Cert Hub",
-                  "name": "Claude Code & Agent SDK Study Guide",
-                  "description": "Claude Code and the Claude Agent SDK in depth: permission modes and allow/deny rules, settings and CLAUDE.md precedence, hooks and exit codes, subagents, skills, plugins and marketplaces, MCP configuration, headless CI, team rollout with managed settings, and Managed Agents.",
-                  "keywords": "Claude Code, Claude Agent SDK, Claude Managed Agents, CLAUDE.md, permission modes, hooks, PreToolUse, subagents, Agent Skills, SKILL.md, plugins, marketplaces, MCP, .mcp.json, managed settings, headless, agentic coding, Michael Bettan, Michaël Bettan",
+                  "headline": "Claude Code: Study Guide | ML Cert Hub",
+                  "name": "Claude Code Study Guide",
+                  "description": "Claude Code in depth: permissions, CLAUDE.md hierarchy, hooks, subagents, skills, slash commands, plan mode, built-in tools, MCP, CI review and Vertex AI.",
+                  "keywords": "Claude Code, CLAUDE.md, .claude/rules, permission modes, hooks, PreToolUse, subagents, Agent Skills, SKILL.md, slash commands, plan mode, Grep, Glob, plugins, marketplaces, MCP, .mcp.json, managed settings, headless, claude -p, code review, Vertex AI, agentic coding, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-27",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -112,7 +112,7 @@
                         {
                               "@type": "ListItem",
                               "position": 2,
-                              "name": "Claude Code & Agent SDK",
+                              "name": "Claude Code",
                               "item": "https://mbettan.github.io/machine-learning-cert/ClaudeCode.html"
                         }
                   ]
@@ -120,6 +120,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/ClaudeCode.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -142,8 +146,8 @@
                     <i class="fas fa-graduation-cap"></i>
                     <span>Certification Study Notes</span>
                 </div>
-                <h1>Claude Code <em>&amp; Agent SDK</em></h1>
-                <p class="cover-subtitle">Configuring and governing Claude's agent harness: the agentic loop, permission modes and allow/ask/deny rules, settings and CLAUDE.md precedence, deterministic hooks, isolated and fork subagents, progressive-disclosure skills, plugins and marketplaces, MCP scopes and policy filtering, headless CI runs, team rollout with managed settings, the Agent SDK, and hosted Managed Agents.</p>
+                <h1>Claude <em>Code</em></h1>
+                <p class="cover-subtitle">Configuring and governing Claude's agent harness: the agentic loop, permission modes and allow/ask/deny rules, settings, the CLAUDE.md hierarchy and path-scoped rules, deterministic hooks, isolated and fork subagents, progressive-disclosure skills and custom slash commands, plugins and marketplaces, MCP scopes and policy filtering, headless CI runs and automated code review, plan mode and built-in tool choice, team rollout with managed settings, and Claude Code on Vertex AI.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -182,52 +186,68 @@
                     <span class="toc-number">02</span>
                     <span>Settings &amp; Memory Precedence</span>
                 </a>
-                <a href="#mechanisms" class="toc-item">
+                <a href="#claude-md" class="toc-item">
                     <span class="toc-number">03</span>
+                    <span>CLAUDE.md Hierarchy &amp; Path-Scoped Rules</span>
+                </a>
+                <a href="#mechanisms" class="toc-item">
+                    <span class="toc-number">04</span>
                     <span>Which Mechanism Carries Which Rule</span>
                 </a>
                 <a href="#hooks" class="toc-item">
-                    <span class="toc-number">04</span>
+                    <span class="toc-number">05</span>
                     <span>Hooks &amp; Exit Codes</span>
                 </a>
                 <a href="#subagents" class="toc-item">
-                    <span class="toc-number">05</span>
+                    <span class="toc-number">06</span>
                     <span>Subagents</span>
                 </a>
                 <a href="#skills" class="toc-item">
-                    <span class="toc-number">06</span>
+                    <span class="toc-number">07</span>
                     <span>Skills &amp; Progressive Disclosure</span>
                 </a>
+                <a href="#slash-commands" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Custom Slash Commands</span>
+                </a>
+                <a href="#workflows" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Plan Mode &amp; Iterative Refinement</span>
+                </a>
+                <a href="#built-in-tools" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Built-in Tools: Grep vs Glob, Edit</span>
+                </a>
                 <a href="#plugins" class="toc-item">
-                    <span class="toc-number">07</span>
+                    <span class="toc-number">11</span>
                     <span>Plugins &amp; Marketplaces</span>
                 </a>
                 <a href="#mcp" class="toc-item">
-                    <span class="toc-number">08</span>
+                    <span class="toc-number">12</span>
                     <span>MCP in Claude Code</span>
                 </a>
                 <a href="#headless" class="toc-item">
-                    <span class="toc-number">09</span>
+                    <span class="toc-number">13</span>
                     <span>Headless &amp; CI Use</span>
                 </a>
+                <a href="#ci-review" class="toc-item">
+                    <span class="toc-number">14</span>
+                    <span>Code Review &amp; Tests in CI/CD</span>
+                </a>
                 <a href="#team-rollout" class="toc-item">
-                    <span class="toc-number">10</span>
+                    <span class="toc-number">15</span>
                     <span>Team Rollout &amp; Spend Controls</span>
                 </a>
-                <a href="#agent-sdk" class="toc-item">
-                    <span class="toc-number">11</span>
-                    <span>Claude Agent SDK</span>
-                </a>
-                <a href="#managed-agents" class="toc-item">
-                    <span class="toc-number">12</span>
-                    <span>Managed Agents &amp; Wiring Paths</span>
+                <a href="#vertex-ai" class="toc-item">
+                    <span class="toc-number">16</span>
+                    <span>Claude Code on Vertex AI</span>
                 </a>
                 <a href="#failure-modes" class="toc-item">
-                    <span class="toc-number">13</span>
+                    <span class="toc-number">17</span>
                     <span>Failure Modes &amp; Find the Defect</span>
                 </a>
                 <a href="#resources" class="toc-item">
-                    <span class="toc-number">14</span>
+                    <span class="toc-number">18</span>
                     <span>Glossary, Quiz &amp; Self-Assessment</span>
                 </a>
             </div>
@@ -244,7 +264,7 @@
         <div class="two-columns">
             <div class="concept-card accent-mint">
                 <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>Definition</h3>
-                <p><strong>Claude Code</strong> is Anthropic's agentic coding tool. It reads your codebase, edits files, runs commands, and verifies its own work through a tool-using loop. The same harness ships as a library, the <strong>Claude Agent SDK</strong>, so you can embed that loop in your own process. <strong>Claude Managed Agents</strong> runs a comparable stateful loop on Anthropic's infrastructure.</p>
+                <p><strong>Claude Code</strong> is Anthropic's agentic coding tool. It reads your codebase, edits files, runs commands, and verifies its own work through a tool-using loop. The same harness ships as a library, the <strong>Claude Agent SDK</strong>, and <strong>Claude Managed Agents</strong> runs a comparable loop on Anthropic's infrastructure; both are covered in the separate <a href="ClaudeAgentSDK.html">Claude Agent SDK guide</a>.</p>
             </div>
             <div class="concept-card accent-blue">
                 <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>The agentic loop</h3>
@@ -288,7 +308,7 @@
                 </div>
                 <div class="definition-item">
                     <dt>Cowork, Dispatch &amp; Agent SDK</dt>
-                    <dd><strong>Cowork</strong> runs desktop knowledge work in an app-hosted VM; <strong>Dispatch</strong> hands off tasks from mobile/web to desktop. The <strong>Claude Agent SDK</strong> embeds the same loop, tools, permissions, hooks, and subagents as a TypeScript or Python library in your own process.</dd>
+                    <dd><strong>Cowork</strong> runs desktop knowledge work in an app-hosted VM; <strong>Dispatch</strong> hands off tasks from mobile/web to desktop. The <strong>Claude Agent SDK</strong> embeds the same loop, tools, permissions, hooks, and subagents as a TypeScript or Python library in your own process (see the <a href="ClaudeAgentSDK.html">Claude Agent SDK guide</a>).</dd>
                 </div>
             </div>
         </div>
@@ -309,6 +329,14 @@
             <div class="callout-content">
                 <h4>Mental model</h4>
                 <p>The model <em>proposes</em>; the harness <em>disposes</em>. Anything written in <code>CLAUDE.md</code> or <code>.claude/rules/</code> is advisory guidance the model weighs. Anything in <code>settings.json</code> permission rules, hooks, or managed policy is enforced deterministically by the client regardless of what the model decides.</p>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Scope of this guide</h4>
+                <p>Claude Code as a tool: configuration, workflows, CI and rollout. Building your own agents (the agent loop, <code>stop_reason</code>, multi-agent orchestration, SDK hooks and sessions, tool-error handling, escalation, provenance) and Claude Managed Agents are in the <a href="ClaudeAgentSDK.html">Claude Agent SDK guide</a>.</p>
             </div>
         </div>
 
@@ -444,7 +472,7 @@
                 <ul>
                     <li>Target <strong>under 200 lines</strong> per <code>CLAUDE.md</code>: longer files cost context and reduce adherence.</li>
                     <li><strong><code>/init</code> &amp; <code># &lt;rule&gt;</code> shortcut:</strong> <code>/init</code> scans the repo to bootstrap a starter <code>CLAUDE.md</code> (treat as a draft to prune); starting a prompt with <strong><code># &lt;rule&gt;</code></strong> appends an instruction to your chosen <code>CLAUDE.md</code> tier.</li>
-                    <li><code>@path/to/file</code> imports expand at launch (max 5 hops) and <strong>do not save context tokens</strong>.</li>
+                    <li><code>@path/to/file</code> imports expand at launch (max 4 hops) and <strong>do not save context tokens</strong>.</li>
                     <li>Skip noisy ancestor files in monorepos via <code>"claudeMdExcludes": ["**/monorepo/CLAUDE.md"]</code>.</li>
                     <li><code>--add-dir</code> loads skills/commands/agents from extra directories, but <strong>not</strong> <code>CLAUDE.md</code> or <code>.claude/rules/</code> unless <code>CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1</code>.</li>
                     <li>Audit instruction bloat/conflicts with <strong><code>/doctor prompt-audit</code></strong> and inspect token usage with <code>/context</code>. (Note: <strong><code>.claudeignore</code> does not exist</strong> — use <code>permissions.deny: ["Read(...)"]</code>.)</li>
@@ -487,11 +515,94 @@
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 03: WHICH MECHANISM
+             SECTION 03: 3. CLAUDE.MD HIERARCHY, `@` IMPORTS &amp; PATH-SCOPED RULES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="claude-md">
+            <div class="section-divider-number">03</div>
+            <h2>3. CLAUDE.md Hierarchy, <code>@</code> Imports &amp; Path-Scoped Rules</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Instruction is for…</th><th>Put it in</th><th>In git?</th><th>Trap</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>The whole team, every task</td><td><code>./CLAUDE.md</code> or <code>./.claude/CLAUDE.md</code></td><td>Yes</td><td>Keep it short (under ~200 lines); move topic detail into imports or rules</td></tr>
+                    <tr><td>Only you, every project</td><td><code>~/.claude/CLAUDE.md</code></td><td>No</td><td>Teammates never receive it: team conventions placed here "work on my machine" only</td></tr>
+                    <tr><td>Only you, this repo</td><td><code>./CLAUDE.local.md</code></td><td>No (gitignored)</td><td>Not shared across worktrees; import <code>@~/.claude/&lt;file&gt;.md</code> instead to reuse personal notes</td></tr>
+                    <tr><td>One package or directory</td><td><code>&lt;subdir&gt;/CLAUDE.md</code></td><td>Yes</td><td>Loads <strong>lazily</strong>, only once Claude reads files in that subtree</td></tr>
+                    <tr><td>One file type spread across many directories (tests, API handlers)</td><td><code>.claude/rules/&lt;topic&gt;.md</code> with <code>paths:</code> globs</td><td>Yes</td><td>A directory <code>CLAUDE.md</code> cannot target "every <code>*.test.tsx</code> anywhere"</td></tr>
+                    <tr><td>The whole org, not excludable</td><td>Managed policy <code>CLAUDE.md</code></td><td>IT-deployed</td><td>Users cannot override or exclude it</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prose"><p><strong><code>@</code> imports (modular CLAUDE.md):</strong></p></div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Markdown — CLAUDE.md with @imports</span>
+            </div>
+            <pre># CLAUDE.md
+See @README.md for the project overview and @package.json for npm scripts.
+
+## Standards
+- Testing conventions: @docs/testing.md
+- API conventions: @docs/api-conventions.md
+- My personal overrides: @~/.claude/my-project-instructions.md</pre>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li>Relative paths resolve <strong>from the file containing the import</strong>, not from the working directory. Absolute and <code>~</code> paths are allowed.</li>
+                <li>Imported files can import others, up to <strong>four hops</strong> deep.</li>
+                <li>Imports load <strong>at launch</strong>: they organize instructions but <strong>do not save context tokens</strong>. For on-demand content use path-scoped rules or skills.</li>
+                <li>The first time a project uses imports from outside the repo, Claude Code shows a one-time approval dialog.</li>
+                <li>Team pattern: keep the root <code>CLAUDE.md</code> as a short index of <code>@imports</code>, so each topic file has one owner and only relevant standards are pulled in per package.</li>
+            </ul>
+        </div>
+
+        <div class="prose"><p><strong>Path-scoped rules (<code>.claude/rules/*.md</code>):</strong></p></div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Markdown — .claude/rules/api-and-tests.md</span>
+            </div>
+            <pre>---
+paths:
+  - "src/api/**/*.ts"
+  - "**/*.test.{ts,tsx}"
+---
+# API &amp; test conventions
+- Validate every request body with the shared schema helpers.
+- Tests use the factories in test/factories; never hit the real network.</pre>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <ul>
+                <li>Rules <strong>without</strong> <code>paths</code> load at launch like <code>CLAUDE.md</code>. Rules <strong>with</strong> <code>paths</code> load only when Claude reads a matching file, so they cost no tokens on unrelated tasks.</li>
+                <li>Globs support <code>**</code> and brace expansion (<code>*.{ts,tsx}</code>).</li>
+                <li><strong>Diagnose with <code>/memory</code>:</strong> it lists every <code>CLAUDE.md</code>, <code>CLAUDE.local.md</code> and rules file loaded in the current session. Run it first when "Claude ignores my instruction".</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam traps</h4>
+                <p>(1) A new teammate's Claude ignores the team's conventions → they live in someone's <code>~/.claude/CLAUDE.md</code> (user scope), not the project file. Move them to <code>./CLAUDE.md</code> or <code>.claude/rules/</code>. (2) Test files sit next to source files across 30 directories → one rule with <code>paths: ["**/*.test.*"]</code>, not 30 directory <code>CLAUDE.md</code> files. (3) Splitting a big <code>CLAUDE.md</code> into <code>@imports</code> does not reduce tokens; path-scoped rules do.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: WHICH MECHANISM
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="mechanisms">
-            <div class="section-divider-number">03</div>
-            <h2>3. Which Mechanism Carries Which Rule</h2>
+            <div class="section-divider-number">04</div>
+            <h2>4. Which Mechanism Carries Which Rule</h2>
         </div>
 
         <div class="callout tip">
@@ -543,11 +654,11 @@
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 04: HOOKS
+             SECTION 05: HOOKS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="hooks">
-            <div class="section-divider-number">04</div>
-            <h2>4. Hooks &amp; Exit-Code Semantics</h2>
+            <div class="section-divider-number">05</div>
+            <h2>5. Hooks &amp; Exit-Code Semantics</h2>
         </div>
 
         <div class="concept-card accent-coral">
@@ -566,7 +677,7 @@
                 </thead>
                 <tbody>
                     <tr><td><strong><code>0</code></strong></td><td>Success / allow</td><td>Event proceeds. <code>stdout</code> is parsed for JSON decision fields (<code>hookSpecificOutput</code>, <code>decision</code>, <code>continue</code>). Plain-text <code>stdout</code> is added to Claude's context <strong>only</strong> on <code>SessionStart</code>, <code>Setup</code>, <code>UserPromptSubmit</code>, and <code>PostModelSwitch</code>. Exit <code>0</code> without JSON does <em>not</em> bypass permission prompts.</td></tr>
-                    <tr><td><strong><code>2</code></strong></td><td><strong>Blocking error</strong></td><td><strong>Blocks</strong> the action (on blockable events). <code>stderr</code> is fed back to Claude as the block reason; any JSON on <code>stdout</code> is <strong>ignored</strong>.</td></tr>
+                    <tr><td><strong><code>2</code></strong></td><td><strong>Blocking error</strong></td><td><strong>Blocks</strong> the action (on blockable events). <code>stderr</code> is fed back to Claude as the block reason. Valid JSON on <code>stdout</code> is still read but <strong>can't override the block</strong> (even <code>"allow"</code>); a JSON blocking-decision reason, if present, replaces <code>stderr</code> as the message.</td></tr>
                     <tr><td><strong><code>1</code> or other non-zero</strong> (no valid JSON)</td><td><strong>Non-blocking error (fail-open default)</strong></td><td><strong>Exam trap:</strong> <code>exit 1</code> without valid hook JSON logs <code>stderr</code> as a warning and <strong>lets the tool call proceed</strong> — <strong>unless <code>"onFailure": "block"</code></strong> is set on the <code>command</code>/<code>http</code> hook (which turns non-zero exits, non-2xx HTTP responses, and <strong>timeouts</strong> into blocks). <em>(If <code>stdout</code> contains valid hook JSON, Claude Code applies the JSON decision and ignores the exit code; <code>WorktreeCreate</code>/<code>WorktreeRemove</code> fail on any non-zero exit.)</em></td></tr>
                 </tbody>
             </table>
@@ -650,11 +761,11 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 05: SUBAGENTS
+             SECTION 06: SUBAGENTS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="subagents">
-            <div class="section-divider-number">05</div>
-            <h2>5. Subagents</h2>
+            <div class="section-divider-number">06</div>
+            <h2>6. Subagents</h2>
         </div>
 
         <div class="two-columns">
@@ -670,7 +781,7 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
             <div class="concept-card accent-purple">
                 <h3><div class="icon-badge"><i class="fas fa-box-open"></i></div>Built-in vs Custom vs Fork (<code>/subtask</code>)</h3>
                 <ul>
-                    <li><strong><code>Explore</code> (Haiku) &amp; <code>Plan</code>:</strong> <strong>Read-only</strong>, <strong>skip root <code>CLAUDE.md</code> and git status</strong>, and are <strong>one-shot</strong> (return no <code>agentId</code>, <strong>cannot be resumed</strong>).</li>
+                    <li><strong><code>Explore</code> &amp; <code>Plan</code>:</strong> (both run on the main conversation's model by default; a project/user subagent named <code>Explore</code> with <code>model: haiku</code> overrides the built-in for cheaper search) <strong>Read-only</strong>, <strong>skip root <code>CLAUDE.md</code> and git status</strong>, and are <strong>one-shot</strong> (return no <code>agentId</code>, <strong>cannot be resumed</strong>).</li>
                     <li><strong><code>general-purpose</code> &amp; Custom subagents:</strong> Load <code>CLAUDE.md</code> (unless <code>omitClaudeMd: true</code>), start in a <strong>fresh context window</strong> (no parent conversation history), and return an <code>agentId</code> that <strong>can be resumed</strong> via <code>SendMessage</code>.</li>
                     <li><strong>Fork subagent (<code>/subtask</code>):</strong> Unlike standard subagents, a fork <strong>inherits the parent's full conversation history, system prompt, tools, and model</strong>, and <strong>shares the parent's prompt cache</strong> (up to depth 2).</li>
                 </ul>
@@ -728,11 +839,11 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 06: SKILLS
+             SECTION 07: SKILLS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="skills">
-            <div class="section-divider-number">06</div>
-            <h2>6. Skills &amp; Progressive Disclosure</h2>
+            <div class="section-divider-number">07</div>
+            <h2>7. Skills &amp; Progressive Disclosure</h2>
         </div>
 
         <div class="two-columns">
@@ -753,6 +864,7 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
                     <li><strong>4. Nested</strong> (<code>&lt;subdir&gt;/.claude/skills/</code>, auto-discovered on demand)</li>
                     <li><strong>5. Plugin</strong> (<code>&lt;plugin&gt;/skills/&lt;name&gt;/SKILL.md</code>, namespaced <code>/plugin:skill</code>)</li>
                     <li><strong>6. Synced <code>claude.ai</code></strong> (<code>~/.claude/skills/synced/</code>, invoked as <code>/anthropic-skills:&lt;name&gt;</code>)</li>
+                    <li><strong>Personal variant of a team skill:</strong> copy it to <code>~/.claude/skills/&lt;different-name&gt;/</code> so you can tweak it while teammates keep the project version. Reusing the <strong>same name</strong> silently shadows the project skill for you only (personal &gt; project), which hides upstream fixes.</li>
                 </ul>
             </div>
         </div>
@@ -766,7 +878,7 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
                     <tr><td><code>description</code> + <code>when_to_use</code></td><td>Trigger text shown in context (combined cap: <strong>1,536 chars</strong>; put the primary trigger phrase first)</td></tr>
                     <tr><td><code>disable-model-invocation: true</code></td><td><strong>Manual-only (<code>/name</code>):</strong> description is <strong>omitted from context</strong> (zero token cost until invoked), Claude cannot invoke it via the <code>Skill</code> tool, and subagents cannot preload it. Use for side-effecting playbooks (<code>/deploy</code>, <code>/release</code>)</td></tr>
                     <tr><td><code>user-invocable: false</code></td><td>Model-invocable background knowledge; hidden from the <code>/</code> menu (description stays in context)</td></tr>
-                    <tr><td><code>allowed-tools</code></td><td><strong>Pre-approves</strong> listed tools while the skill runs (does <strong>not</strong> restrict available tools; clears on next user turn)</td></tr>
+                    <tr><td><code>allowed-tools</code></td><td><strong>Pre-approves</strong> listed tools while the skill runs (does <strong>not</strong> restrict available tools; clears on next user turn). To actually <strong>limit</strong> tools, use <code>context: fork</code> with an <code>agent</code> whose <code>tools</code> list is narrow, or <code>permissions.deny</code></td></tr>
                     <tr><td><code>context: fork</code> + <code>agent</code></td><td>Runs the skill in an <strong>isolated subagent with no conversation history</strong> (<code>agent: Explore</code> also skips <code>CLAUDE.md</code>, so <code>SKILL.md</code> must be self-contained)</td></tr>
                     <tr><td><code>paths</code> / <code>hooks</code> / <code>model</code> / <code>effort</code> / <code>shell</code></td><td><code>paths:</code> restricts auto-activation to matching file globs; <code>hooks:</code> registers skill-scoped lifecycle hooks</td></tr>
                     <tr><td><code>$ARGUMENTS</code>, <code>$ARGUMENTS[N]</code>, <code>$N</code></td><td>Substitutes arguments passed to <code>/skill-name arg0 arg1</code> (appends <code>ARGUMENTS: ...</code> if omitted from body; also supports <code>${CLAUDE_SKILL_DIR}</code> and <code>${CLAUDE_SESSION_ID}</code>)</td></tr>
@@ -783,18 +895,191 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
                 <tbody>
                     <tr><td><strong>Claude Code CLI / Desktop / IDE</strong></td><td>Filesystem scopes + <code>claude.ai</code> downward sync (<code>~/.claude/skills/synced/</code>)</td><td>Full Claude Code frontmatter (<code>allowed-tools</code>, <code>context: fork</code>, <code>hooks</code>, <code>argument-hint</code>). <strong>One-way sync:</strong> <code>claude.ai</code> skills sync <em>down</em> to Claude Code, but local <code>.claude/skills/</code> <strong>never</strong> sync <em>up</em> to <code>claude.ai</code> or the API</td></tr>
                     <tr><td><strong>Agent SDK</strong></td><td><code>.claude/skills/</code> when <code>setting_sources</code> includes <code>"project"</code>/<code>"user"</code>, or preloaded per subagent via <code>skills</code></td><td>Full body injected at startup when listed in subagent <code>skills: [...]</code></td></tr>
-                    <tr><td><strong>Claude API (<code>/v1/skills</code>)</strong></td><td>Uploaded via Skills API (<code>skill_id</code> in <code>container.skills</code> + <code>code_execution</code> tool; <strong>workspace-wide</strong>, pin version in prod)</td><td>Runs in Anthropic's networkless container. <strong>Strict schema trap:</strong> API <code>/v1/skills</code> accepts <strong>only</strong> <code>name</code>, <code>description</code>, <code>license</code>, <code>compatibility</code>, <code>metadata</code>, <code>allowed-tools</code> — uploading a <code>SKILL.md</code> with <code>argument-hint</code>, <code>disable-model-invocation</code>, <code>context</code>, or <code>hooks</code> fails validation</td></tr>
+                    <tr><td><strong>Claude API (<code>/v1/skills</code>)</strong></td><td>Uploaded via Skills API (<code>skill_id</code> in <code>container.skills</code> + <code>code_execution</code> tool; <strong>workspace-wide</strong>, pin version in prod)</td><td>Runs in Anthropic's networkless container. <strong>Strict schema trap (verify: based on the Agent Skills spec; subject to change):</strong> API <code>/v1/skills</code> accepts <strong>only</strong> <code>name</code>, <code>description</code>, <code>license</code>, <code>compatibility</code>, <code>metadata</code>, <code>allowed-tools</code> — uploading a <code>SKILL.md</code> with <code>argument-hint</code>, <code>disable-model-invocation</code>, <code>context</code>, or <code>hooks</code> fails validation</td></tr>
                     <tr><td><strong>Managed Agents</strong></td><td>Attached to the Agent definition (<code>skills: [...]</code>)</td><td>Runs in the session's cloud or self-hosted environment</td></tr>
                 </tbody>
             </table>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 07: PLUGINS
+             SECTION 08: 8. CUSTOM SLASH COMMANDS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="slash-commands">
+            <div class="section-divider-number">08</div>
+            <h2>8. Custom Slash Commands</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Scope</th><th>Location</th><th>Invoked as</th><th>Shared?</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Project</strong></td><td><code>.claude/commands/&lt;name&gt;.md</code> (or skill <code>.claude/skills/&lt;name&gt;/SKILL.md</code>)</td><td><code>/name</code></td><td>Yes: committed, every teammate gets it on clone/pull</td></tr>
+                    <tr><td><strong>Personal</strong></td><td><code>~/.claude/commands/&lt;name&gt;.md</code> (or <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code>)</td><td><code>/name</code></td><td>No: only you, all projects</td></tr>
+                    <tr><td><strong>Plugin</strong></td><td><code>&lt;plugin&gt;/commands/</code> or <code>&lt;plugin&gt;/skills/</code></td><td><code>/plugin:name</code></td><td>Via marketplace</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prose"><p>Commands and skills are unified: a <code>.claude/commands/review.md</code> file and a <code>.claude/skills/review/SKILL.md</code> skill both create <code>/review</code> and accept the same frontmatter. Prefer a skill when you need supporting files (scripts, references).</p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Frontmatter</th><th>Effect</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>description</code></td><td>Shown in the <code>/</code> menu; also lets Claude invoke it automatically when relevant</td></tr>
+                    <tr><td><code>argument-hint</code></td><td>Autocomplete hint such as <code>[focus-area]</code></td></tr>
+                    <tr><td><code>allowed-tools</code></td><td>Pre-approves listed tools while the command runs (it does not remove other tools)</td></tr>
+                    <tr><td><code>model</code></td><td>Model override for this command</td></tr>
+                    <tr><td><code>context: fork</code> (+ <code>agent</code>)</td><td>Runs in a <strong>forked subagent with its own context</strong>; verbose output stays out of the main conversation, only the result returns</td></tr>
+                    <tr><td><code>disable-model-invocation: true</code></td><td>Only you can trigger it (use for side effects such as deploys)</td></tr>
+                    <tr><td>Body: <code>$ARGUMENTS</code>, <code>$1</code>, <code>@file</code>, <code>!`cmd`</code></td><td>Argument substitution, file inclusion, and shell preprocessing (see <a href="#skills">Skills</a> for the <code>!`cmd`</code> trap)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Markdown — .claude/commands/review-branch.md</span>
+            </div>
+            <pre>---
+description: Review the current branch against team standards
+argument-hint: [focus-area]
+allowed-tools: Read, Grep, Glob, Bash(git diff *)
+context: fork
+---
+Review the changes on this branch (run `git diff main...HEAD`). Focus: $ARGUMENTS
+Apply the checklist in @docs/review-checklist.md and return findings as a table
+with file, line, severity and suggested fix.</pre>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule</h4>
+                <p>Team workflow everyone should run the same way → <strong>project</strong> <code>.claude/commands/</code> (or skill), committed. Personal shortcut → <code>~/.claude/commands/</code>. Workflow that reads a lot of files or produces long output → add <code>context: fork</code> so the main session stays clean.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>A command saved in <code>~/.claude/commands/</code> "doesn't exist" for teammates: personal scope is not in version control.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: 9. WORKFLOWS: PLAN MODE, INTERVIEW PATTERN &amp; ITERATIVE REFINEMENT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflows">
+            <div class="section-divider-number">09</div>
+            <h2>9. Workflows: Plan Mode, Interview Pattern &amp; Iterative Refinement</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Situation</th><th>Approach</th><th>Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Diff fits in one sentence (typo, log line, rename)</td><td><strong>Direct execution</strong></td><td>Planning overhead exceeds its value</td></tr>
+                    <tr><td>Clear bug with a stack trace in one file</td><td><strong>Direct execution</strong></td><td>Scope and fix are already known</td></tr>
+                    <tr><td>Multi-file change, unfamiliar code, several valid approaches (framework migration, splitting a monolith, new integration)</td><td><strong>Plan mode</strong> first</td><td>Explore safely and agree on an approach before edits; avoids costly rework</td></tr>
+                    <tr><td>Large change whose approach is already decided</td><td>Plan mode to explore, then <strong>direct execution</strong> to implement</td><td>Combine: investigate read-only, then execute the agreed plan</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Explore → plan → implement → commit.</strong> Plan mode allows reads and read-only tools but blocks edits until you approve. Press <strong><code>Ctrl+G</code></strong> to open the plan in your editor and change it before Claude proceeds. <code>/model opusplan</code> uses Opus while planning and Sonnet while executing.</li>
+                <li><strong>Keep discovery out of the main context:</strong> delegate verbose exploration to the <code>Explore</code> subagent; only its summary returns.</li>
+                <li><strong>Interview pattern</strong> (unfamiliar domain, hidden requirements): <em>"Interview me in detail using the AskUserQuestion tool about this feature, covering edge cases, failure modes and trade-offs, then write a complete spec to SPEC.md."</em> Then start a <strong>fresh session</strong> that implements from <code>SPEC.md</code>, so the interview noise doesn't fill the implementation context.</li>
+            </ul>
+        </div>
+
+        <div class="prose"><p><strong>Iterative refinement techniques:</strong></p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Technique</th><th>Use when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>2–3 concrete input → output examples</strong></td><td>Prose descriptions get interpreted inconsistently (data transformations, output formats, naming)</td></tr>
+                    <tr><td><strong>Test-driven iteration</strong>: write tests first (including edge cases and performance limits), then iterate on failures</td><td>Behavior must be verifiable; failing tests tell Claude exactly what to fix</td></tr>
+                    <tr><td><strong>Give a pass/fail check</strong> (test command, build, linter, screenshot comparison)</td><td>Always: Claude can verify and self-correct instead of guessing</td></tr>
+                    <tr><td><strong>Specific feedback</strong>: actual vs expected output, exact error text</td><td>Replace "it doesn't work" with evidence</td></tr>
+                    <tr><td><strong>One message for interacting issues; sequential fixes for independent ones</strong></td><td>Fixes that affect each other need to be considered together</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>Plan mode is not a default for everything. Choosing plan mode for a one-line, well-understood fix (or direct execution for an architectural migration) is the wrong call.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: 10. BUILT-IN TOOLS: GREP VS GLOB, READ, EDIT &amp; WRITE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="built-in-tools">
+            <div class="section-divider-number">10</div>
+            <h2>10. Built-in Tools: Grep vs Glob, Read, Edit &amp; Write</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Tool</th><th>What it does</th><th>Pick it when</th><th>Trap</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Grep</strong></td><td>Searches file <strong>contents</strong> (ripgrep regex); output modes <code>files_with_matches</code> (default), <code>content</code>, <code>count</code>; filter with <code>glob</code> or <code>type</code>; respects <code>.gitignore</code></td><td>Find callers of a function, an error string, all imports of a module</td><td>It doesn't find files by name; escape regex metacharacters</td></tr>
+                    <tr><td><strong>Glob</strong></td><td>Finds files by <strong>name/path pattern</strong> (<code>**/*.test.tsx</code>); results sorted by modification time, capped at 100</td><td>Locate files by extension, naming convention or directory</td><td>Doesn't search contents; <strong>doesn't respect <code>.gitignore</code></strong> by default</td></tr>
+                    <tr><td><strong>Read</strong></td><td>Reads a file (paged with offset/limit for large files)</td><td>Inspect a file before changing it</td><td>Required before <code>Edit</code></td></tr>
+                    <tr><td><strong>Edit</strong></td><td>Replaces an exact <code>old_string</code> with <code>new_string</code></td><td>Targeted change in an existing file</td><td>Fails unless the file was read first, the match is exact and <code>old_string</code> is unique</td></tr>
+                    <tr><td><strong>Write</strong></td><td>Creates or fully overwrites a file</td><td>New files, or a complete rewrite</td><td>Overwriting an existing file requires reading it first</td></tr>
+                    <tr><td><strong>Bash</strong></td><td>Runs shell commands</td><td>Tests, builds, git, anything without a dedicated tool</td><td>Prefer Grep/Glob/Read over <code>grep</code>/<code>find</code>/<code>cat</code> for search and reading</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prose"><p><strong>Edit failure → fallback:</strong></p></div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Not read yet / file changed since read</h4>
+                <p>→ <code>Read</code> the file again, then retry the edit.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4><code>old_string</code> matches several places</h4>
+                <p>→ include more surrounding lines so it is unique, or set <code>replace_all: true</code> when every occurrence should change.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Still no stable unique anchor</h4>
+                <p>(repetitive generated code, many similar blocks) → <code>Read</code> the full file and <code>Write</code> the complete new content.</p>
+            </div>
+        </div>
+
+        <div class="prose"><p><strong>Incremental codebase exploration:</strong> start with <code>Grep</code> for entry points (function name, route, error message) → <code>Read</code> only the files that matter → follow imports with further <code>Grep</code> calls. To trace a function used through wrapper modules, first find every exported name that re-exports it, then <code>Grep</code> each name across the codebase. Don't read every file up front.</p></div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: PLUGINS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="plugins">
-            <div class="section-divider-number">07</div>
-            <h2>7. Plugins &amp; Marketplaces</h2>
+            <div class="section-divider-number">11</div>
+            <h2>11. Plugins &amp; Marketplaces</h2>
         </div>
 
         <div class="two-columns">
@@ -837,11 +1122,11 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 08: MCP
+             SECTION 12: MCP
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="mcp">
-            <div class="section-divider-number">08</div>
-            <h2>8. MCP in Claude Code</h2>
+            <div class="section-divider-number">12</div>
+            <h2>12. MCP in Claude Code</h2>
         </div>
 
         <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Claude Code acts as an MCP Host that spawns one dedicated MCP Client per configured server (<strong>strict 1:1 Client–Server relationship</strong>). Add servers via <code>claude mcp add --transport http &lt;name&gt; &lt;url&gt;</code> or <code>claude mcp add --transport stdio &lt;name&gt; -- &lt;cmd&gt; [args...]</code>.</p>
@@ -898,11 +1183,11 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 09: HEADLESS
+             SECTION 13: HEADLESS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="headless">
-            <div class="section-divider-number">09</div>
-            <h2>9. Headless, CI/CD, Checkpointing &amp; GitHub Actions (<code>claude -p</code>)</h2>
+            <div class="section-divider-number">13</div>
+            <h2>13. Headless, CI/CD, Checkpointing &amp; GitHub Actions (<code>claude -p</code>)</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -925,7 +1210,7 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
 
         <div class="two-columns">
             <div class="concept-card accent-blue">
-                <h3><div class="icon-badge"><i class="fab fa-github"></i></div>GitHub Actions Integration (<code>/install-github-app</code>)</h3>
+                <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>GitHub Actions Integration (<code>/install-github-app</code>)</h3>
                 <ul>
                     <li><strong>Setup &amp; prerequisites:</strong> Run <strong><code>/install-github-app</code></strong> interactively in the CLI (requires authenticated <code>gh</code> CLI and <strong>repository admin permissions</strong>) to install the Claude GitHub App, configure repo secrets (<code>CLAUDE_CODE_OAUTH_TOKEN</code> or <code>ANTHROPIC_API_KEY</code>), and open a PR adding <code>.github/workflows/claude.yml</code> (<code>@claude</code> mentions on issues/PRs create isolated <code>claude/issue/&lt;N&gt;</code> branches — never pushing directly to <code>main</code>) and <code>claude-code-review.yml</code> (automated PR diff reviews).</li>
                     <li><strong>Ephemeral CI runner trap:</strong> GitHub Actions runners are fresh checkouts — gitignored <code>CLAUDE.local.md</code>, <code>.claude/settings.local.json</code>, and <code>~/.claude/projects/.../memory/MEMORY.md</code> <strong>do not exist in CI</strong>. Any rule or skill that PR review agents must follow must be committed to <code>CLAUDE.md</code>, <code>.claude/rules/</code>, or <code>.claude/skills/</code>.</li>
@@ -949,11 +1234,59 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 10: TEAM ROLLOUT
+             SECTION 14: 14. CODE REVIEW &amp; TEST GENERATION IN CI/CD
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="ci-review">
+            <div class="section-divider-number">14</div>
+            <h2>14. Code Review &amp; Test Generation in CI/CD</h2>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash — CI re-review with prior findings</span>
+            </div>
+            <pre><span class="comment"># Re-review after new commits: give prior findings so only new or unresolved issues are reported</span>
+claude -p "Review the diff in pr.diff using the criteria in review-criteria.md. \
+Prior findings are in prior-findings.json: report only issues that are new or still unresolved." \
+  --output-format json \
+  --json-schema "$(cat review-schema.json)" \
+  --allowedTools "Read,Grep,Glob" \
+  | jq '.structured_output.findings'</pre>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Practice</th><th>Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong><code>-p</code> for every pipeline run</strong></td><td>Without it Claude Code starts an interactive session and the job waits for input</td></tr>
+                    <tr><td><strong><code>--output-format json</code> + <code>--json-schema</code></strong> → read <code>.structured_output</code></td><td>Machine-parseable findings (file, line, severity, issue, fix) your script can post as inline PR comments</td></tr>
+                    <tr><td><strong>Include prior findings on re-runs</strong></td><td>Without them, each push re-posts the same comments; with them Claude reports only new or still-unaddressed issues</td></tr>
+                    <tr><td><strong>Independent review instance</strong></td><td>The session that generated code keeps its own reasoning and is less likely to question it; review in a separate <code>claude -p</code> run that sees only the diff and criteria</td></tr>
+                    <tr><td><strong>Per-file passes + one integration pass</strong> for large PRs</td><td>Avoids attention dilution; see the <a href="ClaudeAgentSDK.html">Claude Agent SDK guide</a> for decomposition patterns</td></tr>
+                    <tr><td><strong>Explicit criteria</strong> ("report bugs and security issues; skip style and naming") with severity definitions and examples</td><td>Vague "be conservative" prompts don't improve precision; false positives erode trust in every finding</td></tr>
+                    <tr><td><strong>Commit project context</strong> (<code>CLAUDE.md</code> with testing standards, fixtures, review criteria) and pass existing test files</td><td>CI runners only see committed files; showing existing tests prevents duplicate test scenarios</td></tr>
+                    <tr><td><strong>Blocking pre-merge check → synchronous <code>claude -p</code>. Overnight or weekly reports → Message Batches API</strong></td><td>Batches cost less but can take up to 24 hours with no latency guarantee, so they suit only jobs nobody waits on</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam traps</h4>
+                <p>(1) Re-running review on every push without the earlier findings → duplicate PR comments. (2) Asking the generating session to "review your own work" instead of a fresh instance. (3) <code>--bare</code> skips <code>CLAUDE.md</code> auto-discovery, so pass review criteria explicitly (prompt or <code>--append-system-prompt-file</code>) when you need clean-room mode on untrusted code (see <a href="#headless">Headless</a>).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 15: TEAM ROLLOUT
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="team-rollout">
-            <div class="section-divider-number">10</div>
-            <h2>10. Team Rollout, Distribution &amp; Spend Controls</h2>
+            <div class="section-divider-number">15</div>
+            <h2>15. Team Rollout, Distribution &amp; Spend Controls</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -991,90 +1324,39 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 11: AGENT SDK
+             SECTION 16: 16. CLAUDE CODE ON GOOGLE CLOUD (VERTEX AI)
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="agent-sdk">
-            <div class="section-divider-number">11</div>
-            <h2>11. Claude Agent SDK</h2>
+        <div class="section-divider" id="vertex-ai">
+            <div class="section-divider-number">16</div>
+            <h2>16. Claude Code on Google Cloud (Vertex AI)</h2>
         </div>
 
-        <div class="two-columns">
-            <div class="concept-card accent-blue">
-                <h3><div class="icon-badge"><i class="fas fa-box"></i></div><code>query()</code> vs <code>ClaudeSDKClient</code> &amp; sessions</h3>
-                <ul>
-                    <li><strong>Packages:</strong> TypeScript <code>@anthropic-ai/claude-agent-sdk</code> · Python <code>claude-agent-sdk</code> (replaces <code>claude-code-sdk</code>).</li>
-                    <li><strong><code>query(prompt, options)</code>:</strong> Starts a fresh session per call unless you pass <code>continue_conversation=True</code> (<code>continue: true</code>), <code>resume=session_id</code> (from <code>ResultMessage.session_id</code>), or <code>resume=session_id, fork_session=True</code> (<code>forkSession: true</code>). <strong>Fork trap:</strong> <code>fork_session</code> branches the conversation transcript <strong>only</strong>, not the filesystem — pair with <code>enable_file_checkpointing=True</code> + <code>rewind_files(user_message_id)</code> to restore disk state.</li>
-                    <li><strong><code>ClaudeSDKClient</code> (Python):</strong> Reuses one subprocess across multiple turns and supports <code>await client.interrupt()</code> (<strong>must drain buffered messages</strong> up to the interrupted turn's <code>ResultMessage</code> before sending the next query). TypeScript calls methods directly on the <code>Query</code> handle returned by <code>query()</code>.</li>
-                </ul>
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash — Vertex AI environment</span>
             </div>
-            <div class="concept-card accent-purple">
-                <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div><code>setting_sources</code> / <code>settingSources</code></h3>
-                <ul>
-                    <li><strong>Omitted (default):</strong> Loads <code>user</code>, <code>project</code>, and <code>local</code> settings, <code>CLAUDE.md</code>, skills, agents, and hooks, <strong>just like the CLI</strong>. <em>(If top-level <code>skills</code> is set while <code>setting_sources</code> is omitted, only <code>user</code> and <code>project</code> load; <code>local</code> is dropped.)</em></li>
-                    <li><strong><code>[]</code> (empty list):</strong> Disables <code>user</code>, <code>project</code>, and <code>local</code> filesystem settings and <code>CLAUDE.md</code>.</li>
-                    <li><strong>Multi-tenant trap — what <code>setting_sources=[]</code> STILL loads:</strong> (1) <strong>Managed policy settings</strong>, (2) <strong><code>~/.claude.json</code></strong> global state (isolate via <code>CLAUDE_CONFIG_DIR</code> in <code>env</code>), (3) <strong>Auto memory</strong> at <code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code> (disable via <strong><code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code></strong> in <code>env</code> or <code>autoMemoryEnabled: false</code>), and (4) <strong><code>claude.ai</code> MCP connectors</strong> (pass <strong><code>strict_mcp_config=True</code></strong> / <code>strictMcpConfig: true</code>).</li>
-                </ul>
-            </div>
+            <pre>gcloud auth application-default login          <span class="comment"># Application Default Credentials</span>
+export CLAUDE_CODE_USE_VERTEX=1
+export CLOUD_ML_REGION=global                   <span class="comment"># or a multi-region (us, eu) or region (us-east5)</span>
+export ANTHROPIC_VERTEX_PROJECT_ID=my-gcp-project
+claude</pre>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Option (Python / TS)</th><th>What it controls &amp; critical SDK traps</th></tr>
+                    <tr><th>Step / setting</th><th>Detail</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>tools</code> / <code>tools</code></td><td><strong>Tool availability in context</strong> (<code>["Read", "Grep"]</code>, or <code>[]</code> to strip all built-in tools so Claude only sees MCP tools).</td></tr>
-                    <tr><td><code>allowed_tools</code> / <code>allowedTools</code></td><td><strong>Pre-approves</strong> matching calls at Step 2; unlisted tools remain in context and fall through to <code>permission_mode</code> / <code>can_use_tool</code>. Has <strong>no effect</strong> in <code>bypassPermissions</code>.</td></tr>
-                    <tr><td><code>disallowed_tools</code> / <code>disallowedTools</code></td><td>Bare names (<code>"Bash"</code>, <code>"*"</code>) <strong>remove the tool from context</strong>; scoped rules (<code>"Bash(rm *)"</code>) keep the tool in context and <strong>deny matching calls at Step 2 in every mode</strong>, including <code>bypassPermissions</code>. File-write rules must use <code>Edit(//abs/path)</code> (<code>Write(...)</code> never matches).</td></tr>
-                    <tr><td><code>permission_mode</code> / <code>permissionMode</code></td><td><code>"default"</code>, <code>"acceptEdits"</code>, <code>"plan"</code>, <code>"auto"</code>, <code>"dontAsk"</code>, <code>"bypassPermissions"</code>. In TypeScript, <code>"bypassPermissions"</code> throws unless <strong><code>allowDangerouslySkipPermissions: true</code></strong> is also set.</td></tr>
-                    <tr><td><code>can_use_tool</code> / <code>canUseTool</code></td><td>Async callback <code>(tool_name, input_data, context) -&gt; PermissionResultAllow | PermissionResultDeny</code>. Fires <strong>only</strong> when the harness would prompt; <strong>never fires</strong> in <code>dontAsk</code>, <code>bypassPermissions</code>, or for tools matched by <code>allowed_tools</code> (TS emits <code>CLAUDE_SDK_CAN_USE_TOOL_SHADOWED</code>).</td></tr>
-                    <tr><td><code>hooks</code> / <code>hooks</code></td><td>In-process callbacks (<code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, <code>SubagentStop</code>, <code>UserPromptSubmit</code>). Unlike command hooks, <strong>SDK callback hooks block on timeout</strong>.</td></tr>
-                    <tr><td><code>mcp_servers</code> + <code>create_sdk_mcp_server</code></td><td>Register external or <strong>in-process custom tools</strong> (<code>@tool</code> + <code>create_sdk_mcp_server(name="srv", tools=[fn])</code>; TS <code>tool()</code> + <code>createSdkMcpServer()</code>). Expose in <code>allowed_tools</code> as <strong><code>mcp__&lt;srv&gt;__&lt;tool&gt;</code></strong>. Returning <code>{"content": [...], "is_error": True}</code> feeds recoverable tool errors back to Claude.</td></tr>
-                    <tr><td><code>agents</code> / <code>agents</code> (<code>AgentDefinition</code>)</td><td>Programmatic subagents (include <code>"Agent"</code> in top-level <code>allowed_tools</code>). <strong>Python SDK quirk:</strong> multi-word fields on <code>AgentDefinition</code> (<code>disallowedTools</code>, <code>mcpServers</code>, <code>maxTurns</code>, <code>permissionMode</code>, <code>initialPrompt</code>) use <strong>camelCase</strong> even in Python!</td></tr>
-                    <tr><td><code>output_format</code> / <code>outputFormat</code></td><td><code>{"type": "json_schema", "schema": ...}</code> → validated payload in <code>ResultMessage.structured_output</code>. Requires <strong>JSON Schema draft-07</strong> (in Zod 4+, pass <code>z.toJSONSchema(schema, { target: "draft-7" })</code> — default <code>2020-12</code> is rejected).</td></tr>
-                    <tr><td><code>env</code> / <code>env</code></td><td><strong>Python vs TypeScript trap:</strong> In Python, <code>options.env</code> <strong>merges</strong> onto the process environment; in TypeScript, <code>options.env</code> <strong>replaces</strong> <code>process.env</code> completely — always spread <code>{ ...process.env, MY_VAR: "1" }</code> in TS or <code>PATH</code> is wiped and the CLI fails with <code>ENOENT</code>!</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 12: MANAGED AGENTS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="managed-agents">
-            <div class="section-divider-number">12</div>
-            <h2>12. Managed Agents &amp; Agent Wiring Paths</h2>
-        </div>
-
-        <p class="prose" style="margin-bottom: 18px; color: var(--text-secondary);">All Managed Agents endpoints require the beta header <strong><code>managed-agents-2026-04-01</code></strong> (set automatically by <code>client.beta.agents</code> / <code>environments</code> / <code>sessions</code>).</p>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>1. Agent (<code>POST /v1/agents</code>)</dt>
-                <dd>Versioned server-side definition (<code>model</code>, <code>system</code> string — no <code>CLAUDE.md</code> hierarchy, <code>tools</code>, <code>mcp_servers</code>, <code>skills</code>). Built-in sandbox tools use <strong><code>{"type": "agent_toolset_20260401"}</code></strong> (in <code>/workspace</code>); custom tools (<code>{"type": "custom", ...}</code>) pause the session and emit <strong><code>agent.custom_tool_use</code></strong> over SSE until your backend runs the logic and posts <strong><code>user.custom_tool_result</code></strong>. Per-tool <code>permission_policy</code> (<code>always_allow</code>, <code>always_ask</code>, <code>auto</code>) gates execution via <strong><code>user.tool_confirmation</code></strong>.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>2. Environment (<code>POST /v1/environments</code>)</dt>
-                <dd>Anthropic-managed cloud container (<code>type: "cloud"</code>, configurable <code>networking: {"type": "limited"}</code> domain allowlists) or self-hosted runner on your infrastructure.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>3. Session (<code>POST /v1/sessions</code>)</dt>
-                <dd>Binds a pinned <code>agent</code> version + <code>environment_id</code>, mounted <code>resources</code> (<code>file</code>, <code>github_repository</code>, <code>memory_store</code>), <strong><code>vault_ids</code></strong> (Vaults inject MCP/API credentials into outbound headers outside the container so raw secrets never enter the sandbox), and spend <code>budget</code>.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>4. Events (<code>POST /v1/sessions/{id}/events</code>)</dt>
-                <dd>Bidirectional SSE stream (<code>user.message</code>, <code>agent.message</code>, <code>agent.custom_tool_use</code> → <code>user.custom_tool_result</code>, <code>user.tool_confirmation</code>, and <code>session.status_idle</code> with <code>stop_reason.type == "end_turn"</code>).</dd>
-            </div>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Wiring path</th><th>Who runs the loop</th><th>You own</th><th>Pick when</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Raw Messages API loop</strong></td><td>Your code</td><td>Tool execution, state, retries, context compaction</td><td>Custom loop control, minimal dependencies, strict ZDR / HIPAA BAA compliance</td></tr>
-                    <tr><td><strong>Claude Agent SDK</strong></td><td>SDK in your process</td><td>Compute/container hosting, filesystem isolation, storage</td><td>You want Claude Code's built-in tools/hooks/subagents while keeping execution in your VPC (eligible for ZDR / HIPAA BAA when using eligible API endpoints)</td></tr>
-                    <tr><td><strong>Claude Managed Agents</strong></td><td>Anthropic server-side</td><td>Agent config, custom tool handlers, session lifecycle</td><td>Long-running cloud sandbox sessions without managing container infra, <strong>and no ZDR or HIPAA BAA requirement</strong></td></tr>
+                    <tr><td><strong>GCP prerequisites</strong></td><td>Enable the Vertex AI API, request access to the Claude models in <strong>Model Garden</strong>, and grant <code>roles/aiplatform.user</code> (needs <code>aiplatform.endpoints.predict</code>). A dedicated project simplifies cost tracking and access control</td></tr>
+                    <tr><td><strong>Setup wizard</strong></td><td>Run <code>claude</code> → <em>3rd-party platform</em> → <em>Google Vertex AI</em>; it detects project/region, checks which models you can invoke and writes the <code>env</code> block of your user settings. Reopen with <code>/setup-vertex</code> (verify: requires a recent Claude Code version)</td></tr>
+                    <tr><td><strong>Regions</strong></td><td><code>CLOUD_ML_REGION=global</code>, a multi-region (<code>us</code>, <code>eu</code>) or a specific region. When using <code>global</code>, set <code>VERTEX_REGION_CLAUDE_*</code> to route models that have no global endpoint to a region</td></tr>
+                    <tr><td><strong>Optional</strong></td><td><code>ANTHROPIC_VERTEX_BASE_URL</code> (custom endpoint or gateway), <code>DISABLE_PROMPT_CACHING=1</code>, <code>ENABLE_PROMPT_CACHING_1H=1</code> (1-hour cache TTL, higher write cost), <code>CLAUDE_CODE_SKIP_VERTEX_AUTH=1</code> (gateway handles auth)</td></tr>
+                    <tr><td><strong>Behavior differences</strong></td><td><code>/logout</code> is unavailable (Google Cloud handles auth); MCP tool search is <strong>off by default</strong> (set <code>ENABLE_TOOL_SEARCH=true</code> on supported models); server-managed settings from <code>claude.ai</code> do not apply (use file or MDM managed settings)</td></tr>
+                    <tr><td><strong>Project ID override</strong></td><td><code>GCLOUD_PROJECT</code>, <code>GOOGLE_CLOUD_PROJECT</code> or the credentials file can override <code>ANTHROPIC_VERTEX_PROJECT_ID</code></td></tr>
+                    <tr><td><strong>GitHub Actions</strong></td><td><code>anthropics/claude-code-action@v1</code> with <code>use_vertex: "true"</code>, authenticated through <strong>Workload Identity Federation</strong> (<code>google-github-actions/auth</code>) and a service account with the required Vertex AI role; no long-lived keys</td></tr>
+                    <tr><td><strong>Spend</strong></td><td>Billed to the GCP project; track with Cloud Billing and Claude Code OpenTelemetry metrics, or an LLM gateway for per-user caps (see <a href="#team-rollout">Team Rollout</a>)</td></tr>
                 </tbody>
             </table>
         </div>
@@ -1082,17 +1364,17 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
-                <h4>Compliance trap: ZDR &amp; HIPAA BAA</h4>
-                <p><strong>Managed Agents is stateful by design</strong> (storing conversation history, container state, and outputs server-side) and <strong>cannot be used under a HIPAA BAA or Zero Data Retention (ZDR) agreement</strong>. When handling regulated PHI or ZDR-governed data, execute the loop yourself via the Agent SDK or Messages API on a BAA/ZDR-qualified endpoint. <em>(Note: while standard web/consumer Claude Code is excluded from ZDR, <strong>Claude Code on Claude Enterprise</strong> provides a dedicated ZDR option for qualifying enterprise organizations.)</em></p>
+                <h4>Exam trap</h4>
+                <p>"Could not load the default credentials" means ADC isn't set up: run <code>gcloud auth application-default login</code> (or point to a service account) after setting the project and region variables. Changing <code>ANTHROPIC_API_KEY</code> doesn't help, because Vertex calls use Google Cloud credentials.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 13: FAILURE MODES
+             SECTION 17: FAILURE MODES
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="failure-modes">
-            <div class="section-divider-number">13</div>
-            <h2>13. Failure Modes &amp; Find the Defect</h2>
+            <div class="section-divider-number">17</div>
+            <h2>17. Failure Modes &amp; Find the Defect</h2>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -1112,7 +1394,6 @@ cmd=$(jq -r <span class="string">'.tool_input.command'</span>)
                     <tr><td>Remote HTTP MCP server blocked despite <code>{"serverName": "sentry"}</code> in <code>allowedMcpServers</code></td><td>Once <em>any</em> <code>serverUrl</code> entry exists in <code>allowedMcpServers</code>, remote servers must match a <code>serverUrl</code> pattern → add <code>{"serverUrl": "https://*.sentry.io/*"}</code></td><td>Adding <code>mcp__sentry__*</code> to <code>permissions.allow</code></td></tr>
                     <tr><td><code>claude -p --json-schema</code> returns empty <code>.result</code> in CI, or untrusted PR executes repo hooks</td><td>Schema output is in <strong><code>.structured_output</code></strong> (not <code>.result</code>), and <code>-p</code> without <code>--bare</code> auto-runs repo <code>.claude/settings.json</code> hooks → read <code>.structured_output</code> and pass <strong><code>--bare</code></strong></td><td>Running <code>claude -p</code> in <code>default</code> mode without <code>--bare</code></td></tr>
                     <tr><td>Local <code>managed-settings.json</code> on macOS ignored after admin enables Server-managed settings</td><td><code>managedSourcesBehavior</code> defaults to <code>"first-wins"</code> (Server &gt; MDM &gt; File) → set <strong><code>"managedSourcesBehavior": "merge"</code></strong> in the server-managed config</td><td>Moving the file to <code>/etc/claude-code/</code> on macOS</td></tr>
-                    <tr><td>Multi-tenant SDK app with <code>setting_sources=[]</code> leaks memory or fails with <code>ENOENT</code> in TS when setting <code>options.env</code></td><td><code>setting_sources=[]</code> still loads auto-memory (<code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code>), <code>~/.claude.json</code> (<code>CLAUDE_CONFIG_DIR</code>), and claude.ai MCP (<code>strict_mcp_config=True</code>); TS <code>options.env</code> replaces <code>process.env</code> (<code>{...process.env, ...}</code>)</td><td>Passing <code>mcp_servers={}</code> without <code>strict_mcp_config=True</code></td></tr>
                     <tr><td>Running <code>/compact</code> after Claude hallucinates a non-existent API still repeats the hallucination</td><td><strong>Context poisoning:</strong> <code>/compact</code> summarizes the current conversation, preserving poisoned assumptions in the summary → run <strong><code>/clear</code></strong> (or <code>/rewind</code> to a turn before the hallucination)</td><td>Running <code>/compact</code> a second time with a shorter prompt</td></tr>
                     <tr><td>Skill with detailed triggers under <code>## When to Use</code> in <code>SKILL.md</code> body never auto-triggers</td><td>Only YAML frontmatter (<code>description</code> + <code>when_to_use</code> above the closing <code>---</code>) loads at Level 1 startup → move trigger keywords into YAML frontmatter <code>description</code></td><td>Adding <code>user-invocable: true</code> to frontmatter</td></tr>
                     <tr><td>Running <code>/rewind</code> (Code only) after a failed migration script leaves deleted files and DB tables broken</td><td>Checkpointing tracks <strong>only</strong> <code>Edit</code>/<code>Write</code>/<code>NotebookEdit</code> changes and <strong>never undoes <code>Bash</code> side-effects</strong> → use <code>git checkout</code> / DB rollbacks for <code>Bash</code> mutations</td><td>Using <em>Conversation and code</em> restore mode in <code>/rewind</code></td></tr>
@@ -1182,10 +1463,10 @@ claude -p <span class="string">"Extract release notes"</span> --json-schema <spa
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 14: RESOURCES, GLOSSARY & QUIZ
+             SECTION 18: RESOURCES, GLOSSARY & QUIZ
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="resources">
-            <div class="section-divider-number">14</div>
+            <div class="section-divider-number">18</div>
             <h2>Glossary, Practice Quiz &amp; Self-Assessment</h2>
         </div>
 
@@ -1201,10 +1482,6 @@ claude -p <span class="string">"Extract release notes"</span> --json-schema <spa
             <div class="definition-item"><dt><code>managed-mcp.json</code> vs <code>allowedMcpServers</code></dt><dd><code>managed-mcp.json</code> provisions an exclusive system-wide server set; <code>allowedMcpServers</code> / <code>deniedMcpServers</code> filter servers by <code>serverName</code>, <code>serverCommand</code>, or <code>serverUrl</code>.</dd></div>
             <div class="definition-item"><dt><code>--bare</code> (<code>claude -p</code>)</dt><dd>Clean-room headless flag that skips <code>CLAUDE.md</code>, auto-memory, hooks, plugins, skills, <code>.mcp.json</code>, and OAuth/keychain.</dd></div>
             <div class="definition-item"><dt><code>managedSourcesBehavior</code></dt><dd>Intra-managed rule: defaults to <code>"first-wins"</code> (<code>Server/Gateway &gt; MDM/HKLM &gt; File + managed-settings.d/*.json &gt; HKCU</code>); set <code>"merge"</code> to combine.</dd></div>
-            <div class="definition-item"><dt><code>tools</code> vs <code>allowed_tools</code> (SDK)</dt><dd><code>tools</code> controls built-in tool <strong>availability</strong> in context (<code>tools=[]</code> strips all built-ins); <code>allowed_tools</code> only <strong>pre-approves</strong> calls at Step 2.</dd></div>
-            <div class="definition-item"><dt><code>setting_sources=[]</code> (SDK)</dt><dd>Skips <code>user</code>/<code>project</code>/<code>local</code> files, but <strong>still loads</strong> managed policy, <code>~/.claude.json</code>, auto-memory (<code>MEMORY.md</code>), and <code>claude.ai</code> MCP connectors.</dd></div>
-            <div class="definition-item"><dt><code>create_sdk_mcp_server</code></dt><dd>Builds an in-process SDK MCP server from <code>@tool</code> functions; pre-approve in <code>allowed_tools</code> as <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>.</dd></div>
-            <div class="definition-item"><dt><code>agent_toolset_20260401</code> &amp; Vaults</dt><dd>Managed Agents built-in container toolset (<code>/workspace</code>), paired with <code>agent.custom_tool_use</code> (VPC tools) and <code>vault_ids</code> (server-side secret injection).</dd></div>
             <div class="definition-item"><dt>Deep Agent 4 Pillars</dt><dd>(1) Explicit planning (<code>TodoWrite</code>/<code>TodoRead</code>), (2) Hierarchical subagents, (3) Filesystem as external context engine, and (4) System prompt heuristics.</dd></div>
             <div class="definition-item"><dt>Context Rot Taxonomy</dt><dd><em>Context poisoning</em> (hallucinations locked into history; requires <code>/clear</code>, not <code>/compact</code>), <em>Context confusion</em> (tool bloat), and <em>Context clash</em> (conflicting rules).</dd></div>
             <div class="definition-item"><dt><code>/output-style</code> vs <code>/statusline</code></dt><dd><code>/output-style</code> replaces the SWE system prompt (<code>Default</code>, <code>Explanatory</code>, <code>Learning</code>, custom); <code>/statusline</code> renders live JSON telemetry on <code>stdin</code> at 0 token cost.</dd></div>
@@ -1292,15 +1569,15 @@ claude -p <span class="string">"Extract release notes"</span> --json-schema <spa
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q7.</span> In the Agent SDK, what four things can still load even when you pass <code>setting_sources=[]</code>?</p>
+                    <p><span class="q-num">Q7.</span> A team splits a 900-line <code>CLAUDE.md</code> into ten <code>@docs/*.md</code> imports to save context tokens. Does it work, and what would?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">(1) Managed policy settings, (2) <code>~/.claude.json</code> global state (isolate via <code>CLAUDE_CONFIG_DIR</code>), (3) auto-memory at <code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code> (disable via <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code>), and (4) <code>claude.ai</code> MCP connectors (suppress via <code>strict_mcp_config=True</code>).</span>
+                        <span class="answer-text">No. <code>@</code> imports expand at launch, so the same tokens load every session; imports only organize content. To load topic guidance on demand, move it into <code>.claude/rules/*.md</code> files with <code>paths:</code> globs (loaded only when Claude reads a matching file) or into skills.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q8.</span> In Claude Managed Agents, how do you run a proprietary tool inside your own VPC while keeping third-party MCP credentials out of the cloud container?</p>
+                    <p><span class="q-num">Q8.</span> A CI review job re-posts the same comments on every push to a PR. What two changes fix it without lowering recall?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Declare the VPC tool as <code>{"type": "custom", ...}</code> on the Agent so the session pauses and emits <code>agent.custom_tool_use</code> over SSE (your VPC executes it and posts <code>user.custom_tool_result</code>), and attach a Vault via <code>vault_ids</code> on the Session so MCP auth headers are injected server-side outside the sandbox.</span>
+                        <span class="answer-text">(1) Pass the previous run's findings into the next <code>claude -p</code> call and ask for only new or still-unresolved issues. (2) Emit findings with <code>--output-format json --json-schema</code> and read <code>.structured_output</code>, so the script can de-duplicate by file and line before posting inline comments.</span>
                     </div>
                 </div>
             </div>
@@ -1312,6 +1589,10 @@ claude -p <span class="string">"Extract release notes"</span> --json-schema <spa
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>

@@ -1,6 +1,6 @@
 {
   "topic_id": "claude-code",
-  "title": "Claude Code & Agent SDK",
+  "title": "Claude Code",
   "guide_url": "ClaudeCode.html",
   "questions": [
     {
@@ -30,7 +30,17 @@
         }
       ],
       "explanation": "bypassPermissions is meant for isolated containers and VMs only. Deny rules (such as Read/Edit(//prod/config/**) and Bash(rm *)) are enforced by the client in every mode, and dropping back to a gated mode like acceptEdits restores prompts on unexpected shell scripts.",
-      "key_takeaway": "Use bypassPermissions only in disposable sandboxes; on workstations combine a gated mode with explicit deny rules."
+      "key_takeaway": "Use bypassPermissions only in disposable sandboxes; on workstations combine a gated mode with explicit deny rules.",
+      "doc_links": [
+        {
+          "label": "Claude Code Permissions & Rules",
+          "url": "https://code.claude.com/docs/en/permissions"
+        },
+        {
+          "label": "Claude Code Permission Modes",
+          "url": "https://code.claude.com/docs/en/permission-modes"
+        }
+      ]
     },
     {
       "id": "claude-code-q-02",
@@ -58,8 +68,18 @@
           "why_wrong": "Modes do not switch on their own; the behavior is the documented scope of acceptEdits."
         }
       ],
-      "explanation": "acceptEdits auto-approves file edits plus mkdir, touch, rm, rmdir, mv, cp and sed inside the working directory or additional directories. Other Bash commands, out-of-scope paths, protected paths and critical-path removals still prompt.",
-      "key_takeaway": "acceptEdits covers common filesystem commands too; add deny rules like Bash(rm *) if deletions must stay gated."
+      "explanation": "acceptEdits pre-approves file modifications together with standard filesystem shell utilities (cp, mv, mkdir, touch, sed, rm, and rmdir) scoped to the working tree or configured extra directories. Other Bash commands, out-of-scope paths, protected paths and critical-path removals still prompt.",
+      "key_takeaway": "acceptEdits covers common filesystem commands too; add deny rules like Bash(rm *) if deletions must stay gated.",
+      "doc_links": [
+        {
+          "label": "Claude Code Permissions & Rules",
+          "url": "https://code.claude.com/docs/en/permissions"
+        },
+        {
+          "label": "Claude Code Permission Modes",
+          "url": "https://code.claude.com/docs/en/permission-modes"
+        }
+      ]
     },
     {
       "id": "claude-code-q-03",
@@ -88,7 +108,17 @@
         }
       ],
       "explanation": "Claude Code evaluates deny rules first, then ask, then allow, and the first match decides regardless of how specific each rule is. Arrays merge across settings layers, so a deny anywhere blocks. The fix is to narrow the deny.",
-      "key_takeaway": "Deny beats ask beats allow, regardless of specificity; an allow can never punch a hole in a deny."
+      "key_takeaway": "Deny beats ask beats allow, regardless of specificity; an allow can never punch a hole in a deny.",
+      "doc_links": [
+        {
+          "label": "Claude Code Permissions & Rules",
+          "url": "https://code.claude.com/docs/en/permissions"
+        },
+        {
+          "label": "Claude Code Permission Modes",
+          "url": "https://code.claude.com/docs/en/permission-modes"
+        }
+      ]
     },
     {
       "id": "claude-code-q-04",
@@ -117,12 +147,22 @@
         }
       ],
       "explanation": "Precedence from highest to lowest is managed, command line (--settings), project local (.claude/settings.local.json at git root), shared project (.claude/settings.json), then user (~/.claude/settings.json). Scalar keys at a higher level override lower levels; for model restrictions, managed availableModels and deniedModels enforce hard locks.",
-      "key_takeaway": "Settings order: managed > --settings > .claude/settings.local.json > .claude/settings.json > ~/.claude/settings.json."
+      "key_takeaway": "Settings order: managed > --settings > .claude/settings.local.json > .claude/settings.json > ~/.claude/settings.json.",
+      "doc_links": [
+        {
+          "label": "Claude Code Settings & Precedence",
+          "url": "https://code.claude.com/docs/en/settings"
+        },
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        }
+      ]
     },
     {
       "id": "claude-code-q-05",
-      "section": "Settings & Memory Precedence",
-      "guide_anchor": "settings-memory",
+      "section": "CLAUDE.md Hierarchy & Path-Scoped Rules",
+      "guide_anchor": "claude-md",
       "question": "A team moves database guidance out of CLAUDE.md into .claude/rules/db/postgres.md to save context. Token usage doesn't drop: the guidance still appears in sessions about frontend CSS. What is wrong?",
       "options": [
         {
@@ -146,7 +186,17 @@
         }
       ],
       "explanation": "Rules files are discovered recursively, but only a paths: YAML frontmatter field scopes a rule to matching files. Without it, the rule loads at launch with the same priority as .claude/CLAUDE.md.",
-      "key_takeaway": "Folder placement doesn't scope a rule; add paths: globs in frontmatter so it loads only for matching files."
+      "key_takeaway": "Folder placement doesn't scope a rule; add paths: globs in frontmatter so it loads only for matching files.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        }
+      ]
     },
     {
       "id": "claude-code-q-06",
@@ -175,7 +225,17 @@
         }
       ],
       "explanation": "Settings rules are enforced by the client regardless of what Claude decides; CLAUDE.md instructions are advisory guidance. Deploying Read(./.env) in managed permissions.deny blocks Read, Edit/Write, and @.env prompt mentions across the org with no local opt-out.",
-      "key_takeaway": "Hard requirements belong in (managed) permissions.deny or hooks; CLAUDE.md is for guidance."
+      "key_takeaway": "Hard requirements belong in (managed) permissions.deny or hooks; CLAUDE.md is for guidance.",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        }
+      ]
     },
     {
       "id": "claude-code-q-07",
@@ -204,7 +264,17 @@
         }
       ],
       "explanation": "Skills use progressive disclosure: names and descriptions load at session start (or zero tokens if disable-model-invocation: true is set for manual /release invocation), and the full body loads only when invoked.",
-      "key_takeaway": "Occasional procedures belong in skills, not CLAUDE.md, so you pay only for the description until used."
+      "key_takeaway": "Occasional procedures belong in skills, not CLAUDE.md, so you pay only for the description until used.",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        }
+      ]
     },
     {
       "id": "claude-code-q-08",
@@ -233,7 +303,17 @@
         }
       ],
       "explanation": "For hooks that print plain text (without valid hook JSON on stdout and without \"onFailure\": \"block\"), exit 0 means no objection, exit 2 is a blocking error whose stderr becomes the reason sent to Claude, and exit 1 (or a timeout) is a non-blocking fail-open error after which the tool call still proceeds.",
-      "key_takeaway": "Only exit 2 blocks a plain-text PreToolUse call; set \"onFailure\": \"block\" so unexpected crashes or timeouts also fail closed."
+      "key_takeaway": "Only exit 2 blocks a plain-text PreToolUse call; set \"onFailure\": \"block\" so unexpected crashes or timeouts also fail closed.",
+      "doc_links": [
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        },
+        {
+          "label": "Automating Actions with Hooks",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        }
+      ]
     },
     {
       "id": "claude-code-q-09",
@@ -262,7 +342,17 @@
         }
       ],
       "explanation": "PostToolUse (with matcher Edit|Write, optionally paired with FileChanged to catch Bash-based file edits) fires immediately after a tool call succeeds. It cannot undo the execution, making it ideal for formatters, linters, and audit logs.",
-      "key_takeaway": "Use PreToolUse to guard and PostToolUse (or FileChanged) to format or audit after disk changes."
+      "key_takeaway": "Use PreToolUse to guard and PostToolUse (or FileChanged) to format or audit after disk changes.",
+      "doc_links": [
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        },
+        {
+          "label": "Automating Actions with Hooks",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        }
+      ]
     },
     {
       "id": "claude-code-q-10",
@@ -291,7 +381,17 @@
         }
       ],
       "explanation": "When multiple PreToolUse hooks run in parallel, decisions resolve by deny > defer > ask > allow. Even when a hook returns allow, permission rules still run next: a matching deny blocks and a matching ask prompts. Conversely, a hook deny blocks the call in every mode, including bypassPermissions.",
-      "key_takeaway": "Hooks can tighten (deny > defer > ask > allow) but never loosen past deny/ask rules; a hook deny holds in bypassPermissions."
+      "key_takeaway": "Hooks can tighten (deny > defer > ask > allow) but never loosen past deny/ask rules; a hook deny holds in bypassPermissions.",
+      "doc_links": [
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        },
+        {
+          "label": "Automating Actions with Hooks",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        }
+      ]
     },
     {
       "id": "claude-code-q-11",
@@ -320,7 +420,17 @@
         }
       ],
       "explanation": "Explore and Plan are read-only, one-shot subagents that start without root CLAUDE.md files and git status to keep research fast and cheap. Custom subagents and general-purpose load CLAUDE.md unless omitClaudeMd: true is set.",
-      "key_takeaway": "Explore and Plan skip root CLAUDE.md (and are one-shot/non-resumable); pass context in the prompt or use a custom subagent."
+      "key_takeaway": "Explore and Plan skip root CLAUDE.md (and are one-shot/non-resumable); pass context in the prompt or use a custom subagent.",
+      "doc_links": [
+        {
+          "label": "Claude Code Custom Subagents",
+          "url": "https://code.claude.com/docs/en/sub-agents"
+        },
+        {
+          "label": "Parallel Sessions with Git Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        }
+      ]
     },
     {
       "id": "claude-code-q-12",
@@ -349,7 +459,17 @@
         }
       ],
       "explanation": "Subagents shine for isolated, parallelizable or exploratory work whose transcript the parent doesn't need. Fanning out tightly coupled sequential edits repeats context across agents with no parallel gain. Note also that a subagent cannot escalate to bypassPermissions unless the parent session is already in bypassPermissions.",
-      "key_takeaway": "Fan out only independent subtasks; dependent sequential steps belong in one context."
+      "key_takeaway": "Fan out only independent subtasks; dependent sequential steps belong in one context.",
+      "doc_links": [
+        {
+          "label": "Claude Code Custom Subagents",
+          "url": "https://code.claude.com/docs/en/sub-agents"
+        },
+        {
+          "label": "Parallel Sessions with Git Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        }
+      ]
     },
     {
       "id": "claude-code-q-13",
@@ -378,7 +498,17 @@
         }
       ],
       "explanation": "With disable-model-invocation: true, only the user can invoke /deploy, its description is omitted from context (zero standing token cost), Claude cannot call it via the Skill tool, and subagents cannot preload it via skills:.",
-      "key_takeaway": "Side-effecting skills should set disable-model-invocation: true: manual-only and zero context cost until used."
+      "key_takeaway": "Side-effecting skills should set disable-model-invocation: true: manual-only and zero context cost until used.",
+      "doc_links": [
+        {
+          "label": "Claude Code Skills Guide",
+          "url": "https://code.claude.com/docs/en/skills"
+        },
+        {
+          "label": "Claude Agent Skills Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
+        }
+      ]
     },
     {
       "id": "claude-code-q-14",
@@ -407,7 +537,17 @@
         }
       ],
       "explanation": "While skills enabled on claude.ai sync down to Claude Code (~/.claude/skills/synced/), local .claude/skills/ never sync up to claude.ai or the Messages API. API skills must be uploaded via /v1/skills (which accepts only 6 frontmatter keys: name, description, license, compatibility, metadata, allowed-tools) and referenced by skill_id in container.skills.",
-      "key_takeaway": "Local .claude/skills/ never sync to the API; upload via /v1/skills (strict 6-key frontmatter) and pin version in production."
+      "key_takeaway": "Local .claude/skills/ never sync to the API; upload via /v1/skills (strict 6-key frontmatter) and pin version in production.",
+      "doc_links": [
+        {
+          "label": "Claude Code Skills Guide",
+          "url": "https://code.claude.com/docs/en/skills"
+        },
+        {
+          "label": "Claude Agent Skills Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
+        }
+      ]
     },
     {
       "id": "claude-code-q-15",
@@ -436,7 +576,17 @@
         }
       ],
       "explanation": "Use ${CLAUDE_PLUGIN_ROOT} for read-only scripts bundled inside a plugin (and ${CLAUDE_PLUGIN_DATA} for persistent state that must survive plugin updates), and ${CLAUDE_PROJECT_DIR} for scripts committed in a repository.",
-      "key_takeaway": "Plugin scripts use ${CLAUDE_PLUGIN_ROOT}; persistent plugin data uses ${CLAUDE_PLUGIN_DATA}; repo scripts use ${CLAUDE_PROJECT_DIR}."
+      "key_takeaway": "Plugin scripts use ${CLAUDE_PLUGIN_ROOT}; persistent plugin data uses ${CLAUDE_PLUGIN_DATA}; repo scripts use ${CLAUDE_PROJECT_DIR}.",
+      "doc_links": [
+        {
+          "label": "Claude Code Plugins Overview",
+          "url": "https://code.claude.com/docs/en/plugins/overview"
+        },
+        {
+          "label": "Claude Code Plugin Marketplaces",
+          "url": "https://code.claude.com/docs/en/plugins/create-marketplace"
+        }
+      ]
     },
     {
       "id": "claude-code-q-16",
@@ -465,7 +615,17 @@
         }
       ],
       "explanation": "strictKnownMarketplaces allowlists marketplace sources, extraKnownMarketplaces registers the catalog, managed enabledPlugins force-enables required plugins, and disableSideloadFlags blocks --plugin-dir sideloading (pair with strictPluginOnlyCustomization to block unmanaged local customizations).",
-      "key_takeaway": "Restrict with strictKnownMarketplaces + disableSideloadFlags, register with extraKnownMarketplaces, force-enable with enabledPlugins."
+      "key_takeaway": "Restrict with strictKnownMarketplaces + disableSideloadFlags, register with extraKnownMarketplaces, force-enable with enabledPlugins.",
+      "doc_links": [
+        {
+          "label": "Claude Code Plugins Overview",
+          "url": "https://code.claude.com/docs/en/plugins/overview"
+        },
+        {
+          "label": "Claude Code Plugin Marketplaces",
+          "url": "https://code.claude.com/docs/en/plugins/create-marketplace"
+        }
+      ]
     },
     {
       "id": "claude-code-q-17",
@@ -494,7 +654,17 @@
         }
       ],
       "explanation": "Project scope stores servers in .mcp.json at the repo root so everyone who clones gets them (Claude Code prompts for approval before first use). HTTP is recommended for remote servers, and ${VAR} expansion in headers keeps the secret in each user's environment.",
-      "key_takeaway": "Team-shared remote MCP = HTTP + project scope (.mcp.json) + ${VAR} secrets from the environment."
+      "key_takeaway": "Team-shared remote MCP = HTTP + project scope (.mcp.json) + ${VAR} secrets from the environment.",
+      "doc_links": [
+        {
+          "label": "MCP in Claude Code",
+          "url": "https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "label": "Enterprise MCP Access in Claude Code",
+          "url": "https://code.claude.com/docs/en/managed-mcp"
+        }
+      ]
     },
     {
       "id": "claude-code-q-18",
@@ -523,7 +693,17 @@
         }
       ],
       "explanation": "In a remote server's url and headers, Claude Code reads credential variables such as ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN and cloud provider tokens as empty, so a project file or plugin can't exfiltrate them. Copy the value into a variable with your own name.",
-      "key_takeaway": "Never route Claude's own credentials to an MCP server; built-in credential variables expand to empty in remote headers."
+      "key_takeaway": "Never route Claude's own credentials to an MCP server; built-in credential variables expand to empty in remote headers.",
+      "doc_links": [
+        {
+          "label": "MCP in Claude Code",
+          "url": "https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "label": "Enterprise MCP Access in Claude Code",
+          "url": "https://code.claude.com/docs/en/managed-mcp"
+        }
+      ]
     },
     {
       "id": "claude-code-q-19",
@@ -552,7 +732,17 @@
         }
       ],
       "explanation": "MCP rules use mcp__<server>__<tool> (or mcp__plugin_<plugin>_<server>__<tool> for plugin MCP servers). Globs are valid only in the tool suffix after a literal server prefix, parentheses (...) on mcp__ rules are rejected, and unanchored allow globs (* or mcp__*) are skipped.",
-      "key_takeaway": "Write MCP rules as mcp__server__tool (never with parentheses); wildcards only in the tool suffix; mcp__* in allow is skipped."
+      "key_takeaway": "Write MCP rules as mcp__server__tool (never with parentheses); wildcards only in the tool suffix; mcp__* in allow is skipped.",
+      "doc_links": [
+        {
+          "label": "MCP in Claude Code",
+          "url": "https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "label": "Enterprise MCP Access in Claude Code",
+          "url": "https://code.claude.com/docs/en/managed-mcp"
+        }
+      ]
     },
     {
       "id": "claude-code-q-20",
@@ -581,7 +771,17 @@
         }
       ],
       "explanation": "In headless (-p) mode without pre-approval, default mode immediately denies unapproved tool calls (or waits if an SDK canUseTool / --permission-prompt-tool host is attached). Combining --allowedTools \"Edit,Bash(git commit *)\" with --permission-mode dontAsk (and --bare on untrusted repos) pre-approves the exact needed tools and deterministically denies everything else.",
-      "key_takeaway": "Unattended CI runs: claude -p + --allowedTools + --permission-mode dontAsk (plus --bare on untrusted code)."
+      "key_takeaway": "Unattended CI runs: claude -p + --allowedTools + --permission-mode dontAsk (plus --bare on untrusted code).",
+      "doc_links": [
+        {
+          "label": "Running Claude Code Programmatically",
+          "url": "https://code.claude.com/docs/en/headless"
+        },
+        {
+          "label": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
+        }
+      ]
     },
     {
       "id": "claude-code-q-21",
@@ -610,7 +810,17 @@
         }
       ],
       "explanation": "Server-managed settings deliver one uniform policy per organization (and apply only to claude.ai OAuth sessions). For per-group rules, deploy separate MDM profiles / managed-settings.json files to contractor devices (setting \"managedSourcesBehavior\": \"merge\" if combined with server-managed settings) or enforce per-group policies at an LLM gateway.",
-      "key_takeaway": "Server-managed settings are org-wide; use MDM/file policies (with managedSourcesBehavior: \"merge\") or a gateway for per-group rules."
+      "key_takeaway": "Server-managed settings are org-wide; use MDM/file policies (with managedSourcesBehavior: \"merge\") or a gateway for per-group rules.",
+      "doc_links": [
+        {
+          "label": "Claude Code Organization Setup",
+          "url": "https://code.claude.com/docs/en/admin-setup"
+        },
+        {
+          "label": "Managing Claude Code Spend & Costs",
+          "url": "https://code.claude.com/docs/en/costs"
+        }
+      ]
     },
     {
       "id": "claude-code-q-22",
@@ -639,97 +849,20 @@
         }
       ],
       "explanation": "allowManagedPermissionRulesOnly makes managed settings the only source of permission rules: Claude Code ignores allow, ask and deny rules from user, project, local and --settings files, ignores --allowedTools, and stops saving new rules.",
-      "key_takeaway": "allowManagedPermissionRulesOnly locks permission rules to managed policy; pair with disableBypassPermissionsMode."
+      "key_takeaway": "allowManagedPermissionRulesOnly locks permission rules to managed policy; pair with disableBypassPermissionsMode.",
+      "doc_links": [
+        {
+          "label": "Claude Code Organization Setup",
+          "url": "https://code.claude.com/docs/en/admin-setup"
+        },
+        {
+          "label": "Managing Claude Code Spend & Costs",
+          "url": "https://code.claude.com/docs/en/costs"
+        }
+      ]
     },
     {
       "id": "claude-code-q-23",
-      "section": "Claude Agent SDK",
-      "guide_anchor": "agent-sdk",
-      "question": "A multi-tenant service built on the Agent SDK omits settingSources. On a shared build host, agents start following one developer's personal hooks and CLAUDE.md preferences. What explains this and what is the fix?",
-      "options": [
-        {
-          "text": "Omitting settingSources loads user, project and local settings like the CLI; pass [] for isolation.",
-          "correct": true
-        },
-        {
-          "text": "The SDK always loads user settings and ignores settingSources, so delete ~/.claude on every build host.",
-          "correct": false,
-          "why_wrong": "settingSources does control filesystem loading; [] disables user, project and local sources."
-        },
-        {
-          "text": "Omitting settingSources loads nothing, so the hooks must come from managed settings on the build host.",
-          "correct": false,
-          "why_wrong": "Current docs: omitting it loads the same filesystem settings as the CLI, not nothing."
-        },
-        {
-          "text": "Hooks leak only through subagents, so set omitClaudeMd on every AgentDefinition to stop the leakage.",
-          "correct": false,
-          "why_wrong": "omitClaudeMd affects CLAUDE.md for a subagent; it doesn't stop user-level hooks and settings loading."
-        }
-      ],
-      "explanation": "When settingSources is omitted, query() loads user, project and local settings, CLAUDE.md and .claude/ skills, agents and commands, matching the CLI. Pass settingSources: [] (setting_sources=[] in Python) to disable user/project/local files, and for full multi-tenant isolation also set CLAUDE_CODE_DISABLE_AUTO_MEMORY=\"1\", a per-tenant CLAUDE_CONFIG_DIR, and strict_mcp_config=True.",
-      "key_takeaway": "Pass setting_sources=[] plus CLAUDE_CODE_DISABLE_AUTO_MEMORY=\"1\", per-tenant CLAUDE_CONFIG_DIR, and strict_mcp_config=True."
-    },
-    {
-      "id": "claude-code-q-24",
-      "section": "Claude Agent SDK",
-      "guide_anchor": "agent-sdk",
-      "question": "An SDK app passes allowedTools: [\"Bash\"] and a canUseTool callback that should reject any command touching /prod. The callback never fires and a /prod command runs. What is the right fix?",
-      "options": [
-        {
-          "text": "Move the check into a PreToolUse hook, which runs first on every call; avoid bare allowedTools entries.",
-          "correct": true
-        },
-        {
-          "text": "Set permissionMode to bypassPermissions so that every tool call is routed through canUseTool for review.",
-          "correct": false,
-          "why_wrong": "bypassPermissions auto-approves calls before the callback is consulted, making the problem worse."
-        },
-        {
-          "text": "Set permissionMode to dontAsk so the SDK invokes canUseTool silently instead of showing a user prompt.",
-          "correct": false,
-          "why_wrong": "In dontAsk mode the canUseTool step is skipped and unapproved calls are denied outright."
-        },
-        {
-          "text": "Add disallowedTools: [\"Bash\"] alongside allowedTools so the callback is consulted for conflicting entries.",
-          "correct": false,
-          "why_wrong": "A bare entry in disallowedTools removes Bash from context entirely; it does not route calls through the callback."
-        }
-      ],
-      "explanation": "canUseTool replaces the interactive prompt at Step 4 and fires only when the harness would prompt. A bare allowedTools: [\"Bash\"] entry auto-approves Bash at Step 2 before canUseTool is ever reached (emitting CLAUDE_SDK_CAN_USE_TOOL_SHADOWED in TypeScript). Use a PreToolUse hook (Step 1) or a scoped disallowedTools rule (evaluated before allow rules at Step 2).",
-      "key_takeaway": "canUseTool fires only when a prompt would appear; use a PreToolUse hook or scoped disallowedTools rule to gate every call."
-    },
-    {
-      "id": "claude-code-q-25",
-      "section": "Managed Agents & Wiring Paths",
-      "guide_anchor": "managed-agents",
-      "question": "A hospital wants a clinical-notes agent processing PHI under its HIPAA BAA and asks for \"a hosted agent with no infrastructure to manage.\" Which design fits?",
-      "options": [
-        {
-          "text": "Claude Managed Agents in a US environment, because keeping data in a US region satisfies HIPAA by itself.",
-          "correct": false,
-          "why_wrong": "Managed Agents is not currently eligible for HIPAA BAA coverage; geography doesn't change eligibility."
-        },
-        {
-          "text": "Claude Managed Agents with session deletion after each run, which makes the service eligible for a BAA.",
-          "correct": false,
-          "why_wrong": "Deleting sessions is possible, but the service is still stateful by design and not BAA-eligible."
-        },
-        {
-          "text": "A self-hosted environment for Managed Agents, since running the sandbox on-premises transfers BAA scope.",
-          "correct": false,
-          "why_wrong": "Sessions and history are still stored server-side by the Managed Agents service; eligibility is unchanged."
-        },
-        {
-          "text": "Its own agent loop (e.g. the Agent SDK) on a BAA-eligible configuration, using only eligible features.",
-          "correct": true
-        }
-      ],
-      "explanation": "Managed Agents is stateful by design: it stores conversation history, sandbox state and outputs server-side, so it is not currently eligible for Zero Data Retention or HIPAA BAA coverage. Compliance picks the wiring path before convenience does.",
-      "key_takeaway": "Rule out Managed Agents for ZDR or HIPAA workloads; run your own loop on an eligible configuration."
-    },
-    {
-      "id": "claude-code-q-26",
       "section": "Failure Modes & Find the Defect",
       "guide_anchor": "failure-modes",
       "question": "A team committed .mcp.json with an inline live Bearer token. An hour later they replaced it with ${WAREHOUSE_TOKEN} in a new commit and pushed. What is still required?",
@@ -755,10 +888,20 @@
         }
       ],
       "explanation": "Overwriting a committed secret doesn't remove it from history; treat it as compromised. Rotate it, store the replacement outside the repo and reference it with ${VAR}, and consider a PreToolUse guard against writing inline secrets.",
-      "key_takeaway": "A committed secret is a leaked secret: rotate first, then move it to the environment or a secret manager."
+      "key_takeaway": "A committed secret is a leaked secret: rotate first, then move it to the environment or a secret manager.",
+      "doc_links": [
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "label": "Claude Code Settings & Precedence",
+          "url": "https://code.claude.com/docs/en/settings"
+        }
+      ]
     },
     {
-      "id": "claude-code-q-27",
+      "id": "claude-code-q-24",
       "section": "Permission Modes & Rules",
       "guide_anchor": "permissions",
       "question": "An engineer adds deny: [\"Write(/etc/**)\"] and allow: [\"Edit(.claude/**)\"] to .claude/settings.json. During a session, Claude successfully creates /etc/myapp.conf using the Write tool without being blocked, yet still prompts before editing .claude/settings.json. Why did both rules fail to work as expected?",
@@ -784,10 +927,20 @@
         }
       ],
       "explanation": "Only Read(...) and Edit(...) accept file-path patterns: Edit(...) governs Edit, Write, and NotebookEdit, whereas Write(path) rules never match. Furthermore, a single leading / anchors to <cwd> (or ~/.claude/), so an absolute filesystem path requires // (Edit(//etc/**)). Finally, protected repo paths (.git, .claude, .vscode, .idea, .husky, .mcp.json) are checked before permissions.allow, so Edit(.claude/**) never pre-approves writes there.",
-      "key_takeaway": "Use Edit(//abs/path) to govern all file writes from filesystem root; protected paths like .claude/ always prompt before allow rules."
+      "key_takeaway": "Use Edit(//abs/path) to govern all file writes from filesystem root; protected paths like .claude/ always prompt before allow rules.",
+      "doc_links": [
+        {
+          "label": "Claude Code Permissions & Rules",
+          "url": "https://code.claude.com/docs/en/permissions"
+        },
+        {
+          "label": "Claude Code Permission Modes",
+          "url": "https://code.claude.com/docs/en/permission-modes"
+        }
+      ]
     },
     {
-      "id": "claude-code-q-28",
+      "id": "claude-code-q-25",
       "section": "Hooks & Exit Codes",
       "guide_anchor": "hooks",
       "question": "A team blocks .env access using a PreToolUse hook with matcher \"Read\" that exits with code 2 when file_path ends in .env, and restricts their deployer subagent with disallowedTools: Bash(git push *). In testing, typing \"Summarize @.env\" leaks .env without firing the hook, and the subagent loses all Bash access (even npm test). What fixes both?",
@@ -813,10 +966,20 @@
         }
       ],
       "explanation": "PreToolUse hooks only fire on tool invocations; when a user @-mentions a file (@.env), Claude Code inlines it while constructing the prompt without calling Read. Adding Read(./.env) to permissions.deny blocks Read, Edit/Write, and @file mentions. In subagent frontmatter, any disallowedTools entry with a specifier (Bash(git push *)) strips the entire underlying tool (Bash); keep Bash in tools and block git push via permissions.deny or a PreToolUse hook.",
-      "key_takeaway": "PreToolUse skips @file mentions (use permissions.deny: [\"Read(./.env)\"]); subagent disallowedTools specifiers strip the whole tool."
+      "key_takeaway": "PreToolUse skips @file mentions (use permissions.deny: [\"Read(./.env)\"]); subagent disallowedTools specifiers strip the whole tool.",
+      "doc_links": [
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        },
+        {
+          "label": "Automating Actions with Hooks",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        }
+      ]
     },
     {
-      "id": "claude-code-q-29",
+      "id": "claude-code-q-26",
       "section": "Headless & CI Use",
       "guide_anchor": "headless",
       "question": "A GitHub Actions workflow runs on untrusted external pull requests using:\nclaude -p \"Audit diff\" --json-schema '{\"type\":\"object\",\"properties\":{\"risk\":{\"type\":\"string\"}}}' --output-format json | jq -r '.result.risk'\nSecurity warns of remote code execution from the PR branch, and the jq step always outputs null. What are the two defects?",
@@ -842,40 +1005,21 @@
         }
       ],
       "explanation": "In headless (-p) mode without --bare, Claude Code skips untrusted project allow rules and subagent frontmatter hooks, but automatically executes repository .claude/settings.json hooks and .mcp.json stdio servers without a workspace trust dialog. Passing --bare disables auto-discovery of repo hooks, MCP servers, plugins, and CLAUDE.md. Second, when --json-schema is used with --output-format json, the validated object is placed in .structured_output (so jq should read .structured_output.risk, not .result.risk).",
-      "key_takeaway": "Always pass --bare when running claude -p on untrusted PR code, and read --json-schema results from .structured_output."
-    },
-    {
-      "id": "claude-code-q-30",
-      "section": "Claude Agent SDK",
-      "guide_anchor": "agent-sdk",
-      "question": "You build a Python Agent SDK service with an in-process tool lookup_order registered via @tool and create_sdk_mcp_server(name=\"orders\", tools=[lookup_order]). You want Claude to ONLY see and call lookup_order (no built-in tools like Bash, Read, or Edit in its context window) and execute it without prompting in default mode. Which ClaudeAgentOptions setup works?",
-      "options": [
+      "key_takeaway": "Always pass --bare when running claude -p on untrusted PR code, and read --json-schema results from .structured_output.",
+      "doc_links": [
         {
-          "text": "ClaudeAgentOptions(mcp_servers={\"orders\": server}, allowed_tools=[\"lookup_order\"], permission_mode=\"default\")",
-          "correct": false,
-          "why_wrong": "Omitting tools leaves all built-in tool schemas in Claude's context window, and SDK MCP tools must be referenced as mcp__orders__lookup_order."
+          "label": "Running Claude Code Programmatically",
+          "url": "https://code.claude.com/docs/en/headless"
         },
         {
-          "text": "ClaudeAgentOptions(allowed_tools=[\"mcp__orders__lookup_order\"], disallowed_tools=[\"Bash(*)\", \"Edit(*)\"])",
-          "correct": false,
-          "why_wrong": "Scoped rules in disallowed_tools keep the tools in context, and other built-in tools (Read, Glob, Grep, WebFetch) remain available."
-        },
-        {
-          "text": "ClaudeAgentOptions(tools=[], mcp_servers={\"orders\": server}, allowed_tools=[\"mcp__orders__lookup_order\"])",
-          "correct": true
-        },
-        {
-          "text": "ClaudeAgentOptions(tools=[\"mcp__orders__lookup_order\"], mcp_servers={\"orders\": server}, permission_mode=\"dontAsk\")",
-          "correct": false,
-          "why_wrong": "tools only configures built-in tool availability; MCP tools must be pre-approved in allowed_tools as mcp__<server>__<tool>."
+          "label": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
         }
-      ],
-      "explanation": "In ClaudeAgentOptions, tools controls built-in tool availability in the context window—passing tools=[] strips all built-in tools so Claude only sees MCP tools (whereas allowed_tools only pre-approves calls at Step 2 while leaving unlisted built-in tools visible in context). In-process SDK MCP tools created with create_sdk_mcp_server(name=\"orders\", ...) are exposed as mcp__orders__lookup_order and pre-approved via allowed_tools.",
-      "key_takeaway": "Use tools=[] to strip built-in tools from context, and pre-approve in-process SDK MCP tools in allowed_tools as mcp__<server>__<tool>."
+      ]
     },
     {
-      "id": "claude-code-q-31",
-      "section": "Settings & CLAUDE.md Memory",
+      "id": "claude-code-q-27",
+      "section": "Settings & Memory Precedence",
       "guide_anchor": "settings-memory",
       "question": "A tech lead wants Claude Code to act as a Socratic security auditor with `# TODO(human)` markers during interactive pairing, and wants a terminal status bar showing the current git branch and active persona without consuming any context-window tokens. Which combination achieves both?",
       "options": [
@@ -900,10 +1044,20 @@
         }
       ],
       "explanation": "Output styles (/output-style or custom .claude/output-styles/<name>.md files; built-in Learning mode inserts # TODO(human) markers) replace Claude Code's default SWE system-prompt instructions while keeping all tools active. The statusLine command in settings.json receives session JSON on stdin (including output_style.name and transcript_path) and renders a live terminal footer with zero context-window token cost.",
-      "key_takeaway": "Use /output-style (.claude/output-styles/*.md) for interactive personas and statusLine in settings.json for zero-token terminal telemetry."
+      "key_takeaway": "Use /output-style (.claude/output-styles/*.md) for interactive personas and statusLine in settings.json for zero-token terminal telemetry.",
+      "doc_links": [
+        {
+          "label": "Claude Code Settings & Precedence",
+          "url": "https://code.claude.com/docs/en/settings"
+        },
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        }
+      ]
     },
     {
-      "id": "claude-code-q-32",
+      "id": "claude-code-q-28",
       "section": "Headless & CI Use",
       "guide_anchor": "headless",
       "question": "During an interactive refactor, Claude edits 6 files with Write/Edit, runs an Alembic database migration via Bash, and then hallucinates a non-existent internal SDK method. The developer runs /compact, sees Claude still repeat the hallucinated method, and then presses Esc+Esc (/rewind) to restore both conversation and code to Turn 1. What is the state of the workspace afterward?",
@@ -929,7 +1083,407 @@
         }
       ],
       "explanation": "First, /compact summarizes history and therefore preserves 'context poisoning' (the hallucinated SDK method) in condensed form—recovering requires /rewind (prior to the bad turn) or /clear. Second, Claude Code's checkpointing tracks only file modifications made via its file-editing tools (Write, Edit, NotebookEdit); side effects from Bash commands (such as database migrations, rm, or git operations) are never undone by /rewind or SDK session.rewind_files().",
-      "key_takeaway": "/compact preserves poisoned premises (use /rewind or /clear), and /rewind restores only Edit/Write/NotebookEdit files—never Bash side effects."
+      "key_takeaway": "/compact preserves poisoned premises (use /rewind or /clear), and /rewind restores only Edit/Write/NotebookEdit files—never Bash side effects.",
+      "doc_links": [
+        {
+          "label": "Running Claude Code Programmatically",
+          "url": "https://code.claude.com/docs/en/headless"
+        },
+        {
+          "label": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-29",
+      "section": "CLAUDE.md Hierarchy & Path-Scoped Rules",
+      "guide_anchor": "claude-md",
+      "question": "In a monorepo, packages/api/CLAUDE.md contains the line \"Follow @docs/api-style.md\". The style file lives at the repo root in docs/api-style.md. Running /memory in a session shows the package CLAUDE.md but not the style guide. What is the cause?",
+      "options": [
+        {
+          "text": "Imports only work in the root CLAUDE.md; files in subdirectories are read as plain text without expansion.",
+          "correct": false,
+          "why_wrong": "Any CLAUDE.md can use @ imports, including nested ones; the problem is where the relative path points."
+        },
+        {
+          "text": "The import exceeds the maximum nesting depth, because package files already count as one import hop.",
+          "correct": false,
+          "why_wrong": "Directory CLAUDE.md files are discovered, not imported, so they do not use up import hops."
+        },
+        {
+          "text": "Import paths resolve from the importing file, so it looks for packages/api/docs/api-style.md instead.",
+          "correct": true
+        },
+        {
+          "text": "Imported files load lazily, so the style guide appears only after Claude edits a file under docs/.",
+          "correct": false,
+          "why_wrong": "Imports expand at launch together with the file that contains them; they are not loaded on demand."
+        }
+      ],
+      "explanation": "A relative @ path is resolved against the directory of the file that contains it, not the working directory or the repo root. From packages/api/CLAUDE.md, @docs/api-style.md points to packages/api/docs/api-style.md. Use @../../docs/api-style.md (or an absolute or ~ path), then confirm with /memory.",
+      "key_takeaway": "Relative @ imports resolve from the importing file's folder; check what actually loaded with /memory.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-30",
+      "section": "CLAUDE.md Hierarchy & Path-Scoped Rules",
+      "guide_anchor": "claude-md",
+      "question": "A developer starts Claude Code at the repo root and asks it to draft a migration plan for the billing service. The plan ignores the money-handling rules in services/billing/CLAUDE.md, although later edits inside services/billing follow them. How should the team make the rules apply from the start?",
+      "options": [
+        {
+          "text": "Move the cross-cutting rules to the root CLAUDE.md or a rule, since subfolder files load only on demand.",
+          "correct": true
+        },
+        {
+          "text": "Add an instruction to the prompt template telling Claude to search for any CLAUDE.md files before planning.",
+          "correct": false,
+          "why_wrong": "Relying on the model to remember to look is advisory; placing the rules where they load at launch is reliable."
+        },
+        {
+          "text": "Rename the file to CLAUDE.local.md so it is loaded at launch for every session in the repository.",
+          "correct": false,
+          "why_wrong": "CLAUDE.local.md is a personal, gitignored file at the project root; renaming a subfolder file doesn't share it."
+        },
+        {
+          "text": "Run /compact before planning so Claude re-reads every CLAUDE.md file in the repository from disk.",
+          "correct": false,
+          "why_wrong": "Compaction re-injects the project-root file only; nested files still load when Claude reads their subtree."
+        }
+      ],
+      "explanation": "CLAUDE.md files in the working directory and its parents load at launch; files in subdirectories load only when Claude reads files in that subtree. A planning task that hasn't opened billing files yet won't see them. Put rules needed up front in the root file, or launch Claude from services/billing.",
+      "key_takeaway": "Subdirectory CLAUDE.md files load lazily; rules needed before Claude touches that folder belong higher up.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-31",
+      "section": "Custom Slash Commands",
+      "guide_anchor": "slash-commands",
+      "question": "A team's committed /audit-deps command has allowed-tools: Read, Grep in its frontmatter. The lead assumed this would stop the command from running shell commands, but Claude still proposes Bash calls during it, prompting for approval. What explains this, and what would block Bash?",
+      "options": [
+        {
+          "text": "The frontmatter key is ignored for project commands; it only takes effect in personal ~/.claude/commands files.",
+          "correct": false,
+          "why_wrong": "Project and personal commands accept the same frontmatter; the key works but only grants approvals."
+        },
+        {
+          "text": "allowed-tools only pre-approves the listed tools; to block Bash, add deny rules in settings.",
+          "correct": true
+        },
+        {
+          "text": "allowed-tools is a strict allowlist, so Bash prompts mean the file has a YAML error and the key is being skipped.",
+          "correct": false,
+          "why_wrong": "Even when parsed correctly, allowed-tools never removes tools; every tool stays callable under normal permissions."
+        },
+        {
+          "text": "Add context: fork, because forked commands inherit only the tools named in allowed-tools and nothing else.",
+          "correct": false,
+          "why_wrong": "Forking isolates the conversation context; it does not turn allowed-tools into a restriction on available tools."
+        }
+      ],
+      "explanation": "allowed-tools grants permission for the listed tools while the command's turn runs, so they don't prompt. It does not restrict which tools are available: other tools stay callable and your permission settings still govern them. To forbid Bash, use permissions.deny rules or a PreToolUse hook.",
+      "key_takeaway": "allowed-tools pre-approves; it never restricts. Block tools with deny rules or hooks.",
+      "doc_links": [
+        {
+          "label": "Claude Code Slash Commands",
+          "url": "https://code.claude.com/docs/en/commands"
+        },
+        {
+          "label": "Claude Code Skills Guide",
+          "url": "https://code.claude.com/docs/en/skills"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-32",
+      "section": "Custom Slash Commands",
+      "guide_anchor": "slash-commands",
+      "question": "A /dep-report command scans every package manifest and lockfile and prints a long intermediate analysis before its two-line verdict. After a few runs the main session is full of scan output and later answers degrade. Which change keeps the command's result while protecting the main conversation?",
+      "options": [
+        {
+          "text": "Add disable-model-invocation: true so the command output is no longer added to the conversation history.",
+          "correct": false,
+          "why_wrong": "That flag only stops Claude from triggering the command automatically; output still lands in the session."
+        },
+        {
+          "text": "Move the file from .claude/commands/ to ~/.claude/commands/ so its output is stored in a personal scope.",
+          "correct": false,
+          "why_wrong": "Scope controls who can invoke the command, not where its output goes; the session would fill up the same way."
+        },
+        {
+          "text": "Set argument-hint to [summary-only] so the command prints only the final verdict instead of the analysis.",
+          "correct": false,
+          "why_wrong": "argument-hint is just autocomplete text in the menu; it doesn't change what the command does or prints."
+        },
+        {
+          "text": "Add context: fork to its frontmatter so it runs in a forked subagent and only the result returns.",
+          "correct": true
+        }
+      ],
+      "explanation": "context: fork runs the command in a forked subagent with its own context window. The verbose scan stays in that context and only the final result comes back, so the main conversation keeps its budget for the actual task.",
+      "key_takeaway": "Use context: fork for commands that read a lot or print a lot; only their result returns to the main session.",
+      "doc_links": [
+        {
+          "label": "Claude Code Slash Commands",
+          "url": "https://code.claude.com/docs/en/commands"
+        },
+        {
+          "label": "Claude Code Skills Guide",
+          "url": "https://code.claude.com/docs/en/skills"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-33",
+      "section": "Plan Mode & Iterative Refinement",
+      "guide_anchor": "workflows",
+      "question": "A product owner asks for a loyalty-points feature in a domain the engineer barely knows; rules on expiry, refunds and fraud are mostly in people's heads. The engineer wants Claude to surface edge cases before any code exists and to keep implementation context clean. Which workflow fits best?",
+      "options": [
+        {
+          "text": "Ask Claude to implement a first version directly and refine it through code review until the rules look right.",
+          "correct": false,
+          "why_wrong": "Building before the hidden requirements are known guarantees rework; the edge cases surface late and expensively."
+        },
+        {
+          "text": "Have Claude interview them with AskUserQuestion, write SPEC.md, then implement from it in a fresh session.",
+          "correct": true
+        },
+        {
+          "text": "Write the full spec alone first and paste it into the same session that will implement it, to save one step.",
+          "correct": false,
+          "why_wrong": "This skips Claude's questioning of edge cases, and the spec work still fills the context used to implement."
+        },
+        {
+          "text": "Enable plan mode and approve the first plan Claude proposes, since plan mode collects requirements itself.",
+          "correct": false,
+          "why_wrong": "Plan mode explores the code and proposes an approach; it doesn't draw out business rules held only by people."
+        }
+      ],
+      "explanation": "The interview pattern lets Claude ask about edge cases, failure modes and trade-offs, then write a complete spec. Starting a new session that implements from SPEC.md keeps the long interview out of the implementation context.",
+      "key_takeaway": "Unclear domain: interview first, write the spec to a file, implement in a fresh session.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-34",
+      "section": "Plan Mode & Iterative Refinement",
+      "guide_anchor": "workflows",
+      "question": "Claude keeps producing a date-normalization function that handles some inputs one way and similar inputs another way, even after three rounds of prose feedback such as \"be consistent with time zones\". What is the most effective next step?",
+      "options": [
+        {
+          "text": "Give 2–3 concrete input → output examples plus tests for the edge cases, then iterate on failures.",
+          "correct": true
+        },
+        {
+          "text": "Rewrite the instruction in capital letters and mark it as critical so Claude weighs it more heavily.",
+          "correct": false,
+          "why_wrong": "Emphasis doesn't remove ambiguity; Claude still has to guess what \"consistent\" means for each input."
+        },
+        {
+          "text": "Switch to plan mode and ask Claude to describe its approach in more detail before writing code again.",
+          "correct": false,
+          "why_wrong": "The problem is an ambiguous target, not a missing plan; a longer description repeats the same gap."
+        },
+        {
+          "text": "Start a new session and paste the same prose requirements so that earlier wrong attempts don't bias it.",
+          "correct": false,
+          "why_wrong": "A fresh context helps with poisoning, but the identical vague requirement gives the same inconsistent output."
+        }
+      ],
+      "explanation": "When prose is interpreted inconsistently, concrete input/output examples remove the ambiguity, and tests give Claude a pass/fail check it can run itself. Failing tests then tell it exactly which cases to fix.",
+      "key_takeaway": "Replace vague prose with concrete examples and tests that Claude can run and iterate against.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-35",
+      "section": "Built-in Tools: Grep vs Glob, Edit",
+      "guide_anchor": "built-in-tools",
+      "question": "Claude must find every place a deprecated helper formatCurrency( is called before changing its signature. It first uses Glob with **/*formatCurrency* and reports a single file. Why is that result incomplete, and which tool fits?",
+      "options": [
+        {
+          "text": "Glob matches file names, not contents; use Grep for formatCurrency\\( to list files that call it.",
+          "correct": true
+        },
+        {
+          "text": "Glob caps results at 10 files; rerun it with a narrower pattern per directory to see every match.",
+          "correct": false,
+          "why_wrong": "Glob's cap is 100 results and the issue is what it matches: file paths, never the code inside files."
+        },
+        {
+          "text": "Glob skips files listed in .gitignore; switch to Read on every source file to be certain nothing is missed.",
+          "correct": false,
+          "why_wrong": "Glob does not respect .gitignore by default, and reading every file is the slow approach to avoid."
+        },
+        {
+          "text": "Use Bash with find . -name to search more broadly, since built-in tools only search the current directory.",
+          "correct": false,
+          "why_wrong": "find also matches names, not contents, and dedicated tools are preferred over shell equivalents for search."
+        }
+      ],
+      "explanation": "Glob finds files by name or path pattern; it never looks inside them. Call sites are content, so Grep (ripgrep regex, escaping the parenthesis) is the right tool; its default files_with_matches mode lists every calling file.",
+      "key_takeaway": "Glob finds files by path; Grep finds text inside files. Searching for callers is a Grep job.",
+      "doc_links": [
+        {
+          "label": "Claude Code Built-in Tools Reference",
+          "url": "https://code.claude.com/docs/en/tools-reference"
+        },
+        {
+          "label": "How Claude Code Works",
+          "url": "https://code.claude.com/docs/en/how-claude-code-works"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-36",
+      "section": "Built-in Tools: Grep vs Glob, Edit",
+      "guide_anchor": "built-in-tools",
+      "question": "Claude tries to change one timeout value in a generated config file. The Edit call fails because old_string \"timeout: 30\" appears in twelve service blocks, and only the payments block should change. What should it do?",
+      "options": [
+        {
+          "text": "Set replace_all: true so the edit succeeds, then revert the eleven unwanted changes with further edits.",
+          "correct": false,
+          "why_wrong": "replace_all is for changing every occurrence; using it here creates eleven wrong edits to undo."
+        },
+        {
+          "text": "Use Bash with sed -i to replace the first match, since Edit cannot handle repeated strings in a file.",
+          "correct": false,
+          "why_wrong": "Edit handles repeats once old_string is unique; sed's first match may not even be the payments block."
+        },
+        {
+          "text": "Widen old_string with nearby unique lines, such as the payments service header, and retry the Edit.",
+          "correct": true
+        },
+        {
+          "text": "Write the whole file from memory with the new value, since Write does not require reading the file first.",
+          "correct": false,
+          "why_wrong": "Write also requires a prior read for existing files, and rewriting from memory risks dropping content."
+        }
+      ],
+      "explanation": "Edit requires an exact, unique match unless replace_all is set. Adding surrounding context that only the payments block has makes the match unique. If no stable anchor exists, Read the file and Write the full new content.",
+      "key_takeaway": "Edit fails on non-unique matches: add context to make old_string unique, or use replace_all only if all should change.",
+      "doc_links": [
+        {
+          "label": "Claude Code Built-in Tools Reference",
+          "url": "https://code.claude.com/docs/en/tools-reference"
+        },
+        {
+          "label": "How Claude Code Works",
+          "url": "https://code.claude.com/docs/en/how-claude-code-works"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-37",
+      "section": "Code Review & Tests in CI/CD",
+      "guide_anchor": "ci-review",
+      "question": "A pipeline uses one long-running Claude session to generate a feature and then, in the same session, asks it to review the result before merge. The review rarely flags anything, yet humans keep finding logic errors. Which change most improves review quality?",
+      "options": [
+        {
+          "text": "Add \"be extremely critical of your own code\" to the review prompt inside the same generation session.",
+          "correct": false,
+          "why_wrong": "The session still carries its own reasoning for every choice; telling it to be critical doesn't remove that bias."
+        },
+        {
+          "text": "Run the review in a separate claude -p instance that sees only the diff and the review criteria.",
+          "correct": true
+        },
+        {
+          "text": "Ask the same session to review twice in a row and post only the findings that both passes agree on.",
+          "correct": false,
+          "why_wrong": "Both passes share the generator's context and blind spots, so agreement filters out real issues instead."
+        },
+        {
+          "text": "Raise max turns so the generating session has more room to reflect on its decisions before merge.",
+          "correct": false,
+          "why_wrong": "More turns in the same context don't give an independent view; the fix is a fresh reviewer context."
+        }
+      ],
+      "explanation": "A session that wrote the code keeps the reasoning that led to it and is less likely to question its own choices. An independent review run with only the diff and explicit criteria catches more defects.",
+      "key_takeaway": "Review generated code in a fresh, independent instance that has only the diff and the criteria.",
+      "doc_links": [
+        {
+          "label": "Claude Code Pull Request Review",
+          "url": "https://code.claude.com/docs/en/code-review"
+        },
+        {
+          "label": "Claude Code GitHub Actions",
+          "url": "https://code.claude.com/docs/en/github-actions"
+        }
+      ]
+    },
+    {
+      "id": "claude-code-q-38",
+      "section": "Claude Code on Vertex AI",
+      "guide_anchor": "vertex-ai",
+      "question": "A platform team routes Claude Code through Google Cloud: they set CLAUDE_CODE_USE_VERTEX=1, CLOUD_ML_REGION and ANTHROPIC_VERTEX_PROJECT_ID, and gcloud ADC login succeeds. Every request still fails with a permission error for the model. What should they check first?",
+      "options": [
+        {
+          "text": "That ANTHROPIC_API_KEY is exported, because Vertex requests are signed with the Anthropic key first.",
+          "correct": false,
+          "why_wrong": "With Vertex enabled, calls authenticate with Google Cloud credentials; an Anthropic key isn't used."
+        },
+        {
+          "text": "That users ran /login in Claude Code to link their claude.ai account to the Google Cloud project.",
+          "correct": false,
+          "why_wrong": "Authentication is handled by Google Cloud on Vertex; the claude.ai login flow doesn't grant model access."
+        },
+        {
+          "text": "That CLOUD_ML_REGION is switched to global, because regional endpoints never serve Claude models.",
+          "correct": false,
+          "why_wrong": "Regional and multi-region endpoints are supported; region choice doesn't fix a missing IAM grant."
+        },
+        {
+          "text": "That Claude model access is enabled in Model Garden and users hold roles/aiplatform.user.",
+          "correct": true
+        }
+      ],
+      "explanation": "On Vertex AI, the project needs the Vertex AI API enabled, access to the Claude models requested in Model Garden, and an IAM role such as roles/aiplatform.user (which includes aiplatform.endpoints.predict). ADC proves identity; IAM and model access decide whether that identity may call the model.",
+      "key_takeaway": "Vertex setup = ADC credentials + Model Garden access + roles/aiplatform.user on the project.",
+      "doc_links": [
+        {
+          "label": "Claude Code on Google Cloud Agent Platform",
+          "url": "https://code.claude.com/docs/en/google-vertex-ai"
+        },
+        {
+          "label": "Claude Models on Google Cloud",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/overview"
+        }
+      ]
     }
   ]
 }
