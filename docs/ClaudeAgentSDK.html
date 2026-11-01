@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Agent SDK &amp; Agentic Orchestration: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Claude Agent SDK and agentic orchestration: the agent loop and stop_reason, coordinator–subagent patterns, AgentDefinition, hooks vs prompts, sessions, structured tool errors, tool_choice, escalation, error propagation, long-context management, provenance and Managed Agents.">
+    <meta name="keywords" content="Claude Agent SDK, agentic loop, stop_reason, tool_use, end_turn, coordinator, subagents, Agent tool, Task tool, AgentDefinition, allowedTools, PreToolUse, HookMatcher, fork_session, resume, isError, tool_choice, escalation, provenance, Claude Managed Agents, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Claude Agent SDK &amp; Agentic Orchestration: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Claude Agent SDK and agentic orchestration: the agent loop and stop_reason, coordinator–subagent patterns, AgentDefinition, hooks vs prompts, sessions, structured tool errors, tool_choice, escalation, error propagation, long-context management, provenance and Managed Agents.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Claude Agent SDK &amp; Agentic Orchestration — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Claude Agent SDK &amp; Agentic Orchestration: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Claude Agent SDK and agentic orchestration: the agent loop and stop_reason, coordinator–subagent patterns, AgentDefinition, hooks vs prompts, sessions, structured tool errors, tool_choice, escalation, error propagation, long-context management, provenance and Managed Agents.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Claude Agent SDK &amp; Agentic Orchestration — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .concept-card ul ul {
+            margin-top: 6px;
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html#article",
+                  "headline": "Claude Agent SDK & Agentic Orchestration: Study Guide | ML Cert Hub",
+                  "name": "Claude Agent SDK & Agentic Orchestration Study Guide",
+                  "description": "Claude Agent SDK and agentic orchestration: the agent loop and stop_reason, coordinator–subagent patterns, AgentDefinition, hooks vs prompts, sessions, structured tool errors, tool_choice, escalation, error propagation, long-context management, provenance and Managed Agents.",
+                  "keywords": "Claude Agent SDK, agentic loop, stop_reason, tool_use, end_turn, coordinator, subagents, Agent tool, Task tool, AgentDefinition, allowedTools, PreToolUse, HookMatcher, fork_session, resume, isError, tool_choice, escalation, provenance, Claude Managed Agents, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Claude Agent SDK",
+                              "item": "https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/ClaudeAgentSDK.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Claude Agent SDK <em>&amp; Agentic Orchestration</em></h1>
+                <p class="cover-subtitle">Building agents on Claude's harness: the agentic loop and <code>stop_reason</code>, the Agent SDK API, coordinator–subagent orchestration, <code>AgentDefinition</code> and context passing, hooks as deterministic guardrails, session resume and fork, structured tool errors, tool scoping and <code>tool_choice</code>, escalation, error propagation, long-context management, provenance, and hosted Managed Agents.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Anthropic / Applied AI</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=claude-agent-sdk" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Claude Agent SDK Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Wiring Paths</span>
+                </a>
+                <a href="#agent-loop" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Agentic Loop &amp; stop_reason</span>
+                </a>
+                <a href="#agent-sdk" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Agent SDK Core API</span>
+                </a>
+                <a href="#orchestration" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Orchestration &amp; Decomposition</span>
+                </a>
+                <a href="#subagents" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Subagents &amp; Context Passing</span>
+                </a>
+                <a href="#hooks-enforcement" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Hooks vs Prompt Guidance</span>
+                </a>
+                <a href="#sessions" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Sessions: Resume &amp; Fork</span>
+                </a>
+                <a href="#tool-errors" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Structured Tool Errors</span>
+                </a>
+                <a href="#tool-distribution" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Tool Scoping &amp; tool_choice</span>
+                </a>
+                <a href="#escalation" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Escalation &amp; Ambiguity</span>
+                </a>
+                <a href="#error-propagation" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Error Propagation</span>
+                </a>
+                <a href="#long-context" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Long Sessions &amp; Context</span>
+                </a>
+                <a href="#provenance" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Provenance &amp; Synthesis</span>
+                </a>
+                <a href="#managed-agents" class="toc-item">
+                    <span class="toc-number">13</span>
+                    <span>Managed Agents</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">14</span>
+                    <span>Failure Modes &amp; Exam Traps</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">15</span>
+                    <span>Glossary &amp; Self-Assessment</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW &amp; WIRING PATHS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Wiring Paths</h2>
+        </div>
+
+        <div class="prose"><p><strong>Definition:</strong> The <strong>Claude Agent SDK</strong> (TypeScript <code>@anthropic-ai/claude-agent-sdk</code> · Python <code>claude-agent-sdk</code>, which replaces <code>claude-code-sdk</code>) packages the Claude Code agent harness as a library: the agent loop, built-in tools, permissions, hooks, subagents, sessions and MCP, running inside <strong>your</strong> process. This guide covers the SDK API and the architecture patterns you build with it: loops, coordinator–subagent orchestration, deterministic enforcement, session state, tool error design, escalation, error propagation, long-context management and provenance.</p></div>
+
+        <div class="prose"><p><strong>Three ways to wire an agent:</strong></p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Wiring path</th><th>Who runs the loop</th><th>You own</th><th>Pick when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Raw Messages API loop</strong></td><td>Your code</td><td>Tool execution, <code>stop_reason</code> handling, state, retries, compaction</td><td>Full control, minimal dependencies</td></tr>
+                    <tr><td><strong>Claude Agent SDK</strong></td><td>SDK in your process</td><td>Hosting, filesystem isolation, storage</td><td>You want Claude Code's tools, hooks, subagents and sessions in your own infrastructure</td></tr>
+                    <tr><td><strong>Claude Managed Agents</strong></td><td>Anthropic server-side</td><td>Agent config, custom tool handlers, session lifecycle</td><td>Long-running hosted sandbox sessions without running containers yourself</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental model</h4>
+                <p>The model <em>decides</em> (which tool, which subagent, when to stop); the harness <em>enforces</em> (permissions, hooks, budgets). Anything that must hold 100% of the time belongs in code (hooks, tool scoping, prerequisite gates), never only in the prompt.</p>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Scope note</h4>
+                <p>Claude Code configuration (permission modes, <code>CLAUDE.md</code>, skills, plugins, CLI flags) lives in the <a href="ClaudeCode.html">Claude Code guide</a>. MCP protocol internals live in the MCP guide.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: 1. THE AGENTIC LOOP &amp; STOP_REASON
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agent-loop">
+            <div class="section-divider-number">01</div>
+            <h2>1. The Agentic Loop &amp; stop_reason</h2>
+        </div>
+
+        <div class="prose"><p><strong>Raw Messages API loop (what the SDK does for you):</strong></p></div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Call</h4>
+                <p>Send <code>messages</code> + <code>tools</code> to Claude.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Inspect</h4>
+                <p>Read <code>stop_reason</code> on the response.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>If <code>"tool_use"</code></h4>
+                <p>Execute <strong>every</strong> <code>tool_use</code> block, append the assistant turn, then append one user turn containing a <code>tool_result</code> block per call (matched by <code>tool_use_id</code>). Go to 1.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>If <code>"end_turn"</code></h4>
+                <p>The model is done. Use the final text.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>stop_reason</code></th><th>Meaning</th><th>Loop action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>tool_use</code></td><td>Claude wants tools run</td><td>Execute, append <code>tool_result</code>s, call again</td></tr>
+                    <tr><td><code>end_turn</code></td><td>Natural completion</td><td>Stop; return the answer</td></tr>
+                    <tr><td><code>max_tokens</code></td><td>Hit your <code>max_tokens</code> cap mid-response</td><td>Raise the cap or continue the response; output is truncated</td></tr>
+                    <tr><td><code>pause_turn</code></td><td>A <strong>server-tool</strong> loop hit its iteration limit</td><td>Send the assistant content back unchanged to let Claude continue</td></tr>
+                    <tr><td><code>refusal</code></td><td>Claude declined</td><td>Handle explicitly (read <code>stop_details</code>, fallback model or human)</td></tr>
+                    <tr><td><code>stop_sequence</code></td><td>One of your <code>stop_sequences</code> fired</td><td>Read <code>stop_sequence</code></td></tr>
+                    <tr><td><code>model_context_window_exceeded</code></td><td>Response filled the context window</td><td>Treat as truncated; compact or split the task</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule</h4>
+                <p>The loop's termination signal is <code>stop_reason</code>, <strong>not</strong> the text. Continue on <code>tool_use</code>; stop on <code>end_turn</code>; handle the rest explicitly.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam traps (loop anti-patterns)</h4>
+                <p>(1) parsing natural language ("I'm done", "task complete") to decide termination; (2) treating "the response contains text" as completion (Claude often writes text <em>and</em> calls tools in the same turn); (3) using an arbitrary iteration cap as the <strong>primary</strong> stop condition (keep a cap only as a safety bound); (4) dropping tool results instead of appending them, so the model cannot reason about what happened.</p>
+            </div>
+        </div>
+
+        <div class="prose"><p><strong>Model-driven vs pre-configured:</strong> In an agent loop Claude chooses the next tool from context. A fixed decision tree or hard-coded tool sequence is a <em>workflow</em>, not an agent; use it only when the order is known in advance (see §3).</p></div>
+
+        <div class="prose"><p><strong>The SDK version of the loop:</strong> <code>query()</code> runs the loop and streams messages (<code>AssistantMessage</code>, <code>ResultMessage</code>, …). Check <code>ResultMessage.subtype</code> first:</p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>ResultMessage.subtype</code></th><th>What happened</th><th><code>result</code> present?</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>success</code></td><td>Finished normally</td><td>Yes</td></tr>
+                    <tr><td><code>error_max_turns</code></td><td>Hit <code>max_turns</code> / <code>maxTurns</code></td><td>No</td></tr>
+                    <tr><td><code>error_max_budget_usd</code></td><td>Hit <code>max_budget_usd</code> / <code>maxBudgetUsd</code> (subagent spend counts toward the cap)</td><td>No</td></tr>
+                    <tr><td><code>error_during_execution</code></td><td>Loop interrupted (cancelled request, crash)</td><td>No</td></tr>
+                    <tr><td><code>error_max_structured_output_retries</code></td><td>No schema-valid structured output within the retry limit</td><td>No</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li>Every result carries <code>session_id</code>, <code>total_cost_usd</code>, <code>usage</code>, <code>num_turns</code>, so you can resume even after an error. The result also has a <code>stop_reason</code> (<code>end_turn</code>, <code>max_tokens</code>, <code>refusal</code>, …).</li>
+                <li>A single-shot <code>query()</code> <strong>raises after yielding an error result</strong>: wrap the loop in <code>try</code> if you need to continue (for example, resume with a higher <code>max_turns</code>).</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: 2. AGENT SDK CORE API
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agent-sdk">
+            <div class="section-divider-number">02</div>
+            <h2>2. Agent SDK Core API</h2>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <ul>
+                <li><strong><code>query(prompt, options)</code> vs <code>ClaudeSDKClient</code>:</strong>
+                    <ul>
+                        <li><code>query()</code> starts a fresh session per call unless you pass <strong><code>continue_conversation=True</code></strong> (<code>continue: true</code> in TS), <strong><code>resume=session_id</code></strong> (from <code>ResultMessage.session_id</code>), or <strong><code>resume=session_id, fork_session=True</code></strong> (<code>forkSession: true</code>) to branch history into a new session ID. <strong>Fork trap:</strong> <code>fork_session</code> branches the conversation transcript <strong>only</strong>, not the filesystem. Pair with <code>enable_file_checkpointing=True</code> + <code>rewind_files(user_message_id)</code> to restore disk state.</li>
+                        <li><strong><code>ClaudeSDKClient</code></strong> (Python <code>async with ClaudeSDKClient(options) as client:</code>): reuses one session across multiple <code>await client.query(...)</code> + <code>client.receive_response()</code> turns and supports <strong><code>await client.interrupt()</code><strong> (</strong>drain buffered messages</strong> up to the interrupted turn's <code>ResultMessage</code> before sending the next query). TypeScript has no <code>ClaudeSDKClient</code> class; call methods on the <code>Query</code> object returned by <code>query()</code>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="prose"><p><strong><code>setting_sources</code> / <code>settingSources</code> (<code>"user" | "project" | "local"</code>):</strong></p></div>
+
+        <div class="concept-card accent-purple">
+            <ul>
+                <li><strong>Omitted (default)</strong> → loads <code>user</code>, <code>project</code> and <code>local</code> settings, <code>CLAUDE.md</code>, skills, agents and hooks, <strong>just like the interactive CLI</strong>. *(Exception: if top-level <code>skills</code> is passed while <code>setting_sources</code> is omitted, only <code>user</code> and <code>project</code> load.)*</li>
+                <li><strong><code>[]</code> (empty list)</strong> → disables <code>user</code>, <code>project</code> and <code>local</code> filesystem settings and <code>CLAUDE.md</code>. <strong>Multi-tenant trap — what <code>setting_sources=[]</code> still loads:<strong> (1) </strong>managed policy settings<strong>, (2) </strong><code>~/.claude.json</code></strong> global state (isolate via <code>CLAUDE_CONFIG_DIR</code> in <code>env</code>), (3) <strong>auto memory</strong> <code>MEMORY.md</code> (disable with <strong><code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code></strong> or <code>autoMemoryEnabled: false</code>), and (4) <strong><code>claude.ai</code> MCP connectors</strong> (<code>mcp_servers={}</code> does <em>not</em> suppress them; pass <strong><code>strict_mcp_config=True</code></strong> / <code>strictMcpConfig: true</code>).</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Option (Python / TS)</th><th>What it controls &amp; critical SDK traps</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>tools</code></td><td><strong>Built-in tool availability in context</strong> (<code>["Read", "Grep"]</code>, or <code>[]</code> to strip all built-ins so Claude sees only MCP tools).</td></tr>
+                    <tr><td><code>allowed_tools</code> / <code>allowedTools</code></td><td><strong>Pre-approves</strong> matching calls; unlisted tools stay in context and fall through to <code>permission_mode</code> / <code>can_use_tool</code>. No effect in <code>bypassPermissions</code>.</td></tr>
+                    <tr><td><code>disallowed_tools</code> / <code>disallowedTools</code></td><td>Bare names (<code>"Bash"</code>) <strong>remove the tool from context</strong>; scoped rules (<code>"Bash(rm *)"</code>) keep the tool and <strong>deny matching calls in every mode</strong>, including <code>bypassPermissions</code>. File-write rules must use <code>Edit(//abs/path)</code> (<code>Write(...)</code> never matches).</td></tr>
+                    <tr><td><code>permission_mode</code> / <code>permissionMode</code></td><td><code>"default"</code>, <code>"acceptEdits"</code>, <code>"plan"</code>, <code>"auto"</code>, <code>"dontAsk"</code>, <code>"bypassPermissions"</code>. In TS, <code>"bypassPermissions"</code> throws unless <strong><code>allowDangerouslySkipPermissions: true</code></strong> is also set.</td></tr>
+                    <tr><td><code>can_use_tool</code> / <code>canUseTool</code></td><td>Async callback returning <code>PermissionResultAllow(updated_input=...)</code> or <code>PermissionResultDeny(message=...)</code>. Fires <strong>only</strong> when the harness would prompt; <strong>never</strong> in <code>dontAsk</code>, <code>bypassPermissions</code>, or for tools matched by <code>allowed_tools</code>.</td></tr>
+                    <tr><td><code>hooks</code></td><td>In-process callbacks (<code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, <code>SubagentStop</code>, <code>UserPromptSubmit</code>, …) registered with <code>HookMatcher</code> (see §5).</td></tr>
+                    <tr><td><code>mcp_servers</code> + <code>create_sdk_mcp_server</code></td><td>External or <strong>in-process custom tools</strong> (<code>@tool</code> + <code>create_sdk_mcp_server(name="srv", tools=[fn])</code>; TS <code>tool()</code> + <code>createSdkMcpServer()</code>). Pre-approve as <strong><code>mcp__&lt;srv&gt;__&lt;tool&gt;</code></strong>.</td></tr>
+                    <tr><td><code>agents</code> (<code>AgentDefinition</code>)</td><td>Programmatic subagents (see §4). <strong>Python quirk:</strong> multi-word fields use <strong>camelCase</strong> (<code>disallowedTools</code>, <code>mcpServers</code>, <code>maxTurns</code>, <code>permissionMode</code>, <code>initialPrompt</code>).</td></tr>
+                    <tr><td><code>max_turns</code> / <code>max_budget_usd</code></td><td>Safety bounds; produce <code>error_max_turns</code> / <code>error_max_budget_usd</code>.</td></tr>
+                    <tr><td><code>output_format</code> / <code>outputFormat</code></td><td><code>{"type": "json_schema", "schema": ...}</code> → validated payload in <code>ResultMessage.structured_output</code>.</td></tr>
+                    <tr><td><code>env</code></td><td><strong>Python merges</strong> <code>env</code> onto the process environment; <strong>TypeScript replaces</strong> <code>process.env</code> — spread <code>{ ...process.env, MY_VAR: "1" }</code> or <code>PATH</code> is lost and the CLI fails with <code>ENOENT</code>.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: 3. COORDINATOR–SUBAGENT ORCHESTRATION &amp; DECOMPOSITION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="orchestration">
+            <div class="section-divider-number">03</div>
+            <h2>3. Coordinator–Subagent Orchestration &amp; Decomposition</h2>
+        </div>
+
+        <div class="prose"><p><strong>Hub-and-spoke:</strong> one <strong>coordinator</strong> decomposes the task, decides which subagents to invoke, passes each one the context it needs, aggregates results and handles errors. Subagents never talk to each other directly; <strong>all routing goes through the coordinator</strong> (observability, consistent error handling, controlled information flow).</p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Coordinator responsibility</th><th>Do</th><th>Avoid</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Select</strong></td><td>Pick subagents based on what the query needs (simple question → one agent)</td><td>Always running the full pipeline for every request</td></tr>
+                    <tr><td><strong>Partition</strong></td><td>Give each subagent a distinct subtopic or source type</td><td>Overlapping scopes → duplicated work and conflicting findings</td></tr>
+                    <tr><td><strong>Decompose</strong></td><td>Cover the whole question; check the decomposition against the original goal</td><td>Overly narrow subtasks that silently drop parts of a broad topic</td></tr>
+                    <tr><td><strong>Instruct</strong></td><td>State goals, scope and quality criteria</td><td>Step-by-step procedures that stop subagents from adapting</td></tr>
+                    <tr><td><strong>Refine</strong></td><td>Evaluate the synthesis for gaps, re-delegate targeted queries, re-synthesize</td><td>Accepting the first synthesis even when coverage is thin</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prose"><p><strong>Choosing a decomposition pattern:</strong></p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>Use when</th><th>Example</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Prompt chaining (fixed sequential pipeline)</strong></td><td>Steps and order are known in advance; predictable multi-aspect work</td><td>Review each file individually → separate cross-file integration pass</td></tr>
+                    <tr><td><strong>Dynamic / adaptive decomposition</strong></td><td>Open-ended investigation; next steps depend on findings</td><td>"Add tests to a legacy codebase": map structure → find high-impact areas → prioritized plan that adapts as dependencies appear</td></tr>
+                    <tr><td><strong>Parallel fan-out</strong></td><td>Subtasks are independent</td><td>Search, document analysis and data lookup at the same time</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — attention dilution</h4>
+                <p>One giant prompt reviewing 30 files at once gives shallow, inconsistent findings. Split into <strong>per-file local passes</strong> plus <strong>one cross-file integration pass</strong>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: 4. SUBAGENT INVOCATION, AGENTDEFINITION &amp; CONTEXT PASSING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="subagents">
+            <div class="section-divider-number">04</div>
+            <h2>4. Subagent Invocation, AgentDefinition &amp; Context Passing</h2>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Python — coordinator with an AgentDefinition subagent</span>
+            </div>
+            <pre>from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition
+
+options = ClaudeAgentOptions(
+    allowed_tools=["Read", "Grep", "Glob", "Agent"],   <span class="comment"># the coordinator needs the Agent tool</span>
+    agents={
+        "code-reviewer": AgentDefinition(
+            description="Security and quality review. Use for code review tasks.",  <span class="comment"># WHEN to delegate</span>
+            prompt="You are a code review specialist...",                           <span class="comment"># subagent system prompt</span>
+            tools=["Read", "Grep", "Glob"],                                         <span class="comment"># least privilege</span>
+            model="sonnet",
+        ),
+    },
+)</pre>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <ul>
+                <li><strong>Spawning mechanism:</strong> Claude spawns subagents through the <strong><code>Agent</code> tool<strong> (legacy name </strong><code>Task</code></strong>, still accepted as an alias; older docs and exams say "Task tool"). The coordinator can only delegate if that tool is <strong>in context</strong> (with an explicit <code>tools</code> list, include <code>"Agent"</code>; a bare <code>disallowed_tools</code> entry removes it) <strong>and approved</strong> (docs examples also list <code>"Agent"</code> in <code>allowed_tools</code>, which only pre-approves calls).</li>
+                <li><strong><code>AgentDefinition</code> fields:</strong> <code>description</code> (required; tells the coordinator <em>when</em> to use it), <code>prompt</code> (required; system prompt), <code>tools</code> (omit = inherit all), <code>disallowedTools</code>, <code>model</code> (<code>"sonnet"</code>, <code>"opus"</code>, <code>"haiku"</code>, <code>"inherit"</code>, or full ID), <code>skills</code>, <code>mcpServers</code>, <code>maxTurns</code>, <code>memory</code>, <code>background</code>, <code>effort</code>, <code>permissionMode</code>, <code>omitClaudeMd</code> (TS).</li>
+                <li><strong>Fan-out limits:</strong> spawn depth and concurrency are capped by <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code> and <code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code> (verify current defaults).</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>A (non-fork) subagent receives</th><th>It does <strong>not</strong> receive</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Its own system prompt (<code>AgentDefinition.prompt</code>) + the <strong>Agent tool's prompt string</strong></td><td>The parent's conversation history or tool results</td></tr>
+                    <tr><td>Project <code>CLAUDE.md</code> (via <code>setting_sources</code>, unless <code>omitClaudeMd</code>)</td><td>The parent's system prompt</td></tr>
+                    <tr><td>Its tool definitions (inherited or the <code>tools</code> subset)</td><td>Skill content, unless listed in <code>skills</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule — context passing</h4>
+                <p>The <strong>only</strong> channel from coordinator to subagent is the prompt string. Put everything the subagent needs <strong>in that prompt</strong>: complete prior findings, file paths, error messages, decisions. Use a structured format that separates <strong>content</strong> from <strong>metadata</strong> (source URL, document name, page, date) so attribution survives.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <ul>
+                <li><strong>Return path:</strong> only the subagent's <strong>final message</strong> returns to the coordinator; intermediate tool output is discarded. Ask subagents to return structured results (or write artifacts to disk and return the path).</li>
+                <li><strong>Parallel subagents:</strong> emit <strong>multiple <code>Agent</code> tool calls in a single coordinator response</strong> to run them concurrently. Spreading them across separate turns serializes the work.</li>
+                <li><strong>Fork vs fresh subagent:</strong> a <em>fork</em> inherits the parent conversation; a normal subagent starts fresh. Use fresh subagents for isolation and independent review.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: 5. HOOKS: DETERMINISTIC ENFORCEMENT VS PROMPTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="hooks-enforcement">
+            <div class="section-divider-number">05</div>
+            <h2>5. Hooks: Deterministic Enforcement vs Prompts</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Need</th><th>Mechanism</th><th>Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>A rule that must <strong>always</strong> hold (identity verified before refund, refund cap, no writes to <code>.env</code>)</td><td><strong><code>PreToolUse</code> hook</strong> (or tool scoping / prerequisite gate in code)</td><td>Prompts are probabilistic: a non-zero share of runs will skip or misread the instruction</td></tr>
+                    <tr><td>Normalize or redact tool output before the model sees it</td><td><strong><code>PostToolUse</code> hook</strong> (<code>updatedToolOutput</code>, <code>additionalContext</code>)</td><td>One place to fix heterogeneous formats (Unix epoch vs ISO 8601, numeric status codes)</td></tr>
+                    <tr><td>Style, tone, preferred approach, soft priorities</td><td><strong>System prompt / <code>CLAUDE.md</code></strong></td><td>Guidance; occasional deviation is acceptable</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Python — PreToolUse refund guard registered with HookMatcher</span>
+            </div>
+            <pre>from claude_agent_sdk import ClaudeAgentOptions, HookMatcher
+
+async def refund_guard(input_data, tool_use_id, context):
+    amount = input_data["tool_input"].get("amount", 0)
+    if amount &gt; 500:
+        return {"hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny",
+            "permissionDecisionReason": "Refunds over $500 need a human: call escalate_to_human with a handoff summary."}}
+    return {}   <span class="comment"># empty dict = allow unchanged</span>
+
+options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__billing__process_refund", hooks=[refund_guard])]})</pre>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Callback signature:</strong> <code>(input_data, tool_use_id, context)</code>; <code>input_data</code> has <code>tool_name</code>, <code>tool_input</code>, <code>hook_event_name</code> (plus <code>agent_id</code> / <code>agent_type</code> inside subagents).</li>
+                <li><strong><code>PreToolUse</code> outputs</strong> (in <code>hookSpecificOutput</code>): <code>permissionDecision</code> = <code>"allow"</code> | <code>"deny"</code> | <code>"ask"</code> | <code>"defer"</code>, <code>permissionDecisionReason</code> (sent to Claude), <code>updatedInput</code> (rewrite arguments). <code>"defer"</code> ends the turn with <code>stop_reason: "tool_deferred"</code> so you can resume later.</li>
+                <li><strong><code>PostToolUse</code> outputs:</strong> <code>additionalContext</code> (append to the tool result) and <code>updatedToolOutput</code> (replace the output before Claude sees it).</li>
+                <li><strong>Precedence:</strong> across hooks and permission rules, <strong><code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></strong>. One <code>deny</code> blocks the call.</li>
+                <li><strong>Prerequisite gate pattern:</strong> keep state in your app (for example, "verified customer ID returned by <code>get_customer</code>"); a <code>PreToolUse</code> hook on <code>process_refund</code> denies until that state exists, with a reason that tells Claude which step to run first.</li>
+                <li><strong>Deny + redirect:</strong> the <code>permissionDecisionReason</code> should name the alternative path (escalate, ask for ID), so the model recovers instead of retrying.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>"Add a stronger instruction in the system prompt (MUST, ALWAYS)" is the wrong answer whenever the scenario needs <strong>guaranteed</strong> compliance (money, identity, safety). Use a hook or code-level gate.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: 6. SESSION STATE: RESUME, FORK &amp; NAMED SESSIONS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="sessions">
+            <div class="section-divider-number">06</div>
+            <h2>6. Session State: Resume, Fork &amp; Named Sessions</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Operation</th><th>SDK</th><th>Claude Code CLI</th><th>Effect</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Continue</strong></td><td><code>continue_conversation=True</code></td><td><code>claude --continue</code> (<code>-c</code>)</td><td>Most recent session in the current directory; same session ID</td></tr>
+                    <tr><td><strong>Resume</strong></td><td><code>resume=session_id</code></td><td><code>claude --resume &lt;id-or-name&gt;</code> (<code>-r</code>), <code>/resume</code></td><td>Specific session; same ID; full prior context</td></tr>
+                    <tr><td><strong>Fork</strong></td><td><code>resume=id, fork_session=True</code> (<code>forkSession</code>)</td><td><code>--resume &lt;id&gt; --fork-session</code>, <code>/branch</code></td><td><strong>New</strong> session ID with a copy of the history; original unchanged</td></tr>
+                    <tr><td><strong>Name</strong></td><td>—</td><td><code>claude -n &lt;name&gt;</code> / <code>--name</code>, <code>/rename &lt;name&gt;</code></td><td>Resume later with <code>claude --resume &lt;name&gt;</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <ul>
+                <li><strong>Fork use case:</strong> from one shared analysis baseline, explore two divergent approaches (two testing strategies, two refactors) and compare, while the original stays resumable.</li>
+                <li><strong>Fork is transcript-only:</strong> the filesystem is shared. Forks that edit files collide unless isolated (worktrees, checkpoints).</li>
+            </ul>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule — resume vs start fresh</h4>
+                <p>Resume when prior context is <strong>still valid</strong>. If files changed since the analysis, <strong>tell the resumed session exactly which files changed</strong> for targeted re-analysis. If many prior tool results are <strong>stale</strong>, start a <strong>new session with a structured summary</strong> of the still-valid findings: stale tool output in history misleads the model more than a clean summary.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: 7. STRUCTURED TOOL ERRORS (ISERROR)
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="tool-errors">
+            <div class="section-divider-number">07</div>
+            <h2>7. Structured Tool Errors (isError)</h2>
+        </div>
+
+        <div class="prose"><p><strong>Mechanics (grounded):</strong> an MCP tool result can set <strong><code>isError: true</code></strong>; SDK in-process tools return <code>{"content": [...], "is_error": True}</code> (Python) or <code>isError: true</code> (TS). A handler error does <strong>not</strong> stop the agent loop: an uncaught exception becomes an error result carrying the raw message, while a caught error lets you compose a message Claude can act on.</p></div>
+
+        <div class="prose"><p><strong>Design convention (application level, not MCP spec fields):</strong> put a structured payload in the error content so the agent can decide what to do next.</p></div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — structured tool error (application-level convention)</span>
+            </div>
+            <pre>{ "isError": true,
+  "content": [{ "type": "text", "text": "{\"errorCategory\": \"transient\", \"isRetryable\": true, \"message\": \"Order service timed out after 10s\", \"attempted\": \"lookup_order(id=8812)\", \"suggestion\": \"Retry once; if it fails again, tell the customer and escalate\"}" }] }</pre>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>errorCategory</code></th><th>Example</th><th><code>isRetryable</code></th><th>Agent should</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>transient</strong></td><td>Timeout, 503, rate limit</td><td><code>true</code></td><td>Retry with backoff (ideally locally inside the tool or subagent)</td></tr>
+                    <tr><td><strong>validation</strong></td><td>Malformed date, missing field</td><td><code>false</code> (until input fixed)</td><td>Fix the input and call again, or ask the user</td></tr>
+                    <tr><td><strong>permission</strong></td><td>Caller lacks access</td><td><code>false</code></td><td>Stop that path; escalate or use an authorized route</td></tr>
+                    <tr><td><strong>business</strong></td><td>Refund exceeds policy, account frozen</td><td><code>false</code></td><td>Explain the policy to the user and offer the allowed alternative</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — access failure vs valid empty result</h4>
+                <p>"No orders found" for a valid query is a <strong>successful</strong> result (<code>isError</code> false, <code>results: []</code>). A timeout is an <strong>error</strong>. Returning <code>[]</code> on a timeout makes the agent tell the customer "you have no orders": silent suppression. Returning a generic <code>"Operation failed"</code> hides whether a retry could work.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: 8. TOOL DISTRIBUTION, SCOPING &amp; TOOL_CHOICE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="tool-distribution">
+            <div class="section-divider-number">08</div>
+            <h2>8. Tool Distribution, Scoping &amp; tool_choice</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Least tools per agent:</strong> give each subagent only the tools for its role (<code>AgentDefinition.tools</code>). More tools = more schema tokens and more mis-selection; tools from another role invite misuse (a synthesis agent with web search starts re-searching instead of synthesizing).</li>
+                <li><strong>Scoped variants:</strong> instead of handing a broad tool to every agent, expose a narrow one where needed (for example, a read-only <code>verify_claim</code> for the synthesis agent while full search stays with the search agent). Route other cross-role needs back through the coordinator.</li>
+                <li><strong>Replace generic tools with constrained ones</strong> when misuse is the risk (a <code>fetch_order(order_id)</code> tool instead of raw SQL access).</li>
+            </ul>
+        </div>
+
+        <div class="prose"><p><strong><code>tool_choice</code> (Messages API):</strong></p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Value</th><th>Behavior</th><th>Use for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>{"type": "auto"}</code></td><td>Claude decides whether to call a tool (default when <code>tools</code> are provided)</td><td>Normal agent turns</td></tr>
+                    <tr><td><code>{"type": "any"}</code></td><td>Must call <strong>some</strong> tool, Claude picks which</td><td>Guarantee a structured tool call when several output schemas exist</td></tr>
+                    <tr><td><code>{"type": "tool", "name": "extract_metadata"}</code></td><td>Must call <strong>that</strong> tool</td><td>Force a mandatory first step (extract before enrich), then switch back to <code>auto</code></td></tr>
+                    <tr><td><code>{"type": "none"}</code></td><td>No tool calls (default when no <code>tools</code>)</td><td>Pure text turns</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam traps</h4>
+                <p>Forcing a tool every turn turns an agent into a fixed pipeline (it can never finish with <code>end_turn</code> text). Forced calls skip thinking. Manual extended thinking does not support <code>any</code> / <code>tool</code>, and some newer models reject them with a 400: use <code>auto</code> with strict tool definitions there (verify per model).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: 9. ESCALATION &amp; AMBIGUITY RESOLUTION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="escalation">
+            <div class="section-divider-number">09</div>
+            <h2>9. Escalation &amp; Ambiguity Resolution</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Escalate to a human when…</th><th>Do <strong>not</strong> use as the trigger</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>The customer <strong>explicitly asks</strong> for a human → honor immediately, without investigating first</td><td><strong>Sentiment</strong> (frustration ≠ complexity; calm customers can have policy-gap cases)</td></tr>
+                    <tr><td><strong>Policy is silent or ambiguous</strong> for this request (exception, gap)</td><td><strong>Self-reported confidence</strong> scores from the model (poorly calibrated)</td></tr>
+                    <tr><td>The agent <strong>cannot make meaningful progress</strong> (repeated failures, missing authority)</td><td>"The case looks complex" without a concrete criterion</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <ul>
+                <li><strong>Write explicit criteria</strong> in the system prompt, with <strong>few-shot examples</strong> of escalate vs resolve.</li>
+                <li><strong>Frustrated but simple:</strong> acknowledge the frustration and offer the fix; escalate if the customer repeats the request for a human.</li>
+                <li><strong>Multi-concern requests:</strong> split the message into distinct issues (e.g. a refund <em>and</em> an address change), investigate each one (in parallel where independent) against the <strong>same verified customer context</strong>, then reply with <strong>one unified resolution</strong> that addresses every item, rather than answering only the first concern.</li>
+                <li><strong>Ambiguous identity:</strong> if a lookup returns multiple matches, <strong>ask for another identifier</strong>; never pick by heuristic (most recent, first row).</li>
+                <li><strong>Handoff summary:</strong> the human usually cannot see the transcript, so pass a structured summary: customer ID, issue, root cause, what was tried, amounts, recommended action.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: 10. ERROR PROPAGATION IN MULTI-AGENT SYSTEMS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="error-propagation">
+            <div class="section-divider-number">10</div>
+            <h2>10. Error Propagation in Multi-Agent Systems</h2>
+        </div>
+
+        <div class="prose"><p><strong>Subagent rule:</strong> recover locally from transient failures (bounded retries); propagate only what you cannot resolve, as <strong>structured error context</strong>:</p></div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — subagent partial-failure payload</span>
+            </div>
+            <pre>{ "status": "partial", "failureType": "timeout", "attempted": "search('EU AI Act fines 2025', source=news)",
+  "partialResults": [ { "claim": "...", "source": "..." } ], "alternatives": ["retry later", "use regulator site"] }</pre>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Anti-pattern</th><th>Why it fails</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Silent suppression</strong> (return empty/success on failure)</td><td>Coordinator treats missing data as "nothing exists"</td><td>Mark the failure explicitly; keep partial results</td></tr>
+                    <tr><td><strong>Kill the whole workflow</strong> on one subagent failure</td><td>Throws away good partial work</td><td>Continue with what succeeded; annotate the gap</td></tr>
+                    <tr><td><strong>Generic status</strong> (<code>"search unavailable"</code>)</td><td>Coordinator can't choose retry vs alternative vs proceed</td><td>Failure type + attempted query + partial results + alternatives</td></tr>
+                    <tr><td><strong>Infinite retry</strong> in the subagent</td><td>Burns budget, hides an outage</td><td>Bounded retries, then propagate</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <ul>
+                <li><strong>Coverage annotations:</strong> the final synthesis states which findings are well supported and which areas have gaps because sources were unavailable.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: 11. LONG SESSIONS &amp; LARGE-CODEBASE CONTEXT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="long-context">
+            <div class="section-divider-number">11</div>
+            <h2>11. Long Sessions &amp; Large-Codebase Context</h2>
+        </div>
+
+        <div class="prose"><p><strong>Symptoms of context degradation:</strong> inconsistent answers, references to "typical patterns" instead of the specific classes found earlier, forgotten constraints.</p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Technique</th><th>How</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Scratchpad file</strong></td><td>Agent writes key findings (file paths, decisions, facts) to a file and re-reads it for later questions</td></tr>
+                    <tr><td><strong>Subagent delegation</strong></td><td>Verbose exploration ("find all test files", "trace refund flow") runs in a subagent; only the summary returns</td></tr>
+                    <tr><td><strong>Phase summaries</strong></td><td>Summarize phase N's findings, then inject that summary into the prompts of phase N+1's subagents</td></tr>
+                    <tr><td><strong>Checkpoint manifest</strong></td><td>Workers persist structured checkpoints on disk; after an interruption, the orchestrator reloads that manifest to resume pending steps</td></tr>
+                    <tr><td><strong><code>/compact</code></strong></td><td>Compress a long interactive session when verbose discovery output fills context (<code>/clear</code> when switching tasks)</td></tr>
+                    <tr><td><strong>Case-facts block</strong></td><td>Keep exact amounts, dates, IDs and customer-stated expectations in a persistent block outside summarized history (summaries blur numbers)</td></tr>
+                    <tr><td><strong>Trim tool output</strong></td><td>Keep only the relevant fields (5 of 40) before results accumulate</td></tr>
+                    <tr><td><strong>Position</strong></td><td>Put key findings first and use clear section headers (models miss details buried in the middle of long inputs)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: 12. PROVENANCE &amp; MULTI-SOURCE SYNTHESIS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="provenance">
+            <div class="section-divider-number">12</div>
+            <h2>12. Provenance &amp; Multi-Source Synthesis</h2>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <ul>
+                <li><strong>Claim→source mappings:</strong> subagents return each claim with its source URL or document name, the relevant excerpt, location (page/section) and <strong>publication or collection date</strong>. The synthesis agent must <strong>preserve and merge</strong> these mappings; summarizing without them loses attribution.</li>
+                <li><strong>Conflicts:</strong> when credible sources disagree, report <strong>both values with their sources</strong> and annotate the conflict; don't silently pick one. Let the coordinator decide how to reconcile.</li>
+                <li><strong>Dates prevent false contradictions:</strong> 2021 vs 2024 figures may both be right; require dates in structured outputs.</li>
+                <li><strong>Report structure:</strong> separate <strong>well-established</strong> from <strong>contested</strong> findings; keep the original methodology context.</li>
+                <li><strong>Match format to content:</strong> use tables for quantitative metrics, narrative paragraphs for event summaries, and bulleted lists for engineering notes rather than forcing a single layout.</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — claim→source mapping with a conflict</span>
+            </div>
+            <pre>{ "claim": "Segment revenue grew 12% YoY", "source": "https://example.com/10-K-2024", "excerpt": "…increased 12%…",
+  "location": "p. 41", "published": "2025-02-14", "conflicts_with": [{ "source": "analyst note", "value": "9%", "published": "2024-11-02" }] }</pre>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 13: 13. MANAGED AGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="managed-agents">
+            <div class="section-divider-number">13</div>
+            <h2>13. Managed Agents</h2>
+        </div>
+
+        <div class="prose"><p>All Managed Agents endpoints require the beta header <strong><code>managed-agents-2026-04-01</code></strong> (set automatically by <code>client.beta.agents</code> / <code>environments</code> / <code>sessions</code>).</p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Primitive</th><th>Endpoint &amp; mechanics</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Agent</strong></td><td><code>POST /v1/agents</code> — versioned definition (<code>model</code>, <code>system</code> string — no <code>CLAUDE.md</code> hierarchy, <code>tools</code>, <code>mcp_servers</code>, <code>skills</code>). Built-in sandbox tools use <strong><code>{"type": "agent_toolset_20260401"}</code></strong> (in <code>/workspace</code>); custom tools (<code>{"type": "custom", ...}</code>) pause the session and emit <strong><code>agent.custom_tool_use</code><strong> until your backend posts </strong><code>user.custom_tool_result</code></strong>. Per-tool <code>permission_policy</code> (<code>always_allow</code>, <code>always_ask</code>, <code>auto</code>) gates execution via <strong><code>user.tool_confirmation</code></strong>.</td></tr>
+                    <tr><td><strong>2. Environment</strong></td><td><code>POST /v1/environments</code> — Anthropic-managed cloud container (<code>type: "cloud"</code>, <code>networking: {"type": "limited"}</code> allowlists) or self-hosted runner.</td></tr>
+                    <tr><td><strong>3. Session</strong></td><td><code>POST /v1/sessions</code> — binds a pinned <code>agent</code> version + <code>environment_id</code>, mounted <code>resources</code> (<code>file</code>, <code>github_repository</code>, <code>memory_store</code>), <strong><code>vault_ids</code></strong> (Vaults inject MCP/API credentials into outbound requests outside the container so raw secrets never enter the sandbox), and a spend <code>budget</code>.</td></tr>
+                    <tr><td><strong>4. Events</strong></td><td><code>POST /v1/sessions/{id}/events</code> &amp; SSE <code>/events/stream</code> — <code>user.message</code>, <code>agent.message</code>, <code>agent.custom_tool_use</code> → <code>user.custom_tool_result</code>, <code>user.tool_confirmation</code>, <code>session.status_idle</code> with <code>stop_reason.type == "end_turn"</code>.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Compliance trap</h4>
+                <p><strong>Managed Agents is stateful by design</strong> (conversation history, container state and outputs stored server-side) and <strong>cannot be used under a HIPAA BAA or Zero Data Retention (ZDR) agreement</strong>. For regulated PHI or ZDR-governed data, run the loop yourself (Agent SDK or Messages API) on an eligible configuration.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 14: 14. FAILURE MODES &amp; EXAM TRAPS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">14</div>
+            <h2>14. Failure Modes &amp; Exam Traps</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Symptom / scenario</th><th>Root cause → correct fix</th><th>Tempting wrong answer</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Loop exits early whenever Claude says "Let me check…"</td><td>Termination keyed on text → loop on <code>stop_reason == "tool_use"</code>, stop on <code>end_turn</code></td><td>Raising the iteration cap</td></tr>
+                    <tr><td>Coordinator never delegates</td><td><code>Agent</code> (alias <code>Task</code>) tool not in context/approved → add <code>"Agent"</code> to the explicit <code>tools</code> list (and <code>allowed_tools</code>)</td><td>Rewriting subagent descriptions only</td></tr>
+                    <tr><td>Synthesis subagent asks "which sources?"</td><td>Subagents don't inherit parent context → pass full findings + metadata in the Agent prompt</td><td>Giving the subagent the parent's transcript file name</td></tr>
+                    <tr><td>3 research subagents run one after another</td><td>Calls spread over turns → emit multiple <code>Agent</code> calls in <strong>one</strong> response</td><td>Switching to a bigger model</td></tr>
+                    <tr><td>Agent refunds $900 despite "never above $500" in the prompt</td><td>Prompt compliance is probabilistic → <code>PreToolUse</code> hook denies and redirects to escalation</td><td>Repeating the rule in capitals</td></tr>
+                    <tr><td>Customer told "you have no orders" during an outage</td><td>Tool returned <code>[]</code> on timeout → <code>isError</code> with <code>transient</code>, <code>isRetryable: true</code></td><td>Retrying forever silently</td></tr>
+                    <tr><td>Report presents one revenue figure; sources disagreed</td><td>Synthesis dropped conflict → keep both values with sources and dates, annotate</td><td>Averaging the two numbers</td></tr>
+                    <tr><td>Resumed session reasons about functions that were deleted</td><td>Stale tool results → tell it which files changed, or start fresh with a summary</td><td><code>/compact</code> the stale session</td></tr>
+                    <tr><td>Escalations driven by an "angry" score miss policy-gap cases</td><td>Sentiment ≠ complexity → explicit criteria + few-shot examples</td><td>Lowering the sentiment threshold</td></tr>
+                    <tr><td>Multi-tenant SDK app leaks memory across tenants or fails with <code>ENOENT</code> in TS</td><td><code>setting_sources=[]</code> still loads auto memory, <code>~/.claude.json</code>, claude.ai MCP; TS <code>env</code> replaces <code>process.env</code></td><td><code>mcp_servers={}</code> without <code>strict_mcp_config=True</code></td></tr>
+                    <tr><td>PHI workload on Managed Agents "with deletion after each run"</td><td>Managed Agents is not BAA/ZDR eligible → Agent SDK / Messages API on eligible setup</td><td>Picking a US region</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 15: 15. GLOSSARY &amp; SELF-ASSESSMENT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">15</div>
+            <h2>15. Glossary &amp; Self-Assessment</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Term</th><th>Definition</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong><code>stop_reason</code></strong></td><td>Why a response ended: <code>tool_use</code> (run tools, continue), <code>end_turn</code> (done), <code>max_tokens</code>, <code>pause_turn</code>, <code>refusal</code>, <code>stop_sequence</code>, <code>model_context_window_exceeded</code></td></tr>
+                    <tr><td><strong><code>ResultMessage.subtype</code></strong></td><td>SDK loop outcome: <code>success</code>, <code>error_max_turns</code>, <code>error_max_budget_usd</code>, <code>error_during_execution</code>, <code>error_max_structured_output_retries</code></td></tr>
+                    <tr><td><strong>Hub-and-spoke</strong></td><td>Coordinator routes all communication between isolated subagents</td></tr>
+                    <tr><td><strong><code>Agent</code> tool (alias <code>Task</code>)</strong></td><td>Tool Claude uses to spawn a subagent; must be available/approved for the coordinator</td></tr>
+                    <tr><td><strong><code>AgentDefinition</code></strong></td><td>Programmatic subagent: <code>description</code>, <code>prompt</code>, <code>tools</code>, <code>model</code>, plus optional limits</td></tr>
+                    <tr><td><strong><code>HookMatcher</code></strong></td><td>Registers SDK hook callbacks for an event and tool-name matcher</td></tr>
+                    <tr><td><strong><code>permissionDecision</code></strong></td><td><code>PreToolUse</code> hook verdict: <code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></td></tr>
+                    <tr><td><strong><code>fork_session</code></strong></td><td>Copies a session's history into a new session ID; original unchanged; filesystem not forked</td></tr>
+                    <tr><td><strong><code>isError</code></strong></td><td>MCP tool-result flag marking a failed call (<code>is_error</code> in Python SDK tools)</td></tr>
+                    <tr><td><strong><code>errorCategory</code> / <code>isRetryable</code></strong></td><td>App-level error payload fields: transient, validation, permission, business</td></tr>
+                    <tr><td><strong><code>tool_choice</code></strong></td><td><code>auto</code> / <code>any</code> / <code>tool</code> (forced) / <code>none</code></td></tr>
+                    <tr><td><strong>Claim→source mapping</strong></td><td>Claim + source + excerpt + location + date, preserved through synthesis</td></tr>
+                    <tr><td><strong>Manifest</strong></td><td>Known-location state export each agent writes so a coordinator can resume after a crash</td></tr>
+                    <tr><td><strong><code>agent_toolset_20260401</code> &amp; Vaults</strong></td><td>Managed Agents built-in toolset (<code>/workspace</code>) and server-side credential injection (<code>vault_ids</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink" style="margin-top: 22px;">
+            <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+            <p>Listen to the 56-minute Claude Agent SDK audio deep dive, or open the 2-column study guide PDF, the 21-slide Claude Agent SDK Architecture &amp; Orchestration Blueprint deck, and the Standard sketchnote infographic in the Hub Viewer.</p>
+            <div class="audio-label" style="margin-top: 15px;">Orchestrating Reliable Agents with the Claude Agent SDK (Podcast)</div>
+            <div class="audio-wrapper">
+                <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                    <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeAgentSDK-v1.0.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                </a>
+                <a href="quiz.html?topic=claude-agent-sdk" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Launch Interactive Claude Agent SDK Practice Quiz →</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> A coordinator's loop stops whenever the assistant text contains “done”. What is wrong, and what should drive termination?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Natural-language completion signals are unreliable: Claude often writes text <em>and</em> requests tools in the same turn. Continue while <code>stop_reason == "tool_use"</code> (execute every <code>tool_use</code> block and append matching <code>tool_result</code>s); stop on <code>"end_turn"</code>; keep an iteration cap only as a safety bound.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> A synthesis subagent keeps asking which sources the research phase used. Why, and how do you fix it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Non-fork subagents start fresh: they do not receive the coordinator's history, tool results or system prompt. The Agent tool's prompt string is the only channel, so pass the complete findings in it with content separated from metadata (URL, document, page, date).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Why does a <code>PreToolUse</code> hook beat a capitalised system-prompt rule for a $500 refund cap?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Prompt compliance is probabilistic; a hook runs in code on every matching call. Return <code>permissionDecision: "deny"</code> with a <code>permissionDecisionReason</code> that redirects Claude to escalation. Precedence is <code>deny &gt; defer &gt; ask &gt; allow</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> An order-lookup tool times out. Why is returning an empty list the wrong behaviour?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">An empty list is a valid “no orders” result, so the agent would tell the customer they have none (silent suppression). Return an error result (<code>isError: true</code>) with a structured payload such as <code>errorCategory: "transient"</code> and <code>isRetryable: true</code>, plus what was attempted.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> In the Agent SDK, what four things can still load even when you pass <code>setting_sources=[]</code>?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">(1) Managed policy settings, (2) <code>~/.claude.json</code> global state (isolate via <code>CLAUDE_CONFIG_DIR</code>), (3) auto memory <code>MEMORY.md</code> (disable via <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY="1"</code>), and (4) <code>claude.ai</code> MCP connectors (suppress via <code>strict_mcp_config=True</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> In Claude Managed Agents, how do you run a proprietary tool inside your own VPC while keeping third-party MCP credentials out of the cloud container?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Declare the VPC tool as <code>{"type": "custom", ...}</code> on the Agent so the session pauses and emits <code>agent.custom_tool_use</code> (your VPC executes it and posts <code>user.custom_tool_result</code>), and attach a Vault via <code>vault_ids</code> on the Session so credentials are injected server-side outside the sandbox.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> Two sources report 9% and 12% growth for the same metric. What should the synthesis report contain?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Both values, each with its source, excerpt, location and publication date, plus an explicit conflict annotation. Dates often explain the difference; never average or silently pick one.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
