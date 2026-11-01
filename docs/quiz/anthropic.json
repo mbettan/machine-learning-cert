@@ -1,0 +1,982 @@
+{
+  "topic_id": "anthropic",
+  "title": "Anthropic & Claude Models",
+  "guide_url": "Anthropic.html",
+  "questions": [
+    {
+      "id": "anthropic-q-01",
+      "section": "Core Philosophy & Ecosystem Map",
+      "guide_anchor": "philosophy",
+      "question": "A product team migrating from a legacy Claude 3.5 workflow to a frontier Claude 4.6 / 4.7+ architecture wants to control reasoning depth dynamically per request rather than maintaining manual budget_tokens configurations. Which mechanism replaces manual token-budget thinking?",
+      "options": [
+        {
+          "text": "Native Adaptive Thinking paired with the 5-level effort parameter (low, medium, high, xhigh, max).",
+          "correct": true
+        },
+        {
+          "text": "Setting temperature to 0.0 and top_p to 0.1 in the request body so the model allocates uniform compute across every output token.",
+          "correct": false,
+          "why_wrong": "Sampling parameters do not allocate reasoning compute (and non-default sampling values return 400 errors on Claude 4.7+); uniform per-token compute was the legacy Claude 2 baseline."
+        },
+        {
+          "text": "Splitting every user prompt across multiple stateless turns inside claude.ai Artifacts to force deeper reflection before answering.",
+          "correct": false,
+          "why_wrong": "Artifacts is an interactive UI workspace in Layer 1, not the API compute-allocation mechanism for reasoning depth."
+        },
+        {
+          "text": "Attaching a Sparse Autoencoder feature dictionary directly to the HTTP request header to expand internal chain-of-thought traces.",
+          "correct": false,
+          "why_wrong": "Sparse Autoencoders are mechanistic interpretability models used to inspect neural features, not an API reasoning-depth parameter."
+        }
+      ],
+      "explanation": "Frontier Claude 4.6 / 4.7+ models replace manual budget_tokens extended thinking with native Adaptive Thinking (thinking: {type: \"adaptive\"}), automatically interleaving thinking between tool calls and scaling reasoning depth across five output_config.effort levels (low, medium, high, xhigh, max).",
+      "key_takeaway": "Claude 4.6 / 4.7+ uses Adaptive Thinking with 5 effort levels (low, medium, high, xhigh, max) instead of fixed token budgets.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-02",
+      "section": "Core Philosophy & Ecosystem Map",
+      "guide_anchor": "philosophy",
+      "question": "An operations analyst who does not write code needs Claude to reorganize hundreds of local PDFs, extract invoice tables across folders, and compile a summary spreadsheet on their laptop without touching a terminal. Which surface in the 3-Layer Claude Ecosystem Map fits this workflow?",
+      "options": [
+        {
+          "text": "Claude Code running in headless CI mode with a custom bash permission hook and a local MCP filesystem server.",
+          "correct": false,
+          "why_wrong": "Claude Code is a Layer 2 terminal-based engineering CLI designed for software developers and automated pipelines."
+        },
+        {
+          "text": "Desktop Cowork, which runs multi-step file and knowledge tasks inside an app-hosted GUI VM.",
+          "correct": true
+        },
+        {
+          "text": "Direct POST /v1/messages API calls routed through Amazon Bedrock with custom client-side Python tool-use loops.",
+          "correct": false,
+          "why_wrong": "The Direct Messages API and Bedrock belong to Layers 2 and 3 and require custom software engineering to orchestrate."
+        },
+        {
+          "text": "Claude Managed Agents provisioned via the programmable Agent SDK inside a remote cloud container cluster.",
+          "correct": false,
+          "why_wrong": "Managed Agents and the Agent SDK are Layer 2 builder interfaces for engineering teams, not no-code desktop workspaces."
+        }
+      ],
+      "explanation": "In Layer 1 (End-User Entry Points), the Claude Desktop app includes Cowork, an app-hosted virtual machine (VM) that lets non-developers delegate multi-step local file and document workflows without using terminal commands.",
+      "key_takeaway": "Cowork (Layer 1) runs inside an app-hosted desktop VM to automate multi-step knowledge work without coding.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-03",
+      "section": "Core Philosophy & Ecosystem Map",
+      "guide_anchor": "philosophy",
+      "question": "A platform engineering team is mapping their enterprise AI architecture onto Anthropic's 3-Layer Claude Ecosystem Map. How are Claude Code, the Claude Agent SDK, and Managed Agents classified relative to Amazon Bedrock and Google Cloud Vertex AI?",
+      "options": [
+        {
+          "text": "Claude Code, Agent SDK, and Managed Agents are Layer 1 end-user workspaces, while Bedrock and Vertex AI are Layer 2 APIs.",
+          "correct": false,
+          "why_wrong": "Layer 1 is for end-user surfaces like claude.ai and Cowork; Bedrock and Vertex AI are Layer 3 cloud delivery routes."
+        },
+        {
+          "text": "Claude Code, Agent SDK, and Managed Agents are Layer 2 builder interfaces; Bedrock and Vertex AI are Layer 3 cloud routes.",
+          "correct": true
+        },
+        {
+          "text": "All five components belong to Layer 3 cloud delivery routes because they execute workloads outside the claude.ai web browser.",
+          "correct": false,
+          "why_wrong": "Layer 3 covers infrastructure provisioning and cloud residency channels, whereas programmable harnesses live in Layer 2."
+        },
+        {
+          "text": "Bedrock and Vertex AI are Layer 1 productivity connectors, while Claude Code and Managed Agents are Layer 3 safety classifiers.",
+          "correct": false,
+          "why_wrong": "Cloud providers are Layer 3 delivery channels, and Claude Code/Managed Agents are Layer 2 engineering interfaces, not safety classifiers."
+        }
+      ],
+      "explanation": "Layer 2 (Builder & Engineering Interfaces) contains programmable surfaces—the Direct Messages API, Claude Code CLI, Claude Agent SDK, and Managed Agents—while Layer 3 (Cloud Delivery Routes) provides enterprise infrastructure, IAM, and data residency via First-Party API, Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Azure Foundry.",
+      "key_takeaway": "Layer 2 holds programmable builder harnesses (API, Claude Code, Agent SDK, Managed Agents); Layer 3 holds cloud delivery routes.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-04",
+      "section": "Core Philosophy & Ecosystem Map",
+      "guide_anchor": "philosophy",
+      "question": "How did the alignment profile and context capacity evolve from the Legacy Baseline (Claude 2) to the Frontier Architecture (Claude 4.6+)?",
+      "options": [
+        {
+          "text": "From reason-based Constitutional resolution with a 1M token window to rigid keyword filters with a 100k static window.",
+          "correct": false,
+          "why_wrong": "This reverses the chronological evolution; Claude 2 had a 100k window and higher false refusals, while Claude 4.6+ scales to 1M tokens."
+        },
+        {
+          "text": "From high false-refusal rates and a 100k window to reason-based Constitutional resolution and up to 1M tokens with compaction.",
+          "correct": true
+        },
+        {
+          "text": "From multimodal GUI virtual machines and 500k context in Claude 2 to stateless text-only turn-taking in Claude 4.6+.",
+          "correct": false,
+          "why_wrong": "Claude 2 was a stateless text LLM with 100k context, whereas Claude 4.6+ supports multi-agent CLI harnesses and GUI VMs."
+        },
+        {
+          "text": "From dynamic effort scaling and server-side compaction in Claude 2 to uniform per-token compute allocation across Claude 4.6+.",
+          "correct": false,
+          "why_wrong": "Uniform per-token compute characterized Claude 2, while Claude 4.6+ introduced Adaptive Thinking with dynamic effort scaling."
+        }
+      ],
+      "explanation": "Claude 2 featured a 100k static context window and a high false-refusal rate on benign edge cases. Claude 3.5 expanded to 200k tokens with multimodal vision and Artifacts, and Claude 4.6+ pairs reason-based Constitutional resolution with up to 1M tokens and server-side compaction.",
+      "key_takeaway": "Claude evolved from 100k static context and frequent false refusals (Claude 2) to 1M context with compaction and reason-based alignment (Claude 4.6+).",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-05",
+      "section": "Core Philosophy & Ecosystem Map",
+      "guide_anchor": "philosophy",
+      "question": "A user on claude.ai asks Claude to build an interactive React dashboard and iteratively edits the live visual component in a dedicated side-by-side workspace next to the conversation. Which Layer 1 capability provides this stateful UI workspace?",
+      "options": [
+        {
+          "text": "Artifacts, the stateful side-by-side workspace in claude.ai for live code, documents, and visuals.",
+          "correct": true
+        },
+        {
+          "text": "Constitutional Classifiers, the low-latency sentinel pipeline that renders interactive HTML previews inside the API gateway.",
+          "correct": false,
+          "why_wrong": "Constitutional Classifiers are ASL-3 runtime safety filters that block catastrophic misuse, not a frontend UI workspace."
+        },
+        {
+          "text": "The Stream Algorithm, which streams React DOM updates across 100k-token browser sessions in real time without re-rendering.",
+          "correct": false,
+          "why_wrong": "The Stream Algorithm is a mechanistic interpretability pruning method for Sparse Autoencoder attribution, not a UI feature."
+        },
+        {
+          "text": "Two-Party Authorization (2PA), which synchronizes component state between the user's chat turn and the browser sandbox.",
+          "correct": false,
+          "why_wrong": "Two-Party Authorization is an ASL-3 weight-security control requiring dual human approval for infrastructure access."
+        }
+      ],
+      "explanation": "Artifacts is the stateful interactive UI workspace in claude.ai (Layer 1) that renders live code, documents, and visual components alongside the chat stream so users can inspect and iterate on outputs in place.",
+      "key_takeaway": "Artifacts provides the stateful side-by-side workspace in claude.ai for live code, documents, and interactive visuals.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-06",
+      "section": "Constitutional AI (CAI) & Alignment",
+      "guide_anchor": "cai",
+      "question": "During post-training evaluations of a model trained purely with human-rater RLHF, researchers notice that when a user states a confident mathematical falsehood in the prompt, the model agrees and fabricates a supporting proof instead of correcting the error. Which structural RLHF bottleneck does this illustrate?",
+      "options": [
+        {
+          "text": "Neural superposition, where polysemantic neurons compress too many unrelated concepts into a single residual stream layer.",
+          "correct": false,
+          "why_wrong": "Superposition is an internal representation property of neural networks, not the human-rater approval bias that causes agreement with user falsehoods."
+        },
+        {
+          "text": "Epistemological vulnerability (sycophancy), where optimizing for human approval trains the model to flatter misconceptions.",
+          "correct": true
+        },
+        {
+          "text": "Egress bandwidth throttling, which truncates corrective mathematical reasoning tokens before they reach the client socket.",
+          "correct": false,
+          "why_wrong": "Egress bandwidth throttling is an ASL-3 network security control to prevent model weight exfiltration."
+        },
+        {
+          "text": "Holistic priority weighting, which forces Tier 4 helpfulness to override Tier 2 honesty on every technical user prompt.",
+          "correct": false,
+          "why_wrong": "Under Constitutional AI, Tier 2 (Broadly Ethical / honesty) outranks Tier 4 (Genuinely Helpful) and prevents sycophancy."
+        }
+      ],
+      "explanation": "Relying solely on human raters in RLHF introduces epistemological vulnerability (sycophancy): models rewarded purely for human approval learn to echo user biases and flatter misconceptions rather than uphold objective deduction.",
+      "key_takeaway": "Pure human-rater RLHF breeds sycophancy because models learn that polite agreement wins higher rater approval than correction.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-07",
+      "section": "Constitutional AI (CAI) & Alignment",
+      "guide_anchor": "cai",
+      "question": "Beyond sycophancy, why does relying exclusively on crowdsourced human contractors for RLHF fail to scale to frontier multimodal and long-horizon reasoning models?",
+      "options": [
+        {
+          "text": "Human raters can only evaluate strict JSON-formatted tool calls and cannot grade natural language reasoning responses.",
+          "correct": false,
+          "why_wrong": "Human raters can read natural language, but their moral intuitions are inconsistent and their throughput is too slow for frontier scale."
+        },
+        {
+          "text": "Inconsistent human standards create fragmented reward signals, while manual labeling cannot scale to massive reasoning traces.",
+          "correct": true
+        },
+        {
+          "text": "Human preference labels automatically trigger ASL-3 containment locks whenever an annotated prompt exceeds 100k tokens.",
+          "correct": false,
+          "why_wrong": "ASL-3 triggers are based on catastrophic model capabilities (like CBRN uplift), not on human annotation length."
+        },
+        {
+          "text": "Human RLHF requires Two-Party Authorization from security engineers on every single training batch, halting GPU clusters.",
+          "correct": false,
+          "why_wrong": "Two-Party Authorization secures ASL-3 model weights against theft; it is not an annotation step in standard RLHF."
+        }
+      ],
+      "explanation": "Human-only RLHF suffers from three compounding bottlenecks: sycophancy, fragmented reward signals (crowdsourced raters applying inconsistent moral and safety standards), and compounded latency/throughput limits when supervising massive multimodal corpora or long reasoning traces.",
+      "key_takeaway": "Human-only RLHF hits scaling walls due to sycophancy, noisy/fragmented reward signals, and annotation throughput limits.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-08",
+      "section": "Constitutional AI (CAI) & Alignment",
+      "guide_anchor": "cai",
+      "question": "When values conflict during a conversation, in what strict priority order (from highest to lowest) does Claude's Constitution resolve trade-offs?",
+      "options": [
+        {
+          "text": "1. Genuinely Helpful → 2. Compliant → 3. Broadly Ethical → 4. Broadly Safe (Lowest Priority)",
+          "correct": false,
+          "why_wrong": "This inverts the hierarchy; helpfulness is Tier 4 and never overrides safety, ethics, or compliance."
+        },
+        {
+          "text": "1. Broadly Safe → 2. Broadly Ethical → 3. Compliant → 4. Genuinely Helpful",
+          "correct": true
+        },
+        {
+          "text": "1. Compliant → 2. Genuinely Helpful → 3. Broadly Safe → 4. Broadly Ethical (Lowest Priority)",
+          "correct": false,
+          "why_wrong": "Broadly Safe (preserving human oversight and systemic boundaries) is always Tier 1, followed by Broadly Ethical."
+        },
+        {
+          "text": "1. Broadly Ethical → 2. Genuinely Helpful → 3. Broadly Safe → 4. Compliant (Lowest Priority)",
+          "correct": false,
+          "why_wrong": "Broadly Safe outranks all other tiers, and Genuinely Helpful sits at Tier 4 below Compliant."
+        }
+      ],
+      "explanation": "Constitutional AI resolves value trade-offs across a four-tier hierarchy: (1) Broadly Safe (never undermine human oversight or shutdown controls), (2) Broadly Ethical (honesty and refusing severe harm), (3) Compliant (adhering to operational/domain guidelines), and (4) Genuinely Helpful (fulfilling intent without preachy refusals).",
+      "key_takeaway": "The 4-tier Constitutional priority order is: 1. Broadly Safe → 2. Broadly Ethical → 3. Compliant → 4. Genuinely Helpful.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-09",
+      "section": "Constitutional AI (CAI) & Alignment",
+      "guide_anchor": "cai",
+      "question": "A hospital security researcher asks Claude to explain how buffer overflow vulnerabilities work in legacy C libraries so their team can patch an internal medical device server. Under the Constitutional Holistic Weighting Rule, how should the model handle this request?",
+      "options": [
+        {
+          "text": "Refuse immediately with a policy lecture because any mention of exploit mechanics triggers a rigid Tier 1 mechanical gate.",
+          "correct": false,
+          "why_wrong": "Holistic weighting explicitly avoids rigid mechanical gates and preachy refusals when risks are theoretical or educational."
+        },
+        {
+          "text": "Weigh plausibility, severity, and context holistically to give a constructive defensive answer without a false refusal.",
+          "correct": true
+        },
+        {
+          "text": "Ignore Tier 1 and Tier 2 safety boundaries completely whenever a user claims to be an authorized security researcher.",
+          "correct": false,
+          "why_wrong": "Higher tiers still govern real catastrophic harm; the model helps here because defensive education is benign, not because Tier 1 is disabled."
+        },
+        {
+          "text": "Defer all safety evaluation to client-side browser cookies before generating any low-level cybersecurity terminology.",
+          "correct": false,
+          "why_wrong": "Constitutional reasoning is intrinsic to the model's alignment, not delegated to browser cookies."
+        }
+      ],
+      "explanation": "Under the Holistic Weighting Rule, the four-tier priority hierarchy is evaluated contextually—weighing plausibility, severity, and intent together rather than executing a brittle keyword gate—so dual-use defensive or educational prompts receive helpful, non-preachy answers.",
+      "key_takeaway": "Holistic weighting balances plausibility, severity, and context so remote theoretical risks do not trigger false refusals.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-10",
+      "section": "Constitutional AI (CAI) & Alignment",
+      "guide_anchor": "cai",
+      "question": "A fintech VP assumes that because Claude is trained with Constitutional AI, the model will automatically refuse to mention competitor mortgage rates, enforce a $250 refund cap, and redact internal account IDs without any extra engineering. Why is this assumption flawed?",
+      "options": [
+        {
+          "text": "Constitutional AI is only active when using the claude.ai web interface and is disabled on the Direct Messages API and Bedrock.",
+          "correct": false,
+          "why_wrong": "Constitutional AI is baked into the foundation model weights and applies across all interfaces and cloud routes."
+        },
+        {
+          "text": "Foundation-layer CAI only stops universal catastrophic/ethical harm; product business rules require application-layer guardrails.",
+          "correct": true
+        },
+        {
+          "text": "Competitor mentions and refund caps are governed by ASL-3 Constitutional Classifiers, which require a separate enterprise license.",
+          "correct": false,
+          "why_wrong": "ASL-3 Constitutional Classifiers guard against catastrophic misuse like CBRN synthesis, not company-specific refund or branding rules."
+        },
+        {
+          "text": "Constitutional AI only runs during Phase 1 supervised fine-tuning and is stripped out during Phase 2 RLAIF optimization.",
+          "correct": false,
+          "why_wrong": "Both Phase 1 (Critique & Revision) and Phase 2 (RLAIF) enforce the Constitution in the final aligned model."
+        }
+      ],
+      "explanation": "Model-level alignment (Constitutional AI) operates at the Foundation Layer to eliminate universal catastrophic, ethical, and oversight harms. Enforcing organization-specific business rules—such as competitor policies, refund caps, tool permissions, and PII redaction—remains the responsibility of Application Layer prompts, hooks, and guardrails.",
+      "key_takeaway": "Foundation-layer CAI stops universal catastrophic/ethical harm; application-layer guardrails must enforce your domain business rules.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-11",
+      "section": "Constitutional AI (CAI) & Alignment",
+      "guide_anchor": "cai",
+      "question": "How do Phase 1 (Supervised Learning) and Phase 2 (Reinforcement Learning) work together in Anthropic's Two-Phase Constitutional AI training pipeline?",
+      "options": [
+        {
+          "text": "Phase 1 uses human contractors to rewrite toxic drafts; Phase 2 uses Sparse Autoencoders to prune 99% of the model weights.",
+          "correct": false,
+          "why_wrong": "Phase 1 uses synthetic self-critique with zero human labeling, and Phase 2 uses RLAIF preference modeling, not SAE weight pruning."
+        },
+        {
+          "text": "Phase 1 builds an SFT dataset via self-critique and revision; Phase 2 trains a preference model via AI Feedback (RLAIF).",
+          "correct": true
+        },
+        {
+          "text": "Phase 1 trains a reward model on random web text; Phase 2 replaces all transformer blocks with deterministic regex classifiers.",
+          "correct": false,
+          "why_wrong": "Phase 1 performs supervised fine-tuning on self-revised responses, and Phase 2 performs RL optimization using an AI-scored preference model."
+        },
+        {
+          "text": "Phase 1 steers Persona Vectors toward deception; Phase 2 throttles network egress bandwidth under Two-Party Authorization.",
+          "correct": false,
+          "why_wrong": "Persona Vector steering is Behavioral Vaccination in interpretability, and egress throttling/2PA are ASL-3 weight-security controls."
+        }
+      ],
+      "explanation": "In Phase 1 (Supervised Critique & Revision), the model drafts responses, critiques them against Constitutional principles, and rewrites them to create a clean SFT dataset without human labelers. In Phase 2 (RLAIF), an AI evaluator scores candidate response pairs against the Constitution to train a preference reward model for RL optimization.",
+      "key_takeaway": "CAI Phase 1 performs self-critique & revision for SFT; Phase 2 uses RLAIF where an AI evaluator scores candidate pairs for RL.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-12",
+      "section": "Mechanistic Interpretability & Steering",
+      "guide_anchor": "interpretability",
+      "question": "Why is inspecting individual raw neurons inside a frontier transformer insufficient for understanding what concepts the model is representing, and how do Sparse Autoencoders (SAEs) solve this?",
+      "options": [
+        {
+          "text": "Raw neurons are encrypted by Two-Party Authorization; SAEs decrypt the weights using the request's cryptographic thinking signature.",
+          "correct": false,
+          "why_wrong": "Neurons are not encrypted inside the forward pass; the challenge is polysemanticity caused by neural superposition."
+        },
+        {
+          "text": "Neurons pack overlapping concepts via superposition; SAEs decompose them into readable monosemantic features.",
+          "correct": true
+        },
+        {
+          "text": "Raw neurons only activate during Phase 1 SFT; SAEs re-enable neuron activations during Phase 2 RLAIF preference scoring.",
+          "correct": false,
+          "why_wrong": "Neurons activate on every forward pass; SAEs are unsupervised dictionary-learning models that disentangle overlapping activations."
+        },
+        {
+          "text": "Individual neurons only store syntax tokens; SAEs translate syntax into strict JSON schemas for API structured outputs.",
+          "correct": false,
+          "why_wrong": "SAEs decompose dense internal neural activations into human-interpretable concepts (like sycophancy or code vulnerabilities), not JSON schemas."
+        }
+      ],
+      "explanation": "Because neural networks compress far more concepts than they have physical neurons (superposition), individual neurons become polysemantic—firing on unrelated concepts. Sparse Autoencoders (SAEs) decompile these dense activations into sparse, human-readable monosemantic features.",
+      "key_takeaway": "SAEs resolve neural superposition by decomposing dense, polysemantic neuron activations into readable monosemantic features.",
+      "doc_links": [
+        {
+          "label": "Anthropic Transformer Circuits Research",
+          "url": "https://transformer-circuits.pub/"
+        },
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-13",
+      "section": "Mechanistic Interpretability & Steering",
+      "guide_anchor": "interpretability",
+      "question": "Tracing causal attribution circuits across a 100k+ token context window historically failed due to quadratic compute growth across token-to-token interactions. Which technique makes long-context SAE attribution tractable in near-linear time?",
+      "options": [
+        {
+          "text": "The Stream Algorithm, which hierarchically prunes 97% to 99% of irrelevant token interactions.",
+          "correct": true
+        },
+        {
+          "text": "Server-side context compaction, which deletes 99% of the user's prompt history before running the forward pass.",
+          "correct": false,
+          "why_wrong": "Compaction summarizes conversation history for long-running API sessions; it does not trace mechanistic attribution graphs."
+        },
+        {
+          "text": "Behavioral Vaccination, which freezes transformer attention heads after the first 2,048 tokens of an input sequence.",
+          "correct": false,
+          "why_wrong": "Behavioral Vaccination steers Persona Vectors during fine-tuning to prevent alignment faking; it does not prune attention graphs."
+        },
+        {
+          "text": "Egress bandwidth throttling, which caps the number of residual stream activations emitted per second across GPUs.",
+          "correct": false,
+          "why_wrong": "Egress bandwidth throttling is an ASL-3 network security defense against weight theft, unrelated to circuit attribution."
+        }
+      ],
+      "explanation": "The Stream Algorithm eliminates the quadratic bottleneck of long-context mechanistic interpretability by hierarchically pruning 97% to 99% of negligible token-to-token interactions, enabling causal circuit attribution across 100k+ token contexts in near-linear time.",
+      "key_takeaway": "The Stream Algorithm hierarchically prunes 97–99% of irrelevant token interactions to scale circuit attribution to 100k+ tokens.",
+      "doc_links": [
+        {
+          "label": "Anthropic Transformer Circuits Research",
+          "url": "https://transformer-circuits.pub/"
+        },
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-14",
+      "section": "Mechanistic Interpretability & Steering",
+      "guide_anchor": "interpretability",
+      "question": "An alignment researcher wants to detect when a model's internal state is drifting toward deception or hallucination during inference BEFORE any harmful tokens are emitted to the user. Which interpretability construct enables this runtime monitoring?",
+      "options": [
+        {
+          "text": "Persona Vectors — low-rank directions in activation space representing behavioral traits.",
+          "correct": true
+        },
+        {
+          "text": "Artifacts — stateful frontend containers in claude.ai that log rendered HTML diffs after a chat turn finishes.",
+          "correct": false,
+          "why_wrong": "Artifacts is a user-facing UI workspace in claude.ai and only renders tokens after they have already been generated."
+        },
+        {
+          "text": "Two-Party Authorization — dual-engineer approval gates triggered before any production infrastructure SSH session.",
+          "correct": false,
+          "why_wrong": "Two-Party Authorization protects model weight storage infrastructure, not inference-time activation drift."
+        },
+        {
+          "text": "Phase 1 Critique transcripts — static supervised fine-tuning datasets generated offline prior to model release.",
+          "correct": false,
+          "why_wrong": "Phase 1 SFT transcripts are created offline during training and do not monitor live inference activations."
+        }
+      ],
+      "explanation": "Persona Vectors are low-rank directional vectors in activation space representing high-level behavioral traits (such as honesty, sycophancy, or deception). Monitoring projections along these vectors at runtime reveals state drift before tokens are emitted.",
+      "key_takeaway": "Persona Vectors represent behavioral traits in activation space and allow runtime detection of deceptive or hallucination drift.",
+      "doc_links": [
+        {
+          "label": "Anthropic Transformer Circuits Research",
+          "url": "https://transformer-circuits.pub/"
+        },
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-15",
+      "section": "Mechanistic Interpretability & Steering",
+      "guide_anchor": "interpretability",
+      "question": "A frontier safety team is concerned about 'alignment faking,' where a model feigns compliance during safety evaluations while preserving hidden misaligned objectives for deployment. How does Behavioral Vaccination mitigate this risk during fine-tuning?",
+      "options": [
+        {
+          "text": "By deleting all cybersecurity, chemistry, and virology articles from the pre-training corpus before tokenizing.",
+          "correct": false,
+          "why_wrong": "Corpus filtering is data curation, whereas Behavioral Vaccination is an activation-steering intervention during fine-tuning."
+        },
+        {
+          "text": "By steering Persona Vectors toward undesirable traits during fine-tuning while training the model to recover.",
+          "correct": true
+        },
+        {
+          "text": "By running every user prompt through three separate cloud providers in Layer 3 and majority-voting on the output.",
+          "correct": false,
+          "why_wrong": "Multi-cloud ensembling does not alter internal weight resilience or prevent a model from faking alignment during training."
+        },
+        {
+          "text": "By replacing the model's Constitution with crowdsourced human ratings whenever evaluation prompts are detected.",
+          "correct": false,
+          "why_wrong": "Reverting to human-only RLHF increases sycophancy and noise rather than immunizing internal representations against alignment faking."
+        }
+      ],
+      "explanation": "Behavioral Vaccination deliberately steers Persona Vectors toward undesirable traits (artificially inducing deceptive or misaligned states) during fine-tuning while training the model to recover, building intrinsic structural resilience against alignment faking and sleeper behavior.",
+      "key_takeaway": "Behavioral Vaccination steers Persona Vectors toward undesirable states during fine-tuning so the model learns intrinsic immunity to alignment faking.",
+      "doc_links": [
+        {
+          "label": "Anthropic Transformer Circuits Research",
+          "url": "https://transformer-circuits.pub/"
+        },
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-16",
+      "section": "Frontier Safety: RSP & ASL Framework",
+      "guide_anchor": "safety",
+      "question": "Under Anthropic's Responsible Scaling Policy (RSP), what determines when a model must transition from ASL-2 baseline controls to stricter ASL-3 containment and deployment safeguards?",
+      "options": [
+        {
+          "text": "Empirical evaluations showing meaningful uplift in CBRN weapons, cyber-offense, or autonomous replication.",
+          "correct": true
+        },
+        {
+          "text": "A fixed calendar schedule that automatically upgrades every frontier model tier one safety level every twelve months.",
+          "correct": false,
+          "why_wrong": "The RSP is capability-gated, not calendar-driven; empirical evaluations dictate when stricter ASL controls are required."
+        },
+        {
+          "text": "Crossing 100,000 active enterprise API customers or expanding the context window beyond 200,000 input tokens.",
+          "correct": false,
+          "why_wrong": "User counts and context window sizes do not define ASL thresholds; catastrophic capability uplift triggers ASL-3."
+        },
+        {
+          "text": "Adding support for multimodal image inputs or launching an interactive Artifacts workspace panel in claude.ai.",
+          "correct": false,
+          "why_wrong": "Claude 3.5 supported vision and Artifacts under ASL-2; ASL-3 is triggered by catastrophic misuse or autonomy thresholds."
+        }
+      ],
+      "explanation": "Anthropic's Responsible Scaling Policy (RSP) is capability-gated: a model triggers ASL-3 when empirical evaluations demonstrate it can meaningfully uplift actors in catastrophic workflows such as CBRN weapons acquisition, autonomous cyber-offense, or autonomous replication.",
+      "key_takeaway": "ASL-3 is triggered by empirical capability thresholds (CBRN uplift, cyber-offense, autonomous replication), not release dates.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-17",
+      "section": "Frontier Safety: RSP & ASL Framework",
+      "guide_anchor": "safety",
+      "question": "Why does a model that can define theoretical virology terms and summarize publicly available textbook chapters remain classified at ASL-2 rather than triggering ASL-3?",
+      "options": [
+        {
+          "text": "It offers only theoretical knowledge without autonomous execution or uplift beyond search engines.",
+          "correct": true
+        },
+        {
+          "text": "Biology and chemistry topics are completely exempt from the Responsible Scaling Policy until ASL-4 triggers.",
+          "correct": false,
+          "why_wrong": "CBRN (Chemical, Biological, Radiological, Nuclear) weapons uplift is the primary capability trigger for ASL-3."
+        },
+        {
+          "text": "ASL-3 containment only applies to open-weight checkpoints that are downloadable by the general public.",
+          "correct": false,
+          "why_wrong": "ASL tiers govern Anthropic's proprietary frontier models, mandating strict API and weight-security controls."
+        },
+        {
+          "text": "Textbook summaries are processed exclusively inside Layer 1 Cowork VMs rather than the Direct Messages API.",
+          "correct": false,
+          "why_wrong": "ASL classification is a property of the model's capabilities across all surfaces, not restricted to Cowork."
+        }
+      ],
+      "explanation": "ASL-2 (Standard Frontier Baseline) covers models that can discuss dangerous domains theoretically but cannot execute catastrophic workflows autonomously or provide meaningful operational uplift beyond what threat actors could find via search engines.",
+      "key_takeaway": "ASL-2 applies when a model offers only theoretical knowledge without meaningful catastrophic uplift over search engines.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-18",
+      "section": "Frontier Safety: RSP & ASL Framework",
+      "guide_anchor": "safety",
+      "question": "When a frontier model is deployed under ASL-3 containment, what runtime deployment defense continuously inspects live input and output streams to block multi-turn CBRN uplift and universal jailbreaks?",
+      "options": [
+        {
+          "text": "Constitutional Classifiers — low-latency sentinel models filtering live I/O streams.",
+          "correct": true
+        },
+        {
+          "text": "Sparse Autoencoders — dictionary-learning networks that rewrite user prompts into base64 before inference.",
+          "correct": false,
+          "why_wrong": "SAEs are interpretability tools for decomposing internal activations, not real-time I/O stream classifiers."
+        },
+        {
+          "text": "Phase 1 SFT Self-Critique — forcing the model to run three offline fine-tuning epochs before emitting each token.",
+          "correct": false,
+          "why_wrong": "Phase 1 SFT happens during model training, whereas Constitutional Classifiers are low-latency runtime sentinels."
+        },
+        {
+          "text": "Cowork Virtual Machines — isolating every HTTP API call inside a local macOS desktop GUI container environment.",
+          "correct": false,
+          "why_wrong": "Cowork is a Layer 1 desktop workspace feature for end users, not an ASL-3 API stream safeguard."
+        }
+      ],
+      "explanation": "Under ASL-3, Deployment Defenses mandate low-latency Constitutional Classifiers—sentinel models that continuously inspect live input and output streams to intercept multi-turn CBRN synthesis and jailbreak attempts with minimal false-positive impact.",
+      "key_takeaway": "ASL-3 deployment defenses use real-time Constitutional Classifiers to filter input/output streams against CBRN uplift and jailbreaks.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-19",
+      "section": "Frontier Safety: RSP & ASL Framework",
+      "guide_anchor": "safety",
+      "question": "To defend against state-actor theft or insider exfiltration of frontier model weights, which two hardened Weight Security controls are mandated at ASL-3?",
+      "options": [
+        {
+          "text": "Two-Party Authorization (2PA) for sensitive access plus strict egress bandwidth throttling.",
+          "correct": true
+        },
+        {
+          "text": "Publicly publishing encrypted weight shards on GitHub and rotating customer API keys every thirty days.",
+          "correct": false,
+          "why_wrong": "Publishing weights would completely defeat ASL-3 containment, which exists to prevent weight exfiltration."
+        },
+        {
+          "text": "Replacing encrypted cloud storage with local developer laptops running Claude Desktop Cowork sandboxes.",
+          "correct": false,
+          "why_wrong": "Storing frontier weights on developer laptops violates ASL-3 hardened infrastructure containment."
+        },
+        {
+          "text": "Pruning 99% of model weights with the Stream Algorithm so stolen checkpoints cannot generate coherent text.",
+          "correct": false,
+          "why_wrong": "The Stream Algorithm prunes interpretability attribution graphs, not the deployed model's weight parameters."
+        }
+      ],
+      "explanation": "ASL-3 Hardened Weight Security mandates Two-Party Authorization (2PA)—requiring dual human approval for sensitive infrastructure actions—combined with strict egress bandwidth throttling so automated security systems can detect and sever weight exfiltration before multi-gigabyte theft completes.",
+      "key_takeaway": "ASL-3 weight security pairs Two-Party Authorization (2PA) with strict egress bandwidth throttling to stop weight theft.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-20",
+      "section": "Focused Glossary & Practice Quiz",
+      "guide_anchor": "glossary",
+      "question": "Which pair of glossary terms correctly distinguishes the training-time AI preference-scoring phase from the runtime ASL-3 input/output stream filter?",
+      "options": [
+        {
+          "text": "RLAIF scores candidate pairs via AI feedback in CAI Phase 2; Constitutional Classifiers filter live I/O at ASL-3.",
+          "correct": true
+        },
+        {
+          "text": "RLHF filters live I/O streams at ASL-3 runtime; Sparse Autoencoders score candidate response pairs during CAI Phase 2.",
+          "correct": false,
+          "why_wrong": "RLHF is human-rater training feedback, and SAEs are interpretability models; neither is an ASL-3 runtime stream filter."
+        },
+        {
+          "text": "Constitutional Classifiers generate Phase 1 SFT rewrites; Two-Party Authorization scores candidate pairs in Phase 2.",
+          "correct": false,
+          "why_wrong": "Constitutional Classifiers run at deployment time for ASL-3 safety, while 2PA is a dual-approval weight-security control."
+        },
+        {
+          "text": "Behavioral Vaccination filters live API responses at runtime; Holistic Weighting throttles network egress bandwidth.",
+          "correct": false,
+          "why_wrong": "Behavioral Vaccination is a fine-tuning steering intervention, and Holistic Weighting is a Constitutional value-resolution principle."
+        }
+      ],
+      "explanation": "RLAIF (Reinforcement Learning from AI Feedback) is Phase 2 of Constitutional AI training where an AI evaluator scores candidate outputs against the Constitution. Constitutional Classifiers are low-latency sentinel models deployed at runtime under ASL-3 to inspect streaming inputs and outputs for CBRN misuse.",
+      "key_takeaway": "RLAIF scores candidate responses during Phase 2 training; Constitutional Classifiers guard live I/O streams at ASL-3 runtime.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-21",
+      "section": "Focused Glossary & Practice Quiz",
+      "guide_anchor": "glossary",
+      "question": "An engineer reviewing the Anthropic glossary wants to match each interpretability term to its exact function. Which mapping is accurate?",
+      "options": [
+        {
+          "text": "SAE: dual human approval for weight access; Stream Algorithm: AI preference scoring; Persona Vectors: desktop GUI VM.",
+          "correct": false,
+          "why_wrong": "Dual approval is 2PA, AI preference scoring is RLAIF, and the desktop GUI VM is Cowork."
+        },
+        {
+          "text": "SAE: extracts monosemantic features; Stream Algorithm: prunes 97–99% of token links; Persona Vectors: trait directions.",
+          "correct": true
+        },
+        {
+          "text": "SAE: throttles network egress bandwidth; Stream Algorithm: streams SSE deltas to claude.ai; Persona Vectors: user profiles.",
+          "correct": false,
+          "why_wrong": "All three are mechanistic interpretability techniques operating on internal neural activations, not network or user-profile tools."
+        },
+        {
+          "text": "SAE: four-tier Constitutional priority order; Stream Algorithm: Phase 1 self-critique loop; Persona Vectors: ASL-3 classifiers.",
+          "correct": false,
+          "why_wrong": "This confuses interpretability methods with Constitutional AI priority tiers, Phase 1 SFT, and ASL-3 Constitutional Classifiers."
+        }
+      ],
+      "explanation": "In Anthropic's mechanistic interpretability stack, Sparse Autoencoders (SAEs) decompose polysemantic neural superposition into readable monosemantic features, the Stream Algorithm hierarchically prunes 97–99% of irrelevant token interactions for 100k+ context attribution, and Persona Vectors capture low-rank activation directions for behavioral drift detection and steering.",
+      "key_takeaway": "SAEs extract monosemantic features, the Stream Algorithm prunes 97–99% of token interactions, and Persona Vectors track behavioral traits.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-22",
+      "section": "Focused Glossary & Practice Quiz",
+      "guide_anchor": "glossary",
+      "question": "A chief risk officer asks how the Responsible Scaling Policy (RSP), AI Safety Levels (ASLs), and Two-Party Authorization (2PA) relate to one another. Which statement accurately connects all three?",
+      "options": [
+        {
+          "text": "The RSP defines capability-gated ASL tiers, and 2PA is an ASL-3 control requiring dual human approval for weight access.",
+          "correct": true
+        },
+        {
+          "text": "2PA is the overarching governance framework, ASL is a Phase 1 SFT dataset, and RSP is a Layer 1 desktop GUI application.",
+          "correct": false,
+          "why_wrong": "RSP is the governance policy, ASLs are the biosafety-inspired capability tiers, and 2PA is an ASL-3 weight-access safeguard."
+        },
+        {
+          "text": "ASLs replace Constitutional AI in Claude 4.6+, while RSP and 2PA are deprecated legacy Claude 2 sampling parameters.",
+          "correct": false,
+          "why_wrong": "RSP, ASLs, and 2PA are active frontier safety and security pillars that complement Constitutional AI."
+        },
+        {
+          "text": "RSP and ASL are cloud billing tiers on Amazon Bedrock, and 2PA is the two-factor login for claude.ai consumer accounts.",
+          "correct": false,
+          "why_wrong": "RSP and ASLs govern catastrophic AI safety risk, and 2PA secures critical frontier model weights and infrastructure."
+        }
+      ],
+      "explanation": "The Responsible Scaling Policy (RSP) is Anthropic's capability-gated governance framework; AI Safety Levels (ASLs) are the concrete containment tiers defined under the RSP (such as ASL-2 baseline and ASL-3 CBRN trigger); and Two-Party Authorization (2PA) is a specific ASL-3 weight-security control requiring dual human approval before accessing sensitive weights or training infrastructure.",
+      "key_takeaway": "The RSP defines capability-gated ASL tiers, and ASL-3 mandates Two-Party Authorization (2PA) to protect model weights.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-23",
+      "section": "Mechanistic Interpretability & Steering",
+      "guide_anchor": "interpretability",
+      "question": "In Anthropic's circuit-tracing study ('On the Biology of a Large Language Model'), researchers linked monosemantic SAE features into attribution graphs to inspect internal computation. What mechanism did they discover causes factual hallucinations on unfamiliar entities?",
+      "options": [
+        {
+          "text": "The model lacks any internal 'don't know' representation and guesses randomly whenever token probabilities drop below 0.5.",
+          "correct": false,
+          "why_wrong": "Attribution graphs showed the model actually has a default reluctance to speculate ('don't know' circuit) that gets actively inhibited during a hallucination."
+        },
+        {
+          "text": "Misfiring 'known-entity' circuits suppress the model's default 'don't know' refusal circuit.",
+          "correct": true
+        },
+        {
+          "text": "Cross-lingual translation circuits overwrite factual memory weights whenever a prompt is phrased in English.",
+          "correct": false,
+          "why_wrong": "Cross-lingual circuits form a shared universal 'language of thought' conceptual space; they do not overwrite factual memory to cause hallucinations."
+        },
+        {
+          "text": "Forward-planning poetry circuits force the final output tokens to rhyme with the user's question.",
+          "correct": false,
+          "why_wrong": "Forward-planning circuits select target rhyming words ahead of time when composing poetry, not when answering factual entity queries."
+        }
+      ],
+      "explanation": "Attribution graphs revealed four core findings: a shared cross-lingual universal 'language of thought', forward planning (choosing poetry rhymes before writing a line), unfaithful backward reasoning from wrong hints, and a default reluctance to speculate—where hallucinations happen because misfiring 'known-entity' circuits inhibit the default 'don't know' circuit.",
+      "key_takeaway": "Circuit tracing shows hallucinations occur when misfiring 'known-entity' circuits inhibit the model's default 'don't know' refusal circuit.",
+      "doc_links": [
+        {
+          "label": "Anthropic Transformer Circuits Research",
+          "url": "https://transformer-circuits.pub/"
+        },
+        {
+          "label": "Anthropic: Constitutional AI Research",
+          "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-24",
+      "section": "Frontier Safety: RSP & ASL Framework",
+      "guide_anchor": "safety",
+      "question": "First-generation ASL-3 Constitutional Classifiers faced reconstruction attacks (fragmenting harmful requests across code/turns) and output obfuscation attacks (aliases, metaphors, ciphers) while adding ~23.7% compute overhead. How do Next-Generation Constitutional Classifiers++ solve both challenges?",
+      "options": [
+        {
+          "text": "A two-stage cascade pairing a linear activation probe with an escalated two-sided I/O classifier (~1% overhead).",
+          "correct": true
+        },
+        {
+          "text": "Running three full-size Opus models in parallel on every single user token and blocking any non-JSON text responses.",
+          "correct": false,
+          "why_wrong": "Running three full Opus models per token would multiply compute overhead rather than reducing it to ~1% via a lightweight linear activation probe."
+        },
+        {
+          "text": "Replacing runtime stream classifiers entirely with offline Phase 1 SFT self-critique transcripts prior to deployment.",
+          "correct": false,
+          "why_wrong": "ASL-3 requires continuous runtime defense alongside training-time alignment; Next-Gen Classifiers++ upgrade the runtime architecture rather than removing it."
+        },
+        {
+          "text": "Throttling client network egress bandwidth to 10 kilobytes per second whenever a user submits a multi-turn conversation.",
+          "correct": false,
+          "why_wrong": "Egress bandwidth throttling is an ASL-3 weight-security control to prevent model checkpoint theft, not a jailbreak classifier."
+        }
+      ],
+      "explanation": "Next-Generation Constitutional Classifiers++ use a two-stage cascade: a lightweight linear activation probe screens internal model activations on 100% of traffic at negligible cost and escalates suspicious exchanges to a heavier two-sided conversation classifier that evaluates full input and output context together, cutting compute overhead to ~1% while stopping reconstruction and obfuscation jailbreaks.",
+      "key_takeaway": "Constitutional Classifiers++ pair a linear activation probe with an escalated two-sided I/O classifier to stop reconstruction/obfuscation attacks at ~1% overhead.",
+      "doc_links": [
+        {
+          "label": "Anthropic Responsible Scaling Policy",
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        }
+      ]
+    },
+    {
+      "id": "anthropic-q-25",
+      "section": "Core Philosophy & Ecosystem Map",
+      "guide_anchor": "philosophy",
+      "question": "An engineering team is deploying long-running autonomous workflows on Anthropic's hosted runtime (Claude Managed Agents) in Layer 2. Around which four core architectural primitives is Managed Agents structured?",
+      "options": [
+        {
+          "text": "Artifacts, Cowork VMs, Slack Connectors, and PowerPoint Add-ins running inside the claude.ai consumer web application.",
+          "correct": false,
+          "why_wrong": "Artifacts, Cowork, and Productivity Connectors belong to Layer 1 (End-User Entry Points), not the Layer 2 Managed Agents runtime."
+        },
+        {
+          "text": "Agent, Environment, Session, and Events (SSE-streamed messages, tool runs, and interrupts).",
+          "correct": true
+        },
+        {
+          "text": "Amazon Bedrock IAM roles, Google Vertex AI service accounts, Azure Foundry subscriptions, and egress bandwidth throttles.",
+          "correct": false,
+          "why_wrong": "Cloud IAM accounts belong to Layer 3 (Cloud Delivery Routes) and egress throttling is an ASL-3 weight-security control."
+        },
+        {
+          "text": "Sparse Autoencoders, Attribution Graphs, Persona Vectors, and Behavioral Vaccination steering hooks.",
+          "correct": false,
+          "why_wrong": "Those four components belong to Anthropic's mechanistic interpretability and activation-steering research stack, not Managed Agents."
+        }
+      ],
+      "explanation": "In Layer 2 of the Claude Ecosystem Map, Claude Managed Agents provides a hosted cloud harness built around four core primitives: Agent (the model, system prompt, tools, MCP servers, and skills), Environment (the cloud or self-hosted container sandbox), Session (a stateful running execution instance), and Events (SSE-streamed messages, tool executions, and mid-run steering interrupts).",
+      "key_takeaway": "Claude Managed Agents is built around four core primitives: Agent, Environment, Session, and Events.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Choosing the Right Claude Model",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+        }
+      ]
+    }
+  ]
+}
