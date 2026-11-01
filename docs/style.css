@@ -2887,55 +2887,6 @@ footer a:hover {
     margin: -4px 0 14px;
 }
 
-.card-certs {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: -2px 0 16px;
-    padding: 0;
-}
-
-.card-cert-tag {
-    display: inline-flex;
-    align-items: center;
-    max-width: 100%;
-    font-family: var(--font-sans);
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    line-height: 1.3;
-    padding: 3px 10px;
-    border-radius: 100px;
-    border: 1px solid var(--card-border);
-}
-
-.card-cert-tag.google-cert.cert-core {
-    color: var(--mint);
-    background: var(--mint-dim);
-    border-color: rgba(0, 232, 160, 0.42);
-}
-
-.card-cert-tag.google-cert.cert-supporting {
-    color: var(--mint);
-    background: rgba(0, 232, 160, 0.04);
-    border-style: dashed;
-    border-color: rgba(0, 232, 160, 0.36);
-}
-
-.card-cert-tag.anthropic-cert.cert-core {
-    color: #FF8E8E;
-    background: rgba(255, 107, 107, 0.12);
-    border-color: rgba(255, 107, 107, 0.45);
-}
-
-.card-cert-tag.anthropic-cert.cert-supporting {
-    color: #FF8E8E;
-    background: rgba(255, 107, 107, 0.04);
-    border-style: dashed;
-    border-color: rgba(255, 107, 107, 0.38);
-}
-
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
