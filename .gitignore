@@ -28,25 +28,3 @@ htmlcov/
 *.fdb_latexmk
 *.fls
 
-# Temporary/Generated files
-template.html
-updated_test.html
-*.pptx
-patch*.py
-interactive_rewrite.py
-verify_content.py
-
-# Agent artifacts
-.agents/
-
-# Package management (if not intended for repo)
-package.json
-package-lock.json
-
-# Archived study guide versions & local build/verification tooling
-foundation/archive/
-docs/*-print.html
-scripts/
-QUIZ_SPEC.md
-render_pdf.js
-
