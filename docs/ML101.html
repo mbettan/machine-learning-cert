@@ -68,8 +68,7 @@
                   "keywords": "Machine Learning 101, ML101, Supervised Learning, Unsupervised Learning, Deep Learning, Neural Networks, Transformers, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ML101.html",
                   "inLanguage": "en",
-                  "version": "2.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-27",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Beginner",
                   "author": {
@@ -108,6 +107,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/ML101.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -135,10 +138,6 @@
                         <span>Updated: <strong>April 2026</strong></span>
                     </div>
                     <div class="cover-meta-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.0</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
                         <i class="fas fa-tag"></i>
                         <span>Category: <strong>Foundation</strong></span>
                     </div>
@@ -151,6 +150,10 @@
                         <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=ml101" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: ML 101 Practice Quiz →</span>
+                </a>
             </div>
         </section>
 
@@ -322,7 +325,7 @@
             </div>
             <div class="concept-card accent-purple">
                 <h3>Unsupervised & Reinforcement</h3>
-                <p><strong>Unsupervised Learning:</strong> detect known patterns w/o examples.</p>
+                <p><strong>Unsupervised Learning:</strong> detect unknown patterns w/o labeled examples.</p>
                 <ul>
                     <li><strong>Clustering model:</strong> identifying similarities in groups.</li>
                     <li><strong>Anomaly Detection:</strong> identifying abnormalities in data.</li>
@@ -494,7 +497,7 @@
             <h3>Model Monitoring</h3>
             <ul>
                 <li><strong>Metrics to monitor:</strong> traffic patterns, error rates, latency, resource utilization with Cloud Monitoring alerting.</li>
-                <li><strong>Data Skew:</strong> drift in the data over time → refresh models.</li>
+                <li><strong>Data Drift:</strong> the input data changes over time → refresh models. (Not to be confused with <em>training-serving skew</em>, a mismatch between training and serving data.)</li>
                 <li>Watch for changes in dependencies upstream in the pipeline.</li>
                 <li>Assess model prediction quality.</li>
                 <li>Test for unfairness (bias unintentionally).</li>
@@ -634,6 +637,24 @@
 
         
         <!-- ═══════════════════════════════════════
+             PRACTICE QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Practice</h3>
+            <p>Drill scenario questions on problem types, data leakage, over/underfitting, evaluation metrics, serving modes, and neural network basics.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Back to the Hub</span>
+                </a>
+                <a href="quiz.html?topic=ml101" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Take the practice quiz: ML 101 →</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
              SELF ASSESSMENT QUESTIONS
              ═══════════════════════════════════════ -->
         <div class="quiz-block">
@@ -669,6 +690,10 @@
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>

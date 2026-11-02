@@ -1,0 +1,982 @@
+{
+  "topic_id": "ml101",
+  "title": "ML 101",
+  "guide_url": "ML101.html",
+  "questions": [
+    {
+      "id": "ml101-q-01",
+      "section": "Definitions & Scope",
+      "guide_anchor": "definitions",
+      "question": "A support team wants to automatically categorize thousands of customer photos and voice notes. Which approach does the guide describe as working even when the data is unstructured, like images and speech?",
+      "options": [
+        {
+          "text": "Deep Learning, a neural-network-based subtype of ML that handles unstructured data",
+          "correct": true
+        },
+        {
+          "text": "A hand-written rules engine, since AI is defined as computers that think and act like humans",
+          "correct": false,
+          "why_wrong": "The guide contrasts ML with rule-based approaches: ML solves problems from data examples, not rules, and rules scale poorly to raw images and audio."
+        },
+        {
+          "text": "Matrix factorization, which decomposes images and audio into matrices",
+          "correct": false,
+          "why_wrong": "The guide lists matrix factorization (matrix decomposition) as a recommender-system technique (e.g., Netflix), not a way to perceive unstructured media."
+        },
+        {
+          "text": "Anomaly detection, because unlabeled media must always be screened for abnormalities first",
+          "correct": false,
+          "why_wrong": "Anomaly detection identifies abnormalities in data; it does not categorize photos and voice notes into classes."
+        }
+      ],
+      "explanation": "The guide defines Deep Learning as the ML subtype that works even when data is unstructured (images, speech, video, natural language text) and notes it is based on neural networks.",
+      "key_takeaway": "Unstructured data (images, speech, video, text) is the home turf of Deep Learning, which is built on neural networks.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-02",
+      "section": "Standard Workflow",
+      "guide_anchor": "workflow",
+      "question": "A team has just reviewed its evaluation metrics and now wants to change the number of layers and the learning rate before running the model on test data. Which step of the 10-step workflow are they in?",
+      "options": [
+        {
+          "text": "Model Troubleshooting, which is where all parameter changes happen",
+          "correct": false,
+          "why_wrong": "Troubleshooting addresses performance problems; the guide reserves adjusting parameters not learned from data for the Tuning step."
+        },
+        {
+          "text": "Model Tuning: adjusting parameters that are not learned from data, like layers or learning rate",
+          "correct": true
+        },
+        {
+          "text": "Data Preparation, because layer counts and learning rates must be formatted before import",
+          "correct": false,
+          "why_wrong": "Data Preparation is about formatting the data itself, not model hyperparameters like layers or learning rate."
+        },
+        {
+          "text": "Model Monitoring, the step that keeps the model accurate over time",
+          "correct": false,
+          "why_wrong": "Monitoring happens after serving in production; this team has not even reached testing yet."
+        }
+      ],
+      "explanation": "In the guide's sequence, Evaluation (review metrics) is followed by Tuning (adjust parameters not learned from data), then Testing (try the model on test data). Layers and learning rate are hyperparameters.",
+      "key_takeaway": "Tuning = adjusting hyperparameters (e.g., # layers, learning rate) between Evaluation and Testing.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-03",
+      "section": "Standard Workflow",
+      "guide_anchor": "workflow",
+      "question": "An eager team starts pulling every table from the data warehouse on day one, before anyone has agreed what outcome the model should achieve. Which workflow step did they skip?",
+      "options": [
+        {
+          "text": "Model Serving, since the deployment target dictates which tables to pull",
+          "correct": false,
+          "why_wrong": "Serving is step 9 of 10; it does not come before data work and does not define the business outcome."
+        },
+        {
+          "text": "Data Preparation, which should always precede Data Extraction in the guide's workflow",
+          "correct": false,
+          "why_wrong": "In the guide, Data Extraction comes before Data Preparation; neither one defines the business goal."
+        },
+        {
+          "text": "Problem Definition: agreeing on the business problem and the outcome to achieve",
+          "correct": true
+        },
+        {
+          "text": "Model Testing, which validates the data needs before extraction begins",
+          "correct": false,
+          "why_wrong": "Testing tries a trained model on test data late in the lifecycle; it does not set requirements for extraction."
+        }
+      ],
+      "explanation": "Step 1 is Problem Definition: what business problem are you solving and what outcome do you want? Data Extraction (step 2) then determines the data needed based on that use case.",
+      "key_takeaway": "Always start with Problem Definition; data extraction is driven by the use case it defines.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-04",
+      "section": "ML Problem Types",
+      "guide_anchor": "problem-types",
+      "question": "A bank wants a model that labels each credit card transaction as either fraudulent or legitimate. Which ML problem type fits best?",
+      "options": [
+        {
+          "text": "Regression, because the model outputs a continuous fraud amount for each transaction",
+          "correct": false,
+          "why_wrong": "Regression predicts a continuous value; the bank wants one of two classes (fraud or not)."
+        },
+        {
+          "text": "Clustering, grouping similar transactions without any labeled examples",
+          "correct": false,
+          "why_wrong": "Clustering is unsupervised and finds groups; it does not assign a yes/no fraud label learned from examples."
+        },
+        {
+          "text": "Multi-class classification, since fraud has many possible subtypes to choose from",
+          "correct": false,
+          "why_wrong": "The target here has exactly two outcomes; multi-class is for three or more discrete classes."
+        },
+        {
+          "text": "Binary classification, which predicts one of exactly two classes (fraud or not)",
+          "correct": true
+        }
+      ],
+      "explanation": "The guide's own example of a binary classification model is credit card transactions (fraud or not): a yes/no question with exactly two classes.",
+      "key_takeaway": "Two possible outcomes (yes/no) = binary classification; three or more discrete classes = multi-class.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-05",
+      "section": "ML Problem Types",
+      "guide_anchor": "problem-types",
+      "question": "A retailer wants to forecast how much each customer will spend over the next month, in dollars. Which model type should the team choose?",
+      "options": [
+        {
+          "text": "A regression model, because the target is a continuous value rather than a class",
+          "correct": true
+        },
+        {
+          "text": "A multi-class classifier that assigns each customer to a persona segment",
+          "correct": false,
+          "why_wrong": "Segmenting customers into personas is the guide's multi-class example; a dollar forecast is a continuous value."
+        },
+        {
+          "text": "A binary classifier that predicts whether the customer will spend or not spend",
+          "correct": false,
+          "why_wrong": "A yes/no output loses the amount; the retailer needs a continuous spend figure."
+        },
+        {
+          "text": "Reinforcement learning, exploring spending scenarios through rewards and penalties",
+          "correct": false,
+          "why_wrong": "Reinforcement learning learns from an environment via exploration/exploitation (e.g., chess, maze), not from historical spend labels."
+        }
+      ],
+      "explanation": "Regression predicts a continuous value; the guide's example is exactly 'forecast customer spending over the next month'.",
+      "key_takeaway": "Predicting a number on a continuous scale (spend, price, demand) is a regression problem.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-06",
+      "section": "ML Problem Types",
+      "guide_anchor": "problem-types",
+      "question": "A game studio wants an agent that learns to escape a maze by trying moves and receiving positive or negative feedback, with no labeled dataset. Which learning paradigm matches?",
+      "options": [
+        {
+          "text": "Supervised learning with matrix factorization over maze layouts",
+          "correct": false,
+          "why_wrong": "The guide lists matrix factorization as a recommender-system technique; there are no labeled examples here, and the agent must learn from feedback."
+        },
+        {
+          "text": "Unsupervised anomaly detection that flags unusual moves in the maze",
+          "correct": false,
+          "why_wrong": "Anomaly detection finds abnormalities in data; it does not learn a policy to complete a task."
+        },
+        {
+          "text": "Reinforcement learning, which learns from the environment via exploration and exploitation",
+          "correct": true
+        },
+        {
+          "text": "Binary classification that labels each move as correct or incorrect from a historical log",
+          "correct": false,
+          "why_wrong": "There is no historical labeled log; the agent learns by interacting with the environment instead."
+        }
+      ],
+      "explanation": "The guide describes reinforcement learning as learning from the environment via exploration and exploitation, using positive/negative reinforcement to complete a task, with chess and mazes as examples.",
+      "key_takeaway": "Learning by trial, feedback and rewards in an environment (chess, maze) = reinforcement learning.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-07",
+      "section": "ML Problem Types",
+      "guide_anchor": "problem-types",
+      "question": "A marketing team has customer purchase data but no labels or predefined segments. They want the data itself to reveal groups of similar customers. What should they use?",
+      "options": [
+        {
+          "text": "Multi-class classification, since the guide's example is segmenting customers into personas",
+          "correct": false,
+          "why_wrong": "Multi-class classification is supervised: it needs labeled examples of each persona, which this team does not have."
+        },
+        {
+          "text": "A clustering model, an unsupervised approach that identifies similarities in groups",
+          "correct": true
+        },
+        {
+          "text": "Regression, predicting a continuous similarity score for each customer",
+          "correct": false,
+          "why_wrong": "Regression needs a continuous target label to learn from; the goal here is discovering groups."
+        },
+        {
+          "text": "Online prediction, so groups update with every API request in real time",
+          "correct": false,
+          "why_wrong": "Online prediction is a serving mode, not an ML problem type for discovering structure."
+        }
+      ],
+      "explanation": "Without labeled examples, this is unsupervised learning. The guide lists clustering (identifying similarities in groups) and anomaly detection as unsupervised models.",
+      "key_takeaway": "No labels + find natural groups = clustering (unsupervised). Known persona labels = multi-class (supervised).",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-08",
+      "section": "Data Extraction & Preparation",
+      "guide_anchor": "data-ops",
+      "question": "A churn model scores brilliantly on the test set but performs poorly once deployed. The team finds that one input, 'cancellation_ticket_opened', is highly correlated with the target and is only filled in after a customer churns. What is the problem?",
+      "options": [
+        {
+          "text": "Underfitting: the model is too simple to capture churn patterns",
+          "correct": false,
+          "why_wrong": "Underfitting shows poor performance on both training and test data; here test performance was excellent."
+        },
+        {
+          "text": "Data leakage: a feature leaks target information that is unavailable at serving time",
+          "correct": true
+        },
+        {
+          "text": "Data drift: customer behavior changed over time, so the model simply needs a refresh",
+          "correct": false,
+          "why_wrong": "Drift is gradual change in data over time; the root cause here is a feature carrying target information that is unavailable at serving."
+        },
+        {
+          "text": "High bias caused by a missing relationship between features and labels",
+          "correct": false,
+          "why_wrong": "The model found a very strong (leaky) relationship; the issue is that it cannot exist at prediction time."
+        }
+      ],
+      "explanation": "The guide defines data leakage as using input features during training that leak information about the target and are unavailable when the model is served. It is detected by a feature highly correlated with the target, and shows as strong test performance but weak production performance.",
+      "key_takeaway": "Suspiciously great test scores + a feature highly correlated with the target = check for data leakage.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Feature Preprocessing",
+          "url": "https://scikit-learn.org/stable/modules/preprocessing.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-09",
+      "section": "Data Extraction & Preparation",
+      "guide_anchor": "data-ops",
+      "question": "Features are normalized by a batch script during training, but the production app recomputes them with different code at request time, and predictions degrade. Which pitfall does the guide name for this?",
+      "options": [
+        {
+          "text": "Overfitting, because the model memorized the batch script's output",
+          "correct": false,
+          "why_wrong": "Overfitting is good training but poor test performance due to poor generalization, not a training-versus-inference processing mismatch."
+        },
+        {
+          "text": "Class imbalance, because production traffic contains different class proportions",
+          "correct": false,
+          "why_wrong": "Nothing in the scenario concerns class proportions; the issue is different processing code at training and inference."
+        },
+        {
+          "text": "Prediction-serving skew: a mismatch between training-time and inference-time processing",
+          "correct": true
+        },
+        {
+          "text": "Insufficient variation, because the dataset did not capture the diversity of the problem space",
+          "correct": false,
+          "why_wrong": "Capturing variation concerns dataset diversity; the data is fine but is processed differently at serving time."
+        }
+      ],
+      "explanation": "The guide says to prevent prediction-serving skew: avoid a mismatch between the data or processing used during training and what is available at prediction (inference) time. The glossary calls this training-serving skew.",
+      "key_takeaway": "Use the same data and processing at training and inference to avoid prediction (training)-serving skew.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Feature Preprocessing",
+          "url": "https://scikit-learn.org/stable/modules/preprocessing.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-10",
+      "section": "Data Extraction & Preparation",
+      "guide_anchor": "data-ops",
+      "question": "An image classifier works well on common products but fails on rare ones that were barely present in training. Which data extraction principle from the guide addresses this most directly?",
+      "options": [
+        {
+          "text": "Capture variation, so the dataset reflects the diversity of the full problem space",
+          "correct": true
+        },
+        {
+          "text": "Remove null values and normalize every feature to between -1 and 1",
+          "correct": false,
+          "why_wrong": "That is feature engineering and cleanup; it improves data quality but does not add the missing rare examples."
+        },
+        {
+          "text": "Select fewer features so the model focuses on the most common products",
+          "correct": false,
+          "why_wrong": "Narrowing features toward common products makes rare-case generalization worse, not better."
+        },
+        {
+          "text": "Skip testing on new data, because rare products will never appear often enough to matter in production",
+          "correct": false,
+          "why_wrong": "The guide encourages testing with new data; ignoring rare cases does not fix poor generalization."
+        }
+      ],
+      "explanation": "The guide says the dataset should capture the diversity of the problem space: the more diverse examples a model sees in training, the more readily it can generalize to new or less common examples.",
+      "key_takeaway": "Diverse training examples help the model generalize to new and less common cases.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Feature Preprocessing",
+          "url": "https://scikit-learn.org/stable/modules/preprocessing.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-11",
+      "section": "Model Troubleshooting",
+      "guide_anchor": "troubleshooting",
+      "question": "A model reaches 99% accuracy on training data but only 71% on the test set. Which remediation is consistent with the guide?",
+      "options": [
+        {
+          "text": "Increase model complexity and training time so it learns more patterns",
+          "correct": false,
+          "why_wrong": "Those are the guide's fixes for underfitting; they would make overfitting worse."
+        },
+        {
+          "text": "Add more redundant features so the model has extra signals to rely on",
+          "correct": false,
+          "why_wrong": "The guide lists too many redundant features as a cause of overfitting, not a cure."
+        },
+        {
+          "text": "Evaluate on the training set instead, since that is where the model performs as intended",
+          "correct": false,
+          "why_wrong": "The guide explicitly says never test with training data; it would hide the generalization problem."
+        },
+        {
+          "text": "Apply regularization such as dropout, early stopping, or L1/L2 penalties",
+          "correct": true
+        }
+      ],
+      "explanation": "Good training but poor test performance is overfitting. The guide lists regularization, early stopping, L1/L2, dropout, max-norm regularization and data augmentation as ways to combat it.",
+      "key_takeaway": "Overfitting (great train, poor test) → regularize: dropout, early stopping, L1/L2, max-norm, data augmentation.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-12",
+      "section": "Model Troubleshooting",
+      "guide_anchor": "troubleshooting",
+      "question": "A simple model performs poorly on both the training data and the test data. What does the guide recommend?",
+      "options": [
+        {
+          "text": "Add dropout and L1 regularization to limit captured information",
+          "correct": false,
+          "why_wrong": "Regularization combats overfitting; limiting information further would worsen an already underfit model."
+        },
+        {
+          "text": "Increase the model's complexity and its training time",
+          "correct": true
+        },
+        {
+          "text": "Stop training earlier, as soon as the validation loss starts to rise at all",
+          "correct": false,
+          "why_wrong": "Early stopping is an overfitting remedy; an underfit model needs more learning, not less."
+        },
+        {
+          "text": "Deploy it and rely on monitoring to catch the errors",
+          "correct": false,
+          "why_wrong": "Monitoring catches drift in production; it does not fix a model that never learned the training data."
+        }
+      ],
+      "explanation": "Poor performance on both training and test sets is underfitting. The guide's remedies are to increase the model's complexity and increase the training time.",
+      "key_takeaway": "Underfitting (poor train and test) → more model complexity and more training time.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-13",
+      "section": "Model Troubleshooting",
+      "guide_anchor": "troubleshooting",
+      "question": "Each time the team retrains on a slightly different sample of the same training data, the model's predictions change substantially. Which concept describes this, and what is the target state?",
+      "options": [
+        {
+          "text": "High bias; the goal is high bias with low variance for stability",
+          "correct": false,
+          "why_wrong": "Bias is a missing feature-label relationship, and the guide's ideal is low bias and low variance."
+        },
+        {
+          "text": "Prediction bias; the goal is to match the average prediction to the average label",
+          "correct": false,
+          "why_wrong": "Prediction bias compares average predictions to average labels; it is not sensitivity to small training fluctuations."
+        },
+        {
+          "text": "High variance; the guide's ideal state is low bias and low variance",
+          "correct": true
+        },
+        {
+          "text": "Data drift; the goal is to refresh the model every time upstream data changes",
+          "correct": false,
+          "why_wrong": "Drift is gradual change in production data over time; this is instability caused by small changes to the training sample."
+        }
+      ],
+      "explanation": "The guide defines variance as sensitivity to small fluctuations in the training dataset, producing differences in sets of predictions. For both bias and variance, the ideal state is low bias, low variance.",
+      "key_takeaway": "Variance = sensitivity to small training-data fluctuations. Aim for low bias AND low variance.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-14",
+      "section": "Model Evaluation",
+      "guide_anchor": "evaluation",
+      "question": "A fraud team's top priority is catching as many truly fraudulent transactions as possible. Which metric measures the share of actual positives the model identifies?",
+      "options": [
+        {
+          "text": "Precision, calculated as TP / (TP + FP)",
+          "correct": false,
+          "why_wrong": "Precision measures how many predicted positives are correct; it ignores the fraud cases the model missed (FN)."
+        },
+        {
+          "text": "Accuracy, calculated as (TP + TN) divided by the total population",
+          "correct": false,
+          "why_wrong": "Accuracy mixes true positives and true negatives, so it can look high while many fraud cases are missed."
+        },
+        {
+          "text": "RMSE, the root mean squared error of the fraud score",
+          "correct": false,
+          "why_wrong": "RMSE is listed as a regression metric, not a classification metric for counting caught positives."
+        },
+        {
+          "text": "Recall, calculated as TP / (TP + FN)",
+          "correct": true
+        }
+      ],
+      "explanation": "Recall is the percentage of actual positive labels identified: TP / (TP + FN). Maximizing it reduces missed fraud (false negatives).",
+      "key_takeaway": "Recall = TP / (TP + FN): of all real positives, how many did we catch?",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-15",
+      "section": "Model Evaluation",
+      "guide_anchor": "evaluation",
+      "question": "A product owner wants one classification metric that balances precision and recall instead of tracking them separately. Which metric fits?",
+      "options": [
+        {
+          "text": "F1 score, defined as 2 × (Precision × Recall) / (Precision + Recall)",
+          "correct": true
+        },
+        {
+          "text": "MAE, because averaging absolute errors combines both kinds of mistake into one number",
+          "correct": false,
+          "why_wrong": "MAE is listed among regression metrics; it is not the classification metric that combines precision and recall."
+        },
+        {
+          "text": "Accuracy, because it already weights false positives and false negatives equally",
+          "correct": false,
+          "why_wrong": "Accuracy is (TP + TN) / total; it is not defined in terms of precision and recall."
+        },
+        {
+          "text": "Log loss, since it is literally the average of precision and recall",
+          "correct": false,
+          "why_wrong": "Log loss is a separate classification metric; the formula combining precision and recall is the F1 score."
+        }
+      ],
+      "explanation": "The guide gives the F1 score as 2 × (Precision × Recall) / (Precision + Recall), a single number balancing the two.",
+      "key_takeaway": "F1 = 2PR / (P + R): one number that balances precision and recall.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-16",
+      "section": "Model Evaluation",
+      "guide_anchor": "evaluation",
+      "question": "Training on a very large dataset with batch gradient descent is too slow. The team wants a compromise between processing everything at once and a fully random one-at-a-time process. What does the guide point to?",
+      "options": [
+        {
+          "text": "Keep batch gradient descent and add more epochs",
+          "correct": false,
+          "why_wrong": "More epochs of batch gradient descent make training even slower; the guide flags batch GD as slow on large datasets."
+        },
+        {
+          "text": "Replace gradient descent with backpropagation, which does not need gradients at all",
+          "correct": false,
+          "why_wrong": "Backpropagation is the efficient algorithm that calculates the gradients gradient descent uses; it is not a gradient-free replacement."
+        },
+        {
+          "text": "Mini-batch gradient descent, the guide's mixed mode between batch and stochastic",
+          "correct": true
+        },
+        {
+          "text": "Raise the learning rate as high as possible so the loss converges in fewer steps",
+          "correct": false,
+          "why_wrong": "The glossary warns that too high a learning rate risks non-convergence."
+        }
+      ],
+      "explanation": "The guide summarizes gradient descent variants: batch (slow on large datasets), stochastic (random process) and mini-batch (mixed mode between the two).",
+      "key_takeaway": "Batch GD is slow on big data, SGD is random, mini-batch GD is the mixed mode in between.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-17",
+      "section": "Model Evaluation",
+      "guide_anchor": "evaluation",
+      "question": "A data scientist reports 98% accuracy measured on the same records the model was trained on and asks to deploy. What should the reviewer insist on first?",
+      "options": [
+        {
+          "text": "Retrain on the same records with more epochs to push the score past 99%",
+          "correct": false,
+          "why_wrong": "More training on the same records does not reveal how the model performs on unseen data."
+        },
+        {
+          "text": "Deploy now and use production monitoring as the first real test",
+          "correct": false,
+          "why_wrong": "Testing should happen before deployment; monitoring keeps an already-validated model accurate."
+        },
+        {
+          "text": "Report precision instead, because accuracy can never be trusted for any classification model",
+          "correct": false,
+          "why_wrong": "The problem is the evaluation data, not the metric; precision on training data is equally misleading."
+        },
+        {
+          "text": "Evaluate on a held-out test slice and with new data, never on the training data itself",
+          "correct": true
+        }
+      ],
+      "explanation": "Evaluation metrics are based on how the model performs on a slice of the dataset (the test set), and the guide states: never test with training data. Testing with new data is also recommended.",
+      "key_takeaway": "Never test with training data: evaluate on a held-out test set and with new data.",
+      "doc_links": [
+        {
+          "label": "Scikit-Learn Model Evaluation",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-18",
+      "section": "Model Serving & Monitoring",
+      "guide_anchor": "serving",
+      "question": "A checkout page must show a fraud score for each payment within milliseconds, before the order is confirmed. Which serving mode fits?",
+      "options": [
+        {
+          "text": "Batch prediction, waiting until all requests are processed before returning values",
+          "correct": false,
+          "why_wrong": "Batch prediction is asynchronous and returns results only after processing all requests; checkout cannot wait for that."
+        },
+        {
+          "text": "Online prediction, which is synchronous (real-time) and handles one request per API call",
+          "correct": true
+        },
+        {
+          "text": "A nightly scoring job that writes yesterday's fraud scores to a table",
+          "correct": false,
+          "why_wrong": "A nightly job is batch prediction; it cannot score a payment that is happening right now."
+        },
+        {
+          "text": "Monitoring dashboards in Cloud Monitoring that alert analysts when fraud rates rise",
+          "correct": false,
+          "why_wrong": "Monitoring tracks a deployed model's health; it does not serve per-request predictions."
+        }
+      ],
+      "explanation": "The guide says online prediction is synchronous (real-time), quickly returns a prediction, accepts one request per API call, and suits apps that depend on a quick prediction turnaround. Batch prediction is asynchronous and suits many requests at once.",
+      "key_takeaway": "Real-time, per-request answers → online prediction. Many requests at once, results later → batch prediction.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-19",
+      "section": "Model Serving & Monitoring",
+      "guide_anchor": "serving",
+      "question": "A demand-forecasting model that launched accurately has become steadily less accurate over a year as customer behavior shifted. What does the guide's monitoring section recommend?",
+      "options": [
+        {
+          "text": "Treat it as data drift (the input data changing over time) and refresh the model",
+          "correct": true
+        },
+        {
+          "text": "Add dropout layers, because declining accuracy over time is always caused by overfitting",
+          "correct": false,
+          "why_wrong": "The model was accurate at launch; gradual decay as data changes is drift, which the guide addresses by refreshing models."
+        },
+        {
+          "text": "Switch from online to batch prediction to slow down the decline",
+          "correct": false,
+          "why_wrong": "The serving mode does not fix the gap between old training data and new real-world data."
+        },
+        {
+          "text": "Lower the score threshold so the confusion matrix looks healthier again",
+          "correct": false,
+          "why_wrong": "Moving thresholds hides symptoms; the model still reflects outdated patterns."
+        }
+      ],
+      "explanation": "Under model monitoring, the guide lists data drift (the input data changing over time) with the remedy 'refresh models', and keeps 'skew' for training-serving mismatches. The guide also lists tracking traffic, errors, latency and resource use, watching upstream dependencies, assessing prediction quality and testing for unfairness.",
+      "key_takeaway": "Data drifts over time; monitor prediction quality and refresh models when drift appears.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-20",
+      "section": "User Personas",
+      "guide_anchor": "personas",
+      "question": "A company is staffing an ML initiative. Which persona's focus, per the guide, is getting models into production?",
+      "options": [
+        {
+          "text": "Data Scientist, whose focus is building models that work",
+          "correct": false,
+          "why_wrong": "The guide frames the Data Scientist's goal as 'models that work', not running them in production."
+        },
+        {
+          "text": "Data Engineer, whose focus is getting clean, useful data to every team",
+          "correct": false,
+          "why_wrong": "The Data Engineer's story is 'get clean and useful data', not productionizing models."
+        },
+        {
+          "text": "ML Engineer, whose focus is getting models into production",
+          "correct": true
+        },
+        {
+          "text": "ML Developer, whose focus is building intelligent applications",
+          "correct": false,
+          "why_wrong": "The ML Developer builds intelligent applications on top of models; 'models in production' belongs to the ML Engineer."
+        }
+      ],
+      "explanation": "The guide's persona map: Product Manager (insights and objectives), Data Analyst (query and analyze), Data Engineer (clean, useful data), Data Scientist (models that work), ML Developer (intelligent applications), ML Engineer (models in production). MLOps is 'DevOps' for ML.",
+      "key_takeaway": "ML Engineer = models in production; Data Scientist = models that work; Data Engineer = clean data.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Models Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/overview"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-21",
+      "section": "Neural Networks",
+      "guide_anchor": "neural-networks",
+      "question": "A recommendation team needs a network that both memorizes specific feature combinations and generalizes to unseen ones. Which architecture does the guide recommend?",
+      "options": [
+        {
+          "text": "A wide network alone, because many features give the best generalization",
+          "correct": false,
+          "why_wrong": "The guide associates wide networks (many features) with memorization, not generalization."
+        },
+        {
+          "text": "A deep network alone, since many hidden layers handle memorization as well",
+          "correct": false,
+          "why_wrong": "Deep networks (many hidden layers) are associated with generalization; memorization comes from the wide part."
+        },
+        {
+          "text": "A recurrent network, because previous recommendations feed into the next run",
+          "correct": false,
+          "why_wrong": "RNNs target sequential data; the guide names deep-and-wide as the fit for recommendation engines."
+        },
+        {
+          "text": "A deep and wide network, combining generalization with memorization",
+          "correct": true
+        }
+      ],
+      "explanation": "The guide says deep networks give generalization (many hidden layers), wide networks give memorization (many features), and deep-and-wide networks combine both and are a good fit for recommendation engines.",
+      "key_takeaway": "Deep = generalization, wide = memorization, deep and wide = both (good for recommenders).",
+      "doc_links": [
+        {
+          "label": "PyTorch Neural Networks Guide",
+          "url": "https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-22",
+      "section": "Neural Networks",
+      "guide_anchor": "neural-networks",
+      "question": "An IoT team models sensor readings where each reading depends on the ones before it. Which network type is optimized for this kind of data?",
+      "options": [
+        {
+          "text": "A recurrent neural network (RNN), optimized for sequential data where previous runs feed the next",
+          "correct": true
+        },
+        {
+          "text": "A feedforward network, where information moves strictly forward from input to output",
+          "correct": false,
+          "why_wrong": "FFNNs have no recursive connections, so earlier steps do not feed into later ones."
+        },
+        {
+          "text": "A wide network, which memorizes every individual sensor reading as its own feature",
+          "correct": false,
+          "why_wrong": "Wide networks emphasize memorization through many features, not sequential dependencies."
+        },
+        {
+          "text": "A matrix factorization model, which decomposes the readings into a matrix",
+          "correct": false,
+          "why_wrong": "Matrix factorization is a recommender technique, not a network for sequential data."
+        }
+      ],
+      "explanation": "The guide describes RNNs as optimized for sequential data, where previous runs feed into the next, while FFNNs move information strictly forward without recursive connections.",
+      "key_takeaway": "Sequential data where earlier steps matter → RNN; strictly forward flow → FFNN.",
+      "doc_links": [
+        {
+          "label": "PyTorch Neural Networks Guide",
+          "url": "https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html"
+        },
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-23",
+      "section": "Glossary",
+      "guide_anchor": "glossary",
+      "question": "A model has hundreds of features, many probably useless. The team wants a regularization method that drives the least useful feature weights to zero. Which one?",
+      "options": [
+        {
+          "text": "L2 Ridge, which penalizes squared weights and keeps them roughly equal in size",
+          "correct": false,
+          "why_wrong": "L2 keeps weights approximately equal in size; it does not push useless weights all the way to zero."
+        },
+        {
+          "text": "L1 Lasso, which penalizes the absolute values of the weights",
+          "correct": true
+        },
+        {
+          "text": "Max-norm regularization, which limits the absolute magnitude of network weights",
+          "correct": false,
+          "why_wrong": "Max-norm caps weight magnitude; the guide credits L1 with driving the least useful features to 0."
+        },
+        {
+          "text": "Data augmentation, transforming existing examples to artificially boost diversity",
+          "correct": false,
+          "why_wrong": "Data augmentation adds training diversity; it does not zero out feature weights."
+        }
+      ],
+      "explanation": "The glossary describes L1 (Lasso) as penalizing absolute weight values and driving the least useful features to 0, whereas L2 (Ridge) penalizes squared weights and keeps them approximately equal.",
+      "key_takeaway": "L1 (Lasso) zeros out useless features; L2 (Ridge) shrinks weights to similar sizes.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-24",
+      "section": "Glossary",
+      "guide_anchor": "glossary",
+      "question": "A team repeatedly checks the test set while adjusting hyperparameters, then reports that same test score as the final result. Which data split should they use for tuning instead?",
+      "options": [
+        {
+          "text": "The training set, because it holds the labeled examples used to optimize the model",
+          "correct": false,
+          "why_wrong": "Tuning on training data cannot detect overfitting; the training set is for optimizing model weights."
+        },
+        {
+          "text": "A fresh copy of the test set, reshuffled for every tuning round",
+          "correct": false,
+          "why_wrong": "Reshuffling the same test data still leaks it into tuning decisions, so it no longer gives an unbiased final result."
+        },
+        {
+          "text": "The validation set, a disjoint subset meant for adjusting hyperparameters",
+          "correct": true
+        },
+        {
+          "text": "No split at all; feature stores remove the need for held-out data",
+          "correct": false,
+          "why_wrong": "A feature store serves and re-uses features; it does not replace validation and test splits."
+        }
+      ],
+      "explanation": "The glossary defines the validation set as a disjoint subset used to adjust hyperparameters and prevent overfitting, while the test set provides final results on new data that the model never learns from.",
+      "key_takeaway": "Tune on the validation set; keep the test set untouched for the final result.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        }
+      ]
+    },
+    {
+      "id": "ml101-q-25",
+      "section": "Glossary",
+      "guide_anchor": "glossary",
+      "question": "An analyst notices that the model's average predicted house price is 8% higher than the average actual price in the dataset. Which of the guide's three meanings of 'bias' is this?",
+      "options": [
+        {
+          "text": "Bias (math): the intercept b in y = wx + b",
+          "correct": false,
+          "why_wrong": "The mathematical bias is an offset term inside the model, not a gap between average predictions and average labels."
+        },
+        {
+          "text": "Bias (ethics/fairness): unintentional unfairness or stereotyping in the data",
+          "correct": false,
+          "why_wrong": "Fairness bias concerns unfair treatment of groups, not an overall offset between predictions and labels."
+        },
+        {
+          "text": "Prediction bias: the gap between average predictions and average labels",
+          "correct": true
+        },
+        {
+          "text": "High bias from underfitting, meaning the model failed to learn any feature-label relationship",
+          "correct": false,
+          "why_wrong": "The troubleshooting sense of bias is a missing feature-label relationship; the glossary term for this average gap is prediction bias."
+        }
+      ],
+      "explanation": "The glossary lists three kinds of 'bias': math (intercept or offset), prediction bias (difference between the average of predictions and the average of labels) and ethics/fairness bias.",
+      "key_takeaway": "Prediction bias = average prediction minus average label; distinct from math bias and fairness bias.",
+      "doc_links": [
+        {
+          "label": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": "Scikit-Learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html"
+        }
+      ]
+    }
+  ]
+}
