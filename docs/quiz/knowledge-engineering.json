@@ -1,0 +1,1021 @@
+{
+  "topic_id": "knowledge-engineering",
+  "title": "Knowledge Engineering for AI Agents",
+  "guide_url": "KnowledgeEngineering.html",
+  "questions": [
+    {
+      "id": "knowledge-engineering-q-01",
+      "section": "Naive RAG vs. Knowledge Engineering",
+      "guide_anchor": "naive-vs-ke",
+      "question": "A finance agent keeps quoting wrong totals from quarterly reports. Investigation shows the PDF text extractor flattens every table into a single run-on line of numbers. A stakeholder proposes upgrading to the largest available model. What should the architect recommend?",
+      "options": [
+        {
+          "text": "Fix upstream parsing with layout-aware extraction that keeps tables intact; a larger model cannot recover lost columns.",
+          "correct": true
+        },
+        {
+          "text": "Upgrade to the largest available model, because its stronger reasoning can reconstruct the original table layout from the flattened numbers.",
+          "correct": false,
+          "why_wrong": "A smarter model reasoning over corrupted input only hallucinates more persuasively; the lost row-column relationships are not in the text anymore."
+        },
+        {
+          "text": "Lower the sampling temperature to zero so the model stops inventing totals.",
+          "correct": false,
+          "why_wrong": "Temperature controls randomness, not data quality. A deterministic model still reasons over the same broken, flattened table."
+        },
+        {
+          "text": "Add a system prompt telling the model to double-check every number against the report before answering.",
+          "correct": false,
+          "why_wrong": "The model can only check against the corrupted text it was given; a prompt instruction cannot restore table structure lost during ingestion."
+        }
+      ],
+      "explanation": "The guide's core trap: upgrading the foundation model cannot fix an upstream knowledge engineering failure. If parsing drops table structure, every downstream step, and any model, inherits the corruption. The fix is layout-aware ingestion that keeps tables intact.",
+      "key_takeaway": "Bad ground truth beats good reasoning: fix parsing, chunking, and metadata before reaching for a bigger model.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        },
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-02",
+      "section": "3-Phase Framework",
+      "guide_anchor": "three-phase-framework",
+      "question": "An architect is splitting a knowledge-layer backlog across three teams named Prepare, Index, and Expose. Which assignment of work items matches the guide's 3-phase framework?",
+      "options": [
+        {
+          "text": "Prepare: ingestion and chunking; Index: metadata, hybrid index, and graph; Expose: retrieval tools.",
+          "correct": false,
+          "why_wrong": "Metadata & provenance is Step 4, the last step of Prepare. It makes data traceable before anything is indexed."
+        },
+        {
+          "text": "Prepare: ingest, structure, chunk, tag metadata; Index: hybrid index and graph; Expose: typed retrieval tools.",
+          "correct": true
+        },
+        {
+          "text": "Prepare: ingestion and structuring only; Index: chunking, metadata, and the hybrid index; Expose: the knowledge graph plus retrieval tools.",
+          "correct": false,
+          "why_wrong": "Chunking and metadata belong to Prepare, and the knowledge graph is an Index representation (Step 6), not an Expose step."
+        },
+        {
+          "text": "Prepare: ingestion only; Index: structuring, chunking, embeddings, and graph; Expose: metadata and tools.",
+          "correct": false,
+          "why_wrong": "Structuring, chunking, and metadata are all Prepare steps; metadata is attached to chunks before indexing, not at tool time."
+        }
+      ],
+      "explanation": "Prepare (Steps 1–4: ingestion, normalization & structuring, structure-aware chunking, metadata & provenance) makes data clean and traceable. Index (Steps 5–6: hybrid index, knowledge graph & ontology) makes it findable. Expose (Step 7: specialized retrieval tools) turns indexes into agent tools.",
+      "key_takeaway": "Prepare = Steps 1–4, Index = Steps 5–6, Expose = Step 7.",
+      "doc_links": [
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-03",
+      "section": "Document Ingestion",
+      "guide_anchor": "step-ingestion",
+      "question": "A procurement agent ingests 200,000 vendor PDFs. Most are clean digital files, but about 15% are scanned faxes, and the current stream parser silently returns empty strings for them. The team needs accuracy without paying vision-OCR latency on every page. What design fits best?",
+      "options": [
+        {
+          "text": "Run vision OCR on every page of every document so that no scan is ever missed.",
+          "correct": false,
+          "why_wrong": "This works but wastes 2–10 s per page on the 85% of clean digital PDFs that a fast stream parser handles correctly."
+        },
+        {
+          "text": "Keep the stream parser and drop any document that comes back empty from the index.",
+          "correct": false,
+          "why_wrong": "Silently dropping 15% of the corpus creates knowledge gaps the agent cannot see, so it answers confidently from incomplete data."
+        },
+        {
+          "text": "Tiered extraction: fast stream parsing first, escalating scans and tables to layout/OCR parsing, behind a quality gate.",
+          "correct": true
+        },
+        {
+          "text": "Send the raw PDF bytes straight to the LLM at query time and let the model read the scanned pages directly whenever a question needs them.",
+          "correct": false,
+          "why_wrong": "This skips ingestion entirely: nothing is structured, chunked, tagged with provenance, or indexed, so retrieval across 200,000 files is impossible."
+        }
+      ],
+      "explanation": "The guide's production pattern is tiered extraction with epistemic gating: Tier 1 stream parsing for clean digital PDFs (~0.05 s), Tier 2 layout/vision OCR fallback (2–10 s) for low-density pages, tables, and scans, and a composite quality gate that hard-stops bad extractions before indexing.",
+      "key_takeaway": "Use cheap stream parsing where it works, escalate to layout/OCR where it fails, and gate quality before indexing.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Claude PDF Support",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-04",
+      "section": "Document Ingestion",
+      "guide_anchor": "step-ingestion",
+      "question": "A document pipeline computes a composite extraction-quality score from OCR confidence, dictionary-word ratio, character entropy, and structural completeness. A batch of faded scans scores well below the threshold. What should the pipeline do with them?",
+      "options": [
+        {
+          "text": "Index them anyway with a low_quality flag so the agent can decide at query time whether to trust them.",
+          "correct": false,
+          "why_wrong": "Indexed garbage still gets retrieved and quoted; the gate exists to stop corrupted text before it reaches the index or an LLM."
+        },
+        {
+          "text": "Pass the extracted text to an LLM and ask it to repair the garbled words before indexing.",
+          "correct": false,
+          "why_wrong": "An LLM 'repairing' unreadable text invents plausible content, turning silent corruption into confident fabrication."
+        },
+        {
+          "text": "Hard-stop them before indexing or any LLM call and route them for re-scanning or manual review.",
+          "correct": true
+        },
+        {
+          "text": "Re-split the low-scoring pages into smaller chunks so each one is easier for the embedding model to read.",
+          "correct": false,
+          "why_wrong": "Chunk size does not fix unreadable source text; smaller chunks of garbage are still garbage."
+        }
+      ],
+      "explanation": "The composite quality gate is an epistemic gate: it blocks corrupted or unreadable extractions in code before they are indexed or sent to a model. Letting them through, or asking a model to repair them, produces 'garbage in, confident hallucination out'.",
+      "key_takeaway": "Gate extraction quality in code and hard-stop bad pages before indexing or calling an LLM.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Claude PDF Support",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-05",
+      "section": "Normalization & Structuring",
+      "guide_anchor": "step-structuring",
+      "question": "After OCR, a team's contract text has no headings, tables appear as loose numbers, and dates show up as '03/04/25', 'April 3rd 2025', and '2025.04.03'. The chunker and the LLM keep confusing which sub-clause belongs to which article. What step is missing?",
+      "options": [
+        {
+          "text": "Normalization and structuring: rebuild Markdown headings, serialize tables, and normalize dates to ISO-8601.",
+          "correct": true
+        },
+        {
+          "text": "A bigger embedding model with more dimensions, so that semantic similarity can infer the hierarchy.",
+          "correct": false,
+          "why_wrong": "Embeddings do not create structure; without explicit headings and table markup the chunker still cannot tell which clause belongs where."
+        },
+        {
+          "text": "A knowledge graph linking every clause to every date mentioned in the contract.",
+          "correct": false,
+          "why_wrong": "A graph is an Index step built on clean, structured input; it cannot fix missing headings and ambiguous date formats upstream."
+        },
+        {
+          "text": "Fixed 500-token chunking so that every chunk has the same size regardless of layout.",
+          "correct": false,
+          "why_wrong": "Fixed-size chunking ignores structure entirely and makes the scope confusion worse by cutting through clauses."
+        }
+      ],
+      "explanation": "Step 2 converts raw extracted text into a canonical hierarchy: explicit # / ## / ### headings, serialized tables, structured JSON, and normalized entities such as ISO-8601 dates. Chunkers and LLMs rely on these markers to understand scope.",
+      "key_takeaway": "Structure first: headings, serialized tables, and canonical formats are what chunkers and LLMs use to understand scope.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Claude Structured Outputs",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-06",
+      "section": "Structure-Aware Chunking",
+      "guide_anchor": "step-chunking",
+      "question": "A legal agent answers 'Yes, the vendor is liable for all damages' when the contract continues '...except indirect or consequential damages' in the next paragraph. The index uses a fixed 500-token splitter. What is the most targeted fix?",
+      "options": [
+        {
+          "text": "Increase retrieval top_k from 5 to 30 so the neighboring chunk is more likely to be included too.",
+          "correct": false,
+          "why_wrong": "This may sometimes pull in the exception, but it floods the context with noise and still does not guarantee the rule and exception arrive together."
+        },
+        {
+          "text": "Split along clause and section boundaries so each rule stays in the same chunk as its exceptions.",
+          "correct": true
+        },
+        {
+          "text": "Shrink the chunks to 100 tokens to raise vector-matching precision.",
+          "correct": false,
+          "why_wrong": "Smaller fixed-size chunks cut logical units even more often, separating rules from exceptions more frequently."
+        },
+        {
+          "text": "Instruct the model in its system prompt to always assume that exceptions exist in contracts.",
+          "correct": false,
+          "why_wrong": "The model cannot cite an exception it never received; a generic prompt rule just adds hedging without the actual clause text."
+        }
+      ],
+      "explanation": "Fixed-token chunking severs rules from their exceptions and table rows from headers. Structure-aware chunking splits along logical boundaries (sections, clauses, intact tables), for example with a header-aware chunker, so each chunk is a complete unit of meaning.",
+      "key_takeaway": "Cut at logical seams (sections, clauses, intact tables), never at an arbitrary token count.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-07",
+      "section": "Structure-Aware Chunking",
+      "guide_anchor": "step-chunking",
+      "question": "A policy assistant needs precise matching on short passages, but answers are only correct when the LLM sees the whole surrounding section. Small chunks match well yet lack context; large chunks give context but match poorly. Which chunking technique resolves this trade-off?",
+      "options": [
+        {
+          "text": "Use one large chunk per document and rely on the LLM's long context window to find the answer.",
+          "correct": false,
+          "why_wrong": "Whole-document chunks match poorly and waste context; this gives up retrieval precision instead of balancing it."
+        },
+        {
+          "text": "Average the embeddings of the small and large chunks into one combined vector per section so both signals are kept.",
+          "correct": false,
+          "why_wrong": "Averaging blurs both signals; it neither keeps the precision of small chunks nor returns the full parent text to the model."
+        },
+        {
+          "text": "Parent-child chunking: embed small child chunks for matching, then return the larger parent section to the LLM.",
+          "correct": true
+        },
+        {
+          "text": "Alternate chunk sizes between 128 and 2,048 tokens across the corpus so both sizes are represented.",
+          "correct": false,
+          "why_wrong": "Mixing sizes randomly gives some queries precision and others context, but never both for the same query."
+        }
+      ],
+      "explanation": "Hierarchical (parent-child) chunking embeds small children (about 128–256 tokens) for high-precision matching, then follows a metadata pointer to return the larger parent section (about 1,024–2,048 tokens) to the LLM.",
+      "key_takeaway": "Match on small children, answer with the big parent: parent-child chunking separates retrieval precision from generation context.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-08",
+      "section": "Structure-Aware Chunking",
+      "guide_anchor": "step-chunking",
+      "question": "In a corpus of company annual reports, a chunk reads only 'Revenue grew 3% over the previous quarter.' Queries like 'ACME Q2 2023 revenue growth' miss it because the company name and period appear only on the report's first page. What should the team do?",
+      "options": [
+        {
+          "text": "Add the company name to the query at search time and leave the stored chunks as they are.",
+          "correct": false,
+          "why_wrong": "The chunk itself still lacks the identifying context, so neither its embedding nor its BM25 terms contain 'ACME' or 'Q2 2023' to match."
+        },
+        {
+          "text": "Prepend a short chunk-specific context (company, report, period) before computing both the embedding and the BM25 index.",
+          "correct": true
+        },
+        {
+          "text": "Prepend the context only to the embedding input, because BM25 keyword matching gains nothing from extra terms in a chunk.",
+          "correct": false,
+          "why_wrong": "BM25 benefits directly: exact terms like the company name become searchable inside the chunk. The pattern applies context to both indexes."
+        },
+        {
+          "text": "Remove numeric sentences from the index, because embeddings cannot represent percentages well.",
+          "correct": false,
+          "why_wrong": "Deleting factual content makes the agent unable to answer at all; the problem is missing context, not the number."
+        }
+      ],
+      "explanation": "Contextual retrieval (the Anthropic pattern) prepends a short, chunk-specific context to every chunk before computing its embedding and its BM25 index. In Anthropic's version an LLM reads the whole document plus the chunk and writes about 50–100 tokens; a breadcrumb is a cheaper fallback.",
+      "key_takeaway": "Give orphaned chunks their context back by prepending it before embedding and before BM25 indexing.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-09",
+      "section": "Metadata & Provenance",
+      "guide_anchor": "step-metadata",
+      "question": "A multi-tenant HR agent filters results after vector search: it takes the top 10 chunks, then removes those from other tenants or with status 'draft'. Users often get empty or thin answers, and auditors worry about leakage. What change does the guide recommend?",
+      "options": [
+        {
+          "text": "Raise top_k to 100 before post-filtering so enough allowed chunks usually survive.",
+          "correct": false,
+          "why_wrong": "This only papers over the problem: disallowed chunks are still scored and handled, and results remain unreliable when allowed matches rank low."
+        },
+        {
+          "text": "Tell the model in the system prompt to ignore drafts and other tenants' documents.",
+          "correct": false,
+          "why_wrong": "Prompt-based access control is probabilistic and injectable; tenant isolation must be enforced deterministically in code."
+        },
+        {
+          "text": "Build a separate LLM call that reviews each retrieved chunk one by one and decides whether the current user is allowed to see it.",
+          "correct": false,
+          "why_wrong": "An LLM judging permissions adds cost and remains probabilistic; the guide uses deterministic metadata filters instead."
+        },
+        {
+          "text": "Tag every chunk with tenant_id, status, and effective dates, and apply them as pre-filters before vector scoring.",
+          "correct": true
+        }
+      ],
+      "explanation": "Step 4 attaches lifecycle and governance metadata (status, effective_date, version, access_acl/tenant_id) to every chunk. Applied as deterministic pre-filters, it excludes drafts, expired policies, and other tenants' records before vector scoring, so the top-k is drawn only from allowed content.",
+      "key_takeaway": "Enforce ACLs, status, and dates as deterministic pre-filters before vector scoring, not after it and not in the prompt.",
+      "doc_links": [
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-10",
+      "section": "Metadata & Provenance",
+      "guide_anchor": "step-metadata",
+      "question": "A compliance team adds an auditor node that must verify every factual claim in a generated answer against the exact source location. Which design makes this verification deterministic?",
+      "options": [
+        {
+          "text": "Have the auditor re-run the same vector search and check whether similar text comes back.",
+          "correct": false,
+          "why_wrong": "Re-searching is probabilistic and may return different chunks; it cannot confirm the specific passage a claim came from."
+        },
+        {
+          "text": "Store doc_id, section_path, and page_number on every chunk and require inline citations that reference them.",
+          "correct": true
+        },
+        {
+          "text": "Ask the generator to rate its own confidence from 1 to 10 for each claim it makes.",
+          "correct": false,
+          "why_wrong": "Self-reported confidence is not evidence; it gives the auditor nothing concrete to check against the source."
+        },
+        {
+          "text": "Keep the raw source documents in a separate storage bucket so that auditors can browse and search them manually whenever they need to.",
+          "correct": false,
+          "why_wrong": "Without chunk-level provenance there is no link from a claim to its location, so verification stays manual and slow."
+        }
+      ],
+      "explanation": "The second job of Step 4 is post-generation auditability: provenance fields such as source_uri, doc_id, section_path, page_number, and bounding_box enable exact inline citations (e.g., Section 4.2, Page 14) that a human or an auditor node can check deterministically.",
+      "key_takeaway": "Provenance metadata turns citations into checkable pointers: every quote carries its birth certificate.",
+      "doc_links": [
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-11",
+      "section": "Embeddings & Hybrid Indexes",
+      "guide_anchor": "step-hybrid-index",
+      "question": "An IT support agent handles paraphrased questions well, but queries quoting exact error codes such as 'ERR-4471-B' or part numbers keep returning loosely related articles. The index is dense-vector only. What should the team add?",
+      "options": [
+        {
+          "text": "Sparse BM25 search in parallel with dense search, fused with Reciprocal Rank Fusion and refined by a cross-encoder reranker.",
+          "correct": true
+        },
+        {
+          "text": "A larger dense embedding model with 3,072 dimensions instead of 768 so it can capture exact codes more precisely.",
+          "correct": false,
+          "why_wrong": "More dimensions still map text into continuous semantic space; dense vectors keep blurring exact alphanumeric identifiers."
+        },
+        {
+          "text": "A knowledge graph linking every error code to related services and teams across the organization.",
+          "correct": false,
+          "why_wrong": "A graph solves multi-hop relationship questions, not exact-string matching; the missing capability is lexical search."
+        },
+        {
+          "text": "A lower similarity threshold so that more candidate chunks are returned for each query.",
+          "correct": false,
+          "why_wrong": "Returning more loosely related chunks adds noise; the dense ranking still does not prioritize exact token matches."
+        }
+      ],
+      "explanation": "Dense embeddings capture meaning and synonyms but smooth over exact strings. BM25 scores exact token matches (SKUs, error codes, clause numbers). Production systems run both, merge with RRF (k = 60), and rerank the top-K (about 50) with a cross-encoder to keep the top-N (about 5).",
+      "key_takeaway": "Dense for meaning, BM25 for exact IDs; fuse with RRF and rerank with a cross-encoder.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-12",
+      "section": "Embeddings & Hybrid Indexes",
+      "guide_anchor": "step-hybrid-index",
+      "question": "An engineer merges dense and BM25 results by adding the cosine similarity score to the BM25 score for each chunk. Rankings swing wildly, and BM25 almost always dominates. Why does the guide use Reciprocal Rank Fusion instead?",
+      "options": [
+        {
+          "text": "RRF retrains both retrievers jointly so that their scores end up on one shared, calibrated scale before they are added together.",
+          "correct": false,
+          "why_wrong": "RRF involves no training; it is a simple formula applied to the ranked lists each retriever already returns."
+        },
+        {
+          "text": "RRF keeps only the results that appear in both lists and discards everything else.",
+          "correct": false,
+          "why_wrong": "RRF sums contributions from each list, so a chunk found by only one retriever still scores; it rewards agreement without requiring it."
+        },
+        {
+          "text": "RRF uses only each chunk's rank in each list, so scores on different scales cannot overwhelm each other.",
+          "correct": true
+        },
+        {
+          "text": "RRF weights the dense retriever more heavily because semantic meaning matters more than keywords.",
+          "correct": false,
+          "why_wrong": "Standard RRF treats each retriever's ranks equally via 1/(k + rank); it does not favor dense results."
+        }
+      ],
+      "explanation": "Cosine similarity and BM25 scores live on different, incomparable scales. RRF sums 1/(60 + rank) across retrievers, using rank only, so chunks ranked well by both retrievers rise to the top and neither raw scale dominates.",
+      "key_takeaway": "Fuse by rank, not raw score: RRF(d) = Σ 1/(60 + rank) rewards cross-retriever agreement.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-13",
+      "section": "Knowledge Graph & Ontology",
+      "guide_anchor": "step-knowledge-graph",
+      "question": "A supply-chain agent must answer 'If Supplier X fails, which customer SLAs are at risk?' The chain runs Supplier X → Component → Product → Contract → SLA, spread across five unrelated documents. Hybrid search finds each document alone but never connects them. What capability is missing?",
+      "options": [
+        {
+          "text": "A cross-encoder reranker that reorders the hybrid search results more accurately.",
+          "correct": false,
+          "why_wrong": "Reranking improves the order of passages that were found, but the intermediate hops share no text with the question, so they are never retrieved."
+        },
+        {
+          "text": "Larger chunks, so that the entire Supplier → Component → Product → Contract → SLA chain fits inside a single retrieved passage.",
+          "correct": false,
+          "why_wrong": "The links live in five separate documents; no chunk size merges them, and the relationships are never written down in one place."
+        },
+        {
+          "text": "An ontology-governed knowledge graph, exposed as a traversal tool that follows the dependency edges.",
+          "correct": true
+        },
+        {
+          "text": "Contextual retrieval breadcrumbs prepended to each chunk in the corpus before indexing.",
+          "correct": false,
+          "why_wrong": "Breadcrumbs restore a chunk's own document context, not relationships between entities across separate documents."
+        }
+      ],
+      "explanation": "Vector and keyword indexes find passages with similar text. Multi-hop questions need explicit entity-relationship edges. Hybrid GraphRAG uses search to locate the entry entity, then traverses 1–3 hops along ontology edges and passes the subgraph path plus source chunks to the LLM.",
+      "key_takeaway": "When the answer lives in the relationships between entities, add a knowledge graph and a traversal tool.",
+      "doc_links": [
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-14",
+      "section": "Exam Quick-Review",
+      "guide_anchor": "exam-review",
+      "question": "A data team writes a schema stating that a Contract is governed_by a Jurisdiction, that a Clause may supersede another Clause, and that every Party must have a legal name. A second team then loads 40,000 real contracts and their links into a graph database. What did each team produce?",
+      "options": [
+        {
+          "text": "The first team built the knowledge graph; the second team built the ontology from the loaded data.",
+          "correct": false,
+          "why_wrong": "This reverses the terms: the schema of classes, predicates, and constraints is the ontology; the populated instances are the graph."
+        },
+        {
+          "text": "Both teams produced embeddings that are simply stored in two different formats.",
+          "correct": false,
+          "why_wrong": "Neither artifact is an embedding; they are an explicit schema and explicit typed nodes and edges, not dense vectors."
+        },
+        {
+          "text": "Team 1 wrote the ontology (the schema); team 2 built the knowledge graph (the instances).",
+          "correct": true
+        },
+        {
+          "text": "The first team built a hybrid index; the second team built a BM25 keyword index over the contracts.",
+          "correct": false,
+          "why_wrong": "Hybrid and BM25 indexes retrieve text passages; neither defines entity classes or relationship predicates."
+        }
+      ],
+      "explanation": "An ontology (the TBox) defines allowed entity classes, relationship predicates, and constraints. A knowledge graph (the ABox) is the populated network of real entities and edges that conforms to that ontology.",
+      "key_takeaway": "Ontology = schema (classes, predicates, rules); knowledge graph = the real instances that conform to it.",
+      "doc_links": [
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-15",
+      "section": "Retrieval Tools (ACI)",
+      "guide_anchor": "step-retrieval-tools",
+      "question": "A contracts agent has one tool, search_all(query: str). In traces it asks for 500 results, invents categories like 'liability-ish', and passes dates as 'last spring'. Which tool redesign does the guide recommend?",
+      "options": [
+        {
+          "text": "Keep search_all but add a long system prompt explaining valid categories, date formats, and sensible result counts.",
+          "correct": false,
+          "why_wrong": "Prompt guidance is advisory; the model can still send invalid values. The guide makes invalid calls impossible through typed parameters."
+        },
+        {
+          "text": "Split it into intent-specific tools with Literal enums, ISO-date parameters, and a bounded top_k.",
+          "correct": true
+        },
+        {
+          "text": "Let the model write raw SQL and vector queries directly against the index for maximum flexibility.",
+          "correct": false,
+          "why_wrong": "This gives the model even more freedom and no guardrails, increasing malformed queries and bypassing mandatory filters."
+        },
+        {
+          "text": "Silently truncate the results to 5 chunks and drop any unknown category values inside search_all.",
+          "correct": false,
+          "why_wrong": "Silent fixes hide errors from the agent; it never learns valid inputs and gets results that do not match what it asked for."
+        }
+      ],
+      "explanation": "ACI and Poka-Yoke design rules: decompose by domain intent (exact lookup, filtered hybrid search, graph traversal), constrain arguments with Literal enums, date validators, and bounded top_k, and return structured provenance with every result.",
+      "key_takeaway": "Replace one blunt search tool with narrow, typed tools whose parameters make invalid calls impossible.",
+      "doc_links": [
+        {
+          "label": "Defining Tools in Claude",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+        },
+        {
+          "label": "Anthropic: Context Engineering for Agents",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-16",
+      "section": "Retrieval Tools (ACI)",
+      "guide_anchor": "step-retrieval-tools",
+      "question": "A generator agent and a separate auditor agent both call the same retrieval tool. The auditor often cannot confirm citations because the tool returns only a plain string of concatenated chunk text. What should the tool return instead?",
+      "options": [
+        {
+          "text": "A longer string that includes more surrounding text so the auditor has extra context to judge from.",
+          "correct": false,
+          "why_wrong": "More text without locations still gives the auditor nothing to match a claim against deterministically."
+        },
+        {
+          "text": "Structured objects with chunk_text, doc_id, section_path, page_number, and effective_date per result.",
+          "correct": true
+        },
+        {
+          "text": "Only the doc_id list, so that the auditor fetches each full document and searches it on its own.",
+          "correct": false,
+          "why_wrong": "Dropping the passage and its section forces the auditor to re-search whole documents, which is slow and ambiguous."
+        },
+        {
+          "text": "A model-written summary of the chunks, because summaries are shorter and cheaper for both agents to read.",
+          "correct": false,
+          "why_wrong": "Summaries discard the exact wording and locations needed to verify a quote, and they can introduce new errors."
+        }
+      ],
+      "explanation": "The third ACI rule is to return structured provenance. When every result carries chunk_text plus doc_id, section_path, page_number, and effective_date, downstream generator and auditor agents can verify each citation deterministically.",
+      "key_takeaway": "Retrieval tools should return structured results with provenance, not a blob of text.",
+      "doc_links": [
+        {
+          "label": "Defining Tools in Claude",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+        },
+        {
+          "label": "Anthropic: Context Engineering for Agents",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-17",
+      "section": "Progressive Scaling Ladder",
+      "guide_anchor": "scaling-ladder",
+      "question": "A paralegal tool reviews one uploaded 10-page lease at a time and flags unusual clauses. The draft architecture chunks the lease, embeds it into a vector database, builds a knowledge graph, and exposes search tools. What does the scaling ladder recommend?",
+      "options": [
+        {
+          "text": "Keep every step of the pipeline, because a full chunk-embed-graph-tools architecture is the safest default for legal documents.",
+          "correct": false,
+          "why_wrong": "Extra layers add cost and new failure modes (missed chunks) with no benefit when the whole document fits in context."
+        },
+        {
+          "text": "Keep chunking and the vector database but drop the knowledge graph to save cost.",
+          "correct": false,
+          "why_wrong": "That is Level 2, built for hundreds to millions of documents; retrieving 5 chunks out of one 10-page lease can miss clauses."
+        },
+        {
+          "text": "Level 1: parse cleanly, structure it, attach page/section provenance, and pass the whole lease in context.",
+          "correct": true
+        },
+        {
+          "text": "Skip parsing and provenance and paste the raw extracted text into the prompt as quickly as possible.",
+          "correct": false,
+          "why_wrong": "Level 1 still needs Steps 1, 2, and 4: clean parsing, structure, and provenance so flagged clauses can be cited."
+        }
+      ],
+      "explanation": "Level 1 (in-context processing) applies when the knowledge fits in the context window: Steps 1, 2, and 4 only. Skip chunking, indexing, the graph, and search tools; parse cleanly, attach provenance, and pass structured Markdown directly.",
+      "key_takeaway": "If it fits in context, don't retrieve it: Level 1 = Ingest → Structure → Provenance.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-18",
+      "section": "Progressive Scaling Ladder",
+      "guide_anchor": "scaling-ladder",
+      "question": "A customer-support agent must answer questions from 2 million help-center articles and product manuals. Almost every question is answered by one self-contained procedure or policy section. Which level of the scaling ladder fits?",
+      "options": [
+        {
+          "text": "Level 1: put as many articles as possible into the context window for each request.",
+          "correct": false,
+          "why_wrong": "Two million articles cannot fit in any context window; this scale requires chunking, indexing, and retrieval tools."
+        },
+        {
+          "text": "Level 2: Steps 1–5 and 7, with hybrid search, metadata filters, and typed tools, but no graph.",
+          "correct": true
+        },
+        {
+          "text": "Level 3: all seven steps, because a corpus of 2 million documents always requires a knowledge graph on top of hybrid search.",
+          "correct": false,
+          "why_wrong": "Corpus size alone does not justify a graph; Step 6 is added only when queries need multi-hop relationships."
+        },
+        {
+          "text": "Level 2 without metadata, since filters are only necessary in multi-tenant systems.",
+          "correct": false,
+          "why_wrong": "Metadata also drives version and recency filters and citations; Step 4 is part of every level of the ladder."
+        }
+      ],
+      "explanation": "Level 2 (production agentic RAG) covers hundreds to millions of documents where answers come from self-contained sections: Steps 1, 2, 3, 4, 5, and 7. Step 6 is skipped because semantic + keyword search with metadata filters already answers the questions.",
+      "key_takeaway": "Scale decides whether you index; query shape decides whether you need a graph.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-19",
+      "section": "Progressive Scaling Ladder",
+      "guide_anchor": "scaling-ladder",
+      "question": "An SRE agent investigates outages across 600 microservices. Typical questions are 'Which upstream database and region could explain errors in Checkout-API, and which compliance policy governs that region?' Which level fits?",
+      "options": [
+        {
+          "text": "Level 2, since a good reranker will put the relevant runbooks in the right order.",
+          "correct": false,
+          "why_wrong": "Reranking orders passages that were found; it cannot follow depends_on and hosted_in edges across services."
+        },
+        {
+          "text": "Level 1, by loading all 600 service READMEs into the context window for every investigation.",
+          "correct": false,
+          "why_wrong": "This is costly and unreliable at scale, and the dependency links are still implicit rather than traversable."
+        },
+        {
+          "text": "Level 2 with much larger chunks, so that each service's upstream dependencies and hosting region appear together in a single passage.",
+          "correct": false,
+          "why_wrong": "The chain spans many services and documents; no single chunk holds the full multi-hop path."
+        },
+        {
+          "text": "Level 3 (GraphRAG): all seven steps, adding a service/database/region dependency graph with traversal tools.",
+          "correct": true
+        }
+      ],
+      "explanation": "Level 3 applies when relationships, dependencies, or cross-document rules drive the answer, such as microservice root-cause analysis. It combines structure-aware hybrid search with explicit graph traversal exposed as specialized tools.",
+      "key_takeaway": "Multi-hop dependency questions (root cause, supply chain, regulatory cross-references) call for Level 3 GraphRAG.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-20",
+      "section": "Diagnostic Cheat Sheet",
+      "guide_anchor": "diagnostics",
+      "question": "During an architecture review, traces show a policy agent writing queries such as 'everything about money stuff from before' and occasionally invented filter syntax that the search backend rejects. Which step is broken, and what is the fix?",
+      "options": [
+        {
+          "text": "Step 5: switch to a larger embedding model so vague queries still find relevant passages.",
+          "correct": false,
+          "why_wrong": "The index is not the failure; the agent is free to send broad, malformed requests because the tool interface has no constraints."
+        },
+        {
+          "text": "Step 3: re-chunk the corpus into smaller pieces so that vague queries match more of them.",
+          "correct": false,
+          "why_wrong": "Chunking does not affect how the agent formulates queries; smaller chunks would only return more noise."
+        },
+        {
+          "text": "Step 7: replace the generic search tool with narrow, typed tools using enums, date filters, and clear docstrings.",
+          "correct": true
+        },
+        {
+          "text": "Step 6: build a knowledge graph so the agent can browse topics through relationships instead of writing free-text search queries at all.",
+          "correct": false,
+          "why_wrong": "A graph helps multi-hop reasoning, but the symptom here is unconstrained query formulation at the tool boundary."
+        }
+      ],
+      "explanation": "In the diagnostic cheat sheet, overly broad, unparseable, or hallucinated queries map to Step 7: a single generic search(query) tool gives the LLM too much freedom. The fix is narrow, typed tools with Literal enums, date filters, and junior-dev docstrings.",
+      "key_takeaway": "Bad queries are a tool-interface problem: constrain the agent with typed, intent-specific tools.",
+      "doc_links": [
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        },
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-21",
+      "section": "Diagnostic Cheat Sheet",
+      "guide_anchor": "diagnostics",
+      "question": "A benefits agent answers a question about parental leave by citing the 2022 policy, even though a 2025 version replaced it. Both versions sit in the index with nearly identical wording. Using the diagnostic cheat sheet, where is the root cause?",
+      "options": [
+        {
+          "text": "Step 4: chunks lack version, status, and effective-date tags, or retrieval runs without a pre-filter on them.",
+          "correct": true
+        },
+        {
+          "text": "Step 5: the embedding model cannot tell the two policy years apart, so it needs to be replaced with a newer, more precise model.",
+          "correct": false,
+          "why_wrong": "The two versions are nearly identical in meaning; no embedding model reliably separates them. Lifecycle filtering must be deterministic metadata."
+        },
+        {
+          "text": "Step 1: the parser dropped the year from the document headers during ingestion.",
+          "correct": false,
+          "why_wrong": "Even with the year in the text, similarity search would still rank both versions; the fix is a status/effective-date filter."
+        },
+        {
+          "text": "Step 6: the agent needs a knowledge graph of related HR topics so it can browse benefits policies by relationship.",
+          "correct": false,
+          "why_wrong": "A topic graph helps multi-hop questions; choosing the active version among near-duplicate policies is a lifecycle metadata problem, fixed in Step 4."
+        }
+      ],
+      "explanation": "The cheat sheet maps 'cites an outdated policy or leaks another customer's record' to Step 4. Attach version, status='active', effective_date, and tenant_id to every chunk, and enforce them as mandatory pre-filters before retrieval.",
+      "key_takeaway": "Outdated citations are a metadata problem: tag lifecycle fields and pre-filter on status='active'.",
+      "doc_links": [
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        },
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-22",
+      "section": "Operating the Knowledge Layer",
+      "guide_anchor": "knowledge-operations",
+      "question": "A contact-center team wants its agent to answer questions grounded in 50,000 recorded support calls and to cite where each fact came from. How should the knowledge layer prepare these recordings?",
+      "options": [
+        {
+          "text": "Store each recording's file name and a one-line summary, and cite the whole call file as the source.",
+          "correct": false,
+          "why_wrong": "A one-line summary loses most of the content, and citing a whole call is not addressable or easy to verify."
+        },
+        {
+          "text": "Transcribe with speaker labels and timestamps, chunk by speaker turn or topic, and keep start/end time per chunk.",
+          "correct": true
+        },
+        {
+          "text": "Embed each full recording as one audio vector, since a single embedding captures the whole call.",
+          "correct": false,
+          "why_wrong": "One vector per long call destroys passage-level precision and gives no time location to cite."
+        },
+        {
+          "text": "Skip the recordings and rely on agents' after-call notes, since audio cannot be grounded reliably.",
+          "correct": false,
+          "why_wrong": "Audio can be grounded once transcribed; dropping it discards the primary source and keeps only secondhand notes."
+        }
+      ],
+      "explanation": "For audio, the guide prepares a speech-to-text transcript with speaker labels (diarization) and timestamps, chunked by speaker turn or topic, and keeps start_time, end_time, speaker, and recording_id as provenance, so citations point to a time, not just a file.",
+      "key_takeaway": "Turn media into time- or region-addressable units so citations point to 'minute 12:40', not 'the recording'.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        },
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-23",
+      "section": "Operating the Knowledge Layer",
+      "guide_anchor": "identity-aware-access",
+      "question": "An internal research agent queries one shared document index using a service account that can read every document. The system prompt says 'Only use documents the current user is allowed to see.' A security review flags this. What should change?",
+      "options": [
+        {
+          "text": "Strengthen the system prompt with examples of restricted documents, and repeat the access rule at both the start and the end of the prompt.",
+          "correct": false,
+          "why_wrong": "Prompt rules remain probabilistic and vulnerable to injection; access control must be enforced in code."
+        },
+        {
+          "text": "Add an output filter that scans answers for the names of confidential projects after generation.",
+          "correct": false,
+          "why_wrong": "Restricted content has already been retrieved and used; name matching misses paraphrases and leaks through summaries."
+        },
+        {
+          "text": "Give the agent a second service account with slightly fewer read permissions than the first one.",
+          "correct": false,
+          "why_wrong": "The agent's scope still differs from each user's actual permissions, so some users would see documents they shouldn't."
+        },
+        {
+          "text": "Propagate the end user's identity to the retrieval tool and enforce source-synced ACLs as a mandatory filter.",
+          "correct": true
+        }
+      ],
+      "explanation": "Identity-aware access enforces ACLs inside the retrieval tool, using the end user's verified identity and ACLs ingested from the source system. A shared index plus a superuser credential plus a 'respect permissions' prompt is a data leak waiting to happen.",
+      "key_takeaway": "Filter by the end user's identity in code at retrieval time; never by the agent's broad credential or a prompt.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        },
+        {
+          "label": "Managing Agent Access & IAM",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-agent-access"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-24",
+      "section": "Operating the Knowledge Layer",
+      "guide_anchor": "freshness-lifecycle",
+      "question": "A team adopts a newer, better embedding model. To save cost, they plan to embed only newly ingested documents with it and keep the 3 million existing vectors from the old model in the same index. What is the problem?",
+      "options": [
+        {
+          "text": "No real problem: cosine similarity normalizes every vector, so embeddings from the old and the new model can safely share one index.",
+          "correct": false,
+          "why_wrong": "Normalization fixes vector length, not meaning; different models place text in different spaces, so cross-model similarity is meaningless."
+        },
+        {
+          "text": "The only issue is storage, because the new model's vectors may have more dimensions than the old ones.",
+          "correct": false,
+          "why_wrong": "Even with equal dimensions, vectors from different models are not comparable; storage is a minor concern next to broken ranking."
+        },
+        {
+          "text": "Vectors from different embedding models aren't comparable: re-embed the corpus and record embedding_model.",
+          "correct": true
+        },
+        {
+          "text": "The new model must be fine-tuned on the old vectors first so both models produce matching embeddings.",
+          "correct": false,
+          "why_wrong": "Re-embedding the corpus is the standard fix; trying to align two models adds risk without guaranteeing comparable vectors."
+        }
+      ],
+      "explanation": "Vectors produced by different embedding models (or model versions) live in incompatible spaces, so mixing them in one index breaks similarity ranking. Re-embed the corpus (or build a new index and cut over) and record embedding_model and ingested_at in metadata.",
+      "key_takeaway": "Changing the embedding model means re-embedding everything; never mix models in one index.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-25",
+      "section": "Operating the Knowledge Layer",
+      "guide_anchor": "knowledge-evaluation",
+      "question": "A team evaluates its agent on a golden dataset. The expected source chunk appears in the top-5 results for 96% of queries, yet answer correctness is only 70%, with unsupported claims in many answers. Where should they focus first?",
+      "options": [
+        {
+          "text": "Re-parse and re-chunk the entire corpus, because low answer accuracy always means retrieval is broken.",
+          "correct": false,
+          "why_wrong": "Recall@5 of 96% shows retrieval is finding the right chunks; re-chunking targets the wrong layer."
+        },
+        {
+          "text": "Generation: check prompting and context overload, and measure groundedness and citation accuracy.",
+          "correct": true
+        },
+        {
+          "text": "Add a knowledge graph, because unsupported claims are a sign of missing multi-hop relationships.",
+          "correct": false,
+          "why_wrong": "Nothing points to multi-hop failures; the right evidence is already retrieved but not used faithfully."
+        },
+        {
+          "text": "Remove the queries with no correct answer from the golden set, since they lower the overall score.",
+          "correct": false,
+          "why_wrong": "No-answer queries are deliberately included to test a correct 'not found'; removing them hides a real failure mode."
+        }
+      ],
+      "explanation": "Measure retrieval and generation separately. High recall@k with wrong or unsupported answers points to generation (prompting, context overload); low recall@k would point to Steps 1–5. Groundedness and citation accuracy quantify the generation problem.",
+      "key_takeaway": "Separate retrieval metrics (recall@k, MRR) from generation metrics (groundedness) to locate the failing layer.",
+      "doc_links": [
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        },
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+      ]
+    },
+    {
+      "id": "knowledge-engineering-q-26",
+      "section": "Retrieval Tools (ACI)",
+      "guide_anchor": "structured-data-tools",
+      "question": "A retailer's customer-facing agent must answer \"what is my refund status and total refunded this year?\" from an orders database. A developer proposes giving the agent an execute_sql tool over the full schema. What should the architect choose instead?",
+      "options": [
+        {
+          "text": "Keep execute_sql but add a system prompt rule telling the model to always filter by the customer's ID",
+          "correct": false,
+          "why_wrong": "A prompt rule is not a control; injected text or a model error can drop the filter and expose other rows."
+        },
+        {
+          "text": "Embed every order row as text in a vector index so semantic search can retrieve the matching orders",
+          "correct": false,
+          "why_wrong": "Embeddings cannot compute exact totals or reliable filters; aggregates belong in a query tool."
+        },
+        {
+          "text": "Parameterized query tools with typed arguments and the customer identity bound by the system",
+          "correct": true
+        },
+        {
+          "text": "Open NL2SQL over a curated set of approved views, with a metric glossary placed in the model's context",
+          "correct": false,
+          "why_wrong": "Curated NL2SQL suits varied analyst questions; known, recurring customer questions fit fixed tools."
+        }
+      ],
+      "explanation": "Choose the most constrained tool shape that answers the questions users actually ask. These questions are known and recurring on a customer-facing path, so an engineer writes the SQL ahead of time and the model only fills typed arguments, while the user's identity is bound by the system so row-level security does not depend on the model.",
+      "key_takeaway": "Known, customer-facing questions get parameterized query tools; reserve NL2SQL for varied analysis.",
+      "doc_links": [
+        {
+          "label": "MCP Toolbox for Databases",
+          "url": "https://mcp-toolbox.dev/"
+        },
+        {
+          "label": "BigQuery conversational analytics",
+          "url": "https://docs.cloud.google.com/bigquery/docs/conversational-analytics"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Engineering for AI Agents: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Vendor-neutral Knowledge Engineering study guide for AI agents: the 3-phase, 7-step framework (layout-aware ingestion, structure-aware chunking, metadata &amp; provenance, hybrid indexes, knowledge graphs &amp; ontologies, typed retrieval tools), the scaling ladder, a symptom-to-fix cheat sheet, multimodal sources, identity-aware access, freshness, memory, and evaluation.">
+    <meta name="keywords" content="Knowledge Engineering, AI Agents, RAG, GraphRAG, Knowledge Graph, Ontology, Document Ingestion, Layout-aware Parsing, OCR, Docling, Structure-aware Chunking, Parent-Child Chunking, Contextual Retrieval, Metadata, Provenance, Hybrid Search, BM25, Reciprocal Rank Fusion, Reranker, ACI, MCP, Poka-Yoke, Golden Dataset, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Knowledge Engineering for AI Agents: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Vendor-neutral Knowledge Engineering study guide for AI agents: the 3-phase, 7-step framework (layout-aware ingestion, structure-aware chunking, metadata &amp; provenance, hybrid indexes, knowledge graphs &amp; ontologies, typed retrieval tools), the scaling ladder, a symptom-to-fix cheat sheet, multimodal sources, identity-aware access, freshness, memory, and evaluation.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Knowledge Engineering for AI Agents — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Knowledge Engineering for AI Agents: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Vendor-neutral Knowledge Engineering study guide for AI agents: the 3-phase, 7-step framework (layout-aware ingestion, structure-aware chunking, metadata &amp; provenance, hybrid indexes, knowledge graphs &amp; ontologies, typed retrieval tools), the scaling ladder, a symptom-to-fix cheat sheet, multimodal sources, identity-aware access, freshness, memory, and evaluation.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Knowledge Engineering for AI Agents — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .ascii-diagram {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            white-space: pre;
+            margin: 0;
+        }
+        .step-heading {
+            margin: 28px 0 14px;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        .step-heading .toc-number {
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html#article",
+                  "headline": "Knowledge Engineering for AI Agents: Study Guide | ML Cert Hub",
+                  "name": "Knowledge Engineering for AI Agents Study Guide",
+                  "description": "Vendor-neutral Knowledge Engineering study guide for AI agents: the 3-phase, 7-step framework (layout-aware ingestion, structure-aware chunking, metadata & provenance, hybrid indexes, knowledge graphs & ontologies, typed retrieval tools), the scaling ladder, a symptom-to-fix cheat sheet, multimodal sources, identity-aware access, freshness, memory, and evaluation.",
+                  "keywords": "Knowledge Engineering, AI Agents, RAG, GraphRAG, Knowledge Graph, Ontology, Document Ingestion, Layout-aware Parsing, OCR, Docling, Structure-aware Chunking, Parent-Child Chunking, Contextual Retrieval, Metadata, Provenance, Hybrid Search, BM25, Reciprocal Rank Fusion, Reranker, ACI, MCP, Poka-Yoke, Golden Dataset, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Knowledge Engineering",
+                              "item": "https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/KnowledgeEngineering.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Knowledge <em>Engineering</em></h1>
+                <p class="cover-subtitle">Vendor-neutral guide to the data and interface layer under every grounded AI agent: the 3-phase, 7-step framework (layout-aware ingestion, normalization, structure-aware chunking, metadata &amp; provenance, hybrid indexes, knowledge graphs &amp; ontologies, typed retrieval tools), the progressive scaling ladder, a symptom-to-fix diagnostic sheet, and how to keep the knowledge layer multimodal, permission-aware, fresh, and measurable.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Knowledge &amp; Retrieval</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=knowledge-engineering" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Knowledge Engineering Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#naive-vs-ke" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Naive RAG vs. Knowledge Engineering</span>
+                </a>
+                <a href="#three-phase-framework" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>The 3-Phase, 7-Step Framework</span>
+                </a>
+                <a href="#scaling-ladder" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Progressive Scaling Ladder</span>
+                </a>
+                <a href="#diagnostics" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Diagnostic Cheat Sheet: Symptom → Step</span>
+                </a>
+                <a href="#knowledge-operations" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Operating the Knowledge Layer</span>
+                </a>
+                <a href="#exam-review" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Exam Quick-Review</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Pocket Card, Glossary &amp; Practice Quiz</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-book-open"></i></div>Definition</h3>
+                <p><strong>Knowledge Engineering</strong> for AI agents is the discipline of transforming raw, unstructured enterprise data into structured, traceable, and mistake-proof retrieval systems and tools (<strong>Agent-Computer Interfaces</strong>) so an LLM can reason over verified ground truth.</p>
+                <p><strong>Core thesis:</strong> an agent is only as reliable as the ground truth returned by its tools. Even the most sophisticated reasoning loop (ReAct, Evaluator-Optimizer, Orchestrator-Workers) will confidently hallucinate if its knowledge layer drops tables, bisects clauses, ignores document versions, or misses multi-hop entity relationships.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>The 5 structural gaps it solves</h3>
+                <ul>
+                    <li><strong>Silent parsing corruption:</strong> naive extractors (<code>pypdf</code>) strip table grids, scramble multi-column layouts, and return empty strings on scans.</li>
+                    <li><strong>Severed logical context:</strong> fixed-token chunking slices clauses away from their exceptions and table rows from their headers.</li>
+                    <li><strong>Permission &amp; version blindness:</strong> pure vector similarity ignores whether a policy is superseded, expired, or restricted to another tenant's ACL.</li>
+                    <li><strong>Lexical &amp; relational blindness:</strong> dense embeddings miss exact SKUs, clause IDs, and error codes; flat chunks cannot traverse multi-hop dependencies (<code>A → B → C</code>).</li>
+                    <li><strong>Ambiguous tool interfaces:</strong> a single generic <code>search_all(query: str)</code> tool forces the model to guess query syntax and filters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental model: nervous system vs. library</h4>
+                <p><a href="ADP.html">Agentic Design Patterns</a> build the <strong>nervous system</strong> (how the agent thinks, loops, and asks for human approval). Knowledge Engineering builds the <strong>library and catalog</strong>: how raw files become clean books, indexed by topic, keyword, and citation network, with a librarian desk of specialized lookup tools.</p>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-link"></i></div>
+            <div class="callout-content">
+                <h4>Scope vs. the RAG guide</h4>
+                <p>The <a href="RAG.html">RAG guide</a> covers the retrieve-then-generate pipeline end to end (embeddings, retrieval, reranking, generation, evaluation). This guide focuses on the <strong>data and interface layer underneath it</strong>: turning raw sources into clean, traceable, permission-aware knowledge and exposing it through safe agent tools.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: NAIVE RAG VS KE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="naive-vs-ke">
+            <div class="section-divider-number">01</div>
+            <h2>1. Naive RAG vs. Agentic Knowledge Engineering</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Naive RAG (Prototype)</th><th>Knowledge Engineering (Production)</th><th>Memory Hook</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Parsing</strong></td><td>Raw text stream (drops tables &amp; layout)</td><td>Layout-aware vision/OCR (<code>Docling</code>, Document AI; preserves tables)</td><td><em>"Read the page layout, not just the raw bytes"</em></td></tr>
+                    <tr><td><strong>Chunking</strong></td><td>Fixed size (e.g., every 500 tokens)</td><td>Structure-aware (split by section, clause, or intact table)</td><td><em>"Cut at chapter seams, never mid-sentence"</em></td></tr>
+                    <tr><td><strong>Context</strong></td><td>Raw text only</td><td>Rich metadata &amp; provenance (<code>doc_id</code>, <code>version</code>, <code>date</code>, <code>owner</code>)</td><td><em>"Every quote carries its birth certificate"</em></td></tr>
+                    <tr><td><strong>Search</strong></td><td>Vector similarity only</td><td>Hybrid (Vector + BM25) + metadata pre-filters + Knowledge Graph</td><td><em>"Meaning + exact IDs + relationship web"</em></td></tr>
+                    <tr><td><strong>Agent Access</strong></td><td>Passive prompt stuffing (1 generic search)</td><td>Active, strongly-typed <strong>Retrieval Tools</strong> (ACI / MCP)</td><td><em>"Specialized scalpel tools, not one blunt shovel"</em></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam &amp; production trap: a bigger model will not fix bad data</h4>
+                <p>Upgrading the foundation model (e.g., from a fast tier to a frontier tier) <strong>cannot</strong> fix an upstream knowledge engineering failure. If a parser drops a table column or a 500-token split cuts out a <code>"provided, however, that..."</code> exception clause, a smarter model only hallucinates more persuasively.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: 3-PHASE FRAMEWORK
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="three-phase-framework">
+            <div class="section-divider-number">02</div>
+            <h2>2. The 3-Phase Framework (7 Steps to Memorize)</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Instead of memorizing 7 isolated items, group them into <strong>3 logical phases</strong>: <strong>Prepare → Index → Expose</strong>.</p>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-broom"></i> Phase 1: Prepare (Structure &amp; Provenance)</div>
+            <div class="architecture-flow">
+                <div class="arch-node input">1. Ingestion<br><small>Layout / OCR</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">2. Structuring<br><small>MD / JSON / Tables</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">3. Structure Chunking<br><small>Sections, clauses</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node storage">4. Metadata &amp; Provenance<br><small>doc_id, version, ACL</small></div>
+            </div>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-database"></i> Phase 2: Index (Representation) → Phase 3: Expose (Agent Interface)</div>
+            <div class="architecture-flow">
+                <div class="arch-node storage">5. Hybrid Index<br><small>Dense + BM25 + RRF</small></div>
+                <div class="arch-arrow">+</div>
+                <div class="arch-node storage">6. Knowledge Graph<br><small>Entity → Relation → Entity</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node output">7. Retrieval Tools<br><small>Typed ACI / MCP</small></div>
+            </div>
+        </div>
+
+        <!-- Phase 1 -->
+        <h3 class="step-heading" id="phase-prepare"><span class="toc-number">P1</span>Phase 1: PREPARE — Make Data Clean, Complete &amp; Traceable</h3>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint" id="step-ingestion">
+                <h3><div class="icon-badge"><i class="fas fa-file-import"></i></div>Step 1: Document Ingestion</h3>
+                <p><strong>What:</strong> extract content from raw enterprise formats (PDFs, DOCX, HTML, scans, emails, spreadsheets) with layout-aware and OCR-capable parsers instead of raw character-stream readers.</p>
+                <p><strong>Why:</strong> standard text extractors (<code>pypdf</code>) fail silently on scans, multi-column layouts, and complex tables: <em>garbage in, confident hallucination out</em>.</p>
+                <p><strong>Production pattern (tiered extraction &amp; epistemic gating):</strong></p>
+                <ul>
+                    <li><strong>Tier 1 — fast stream (~0.05 s):</strong> <code>pypdf</code>/<code>pdfplumber</code> on clean, single-column digital PDFs.</li>
+                    <li><strong>Tier 2 — layout/vision OCR fallback (2–10 s):</strong> route low-density pages, tables, or scans to <code>Docling</code> (local layout model + <code>TableFormer</code> + OCR) or a managed cloud parser (e.g., Google Document AI).</li>
+                    <li><strong>Composite extraction quality gate:</strong> score OCR confidence, dictionary-word ratio, character entropy, and structural completeness; hard-stop below a threshold (e.g., <code>&lt; 0.70</code>) <em>before</em> indexing or calling an LLM.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue" id="step-structuring">
+                <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Step 2: Normalization &amp; Structuring</h3>
+                <p><strong>What:</strong> convert raw extracted text into a clean, canonical hierarchy: Markdown with explicit <code>#</code> / <code>##</code> / <code>###</code> headings, serialized Markdown/HTML tables, structured JSON records, and normalized entities (ISO-8601 <code>YYYY-MM-DD</code> dates, standardized currency/units).</p>
+                <p><strong>Why:</strong> LLMs and downstream chunkers rely on structural markers to understand scope: which sub-clause belongs to which article, which cell belongs to which column header.</p>
+                <p><strong>Key output:</strong> a typed document object (such as <code>DoclingDocument</code>) preserving reading order, section hierarchy, bounding boxes, and table grids.</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple" id="step-chunking">
+                <h3><div class="icon-badge"><i class="fas fa-scissors"></i></div>Step 3: Structure-Aware Chunking</h3>
+                <p><strong>What:</strong> split along <strong>logical and semantic boundaries</strong> (sections, subsections, complete tables, atomic clauses), not arbitrary fixed token counts.</p>
+                <p><strong>Why:</strong> fixed-token chunking cuts rules from their exceptions (<em>"The vendor is liable for all damages..."</em> in chunk 1; <em>"...except indirect or consequential damages"</em> in chunk 2) and separates table rows from headers.</p>
+                <ul>
+                    <li><strong>Header-aware chunking (<code>HybridChunker</code>):</strong> starts from the document hierarchy, splits oversized chunks and merges undersized siblings to respect the embedding tokenizer's limit.</li>
+                    <li><strong>Intact table preservation:</strong> serialize tables whole, or attach column headers to every row group.</li>
+                    <li><strong>Parent-child chunking:</strong> embed small child chunks (128–256 tokens) for precise matching; return the larger parent section (1,024–2,048 tokens) to the LLM.</li>
+                    <li><strong>Contextual retrieval (Anthropic pattern):</strong> prepend a short, chunk-specific context before computing <em>both</em> the embedding and the BM25 index. Anthropic's version has an LLM read the whole document plus the chunk and write ~50–100 tokens; a cheap fallback is a breadcrumb such as <code>[Doc: MSA_2026 | Section 8.2: Limitation of Liability]</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber" id="step-metadata">
+                <h3><div class="icon-badge"><i class="fas fa-tags"></i></div>Step 4: Metadata &amp; Provenance</h3>
+                <p><strong>What:</strong> a mandatory, structured metadata envelope on every chunk:</p>
+                <ul>
+                    <li><strong>Provenance &amp; location:</strong> <code>source_uri</code>, <code>doc_id</code>, <code>section_path</code>, <code>page_number</code>, <code>bounding_box</code>.</li>
+                    <li><strong>Lifecycle &amp; governance:</strong> <code>created_date</code>, <code>effective_date</code>, <code>expiration_date</code>, <code>version</code>, <code>status</code> (<code>"active"</code> vs. <code>"superseded"</code>), <code>owner</code>, <code>access_acl</code> / <code>tenant_id</code>.</li>
+                </ul>
+                <p><strong>Solves two problems:</strong></p>
+                <ul>
+                    <li><strong>Pre-search deterministic filtering:</strong> exclude expired policies, drafts, or another tenant's records <em>before</em> vector scoring runs.</li>
+                    <li><strong>Post-generation auditability:</strong> exact inline citations (<code>(Source: Section 4.2, Page 14)</code>) that humans or auditor nodes can verify deterministically.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <h3 class="step-heading" id="phase-index"><span class="toc-number">P2</span>Phase 2: INDEX — Make Knowledge Findable by Meaning, Keyword &amp; Relationship</h3>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan" id="step-hybrid-index">
+                <h3><div class="icon-badge"><i class="fas fa-magnifying-glass"></i></div>Step 5: Embeddings &amp; Hybrid Indexes</h3>
+                <ul>
+                    <li><strong>Dense vector search:</strong> maps text into continuous space (768–3,072 dims, served via ANN indexes such as HNSW or ScaNN) to capture meaning, intent, and synonyms (<em>"termination for cause"</em> ↔ <em>"ending the agreement due to breach"</em>).</li>
+                    <li><strong>Sparse lexical search (BM25):</strong> scores exact token matches using term-frequency saturation, IDF, and length normalization; catches <strong>SKUs, part numbers, error codes, clause numbers (<code>Section 12.4(b)</code>), acronyms, and proper nouns</strong>.</li>
+                </ul>
+                <p><strong>Why both:</strong> dense vectors blur exact alphanumeric IDs; keyword search misses paraphrases. Run both in parallel, fuse with <strong>Reciprocal Rank Fusion</strong>, then pass the top-K (≈50) through a <strong>cross-encoder reranker</strong> (e.g., Cohere Rerank, BGE-Reranker, or a managed cloud ranking API) to keep the top-N (≈5).</p>
+            </div>
+            <div class="concept-card accent-coral" id="step-knowledge-graph">
+                <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Step 6: Knowledge Graph &amp; Ontology</h3>
+                <p><strong>What:</strong> domain knowledge as explicit <strong>nodes (entities)</strong> and <strong>directed edges (relationships)</strong> governed by a formal schema (<strong>ontology</strong>).</p>
+                <p><strong>Why:</strong> vector and keyword indexes find <em>passages with similar text</em>, but fail on <strong>multi-hop relational reasoning</strong>, dependency tracing, or aggregation across isolated documents.</p>
+                <ul>
+                    <li><strong>Ontology (schema / TBox):</strong> allowed entity classes (<code>Contract</code>, <code>Party</code>, <code>Clause</code>), predicates (<code>governed_by</code>, <code>supersedes</code>), and constraints (RDFS, OWL, or typed schemas).</li>
+                    <li><strong>Knowledge Graph (instances / ABox):</strong> the populated network of real entities and edges (stored in a graph database; queried via <strong>Cypher</strong>, <strong>GQL</strong>, or <strong>SPARQL</strong>).</li>
+                    <li><strong>Hybrid GraphRAG:</strong> use hybrid search to find the entry entity, traverse 1–3 hops along ontology edges, and pass both the subgraph path and source chunks to the LLM. See <a href="RAG.html#graphrag">RAG → GraphRAG</a>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="formula-block">
+            <div class="formula-label">Reciprocal Rank Fusion (RRF) — merge ranked lists by rank, not raw score</div>
+            <div class="formula">RRF(d) = ∑<sub>m ∈ {Dense, BM25}</sub> 1 / (60 + rank<sub>m</sub>(d))</div>
+            <div class="formula-description">Cosine and BM25 scores live on different scales, so RRF uses only ranks (k = 60 is the conventional constant). Documents ranked well by <em>both</em> retrievers rise to the top.</div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Multi-hop example — the answer lives in the edges, not in any single chunk</span>
+            </div>
+            <pre class="ascii-diagram">[Service: Checkout-API] ──(depends_on)──► [DB: Payments-Cluster-02]
+                                                     │
+                                               (hosted_in)
+                                                     ▼
+[Policy: PCI-DSS-v4] ◄──(governed_by)─── [Region: eu-central-1]</pre>
+        </div>
+
+        <!-- Phase 3 -->
+        <h3 class="step-heading" id="phase-expose"><span class="toc-number">P3</span>Phase 3: EXPOSE — Turn Indexes into Agent Tools</h3>
+
+        <div class="concept-card accent-mint" id="step-retrieval-tools" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-screwdriver-wrench"></i></div>Step 7: Retrieval Tools (the Agent-Computer Interface)</h3>
+            <p><strong>What:</strong> wrap hybrid indexes, metadata filters, and knowledge graphs into narrow, strongly-typed, mistake-proof functions (often exposed via <a href="MCP.html">MCP</a>) that the agent invokes intentionally.</p>
+            <p><strong>Why:</strong> one vague <code>search_all(query: str)</code> tool is an anti-pattern: the model must guess how to phrase queries, cannot enforce deterministic metadata constraints, and floods its own context window with noisy chunks.</p>
+            <ul>
+                <li><strong>Decompose by domain intent:</strong> exact lookup, filtered hybrid search, and graph traversal become separate tools.</li>
+                <li><strong>Poka-Yoke the arguments:</strong> <code>Literal</code> enums, ISO-date validators, and bounded <code>top_k</code> so the model cannot request 500 chunks or invent category names.</li>
+                <li><strong>Return structured provenance:</strong> <code>chunk_text</code>, <code>doc_id</code>, <code>section_path</code>, <code>page_number</code>, <code>effective_date</code>, so generator and auditor agents can verify citations deterministically.</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Python (illustrative) — replace search_all(query) with intent-specific, typed tools</span>
+            </div>
+            <pre><span class="keyword">def</span> <span class="function">get_policy_by_id</span>(policy_id: str) -&gt; PolicyRecord: ...
+    <span class="comment"># exact key / BM25 lookup</span>
+
+<span class="keyword">def</span> <span class="function">search_active_clauses</span>(
+    category: Literal[<span class="string">"indemnity"</span>, <span class="string">"termination"</span>, <span class="string">"ip"</span>],
+    jurisdiction: str,
+    effective_after: date,
+    top_k: int = Field(default=<span class="variable">5</span>, le=<span class="variable">10</span>),
+) -&gt; list[ChunkWithProvenance]: ...
+    <span class="comment"># hybrid search with mandatory pre-filters (status="active", user ACL)</span>
+
+<span class="keyword">def</span> <span class="function">trace_system_dependencies</span>(service_name: str, max_hops: int = <span class="variable">2</span>) -&gt; SubgraphPath: ...
+    <span class="comment"># deterministic graph traversal</span></pre>
+        </div>
+
+        <div class="concept-card accent-blue" id="structured-data-tools" style="margin-top: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-table"></i></div>Structured data tools: parameterized queries vs. NL2SQL</h3>
+            <p>Questions such as "total refunds by region last quarter" need exact filters, joins and aggregates, which embeddings cannot compute. Expose tables through a query tool instead of indexing rows as text, and choose the most constrained tool shape that still answers the questions users actually ask.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Tool shape</th><th>Who writes the SQL</th><th>Use when</th><th>Main risk</th><th>Core controls</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Parameterized query tool</strong><br><code>get_refunds_by_region(region, quarter)</code></td><td>An engineer, ahead of time; the model only fills typed arguments</td><td>Questions are known and recurring; customer-facing paths; anything that writes</td><td>Cannot answer questions outside the tool catalog</td><td>Enum and typed arguments, bound parameters, never string concatenation</td></tr>
+                    <tr><td><strong>NL2SQL over a curated layer</strong><br>(approved views plus metric definitions)</td><td>The model, against a small set of documented views</td><td>Analysts ask varied questions over a well-defined domain</td><td>A wrong join or metric definition that still returns a plausible number</td><td>Approved views only, a metric glossary in context, verified example queries</td></tr>
+                    <tr><td><strong>Open NL2SQL over the schema</strong><br>(<code>execute_sql</code>)</td><td>The model, against any table it can discover</td><td>Exploration by trusted internal users in a sandbox</td><td>Expensive scans, data exposure, injected text steering the query</td><td>Everything below, plus human review before results are shared</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Guardrails for any model-written SQL</h3>
+            <ul>
+                <li><strong>Read-only identity:</strong> the database account can only <code>SELECT</code> from approved views. Permissions enforce safety; a prompt instruction does not.</li>
+                <li><strong>Validate before you execute:</strong> parse the statement, reject anything other than a single <code>SELECT</code>, dry-run it to estimate bytes scanned, and enforce a cost ceiling and a row <code>LIMIT</code>.</li>
+                <li><strong>Row-level security follows the user:</strong> propagate the end user's identity so the database filters rows, rather than trusting the agent to add the right <code>WHERE</code> clause.</li>
+                <li><strong>Return the query with the answer:</strong> include the SQL and the row count so the user or an auditor agent can check how the number was produced.</li>
+                <li><strong>Evaluate on results, not text:</strong> compare the result set of each generated query with a reference query on a golden question set; two different SQL strings can both be correct.</li>
+                <li><strong>On Google Cloud:</strong> <a href="https://mcp-toolbox.dev/" target="_blank" rel="noopener">MCP Toolbox for Databases</a> supports both ends: <code>bigquery-sql</code> and <code>postgres-sql</code> tools run a predefined statement with bound parameters, while <code>bigquery-execute-sql</code> accepts model-written SQL and offers a dry run. BigQuery <a href="https://docs.cloud.google.com/bigquery/docs/conversational-analytics" target="_blank" rel="noopener">conversational analytics</a> data agents sit in the middle, grounded by authored context and verified queries.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: SCALING LADDER
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="scaling-ladder">
+            <div class="section-divider-number">03</div>
+            <h2>3. Progressive Scaling Ladder: When Do You Need Which Steps?</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Apply <strong>progressive complexity</strong> (Rule 0 from <a href="ADP.html">Agentic Design Patterns</a>): add indexing and graph layers only when corpus scale or query topology proves the simpler level falls short.</p>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">Q1</div>
+                <h4>Does the knowledge fit in the context window?</h4>
+                <p>1 to a few documents per run → <strong>Level 1</strong>. Hundreds to millions of documents → go to Q2.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">Q2</div>
+                <h4>Do queries need multi-hop traversal?</h4>
+                <p>Fact, clause, or procedure lookup → <strong>Level 2</strong>. Entity dependencies, hierarchies, cross-document rules → <strong>Level 3</strong>.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Level</th><th>Data &amp; Task Profile</th><th>Steps Needed</th><th>What You Skip &amp; Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Level 1: In-Context Processing</strong></td><td>Analyzing <strong>1 to a few documents</strong> at a time (e.g., one uploaded contract or invoice that fits in context)</td><td><strong>Steps 1, 2, 4</strong><br><em>(Ingest → Structure → Provenance)</em></td><td><strong>Skip 3, 5, 6, 7.</strong> Do not chunk and embed a 10-page document just to retrieve 5 chunks from it; parse it cleanly, attach page/section provenance, and pass the structured Markdown directly.</td></tr>
+                    <tr><td><strong>Level 2: Production Agentic RAG</strong></td><td>Searching <strong>hundreds to millions of documents</strong> for facts, clauses, policies, or procedures</td><td><strong>Steps 1, 2, 3, 4, 5, 7</strong><br><em>(+ Chunking, Hybrid Index, Retrieval Tools)</em></td><td><strong>Skip 6 (Knowledge Graph)</strong> when self-contained sections found by semantic + keyword search and metadata filters answer the question.</td></tr>
+                    <tr><td><strong>Level 3: Graph-Augmented RAG (GraphRAG)</strong></td><td>Domains where <strong>relationships, dependencies, hierarchies, or cross-document rules</strong> drive the answer (supply-chain impact, microservice root cause, regulatory cross-references)</td><td><strong>All Steps 1–7</strong><br><em>(+ Knowledge Graph / Ontology + graph tools)</em></td><td><strong>Nothing skipped:</strong> structure-aware hybrid search plus explicit graph traversal, exposed as specialized tools.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-scale-balanced"></i></div>
+            <div class="callout-content">
+                <h4>Trap: over-engineering the small case</h4>
+                <p>A vector database and knowledge graph for a single 5-page contract add cost and new failure modes (missed chunks) with no benefit. Conversely, stuffing millions of documents into a prompt is impossible; the scale and the query shape choose the level.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: DIAGNOSTICS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="diagnostics">
+            <div class="section-divider-number">04</div>
+            <h2>4. Diagnostic Cheat Sheet: "Symptom → Missing Step"</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Use this table in architecture reviews and debugging sessions to pinpoint why an agent is failing.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Agent Failure Symptom</th><th>Broken Step</th><th>Root Cause</th><th>Engineering Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Misses numbers inside tables or hallucinates on scanned PDFs</td><td><strong>01 Ingestion / 02 Structuring</strong></td><td>Basic stream parser dropped table structure or returned empty text on scans</td><td>Tiered layout-aware/OCR parsing + pre-LLM quality gate</td></tr>
+                    <tr><td>Retrieves a general rule but misses the exception right below it</td><td><strong>03 Structure-Aware Chunking</strong></td><td>Fixed 500-token splitter severed the rule from its sub-clause or table header</td><td>Split on headers/clauses (<code>HybridChunker</code>), keep tables intact, or use parent-child chunks</td></tr>
+                    <tr><td>Cites an outdated 2022 policy or leaks another customer's record</td><td><strong>04 Metadata &amp; Provenance</strong></td><td>Chunks lack lifecycle/ACL tags, or retrieval runs without pre-filtering</td><td>Attach <code>version</code>, <code>status="active"</code>, <code>effective_date</code>, <code>tenant_id</code>; enforce mandatory pre-filters</td></tr>
+                    <tr><td>Finds general topics but fails on exact SKUs, clause IDs, or error codes</td><td><strong>05 Embeddings &amp; Hybrid Index</strong></td><td>Pure dense embeddings smooth over exact alphanumeric strings</td><td>Hybrid search (dense + BM25) fused via RRF + cross-encoder reranking</td></tr>
+                    <tr><td>Fails on multi-hop questions (<em>"If Vendor X defaults, which SLA in Contract Y is triggered via Subsidiary Z?"</em>)</td><td><strong>06 Knowledge Graph &amp; Ontology</strong></td><td>Flat chunks share no lexical or vector overlap across the intermediate hops</td><td>Model entities and relationships in an ontology-governed graph; expose traversal tools</td></tr>
+                    <tr><td>Writes overly broad, unparseable, or hallucinated search queries</td><td><strong>07 Retrieval Tools (ACI)</strong></td><td>One generic <code>search(query)</code> tool gives the LLM too much freedom and zero guardrails</td><td>Narrow, typed MCP tools with <code>Literal</code> enums, date filters, and clear docstrings (Poka-Yoke)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: OPERATING THE KNOWLEDGE LAYER
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="knowledge-operations">
+            <div class="section-divider-number">05</div>
+            <h2>5. Operating the Knowledge Layer: Multimodal, Access, Freshness, Memory &amp; Evaluation</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">The 7 steps build the knowledge layer once. A production agent also needs it to handle non-text sources, respect permissions, stay current, stay separate from agent memory, and be measured. For pipeline-level depth see the RAG guide: <a href="RAG.html#indexing">indexing</a>, <a href="RAG.html#security">security</a>, <a href="RAG.html#freshness">freshness</a>, and <a href="RAG.html#evaluation">evaluation</a>.</p>
+
+        <h3 class="step-heading" id="multimodal-sources"><span class="toc-number">5.1</span>Multimodal Sources (Audio, Video, Images)</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Source</th><th>Prepare it as</th><th>Provenance to keep</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Audio</strong> (calls, meetings, voicemail)</td><td>Speech-to-text transcript with speaker labels (diarization) and timestamps; chunk by speaker turn or topic</td><td><code>start_time</code>, <code>end_time</code>, <code>speaker</code>, <code>recording_id</code></td></tr>
+                    <tr><td><strong>Video</strong> (training, demos, recorded incidents)</td><td>Transcript + scene/shot segments + keyframe descriptions, or one multimodal embedding per segment</td><td>Timestamp range, keyframe URI</td></tr>
+                    <tr><td><strong>Images, diagrams, scanned forms</strong></td><td>OCR for text; a vision model's caption for figures; or a multimodal embedding model that maps images and text into the same vector space</td><td><code>page_number</code>, <code>bounding_box</code>, <code>image_uri</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-photo-film"></i></div>
+            <div class="callout-content">
+                <h4>Rule: make media addressable</h4>
+                <p>Turn every media file into <strong>time- or region-addressable units</strong> so a citation points to <em>"minute 12:40"</em> or <em>"Figure 3, page 7"</em>, not just <em>"the video"</em>.</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral" id="identity-aware-access">
+                <h3><div class="icon-badge"><i class="fas fa-user-shield"></i></div>5.2 Identity-Aware Access &amp; Sensitive Data</h3>
+                <ul>
+                    <li><strong>Filter by the end user's identity, in code.</strong> Enforce ACLs inside the retrieval tool as a mandatory filter built from the <em>end user's</em> verified identity (propagated to the tool). Do not query with the agent's broad service credential, and never rely on a prompt like <em>"ignore documents the user cannot see"</em>.</li>
+                    <li><strong>Sync permissions with content.</strong> Ingest ACLs from the source system alongside the text; a permission change must re-propagate to the index, just like a content change.</li>
+                    <li><strong>Redact before you index.</strong> Remove or tokenize PII and secrets that retrieval does not need <em>before</em> embedding. Once sensitive text is in chunks and vectors, the only fix is delete and re-index.</li>
+                </ul>
+                <p><strong>Trap:</strong> one shared index + a superuser credential + a prompt asking the model to "respect permissions" = a data leak waiting to happen.</p>
+            </div>
+            <div class="concept-card accent-amber" id="freshness-lifecycle">
+                <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>5.3 Freshness &amp; Index Lifecycle</h3>
+                <ul>
+                    <li><strong>Incremental ingestion:</strong> detect changes (content hash, modified timestamp, or change events) and re-parse/re-embed only the changed documents.</li>
+                    <li><strong>Deletes and supersession:</strong> propagate deletions (remove or tombstone chunks) and flip old versions to <code>status="superseded"</code> so two versions are never both "active".</li>
+                    <li><strong>Embedding model change ⇒ full re-embed:</strong> vectors from different embedding models (or versions) are not comparable; never mix them in one index. Record <code>embedding_model</code> and <code>ingested_at</code> in metadata.</li>
+                    <li><strong>Monitor staleness:</strong> track the lag between a source change and the index update.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="step-heading" id="knowledge-vs-memory"><span class="toc-number">5.4</span>Knowledge Base vs. Agent Memory</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Knowledge base</th><th>Agent memory</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Source</strong></td><td>Curated enterprise documents and systems of record</td><td>The agent's own interactions (sessions)</td></tr>
+                    <tr><td><strong>Scope</strong></td><td>Shared across users, filtered by ACL</td><td>Per user or per session</td></tr>
+                    <tr><td><strong>Authority</strong></td><td>Authoritative, versioned ground truth</td><td>User-specific preferences and facts; can be wrong or stale</td></tr>
+                    <tr><td><strong>Write path</strong></td><td>Ingestion pipeline (Steps 1–6) with owners and review</td><td>Agent extracts and consolidates facts during or after a session</td></tr>
+                    <tr><td><strong>Lifecycle</strong></td><td>Versions, effective dates, supersession</td><td>TTL, consolidation, user deletion requests</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-brain"></i></div>
+            <div class="callout-content">
+                <h4>Rule: keep the two stores separate</h4>
+                <p>Do not write unverified conversation facts into the shared knowledge base, and do not store company policy in a user's memory. See the 4-tier memory model in <a href="ADP.html#memory-context">Agentic Design Patterns → Memory</a>.</p>
+            </div>
+        </div>
+
+        <h3 class="step-heading" id="knowledge-evaluation"><span class="toc-number">5.5</span>Evaluating the Knowledge Layer (Golden Dataset)</h3>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-bullseye"></i></div>Build &amp; measure</h3>
+                <ul>
+                    <li><strong>Golden set:</strong> realistic queries (exact-ID lookups, multi-hop questions, permission edge cases, and questions with <strong>no</strong> answer in the corpus), each mapped to expected <code>doc_id</code>/chunk IDs and a reference answer.</li>
+                    <li><strong>Retrieval metrics:</strong> recall@k (did the right chunk reach the top-k?), precision@k, and rank-aware MRR or nDCG (was it ranked high?).</li>
+                    <li><strong>Generation metrics:</strong> groundedness/faithfulness (claims supported by retrieved text), citation accuracy, answer correctness, and a correct "not found" when the corpus has no answer.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-stethoscope"></i></div>Read the result</h3>
+                <ul>
+                    <li><strong>Low recall@k</strong> → Steps 1–5 (parsing, chunking, metadata, index).</li>
+                    <li><strong>High recall, wrong answers</strong> → generation (prompting, context overload).</li>
+                    <li><strong>Permission violations</strong> → Step 4 and §5.2.</li>
+                    <li><strong>Re-run on every change</strong> to the parser, chunker, embedding model, reranker, or tools. See <a href="AgentOps.html">AgentOps</a> for continuous evaluation pipelines.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: EXAM QUICK-REVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="exam-review">
+            <div class="section-divider-number">06</div>
+            <h2>6. Exam Quick-Review</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Comparison</th><th>Key Distinction</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Naive RAG vs. Knowledge Engineering</strong></td><td>Naive RAG = raw stream → fixed 500-token chunks → vector-only → prompt stuffing. Knowledge Engineering = layout parsing → structure chunking → provenance → hybrid + graph → typed ACI tools.</td></tr>
+                    <tr><td><strong>Prepare vs. Index vs. Expose</strong></td><td><strong>Prepare</strong> (Steps 1–4) makes data clean &amp; traceable; <strong>Index</strong> (Steps 5–6) makes it findable by meaning, keyword &amp; relationship; <strong>Expose</strong> (Step 7) turns indexes into mistake-proof agent tools.</td></tr>
+                    <tr><td><strong>Fixed-token vs. structure-aware chunking</strong></td><td>Fixed-token cuts every N tokens (severing rules from exceptions and tables from headers); structure-aware splits on headings, clauses, and intact tables.</td></tr>
+                    <tr><td><strong>Metadata pre-filtering vs. post-generation citation</strong></td><td>Both rely on <strong>Step 4</strong>: pre-filtering enforces ACLs, recency, and active status <em>before</em> search; provenance enables deterministic citation checks <em>after</em> generation.</td></tr>
+                    <tr><td><strong>Dense vs. BM25 vs. Hybrid</strong></td><td>Dense = meaning &amp; synonyms; BM25 = exact SKUs, error codes &amp; clause numbers; Hybrid = both, fused via RRF + cross-encoder reranking.</td></tr>
+                    <tr><td><strong>Hybrid RAG (Step 5) vs. GraphRAG (Step 6)</strong></td><td>Hybrid RAG retrieves relevant <em>text passages</em>; GraphRAG traverses explicit <em>entity-relationship edges</em> for multi-hop reasoning and dependency analysis.</td></tr>
+                    <tr><td><strong>Ontology vs. Knowledge Graph</strong></td><td><strong>Ontology</strong> = the formal schema (node types, edge predicates, constraints); <strong>Knowledge Graph</strong> = the populated instances that conform to it.</td></tr>
+                    <tr><td><strong>Generic <code>search(query)</code> vs. specialized tools</strong></td><td>Generic search forces the LLM to guess syntax; specialized ACI/MCP tools constrain arguments with typed schemas (<code>Literal</code>, dates, IDs).</td></tr>
+                    <tr><td><strong>Knowledge base vs. agent memory</strong></td><td>Knowledge base = curated, shared (ACL-filtered), versioned ground truth; memory = per-user/session facts extracted from interactions, with TTL and consolidation.</td></tr>
+                    <tr><td><strong>Retrieval vs. generation metrics</strong></td><td>Retrieval = recall@k, precision@k, MRR/nDCG against golden chunk IDs; generation = groundedness, citation accuracy, answer correctness. Measure both separately.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: RESOURCES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">07</div>
+            <h2>7. Pocket Card, Glossary &amp; Practice Quiz</h2>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Pocket card — 3 phases, 7 steps</span>
+            </div>
+            <pre class="ascii-diagram">PHASE 1: PREPARE (Clean &amp; Traceable)
+  01. Ingestion        Layout + OCR parsing (tables, scans, PDFs)
+  02. Structuring      Raw text → Markdown sections / JSON / tables
+  03. Chunking         Split by structure (headers/tables), not every N tokens
+  04. Provenance       Tag doc_id, date, version, section, ACL
+
+PHASE 2: INDEX (Findable)
+  05. Hybrid Index     Dense vectors (meaning) + BM25 (exact IDs) + RRF + rerank
+  06. Knowledge Graph  Entity → Relation → Entity (multi-hop rules)
+
+PHASE 3: EXPOSE (Actionable ACI)
+  07. Retrieval Tools  Domain-specific, typed MCP tools (Poka-Yoke)
+
+SCALING LADDER
+  Level 1 (In-context, 1–few docs):  Steps 1, 2, 4
+  Level 2 (Production agentic RAG):  Steps 1, 2, 3, 4, 5, 7
+  Level 3 (GraphRAG, multi-hop):     All steps 1–7</pre>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Knowledge Engineering</dt>
+                <dd>The discipline of turning raw, unstructured data into structured, traceable, and mistake-proof retrieval systems and tools for AI agents.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Layout-aware ingestion (Step 1)</dt>
+                <dd>Extracting document content with computer-vision layout detection and OCR (e.g., <code>Docling</code>, Google Document AI, <code>LlamaParse</code>) to preserve reading order and tables.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Normalization &amp; structuring (Step 2)</dt>
+                <dd>Transforming raw extracted text into hierarchical Markdown headings, structured JSON, intact tables, and canonical entity formats.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Structure-aware chunking (Step 3)</dt>
+                <dd>Splitting documents along semantic and structural boundaries (sections, clauses, intact tables, parent-child hierarchies) rather than fixed token counts.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Metadata &amp; provenance (Step 4)</dt>
+                <dd>Structured attributes (<code>doc_id</code>, <code>section_path</code>, <code>page_number</code>, <code>version</code>, <code>effective_date</code>, <code>access_acl</code>) on every chunk for pre-search filtering and post-generation citation checks.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Hybrid index (Step 5)</dt>
+                <dd>Dense semantic embeddings plus sparse lexical matching (<strong>BM25</strong>), merged via <strong>Reciprocal Rank Fusion</strong> and refined with a <strong>cross-encoder reranker</strong>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Knowledge Graph (Step 6)</dt>
+                <dd>A network of typed nodes (entities) and directed edges (relationships) representing domain facts and dependencies for multi-hop reasoning.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Ontology</dt>
+                <dd>The formal schema governing a knowledge graph: valid entity classes, relationship predicates, hierarchies, and constraints (e.g., RDFS, OWL).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Retrieval tools / ACI (Step 7)</dt>
+                <dd>Narrow, strongly-typed, well-documented functions (often via <strong>MCP</strong>) that give an agent mistake-proof (<strong>Poka-Yoke</strong>) access to hybrid indexes and knowledge graphs.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Identity-aware retrieval</dt>
+                <dd>Enforcing document ACLs inside the retrieval tool using the end user's propagated identity, rather than the agent's broad credential or a prompt instruction.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Golden dataset</dt>
+                <dd>Curated queries mapped to expected source chunks and reference answers, used to measure retrieval (recall@k, MRR/nDCG) and generation (groundedness, citation accuracy) after every change.</dd>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related guides</h3>
+                <ul>
+                    <li><a href="RAG.html">Retrieval-Augmented Generation (RAG)</a>: embeddings, retrieval &amp; reranking, generation, agentic RAG, GraphRAG, freshness, caching, and evaluation.</li>
+                    <li><a href="ADP.html">Agentic Design Patterns</a>: workflow vs. agent, ACI &amp; Poka-Yoke tool design, 4-tier memory, context engineering.</li>
+                    <li><a href="MCP.html">Model Context Protocol</a>: exposing retrieval tools and resources to any agent.</li>
+                    <li><a href="AgentOps.html">AgentOps</a> and <a href="ResponsibleAI.html">Responsible AI</a>: evaluation pipelines, observability, guardrails, and data governance.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 55-minute Knowledge Engineering audio deep dive, open the 21-slide deck and sketchnote infographic in the Hub Viewer, or drill scenario-based questions on layout-aware parsing, structure-aware chunking, metadata pre-filters, hybrid search, knowledge graphs, typed retrieval tools, and ACL enforcement.</p>
+                <div class="audio-label" style="margin-top: 15px;">Knowledge Engineering for Production AI Agents (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/KnowledgeEngineering-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=knowledge-engineering" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Take the Knowledge Engineering Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> What are the 3 phases and 7 steps of Knowledge Engineering for AI agents?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><strong>Prepare:</strong> (1) Document Ingestion, (2) Normalization &amp; Structuring, (3) Structure-Aware Chunking, (4) Metadata &amp; Provenance. <strong>Index:</strong> (5) Embeddings &amp; Hybrid Indexes, (6) Knowledge Graph &amp; Ontology. <strong>Expose:</strong> (7) Specialized Retrieval Tools (ACI/MCP).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> Why is arbitrary 500-token chunking dangerous for agents?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">It splits logical units (tables, or legal clauses and their exceptions) in half, giving the agent incomplete ground truth and causing confident hallucinations.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Why do production systems use hybrid search (vector + BM25) instead of vectors alone?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Dense embeddings capture meaning and synonyms, while sparse BM25 captures exact keyword, SKU, acronym, and clause-ID matches that embeddings blur.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> When is a Knowledge Graph (Step 6) justified over standard hybrid RAG (Step 5)?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">When answers depend on multi-hop relationships, dependency chains, hierarchies, or cross-document relational rules between entities.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> What two problems does Metadata &amp; Provenance (Step 4) solve?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">(1) <strong>Pre-search filtering</strong> (tenant ACLs, active versions, effective dates enforced before retrieval) and (2) <strong>post-generation auditability</strong> (exact source citations verified by humans or auditor nodes).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> Why expose several specific retrieval tools instead of one generic <code>search(query)</code> tool?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Specific, strongly-typed tools (<strong>Poka-Yoke ACI</strong>) constrain the agent's search space with typed parameters and enums, preventing malformed queries and guaranteeing the right index and filter strategy runs.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> Which steps do you need to analyze a single 5-page contract that fits in the context window?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Only <strong>Steps 1, 2, and 4</strong> (Ingestion → Structuring → Provenance). Skip chunking, vector/hybrid indexing, knowledge graphs, and search tools.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> You switch to a newer embedding model. Can you embed only new documents with it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">No. Vectors from different embedding models are not comparable, so re-embed the whole corpus (or build a new index and cut over). Record <code>embedding_model</code> in metadata.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
