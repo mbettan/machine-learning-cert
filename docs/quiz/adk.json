@@ -30,7 +30,17 @@
         }
       ],
       "explanation": "Rule 0 starts with a single LLM call and adds workflows or multi-agent architectures only when evals prove the simpler approach fails. Under the 'agent theater' litmus test, splitting one prompt into multiple persona agents without independent tools, private data boundaries, an independent verifier role (`include_contents='none'` + external check), or human-gated steps costs ~4x the tokens and 1.5–2.5x the latency for marginal gains.",
-      "key_takeaway": "Avoid 'agent theater': use multiple agents only when sub-agents need distinct tools, private data, an independent verifier, or human gates."
+      "key_takeaway": "Avoid 'agent theater': use multiple agents only when sub-agents need distinct tools, private data, an independent verifier, or human gates.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        }
+      ]
     },
     {
       "id": "adk-q-02",
@@ -59,7 +69,17 @@
         }
       ],
       "explanation": "'SDK' != 'ADK'. While `google-genai` is a model API client that can run a short in-process function-calling loop and hold in-memory chat history, it has no persistent `SessionService` isolated by `app_name`/`user_id`/`session_id`, no commit-then-resume `Event` ledger, no multi-agent transfers, no guardrail callbacks/plugins, no trajectory evaluator (`adk eval`), and no managed deployment runtime.",
-      "key_takeaway": "`google-genai` is a model client; ADK supplies persistent sessions, the Event ledger, multi-agent routing, callbacks, evals, and deployment."
+      "key_takeaway": "`google-genai` is a model client; ADK supplies persistent sessions, the Event ledger, multi-agent routing, callbacks, evals, and deployment.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        }
+      ]
     },
     {
       "id": "adk-q-03",
@@ -88,7 +108,17 @@
         }
       ],
       "explanation": "ADK separates the stateless `Agent` specification from the stateful `SessionService`. Attaching conversation state to the `Agent` instance causes cross-user data bleed under concurrent requests. All working state belongs in `SessionService`, partitioned by the 3-tier isolation keys `app_name -> user_id -> session_id` and mutated via `Event` deltas.",
-      "key_takeaway": "`Agent` instances must remain completely stateless; store conversation state in `SessionService` partitioned by `app_name`, `user_id`, and `session_id`."
+      "key_takeaway": "`Agent` instances must remain completely stateless; store conversation state in `SessionService` partitioned by `app_name`, `user_id`, and `session_id`.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "ADK Agent Primitives",
+          "url": "https://adk.dev/agents/"
+        }
+      ]
     },
     {
       "id": "adk-q-04",
@@ -111,13 +141,23 @@
           "why_wrong": "`MemoryService` handles cross-session recall and has no role in pausing or resuming in-flight tool confirmation events."
         },
         {
-          "text": "The `app_name` passed to `DatabaseSessionService` must be set to a numeric Vertex AI Reasoning Engine resource ID for confirmation to work.",
+          "text": "The `app_name` passed to `DatabaseSessionService` must be set to a numeric Agent Runtime (reasoningEngines) resource ID for confirmation to work.",
           "correct": false,
           "why_wrong": "Requiring a Reasoning Engine ID as `app_name` applies to `VertexAiSessionService`, and built-in tool confirmation is unsupported on `VertexAiSessionService` as well."
         }
       ],
       "explanation": "While swapping `InMemorySessionService` for `DatabaseSessionService` (with an async driver like `postgresql+asyncpg`) or `VertexAiSessionService` works with zero agent code changes for normal turns, ADK's built-in tool confirmation (`require_confirmation` / `request_confirmation`) is documented as supported only by `InMemorySessionService`. Production durable approvals should use `LongRunningFunctionTool` or an external ticket/webhook workflow.",
-      "key_takeaway": "Built-in tool confirmation is `InMemorySessionService`-only; use `LongRunningFunctionTool` or external approval workflows with persistent session stores."
+      "key_takeaway": "Built-in tool confirmation is `InMemorySessionService`-only; use `LongRunningFunctionTool` or external approval workflows with persistent session stores.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "ADK Agent Primitives",
+          "url": "https://adk.dev/agents/"
+        }
+      ]
     },
     {
       "id": "adk-q-05",
@@ -146,7 +186,17 @@
         }
       ],
       "explanation": "A `LoopAgent` stops either when a sub-agent/tool sets `escalate = True` or when `max_iterations` trips. Critically, reaching `max_iterations` is a silent exit—no exception is raised—so the next step in an enclosing `SequentialAgent` (`publisher`) executes regardless. Recording `tool_context.state['temp:approved'] = True` in `exit_loop` and gating `publisher` with `before_agent_callback` distinguishes true convergence from iteration exhaustion.",
-      "key_takeaway": "`LoopAgent` exits silently at `max_iterations`; set `state['temp:approved'] = True` in your exit tool and gate downstream steps via `before_agent_callback`."
+      "key_takeaway": "`LoopAgent` exits silently at `max_iterations`; set `state['temp:approved'] = True` in your exit tool and gate downstream steps via `before_agent_callback`.",
+      "doc_links": [
+        {
+          "label": "ADK Workflow Agents (Sequential, Parallel, Loop)",
+          "url": "https://adk.dev/agents/workflow-agents/"
+        },
+        {
+          "label": "ADK LlmAgent Guide",
+          "url": "https://adk.dev/agents/llm-agents/"
+        }
+      ]
     },
     {
       "id": "adk-q-06",
@@ -175,7 +225,17 @@
         }
       ],
       "explanation": "When `instruction` is a plain string, ADK scans it for `{key}` placeholders to inject values from `session.state` (or `{artifact.name}` from artifacts). Literal braces in JSON examples, regexes, or code snippets can trigger `KeyError` when they match variable syntax. Passing a function `def build_prompt(ctx: ReadonlyContext) -> str:` (`InstructionProvider`) bypasses automatic `{var}` templating and lets you read `ctx.state.get(...)` explicitly.",
-      "key_takeaway": "Use an `InstructionProvider` callable (`def prompt(ctx: ReadonlyContext) -> str:`) whenever instructions contain literal `{...}` JSON or regex syntax."
+      "key_takeaway": "Use an `InstructionProvider` callable (`def prompt(ctx: ReadonlyContext) -> str:`) whenever instructions contain literal `{...}` JSON or regex syntax.",
+      "doc_links": [
+        {
+          "label": "ADK Workflow Agents (Sequential, Parallel, Loop)",
+          "url": "https://adk.dev/agents/workflow-agents/"
+        },
+        {
+          "label": "ADK LlmAgent Guide",
+          "url": "https://adk.dev/agents/llm-agents/"
+        }
+      ]
     },
     {
       "id": "adk-q-07",
@@ -184,7 +244,7 @@
       "question": "A root `coordinator` agent needs a `tax_calculator` specialist to compute VAT and return the structured figure to `coordinator` so `coordinator` can finish drafting the client invoice. When `tax_calculator` is placed in `coordinator.sub_agents`, `tax_calculator` replies directly to the end user and takes over the chat. How should this be wired?",
       "options": [
         {
-          "text": "Wrap tax_calculator in AgentTool(agent=tax_calculator) on coordinator.tools (or use ADK 2.0 mode='task' to return results).",
+          "text": "Wrap tax_calculator in AgentTool(agent=tax_calculator) on coordinator.tools (or use ADK 2.0 mode='single_turn' to return results).",
           "correct": true
         },
         {
@@ -204,7 +264,17 @@
         }
       ],
       "explanation": "`sub_agents` (LLM transfer via `transfer_to_agent`) hands control of the conversation to the specialist, which answers the user next. Wrapping the specialist in `AgentTool(agent=tax_calculator)` (or using ADK 2.0 `mode='single_turn'`) invokes the child like a function call in an isolated child session, forwards any `output_key` state/artifact deltas to the parent, and returns the output to `coordinator` as a tool response.",
-      "key_takeaway": "Use `AgentTool(agent=...)` (or ADK 2.0 `mode='single_turn'`) when the parent must retain control after getting a sub-result; use `sub_agents` for full handoffs."
+      "key_takeaway": "Use `AgentTool(agent=...)` (or ADK 2.0 `mode='single_turn'`) when the parent must retain control after getting a sub-result; use `sub_agents` for full handoffs.",
+      "doc_links": [
+        {
+          "label": "ADK Multi-Agent Routing",
+          "url": "https://adk.dev/agents/routing/"
+        },
+        {
+          "label": "ADK Multi-Agent Workflow Patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        }
+      ]
     },
     {
       "id": "adk-q-08",
@@ -233,7 +303,17 @@
         }
       ],
       "explanation": "ADK enforces a single-parent rule across the agent tree: an `Agent` instance can appear in only one parent's `sub_agents` list because the runtime uses `agent.parent_agent` for hierarchy resolution and transfer scoping. To reuse a specialist across multiple workflows, create a factory function (`def create_compliance_agent() -> LlmAgent:`), call `agent.clone()`, or wrap it as a tool.",
-      "key_takeaway": "Each `Agent` instance can belong to only one parent's `sub_agents` list; use factory functions or `agent.clone()` to reuse specialists across workflows."
+      "key_takeaway": "Each `Agent` instance can belong to only one parent's `sub_agents` list; use factory functions or `agent.clone()` to reuse specialists across workflows.",
+      "doc_links": [
+        {
+          "label": "ADK Multi-Agent Routing",
+          "url": "https://adk.dev/agents/routing/"
+        },
+        {
+          "label": "ADK Multi-Agent Workflow Patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        }
+      ]
     },
     {
       "id": "adk-q-09",
@@ -262,7 +342,17 @@
         }
       ],
       "explanation": "In ADK 2.0's unified graph engine (`Workflow(edges=[...])`), a node routes conditionally along named edges by returning `Event(output=..., route='target_node')`. For parallel fan-out and fan-in, an edge tuple `(source, ('branch_a', 'branch_b'))` runs branches concurrently and a `JoinNode` synchronizes them into `dict[node_id, output]` without requiring LangGraph-style state reducers.",
-      "key_takeaway": "ADK 2.0 `Workflow` uses `Event(route=...)` for conditional branching and tuple fan-out + `JoinNode` for parallel synchronization."
+      "key_takeaway": "ADK 2.0 `Workflow` uses `Event(route=...)` for conditional branching and tuple fan-out + `JoinNode` for parallel synchronization.",
+      "doc_links": [
+        {
+          "label": "ADK 2.0 Graph Workflows",
+          "url": "https://adk.dev/graphs/"
+        },
+        {
+          "label": "ADK Workflow Agents (Sequential, Parallel, Loop)",
+          "url": "https://adk.dev/agents/workflow-agents/"
+        }
+      ]
     },
     {
       "id": "adk-q-10",
@@ -291,7 +381,17 @@
         }
       ],
       "explanation": "In ADK, `get_session()` returns a snapshot that must be treated as read-only. Mutating `session.state` directly in application code bypasses `SessionService.append_event()`, so no `state_delta` is recorded in the event ledger and nothing is written to `DatabaseSessionService` or `VertexAiSessionService`. Always write state via `output_key`, `tool_context.state`, `callback_context.state`, or `EventActions(state_delta={...})`.",
-      "key_takeaway": "Never mutate `get_session().state` directly; write state through `tool_context.state`, `callback_context.state`, `output_key`, or `EventActions(state_delta=...)`."
+      "key_takeaway": "Never mutate `get_session().state` directly; write state through `tool_context.state`, `callback_context.state`, `output_key`, or `EventActions(state_delta=...)`.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
     },
     {
       "id": "adk-q-11",
@@ -320,7 +420,17 @@
         }
       ],
       "explanation": "`VertexAiMemoryBankService` uses an LLM under the hood (`GenerateMemories` triggered by `add_session_to_memory(session)`) to extract meaningful user facts from raw session events and consolidate updates when preferences change over time. By contrast, `VertexAiRagMemoryService` performs vector similarity search over raw transcript chunks without reconciling contradictions, and `add_memory(...)` (`CreateMemory`) writes verbatim entries unless consolidation is enabled.",
-      "key_takeaway": "Use `VertexAiMemoryBankService` (`add_session_to_memory`) for LLM-extracted, consolidated user facts that update as preferences evolve."
+      "key_takeaway": "Use `VertexAiMemoryBankService` (`add_session_to_memory`) for LLM-extracted, consolidated user facts that update as preferences evolve.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
     },
     {
       "id": "adk-q-12",
@@ -349,7 +459,17 @@
         }
       ],
       "explanation": "Gemini built-in tools (`google_search`, `VertexAiSearchTool`, `BuiltInCodeExecutor`) execute server-side inside the model call and historically cannot be mixed in the same request as custom `FunctionTool` declarations (including ADK's injected `transfer_to_agent`). ADK solves this by either setting `bypass_multi_tools_limit=True` on `GoogleSearchTool` / `VertexAiSearchTool` or isolating the built-in tool on its own `LlmAgent` wrapped in `AgentTool(agent=...)`.",
-      "key_takeaway": "To mix Gemini built-in tools (`google_search`, `VertexAiSearchTool`) with custom tools, set `bypass_multi_tools_limit=True` or wrap the built-in agent in `AgentTool`."
+      "key_takeaway": "To mix Gemini built-in tools (`google_search`, `VertexAiSearchTool`) with custom tools, set `bypass_multi_tools_limit=True` or wrap the built-in agent in `AgentTool`.",
+      "doc_links": [
+        {
+          "label": "ADK Tools & MCP Integrations",
+          "url": "https://adk.dev/integrations/"
+        },
+        {
+          "label": "Gemini Structured Outputs",
+          "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+        }
+      ]
     },
     {
       "id": "adk-q-13",
@@ -378,7 +498,17 @@
         }
       ],
       "explanation": "An uncaught exception inside a tool aborts the step (unless intercepted by `on_tool_error_callback` or `ReflectAndRetryToolPlugin`). For expected domain failures (missing file, invalid SKU, rate limit), tools should return a structured error dictionary (`{'status': 'error', 'error_message': '...'}`) so the `Runner` serializes it as a `FunctionResponse` event and the LLM can fix its arguments, try an alternate tool, or explain the issue to the user.",
-      "key_takeaway": "Return structured error dicts (`{'status': 'error', 'error_message': '...'}`) from tools instead of raising exceptions so the model can recover."
+      "key_takeaway": "Return structured error dicts (`{'status': 'error', 'error_message': '...'}`) from tools instead of raising exceptions so the model can recover.",
+      "doc_links": [
+        {
+          "label": "ADK Tools & MCP Integrations",
+          "url": "https://adk.dev/integrations/"
+        },
+        {
+          "label": "Gemini Structured Outputs",
+          "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+        }
+      ]
     },
     {
       "id": "adk-q-14",
@@ -407,7 +537,17 @@
         }
       ],
       "explanation": "MCP is vertical (agent-to-tools/data) and A2A is horizontal (agent-to-agent). For production remote MCP servers, use `McpToolset` with `StreamableHTTPConnectionParams`, restrict exposed tools via `tool_filter=[...]` (exact list or predicate, plus `tool_name_prefix` to avoid collisions), and define toolsets synchronously at module level in `agent.py`. For cross-org agents, use `RemoteA2aAgent` and validate every returned artifact because remote agents execute outside your ADK callbacks.",
-      "key_takeaway": "Pair `McpToolset` (`StreamableHTTPConnectionParams` + `tool_filter` allowlist) for remote tools with `RemoteA2aAgent` (plus artifact validation) for cross-org agents."
+      "key_takeaway": "Pair `McpToolset` (`StreamableHTTPConnectionParams` + `tool_filter` allowlist) for remote tools with `RemoteA2aAgent` (plus artifact validation) for cross-org agents.",
+      "doc_links": [
+        {
+          "label": "ADK Tools & MCP Integrations",
+          "url": "https://adk.dev/integrations/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
     },
     {
       "id": "adk-q-15",
@@ -436,7 +576,17 @@
         }
       ],
       "explanation": "`SkillToolset` implements 3-tier progressive disclosure: Tier L1 exposes only YAML frontmatter (`name` + `description`, ~60 tokens/skill) via `list_skills`; Tier L2 loads the full `SKILL.md` body on demand via `load_skill`; and Tier L3 loads `references/` or `assets/` via `load_skill_resource` and executes `scripts/` via `run_skill_script` (which requires a sandboxed `code_executor` and non-interactive scripts that support `--help` and print structured JSON to stdout).",
-      "key_takeaway": "`SkillToolset` keeps prompts lean via L1/L2/L3 progressive disclosure; bundled scripts must be non-interactive, print JSON, and run in a `code_executor`."
+      "key_takeaway": "`SkillToolset` keeps prompts lean via L1/L2/L3 progressive disclosure; bundled scripts must be non-interactive, print JSON, and run in a `code_executor`.",
+      "doc_links": [
+        {
+          "label": "ADK Agent Primitives",
+          "url": "https://adk.dev/agents/"
+        },
+        {
+          "label": "Claude Agent Skills Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
+        }
+      ]
     },
     {
       "id": "adk-q-16",
@@ -465,7 +615,21 @@
         }
       ],
       "explanation": "If you only redact PII in `after_model_callback`, the raw output of `fetch_patient_record` has already been committed as a `FunctionResponse` event in `session.events`, sent to the external LLM API context, and captured in OpenTelemetry spans. Scrub PII at the tool boundary—`after_tool_callback` (returning a sanitized `dict` before the tool result is persisted or sent to the LLM) and `before_tool_callback`—keep `after_model_callback` as the final output backstop, and set `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`.",
-      "key_takeaway": "Redact PII at the tool boundary (`after_tool_callback` and `before_tool_callback`) before raw tool output enters model context and `session.events`."
+      "key_takeaway": "Redact PII at the tool boundary (`after_tool_callback` and `before_tool_callback`) before raw tool output enters model context and `session.events`.",
+      "doc_links": [
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
     },
     {
       "id": "adk-q-17",
@@ -494,7 +658,17 @@
         }
       ],
       "explanation": "Plugins (`BasePlugin` registered on `App(plugins=[...])`) enforce cross-cutting guardrails, logging, and retry policies across every agent, model, and tool in the app. Plugin callbacks execute **before** agent-level callbacks, and the first callback to return a non-`None` value (`types.Content`, `LlmResponse`, or `dict`) short-circuits the remaining callbacks in that phase and skips the underlying agent, model, or tool call.",
-      "key_takeaway": "`App(plugins=[...])` hooks run before agent-level callbacks, and returning a non-`None` value immediately short-circuits the step."
+      "key_takeaway": "`App(plugins=[...])` hooks run before agent-level callbacks, and returning a non-`None` value immediately short-circuits the step.",
+      "doc_links": [
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
     },
     {
       "id": "adk-q-18",
@@ -523,7 +697,17 @@
         }
       ],
       "explanation": "ADK's recovery stack has three layers: `HttpRetryOptions` for transport 429/503 errors, `ReflectAndRetryToolPlugin` for LLM-guided tool argument self-correction, and `on_model_error_callback` for model failover. By default, `ReflectAndRetryToolPlugin` hooks `on_tool_error_callback` (raised exceptions); to make it trigger on structured error dictionaries (`{'status': 'error', ...}`) returned via `after_tool_callback`, subclass `ReflectAndRetryToolPlugin` and override `extract_error_from_result`.",
-      "key_takeaway": "Override `extract_error_from_result` on `ReflectAndRetryToolPlugin` when your tools return structured `{'status': 'error'}` dicts instead of raising."
+      "key_takeaway": "Override `extract_error_from_result` on `ReflectAndRetryToolPlugin` when your tools return structured `{'status': 'error'}` dicts instead of raising.",
+      "doc_links": [
+        {
+          "label": "ADK Human-in-the-Loop Workflows",
+          "url": "https://adk.dev/graphs/human-input/"
+        },
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        }
+      ]
     },
     {
       "id": "adk-q-19",
@@ -552,13 +736,23 @@
         }
       ],
       "explanation": "LLM context caching only reuses KV states for an exact, unchanging token prefix. Placing dynamic state variables (`{current_time}`, `{user_tier}`) at the top of `instruction` invalidates the entire prefix on every turn. `LlmAgent` provides `static_instruction` for stable, cacheable content (placed before dynamic instructions) and `instruction` for dynamic `{state_key}` templates appended after the cached prefix.",
-      "key_takeaway": "Put stable prompt content in `static_instruction` and dynamic `{state_key}` placeholders in `instruction` to preserve `ContextCacheConfig` prefix hits."
+      "key_takeaway": "Put stable prompt content in `static_instruction` and dynamic `{state_key}` placeholders in `instruction` to preserve `ContextCacheConfig` prefix hits.",
+      "doc_links": [
+        {
+          "label": "ADK Technical Overview",
+          "url": "https://adk.dev/get-started/about/"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
     },
     {
       "id": "adk-q-20",
       "section": "Security & Sandboxing",
       "guide_anchor": "security-sandboxing",
-      "question": "A multi-agent system runs on GKE and executes untrusted Python data-analysis scripts generated by an `LlmAgent`. Meanwhile, a sibling agent deployed on Vertex AI Agent Runtime needs its own least-privilege IAM principal in Cloud Audit Logs without sharing a service account with other agents in the project. Which settings should be used?",
+      "question": "A multi-agent system runs on GKE and executes untrusted Python data-analysis scripts generated by an `LlmAgent`. Meanwhile, a sibling agent deployed on Agent Runtime needs its own least-privilege IAM principal in Cloud Audit Logs without sharing a service account with other agents in the project. Which settings should be used?",
       "options": [
         {
           "text": "Configure `GkeCodeExecutor(executor_type=\"sandbox\")` (pre-warmed gVisor Agent Sandbox) on GKE, and provision a dedicated Google Cloud Agent Identity (`principal://...`) on Agent Runtime.",
@@ -581,7 +775,17 @@
         }
       ],
       "explanation": "For GKE-hosted agents executing untrusted code, `GkeCodeExecutor` with `executor_type='sandbox'` uses pre-warmed gVisor Agent Sandboxes for kernel-level isolation and sub-second startup (replacing legacy per-run Kubernetes Jobs). For tool authentication on Agent Runtime, ADK supports three identity models: **Agent Identity** (`principal://...` per-agent IAM principal for least-privilege access and distinct audit trails), **Service Account** (shared workload identity), and **OAuth 2.0 user delegation** (`ToolContext.request_credential`).",
-      "key_takeaway": "Use `GkeCodeExecutor(executor_type='sandbox')` (gVisor) for GKE code isolation and Agent Identity (`principal://...`) for per-agent IAM on Agent Runtime."
+      "key_takeaway": "Use `GkeCodeExecutor(executor_type='sandbox')` (gVisor) for GKE code isolation and Agent Identity (`principal://...`) for per-agent IAM on Agent Runtime.",
+      "doc_links": [
+        {
+          "label": "Deploying ADK on Google Cloud",
+          "url": "https://adk.dev/get-started/google-cloud/"
+        },
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        }
+      ]
     },
     {
       "id": "adk-q-21",
@@ -610,7 +814,17 @@
         }
       ],
       "explanation": "`tool_trajectory_avg_score` defaults to `match_type: 'EXACT'`, which requires identical tool calls in the exact order with zero extras; when parallel or independent tools can run in any order, configure `match_type: 'ANY_ORDER'` (or `'IN_ORDER'` if extras are allowed between ordered steps). Furthermore, ADK's built-in efficiency metrics (`tool_call_count_v1`, `inference_call_count_v1`, `token_usage_v1`, `invocation_duration_v1`) are strictly `INFORMATIONAL`—setting a threshold on them in `test_config.json` raises an error. Enforce call budgets or forbidden-tool gates via a Python function in `custom_metrics` (`code_config.name`).",
-      "key_takeaway": "Use `IN_ORDER` / `ANY_ORDER` when tool order can vary, and use `custom_metrics` (`code_config.name`) to fail builds on call counts or forbidden tools."
+      "key_takeaway": "Use `IN_ORDER` / `ANY_ORDER` when tool order can vary, and use `custom_metrics` (`code_config.name`) to fail builds on call counts or forbidden tools.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
     },
     {
       "id": "adk-q-22",
@@ -638,8 +852,18 @@
           "why_wrong": "`adk run` is an interactive terminal chat CLI and `InMemoryMemoryService` is a session memory store, not a deterministic conformance replay engine."
         }
       ],
-      "explanation": "ADK provides four ways to evaluate agents: `adk web` (interactive Eval tab), `adk eval` (CLI rubric/trajectory grading), `AgentEvaluator.evaluate(...)` in `pytest`, and **`adk conformance test`**. Running `adk conformance test --mode=replay` replays recorded model responses from `adk conformance record` baselines to deterministically verify harness logic, callbacks, and state deltas in seconds with zero live LLM calls (`--mode=live` tests live model drift).",
-      "key_takeaway": "Use `adk conformance record` and `adk conformance test --mode=replay` to deterministically regression-test agent harness and callback logic without live LLM calls."
+      "explanation": "ADK provides four ways to evaluate agents: `adk web` (interactive Eval tab), `adk eval` (CLI rubric/trajectory grading), `AgentEvaluator.evaluate(...)` in `pytest`, and **`adk conformance test`**. Running `adk conformance test --mode=replay` replays recorded model responses from `adk conformance record` baselines to deterministically verify harness logic, callbacks, and state deltas in seconds with zero live LLM calls; live, evaluation-based mode is documented as not yet implemented.",
+      "key_takeaway": "Use `adk conformance record` and `adk conformance test --mode=replay` to deterministically regression-test agent harness and callback logic without live LLM calls.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
     },
     {
       "id": "adk-q-23",
@@ -668,7 +892,17 @@
         }
       ],
       "explanation": "In a multi-agent workflow (`SequentialAgent`, `LoopAgent`, `sub_agents`), **every** sub-agent emits its own `event.is_final_response() == True` when it finishes its step. Returning on the first `is_final_response()` exits the generator after step 1 (`researcher`). In addition, when `BuiltInPlanner` is enabled with `include_thoughts=True`, `event.content.parts` includes internal reasoning parts where `p.thought == True`. Always drain the `run_async()` loop to the end and join text from parts where `not getattr(p, 'thought', False)`.",
-      "key_takeaway": "In multi-agent runs, drain the entire `run_async()` stream (do not `return` on the first `is_final_response()`) and filter out `p.thought == True` parts."
+      "key_takeaway": "In multi-agent runs, drain the entire `run_async()` stream (do not `return` on the first `is_final_response()`) and filter out `p.thought == True` parts.",
+      "doc_links": [
+        {
+          "label": "Deploying ADK on Google Cloud",
+          "url": "https://adk.dev/get-started/google-cloud/"
+        },
+        {
+          "label": "ADK Live & Streaming Agents",
+          "url": "https://adk.dev/live/"
+        }
+      ]
     },
     {
       "id": "adk-q-24",
@@ -697,7 +931,17 @@
         }
       ],
       "explanation": "In Python ADK, passing `StreamingMode.BIDI` to `runner.run_async()` is a silent no-op (`run_async` only supports `StreamingMode.SSE` for server-sent token streaming). Bidirectional audio/video streaming with barge-in (`event.interrupted == True`) requires `runner.run_live(user_id=..., session_id=..., live_request_queue=LiveRequestQueue(), run_config=RunConfig(response_modalities=['AUDIO']))`. For ambient (event-driven) agents triggered by Cloud Pub/Sub or Eventarc, deploy to Cloud Run with `adk deploy cloud_run --trigger_sources='pubsub,eventarc'`.",
-      "key_takeaway": "Use `runner.run_live()` with `LiveRequestQueue` for bidirectional audio/video streaming, and `adk deploy cloud_run --trigger_sources='pubsub,eventarc'` for ambient agents."
+      "key_takeaway": "Use `runner.run_live()` with `LiveRequestQueue` for bidirectional audio/video streaming, and `adk deploy cloud_run --trigger_sources='pubsub,eventarc'` for ambient agents.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "ADK Multi-Agent Workflow Patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        }
+      ]
     },
     {
       "id": "adk-q-25",
@@ -726,7 +970,329 @@
         }
       ],
       "explanation": "When enabling structured output (output_schema) conflicts with native tool calling or multi-turn tool trajectories, decouple tool execution from formatting: use a SequentialAgent where Step 1 calls tools and writes findings to session state, and Step 2 is a stateless formatter agent configured with output_schema and include_contents='none'.",
-      "key_takeaway": "Decouple tool calling from strict schema formatting using a SequentialAgent followed by a stateless formatter agent (include_contents='none' + output_schema)."
+      "key_takeaway": "Decouple tool calling from strict schema formatting using a SequentialAgent followed by a stateless formatter agent (include_contents='none' + output_schema).",
+      "doc_links": [
+        {
+          "label": "ADK Tools & MCP Integrations",
+          "url": "https://adk.dev/integrations/"
+        },
+        {
+          "label": "Gemini Structured Outputs",
+          "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-26",
+      "section": "When to Use ADK & Multi-Language Parity",
+      "guide_anchor": "when-to-use",
+      "question": "A polyglot enterprise uses ADK across Go, TypeScript, and Java. Team A wants explicit cyclic Workflow(edges=[...]) graphs, while Team B builds a Java Spring Boot LlmAgent that mixes GoogleSearchTool with a custom internal refund FunctionTool. Which design matches ADK's multi-language parity rules?",
+      "options": [
+        {
+          "text": "Use ADK 2.0 Workflow graphs in Go or TypeScript, and in Java wrap GoogleSearchTool inside an AgentTool sub-agent.",
+          "correct": true
+        },
+        {
+          "text": "Set bypass_multi_tools_limit=True on GoogleSearchTool in Java and define ADK 2.0 Workflow(edges=[...]) graphs directly in the Java SDK.",
+          "correct": false,
+          "why_wrong": "ADK 2.0 Workflow graphs target Python, TypeScript, and Go (Java/Kotlin use ADK 1.x workflow agents), and bypass_multi_tools_limit is an ADK Python v1.16+ feature."
+        },
+        {
+          "text": "Deploy the Java and TypeScript agents directly to managed Agent Runtime without containers so the platform auto-translates tool schemas.",
+          "correct": false,
+          "why_wrong": "Managed Agent Runtime natively hosts Python and Go payloads; TypeScript, Java, and Kotlin agents deploy as containers on Cloud Run or GKE."
+        },
+        {
+          "text": "Enable the built-in Agent Search tool in the TypeScript SDK and pass raw Java reflection methods into ParallelAgent without AgentTool.",
+          "correct": false,
+          "why_wrong": "The built-in Agent Search tool is unavailable in the TypeScript SDK, and ParallelAgent does not bypass Gemini's single-agent built-in tool mixing restriction in Java."
+        }
+      ],
+      "explanation": "ADK ships native SDKs for Python, TypeScript, Go, Java, and Kotlin, with ADK 2.0 graph-based `Workflow(edges=[...])` orchestration available in Python, TypeScript, and Go while Java and Kotlin standardize on ADK 1.x workflow primitives (`SequentialAgent`, `ParallelAgent`, `LoopAgent`). Additionally, while ADK Python v1.16+ provides `bypass_multi_tools_limit=True` on `GoogleSearchTool` and `VertexAiSearchTool`, mixing `GoogleSearchTool` with custom function tools in Java/Kotlin (or mixing `BuiltInCodeExecutor` with custom tools in Python/TS) requires isolating the built-in tool inside a dedicated `LlmAgent` wrapped in `AgentTool`.",
+      "key_takeaway": "ADK 2.0 graph `Workflow` runs in Python/TS/Go, while Java/Kotlin use ADK 1.x workflows and isolate `GoogleSearchTool` inside `AgentTool` when mixing custom tools.",
+      "doc_links": [
+        {
+          "label": "ADK 2.0 Overview",
+          "url": "https://adk.dev/2.0/"
+        },
+        {
+          "label": "ADK Built-in Tool Limitations",
+          "url": "https://adk.dev/tools/limitations/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-27",
+      "section": "Runtime Architecture & ManagedAgent",
+      "guide_anchor": "runtime-architecture",
+      "question": "An architect integrates a server-hosted ManagedAgent inside a Python ADK Coordinator deployed on Agent Platform in `us-central1`, and attaches a local Python `FunctionTool` (`lookup_sap_order`) directly to the `ManagedAgent` instance. Initialization fails immediately. What two changes are required?",
+      "options": [
+        {
+          "text": "Configure ManagedAgent against the `global` location and keep `lookup_sap_order` on a local LlmAgent or remote MCP endpoint.",
+          "correct": true
+        },
+        {
+          "text": "Keep `us-central1`, wrap `lookup_sap_order` in `LongRunningFunctionTool`, and replay the full `session.events` list on every turn.",
+          "correct": false,
+          "why_wrong": "ManagedAgent on Agent Platform requires the `global` endpoint, rejects local Python tools with NotImplementedError, and tracks server state via `previous_interaction_id` rather than re-sending history."
+        },
+        {
+          "text": "Switch `ManagedAgent` from the Interactions API data plane to the Agents API control plane so local Python callbacks execute remotely.",
+          "correct": false,
+          "why_wrong": "The Agents API is only the control plane used to create or version remote agent definitions; runtime turn execution always streams over the Interactions API data plane."
+        },
+        {
+          "text": "Serialize the Python `FunctionTool` bytecode into `session.state['environment_id']` so the remote container imports it at runtime.",
+          "correct": false,
+          "why_wrong": "`environment_id` is an opaque server-managed handle for the remote execution container, not a mechanism for uploading arbitrary local Python tool functions."
+        }
+      ],
+      "explanation": "`ManagedAgent` bridges local ADK orchestration with server-hosted agents running on the **Interactions API** (`environment={'type': 'remote'}`). On Agent Platform, `ManagedAgent` must target the **`global`** location (regional endpoints like `us-central1` fail). Furthermore, because execution occurs remotely, `ManagedAgent` accepts only server-side tools (`google_search`, `ToolCodeExecution`)—attaching local Python `FunctionTool`s or `McpToolset` raises `NotImplementedError`. Local `Session` events store only lightweight `previous_interaction_id` and `environment_id` pointers.",
+      "key_takeaway": "Pin `ManagedAgent` to `global` on Agent Platform and attach only server-side tools; keep local Python `FunctionTool`s on a local `LlmAgent`.",
+      "doc_links": [
+        {
+          "label": "ADK Managed Agents",
+          "url": "https://adk.dev/agents/managed-agents/"
+        },
+        {
+          "label": "Gemini Interactions API Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/interactions-overview"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-28",
+      "section": "Runtime Architecture & Interactions API",
+      "guide_anchor": "runtime-architecture",
+      "question": "A compliance workflow invokes `client.interactions.create(model='gemini-4-argon', background=True, ...)` to synthesize a 400-page regulatory filing. Ten seconds later, while the job is still running, a follow-up request chains `previous_interaction_id=job.id` and receives HTTP `400 Bad Request`. Why?",
+      "options": [
+        {
+          "text": "Chaining `previous_interaction_id` while the prior background interaction is `in_progress` is invalid; poll until completion first.",
+          "correct": true
+        },
+        {
+          "text": "`background=True` disables server-side conversation state and deletes `interaction.id` immediately after submission.",
+          "correct": false,
+          "why_wrong": "Background interactions persist server-side state so clients can poll status and retrieve large outputs without 60-second HTTP timeouts."
+        },
+        {
+          "text": "`gemini-4-argon` limits background interactions to 32,768 combined tokens, overflowing on the 400-page input payload.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` provides a unified 1,048,576-token window shared across input, internal reasoning, and output tokens."
+        },
+        {
+          "text": "`previous_interaction_id` works only with `gemini-3.5-flash-lite` and must be replaced by full client-side message history on Argon.",
+          "correct": false,
+          "why_wrong": "Server-side `previous_interaction_id` chaining is fully supported on `gemini-4-argon` once the referenced interaction reaches a terminal completed state."
+        }
+      ],
+      "explanation": "The **Interactions API** (`client.interactions.create`) supports `background=True` for asynchronous server-side execution—preventing ~60-second client HTTP gateway timeouts during deep `gemini-4-argon` reasoning and long decodes across its unified 1,048,576-token context window. However, an interaction cannot be extended while it is still `in_progress`: passing its ID as `previous_interaction_id` before it completes returns HTTP `400 Bad Request`.",
+      "key_takeaway": "Use `background=True` on the Interactions API for long `gemini-4-argon` runs, and wait until status leaves `in_progress` before chaining `previous_interaction_id`.",
+      "doc_links": [
+        {
+          "label": "Gemini Interactions API Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/interactions-overview"
+        },
+        {
+          "label": "ADK Managed Agents",
+          "url": "https://adk.dev/agents/managed-agents/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-29",
+      "section": "ADK 2.0 Graph Workflows & Model Routing",
+      "guide_anchor": "graph-workflows",
+      "question": "During a migration to Gemini 4 Argon and Gemini 3.8 Flash, an engineer sets `ThinkingConfig(thinking_level='minimal')` on `gemini-3.8-flash` for low-latency routing and `ThinkingConfig(thinking_budget=8192)` on `gemini-4-argon` for contract synthesis. Both calls fail with HTTP `400 INVALID_ARGUMENT`. What is the valid routing configuration?",
+      "options": [
+        {
+          "text": "Use `gemini-3.5-flash-lite` for `thinking_level='minimal'` routing, and set `thinking_level` (`'low'|'medium'|'high'`) on `3.8-flash` and `4-argon`.",
+          "correct": true
+        },
+        {
+          "text": "Keep `thinking_level='minimal'` on `gemini-4-argon` instead of `gemini-3.8-flash`, and set `temperature=0.0` to cap reasoning tokens.",
+          "correct": false,
+          "why_wrong": "`thinking_level='minimal'` returns HTTP 400 on BOTH `gemini-4-argon` and `gemini-3.8-flash`, and sampling parameters like `temperature` are ignored by `gemini-4-argon`."
+        },
+        {
+          "text": "Replace `BuiltInPlanner` with `PlanReActPlanner` so `thinking_budget=8192` is accepted natively by `gemini-4-argon`.",
+          "correct": false,
+          "why_wrong": "`PlanReActPlanner` injects prompt-level `/*PLANNING*/` text tags rather than configuring model-native thinking, and `gemini-4-argon` rejects legacy `thinking_budget` integers."
+        },
+        {
+          "text": "Set `thinking_budget=0` on both `gemini-3.8-flash` and `gemini-4-argon` to disable internal reasoning tokens on routine turns.",
+          "correct": false,
+          "why_wrong": "Legacy `thinking_budget` causes HTTP 400 on `gemini-4-argon`; modern Gemini 4 and 3.8 models control reasoning depth exclusively via `thinking_level` (`low`, `medium`, `high`)."
+        }
+      ],
+      "explanation": "Model-level reasoning on Gemini 4 and Gemini 3.x is controlled via `BuiltInPlanner(thinking_config=types.ThinkingConfig(thinking_level=...))`. Both **`gemini-4-argon`** and **`gemini-3.8-flash`** support only `'low'`, `'medium'` (default), and `'high'`—passing `'minimal'` to either model returns HTTP `400`, and passing a legacy integer `thinking_budget` to `gemini-4-argon` also returns HTTP `400` (while `temperature`/`top_p`/`top_k` are ignored). For ultra-fast classification where `'minimal'` thinking is desired, route to **`gemini-3.5-flash-lite`** (where `'minimal'` is supported and default).",
+      "key_takeaway": "Use `thinking_level` (`'low'`, `'medium'`, `'high'`) on `gemini-4-argon` and `gemini-3.8-flash`; `'minimal'` is valid on `gemini-3.5-flash-lite`, and `thinking_budget` fails on `gemini-4-argon`.",
+      "doc_links": [
+        {
+          "label": "Gemini Thinking Configuration",
+          "url": "https://ai.google.dev/gemini-api/docs/generate-content/thinking"
+        },
+        {
+          "label": "ADK 2.0 Workflows & Routing",
+          "url": "https://adk.dev/2.0/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-30",
+      "section": "Context Engineering & Performance",
+      "guide_anchor": "context-performance",
+      "question": "A team upgrades an ADK `App` from an older Gemini 2.5 model to `gemini-4-argon`. Their app registers an explicit `cachedContents` TTL resource via `ContextCacheConfig` for a 25,000-token policy manual and prepends `{request_timestamp}` to `instruction`. API calls fail on cache creation. How should they optimize caching on `gemini-4-argon`?",
+      "options": [
+        {
+          "text": "Remove explicit `cachedContents` creation and place the 25k-token manual in `static_instruction` for automatic implicit caching.",
+          "correct": true
+        },
+        {
+          "text": "Increase `ContextCacheConfig(ttl_seconds=86400)` and `min_tokens=32768` so `gemini-4-argon` accepts the explicit `cachedContents` resource.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` does not support explicit `cachedContents` endpoints at any TTL or token threshold; it uses automatic implicit prefix caching starting at 4,096 tokens."
+        },
+        {
+          "text": "Keep `{request_timestamp}` on line 1 of `static_instruction` so implicit caching hashes each turn independently without storage fees.",
+          "correct": false,
+          "why_wrong": "Implicit caching still requires an identical leading token prefix; putting a per-turn timestamp at the start of `static_instruction` busts the prefix cache on every call."
+        },
+        {
+          "text": "Copy the 25,000-token policy manual into `session.state['temp:policy']` on every `before_model_callback` invocation.",
+          "correct": false,
+          "why_wrong": "`temp:` state is discarded at the end of each invocation and does not fix explicit `cachedContents` incompatibility on `gemini-4-argon`."
+        }
+      ],
+      "explanation": "`gemini-4-argon` relies exclusively on **automatic implicit caching** (activating automatically on shared prefixes `>= 4,096` tokens with zero storage fee) and rejects explicit `cachedContents` resource creation. To maximize implicit prefix cache hits in ADK, place the unchanging 25,000-token manual in `static_instruction` (rendered first in the prompt prefix) and keep volatile `{request_timestamp}` interpolations inside dynamic `instruction`.",
+      "key_takeaway": "`gemini-4-argon` uses automatic implicit caching (`>= 4,096` tokens, no `cachedContents`); keep stable context in `static_instruction` and volatile state in `instruction`.",
+      "doc_links": [
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        },
+        {
+          "label": "ADK Context Optimization",
+          "url": "https://adk.dev/get-started/about/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-31",
+      "section": "Skills & Agents CLI Automation",
+      "guide_anchor": "skills",
+      "question": "A DevOps team uses `agents-cli` in GitHub Actions to scaffold ADK skills and also bundles a bash helper inside a skill's `scripts/` directory (`SkillToolset` Level 3). Both the CI pipeline and production agent runs hang indefinitely waiting on stdin. What caused both hangs, and how should enterprise skills be shared across projects?",
+      "options": [
+        {
+          "text": "Interactive human-mode prompts blocked stdin; pass non-interactive agent-mode flags with JSON stdout and publish shared skills via `GCPSkillRegistry`.",
+          "correct": true
+        },
+        {
+          "text": "`SkillToolset` loads `scripts/` into Level 1 context at startup and blocks until `UnsafeLocalCodeExecutor` is swapped for `BuiltInCodeExecutor`.",
+          "correct": false,
+          "why_wrong": "Level 1 loads only lightweight `name`/`description` frontmatter (~100 tokens), and `BuiltInCodeExecutor` runs server-side inside Gemini without local bash script access."
+        },
+        {
+          "text": "`agents-cli` works only inside `adk web` browser terminals and requires `InMemoryMemoryService` to share skills across Google Cloud projects.",
+          "correct": false,
+          "why_wrong": "`agents-cli` supports headless CI/agent automation via explicit flags, and cross-project skill governance is handled by `GCPSkillRegistry`, not `InMemoryMemoryService`."
+        },
+        {
+          "text": "The skill's `SKILL.md` name used kebab-case instead of CamelCase, causing `load_skill_from_dir` to wait for manual confirmation.",
+          "correct": false,
+          "why_wrong": "ADK requires `SKILL.md` names to use lowercase kebab-case matching the directory name; CamelCase fails validation immediately rather than hanging on stdin."
+        }
+      ],
+      "explanation": "`agents-cli` and Level 3 `scripts/` helpers must distinguish **human mode** (interactive TTY wizards and confirmation prompts) from **agent / CI mode** (strictly non-interactive CLI flags, deterministic exit codes, and structured JSON output—never blocking on `input()` or `read`). For centralized enterprise governance across teams and projects, publish versioned skill packages through **`GCPSkillRegistry`** rather than duplicating `skills/` folders across repositories.",
+      "key_takeaway": "Run `agents-cli` and L3 skill scripts in non-interactive agent mode (flags + JSON stdout, never stdin prompts) and govern shared enterprise skills via `GCPSkillRegistry`.",
+      "doc_links": [
+        {
+          "label": "ADK AgentPlatform Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk"
+        },
+        {
+          "label": "ADK Agent Primitives & Skills",
+          "url": "https://adk.dev/agents/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-32",
+      "section": "Evaluation & Observability",
+      "guide_anchor": "evaluation",
+      "question": "Before promoting a release candidate stored in Agent Registry, an architect must stress-test multi-turn user personas while injecting simulated HTTP `503` and `429` faults on payment tools—without touching live payment endpoints—and then monitor sampled production traces for failure clusters. Which evaluation tier fits?",
+      "options": [
+        {
+          "text": "Agent Platform Gen AI Evaluation Service using 2-Step Agent Simulation, Environment Simulation, Adaptive Rubrics, and Online Evaluation Monitors.",
+          "correct": true
+        },
+        {
+          "text": "Local `adk conformance test --mode=replay` paired with `response_match_score` thresholds in `test_config.json`.",
+          "correct": false,
+          "why_wrong": "`adk conformance test --mode=replay` deterministically replays recorded model turns offline; it cannot run live multi-turn persona simulations, fault-injected environments, or production monitors."
+        },
+        {
+          "text": "In-repo `adk eval` using `tool_call_count_v1` thresholds to inject HTTP 503 faults and cluster production Cloud Trace spans.",
+          "correct": false,
+          "why_wrong": "`adk eval` runs local CI evalsets without managed Environment Simulation or Online Evaluation Monitors, and `tool_call_count_v1` is strictly informational."
+        },
+        {
+          "text": "Manual `adk web` Eval tab sessions connected directly to the live production payment gateway with `hallucinations_v1` enabled.",
+          "correct": false,
+          "why_wrong": "Testing failure injection against a live production payment API risks real side effects and lacks automated multi-turn simulation and continuous online monitoring."
+        }
+      ],
+      "explanation": "Use the three-tier evaluation strategy: (1) `adk conformance test --mode=replay` for sub-5-second deterministic harness checks on every commit, (2) `adk eval` / `AgentEvaluator.evaluate` (`*.evalset.json`) for PR-level trajectory and rubric CI gates, and (3) **Agent Platform Gen AI Evaluation Service** (`client.evals` / `EvalTask`) for cloud-scale **2-Step Agent Simulation** from immutable **Agent Registry** snapshots, **Environment Simulation** (injecting HTTP 503/429/timeout tool faults safely), **Adaptive Rubrics**, and continuous **Online Evaluation Monitors** with **Failure Cluster Analysis**.",
+      "key_takeaway": "Use `adk eval` for fast PR gates and Agent Platform Gen AI Evaluation Service for 2-Step Simulation, Environment Simulation fault injection, Adaptive Rubrics, and Online Monitors.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Agent Evaluation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/agent-evaluation"
+        },
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-33",
+      "section": "Deployment, Live Streaming & CLI",
+      "guide_anchor": "deployment",
+      "question": "A financial advisory firm needs a real-time, barge-in voice assistant that can also perform deep multi-document tax code synthesis using `gemini-4-argon`. When engineers pass `model='gemini-4-argon'` directly to the root voice agent on `runner.run_live()`, the WebSocket session fails to initialize. What is the recommended architecture?",
+      "options": [
+        {
+          "text": "Run `gemini-3.8-live` on the root `runner.run_live()` voice agent and delegate deep tax synthesis to a `gemini-4-argon` specialist via `AgentTool`.",
+          "correct": true
+        },
+        {
+          "text": "Keep `gemini-4-argon` on the root agent, switch to `runner.run_async()` with `StreamingMode.BIDI`, and set `response_modalities=['AUDIO']`.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` does not support Live API WebSockets, and `StreamingMode.BIDI` on `runner.run_async()` is a silent no-op in Python ADK."
+        },
+        {
+          "text": "Attach `thinking_level='minimal'` to `gemini-4-argon` so it unlocks low-latency WebSocket audio streaming on `runner.run_live()`.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` rejects `thinking_level='minimal'` with HTTP 400 and does not support Live API bidirectional audio sessions at any thinking level."
+        },
+        {
+          "text": "Replace `AgentTool` with `sub_agents=[argon_specialist]` so `gemini-4-argon` takes over the live microphone WebSocket mid-call.",
+          "correct": false,
+          "why_wrong": "Transferring root control via `sub_agents` hands the live session to `gemini-4-argon`, which cannot host the bidirectional audio WebSocket; `AgentTool` keeps `gemini-3.8-live` in control."
+        }
+      ],
+      "explanation": "`gemini-4-argon` is optimized for deep text/multimodal reasoning via `generateContent` and the `Interactions API`, and does **not** support Live API WebSocket audio streaming. For real-time voice with barge-in (`event.interrupted == True`), host the root session on **`gemini-3.8-live`** via `runner.run_live(live_request_queue=LiveRequestQueue(), ...)` and wrap the **`gemini-4-argon`** specialist inside **`AgentTool`** so the live voice agent stays in control of the audio stream while invoking Argon as a backend tool.",
+      "key_takeaway": "`gemini-4-argon` does not support Live API WebSockets; pair `gemini-3.8-live` on `runner.run_live()` with a `gemini-4-argon` specialist wrapped in `AgentTool`.",
+      "doc_links": [
+        {
+          "label": "ADK Live & Bidi-Streaming Agents",
+          "url": "https://adk.dev/live/"
+        },
+        {
+          "label": "Gemini Thinking & Model Capabilities",
+          "url": "https://ai.google.dev/gemini-api/docs/generate-content/thinking"
+        }
+      ]
     }
   ]
 }

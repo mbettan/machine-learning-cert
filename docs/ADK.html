@@ -14,8 +14,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent Development Kit (ADK): Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Master Google Agent Development Kit (ADK): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP &amp; A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.">
-    <meta name="keywords" content="Agent Development Kit, ADK, ADK 2.0, Google ADK, AI Agents, LlmAgent, Workflow, Runner, SessionService, Vertex AI Memory Bank, Agent Runtime, MCP, A2A, SkillToolset, Michael Bettan, Michaël Bettan">
+    <meta name="description" content="Master Google Agent Development Kit (ADK v2.0): Python, TypeScript, Go, Java &amp; Kotlin SDK parity, LlmAgent, ManagedAgent &amp; Interactions API, ADK 2.0 graph Workflows, Gemini 4 Argon thinking_level routing, MCP &amp; A2A, Skills &amp; Agents CLI, callbacks, ADK evalset vs. Gen AI Evaluation Service, and Agent Runtime deployment.">
+    <meta name="keywords" content="Agent Development Kit, ADK, ADK 2.0, Google ADK, ManagedAgent, Interactions API, Gemini 4 Argon, thinking_level, LlmAgent, Workflow, Runner, SessionService, Vertex AI Memory Bank, Gen AI Evaluation Service, Agent Runtime, MCP, A2A, SkillToolset, Agents CLI, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -33,7 +33,7 @@
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Agent Development Kit (ADK): Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Master Google Agent Development Kit (ADK): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP &amp; A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.">
+    <meta property="og:description" content="Master Google Agent Development Kit (ADK v2.0): Python, TypeScript, Go, Java &amp; Kotlin SDK parity, LlmAgent, ManagedAgent &amp; Interactions API, ADK 2.0 graph Workflows, Gemini 4 Argon thinking_level routing, MCP &amp; A2A, Skills &amp; Agents CLI, callbacks, ADK evalset vs. Gen AI Evaluation Service, and Agent Runtime deployment.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ADK.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -42,7 +42,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Agent Development Kit (ADK): Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Master Google Agent Development Kit (ADK): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP &amp; A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.">
+    <meta name="twitter:description" content="Master Google Agent Development Kit (ADK v2.0): Python, TypeScript, Go, Java &amp; Kotlin SDK parity, LlmAgent, ManagedAgent &amp; Interactions API, ADK 2.0 graph Workflows, Gemini 4 Argon thinking_level routing, MCP &amp; A2A, Skills &amp; Agents CLI, callbacks, ADK evalset vs. Gen AI Evaluation Service, and Agent Runtime deployment.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Agent Development Kit (ADK) — Study Guide by Michaël Bettan">
 
@@ -77,11 +77,11 @@
                   "@id": "https://mbettan.github.io/machine-learning-cert/ADK.html#article",
                   "headline": "Agent Development Kit (ADK): Study Guide | ML Cert Hub",
                   "name": "Agent Development Kit (ADK) Study Guide",
-                  "description": "Master Google Agent Development Kit (ADK): LlmAgent, Runner, SessionService, ADK 2.0 graph Workflows, AgentTool, MCP & A2A, Skills, callbacks, guardrails, sandboxing, evaluation, and Agent Runtime deployment.",
-                  "keywords": "Agent Development Kit, ADK, ADK 2.0, Google ADK, AI Agents, LlmAgent, Workflow, Runner, SessionService, Vertex AI Memory Bank, Agent Runtime, MCP, A2A, SkillToolset, Michael Bettan, Michaël Bettan",
+                  "description": "Master Google Agent Development Kit (ADK v2.0): Python, TypeScript, Go, Java & Kotlin SDK parity, LlmAgent, ManagedAgent & Interactions API, ADK 2.0 graph Workflows, Gemini 4 Argon thinking_level routing, MCP & A2A, Skills & Agents CLI, callbacks, ADK evalset vs. Gen AI Evaluation Service, and Agent Runtime deployment.",
+                  "keywords": "Agent Development Kit, ADK, ADK 2.0, Google ADK, ManagedAgent, Interactions API, Gemini 4 Argon, thinking_level, LlmAgent, Workflow, Runner, SessionService, Vertex AI Memory Bank, Gen AI Evaluation Service, Agent Runtime, MCP, A2A, SkillToolset, Agents CLI, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ADK.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-11-01",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -120,6 +120,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/ADK.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -140,10 +144,10 @@
                 </a>
                 <div class="cover-eyebrow" style="margin-left: 8px;">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>Certification Study Notes</span>
+                    <span>Certification Study Notes · v2.0 (Oct 2026)</span>
                 </div>
                 <h1>Agent Development Kit <em>(ADK)</em></h1>
-                <p class="cover-subtitle">Applied AI Architect study guide covering Agent + Runner + SessionService runtime architecture, deterministic workflow agents &amp; ADK 2.0 graph Workflows, multi-agent delegation, scoped state &amp; Memory Bank, FunctionTool &amp; output schemas, MCP &amp; A2A, progressive-disclosure Skills, callback guardrails, HITL resilience, sandboxing, trajectory evaluation, and Agent Runtime deployment.</p>
+                <p class="cover-subtitle">Applied AI Architect study guide covering Python/TypeScript/Go/Java/Kotlin SDK parity, Agent + Runner + SessionService + ManagedAgent (Interactions API) runtime architecture, ADK 2.0 graph Workflows, Gemini 4 Argon <code>thinking_level</code> routing &amp; implicit caching, MCP &amp; A2A, Skill Registry &amp; Agents CLI, callback guardrails, sandboxing, ADK <code>evalset</code> vs. Gen AI Evaluation Service, and Agent Runtime deployment.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -151,12 +155,12 @@
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-layer-group"></i>
-                        <span>Track: <strong>Google / Applied AI Architect</strong></span>
+                        <span>Track: <strong>Applied AI Architect / Foundation (PAA Core)</strong></span>
                     </div>
                 </div>
                 <a href="quiz.html?topic=adk" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
                     <i class="fas fa-tasks" aria-hidden="true"></i>
-                    <span>Test Yourself: ADK Practice Quiz →</span>
+                    <span>Test Yourself: ADK Practice Quiz (33 Questions) →</span>
                 </a>
             </div>
         </section>
@@ -176,11 +180,11 @@
                 </a>
                 <a href="#when-to-use" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>When to Use ADK &amp; Frameworks</span>
+                    <span>When to Use ADK &amp; SDK Parity</span>
                 </a>
                 <a href="#runtime-architecture" class="toc-item">
                     <span class="toc-number">02</span>
-                    <span>Runtime: Agent, Runner &amp; SessionService</span>
+                    <span>Runtime, SessionService &amp; ManagedAgent</span>
                 </a>
                 <a href="#agent-types" class="toc-item">
                     <span class="toc-number">03</span>
@@ -192,7 +196,7 @@
                 </a>
                 <a href="#graph-workflows" class="toc-item">
                     <span class="toc-number">05</span>
-                    <span>Graph Workflows (ADK 2.0) &amp; Planners</span>
+                    <span>Graph Workflows &amp; Thinking Levels</span>
                 </a>
                 <a href="#state-memory" class="toc-item">
                     <span class="toc-number">06</span>
@@ -204,11 +208,11 @@
                 </a>
                 <a href="#mcp-a2a" class="toc-item">
                     <span class="toc-number">08</span>
-                    <span>MCP &amp; A2A Integration</span>
+                    <span>MCP, A2A &amp; Agent Registry</span>
                 </a>
                 <a href="#skills" class="toc-item">
                     <span class="toc-number">09</span>
-                    <span>Skills &amp; Progressive Disclosure</span>
+                    <span>Skills, Registry &amp; Agents CLI</span>
                 </a>
                 <a href="#callbacks-guardrails" class="toc-item">
                     <span class="toc-number">10</span>
@@ -220,7 +224,7 @@
                 </a>
                 <a href="#context-performance" class="toc-item">
                     <span class="toc-number">12</span>
-                    <span>Context Engineering &amp; Performance</span>
+                    <span>Context, Model Routing &amp; Caching</span>
                 </a>
                 <a href="#security-sandboxing" class="toc-item">
                     <span class="toc-number">13</span>
@@ -228,7 +232,7 @@
                 </a>
                 <a href="#evaluation" class="toc-item">
                     <span class="toc-number">14</span>
-                    <span>Evaluation &amp; Observability</span>
+                    <span>ADK Eval vs. Gen AI Eval Service</span>
                 </a>
                 <a href="#deployment" class="toc-item">
                     <span class="toc-number">15</span>
@@ -240,7 +244,7 @@
                 </a>
                 <a href="#resources" class="toc-item">
                     <span class="toc-number">17</span>
-                    <span>Multimedia &amp; Deep Dive Resources</span>
+                    <span>Study Downloads &amp; Practice Quiz</span>
                 </a>
             </div>
         </nav>
@@ -256,11 +260,11 @@
         <div class="two-columns">
         <div class="concept-card accent-mint">
             <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Definition</h3>
-            <p>ADK is Google&#x27;s open-source, code-first framework (Python, TypeScript, Java, Go, Kotlin) for building, evaluating and deploying AI agents. It supplies the agent loop as infrastructure: an execution engine, tool runtime, scoped state and memory, multi-agent delegation, guardrail hooks, evaluation and one-command deployment.</p>
+            <p>Agent Development Kit (ADK) is Google&#x27;s open-source, code-first framework (<strong>Python, TypeScript, Go, Java, and Kotlin</strong>) for building, evaluating, governing, and deploying production AI agents. Rather than leaving teams to hand-roll conversation state, tool dispatch, retries, and trace instrumentation around a raw model endpoint, ADK provides the agent harness as modular infrastructure: an event-sourced execution runtime, typed tool and protocol connectors, multi-tier state and memory, multi-agent orchestration, deterministic callback/plugin guardrails, trajectory evaluation, and one-command cloud deployment.</p>
         </div>
         <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Why ADK? (Raw model API limits)</h3>
-            <p>a model API is <strong>stateless</strong> (remembers nothing between calls), <strong>cannot act</strong> (it can only <em>request</em> a tool call), has <strong>no control flow</strong> (no durable loop, branching, checkpointing or stop condition) and <strong>no governance</strong> (no audit trail, approval gate or isolation between users). ADK supplies all four, so you build the agent instead of the plumbing.</p>
+            <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Why ADK? (What a raw model API lacks)</h3>
+            <p>A bare model endpoint is <strong>stateless</strong> (retains zero memory across HTTP requests unless using server-side interaction handles), <strong>passive</strong> (emits tool-call intents as JSON text without executing anything), <strong>unstructured in control flow</strong> (no durable loops, fan-out joins, checkpoints, or hard iteration caps), and <strong>ungoverned</strong> (no tenant isolation, approval gates, or tool-boundary PII scrubbing). ADK supplies all four layers cleanly decoupled from model weights.</p>
         </div>
         </div>
 
@@ -268,40 +272,41 @@
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
                 <h4>Mental model</h4>
-                <p>The model is the <strong>brain</strong>. ADK is the <strong>body and nervous system</strong>: hands (tools), memory (sessions), reflexes (callbacks) and a spine (the Runner) that decides when the brain thinks and when the hands move.</p>
+                <p>Treat the foundation model (<strong>Gemini 4 Argon</strong>, <strong>Gemini 3.8 Flash</strong>, <strong>Claude</strong>, or <strong>Gemma 4</strong>) as the <strong>brain</strong>, and ADK as the <strong>nervous system and skeleton</strong>: hands (<code>FunctionTool</code>, <code>McpToolset</code>), short- and long-term memory (<code>SessionService</code>, <code>MemoryService</code>), spinal reflexes (<code>before_tool_callback</code>, <code>BasePlugin</code>), and the motor loop (<code>Runner</code> / <code>Workflow</code>) that coordinates when the brain reasons and when tools act.</p>
             </div>
         </div>
 
         <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Workflow</h3>
-            <p><strong>1. Define</strong> (<code>Agent</code> + tools + instruction) → <strong>2. Run</strong> (<code>Runner</code> loads the session, calls the model, executes tools, commits every step as an <code>Event</code>) → <strong>3. Evaluate</strong> (<code>adk eval</code> grades answers <em>and</em> tool trajectories) → <strong>4. Deploy</strong> (Agent Runtime, Cloud Run or GKE).</p>
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>End-to-end lifecycle</h3>
+            <p><strong>1. Define</strong> (<code>LlmAgent</code> / <code>Workflow</code> / <code>ManagedAgent</code> + tools + instructions) → <strong>2. Run</strong> (<code>Runner</code> loads session state, invokes the model or <strong>Interactions API</strong>, executes tools, and commits each step as an immutable <code>Event</code>) → <strong>3. Evaluate</strong> (<code>adk conformance</code> + <code>adk eval</code> in CI, paired with <strong>Agent Platform Gen AI Evaluation Service</strong> in cloud) → <strong>4. Deploy</strong> (<strong>Agent Runtime</strong>, <strong>Cloud Run</strong>, or <strong>GKE</strong>).</p>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 01: 1. WHEN TO USE ADK (VS. A SINGLE CALL, A WORKFLOW OR ANOTHER FRAMEWORK)
+             SECTION 01: 1. WHEN TO USE ADK, FRAMEWORK CHOICES AND MULTI-LANGUAGE PARITY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="when-to-use">
             <div class="section-divider-number">01</div>
-            <h2>1. When to Use ADK (vs. a Single Call, a Workflow or Another Framework)</h2>
+            <h2>1. When to Use ADK, Framework Choices and Multi-Language Parity</h2>
         </div>
 
         <div class="callout tip">
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
                 <h4>Rule 0</h4>
-                <p>Start with a single LLM call. Add workflows, then agents, <strong>only when evals prove the simpler version fails.</strong></p>
+                <p>Begin with a single grounded model call. Step up to deterministic workflows—and only then to autonomous multi-turn agents—<strong>when benchmark evaluations prove the simpler tier cannot meet accuracy or adaptability targets.</strong></p>
             </div>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Layer</th><th>What it is</th><th>Decides?</th><th>Acts?</th></tr>
+                    <tr><th>Architectural tier</th><th>Core mechanism</th><th>Makes runtime routing decisions?</th><th>Executes external actions?</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>LLM</strong></td><td>Stateless next-token predictor</td><td><span class="table-check">✅</span></td><td><span class="table-cross">❌</span> (can only request a tool call)</td></tr>
-                    <tr><td><strong>AI agent</strong></td><td>LLM in a loop that executes tools, observes results and persists state until a goal is met</td><td><span class="table-check">✅</span></td><td><span class="table-check">✅</span></td></tr>
-                    <tr><td><strong>ADK</strong></td><td>Framework that supplies that loop, plus state, guardrails, evals and deployment, as production infrastructure</td><td>n/a</td><td>n/a</td></tr>
+                    <tr><td><strong>Single LLM call</strong></td><td>Stateless prompt → completion</td><td><span class="table-check">✅</span> (single step)</td><td><span class="table-cross">❌</span> (can only emit tool-call JSON)</td></tr>
+                    <tr><td><strong>Deterministic workflow</strong></td><td>Predefined DAG or pipeline orchestrating models and tools</td><td><span class="table-cross">❌</span> (code/edges decide the path)</td><td><span class="table-check">✅</span></td></tr>
+                    <tr><td><strong>Autonomous agent</strong></td><td>Model-directed loop executing tools, inspecting observations, and updating state until goal completion</td><td><span class="table-check">✅</span> (multi-step adaptive)</td><td><span class="table-check">✅</span></td></tr>
+                    <tr><td><strong>ADK</strong></td><td>Production framework providing both deterministic workflows and autonomous agent loops under one event ledger</td><td>n/a</td><td>n/a</td></tr>
                 </tbody>
             </table>
         </div>
@@ -309,39 +314,34 @@
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Situation</th><th>Best fit</th><th>Why</th></tr>
+                    <tr><th>Workload shape</th><th>Recommended pattern</th><th>Architectural rationale</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>One prompt (+ retrieval) already gives the answer</td><td>Plain / augmented LLM call</td><td>An agent only adds latency, cost and variance</td></tr>
-                    <tr><td>Fixed, known steps (e.g. a 5-step contract review)</td><td><strong>Workflow</strong> (<code>Workflow</code> graph in ADK 2.0, or <code>SequentialAgent</code> / <code>ParallelAgent</code> / <code>LoopAgent</code>)</td><td>Deterministic routing, predictable cost</td></tr>
-                    <tr><td>Q&amp;A over enterprise documents</td><td>RAG pipeline</td><td>No decision loop needed</td></tr>
-                    <tr><td>Next step depends on what the last step discovered</td><td>**<code>LlmAgent</code>** (ReAct loop)</td><td>Path can&#x27;t be drawn in advance</td></tr>
-                    <tr><td>Regulated, must be reproducible</td><td>Deterministic code / classic ML</td><td>Auditable, no model variance</td></tr>
+                    <tr><td>Single prompt (+ retrieval) answers reliably</td><td>Augmented LLM / RAG call</td><td>Adding an agent loop inflates TTFT, token spend, and variance for zero gain</td></tr>
+                    <tr><td>Fixed, predictable multi-step pipeline (e.g., parse → validate → summarize)</td><td>**ADK 2.0 <code>Workflow</code> graph** (or ADK 1.x <code>SequentialAgent</code> / <code>ParallelAgent</code> / <code>LoopAgent</code>)</td><td>Deterministic execution order, bounded cost, straightforward debugging</td></tr>
+                    <tr><td>Read-only Q&amp;A over enterprise SharePoint/Drive corpora with ACLs</td><td>Managed <strong>Agent Search</strong> / RAG pipeline</td><td>Retrieval grounding solves missing knowledge without open-ended tool loops</td></tr>
+                    <tr><td>Next action depends dynamically on intermediate tool findings</td><td>**<code>LlmAgent</code>** (ReAct / planner loop)</td><td>Control path cannot be hardcoded ahead of time</td></tr>
+                    <tr><td>Long-horizon cloud sandbox execution using Google&#x27;s hosted harness</td><td>**<code>ManagedAgent</code><strong> (backed by </strong>Interactions API**)</td><td>Offloads loop, remote container sandbox, and server-side state to Google</td></tr>
+                    <tr><td>Strictly deterministic compliance or actuarial calculation</td><td>Plain code / classical ML</td><td>Zero stochastic variance, 100% reproducible auditability</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="two-columns">
         <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Workflows vs. agents</h3>
-            <p>a <em>workflow</em> orchestrates LLMs and tools through <strong>predefined code paths</strong> (railway tracks). An <em>agent</em> <strong>directs its own process</strong> (a taxi). Both are &quot;agentic systems&quot;.</p>
-        </div>
-        <div class="concept-card accent-coral">
-            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>The &quot;agent theater&quot; litmus test</h3>
-            <p>multi-agent is justified **only if sub-agents have independent tools, private data, an independent verifier role (<code>include_contents=&#x27;none&#x27;</code> + external check) or human-gated steps.** Splitting one prompt into three persona agents plus a synthesizer costs ~4× the tokens and 1.5–2.5× the latency for marginal quality gains.</p>
-        </div>
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>The &quot;agent theater&quot; litmus test</h3>
+            <p>Splitting a system into multiple agents is justified **only when specialists require distinct tool permissions, isolated data scopes, an independent auditor (<code>include_contents=&#x27;none&#x27;</code> + verification tools), or explicit human sign-off boundaries.** Breaking a single prompt into four chatty persona agents sharing identical context and zero tools burns ~4× the tokens and ~2× the latency without improving accuracy.</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Framework</th><th>Mental model</th><th>Choose when</th></tr>
+                    <tr><th>SDK language</th><th>Package / module</th><th>ADK 2.0 graph <code>Workflow</code> &amp; task modes</th><th>Primary strengths &amp; parity nuances (Oct 2026)</th><th>Typical Google Cloud deploy target</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>ADK</strong></td><td><code>Agent</code> + <code>Runner</code> + <code>SessionService</code>, workflow agents, graph <code>Workflow</code></td><td>Google Cloud / Gemini, explicit Python control flow, managed sessions and Memory Bank</td></tr>
-                    <tr><td><strong>LangGraph</strong></td><td><code>StateGraph</code> with nodes, conditional edges, checkpointer</td><td>Complex cyclic graphs, time-travel debugging, <code>interrupt()</code> pauses</td></tr>
-                    <tr><td><strong>CrewAI</strong></td><td>Role/goal/backstory teams</td><td>Fast prototypes of conversational teams</td></tr>
-                    <tr><td><strong>PydanticAI</strong></td><td>Type-safe agent functions</td><td>Schema-first API backends</td></tr>
+                    <tr><td><strong>Python</strong></td><td><code>google-adk</code></td><td><span class="table-check">✅</span> Full support</td><td>Reference flagship SDK: earliest access to **<code>ManagedAgent</code>**, <code>SkillToolset</code> + <code>GCPSkillRegistry</code>, <code>adk eval</code> / <code>AgentEvaluator</code> / <code>adk conformance</code>, <code>VertexAiMemoryBankService</code>, and <code>run_live()</code>. Agent Runtime upload excludes the API server (platform injects it).</td><td><strong>Agent Runtime</strong>, Cloud Run, GKE</td></tr>
+                    <tr><td><strong>TypeScript</strong></td><td><code>@google/adk</code></td><td><span class="table-check">✅</span> Full support</td><td>Node.js / full-stack web integration, MCP servers, experimental **<code>RoutedLlm</code>** dynamic model switcher, and <code>BuiltInCodeExecutor</code> without single-tool mixing limits on modern Gemini models (<code>Agent Search</code> built-in tool not yet in TS).</td><td><strong>Cloud Run</strong>, GKE</td></tr>
+                    <tr><td><strong>Go</strong></td><td><code>google.golang.org/adk</code></td><td><span class="table-check">✅</span> Full support</td><td>High-concurrency, low-memory compiled microservices with native goroutine fan-out, MCP, OpenTelemetry, and <strong>Agent Runtime</strong> support (Go deploy payload bundles its own dedicated ADK API server binary).</td><td><strong>Agent Runtime</strong>, Cloud Run, GKE</td></tr>
+                    <tr><td><strong>Java &amp; Kotlin</strong></td><td><code>com.google.adk</code></td><td><span class="table-cross">❌</span> (ADK 1.x workflow agents)</td><td>Enterprise Spring/JVM integration (<code>LlmAgent.builder()</code> in Java; type-safe DSL in Kotlin) with <code>SequentialAgent</code> / <code>ParallelAgent</code> / <code>LoopAgent</code>, <code>FunctionTool</code>, <code>McpToolset</code>, and callbacks; built-in <code>GoogleSearchTool</code> + custom tools must be isolated via <code>AgentTool</code>.</td><td><strong>Cloud Run</strong>, GKE</td></tr>
                 </tbody>
             </table>
         </div>
@@ -350,80 +350,107 @@
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>&quot;SDK&quot; ≠ &quot;ADK&quot;. The Gen AI SDK (<code>google-genai</code>) is a model API client: it can run a short in-process function-calling helper (10 calls default) and keep in-memory chat history, but has no persistent sessions, event ledger, multi-agent delegation, callbacks/plugins, evals or deployment. ADK is the agent framework built on top of it.</p>
+                <p>Confusing the **Gen AI SDK (<code>google-genai</code>)<strong> with </strong>ADK (<code>google-adk</code>)**. <code>google-genai</code> is the model/interactions client library (supporting <code>generate_content</code>, <code>client.interactions.create</code>, and basic in-process function calling), whereas ADK provides multi-user <code>SessionService</code> isolation, the persistent <code>Event</code> ledger, multi-agent transfers, lifecycle guardrails (<code>BasePlugin</code>), conformance/trajectory evals, and runtime deployment.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 02: 2. RUNTIME ARCHITECTURE: AGENT, RUNNER AND SESSIONSERVICE
+             SECTION 02: 2. RUNTIME ARCHITECTURE: AGENT, RUNNER, SESSIONSERVICE AND MANAGEDAGENT
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="runtime-architecture">
             <div class="section-divider-number">02</div>
-            <h2>2. Runtime Architecture: Agent, Runner and SessionService</h2>
+            <h2>2. Runtime Architecture: Agent, Runner, SessionService and ManagedAgent</h2>
         </div>
 
         <div class="concept-card accent-mint">
-            <p>ADK separates the <strong>brain</strong>, the <strong>memory</strong> and the <strong>engine</strong>:</p>
+            <p>ADK enforces a strict separation between <strong>stateless agent definitions</strong>, <strong>stateful session storage</strong>, and the <strong>event-loop engine</strong>:</p>
         </div>
 
         <div class="diagram-block">
             <div class="diagram-title"><i class="fas fa-sitemap"></i> ADK Runtime Architecture &amp; Event Loop</div>
             <div class="architecture-flow">
-                <div class="arch-node input">Agent (stateless)<br><small>model, instruction, tools, sub_agents</small></div>
+                <div class="arch-node input">Agent / Workflow (stateless)<br><small>model, instruction, tools, sub_agents</small></div>
                 <div class="arch-arrow">+</div>
                 <div class="arch-node storage">SessionService (stateful)<br><small>app_name → user_id → session_id</small></div>
                 <div class="arch-arrow">→</div>
-                <div class="arch-node process">Runner (event loop)<br><small>1. Load history · 2. Call LLM · 3. Run tools</small></div>
+                <div class="arch-node process">Runner (event loop)<br><small>GenerateContent / Interactions API · tools</small></div>
                 <div class="arch-arrow">→</div>
                 <div class="arch-node output">Commit Event<br><small>state_delta + artifact_delta → repeat</small></div>
             </div>
-            <pre style="margin-top: 14px;"><code>┌───────────────────────┐     ┌──────────────────────────────┐
-│ Agent (stateless)     │     │ SessionService (stateful)    │
-│ model, instruction,   │     │ app_name → user_id →         │
-│ tools, sub_agents     │     │ session_id: events + state   │
-└──────────┬────────────┘     └──────────────┬───────────────┘
-           └──────────────┬──────────────────┘
-                          ▼
-                 ┌─────────────────┐  1. Load session history
-                 │     Runner      │  2. Call model (history + tool schemas)
-                 │ (event loop)    │  3. Execute requested tools
-                 └─────────────────┘  4. Commit Event (+ state/artifact delta)
-                                      5. Repeat until final response</code></pre>
+            <pre style="margin-top: 14px;"><code>┌───────────────────────────┐     ┌──────────────────────────────────┐
+│ Agent / Workflow (code)   │     │ SessionService (stateful store)  │
+│ model, instruction,       │     │ app_name → user_id → session_id  │
+│ tools, sub_agents, hooks  │     │ immutable events + scoped state  │
+└────────────┬──────────────┘     └────────────────┬─────────────────┘
+             └──────────────────┬──────────────────┘
+                                ▼
+                   ┌─────────────────────────┐  1. Hydrate session events &amp; state
+                   │         Runner          │  2. Call GenerateContent / Interactions API
+                   │ (commit-then-resume)    │  3. Execute local / MCP / AgentTool calls
+                   └─────────────────────────┘  4. Commit Event (+ state &amp; artifact deltas)
+                                                5. Repeat until turn completes</code></pre>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Primitive</th><th>Role</th><th>Key rule</th></tr>
+                    <tr><th>Core primitive</th><th>Responsibility</th><th>Production engineering rule</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>**<code>Agent</code>** (<code>LlmAgent</code>)</td><td>Spec: model, instruction, tools, sub-agents, callbacks</td><td>Holds <strong>no</strong> conversation state, so one instance safely serves all users</td></tr>
-                    <tr><td>**<code>BaseLlm</code>**</td><td>Model adapter (<code>model=&quot;gemini-...&quot;</code>, <code>LiteLlm(&quot;openai/...&quot;)</code>, <code>Claude(...)</code>, <code>Gemma(...)</code>)</td><td>Swap models per agent without changing tools, sessions or callbacks</td></tr>
-                    <tr><td>**<code>Runner</code>**</td><td>Drives turns via <code>run_async(...)</code> or live audio/video via <code>run_live(..., live_request_queue=...)</code></td><td><strong>Commit-then-resume:</strong> each event is persisted before the agent continues</td></tr>
-                    <tr><td>**<code>SessionService</code>**</td><td>Stores events and state per <code>app_name</code> / <code>user_id</code> / <code>session_id</code></td><td><code>InMemorySessionService</code> (dev) → <code>DatabaseSessionService</code> (<code>sqlite+aiosqlite</code> / <code>postgresql+asyncpg</code>) / <code>VertexAiSessionService</code> (prod; <code>app_name</code> = Reasoning Engine ID); note: tool confirmation is <code>InMemory</code>-only</td></tr>
-                    <tr><td>**<code>MemoryService</code>**</td><td>Cross-session recall</td><td><code>InMemoryMemoryService</code> (tests) → <code>VertexAiMemoryBankService</code> / <code>VertexAiRagMemoryService</code></td></tr>
-                    <tr><td>**<code>ArtifactService</code>**</td><td>Binary files and generated assets (versioned; <code>&quot;user:...&quot;</code> filename persists across sessions)</td><td><code>InMemoryArtifactService</code> / <code>FileArtifactService</code> (dev) → <code>GcsArtifactService</code> (prod)</td></tr>
-                    <tr><td>**<code>App</code>**</td><td>Top-level container for <code>root_agent</code>, <code>plugins=[...]</code> and app-wide configs</td><td>Home of <code>ResumabilityConfig</code>, <code>EventsCompactionConfig</code>, <code>ContextCacheConfig</code></td></tr>
+                    <tr><td>**<code>Agent</code>** (<code>LlmAgent</code>)</td><td>Stateless blueprint: model, instructions, tools, sub-agents, planners, callbacks</td><td>Store <strong>zero</strong> per-user attributes on <code>self</code>; one singleton safely handles thousands of concurrent requests</td></tr>
+                    <tr><td>**<code>ManagedAgent</code>**</td><td>Data-plane client for Google&#x27;s <strong>Managed Agents API</strong> via the <strong>Interactions API</strong></td><td>Connects to an existing <code>agent_id</code> (<code>global</code> endpoint on Agent Platform); runs loop &amp; tools remotely</td></tr>
+                    <tr><td>**<code>BaseLlm</code>**</td><td>Model abstraction (<code>&quot;gemini-4-argon&quot;</code>, <code>&quot;gemini-3.8-flash&quot;</code>, <code>LiteLlm(...)</code>, <code>Claude(...)</code>, <code>Gemma(...)</code>)</td><td>Mix model families across coordinator and worker agents without changing session or callback code</td></tr>
+                    <tr><td>**<code>Runner</code>**</td><td>Executes turns (<code>run_async</code>) or bidirectional audio/video (<code>run_live</code>)</td><td><strong>Commit-then-resume:</strong> persists every <code>Event</code> to <code>SessionService</code> before advancing to the next step</td></tr>
+                    <tr><td>**<code>SessionService</code>**</td><td>Manages <code>Session</code> objects keyed by <code>app_name</code> / <code>user_id</code> / <code>session_id</code></td><td><code>InMemorySessionService</code> (local dev) → <code>DatabaseSessionService</code> (<code>postgresql+asyncpg</code> / <code>sqlite+aiosqlite</code>) or <code>VertexAiSessionService</code> (prod; <code>app_name</code> = Reasoning Engine ID)</td></tr>
+                    <tr><td>**<code>MemoryService</code>**</td><td>Cross-session long-term recall per user</td><td><code>InMemoryMemoryService</code> (unit tests) → <code>VertexAiMemoryBankService</code> (consolidated facts) / <code>VertexAiRagMemoryService</code></td></tr>
+                    <tr><td>**<code>ArtifactService</code>**</td><td>Versioned binary/file blobs (<code>&quot;user:filename&quot;</code> persists across sessions)</td><td><code>InMemoryArtifactService</code> / <code>FileArtifactService</code> (dev) → <code>GcsArtifactService</code> (Cloud Storage in prod)</td></tr>
+                    <tr><td>**<code>App</code>**</td><td>Root application envelope binding <code>root_agent</code>, <code>plugins=[...]</code>, and runtime policies</td><td>Attach <code>ResumabilityConfig</code>, <code>EventsCompactionConfig</code>, and <code>ContextCacheConfig</code> here—never on <code>LlmAgent</code></td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="two-columns">
         <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Context objects</h3>
-            <p><code>InvocationContext</code> (one per turn: session, agent, run config), <code>ReadonlyContext</code> (<code>InstructionProvider</code>: read-only <code>ctx.state</code>), <code>CallbackContext</code> (agent/model callbacks: state, artifacts), <code>ToolContext</code> (tools <strong>and</strong> tool callbacks: state, artifacts, auth, <code>search_memory</code>, confirmation, <code>actions</code>).</p>
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>`LlmAgent` (`GenerateContent`) vs. `ManagedAgent` (`Interactions API`)</h3>
+            <ul>
+                <li>**Standard <code>LlmAgent</code>:** Your ADK <code>Runner</code> owns the orchestration loop, re-sending compacted conversation history (and cryptographic <strong>Thought Signatures</strong>) over <code>GenerateContent</code> while executing custom Python <code>FunctionTool</code>s and <code>McpToolset</code> connections inside your runtime environment.</li>
+                <li>**<code>ManagedAgent</code> (Preview):** Invokes a pre-existing hosted agent (<code>agent_id</code>, such as <code>antigravity-preview-...</code> or a custom agent provisioned via the <strong>Agents API</strong> control plane) over the <strong>Interactions API</strong> (<code>stream=True</code>) with <code>environment={&#x27;type&#x27;: &#x27;remote&#x27;}</code>. Reasoning, built-in tools (<code>google_search</code>, <code>ToolCodeExecution</code>), and sandbox execution happen inside Google&#x27;s managed cloud infrastructure while partial and final events stream into your ADK workflow.</li>
+                <li>**State split in <code>ManagedAgent</code>:** ADK never re-transmits prior conversation turns to a <code>ManagedAgent</code>. Instead, the local <code>Session</code> records only two lightweight pointers on emitted events—**<code>previous_interaction_id</code><strong> and </strong><code>environment_id</code>**—and reuses them on subsequent turns so the server-side <code>Interaction</code> and remote container sandbox continue seamlessly.</li>
+                <li>**Direct <code>Interactions API</code> (<code>client.interactions.create</code>) for long-horizon tasks:** When calling <code>gemini-4-argon</code> or Deep Research directly via <code>google-genai</code>, setting <code>background=True</code> runs multi-minute tasks asynchronously on the server (preventing ~60s HTTP gateway timeouts and unlocking long decodes up to the unified <code>1,048,576</code>-token window). Chaining a follow-up request via <code>previous_interaction_id</code> while the prior interaction is still <code>in_progress</code> returns **<code>400 Bad Request</code>**—poll until <code>completed</code> first.</li>
+            </ul>
         </div>
-        <div class="concept-card accent-coral">
-            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>Event ledger</h3>
-            <p>every step is appended to <code>session.events</code> as an <code>Event</code> with <code>author</code>, <code>invocation_id</code>, <code>content</code> (text or function call/response parts) and <code>actions</code> (<code>state_delta</code>, <code>artifact_delta</code>, <code>transfer_to_agent</code>, <code>escalate</code>, <code>skip_summarization</code>). One ledger feeds debugging (<code>adk web</code>), audit trails, evaluation (tool trajectories) and memory extraction.</p>
-        </div>
+
+        <pre><code class="language-python">import os
+from google.adk.agents import LlmAgent, ManagedAgent
+from google.adk.tools import google_search
+from google.adk.tools.agent_tool import AgentTool
+
+# ManagedAgent runs server-side via the Interactions API (global endpoint on Agent Platform)
+web_researcher = ManagedAgent(
+    name=&quot;managed_web_researcher&quot;,
+    description=&quot;Performs grounded web synthesis in Google&#x27;s remote managed environment.&quot;,
+    agent_id=os.environ.get(&quot;MANAGED_AGENT_ID&quot;, &quot;antigravity-preview-09-2026&quot;),
+    environment={&quot;type&quot;: &quot;remote&quot;},
+    tools=[google_search],  # Server-side tools only; local FunctionTools raise NotImplementedError
+)
+
+# Coordinator combines local/MCP tools with the remote ManagedAgent wrapped as an AgentTool
+coordinator = LlmAgent(
+    name=&quot;portfolio_coordinator&quot;,
+    model=&quot;gemini-4-argon&quot;,
+    instruction=&quot;Combine internal CRM lookups with external web research.&quot;,
+    tools=[AgentTool(agent=web_researcher)],
+)</code></pre>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>Context hierarchy &amp; Event ledger</h3>
+            <p><code>InvocationContext</code> (full per-turn runtime handle), <code>ReadonlyContext</code> (passed to <code>InstructionProvider</code> callables for read-only <code>ctx.state</code>), <code>CallbackContext</code> (agent/model hooks: mutable state + artifacts), and <code>ToolContext</code> (tools + tool hooks: state, artifacts, credentials, <code>search_memory</code>, confirmation, and <code>actions</code>). Every state change, tool call, transfer, or escalation is recorded as an <code>Event</code> (<code>author</code>, <code>invocation_id</code>, <code>content</code>, <code>actions.state_delta</code>, <code>actions.artifact_delta</code>), creating a single source of truth for <code>adk web</code> time-travel inspection, Cloud Audit trails, and trajectory grading.</p>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>putting memory <em>inside</em> the agent object (<code>Agent(memory=Buffer())</code>). Under concurrent requests users&#x27; data bleeds together. State belongs to the <code>SessionService</code>, partitioned by the <strong>3-tier isolation keys</strong> <code>app_name</code> → <code>user_id</code> → <code>session_id</code>.</p>
+                <p>Passing client-executed Python functions or an <code>McpToolset</code> into <code>ManagedAgent(tools=[...])</code> raises **<code>NotImplementedError</code>**, and pointing <code>ManagedAgent</code> at a regional Agent Platform endpoint fails because the Managed Agents API is served exclusively from **<code>global</code>**. Keep custom/MCP tools on an <code>LlmAgent</code> and compose <code>ManagedAgent</code> beside it.</p>
             </div>
         </div>
 
@@ -436,20 +463,20 @@
         </div>
 
         <div class="concept-card accent-mint">
-            <p>All agents derive from <code>BaseAgent</code>. Only <code>LlmAgent</code> uses a model to decide; <strong>workflow agents never call a model to route.</strong> (In ADK 2.0, <code>SequentialAgent</code>, <code>ParallelAgent</code>, <code>LoopAgent</code> and custom <code>BaseAgent</code> workflows are **deprecated in favor of graph <code>Workflow</code>** in §5, though both appear on exams.)</p>
+            <p>Every ADK agent inherits from <code>BaseAgent</code>. Only <code>LlmAgent</code> (and <code>ManagedAgent</code>) consult a model to decide next steps; <strong>workflow agents route deterministically in code with zero LLM routing overhead.</strong> *(In ADK 2.0 for Python, TypeScript, and Go, <code>SequentialAgent</code>, <code>ParallelAgent</code>, <code>LoopAgent</code>, and custom <code>BaseAgent</code> orchestrators are superseded by unified graph <code>Workflow</code>s in §5, though both patterns remain active in Java/Kotlin and exam scenarios.)*</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Agent</th><th>Control flow</th><th>Use for</th><th>Key parameter</th></tr>
+                    <tr><th>Agent class</th><th>Routing mechanism</th><th>Ideal workload</th><th>Critical configuration</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>**<code>LlmAgent</code>** (alias <code>Agent</code>)</td><td>Model-driven (ReAct)</td><td>Reasoning, tool use, dynamic routing</td><td><code>output_key</code>, <code>output_schema</code>, <code>sub_agents</code>, <code>tools</code>, <code>planner</code></td></tr>
-                    <tr><td>**<code>SequentialAgent</code>**</td><td>Fixed order 1 → 2 → 3</td><td>Pipelines where each step feeds the next</td><td><code>sub_agents</code></td></tr>
-                    <tr><td>**<code>ParallelAgent</code>**</td><td>Concurrent fan-out (isolated <code>branch</code> tag, shared <code>session.state</code>)</td><td>Independent retrievals or checks</td><td>Distinct <code>output_key</code> per branch</td></tr>
-                    <tr><td>**<code>LoopAgent</code>**</td><td>Repeat until exit</td><td>Refinement, polling, critic loops</td><td><code>max_iterations</code> + <code>escalate</code></td></tr>
-                    <tr><td>**Custom (<code>BaseAgent</code>)**</td><td>Your Python</td><td>Conditional branching, state machines</td><td>Override <code>_run_async_impl(ctx)</code></td></tr>
+                    <tr><td>**<code>LlmAgent</code>** (<code>Agent</code>)</td><td>Dynamic model reasoning</td><td>Tool selection, open-ended synthesis, triage</td><td><code>model</code>, <code>output_key</code>, <code>output_schema</code>, <code>planner</code>, <code>tools</code>, <code>sub_agents</code></td></tr>
+                    <tr><td>**<code>SequentialAgent</code>**</td><td>Strict linear order <code>A → B → C</code></td><td>Staged pipelines where step <code>N</code> consumes step <code>N-1</code>&#x27;s <code>output_key</code></td><td><code>sub_agents=[...]</code></td></tr>
+                    <tr><td>**<code>ParallelAgent</code>**</td><td>Concurrent execution (<code>branch</code> isolated, shared <code>session.state</code>)</td><td>Multi-source retrieval, independent compliance checks</td><td>Unique <code>output_key</code> per parallel branch</td></tr>
+                    <tr><td>**<code>LoopAgent</code>**</td><td>Iterative cycle until exit signal or cap</td><td>Draft → critique → revise loops, polling</td><td><code>max_iterations</code> + tool setting <code>actions.escalate = True</code></td></tr>
+                    <tr><td>**Custom (<code>BaseAgent</code>)**</td><td>Arbitrary async code</td><td>Deterministic rule routers, custom state machines</td><td>Override <code>async def _run_async_impl(self, ctx)</code></td></tr>
                 </tbody>
             </table>
         </div>
@@ -457,30 +484,30 @@
         <pre><code class="language-python">from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent, LoopAgent
 from google.adk.tools import ToolContext
 
-def exit_loop(tool_context: ToolContext) -&gt; dict:
-    &quot;&quot;&quot;Call ONLY when the critique says the draft needs no further changes.&quot;&quot;&quot;
-    tool_context.actions.escalate = True           # stops the enclosing LoopAgent
-    tool_context.actions.skip_summarization = True # skip extra LLM call after exit tool
-    tool_context.state[&quot;temp:approved&quot;] = True     # distinguish approval from max_iterations
-    return {&quot;status&quot;: &quot;approved&quot;}
+def approve_patch(tool_context: ToolContext) -&gt; dict:
+    &quot;&quot;&quot;Invoke ONLY when static analysis and unit tests report zero defects.&quot;&quot;&quot;
+    tool_context.actions.escalate = True            # Halts the enclosing LoopAgent immediately
+    tool_context.actions.skip_summarization = True  # Avoids redundant post-tool LLM turn
+    tool_context.state[&quot;temp:verified&quot;] = True      # Proves convergence vs. hitting max_iterations
+    return {&quot;status&quot;: &quot;verified&quot;}
 
-research = ParallelAgent(name=&quot;research&quot;, sub_agents=[
-    LlmAgent(name=&quot;market&quot;, instruction=&quot;Find market data.&quot;, tools=[search], output_key=&quot;market&quot;),
-    LlmAgent(name=&quot;pricing&quot;, instruction=&quot;Find competitor pricing.&quot;, tools=[search], output_key=&quot;pricing&quot;),
+gather = ParallelAgent(name=&quot;gather_context&quot;, sub_agents=[
+    LlmAgent(name=&quot;cve_scan&quot;, model=&quot;gemini-3.5-flash-lite&quot;, instruction=&quot;Extract CVE specs.&quot;, tools=[read_advisory], output_key=&quot;cve&quot;),
+    LlmAgent(name=&quot;ast_scan&quot;, model=&quot;gemini-3.5-flash-lite&quot;, instruction=&quot;Locate affected symbols.&quot;, tools=[search_repo], output_key=&quot;symbols&quot;),
 ])
-refine = LoopAgent(name=&quot;refine&quot;, max_iterations=3, sub_agents=[
-    LlmAgent(name=&quot;writer&quot;, instruction=&quot;Write or revise using {market}, {pricing}, {critique?}.&quot;, output_key=&quot;draft&quot;),
-    LlmAgent(name=&quot;critic&quot;, instruction=&quot;Critique {draft}. If no issues remain, call exit_loop.&quot;,
-             tools=[exit_loop], output_key=&quot;critique&quot;),
+patch_loop = LoopAgent(name=&quot;patch_and_verify&quot;, max_iterations=3, sub_agents=[
+    LlmAgent(name=&quot;patcher&quot;, model=&quot;gemini-3.8-flash&quot;, instruction=&quot;Write patch for {cve} in {symbols}. Feedback: {audit?}&quot;, output_key=&quot;diff&quot;),
+    LlmAgent(name=&quot;auditor&quot;, model=&quot;gemini-4-argon&quot;, include_contents=&quot;none&quot;,
+             instruction=&quot;Verify {diff} with test tools. Call approve_patch only if all checks pass.&quot;,
+             tools=[run_tests, approve_patch], output_key=&quot;audit&quot;),
 ])
-root_agent = SequentialAgent(name=&quot;report&quot;, sub_agents=[research, refine])</code></pre>
+root_agent = SequentialAgent(name=&quot;remediation_pipeline&quot;, sub_agents=[gather, patch_loop])</code></pre>
 
         <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Data passing:</strong> <code>output_key=&quot;x&quot;</code> saves the agent&#x27;s final response to <code>state[&quot;x&quot;]</code>; downstream instructions read it as <code>{x}</code> (<code>{x?}</code> if it may be missing; <code>{artifact.name}</code> injects a text artifact).</li>
-                <li>**Dynamic instructions (<code>InstructionProvider</code>):** if an instruction contains literal curly braces (JSON examples, regexes, format strings) or needs branching logic, pass a callable <code>def build_prompt(ctx: ReadonlyContext) -&gt; str:</code>: ADK skips <code>{var}</code> auto-templating when <code>instruction</code> is a function.</li>
-                <li><strong>Loop termination:</strong> a <code>LoopAgent</code> stops when a sub-agent or tool sets <code>escalate=True</code>, or when <code>max_iterations</code> trips. **When <code>max_iterations</code> trips, <code>LoopAgent</code> exits silently** (no exception), and the next step in an outer <code>SequentialAgent</code> still runs: record <code>temp:approved = True</code> in the exit tool and gate the downstream step via <code>before_agent_callback</code>.</li>
-                <li><strong>Reflection cost:</strong> every critic cycle adds model calls and grows history. To prevent self-grading bias, use a separate verifier (<code>temperature=0</code>, <code>include_contents=&#x27;none&#x27;</code>, its own verification tools, explicit pass rubric).</li>
+                <li>**State templating &amp; <code>InstructionProvider</code>:** Setting <code>output_key=&quot;cve&quot;</code> writes the agent&#x27;s final text to <code>state[&quot;cve&quot;]</code>, which downstream instructions reference via <code>{cve}</code> (use <code>{audit?}</code> when optional so turn 1 doesn&#x27;t raise <code>KeyError</code>, or <code>{artifact.report}</code> to inline text artifacts). Whenever an instruction includes literal curly braces—such as JSON schemas <code>{&quot;status&quot;: &quot;ok&quot;}</code> or regex quantifiers—supply a callable <code>def build_instruction(ctx: ReadonlyContext) -&gt; str:</code> so ADK bypasses <code>{var}</code> placeholder parsing.</li>
+                <li>**Silent <code>LoopAgent</code> exhaustion:** Reaching <code>max_iterations</code> exits <code>LoopAgent</code> <strong>silently without raising an exception</strong>, allowing any subsequent agent in an outer <code>SequentialAgent</code> to run on unapproved output. Always write an explicit convergence flag (<code>state[&quot;temp:verified&quot;] = True</code>) inside your exit tool and check it in the downstream step&#x27;s <code>before_agent_callback</code>.</li>
+                <li><strong>Independent verification:</strong> Prevent self-grading bias in critic loops by isolating the verifier (<code>include_contents=&quot;none&quot;</code>, dedicated deterministic test/linter tools, and explicit pass/fail criteria).</li>
             </ul>
         </div>
 
@@ -488,7 +515,7 @@ root_agent = SequentialAgent(name=&quot;report&quot;, sub_agents=[research, refi
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>a <code>SequentialAgent</code> does <strong>not</strong> route; it runs every sub-agent in order. A <code>LoopAgent(max_iterations=3)</code> around &quot;write code → run tests&quot; runs all 3 iterations even when the tests pass, unless something sets <code>escalate</code>.</p>
+                <p>Expecting <code>SequentialAgent</code> to skip irrelevant steps dynamically or expecting <code>LoopAgent(max_iterations=3)</code> to stop automatically when tests pass. <code>SequentialAgent</code> always runs every child in sequence, and <code>LoopAgent</code> always runs all <code>max_iterations</code> unless a tool or callback sets <code>escalate = True</code>.</p>
             </div>
         </div>
 
@@ -503,36 +530,111 @@ root_agent = SequentialAgent(name=&quot;report&quot;, sub_agents=[research, refi
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Mechanism</th><th>How it works</th><th>Who answers the user next</th><th>Context &amp; state</th><th>Use for</th></tr>
+                    <tr><th>Delegation pattern</th><th>Invocation mechanics</th><th>Who speaks to the user next?</th><th>Session &amp; context boundary</th><th>Best architectural fit</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>**<code>sub_agents</code>** (LLM transfer)</td><td>ADK injects <code>transfer_to_agent(agent_name=...)</code>; the model picks a target by each sub-agent&#x27;s **<code>description</code>**</td><td>The <strong>child</strong> (it takes over)</td><td>Shared session history and state</td><td>Routing a whole request to a specialist (triage)</td></tr>
-                    <tr><td>**<code>AgentTool(agent=...)</code>**</td><td>Parent calls the child like a function (<code>skip_summarization=True</code> returns raw output)</td><td>The <strong>parent</strong> (result returns as a tool response)</td><td>Child runs in a fresh child session, <strong>and forwards its state/artifact deltas</strong> (<code>output_key</code>) back to the parent</td><td>One sub-result, then continue</td></tr>
-                    <tr><td>**<code>RemoteA2aAgent</code>**</td><td>Wraps a remote agent from its Agent Card over A2A</td><td>Depends on whether it&#x27;s used as transfer target or tool</td><td>Opaque: only messages and artifacts cross</td><td>Cross-team or cross-org delegation</td></tr>
+                    <tr><td>**<code>sub_agents</code>** (LLM transfer)</td><td>ADK injects <code>transfer_to_agent(agent_name=...)</code>; LLM selects target using each child&#x27;s **<code>description</code>**</td><td><strong>Target sub-agent</strong> assumes control</td><td>Shares the same <code>session.events</code> and <code>session.state</code></td><td>Full conversational handoff to a domain specialist (billing vs. tech support)</td></tr>
+                    <tr><td>**<code>AgentTool(agent=...)</code>**</td><td>Parent invokes child like a typed function (<code>skip_summarization=True</code> returns raw output)</td><td><strong>Parent coordinator</strong> keeps control</td><td>Runs in an isolated child session while **merging <code>state_delta</code> / <code>artifact_delta</code> (<code>output_key</code>) back**</td><td>Modular sub-task execution without polluting the coordinator&#x27;s chat history</td></tr>
+                    <tr><td>**<code>RemoteA2aAgent</code>**</td><td>Connects to an external service via its A2A Agent Card (<code>/.well-known/agent-card.json</code>)</td><td>Depends on transfer vs. <code>AgentTool</code> wrapping</td><td>Strictly opaque network boundary: only A2A messages, tasks, and artifacts cross</td><td>Cross-team, multi-language, or cross-organization agent federation</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="concept-card accent-blue">
             <ul>
-                <li><strong>Transfer controls:</strong> <code>disallow_transfer_to_parent=True</code> (blocks upward transfer <strong>and</strong> routes the next user turn back to the root agent: use on one-shot utility sub-agents, leave <code>False</code> on multi-turn specialists) and <code>disallow_transfer_to_peers=True</code> (forces hub-and-spoke through the coordinator).</li>
-                <li><strong>Single-parent rule:</strong> an agent instance can be added to <code>sub_agents</code> <strong>only once</strong> (<code>ValueError</code> if shared across two parents); use factory functions or <code>agent.clone()</code> to reuse a specialist definition.</li>
-                <li><strong>ADK 2.0 sub-agent modes:</strong> <code>mode=&quot;chat&quot;</code> (default: one <code>transfer_to_agent</code> tool, child takes over conversation), <code>mode=&quot;task&quot;</code> (child can ask the user clarifying questions, then returns structured results to the parent via <code>finish_task</code>), <code>mode=&quot;single_turn&quot;</code> (child runs autonomously with no user interaction, can execute in parallel, and injects a delegation tool named after each sub-agent).</li>
-                <li><strong>Cheaper routing:</strong> when categories are stable, a custom <code>BaseAgent</code> router (rules or embedding similarity) avoids an LLM routing call; use a small model (Flash-Lite) when an LLM router is needed.</li>
-                <li><strong>Handoff vs. graph:</strong> use <strong>handoffs</strong> when one specialist fully owns a request and failures stay contained. Use a <strong>graph / workflow</strong> when steps depend on each other, several agents co-produce one output or a human must sign off.</li>
+                <li><strong>Scoping transfers &amp; tree rules:</strong> Use <code>disallow_transfer_to_parent=True</code> on one-shot triage helpers (blocks upward handoff and routes the user&#x27;s next turn back to <code>root_agent</code>) and <code>disallow_transfer_to_peers=True</code> to enforce strict hub-and-spoke governance through a coordinator. Every <code>Agent</code> instance obeys the <strong>single-parent rule</strong> (<code>ValueError</code> if attached to two parents&#x27; <code>sub_agents</code>); use factory functions or <code>agent.clone()</code> to reuse definitions.</li>
+                <li><strong>ADK 2.0 collaborative sub-agent modes (Python, TS, Go):</strong><ul><li><code>mode=&quot;chat&quot;</code> (classic default): injects one shared <code>transfer_to_agent</code> tool; the specialist takes over user interaction.</li><li><code>mode=&quot;task&quot;</code>: specialist can ask the user clarifying questions across turns, then invokes <code>finish_task</code> to hand structured output back to the parent coordinator.</li><li><code>mode=&quot;single_turn&quot;</code>: generates a dedicated delegation tool per specialist, runs autonomously with zero direct user prompts, and supports parallel fan-out calls from the coordinator.</li></ul></li>
+                <li><strong>Cost-efficient routing:</strong> Replace frontier LLM routers with deterministic <code>Workflow</code> conditional edges (<code>Event(route=...)</code>), embedding similarity, or **<code>gemini-3.5-flash-lite</code>** (<code>thinking_level=&quot;minimal&quot;</code>) when intent buckets are well-defined.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Writing instructions like <code>&quot;Call transfer_to_billing()&quot;</code> in <code>mode=&quot;chat&quot;</code>. ADK does <strong>not</strong> create per-agent transfer functions in chat mode—it exposes a single <code>transfer_to_agent(agent_name=&quot;billing&quot;)</code> tool (per-specialist tools are generated only in ADK 2.0 <code>mode=&quot;single_turn&quot;</code> / <code>&quot;task&quot;</code> or via <code>AgentTool</code>).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: 5. GRAPH WORKFLOWS (ADK 2.0), PLANNERS AND GEMINI 4 ARGON THINKING LEVELS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="graph-workflows">
+            <div class="section-divider-number">05</div>
+            <h2>5. Graph Workflows (ADK 2.0), Planners and Gemini 4 Argon Thinking Levels</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>ADK 2.0 Graph Engine (`Workflow`)</h3>
+            <p>Available across <strong>Python, TypeScript, and Go</strong>, <code>Workflow(edges=[...])</code> unifies sequential pipelines, parallel fan-out/fan-in, cyclic loops, and conditional routing into one directed graph combining <code>LlmAgent</code>s, plain code nodes (<code>FunctionNode</code>), <code>ManagedAgent</code>s, and nested <code>Workflow</code>s. Return values pass as typed <code>node_input</code>, and function parameters matching <code>session.state</code> keys are dependency-injected automatically.</p>
+        </div>
+
+        <pre><code class="language-python">from google.genai import types
+from google.adk import Workflow
+from google.adk.agents import LlmAgent
+from google.adk.planners import BuiltInPlanner
+from google.adk.workflow import START, END, JoinNode
+from google.adk.events import Event
+
+def classify_severity(node_input: str) -&gt; Event:
+    target = &quot;deep_architect&quot; if &quot;architecture&quot; in node_input.lower() else &quot;fast_responder&quot;
+    return Event(output=node_input, route=target)  # Deterministic conditional edge
+
+deep_architect = LlmAgent(
+    name=&quot;deep_architect&quot;,
+    model=&quot;gemini-4-argon&quot;,
+    planner=BuiltInPlanner(
+        thinking_config=types.ThinkingConfig(include_thoughts=True, thinking_level=&quot;high&quot;)
+    ),
+    instruction=&quot;Produce a rigorous root-cause remediation plan.&quot;,
+)
+fast_responder = LlmAgent(
+    name=&quot;fast_responder&quot;,
+    model=&quot;gemini-3.8-flash&quot;,
+    planner=BuiltInPlanner(
+        thinking_config=types.ThinkingConfig(include_thoughts=False, thinking_level=&quot;low&quot;)
+    ),
+    instruction=&quot;Resolve standard operational questions concisely.&quot;,
+)
+
+root_agent = Workflow(name=&quot;support_graph&quot;, edges=[
+    (START, classify_severity, (&quot;deep_architect&quot;, &quot;fast_responder&quot;)),
+    ((&quot;deep_architect&quot;, &quot;fast_responder&quot;), END),
+])</code></pre>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Graph capability</th><th>LangGraph equivalent</th><th>ADK 2.0 <code>Workflow</code> (Python / TS / Go)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Conditional branching</td><td><code>StateGraph</code> + <code>add_conditional_edges</code></td><td><code>Workflow(edges=[...])</code> + node returning <code>Event(output=..., route=&quot;target&quot;)</code></td></tr>
+                    <tr><td>Parallel fan-out &amp; synchronization</td><td>Parallel edges + <code>Annotated[..., operator.add]</code> reducers</td><td>Edge tuple <code>(src, (&quot;branch_a&quot;, &quot;branch_b&quot;))</code> + **<code>JoinNode</code>** (<code>dict[node_id, output]</code>); no state reducers—use distinct state keys</td></tr>
+                    <tr><td>Durable checkpointing</td><td>Checkpointer keyed by <code>thread_id</code></td><td><code>SessionService</code> keyed by <code>app_name</code> / <code>user_id</code> / <code>session_id</code></td></tr>
+                    <tr><td>Mid-graph human pause</td><td><code>interrupt()</code></td><td>Generator node yielding <code>RequestInput(message=..., schema=...)</code> or <code>LongRunningFunctionTool</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Planners &amp; October 2026 `thinking_level` Matrix (`PAA 3.1`)</h3>
+            <ul>
+                <li>**<code>BuiltInPlanner(thinking_config=types.ThinkingConfig(...))</code>:** Activates native Gemini System-2 reasoning (<code>part.thought == True</code> when <code>include_thoughts=True</code>) and preserves latent <strong>Thought Signatures</strong> across multi-turn tool loops.</li>
+                <li>**<code>PlanReActPlanner()</code>:** Prompts non-thinking or third-party models to emit explicit <code>/*PLANNING*/</code> → <code>/*ACTION*/</code> → <code>/*REASONING*/</code> → <code>/*FINAL_ANSWER*/</code> scaffolding tags.</li>
+                <li>**<code>thinking_level</code> (<code>low</code> | <code>medium</code> | <code>high</code> | <code>minimal</code>) vs. legacy <code>thinking_budget</code>:** <code>thinking_level</code> is <strong>mandatory on Gemini 4 Argon</strong> and <strong>recommended across Gemini 3.x</strong> (whereas integer <code>thinking_budget</code> is a legacy Gemini 2.5 parameter).</li>
             </ul>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Topology</th><th>Shape</th><th>Trade-off</th></tr>
+                    <tr><th><code>thinking_level</code></th><th>**<code>gemini-4-argon</code>**</th><th>**<code>gemini-3.8-flash</code>**</th><th>**<code>gemini-3.5-flash-lite</code>**</th><th>Architectural sweet spot</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Coordinator</strong></td><td><code>LlmAgent(sub_agents=[...])</code> routes requests</td><td>Extra routing call per request</td></tr>
-                    <tr><td><strong>Hierarchical</strong></td><td>Nested coordinators decompose ambiguous goals</td><td>Best quality, highest latency and cost</td></tr>
-                    <tr><td><strong>Swarm / peer transfer</strong></td><td>Specialists hand off without a central coordinator</td><td>Hardest to debug; needs an explicit exit</td></tr>
-                    <tr><td><strong>Generator–auditor</strong></td><td>Generator drafts; a separate auditor (<code>temperature=0</code>, <code>include_contents=&#x27;none&#x27;</code>, its own tools) verifies in a capped loop</td><td>Avoids self-grading bias; one extra call per round</td></tr>
+                    <tr><td>**<code>&quot;minimal&quot;</code>**</td><td><span class="table-cross">❌</span> <strong>HTTP 400 Error</strong></td><td><span class="table-cross">❌</span> <strong>HTTP 400 Error</strong></td><td><span class="table-check">✅</span> <strong>Supported (Default)</strong></td><td>Ultra-low-latency intent routers, schema extractors, inline classifiers</td></tr>
+                    <tr><td>**<code>&quot;low&quot;</code>**</td><td><span class="table-check">✅</span> Supported</td><td><span class="table-check">✅</span> Supported</td><td><span class="table-check">✅</span> Supported</td><td>Routine MCP tool execution, straightforward RAG synthesis, cost-sensitive turns</td></tr>
+                    <tr><td>**<code>&quot;medium&quot;</code>**</td><td><span class="table-check">✅</span> <strong>Supported (Default)</strong></td><td><span class="table-check">✅</span> <strong>Supported (Default)</strong></td><td><span class="table-check">✅</span> Supported</td><td>Balanced production default for multi-step agentic tool loops</td></tr>
+                    <tr><td>**<code>&quot;high&quot;</code>**</td><td><span class="table-check">✅</span> Supported (Dynamic)</td><td><span class="table-check">✅</span> Supported (Dynamic)</td><td><span class="table-check">✅</span> Supported (Dynamic)</td><td>Ambiguous planning, repository-scale code synthesis, conflict resolution (higher TTFT)</td></tr>
                 </tbody>
             </table>
         </div>
@@ -541,68 +643,8 @@ root_agent = SequentialAgent(name=&quot;report&quot;, sub_agents=[research, refi
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>in ADK 1.x / <code>mode=&quot;chat&quot;</code>, per-agent tools like <code>transfer_to_billing</code> do not exist: ADK uses <strong>one</strong> auto-injected <code>transfer_to_agent(agent_name=...)</code> tool (only ADK 2.0 <code>mode=&quot;single_turn&quot;</code> / <code>&quot;task&quot;</code> generates per-agent delegation tools).</p>
+                <p>Passing <code>thinking_level=&quot;minimal&quot;</code> on **<code>gemini-4-argon</code><strong> or </strong><code>gemini-3.8-flash</code>**, OR passing legacy integer <code>thinking_budget=...</code> on **<code>gemini-4-argon</code><strong>, fails immediately with </strong>HTTP <code>400 INVALID_ARGUMENT</code>**. Note also that <code>gemini-4-argon</code> ignores custom <code>temperature</code>, <code>top_p</code>, and <code>top_k</code> values—control reasoning depth and determinism via <code>thinking_level</code>, structured schemas, and explicit rubric instructions.</p>
             </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 05: 5. GRAPH WORKFLOWS (ADK 2.0), PLANNERS AND CUSTOM AGENTS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="graph-workflows">
-            <div class="section-divider-number">05</div>
-            <h2>5. Graph Workflows (ADK 2.0), Planners and Custom Agents</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <p>ADK 2.0 replaces <code>SequentialAgent</code> / <code>ParallelAgent</code> / <code>LoopAgent</code> with a unified graph engine: <code>Workflow(edges=[...])</code> wires <code>LlmAgent</code>s, plain Python functions (<code>FunctionNode</code>) and nested <code>Workflow</code>s into a directed graph. Function return values flow to the next node as typed input (<code>node_input</code>); parameters matching state keys are injected automatically.</p>
-        </div>
-
-        <pre><code class="language-python">from google.adk import Workflow
-from google.adk.workflow import START, END, JoinNode
-from google.adk.events import Event
-
-def route_ticket(node_input: str) -&gt; Event:        # conditional edge via Event(route=...)
-    target = &quot;urgent_agent&quot; if &quot;outage&quot; in node_input.lower() else &quot;standard_agent&quot;
-    return Event(output=node_input, route=target)
-
-root_agent = Workflow(name=&quot;triage&quot;, edges=[
-    (START, route_ticket, (&quot;urgent_agent&quot;, &quot;standard_agent&quot;)),
-    ((&quot;urgent_agent&quot;, &quot;standard_agent&quot;), END),
-])</code></pre>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Concept</th><th>LangGraph</th><th>ADK 2.0 <code>Workflow</code> / ADK 1.x</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Graph &amp; branching</td><td><code>StateGraph</code> + <code>add_conditional_edges</code></td><td><code>Workflow(edges=[...])</code> + <code>Event(route=&quot;target&quot;)</code> (or custom <code>BaseAgent</code>)</td></tr>
-                    <tr><td>Fan-out / fan-in</td><td>Parallel edges + state reducer (<code>operator.add</code>)</td><td>Tuple fan-out <code>(a, (b, c))</code> + **<code>JoinNode</code>** (merges into <code>dict[node_id, output]</code>); <strong>no state reducers</strong>: use distinct keys</td></tr>
-                    <tr><td>Persistence</td><td>Checkpointer keyed by <code>thread_id</code></td><td><code>SessionService</code> keyed by <code>app_name</code> / <code>user_id</code> / <code>session_id</code></td></tr>
-                    <tr><td>Pause for a human</td><td><code>interrupt()</code></td><td><code>RequestInput(message=..., schema=...)</code> yielded in a generator node, or tool confirmation / <code>LongRunningFunctionTool</code></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="concept-card accent-amber">
-            <ul>
-                <li><strong>Custom agent (ADK 1.x):</strong> subclass <code>BaseAgent</code>, override <code>async def _run_async_impl(self, ctx)</code> and <code>async for event in child.run_async(ctx): yield event</code>.</li>
-                <li>**Planners on <code>LlmAgent(planner=...)</code>:** <code>BuiltInPlanner(thinking_config=types.ThinkingConfig(include_thoughts=True, thinking_budget=...))</code> enables Gemini native thinking tokens (<code>part.thought == True</code>); <code>PlanReActPlanner()</code> forces non-thinking or third-party models to emit structured <code>/*PLANNING*/</code> → <code>/*ACTION*/</code> → <code>/*REASONING*/</code> → <code>/*FINAL_ANSWER*/</code> tags.</li>
-            </ul>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Reasoning pattern</th><th>Flow</th><th>Choose when</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>ReAct</strong></td><td>Think → act → observe, repeat</td><td>Exploratory work; step N+1 depends on step N</td></tr>
-                    <tr><td><strong>ReWOO</strong></td><td>Plan once → run tools in parallel → solve once</td><td>Independent sub-tasks known upfront (~50–70% fewer tokens than ReAct)</td></tr>
-                    <tr><td><strong>LLMCompiler</strong></td><td>Planner emits a task DAG → dispatcher runs ready tasks in parallel → joiner</td><td>Interdependent tasks with parallel branches</td></tr>
-                    <tr><td><strong>Parallel fan-out</strong></td><td><code>ParallelAgent</code> or <code>Workflow</code> tuple + <code>JoinNode</code></td><td>Isolated multi-source queries</td></tr>
-                </tbody>
-            </table>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -616,13 +658,13 @@ root_agent = Workflow(name=&quot;triage&quot;, edges=[
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Store</th><th>What it holds</th><th>Lifetime</th><th>Accessed via</th></tr>
+                    <tr><th>Storage tier</th><th>Data shape</th><th>Lifecycle scope</th><th>ADK interface</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Session events</strong></td><td>Transcript of one conversation thread</td><td>The session</td><td><code>SessionService</code></td></tr>
-                    <tr><td><strong>State</strong></td><td>Exact key/value working data</td><td>Depends on prefix (below)</td><td><code>output_key</code>, <code>state_delta</code>, <code>tool_context.state</code></td></tr>
-                    <tr><td><strong>Memory</strong></td><td>LLM-extracted, consolidated facts across sessions, retrieved by similarity</td><td>Long-term, per user</td><td><code>MemoryService</code> + <code>load_memory</code> / <code>PreloadMemoryTool</code></td></tr>
-                    <tr><td><strong>Artifacts</strong></td><td>Files and binary outputs (versioned; <code>&quot;user:...&quot;</code> filename = cross-session)</td><td>Session or user</td><td><code>ArtifactService</code>, <code>tool_context.save_artifact</code></td></tr>
+                    <tr><td><strong>Session events</strong></td><td>Chronological immutable turn &amp; tool transcript</td><td>Single conversation thread</td><td><code>SessionService</code> (<code>session.events</code>)</td></tr>
+                    <tr><td><strong>Scoped state</strong></td><td>Exact structured key/value scratchpad</td><td>Invocation, session, user, or app (by prefix)</td><td><code>output_key</code>, <code>tool_context.state</code>, <code>EventActions(state_delta=...)</code></td></tr>
+                    <tr><td><strong>Semantic memory</strong></td><td>LLM-distilled, consolidated user facts retrieved by relevance</td><td>Cross-session per <code>user_id</code></td><td><code>MemoryService</code> (<code>VertexAiMemoryBankService</code>) + <code>load_memory</code> / <code>PreloadMemoryTool</code></td></tr>
+                    <tr><td><strong>Artifacts</strong></td><td>Versioned binary blobs (PDFs, images, CSVs; <code>&quot;user:...&quot;</code> = cross-session)</td><td>Session or user</td><td><code>ArtifactService</code> (<code>GcsArtifactService</code> in prod)</td></tr>
                 </tbody>
             </table>
         </div>
@@ -630,41 +672,29 @@ root_agent = Workflow(name=&quot;triage&quot;, edges=[
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>State key prefix</th><th>Scope</th><th>Persistence</th></tr>
+                    <tr><th>State key prefix</th><th>Visibility scope</th><th>Survives process restart?</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><em>(none)</em></td><td>This session</td><td>With the session (requires <code>DatabaseSessionService</code> or <code>VertexAiSessionService</code>)</td></tr>
-                    <tr><td><code>user:</code></td><td>One user across all sessions of the same <code>app_name</code></td><td>Persistent <strong>only</strong> with <code>DatabaseSessionService</code> / <code>VertexAiSessionService</code></td></tr>
-                    <tr><td><code>app:</code></td><td>All users and sessions of the <code>app_name</code></td><td>Persistent <strong>only</strong> with <code>DatabaseSessionService</code> / <code>VertexAiSessionService</code></td></tr>
-                    <tr><td><code>temp:</code></td><td>Current invocation only (shared by sub-agents in the same turn)</td><td><strong>Never persisted</strong> (stripped before storage)</td></tr>
+                    <tr><td><em>(unprefixed)</em></td><td>Current <code>session_id</code> only</td><td>Only with <code>DatabaseSessionService</code> or <code>VertexAiSessionService</code></td></tr>
+                    <tr><td><code>user:</code></td><td>All sessions belonging to <code>user_id</code> under <code>app_name</code></td><td>Only with <code>DatabaseSessionService</code> or <code>VertexAiSessionService</code></td></tr>
+                    <tr><td><code>app:</code></td><td>Global across all users/sessions of <code>app_name</code></td><td>Only with <code>DatabaseSessionService</code> or <code>VertexAiSessionService</code></td></tr>
+                    <tr><td><code>temp:</code></td><td>Current single invocation (shared across sub-agents in that turn)</td><td><strong>Never persisted</strong> (stripped prior to commit)</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="concept-card accent-purple">
             <ul>
-                <li><strong>Write state through the event system:</strong> <code>output_key</code>, <code>EventActions(state_delta={...})</code>, or <code>tool_context.state</code> / <code>callback_context.state</code> (tracked into a delta automatically).</li>
-                <li><strong>Memory Bank vs. RAG Memory vs. Grounding:</strong><ul><li>**<code>VertexAiMemoryBankService</code>:<strong> LLM-extracted, </strong>consolidated** user facts that update when preferences change. <code>await memory_service.add_session_to_memory(session)</code> runs <code>GenerateMemories</code> (extraction + consolidation, best wired in <code>after_agent_callback</code>); <code>add_memory(...)</code> calls <code>CreateMemory</code> (writes verbatim facts without consolidation unless <code>enable_consolidation=True</code>).</li><li>**<code>VertexAiRagMemoryService</code>:** stores raw session transcripts in a Vertex AI RAG corpus (<code>similarity_top_k</code>, <code>vector_distance_threshold</code> where <strong>lower = closer</strong>); does <strong>not</strong> consolidate contradictions.</li><li><strong>Document grounding tools</strong> (shared knowledge base, not user memory): <code>google_search</code> (public web), <code>VertexAiSearchTool</code> (Vertex AI Search data store/engine) and <code>VertexAiRagRetrieval</code> (Vertex AI RAG Engine corpus).</li></ul></li>
+                <li>**Memory Bank vs. RAG Memory vs. Enterprise Grounding (<code>PAA 3.1 / 3.2</code>):**<ul><li>**<code>VertexAiMemoryBankService</code> (Managed Memory Bank):<strong> Runs LLM fact extraction and </strong>contradiction consolidation** (<code>await memory_service.add_session_to_memory(session)</code> → <code>GenerateMemories</code>, typically triggered in <code>after_agent_callback</code>). If a user changes preferences in Session 5, Memory Bank revises the stored memory rather than returning stale facts (<code>add_memory</code> / <code>CreateMemory</code> writes verbatim entries unless <code>enable_consolidation=True</code>).</li><li>**<code>VertexAiRagMemoryService</code>:** Indexes raw session chunks into a RAG corpus (<code>similarity_top_k</code>, <code>vector_distance_threshold</code> where <strong>smaller = closer</strong>); does <strong>not</strong> reconcile conflicting historical statements.</li><li><strong>Shared enterprise grounding (not per-user memory):</strong> Use <code>VertexAiSearchTool</code> (<strong>Agent Search</strong> with native SharePoint/Drive ACL propagation), <code>VertexAiRagRetrieval</code> (<strong>RAG Engine</strong>), or <code>google_search</code>.</li></ul></li>
+                <li>**<code>load_memory</code> vs. <code>PreloadMemoryTool</code>:** <code>load_memory</code> lets the model query memory on demand (cheaper, risk of skipped recall); <code>PreloadMemoryTool</code> injects relevant memories automatically at the start of every turn (consistent personalization at higher per-turn latency/tokens).</li>
             </ul>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Read tool</th><th>Behavior</th><th>Trade-off</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>load_memory</code></td><td>The model decides when to search</td><td>Cheaper; misses recall if the model doesn&#x27;t think to search</td></tr>
-                    <tr><td><code>PreloadMemoryTool</code></td><td>Retrieves memories at the start of every turn</td><td>Always grounded; adds latency and tokens every turn</td></tr>
-                </tbody>
-            </table>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>editing <code>session.state</code> on an object returned by <code>get_session()</code> bypasses the event ledger: no history, does not persist to DB/Vertex, race-prone. Treat it as read-only. And <code>user:</code>/<code>app:</code> keys still vanish on restart if you leave <code>InMemorySessionService</code> configured.</p>
+                <p>Mutating <code>session.state[&quot;user:plan&quot;] = &quot;pro&quot;</code> directly on the object returned by <code>await session_service.get_session(...)</code>. That mutates a detached snapshot, skips <code>append_event()</code>, leaves zero audit trail, and drops the write in PostgreSQL / Agent Runtime. Always mutate state through <code>tool_context.state</code>, <code>callback_context.state</code>, <code>output_key</code>, or <code>EventActions(state_delta={...})</code>.</p>
             </div>
         </div>
 
@@ -677,159 +707,115 @@ root_agent = Workflow(name=&quot;triage&quot;, edges=[
         </div>
 
         <div class="concept-card accent-mint">
-            <p><code>tools=[my_function]</code> auto-wraps a Python callable as a <code>FunctionTool</code>: the <strong>docstring</strong> becomes the description and <strong>type hints</strong> become the JSON schema. The model selects and fills tools from that text alone, so <strong>docstring quality is a production safeguard.</strong></p>
+            <p>Passing a callable in <code>tools=[lookup_invoice]</code> wraps it as a <code>FunctionTool</code> whose <strong>docstring</strong> defines when the LLM invokes it and whose <strong>type annotations</strong> compile into the JSON Schema. Poor docstrings directly cause tool-selection hallucinations.</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Rule</th><th>Why</th><th>Example</th></tr>
+                    <tr><th>Tool design rule</th><th>Architectural reason</th><th>Implementation pattern</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Atomic: one tool, one job</strong></td><td>A <code>research_topic</code> tool hides an agent inside a tool</td><td><code>web_search</code> + <code>web_read_page</code></td></tr>
-                    <tr><td><strong>Domain-prefixed names</strong></td><td>Avoids collisions, helps selection</td><td><code>file_read</code>, <code>db_query</code></td></tr>
-                    <tr><td><strong>State limits in the docstring</strong></td><td>The model plans around known constraints</td><td>&quot;Read-only; max 1 MB; 30 s timeout.&quot;</td></tr>
-                    <tr><td><strong>Return errors, don&#x27;t raise</strong></td><td>A structured error lets the model retry or escalate; an uncaught exception ends the turn</td><td><code>{&quot;status&quot;: &quot;error&quot;, &quot;error_message&quot;: &quot;Not found: a.csv&quot;}</code></td></tr>
-                    <tr><td><strong>Allowlist inside the tool</strong></td><td>Safety must not depend on the prompt or brittle keyword blocklists</td><td><code>resolve()</code> + <code>is_relative_to(base)</code>; read-only DB role / <code>WriteMode.BLOCKED</code></td></tr>
-                    <tr><td><strong>Idempotent side effects</strong></td><td>Retries and resumption are at-least-once</td><td>Check-before-create, idempotency keys</td></tr>
-                    <tr><td><strong>Keep the catalogue small</strong></td><td>Tool selection degrades past roughly <strong>16 tools</strong> per agent</td><td>Split into sub-agents or skills</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <pre><code class="language-python">def file_read(path: str) -&gt; dict:
-    &quot;&quot;&quot;Read a UTF-8 text file inside the project sandbox (read-only, max 1 MB).
-
-    Args:
-        path: Path relative to the project root.
-    &quot;&quot;&quot;
-    target = (BASE_DIR / path).resolve()
-    if not target.is_relative_to(BASE_DIR):
-        return {&quot;status&quot;: &quot;error&quot;, &quot;error_message&quot;: &quot;Path outside sandbox.&quot;}
-    return {&quot;status&quot;: &quot;success&quot;, &quot;content&quot;: target.read_text()[:1_000_000]}</code></pre>
-
-        <div class="concept-card accent-amber">
-            <ul>
-                <li><strong>Tool families:</strong> <code>FunctionTool</code> (<code>async def</code> functions run concurrently when the model emits parallel tool calls), <code>AgentTool</code>, <code>LongRunningFunctionTool</code>, Gemini built-ins (<code>google_search</code>, <code>VertexAiSearchTool</code>, <code>BuiltInCodeExecutor</code>), Google Cloud toolsets (<code>BigQueryToolset</code> with <code>BigQueryToolConfig(write_mode=WriteMode.BLOCKED)</code>, <code>SpannerToolset</code>, <code>ApiHubToolset</code>, <code>ApplicationIntegrationToolset</code>, <code>ToolboxToolset</code>), <code>OpenAPIToolset</code>, <code>McpToolset</code>, <code>SkillToolset</code>.</li>
-                <li><strong>Gemini built-in tool constraint:</strong> built-in tools (<code>google_search</code>, <code>VertexAiSearchTool</code>, <code>BuiltInCodeExecutor</code>) execute inside the Gemini API call and cannot be freely mixed with custom function tools or placed inside <code>sub_agents</code> transfer targets on all models. Either set <code>bypass_multi_tools_limit=True</code> on Python search tools (<code>GoogleSearchTool(bypass_multi_tools_limit=True)</code>, <code>VertexAiSearchTool(..., bypass_multi_tools_limit=True)</code>) or isolate each built-in on its own specialist wrapped in <code>AgentTool(agent=...)</code>.</li>
-                <li><strong>Structured output:</strong> <code>output_schema=&lt;Pydantic model&gt;</code> forces the agent&#x27;s final answer into a schema; combine with <code>output_key</code> to pass typed data to the next agent. For high-stakes pipelines add epistemic fields (<code>confidence</code>, <code>citations</code>, <code>escalation_required: bool = True</code> by default, so the pipeline must <em>earn</em> auto-approval).</li>
-            </ul>
-        </div>
-
-        <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-ban"></i></div>
-            <div class="callout-content">
-                <h4>Common trap</h4>
-                <p>on models/SDK versions where <code>output_schema</code> disables tool calling (or forces an extra schema-conversion step), let a tool-using agent gather data and add a separate formatter agent (<code>output_schema=MySchema</code>, <code>include_contents=&#x27;none&#x27;</code>) at the end of a <code>SequentialAgent</code>.</p>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 08: 8. MCP AND A2A INTEGRATION
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="mcp-a2a">
-            <div class="section-divider-number">08</div>
-            <h2>8. MCP and A2A Integration</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <p><strong>Vertical (agent → tools/data) = MCP. Horizontal (agent → agent) = A2A.</strong> They complement each other as orthogonal integration layers.</p>
-        </div>
-
-        <pre><code class="language-python">from google.adk.tools.mcp_tool import McpToolset
-from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams, StreamableHTTPConnectionParams
-from mcp import StdioServerParameters
-
-local_fs = McpToolset(
-    connection_params=StdioConnectionParams(server_params=StdioServerParameters(
-        command=&quot;npx&quot;, args=[&quot;-y&quot;, &quot;@modelcontextprotocol/server-filesystem&quot;, &quot;/data&quot;])),
-    tool_filter=[&quot;read_file&quot;, &quot;list_directory&quot;],     # least privilege: names list or a predicate
-    tool_name_prefix=&quot;fs&quot;,                           # prevents collisions across multiple MCP servers
-)
-remote_rules = McpToolset(connection_params=StreamableHTTPConnectionParams(url=&quot;https://rules.internal/mcp&quot;))</code></pre>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>MCP topic</th><th>Rule</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Transports</strong></td><td><strong>stdio</strong> = local subprocess (dev/desktop); <strong>Streamable HTTP</strong> = remote/shared (production); SSE-only is legacy</td></tr>
-                    <tr><td><strong>Least privilege</strong></td><td><code>tool_filter</code> takes an explicit <strong>list of tool names</strong> or a <strong>predicate</strong> (<code>ReadonlyContext</code> aware), not glob patterns; <code>require_confirmation</code> gates sensitive MCP tools</td></tr>
-                    <tr><td><strong>Resources &amp; Expose</strong></td><td><code>use_mcp_resources=True</code> adds <code>list_mcp_resources</code> / <code>read_mcp_resource</code> tools; expose ADK tools as an MCP server via <code>to_mcp_server(tool)</code> or <code>adk_to_mcp_tool_type(tool)</code></td></tr>
-                    <tr><td><strong>Managed GCP MCP</strong></td><td><code>ApiRegistry(mcp_server_name=...)</code> (Cloud API Registry), <code>ToolboxToolset(server_url=...)</code> (MCP Toolbox for Databases with pooled connections), <code>AgentRegistry</code> (discover MCP servers and A2A agents in one catalog)</td></tr>
-                    <tr><td><strong>Lifecycle</strong></td><td>Outside <code>adk web</code>, <code>await toolset.close()</code> on shutdown; define toolsets <strong>synchronously</strong> at module level in <code>agent.py</code> for deployment</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>A2A topic</th><th>Rule</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Consume</strong></td><td><code>RemoteA2aAgent(name=..., description=..., agent_card=&quot;https://host/.well-known/agent-card.json&quot;)</code></td></tr>
-                    <tr><td><strong>Expose</strong></td><td><code>to_a2a(agent, port=8001)</code> (serve with uvicorn) or <code>adk api_server --a2a</code></td></tr>
-                    <tr><td><strong>Transport</strong></td><td>JSON-RPC 2.0 / gRPC / HTTP+JSON over HTTPS, SSE streaming (<code>message/stream</code>), push notifications (webhooks) for long tasks</td></tr>
-                    <tr><td><strong>Task lifecycle</strong></td><td><code>submitted</code> → <code>working</code> → <code>input-required</code> / <code>auth-required</code> → <code>completed</code> / <code>failed</code> / <code>canceled</code> / <code>rejected</code></td></tr>
-                    <tr><td><strong>Trust</strong></td><td>Remote agents run <strong>outside</strong> your callbacks and guardrails: authenticate via the card&#x27;s <code>securitySchemes</code> and validate every returned artifact</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Protocol</th><th>Connects</th><th>Key safety idea</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>MCP</strong></td><td>Agent → tools and data</td><td>Treat tools like public APIs; <code>tool_filter</code>; read-only by default</td></tr>
-                    <tr><td><strong>A2A</strong></td><td>Agent → agent</td><td>Opaque peers; validate artifacts</td></tr>
-                    <tr><td><strong>A2UI</strong></td><td>Agent → UI</td><td>Client renders only components from its trusted catalogue</td></tr>
-                    <tr><td><strong>AP2</strong></td><td>Agent → payments (A2A extension)</td><td>Signed mandates (Intent → Cart → Payment): no mandate, no payment</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-ban"></i></div>
-            <div class="callout-content">
-                <h4>Common trap</h4>
-                <p>A2A does <strong>not</strong> expose a remote agent&#x27;s tools, prompts or memory, only its card (<code>/.well-known/agent-card.json</code>), tasks and artifacts. If you need its tools directly, you need an MCP server.</p>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 09: 9. SKILLS AND PROGRESSIVE DISCLOSURE
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="skills">
-            <div class="section-divider-number">09</div>
-            <h2>9. Skills and Progressive Disclosure</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <p>A <strong>tool</strong> is a function; a <strong>skill</strong> is packaged expertise (instructions + resources + scripts) loaded <strong>only when needed</strong>, so the prompt doesn&#x27;t inflate as capabilities grow.</p>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Tier</th><th>Content</th><th>Loaded by</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>L1 metadata</strong></td><td>YAML frontmatter <code>name</code> (kebab-case matching directory) + <code>description</code> (~60 tokens)</td><td><code>list_skills</code> (or injected eagerly into system prompt)</td></tr>
-                    <tr><td><strong>L2 instructions</strong></td><td>Full <code>SKILL.md</code> body (&lt; 500 lines)</td><td><code>load_skill</code></td></tr>
-                    <tr><td><strong>L3 resources</strong></td><td><code>references/</code>, <code>assets/</code>, <code>scripts/</code></td><td><code>load_skill_resource</code>, <code>run_skill_script</code> (requires a <code>code_executor</code> on the agent/toolset)</td></tr>
+                    <tr><td><strong>Atomic single responsibility</strong></td><td>Monolithic tools hide unobservable logic and bloat failure blast radius</td><td>Separate <code>crm_get_customer</code> from <code>crm_issue_refund</code></td></tr>
+                    <tr><td><strong>Namespace prefixes</strong></td><td>Prevents collisions when combining multiple MCP servers and toolsets</td><td><code>jira_create_issue</code>, <code>bq_execute_sql</code></td></tr>
+                    <tr><td><strong>Document constraints &amp; units</strong></td><td>Models plan accurately when limits are explicit in the schema description</td><td><code>&quot;Read-only SQL; max 500 rows; 15 s timeout; dates in ISO-8601.&quot;</code></td></tr>
+                    <tr><td><strong>Return structured errors, don&#x27;t raise</strong></td><td>Uncaught exceptions abort the turn; error dicts let the LLM self-correct or escalate</td><td><code>{&quot;status&quot;: &quot;error&quot;, &quot;error_code&quot;: &quot;NOT_FOUND&quot;, &quot;retryable&quot;: False}</code></td></tr>
+                    <tr><td><strong>Enforce security inside tool code</strong></td><td>Prompts cannot act as security boundaries against injection</td><td>Canonical path <code>resolve().is_relative_to(ROOT)</code> + <code>WriteMode.BLOCKED</code></td></tr>
+                    <tr><td><strong>Idempotent mutations</strong></td><td><code>ResumabilityConfig</code> and transport retries have at-least-once semantics</td><td>Require <code>idempotency_key</code> before charging cards or creating tickets</td></tr>
+                    <tr><td><strong>Cap active tools (~16 max)</strong></td><td>Tool selection precision degrades sharply when schemas crowd context</td><td>Partition across specialist <code>AgentTool</code>s or progressive <code>SkillToolset</code>s</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="concept-card accent-purple">
             <ul>
-                <li><strong>ADK wiring:</strong> <code>load_skill_from_dir(Path(&quot;./skills/my-skill&quot;))</code> or inline <code>models.Skill(frontmatter=..., instructions=...)</code> passed to <code>SkillToolset(skills=[...], code_executor=...)</code>; with a <code>SkillRegistry</code> (e.g. <code>GCPSkillRegistry</code>) the agent also gets <code>search_skills</code>.</li>
-                <li><strong>Authoring &amp; bundled scripts:</strong> the frontmatter <code>description</code> is the routing index, so write it the way users phrase requests. Scripts must be <strong>(1) non-interactive</strong> (CLI flags/env vars only; stdin hangs in headless containers), <strong>(2) self-documenting</strong> (<code>--help</code>), and <strong>(3) emit structured JSON on stdout</strong> with actionable errors on stderr + non-zero exit codes.</li>
-                <li><strong>Toolset ≠ skill:</strong> a group of related tools sharing config (e.g. <code>McpToolset</code>, any <code>BaseToolset</code>) is a <strong>toolset</strong>, not a <code>SKILL.md</code> skill.</li>
+                <li><strong>Built-in tool mixing rules across SDK languages:</strong> Gemini server-side tools (<code>google_search</code>, <code>VertexAiSearchTool</code>, <code>BuiltInCodeExecutor</code>) execute inside the model API call.<ul><li>In <strong>ADK Python (v1.16+)</strong>, set <code>bypass_multi_tools_limit=True</code> on <code>GoogleSearchTool</code> or <code>VertexAiSearchTool</code> to mix them alongside custom <code>FunctionTool</code>s.</li><li>Combining **<code>BuiltInCodeExecutor</code><strong> with custom tools (in Python or TypeScript), OR combining </strong><code>GoogleSearchTool</code> with custom tools in Java/Kotlin**, is rejected unless you isolate each built-in tool inside its own specialist <code>LlmAgent</code> wrapped in **<code>AgentTool(agent=...)</code>**.</li></ul></li>
+                <li><strong>Google Cloud native toolsets:</strong> <code>BigQueryToolset</code> (<code>BigQueryToolConfig(write_mode=WriteMode.BLOCKED)</code>), <code>SpannerToolset</code>, <code>ToolboxToolset</code> (MCP Toolbox for Databases with connection pooling &amp; IAM auth), <code>ApiHubToolset</code>, <code>ApplicationIntegrationToolset</code>, <code>OpenAPIToolset</code>, <code>McpToolset</code>, and <code>SkillToolset</code>.</li>
+                <li>**Structured output (<code>output_schema</code>):** Pass a Pydantic model (<code>output_schema=TriageVerdict</code>) with <code>output_key=&quot;verdict&quot;</code> for schema-guaranteed JSON. When <code>output_schema</code> conflicts with multi-turn tool calling on a given model/SDK configuration, decouple them in a 2-step <code>SequentialAgent</code> / <code>Workflow</code>: Step 1 runs tools and writes raw findings to state; Step 2 runs a stateless formatter (<code>output_schema=TriageVerdict</code>, <code>include_contents=&quot;none&quot;</code>).</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: 8. MCP, A2A AND AGENT REGISTRY INTEGRATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="mcp-a2a">
+            <div class="section-divider-number">08</div>
+            <h2>8. MCP, A2A and Agent Registry Integration</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <p>**MCP is vertical (<code>Agent → Tools/Resources</code>); A2A is horizontal (<code>Agent → Peer Agent</code>).<strong> Enterprise architectures combine both under </strong>Agent Registry** governance (<code>PAA 3.2 / 3.3</code>).</p>
+        </div>
+
+        <pre><code class="language-python">from google.adk.tools.mcp_tool import McpToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
+
+# Vertical: remote Streamable HTTP MCP server with explicit allowlist &amp; namespace prefix
+erp_mcp = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(url=&quot;https://erp-mcp.internal.example/mcp&quot;),
+    tool_filter=[&quot;get_order&quot;, &quot;list_shipments&quot;],  # Exact list or ReadonlyContext predicate (never globs)
+    tool_name_prefix=&quot;erp&quot;,
+)
+
+# Horizontal: cross-org or cross-language specialist discovered via A2A Agent Card
+customs_agent = RemoteA2aAgent(
+    name=&quot;customs_clearance_agent&quot;,
+    description=&quot;Validates international tariff codes and customs holds.&quot;,
+    agent_card=&quot;https://partner.example/.well-known/agent-card.json&quot;,
+)</code></pre>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Integration layer</th><th>Production rules &amp; Google Cloud integration (<code>PAA 3.2 / 3.3</code>)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>MCP Transports &amp; Lifecycle</strong></td><td>Use **<code>StdioConnectionParams</code><strong> only for local dev subprocesses; use </strong><code>StreamableHTTPConnectionParams</code>** for remote stateless/stateful production services (legacy SSE-only transport is deprecated). Instantiate <code>McpToolset</code> <strong>synchronously at module scope</strong> in <code>agent.py</code> for <code>adk deploy</code>, and call <code>await toolset.close()</code> on custom FastAPI shutdown.</td></tr>
+                    <tr><td><strong>Google Cloud Managed MCP &amp; Registry</strong></td><td>Discover governed enterprise tools and agents through <strong>Agent Registry</strong> (<code>AgentRegistry</code>), <strong>Cloud API Registry</strong> (<code>ApiRegistry(mcp_server_name=...)</code> for Google Cloud MCP Servers like BigQuery, GKE, or Compute), and <strong>MCP Toolbox for Databases</strong> (<code>ToolboxToolset</code>). Authorize calls using <strong>Agent Identity</strong> (<code>principal://...</code>) and <strong>Auth Manager</strong> OAuth 2.0 tokens.</td></tr>
+                    <tr><td><strong>A2A Consumption &amp; Publishing</strong></td><td>Consume peers via <code>RemoteA2aAgent</code> (supports Go/Java/Python/LangGraph interoperability); expose an ADK agent via <code>to_a2a(agent, port=8001)</code> or <code>adk api_server --a2a</code>. Supports JSON-RPC 2.0 / gRPC / HTTP+JSON, SSE streaming (<code>message/stream</code>), and async webhook push notifications across task states (<code>submitted</code> → <code>working</code> → <code>input-required</code> / <code>auth-required</code> → <code>completed</code> / <code>failed</code> / <code>canceled</code> / <code>rejected</code>).</td></tr>
+                    <tr><td><strong>Adjacent Agentic Protocols</strong></td><td><strong>A2UI:</strong> declarative JSON UI payloads rendered only from the client&#x27;s trusted component catalog. <strong>AP2:</strong> A2A payment extension enforcing cryptographically signed <strong>Intent → Cart → Payment</strong> mandates.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>Assuming local ADK <code>before_tool_callback</code> hooks inspect a <code>RemoteA2aAgent</code>&#x27;s internal database queries. Remote A2A agents are <strong>opaque peers</strong> executing outside your process—never expose internal prompts/tools over A2A, authenticate via the card&#x27;s <code>securitySchemes</code>, and validate every returned A2A artifact at your boundary.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: 9. SKILLS, SKILL REGISTRY AND AGENTS CLI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="skills">
+            <div class="section-divider-number">09</div>
+            <h2>9. Skills, Skill Registry and Agents CLI</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <p>A <strong>tool</strong> executes an action; a <strong>skill</strong> packages domain procedural knowledge (<code>SKILL.md</code> instructions + reference docs + helper scripts) using <strong>3-tier progressive disclosure</strong> so a 50-skill agent doesn&#x27;t burn 80,000 prompt tokens on turn 1.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Disclosure tier</th><th>Payload loaded into context</th><th>Triggered by ADK tool</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>L1: Routing metadata</strong></td><td>YAML frontmatter <code>name</code> (kebab-case matching folder) + trigger-phrased <code>description</code> (~60 tokens)</td><td><code>list_skills</code> / <code>search_skills</code> (or eager catalog summary)</td></tr>
+                    <tr><td><strong>L2: Playbook body</strong></td><td>Complete <code>SKILL.md</code> workflow instructions (&lt; 500 lines)</td><td><code>load_skill</code></td></tr>
+                    <tr><td><strong>L3: Deep assets &amp; scripts</strong></td><td><code>references/</code>, <code>assets/</code>, and executable <code>scripts/</code></td><td><code>load_skill_resource</code>, <code>run_skill_script</code> (requires sandboxed <code>code_executor</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <ul>
+                <li>**Wiring local skills &amp; <code>GCPSkillRegistry</code>:** Load local folders via <code>load_skill_from_dir(Path(&quot;./skills/incident-triage&quot;))</code> into <code>SkillToolset(skills=[...], code_executor=AgentEngineSandboxCodeExecutor())</code>, or attach **<code>GCPSkillRegistry</code><strong> (</strong>Agent Platform Skill Registry**) so agents dynamically discover versioned, organization-approved skills via <code>search_skills</code> without redeployment.</li>
+                <li>**Configuring Skills &amp; Plugins with <code>Agents CLI</code> (<code>PAA 2.2 / 3.1</code>):**<ul><li><strong>Skills &amp; plugins management:</strong> Install reusable skills (<code>npx skills add google/agents-cli</code> or <code>agents-cli</code> skill/plugin commands) and scaffold telemetry, Terraform, CI/CD, and security plugins across ADK workspaces.</li><li>**Human mode vs. Agent mode (<code>PAA 3.1</code> exam focus):<strong> In </strong>human mode** (interactive TTY), <code>agents-cli</code> renders rich interactive wizards, colorized diffs, and confirmation prompts for developers. When invoked by autonomous coding harnesses (<strong>Google Antigravity</strong>, <strong>Claude Code</strong>, or CI runners), run <code>agents-cli</code> in <strong>agent / non-interactive mode</strong> (explicit CLI flags, no interactive stdin prompts, deterministic exit codes, and machine-readable JSON output) so automated workflows never hang waiting on terminal input. Same rule applies to L3 <code>SKILL.md</code> scripts: <strong>non-interactive flags/env vars only</strong>, <code>--help</code> support, and structured JSON on <code>stdout</code>.</li></ul></li>
             </ul>
         </div>
 
@@ -837,7 +823,7 @@ remote_rules = McpToolset(connection_params=StreamableHTTPConnectionParams(url=&
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>a malicious <code>SKILL.md</code> or script is prompt injection through the filesystem. Load skills only from allowlisted roots, review them like code and provide a sandboxed <code>code_executor</code> when enabling <code>run_skill_script</code>.</p>
+                <p>Treating an unreviewed third-party <code>SKILL.md</code> as harmless documentation. Skill instructions enter the model&#x27;s privileged context and <code>run_skill_script</code> executes code—sync skills only from governed <strong>Skill Registry</strong> or code-reviewed repos, and never attach <code>UnsafeLocalCodeExecutor</code> to <code>SkillToolset</code>.</p>
             </div>
         </div>
 
@@ -850,58 +836,32 @@ remote_rules = McpToolset(connection_params=StreamableHTTPConnectionParams(url=&
         </div>
 
         <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Harness engineering</h3>
-            <p>anything that must <em>always</em> happen (validation, limits, redaction, approval) belongs in deterministic code around the model, not in instructions the model may skip.</p>
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Deterministic harness principle</h3>
+            <p>Never rely on system-prompt wording (<code>&quot;Please redact SSNs and never refund over $500&quot;</code>) for security, compliance, or budget caps. Enforce hard invariants in deterministic ADK callbacks and <code>BasePlugin</code>s surrounding the model.</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Hook</th><th>Return <code>None</code></th><th>Return a value</th></tr>
+                    <tr><th>Lifecycle hook</th><th>Return <code>None</code></th><th>Return a typed override object</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>before_agent_callback(callback_context)</code></td><td>Agent runs</td><td><code>types.Content</code> → agent run <strong>skipped</strong>; content is the reply</td></tr>
-                    <tr><td><code>after_agent_callback(callback_context)</code></td><td>Output unchanged</td><td><code>types.Content</code> → <strong>appended</strong> as an extra event (does not replace the output)</td></tr>
-                    <tr><td><code>before_model_callback(callback_context, llm_request)</code></td><td>Model called (request may be edited in place)</td><td><code>LlmResponse</code> → model call <strong>skipped</strong> (guardrail, cache)</td></tr>
-                    <tr><td><code>after_model_callback(callback_context, llm_response)</code></td><td>Response unchanged</td><td><code>LlmResponse</code> → <strong>replaces</strong> the response (output backstop, disclaimers)</td></tr>
-                    <tr><td><code>on_model_error_callback(callback_context, llm_request, error)</code></td><td>Exception re-raised</td><td><code>LlmResponse</code> → exception <strong>suppressed</strong>; response used (<code>after_model_callback</code> still runs)</td></tr>
-                    <tr><td><code>before_tool_callback(tool, args, tool_context)</code></td><td>Tool runs (<code>args</code> dict may be mutated in place)</td><td><code>dict</code> → tool <strong>skipped</strong>; dict is the result (policy block, rate limit, cache, mock)</td></tr>
-                    <tr><td><code>after_tool_callback(tool, args, tool_context, tool_response)</code></td><td>Result unchanged</td><td><code>dict</code> → <strong>replaces</strong> the tool result (PII scrubbing, indirect-injection stripping)</td></tr>
-                    <tr><td><code>on_tool_error_callback(tool, args, tool_context, error)</code></td><td>Exception re-raised</td><td><code>dict</code> → exception <strong>suppressed</strong>; dict is the fallback result (<code>after_tool_callback</code> still runs)</td></tr>
+                    <tr><td><code>before_agent_callback(callback_context)</code></td><td>Agent executes normally</td><td><code>types.Content</code> → <strong>skips agent run</strong>; returns <code>Content</code> as the reply</td></tr>
+                    <tr><td><code>after_agent_callback(callback_context)</code></td><td>Final output kept as-is</td><td><code>types.Content</code> → <strong>appends</strong> an additional event (does <strong>not</strong> overwrite reply)</td></tr>
+                    <tr><td><code>before_model_callback(callback_context, llm_request)</code></td><td>Calls LLM (<code>llm_request</code> mutable in place)</td><td><code>LlmResponse</code> → <strong>skips LLM call</strong> (cache hit, fast policy block)</td></tr>
+                    <tr><td><code>after_model_callback(callback_context, llm_response)</code></td><td>Keeps LLM output</td><td><code>LlmResponse</code> → <strong>replaces</strong> model response (final output redaction/disclaimer)</td></tr>
+                    <tr><td><code>on_model_error_callback(callback_context, llm_request, error)</code></td><td>Re-raises exception</td><td><code>LlmResponse</code> → <strong>suppresses error</strong> and substitutes fallback (<code>after_model_callback</code> still runs)</td></tr>
+                    <tr><td><code>before_tool_callback(tool, args, tool_context)</code></td><td>Executes tool (<code>args</code> mutable in place)</td><td><code>dict</code> → <strong>skips tool execution</strong>; returns <code>dict</code> to the model as the tool result</td></tr>
+                    <tr><td><code>after_tool_callback(tool, args, tool_context, tool_response)</code></td><td>Keeps raw tool result</td><td><code>dict</code> → <strong>replaces tool result</strong> before it enters <code>session.events</code> or LLM context</td></tr>
+                    <tr><td><code>on_tool_error_callback(tool, args, tool_context, error)</code></td><td>Re-raises tool exception</td><td><code>dict</code> → <strong>suppresses exception</strong> and returns recovery <code>dict</code> (<code>after_tool_callback</code> still runs)</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Guardrail layer</th><th>Check (cheapest first)</th><th>Hook</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Input</strong></td><td>Regex injection patterns (~1 ms) → small classifier model for scope/jailbreak</td><td><code>before_model_callback</code> (or <code>before_agent_callback</code>)</td></tr>
-                    <tr><td><strong>Pre-LLM reality check</strong></td><td>Wrong file type, blank scan, low parse quality → escalate without spending tokens</td><td><code>before_agent_callback</code></td></tr>
-                    <tr><td><strong>Tool arguments</strong></td><td>Path traversal, SQL/shell injection, amount limits, PII before external calls</td><td><code>before_tool_callback</code></td></tr>
-                    <tr><td><strong>Tool results</strong></td><td>Indirect injection in pages/emails/PDFs; <strong>redact PII before it enters model context &amp; session events</strong></td><td><code>after_tool_callback</code></td></tr>
-                    <tr><td><strong>Output</strong></td><td>Final PII backstop, groundedness/citation check</td><td><code>after_model_callback</code></td></tr>
-                    <tr><td><strong>Platform</strong></td><td>Gemini <code>safety_settings</code>, Vertex AI <strong>Model Armor</strong> prompt/response/tool screening</td><td><code>GenerateContentConfig</code> / <code>BasePlugin</code></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <pre><code class="language-python">def block_injection(callback_context, llm_request):
-    last = llm_request.contents[-1] if llm_request.contents else None
-    text = (last.parts[0].text or &quot;&quot;) if last and last.parts else &quot;&quot;
-    if INJECTION_PATTERN.search(text):
-        return LlmResponse(content=types.Content(role=&quot;model&quot;,
-                           parts=[types.Part(text=&quot;I can&#x27;t help with that request.&quot;)]))
-    return None                                   # proceed to the model
-
-agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;, before_model_callback=block_injection)</code></pre>
-
-        <div class="concept-card accent-coral">
+        <div class="concept-card accent-purple">
             <ul>
-                <li>**Plugins (<code>BasePlugin</code>):** register once on <code>App(name=..., root_agent=..., plugins=[...])</code> (<code>Runner(plugins=...)</code> is deprecated) to apply hooks across <strong>every</strong> agent, model and tool call in the hierarchy. <strong>Execution order:</strong> plugin callbacks run <strong>before</strong> agent-level callbacks, and the first non-<code>None</code> return short-circuits remaining hooks in that phase.</li>
-                <li><strong>Escalation thresholds:</strong> map a composite quality score to deterministic actions, e.g. ≥ 0.85 proceed, 0.70–0.85 flag for verification, &lt; 0.70 hard stop and human escalation.</li>
+                <li>**App-wide <code>BasePlugin</code> precedence:<strong> Register cross-cutting guardrails (</strong>Model Armor<strong> screening, </strong>Sensitive Data Protection** PII redaction, token budgets, audit logging) once on <code>App(name=&quot;...&quot;, root_agent=..., plugins=[...])</code>. <strong>Plugin callbacks always execute before agent-level callbacks</strong>, and the first hook returning a non-<code>None</code> override short-circuits remaining hooks in that phase.</li>
+                <li><strong>Defense-in-depth ordering:</strong> Screen user prompts in <code>before_model_callback</code> (fast regex → lightweight classifier / <strong>Model Armor</strong>) → validate tool parameters &amp; spending caps in <code>before_tool_callback</code> → strip indirect prompt injections and **redact PII in <code>after_tool_callback</code>** → keep <code>after_model_callback</code> as the final outbound safety net.</li>
             </ul>
         </div>
 
@@ -909,7 +869,7 @@ agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;,
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>redacting PII only in <code>after_model_callback</code> is too late: raw tool outputs have already been sent to the LLM and persisted in <code>session.events</code>. Scrub PII at the <strong>tool boundary</strong> (<code>after_tool_callback</code> and <code>before_tool_callback</code>), and keep <code>after_model_callback</code> as the final output backstop.</p>
+                <p>Scrubbing PII exclusively in <code>after_model_callback</code>. By that stage, unredacted customer records returned by a tool have already been committed to <code>session.events</code>, exported to traces (if content capture is on), and transmitted to the model context. Always scrub at **<code>after_tool_callback</code><strong> and </strong><code>before_tool_callback</code>** first.</p>
             </div>
         </div>
 
@@ -921,91 +881,85 @@ agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;,
             <h2>11. Human-in-the-Loop, Resilience and Durability</h2>
         </div>
 
-        <div class="callout tip">
-            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
-            <div class="callout-content">
-                <h4>Rule of thumb</h4>
-                <p>if a step can change user data, send something externally or spend money, pause for approval before it runs.</p>
-            </div>
-        </div>
-
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Need</th><th>ADK mechanism</th></tr>
+                    <tr><th>Operational requirement</th><th>ADK implementation pattern</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Yes/no approval before a tool runs</td><td><code>FunctionTool(fn, require_confirmation=True)</code></td></tr>
-                    <tr><td>Threshold approval (e.g. only when <code>amount &gt; 1000</code>)</td><td><code>FunctionTool(fn, require_confirmation=lambda amount, **_: amount &gt; 1000)</code> (also on <code>McpToolset</code>)</td></tr>
-                    <tr><td>Structured approval with custom human payload</td><td><code>tool_context.request_confirmation(hint=..., payload={...})</code> inside the tool; read <code>tool_context.tool_confirmation.payload</code> on resume</td></tr>
-                    <tr><td>Pause a graph node for human input (ADK 2.0)</td><td>Yield <code>RequestInput(message=..., schema=...)</code> inside a generator node</td></tr>
-                    <tr><td>Job that finishes minutes/hours later (ticket, webhook)</td><td><code>LongRunningFunctionTool</code>: returns a pending dict now; client later sends the final <code>FunctionResponse</code> with the matching <code>function_call.id</code></td></tr>
-                    <tr><td>Resume an interrupted invocation</td><td><code>App(..., resumability_config=ResumabilityConfig(is_resumable=True))</code> + <code>runner.run_async(..., invocation_id=...)</code> (<strong>at-least-once</strong>)</td></tr>
-                    <tr><td>Cap runaway runs</td><td><code>RunConfig(max_llm_calls=...)</code> (default <strong>500</strong> per run), <code>LoopAgent(max_iterations=...)</code></td></tr>
+                    <tr><td>Conditional approval on sensitive tools</td><td><code>FunctionTool(fn, require_confirmation=lambda amount, **_: amount &gt; 500)</code> (note: built-in <code>require_confirmation</code> is **<code>InMemorySessionService</code>-only**)</td></tr>
+                    <tr><td>Production durable HITL across DB / Agent Runtime sessions</td><td>**<code>LongRunningFunctionTool</code>** (returns pending ticket/status immediately; external approval webhook resumes with matching <code>function_call.id</code>) or ADK 2.0 <code>Workflow</code> generator yielding <code>RequestInput(message=..., schema=...)</code></td></tr>
+                    <tr><td>Crash-resilient invocation replay</td><td><code>App(..., resumability_config=ResumabilityConfig(is_resumable=True))</code> resumed with <code>invocation_id</code> (<strong>at-least-once</strong> execution—tools must be idempotent!)</td></tr>
+                    <tr><td>Runaway reasoning loop protection (<code>PAA 4.2</code>)</td><td><code>RunConfig(max_llm_calls=...)</code> (default <strong>500</strong>), <code>LoopAgent(max_iterations=...)</code>, plus per-session failure counters in <code>state</code></td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="two-columns">
-        <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-gears"></i></div>Exception handling ladder across ADK&#x27;s 3 recovery layers</h3>
-            <p></p>
-        </div>
-        <div class="concept-card accent-amber">
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>3-Layer Fault Recovery Ladder</h3>
             <ul>
-                <li><strong>Transport (HTTP 429/503):</strong> configure <code>HttpRetryOptions(attempts=3, initial_delay=1.0, exp_base=2.0)</code> on the <code>Gemini</code> model&#x27;s <code>retry_options</code>.</li>
-                <li><strong>Tool self-correction:</strong> <code>ReflectAndRetryToolPlugin(max_retries=3, throw_exception_if_retry_exceeded=False)</code> feeds tool errors back to the LLM so it can fix malformed arguments. <strong>Caveat:</strong> by default it only intercepts <strong>raised</strong> tool exceptions; if your tools return <code>{&quot;status&quot;: &quot;error&quot;, ...}</code> dicts, override <code>extract_error_from_result</code> on the plugin.</li>
-                <li><strong>Model failover &amp; human escalation:</strong> catch persistent model/quota errors in <code>on_model_error_callback</code> (Python) or <code>RoutedLlm</code> (TypeScript, experimental) to switch models, and escalate to a human after N consecutive tool failures tracked in <code>state</code>.</li>
-            </ul>
-        </div>
-        </div>
-
-        <div class="concept-card accent-coral">
-            <ul>
-                <li><strong>Idempotency:</strong> retries and resumption can re-execute a completed tool call if the process crashed before the event commit, so side-effecting tools need check-before-create or idempotency keys.</li>
-                <li><strong>Goal monitoring:</strong> store explicit success criteria in state and let a checker agent or callback compare progress to them; escalate, don&#x27;t loop, when the goal is unreachable.</li>
+                <li>**Transport layer (HTTP <code>429</code> / <code>503</code>):** Configure <code>HttpRetryOptions(attempts=3, initial_delay=1.0, exp_base=2.0)</code> on the <code>Gemini</code> model wrapper (and route stateless calls to the <code>global</code> endpoint or <strong>Priority PayGo</strong> / <strong>Provisioned Throughput</strong>).</li>
+                <li><strong>Tool argument self-correction:</strong> Attach <code>ReflectAndRetryToolPlugin(max_retries=3, throw_exception_if_retry_exceeded=False)</code>. <strong>Critical nuance:</strong> out of the box it hooks raised exceptions (<code>on_tool_error_callback</code>); when your tools follow best practice and return <code>{&quot;status&quot;: &quot;error&quot;, ...}</code> dicts instead of raising, **override <code>extract_error_from_result</code>** on the plugin so structured error dicts trigger reflection.</li>
+                <li><strong>Model failover &amp; graceful escalation:</strong> Catch regional/model outages in <code>on_model_error_callback</code> (Python) or <code>RoutedLlm</code> (TypeScript) to fail over (e.g., <code>gemini-4-argon</code> → <code>gemini-3.8-flash</code>), and escalate deterministically when consecutive tool retries exhaust budget.</li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 12: 12. CONTEXT ENGINEERING AND PERFORMANCE
+             SECTION 12: 12. CONTEXT ENGINEERING, GEMINI 4 ARGON MODEL ROUTING AND CACHING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="context-performance">
             <div class="section-divider-number">12</div>
-            <h2>12. Context Engineering and Performance</h2>
+            <h2>12. Context Engineering, Gemini 4 Argon Model Routing and Caching</h2>
         </div>
 
+        <div class="two-columns">
         <div class="concept-card accent-mint">
-            <p>A large context window does not prevent drift: a specialist that inherits a long, noisy trajectory performs worse. <strong>Pass curated summaries, not transcripts.</strong></p>
+            <p>Stuffing raw multi-turn transcripts and 50 KB JSON payloads into every specialist degrades accuracy (&quot;lost in the middle&quot;), inflates p95 latency, and multiplies token spend ~15× across multi-agent trees.</p>
+        </div>
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>3-Tier Agentic Model Routing (`PAA 3.1`)</h3>
+        </div>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Knob</th><th>Where</th><th>Effect</th><th>Use when</th></tr>
+                    <tr><th>Routing tier</th><th>Recommended model &amp; <code>thinking_level</code></th><th>Workload &amp; architectural role</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>static_instruction</code> vs. <code>instruction</code></td><td><code>LlmAgent</code></td><td><code>static_instruction</code> stays cache-stable; dynamic <code>{state_key}</code> placeholders in <code>instruction</code> append after it</td><td>Avoiding prompt-cache invalidation on every turn</td></tr>
-                    <tr><td><code>include_contents=&#x27;none&#x27;</code></td><td><code>LlmAgent</code></td><td>Agent sees only its instruction and current input</td><td>Stateless specialists (classifiers, formatters, auditors)</td></tr>
-                    <tr><td><code>output_key</code> + <code>{key}</code> templating</td><td><code>LlmAgent</code></td><td>Pass a curated result through state</td><td>Pipeline steps needing only the previous output</td></tr>
-                    <tr><td><code>AgentTool</code></td><td>Parent&#x27;s <code>tools</code></td><td>Child&#x27;s intermediate tool calls stay out of the parent&#x27;s message history</td><td>Exploratory sub-tasks</td></tr>
-                    <tr><td><code>EventsCompactionConfig(compaction_interval, overlap_size)</code></td><td><code>App</code></td><td>Summarizes older event ranges via an LLM into a compacted event</td><td>Long-running sessions</td></tr>
-                    <tr><td><code>ContextCacheConfig(cache_intervals, ttl_seconds, min_tokens)</code></td><td><code>App</code></td><td>Reuses cached static prefixes on Gemini 2.0+</td><td>Long instructions / tool schemas called repeatedly</td></tr>
-                    <tr><td>Skills (<code>SkillToolset</code>)</td><td><code>tools</code></td><td>Loads instructions on demand</td><td>Large capability catalogues</td></tr>
+                    <tr><td><strong>Tier 1: High-QPS Router &amp; Guardrail</strong></td><td>**<code>gemini-3.5-flash-lite</code>** (<code>thinking_level=&quot;minimal&quot;</code>) or fine-tuned <strong>Gemma 4</strong> SLM</td><td>Sub-200ms intent classification, slot extraction, schema normalization, and pre-LLM guardrail triage</td></tr>
+                    <tr><td><strong>Tier 2: Primary Agentic Workhorse</strong></td><td>**<code>gemini-3.8-flash</code>** (<code>thinking_level=&quot;low&quot;</code> or <code>&quot;medium&quot;</code>)</td><td>Default execution loop for MCP tool calling, code generation, RAG synthesis, and <code>AgentTool</code> specialists</td></tr>
+                    <tr><td><strong>Tier 3: Frontier Planner &amp; Deep Synthesis</strong></td><td>**<code>gemini-4-argon</code>** (<code>thinking_level=&quot;high&quot;</code> or <code>&quot;medium&quot;</code>)</td><td>Ambiguous multi-step task decomposition, cross-document legal/financial conflict resolution, repo-scale refactoring, and unified 1M-token decodes</td></tr>
+                    <tr><td><strong>Real-Time Voice / Video Front-Door</strong></td><td>**<code>gemini-3.8-live</code>** (<code>runner.run_live</code>) + **<code>gemini-4-argon</code>** (<code>AgentTool</code>)</td><td><code>gemini-4-argon</code> does not support Live API WebSockets; handle sub-second voice + barge-in on <code>3.8-live</code> and delegate heavy backend reasoning via <code>AgentTool</code></td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-gears"></i></div>Resource-aware routing</h3>
-            <p>use eval results (task success, <code>tool_trajectory_avg_score</code>) per task type to route easy requests to a cheaper model (<code>gemini-3.8-flash</code> / Flash-Lite) and reserve Pro + high <code>thinking_budget</code> for hard ones.</p>
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Context Compaction &amp; Prefix Caching Mechanics (Gemini 4 Argon vs. Gemini 3.x)</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mechanism</th><th>Configured on</th><th>How it works &amp; version-specific rules</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>**<code>static_instruction</code> vs. <code>instruction</code>**</td><td><code>LlmAgent</code></td><td>Keeps unchanging system rules, rubrics, and tool schemas at a byte-identical prefix (<code>static_instruction</code>) while appending dynamic <code>{state_key}</code> values afterward (<code>instruction</code>)</td></tr>
+                    <tr><td><strong>Implicit Context Caching (Gemini 4 Argon &amp; 3.x)</strong></td><td>Automatic (model API)</td><td>**<code>gemini-4-argon</code> uses implicit caching exclusively** (triggers automatically on shared prefixes <code>&gt;= 4,096</code> tokens with zero hourly storage fee; **explicit <code>cachedContents</code> creation fails on <code>gemini-4-argon</code>**). Prefix stability via <code>static_instruction</code> is essential!</td></tr>
+                    <tr><td>**<code>ContextCacheConfig(cache_intervals, ttl_seconds, min_tokens)</code>**</td><td><code>App</code></td><td>Manages explicit TTL <code>cachedContents</code> handles on <strong>Gemini 3.x / 2.5</strong> base models when deterministic cache retention across sparse traffic justifies storage fees</td></tr>
+                    <tr><td>**<code>EventsCompactionConfig(compaction_interval, overlap_size)</code>**</td><td><code>App</code></td><td>Periodically summarizes older <code>session.events</code> slices into compact summary events so long-running sessions don&#x27;t hit context degradation</td></tr>
+                    <tr><td>**<code>include_contents=&#x27;none&#x27;</code> + <code>{state_key}</code>**</td><td><code>LlmAgent</code></td><td>Strips prior chat history completely for stateless extractors, formatters, and independent auditors</td></tr>
+                    <tr><td>**Observation masking (<code>after_tool_callback</code>)**</td><td><code>LlmAgent</code> / <code>BasePlugin</code></td><td>Trims verbose 40-column API responses down to the 4 needed fields before the event enters <code>session.events</code></td></tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p><code>EventsCompactionConfig</code>, <code>ResumabilityConfig</code> and <code>ContextCacheConfig</code> are **<code>App</code>-level** settings, not <code>LlmAgent</code> parameters. And putting dynamic <code>{timestamp}</code> or <code>{user_status}</code> inside <code>static_instruction</code> (or at the top of a single prompt without <code>static_instruction</code>) busts the prefix cache on every call.</p>
+                <p>Trying to provision explicit <code>cachedContents</code> (<code>ContextCacheConfig</code>) for **<code>gemini-4-argon</code>**, or injecting <code>{current_timestamp}</code> on line 1 of <code>instruction</code>. <code>gemini-4-argon</code> rejects explicit <code>cachedContents</code> and relies on **automatic implicit caching (<code>&gt;= 4,096</code> tokens)**—which drops to a 0% hit rate if a dynamic timestamp mutates the start of the prompt!</p>
             </div>
         </div>
 
@@ -1020,16 +974,14 @@ agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;,
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Threat</th><th>Example</th><th>ADK mitigation</th></tr>
+                    <tr><th>Threat vector</th><th>Attack scenario</th><th>Deterministic ADK control</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Direct prompt injection</strong></td><td>&quot;Ignore previous instructions…&quot;</td><td><code>before_model_callback</code> (regex → classifier), Model Armor</td></tr>
-                    <tr><td><strong>Indirect injection</strong> (dominant agent threat)</td><td>Hidden text in a fetched page, email or PDF</td><td>Scan every external payload in <code>after_tool_callback</code>; isolate untrusted reader from action tools</td></tr>
-                    <tr><td><strong>Confused deputy / excessive agency</strong></td><td>A summarizer with <code>send_email</code> is tricked into using it</td><td>Remove capabilities at the registry: <code>tool_filter</code>, per-agent identity, read-only credentials</td></tr>
-                    <tr><td><strong>Cascading injection</strong></td><td>Tainted researcher output flows to writer → publisher</td><td>Treat every handoff as untrusted: <code>output_schema</code>, callback checks between steps</td></tr>
-                    <tr><td><strong>Agent impersonation</strong></td><td>Forged Agent Card</td><td>Authenticated endpoints (mTLS/OAuth), signed cards</td></tr>
-                    <tr><td><strong>Runaway cost</strong></td><td>Loops or token-bomb inputs</td><td><code>max_llm_calls</code>, <code>max_iterations</code>, per-session budget in state</td></tr>
-                    <tr><td><strong>Supply chain</strong></td><td>Malicious skill or hallucinated package name</td><td>Allowlisted skill roots, code review, pinned <code>npx</code>/<code>uvx</code> versions</td></tr>
+                    <tr><td><strong>Direct prompt injection</strong></td><td>User attempts to override system instructions</td><td><code>before_model_callback</code> + <strong>Vertex AI Model Armor</strong> prompt screening</td></tr>
+                    <tr><td><strong>Indirect prompt injection</strong></td><td>Malicious instructions hidden inside fetched web pages, emails, or PDFs</td><td>Sanitize/screen untrusted payloads in <code>after_tool_callback</code>; isolate untrusted reader agents from write-capable tools</td></tr>
+                    <tr><td><strong>Confused deputy / excessive agency</strong></td><td>Read-only support bot tricked into invoking <code>delete_account</code></td><td>Least-privilege <code>tool_filter</code> allowlist, <code>WriteMode.BLOCKED</code>, and per-agent <strong>Agent Identity</strong></td></tr>
+                    <tr><td><strong>Cross-agent taint propagation</strong></td><td>Compromised sub-agent poisons downstream publisher</td><td>Enforce strict Pydantic <code>output_schema</code> + boundary validation callbacks between handoffs</td></tr>
+                    <tr><td><strong>Host container escape via generated code</strong></td><td>LLM-generated Python reads <code>/proc/self/environ</code> or metadata credentials</td><td>Never use <code>UnsafeLocalCodeExecutor</code> in prod; isolate in <strong>Agent Runtime Code Execution</strong> or <strong>GKE Agent Sandbox (gVisor)</strong></td></tr>
                 </tbody>
             </table>
         </div>
@@ -1037,77 +989,76 @@ agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;,
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Code executor (<code>LlmAgent(code_executor=...)</code>)</th><th>Where code runs</th><th>Use when</th></tr>
+                    <tr><th><code>code_executor</code> implementation</th><th>Isolation boundary &amp; statefulness</th><th>Recommended environment</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>BuiltInCodeExecutor</code></td><td>Gemini&#x27;s server-side sandbox (stateless, 30 s limit, no internet)</td><td>Quick math, charts and data analysis; zero infra</td></tr>
-                    <tr><td><code>AgentEngineSandboxCodeExecutor</code></td><td>Managed Agent Runtime sandbox (stateful across turns, up to 14 days TTL)</td><td>Production on Google Cloud</td></tr>
-                    <tr><td><code>GkeCodeExecutor</code></td><td>GKE <strong>Agent Sandbox</strong> on gVisor (<code>executor_type=&quot;sandbox&quot;</code>, pre-warmed; legacy <code>&quot;job&quot;</code> mode spins a K8s Job per run)</td><td>GKE-hosted, kernel-level isolation with sub-second startup</td></tr>
-                    <tr><td><code>ContainerCodeExecutor</code></td><td>Self-hosted Docker container</td><td>Custom dependencies in staging/self-hosted setups</td></tr>
-                    <tr><td><code>UnsafeLocalCodeExecutor</code></td><td>Host process (<code>exec()</code>, full host access, stateless)</td><td>Local experiments only, <strong>never</strong> production</td></tr>
+                    <tr><td><code>BuiltInCodeExecutor</code></td><td>Gemini server-side sandbox (stateless, 30 s max, zero network egress; cannot mix directly with custom tools on one agent)</td><td>Zero-infra math, data wrangling, charts</td></tr>
+                    <tr><td><code>AgentEngineSandboxCodeExecutor</code></td><td>Managed <strong>Agent Runtime</strong> isolated container (stateful files across turns, up to 14-day TTL, 100 MB I/O)</td><td>Default production choice on Google Cloud</td></tr>
+                    <tr><td><code>GkeCodeExecutor(executor_type=&quot;sandbox&quot;)</code></td><td>Pre-warmed <strong>GKE Agent Sandbox</strong> backed by <strong>gVisor</strong> kernel isolation (sub-second startup; replaces slow per-run K8s <code>&quot;job&quot;</code> mode)</td><td>GKE clusters needing custom VPC/hardware control</td></tr>
+                    <tr><td><code>ContainerCodeExecutor</code></td><td>Dedicated Docker container</td><td>Local staging or custom system binary testing</td></tr>
+                    <tr><td><code>UnsafeLocalCodeExecutor</code></td><td>Runs <code>exec()</code> inside the ADK host process with full IAM/env access</td><td>Throwaway local debugging only—<strong>never</strong> staging or prod</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="concept-card accent-purple">
-            <ul>
-                <li><strong>Three identity models for tool access:</strong> <strong>(1) Agent Identity</strong> (recommended on Agent Runtime: each agent gets its own Google Cloud IAM principal <code>principal://...</code>, independent of any service account, for least-privilege access and per-agent audit logs), <strong>(2) Service account</strong> (workload identity for shared infra), and <strong>(3) OAuth 2.0 user delegation</strong> (<code>ToolContext.request_credential(auth_config)</code> when acting on a specific user&#x27;s behalf).</li>
-                <li><strong>Zero-trust checklist:</strong> least privilege per agent · validate at every boundary (<code>before_tool</code>, <code>after_tool</code>, <code>output_schema</code>) · audit every call (event ledger + OpenTelemetry) · rate-limit risky actions (counter in state) · human gate for irreversible actions.</li>
-            </ul>
+            <h3><div class="icon-badge"><i class="fas fa-gears"></i></div>Three identity authorities (`PAA 3.2 / 5.1`)</h3>
+            <p><strong>(1) Google Cloud Agent Identity</strong> (<code>principal://...</code> / <code>spiffe://...</code> per-agent cryptographic identity bound to <strong>Principal Access Boundary [PAB]</strong> policies and <strong>Dual-Attribution Cloud Audit Logs</strong>), <strong>(2) Workload Service Account</strong> (coarse infrastructure identity), and <strong>(3) User OAuth 2.0 Delegation</strong> (<code>ToolContext.request_credential</code> / <strong>Auth Manager</strong> when acting strictly under the end user&#x27;s own entitlements).</p>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 14: 14. EVALUATION AND OBSERVABILITY
+             SECTION 14: 14. EVALUATION: ADK EVALSET VS. GEN AI EVALUATION SERVICE &amp; OBSERVABILITY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="evaluation">
             <div class="section-divider-number">14</div>
-            <h2>14. Evaluation and Observability</h2>
+            <h2>14. Evaluation: ADK evalset vs. Gen AI Evaluation Service &amp; Observability</h2>
         </div>
 
+        <div class="two-columns">
         <div class="concept-card accent-mint">
-            <p><strong>Grade the path, not just the answer.</strong> An agent that answers correctly after 15 erratic tool calls (where 3 would do) is still failing in production.</p>
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Core principle (`PAA 4.1`)</h3>
+            <p>Grade <strong>both</strong> the final response and the <strong>tool trajectory</strong>. An agent that guesses the right refund figure while skipping mandatory <code>verify_return_window</code> compliance checks is a production defect.</p>
+        </div>
+        <div class="concept-card accent-blue">
+            <p>**Architectural Decision Matrix: Which Evaluation Engine Should You Use? (<code>PAA 4.1</code>)**</p>
+        </div>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Artifact</th><th>Purpose</th><th>When</th></tr>
+                    <tr><th>Evaluation tier</th><th>Primary tool / API</th><th>Executes where &amp; against what?</th><th>Key strengths &amp; when to choose</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>*.test.json</code></td><td>Unit-style: one session, simple interactions</td><td>Every commit</td></tr>
-                    <tr><td><code>*.evalset.json</code></td><td>Integration-style: multiple, multi-turn sessions (<code>EvalSet</code> / <code>EvalCase</code>)</td><td>Pre-release</td></tr>
-                    <tr><td><code>test_config.json</code></td><td>Criteria thresholds + <code>custom_metrics</code> (<code>code_config.name</code>)</td><td>With each run</td></tr>
+                    <tr><td><strong>1. Deterministic Harness Replay</strong></td><td><code>adk conformance record</code> + <code>adk conformance test --mode=replay</code></td><td>Local / PR CI in <code>&lt;5s</code> using recorded LLM responses (zero live model calls)</td><td>Verifies Python/Go/TS callback wiring, <code>state_delta</code> routing, and guardrail refactors with <strong>zero token cost and zero sampling variance</strong> on every commit</td></tr>
+                    <tr><td><strong>2. Local &amp; CI Golden Regression</strong></td><td><code>adk eval &lt;dir&gt; &lt;evalset.json&gt;</code> / <code>pytest</code> <code>AgentEvaluator.evaluate(...)</code> / <code>adk web</code> Eval tab</td><td>In-repo CI runner executing your ADK agent against <code>*.test.json</code> (unit) and <code>*.evalset.json</code> (multi-turn)</td><td>Fast developer inner-loop and PR merge gate grading <code>tool_trajectory_avg_score</code> (<code>EXACT</code>, <code>IN_ORDER</code>, <code>ANY_ORDER</code>), <code>final_response_match_v2</code>, <code>hallucinations_v1</code>, <code>UserSimulatorProvider</code>, and Python <code>custom_metrics</code></td></tr>
+                    <tr><td><strong>3. Managed Cloud Fleet Evaluation &amp; Simulation</strong></td><td><strong>Agent Platform Gen AI Evaluation Service</strong> (<code>client.evals</code> / <code>EvalTask</code> / <code>agents-cli eval</code>)</td><td>Managed Google Cloud service grading <strong>any</strong> agent (ADK on Agent Runtime, Go/TS/Java Cloud Run endpoints, LangGraph, or custom callables)</td><td><strong>Choose when you need:</strong> <strong>Adaptive Rubrics</strong> (auto-generated per-prompt pass/fail checks), custom <strong>Autoraters</strong>, <strong>2-Step Agent Simulation</strong> (from immutable <strong>Agent Registry</strong> snapshots), <strong>Environment Simulation</strong> (injecting HTTP 503/429/timeout tool faults safely), <strong>Online Evaluation Monitors</strong> on live Cloud Trace spans, <strong>Failure Cluster Analysis</strong>, or closed-loop <strong>Agent Optimizer</strong> prompt tuning</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-gears"></i></div>Four ways to run</h3>
-            <p><code>adk web</code> (Eval tab: save live sessions as cases, inspect traces), <code>adk eval &lt;agent_dir&gt; &lt;evalset.json&gt;</code> (CLI/CI), <code>await AgentEvaluator.evaluate(...)</code> in <code>pytest</code>, and **<code>adk conformance test</code>** (<code>--mode=replay</code> verifies deterministic harness wiring without live model variance; <code>--mode=live</code> checks live drift against <code>adk conformance record</code> baselines).</p>
-        </div>
-
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Criterion</th><th>Measures</th><th>Judge</th></tr>
+                    <tr><th>ADK <code>test_config.json</code> criterion</th><th>What it grades</th><th>Rater type &amp; exam nuances</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>tool_trajectory_avg_score</code></td><td>Actual vs. expected tool calls. <code>match_type</code>: <code>EXACT</code> (default, no extra or missing calls), <code>IN_ORDER</code> (extras allowed between), <code>ANY_ORDER</code></td><td>Deterministic</td></tr>
-                    <tr><td><code>response_match_score</code></td><td>ROUGE-1 word overlap with the reference</td><td>Deterministic</td></tr>
-                    <tr><td><code>final_response_match_v2</code></td><td>Semantic equivalence to the reference</td><td>LLM</td></tr>
-                    <tr><td><code>rubric_based_final_response_quality_v1</code> / <code>rubric_based_tool_use_quality_v1</code></td><td>Custom rubrics</td><td>LLM</td></tr>
-                    <tr><td><code>hallucinations_v1</code></td><td>Groundedness in context (catches ungrounded numbers even when the right tool ran)</td><td>LLM</td></tr>
-                    <tr><td><code>safety_v1</code></td><td>Harmlessness (delegates to Vertex AI Eval Service)</td><td>LLM</td></tr>
-                    <tr><td><code>multi_turn_task_success_v1</code> / <code>multi_turn_trajectory_quality_v1</code></td><td>Whole-conversation success with <code>UserSimulatorProvider</code> (<code>conversation_scenario</code> + <code>starting_prompt</code> + <code>user_persona</code>)</td><td>LLM</td></tr>
+                    <tr><td><code>tool_trajectory_avg_score</code></td><td>Predicted vs. reference tool sequence (<code>match_type</code>: <code>EXACT</code> default, <code>IN_ORDER</code> allows extra helper calls between required steps, <code>ANY_ORDER</code> for parallel lookups)</td><td>Deterministic (mirrors cloud <code>trajectory_exact_match</code> / <code>trajectory_in_order_match</code> / <code>trajectory_any_order_match</code> / <code>trajectory_precision</code> / <code>trajectory_recall</code>)</td></tr>
+                    <tr><td><code>response_match_score</code> vs. <code>final_response_match_v2</code></td><td>Lexical ROUGE-1 overlap vs. semantic equivalence</td><td>Deterministic vs. LLM judge (prefer <code>final_response_match_v2</code> whenever valid phrasing varies)</td></tr>
+                    <tr><td><code>rubric_based_final_response_quality_v1</code> / <code>rubric_based_tool_use_quality_v1</code></td><td>Domain-specific quality rubrics</td><td>LLM judge</td></tr>
+                    <tr><td><code>hallucinations_v1</code> &amp; <code>safety_v1</code></td><td>Context faithfulness (catches invented numbers despite calling the right tool) &amp; harmlessness</td><td>LLM judge (<code>safety_v1</code> delegates to Gen AI Eval Service)</td></tr>
+                    <tr><td><code>multi_turn_task_success_v1</code> / <code>multi_turn_trajectory_quality_v1</code></td><td>End-to-end goal completion with <code>UserSimulatorProvider</code> (<code>starting_prompt</code> + <code>conversation_scenario</code>)</td><td>LLM judge</td></tr>
+                    <tr><td><code>tool_call_count_v1</code>, <code>token_usage_v1</code>, <code>invocation_duration_v1</code></td><td>Resource efficiency telemetry</td><td>**<code>INFORMATIONAL</code> only**—setting thresholds on these in <code>test_config.json</code> throws an error; enforce hard call/cost gates via Python <code>custom_metrics</code> (<code>code_config.name</code>)</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>Observability &amp; Troubleshooting (`PAA 4.2`)</h3>
             <ul>
-                <li><strong>Built-in efficiency metrics vs. custom thresholds:</strong> ADK automatically emits <code>tool_call_count_v1</code>, <code>inference_call_count_v1</code>, <code>token_usage_v1</code> and <code>invocation_duration_v1</code> as **<code>INFORMATIONAL</code>** metrics (setting a pass/fail threshold on them in <code>test_config.json</code> raises an error). To fail a test on call budgets or forbidden tools, register a Python function under <code>custom_metrics</code> (<code>code_config: {&quot;name&quot;: &quot;pkg.mod.metric_fn&quot;}</code>).</li>
-                <li><strong>LLM-as-judge rules:</strong> grade against reference facts, require <strong>reasoning before the score</strong>, return JSON; a 3-judge majority vote stabilizes borderline cases. Keep red-team cases (jailbreaks, indirect injection, empty/huge inputs) in the evalset permanently.</li>
-                <li><strong>Observability:</strong> native OpenTelemetry spans (<code>invoke_agent</code>, <code>call_llm</code>, <code>execute_tool</code>); <code>--otel_to_cloud</code> exports to Cloud Trace (<code>--trace_to_cloud</code> is deprecated); set <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> in production so raw prompts, tool args and PII are omitted from traces.</li>
+                <li><strong>OpenTelemetry GenAI spans:</strong> ADK emits hierarchical spans (<code>invoke_agent</code> → <code>call_llm</code> → <code>execute_tool</code>). Export via <code>--otel_to_cloud</code> locally or <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> on Agent Runtime (powers the 8 <strong>Agent Registry Observability</strong> tabs: Overview, Evaluation, Models, Tools, Usage, Logs, Traces, Topology).</li>
+                <li><strong>Privacy-by-default:</strong> Keep <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> (and <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</code> unset/false) in production unless paired with <strong>Sensitive Data Protection</strong> de-identification and restricted log buckets.</li>
+                <li><strong>Production flywheel:</strong> Export low-scoring <strong>Online Evaluation Monitor</strong> traces and human escalations → scrub PII with SDP → convert into permanent <code>*.evalset.json</code> / golden simulation cases so fixed regressions never recur.</li>
             </ul>
         </div>
 
@@ -1115,7 +1066,7 @@ agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;,
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p><code>response_match_score</code> is <strong>lexical</strong> (ROUGE-1), so a correct paraphrase can fail. Use <code>final_response_match_v2</code> or a rubric when wording legitimately varies. And <code>EXACT</code> trajectory matching fails agents that make harmless extra calls; use <code>IN_ORDER</code> or <code>ANY_ORDER</code> when order or extras don&#x27;t matter.</p>
+                <p>Testing agent resilience against rate limits or ERP outages by firing tests against live staging/production APIs, or relying solely on local <code>*.test.json</code> files for multi-language cloud fleets. Use <strong>Environment Simulation</strong> + <strong>2-Step Agent Simulation</strong> in the <strong>Gen AI Evaluation Service</strong> against an immutable <strong>Agent Registry</strong> snapshot to inject deterministic 503/429 faults safely.</p>
             </div>
         </div>
 
@@ -1127,68 +1078,59 @@ agent = LlmAgent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;,
             <h2>15. Deployment, Live Streaming and Developer Tooling</h2>
         </div>
 
-        <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>The managed-agent split</h3>
-            <p>the platform owns the loop, sandbox, sessions, scaling and restarts; <strong>you own</strong> instructions, tools and their permissions, and what the agent outputs.</p>
-        </div>
-
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Target</th><th>Command</th><th>You manage</th><th>Choose when</th></tr>
+                    <tr><th>Deployment target (<code>PAA 4.2</code>)</th><th>CLI workflow</th><th>Infrastructure you manage</th><th>Choose when</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Agent Runtime</strong> (formerly Agent Engine)</td><td><code>adk deploy agent_engine --project --region --display_name &lt;dir&gt;</code></td><td>Agent code only</td><td>Default on Google Cloud: managed sessions, Memory Bank, code sandbox, Agent Identity, Gemini Enterprise publishing</td></tr>
-                    <tr><td><strong>Cloud Run</strong></td><td><code>adk deploy cloud_run --project --region [--trigger_sources=&quot;pubsub,eventarc&quot;] &lt;dir&gt;</code></td><td>Container, scaling, session DB</td><td>Custom FastAPI routes, scale-to-zero, <strong>ambient (event-driven) agents</strong> triggered by Pub/Sub or Eventarc</td></tr>
-                    <tr><td><strong>GKE</strong></td><td><code>adk deploy gke ... &lt;dir&gt;</code></td><td>Cluster, networking, autoscaling</td><td>Network/residency control, GPU co-location, gVisor Agent Sandbox</td></tr>
-                    <tr><td><strong>Self-hosted</strong></td><td><code>adk api_server</code> or <code>get_fast_api_app(...)</code></td><td>Everything</td><td>On-prem, other clouds, integration tests</td></tr>
+                    <tr><td><strong>Agent Runtime</strong> (managed <code>reasoningEngines</code>)</td><td><code>adk deploy agent_engine</code> or <code>agents-cli deploy</code></td><td>Agent code &amp; dependencies only (<strong>Python</strong> payload omits API server; <strong>Go</strong> payload bundles its dedicated ADK API server)</td><td><strong>Default on Google Cloud:</strong> turnkey <code>VertexAiSessionService</code>, <strong>Memory Bank</strong>, <strong>Code Execution</strong> sandbox, <strong>Agent Identity</strong>, and <strong>Gemini Enterprise</strong> registration</td></tr>
+                    <tr><td><strong>Cloud Run</strong></td><td><code>adk deploy cloud_run [--trigger_sources=&quot;pubsub,eventarc&quot;]</code></td><td>Container image, session DB (<code>DatabaseSessionService</code> / <code>agentengine://</code>), scaling</td><td><strong>TypeScript / Java / Kotlin</strong> ADK containers, custom FastAPI/HTTP gateways, scale-to-zero, or <strong>ambient event-driven agents</strong> triggered by Pub/Sub &amp; Eventarc</td></tr>
+                    <tr><td><strong>GKE</strong></td><td><code>adk deploy gke</code> / custom Helm</td><td>Cluster, node pools, networking</td><td>Strict VPC/data-residency isolation, co-located self-hosted <strong>Gemma 4</strong> GPUs/TPUs, or <strong>gVisor Agent Sandbox</strong> (<code>GkeCodeExecutor</code>)</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Command</th><th>Purpose</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>adk run &lt;dir&gt;</code></td><td>Terminal chat with the agent</td></tr>
-                    <tr><td><code>adk web</code></td><td>Browser dev UI: chat, event trace, state, Eval tab</td></tr>
-                    <tr><td><code>adk eval &lt;dir&gt; &lt;evalset&gt;</code></td><td>Run evals in CI</td></tr>
-                    <tr><td><code>adk conformance record</code> / <code>adk conformance test</code></td><td>Record golden trajectories and run deterministic replay or live conformance tests</td></tr>
-                    <tr><td><code>adk api_server [--a2a] [--otel_to_cloud]</code></td><td>Local FastAPI server (optionally A2A endpoints and Cloud Trace export)</td></tr>
-                    <tr><td><code>agents-cli deploy</code> / <code>agents-cli eval run</code></td><td>Project lifecycle CLI: deploys to the <code>deployment_target</code> in <code>pyproject.toml</code> and runs eval suites</td></tr>
-                </tbody>
-            </table>
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Platform deep dive</h4>
+                <p>See the <a href="AgentPlatform.html#choosing-runtime">Agent Platform guide</a> for capacity planning, regional compute exhaustion vs. project quotas, Provisioned Throughput GSUs, and Agent Registry governance.</p>
+            </div>
         </div>
 
         <pre><code class="language-python">import asyncio
 from google.genai import types
-from google.adk.agents import Agent
+from google.adk.agents import LlmAgent
+from google.adk.planners import BuiltInPlanner
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 
-agent = Agent(name=&quot;assistant&quot;, model=&quot;gemini-3.8-flash&quot;, instruction=&quot;You are a helpful assistant.&quot;)
+agent = LlmAgent(
+    name=&quot;architect_helper&quot;,
+    model=&quot;gemini-4-argon&quot;,
+    planner=BuiltInPlanner(thinking_config=types.ThinkingConfig(include_thoughts=True, thinking_level=&quot;medium&quot;)),
+    instruction=&quot;Answer concisely with concrete architectural trade-offs.&quot;,
+)
 
-async def main(query: str) -&gt; str:
-    session_service = InMemorySessionService()            # swap for Database/VertexAi in prod
-    session = await session_service.create_session(app_name=&quot;demo&quot;, user_id=&quot;u1&quot;)
-    runner = Runner(agent=agent, app_name=&quot;demo&quot;, session_service=session_service)
-    msg = types.Content(role=&quot;user&quot;, parts=[types.Part(text=query)])
-    final_text = &quot;&quot;
-    async for event in runner.run_async(user_id=&quot;u1&quot;, session_id=session.id, new_message=msg):
+async def run_turn(prompt: str) -&gt; str:
+    session_service = InMemorySessionService()  # Replace with VertexAiSessionService / DatabaseSessionService in prod
+    session = await session_service.create_session(app_name=&quot;hub&quot;, user_id=&quot;u_42&quot;)
+    runner = Runner(agent=agent, app_name=&quot;hub&quot;, session_service=session_service)
+    msg = types.Content(role=&quot;user&quot;, parts=[types.Part(text=prompt)])
+    final_answer = &quot;&quot;
+    async for event in runner.run_async(user_id=&quot;u_42&quot;, session_id=session.id, new_message=msg):
         if event.is_final_response() and event.content and event.content.parts:
-            # In multi-agent workflows EVERY sub-agent emits is_final_response(); drain the stream
-            # and skip thinking parts (p.thought == True) so you keep the last agent&#x27;s answer.
-            final_text = &quot;&quot;.join(p.text or &quot;&quot; for p in event.content.parts if not getattr(p, &quot;thought&quot;, False))
-    return final_text
+            # Drain ALL events in multi-agent runs and filter out internal thought summaries (p.thought == True)
+            final_answer = &quot;&quot;.join(p.text or &quot;&quot; for p in event.content.parts if not getattr(p, &quot;thought&quot;, False))
+    return final_answer
 
-print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
+if __name__ == &quot;__main__&quot;:
+    print(asyncio.run(run_turn(&quot;When should I choose AgentTool over sub_agents?&quot;)))</code></pre>
 
-        <div class="concept-card accent-coral">
+        <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Live (bidirectional audio/video) streaming:</strong> use <code>runner.run_live(user_id=..., session_id=..., live_request_queue=LiveRequestQueue(), run_config=RunConfig(response_modalities=[&quot;AUDIO&quot;]))</code> (<code>send_realtime(Blob)</code> for audio/video frames, <code>send_content(Content)</code> for text, <code>close()</code> on exit) and stop playback when <code>event.interrupted == True</code>. In Python ADK, setting <code>StreamingMode.BIDI</code> on <code>run_async()</code> is a silent no-op: only <code>run_live()</code> opens a Gemini Live session (<code>StreamingMode.SSE</code> on <code>run_async()</code> streams text tokens).</li>
-                <li>On Agent Runtime the resource name is <code>projects/.../reasoningEngines/&lt;id&gt;</code>; managed sessions use <code>--session_service_uri agentengine://&lt;id&gt;</code>.</li>
+                <li>**Real-time bidirectional voice &amp; video (<code>runner.run_live</code>):<strong> Open low-latency </strong>Gemini 3.8 Live (<code>gemini-3.8-live</code>)** sessions via <code>runner.run_live(user_id=..., session_id=..., live_request_queue=LiveRequestQueue(), run_config=RunConfig(response_modalities=[&quot;AUDIO&quot;]))</code> (<code>send_realtime(Blob)</code> for PCM audio/video frames, halt playback immediately when <code>event.interrupted == True</code> on user barge-in). Remember: setting <code>StreamingMode.BIDI</code> on <code>runner.run_async()</code> is a <strong>silent no-op</strong> in Python ADK (<code>run_async</code> only supports <code>StreamingMode.SSE</code>), and **<code>gemini-4-argon</code> does not support Live API WebSockets**—pair <code>gemini-3.8-live</code> at the voice front-door with a <code>gemini-4-argon</code> <code>AgentTool</code> for deep backend reasoning.</li>
             </ul>
         </div>
 
@@ -1203,30 +1145,25 @@ print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Symptom / scenario</th><th>Root cause → correct fix</th><th>Tempting wrong answer</th></tr>
+                    <tr><th>Symptom or production failure</th><th>Root cause → architectural fix</th><th>Tempting distractor (wrong)</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Conversation history or <code>user:</code> state lost after a restart</td><td><code>InMemorySessionService</code> in production → <code>DatabaseSessionService</code> / <code>VertexAiSessionService</code></td><td>Switching to <code>InMemoryMemoryService</code></td></tr>
-                    <tr><td>Users see each other&#x27;s data under load</td><td>Memory stored on the agent object → stateless <code>Agent</code>; state in <code>SessionService</code> keyed by app/user/session</td><td>One agent instance per user</td></tr>
-                    <tr><td><code>LoopAgent</code> always runs every iteration</td><td>Nothing sets <code>escalate</code> → exit tool sets <code>tool_context.actions.escalate = True</code> (<code>skip_summarization = True</code>)</td><td>Raising an exception in the tool</td></tr>
-                    <tr><td>Next step runs even when <code>LoopAgent</code> never converged</td><td><code>LoopAgent</code> exits <strong>silently</strong> at <code>max_iterations</code> → set <code>state[&quot;temp:approved&quot;] = True</code> in exit tool and check it in <code>before_agent_callback</code></td><td>Expecting <code>LoopAgent</code> to raise <code>TimeoutError</code></td></tr>
-                    <tr><td><code>ParallelAgent</code> results overwrite each other</td><td>Branches share one <code>output_key</code> → distinct key per branch, then a synthesizer (or <code>JoinNode</code> in ADK 2.0)</td><td>Switching to <code>SequentialAgent</code></td></tr>
-                    <tr><td>Specialist takes over the chat when you wanted a sub-result</td><td><code>sub_agents</code> transfer → wrap the child in <code>AgentTool</code> (or ADK 2.0 <code>mode=&quot;single_turn&quot;</code>)</td><td>Better instructions for the child</td></tr>
-                    <tr><td><code>KeyError</code> when instruction includes a JSON example <code>{&quot;id&quot;: 1}</code></td><td>ADK treats <code>{id}</code> as a state placeholder → wrap the prompt in an <code>InstructionProvider</code> callable <code>def prompt(ctx):</code></td><td>Escaping with double braces <code>{{id}}</code></td></tr>
-                    <tr><td>Early <code>return</code> on <code>event.is_final_response()</code> returns step 1&#x27;s output</td><td>In multi-agent workflows <strong>every</strong> sub-agent emits <code>is_final_response()</code> → drain the <code>run_async</code> generator (and filter <code>not p.thought</code>)</td><td>Parsing <code>session.events</code> manually</td></tr>
-                    <tr><td>Combining <code>google_search</code> with custom <code>FunctionTool</code>s errors</td><td>Gemini built-ins execute server-side → set <code>bypass_multi_tools_limit=True</code> or wrap the search agent in <code>AgentTool</code></td><td>Switching to <code>SequentialAgent</code></td></tr>
-                    <tr><td><code>ReflectAndRetryToolPlugin</code> never retries a failing tool</td><td>Tool returns <code>{&quot;status&quot;: &quot;error&quot;}</code> instead of raising → override <code>extract_error_from_result</code> on the plugin</td><td>Raising <code>max_retries</code> to 10</td></tr>
-                    <tr><td>Tool confirmation crashes after moving to <code>DatabaseSessionService</code></td><td>Built-in tool confirmation is <code>InMemorySessionService</code>-only → use <code>LongRunningFunctionTool</code> / external approval workflow</td><td>Adding an async DB driver</td></tr>
-                    <tr><td>Agent runs a destructive MCP or DB tool</td><td>All tools/verbs exposed → <code>tool_filter=[...]</code> names list, <code>WriteMode.BLOCKED</code>, read-only DB role</td><td>&quot;You are read-only&quot; in the prompt or <code>DROP</code> blocklist</td></tr>
-                    <tr><td>Hidden instruction in a fetched PDF hijacks the agent</td><td>Only user input screened → <code>after_tool_callback</code> payload scanning + isolate reader from action tools</td><td>Input guardrail only</td></tr>
-                    <tr><td>PII leaks into LLM context and <code>session.events</code></td><td>Redaction only in <code>after_model_callback</code> → scrub PII at the tool boundary (<code>after_tool_callback</code> &amp; <code>before_tool_callback</code>)</td><td>&quot;Never reveal PII&quot; instruction</td></tr>
-                    <tr><td><code>after_agent_callback</code> didn&#x27;t change the reply</td><td>It <strong>appends</strong> an event → replace model output in <code>after_model_callback</code></td><td>Returning a longer <code>Content</code></td></tr>
-                    <tr><td>Approved payment executed twice after a resume</td><td>Resumability is at-least-once → idempotency keys, check-before-create</td><td>Disabling resumability</td></tr>
-                    <tr><td>Whole agent team down during a model outage</td><td>Same hardcoded model everywhere → <code>HttpRetryOptions</code> for 429/503 + <code>on_model_error_callback</code> model failover</td><td>Retrying the same model forever</td></tr>
-                    <tr><td>Correct agent fails trajectory eval or paraphrased response eval</td><td><code>EXACT</code> trajectory / lexical <code>response_match_score</code> (ROUGE-1) → use <code>IN_ORDER</code> / <code>ANY_ORDER</code> and <code>final_response_match_v2</code></td><td>Lowering the threshold to 0.1</td></tr>
-                    <tr><td>Setting a threshold on <code>tool_call_count_v1</code> errors in <code>adk eval</code></td><td>Built-in efficiency metrics are <code>INFORMATIONAL</code> only → define a <code>custom_metrics</code> function in <code>test_config.json</code></td><td>Switching to <code>adk web</code></td></tr>
-                    <tr><td>Prompt cache hit rate is 0% despite <code>ContextCacheConfig</code></td><td>Dynamic <code>{state_key}</code> placed at top of prompt → put static text in <code>static_instruction</code> and dynamic state in <code>instruction</code></td><td>Increasing <code>ttl_seconds</code></td></tr>
-                    <tr><td>Deployed agent fails to start with MCP tools</td><td>Async toolset factory → define <code>McpToolset</code> synchronously at module level in <code>agent.py</code></td><td>Increasing container memory</td></tr>
+                    <tr><td><code>HTTP 400 INVALID_ARGUMENT</code> when configuring thinking on <code>gemini-4-argon</code> or <code>gemini-3.8-flash</code></td><td>Passed <code>thinking_level=&quot;minimal&quot;</code> (unsupported on <code>4-argon</code> &amp; <code>3.8-flash</code>) or legacy integer <code>thinking_budget</code> on <code>4-argon</code> → use <code>thinking_level</code> in <code>{&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;}</code> (reserve <code>&quot;minimal&quot;</code> for <code>gemini-3.5-flash-lite</code>)</td><td>Setting <code>temperature=0.0</code> to disable thinking</td></tr>
+                    <tr><td>Explicit <code>cachedContents</code> creation fails when migrating an ADK app to <code>gemini-4-argon</code></td><td><code>gemini-4-argon</code> supports <strong>implicit caching only</strong> (<code>&gt;= 4,096</code> tokens, zero storage fee) → remove explicit cache creation and place static prompt content in <code>static_instruction</code></td><td>Increasing <code>ContextCacheConfig.ttl_seconds</code></td></tr>
+                    <tr><td><code>ManagedAgent</code> raises <code>NotImplementedError</code> or regional connection error</td><td>Attached local Python <code>FunctionTool</code> / <code>McpToolset</code> or targeted <code>us-central1</code> → <code>ManagedAgent</code> supports <strong>server-side tools only</strong> and requires the **<code>global</code>** location on Agent Platform; keep local/MCP tools on a companion <code>LlmAgent</code></td><td>Wrapping <code>McpToolset</code> in <code>StdioConnectionParams</code></td></tr>
+                    <tr><td>Chaining <code>previous_interaction_id</code> on <code>Interactions API</code> (<code>background=True</code>) returns <code>400 Bad Request</code></td><td>Previous background interaction is still <code>in_progress</code> → poll interaction status until <code>completed</code> before sending the follow-up turn</td><td>Resending the full chat history without <code>previous_interaction_id</code></td></tr>
+                    <tr><td>Java/Kotlin ADK team tries to import ADK 2.0 <code>Workflow(edges=[...])</code> or mix <code>GoogleSearchTool</code> + custom tools on one agent</td><td>ADK 2.0 graph <code>Workflow</code> is currently <strong>Python, TypeScript, and Go</strong>; Java/Kotlin use ADK 1.x workflow agents (<code>SequentialAgent</code>/<code>ParallelAgent</code>/<code>LoopAgent</code>) and must isolate <code>GoogleSearchTool</code> inside an <code>AgentTool</code> specialist</td><td>Enabling <code>bypass_multi_tools_limit=True</code> in Java</td></tr>
+                    <tr><td>Coding agent hangs indefinitely running <code>agents-cli</code> or a <code>SKILL.md</code> helper script in CI</td><td>Executed in interactive human TTY mode waiting on stdin confirmation → invoke <code>agents-cli</code> and skill scripts in <strong>non-interactive agent mode</strong> with explicit CLI flags and JSON stdout</td><td>Extending the Cloud Build timeout to 60 minutes</td></tr>
+                    <tr><td>Cross-user data leak under load</td><td>State stored on <code>self</code> inside a singleton <code>Agent</code> → move all mutable state to <code>SessionService</code> (<code>app_name</code> / <code>user_id</code> / <code>session_id</code>)</td><td>Instantiating a new MCP server per HTTP request</td></tr>
+                    <tr><td><code>LoopAgent(max_iterations=3)</code> finishes without converging, yet downstream <code>publisher</code> still runs</td><td><code>LoopAgent</code> exits <strong>silently</strong> at <code>max_iterations</code> → set <code>state[&quot;temp:approved&quot;] = True</code> in the exit tool alongside <code>escalate = True</code> and gate <code>publisher</code> via <code>before_agent_callback</code></td><td>Catching <code>TimeoutError</code> around <code>LoopAgent</code></td></tr>
+                    <tr><td>Specialist hijacks user conversation instead of returning a structured sub-result</td><td>Placed specialist in <code>sub_agents</code> (<code>mode=&quot;chat&quot;</code> transfer) → wrap in <code>AgentTool(agent=...)</code> or use ADK 2.0 <code>mode=&quot;single_turn&quot;</code></td><td>Prompting <code>&quot;Do not talk to the user&quot;</code></td></tr>
+                    <tr><td><code>KeyError</code> before LLM call when instruction contains <code>{&quot;id&quot;: 1}</code></td><td>ADK parses <code>{id}</code> as a <code>session.state</code> placeholder → pass an <code>InstructionProvider</code> callable <code>def prompt(ctx: ReadonlyContext) -&gt; str:</code></td><td>Escaping braces as <code>{{id}}</code></td></tr>
+                    <tr><td>Early <code>return</code> on <code>event.is_final_response()</code> returns step 1&#x27;s draft or raw thoughts</td><td>Every sub-agent in a pipeline emits <code>is_final_response()</code> → drain the full <code>run_async</code> generator and filter <code>not getattr(p, &quot;thought&quot;, False)</code></td><td>Switching from <code>run_async</code> to <code>run_live</code></td></tr>
+                    <tr><td><code>ReflectAndRetryToolPlugin</code> ignores failing tools</td><td>Tools return <code>{&quot;status&quot;: &quot;error&quot;}</code> dicts instead of raising exceptions → override <code>extract_error_from_result</code> on the plugin</td><td>Raising <code>max_retries</code></td></tr>
+                    <tr><td>Built-in <code>require_confirmation=True</code> breaks after switching to <code>DatabaseSessionService</code> / <code>VertexAiSessionService</code></td><td>Built-in tool confirmation is <code>InMemorySessionService</code>-only → use <code>LongRunningFunctionTool</code> or ADK 2.0 <code>RequestInput</code></td><td>Switching SQLAlchemy drivers</td></tr>
+                    <tr><td>Raw SSNs appear in <code>session.events</code> and traces despite <code>after_model_callback</code> redaction</td><td>Tool results are persisted and sent to the LLM <em>before</em> <code>after_model_callback</code> → scrub PII at the tool boundary (<code>after_tool_callback</code> &amp; <code>before_tool_callback</code>) and keep <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code></td><td>Strengthening system prompt privacy rules</td></tr>
+                    <tr><td><code>adk eval</code> fails when setting a threshold on <code>tool_call_count_v1</code> or <code>token_usage_v1</code></td><td>Built-in efficiency metrics are <code>INFORMATIONAL</code> only → enforce call/token budgets via Python <code>custom_metrics</code> (<code>code_config.name</code>)</td><td>Lowering threshold values to <code>0.5</code></td></tr>
+                    <tr><td>Team wants to test 503 tool outages and auto-generate multi-turn personas across a deployed Go Cloud Run agent</td><td><code>adk eval</code> is designed for local/CI golden files → use <strong>Agent Platform Gen AI Evaluation Service</strong> (<strong>2-Step Agent Simulation</strong> + <strong>Environment Simulation</strong> + <strong>Adaptive Rubrics</strong>)</td><td>Running chaos faults against live production ERP APIs</td></tr>
                 </tbody>
             </table>
         </div>
@@ -1245,7 +1182,7 @@ print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
                 <p>A comprehensive walkthrough of the Google ADK runtime architecture, multi-agent topologies, tool contracts, and enterprise production guardrails.</p>
                 <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
                     <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
-                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ADK-v1.0.mp4" type="video/mp4">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ADK-v2.0.mp4" type="video/mp4">
                         Your browser does not support the video element.
                     </video>
                 </div>
@@ -1253,11 +1190,11 @@ print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
 
             <div class="concept-card accent-pink">
                 <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
-                <p>Listen to the ADK audio deep dive or view the 10-page study guide, slide deck, and architecture infographic.</p>
+                <p>Listen to the ADK audio deep dive, open the PDF/deck/infographic assets, or test yourself on the 33-question scenario quiz.</p>
                 <div class="audio-label" style="margin-top: 15px;">Google ADK for Production AI Agents (Podcast)</div>
                 <div class="audio-wrapper">
                     <audio controls controlsList="nodownload" oncontextmenu="return false;">
-                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ADK-v1.0.mp3" type="audio/mpeg">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ADK-v2.0.mp3" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
                 </div>
@@ -1268,7 +1205,7 @@ print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
                     </a>
                     <a href="quiz.html?topic=adk" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
                         <i class="fas fa-tasks"></i>
-                        <span>Launch Interactive ADK Practice Quiz →</span>
+                        <span>Launch Interactive ADK Practice Quiz (33 Questions) →</span>
                     </a>
                 </div>
             </div>
@@ -1290,33 +1227,45 @@ print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> What happens when a <code>LoopAgent(max_iterations=3)</code> reaches its iteration ceiling without any tool setting <code>escalate = True</code>, and how do you prevent an unapproved draft from reaching the next step in an outer <code>SequentialAgent</code>?</p>
+                    <p><span class="q-num">Q2.</span> What happens when you pass <code>thinking_level="minimal"</code> or legacy integer <code>thinking_budget</code> to <code>BuiltInPlanner</code> on <code>gemini-4-argon</code>, and which model tier supports <code>"minimal"</code>?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text"><code>LoopAgent</code> exits silently when <code>max_iterations</code> trips—it does not raise an exception—so the next agent in an outer <code>SequentialAgent</code> still runs. Have the exit tool set <code>tool_context.state["temp:approved"] = True</code> alongside <code>tool_context.actions.escalate = True</code>, and verify <code>temp:approved</code> in the downstream agent's <code>before_agent_callback</code>.</span>
+                        <span class="answer-text">Both fail immediately with <code>HTTP 400 INVALID_ARGUMENT</code> on <code>gemini-4-argon</code> (and <code>"minimal"</code> also fails on <code>gemini-3.8-flash</code>). Use <code>thinking_level</code> in <code>('low', 'medium', 'high')</code> on <code>gemini-4-argon</code> and <code>gemini-3.8-flash</code>, and use <code>gemini-3.5-flash-lite</code> when you want <code>thinking_level="minimal"</code> (its default) for sub-200ms routing.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> When delegating to a specialist, how does <code>sub_agents=[specialist]</code> differ from wrapping the specialist in <code>AgentTool(agent=specialist)</code>?</p>
+                    <p><span class="q-num">Q3.</span> How does <code>ManagedAgent</code> manage conversation history and sandbox continuity over the <code>Interactions API</code> compared to a standard <code>LlmAgent</code>?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">With <code>sub_agents</code> (LLM transfer via <code>transfer_to_agent</code>), the child takes over the conversation and answers the user directly on the shared session history. With <code>AgentTool</code>, the parent calls the child like a function in an isolated child session, forwards the child's state/artifact deltas back, and retains control of the conversation.</span>
+                        <span class="answer-text"><code>ManagedAgent</code> never re-sends prior transcript turns. It persists only <code>previous_interaction_id</code> and <code>environment_id</code> on local ADK session events while full interaction history and remote sandbox state live server-side (pinned to the <code>global</code> location on Agent Platform and restricted to server-side tools).</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q4.</span> Why is scrubbing PII only inside <code>after_model_callback</code> insufficient when an agent queries external customer APIs or support tickets?</p>
+                    <p><span class="q-num">Q4.</span> What happens when a <code>LoopAgent(max_iterations=3)</code> reaches its iteration ceiling without any tool setting <code>escalate = True</code>, and how do you gate the next step in an outer <code>SequentialAgent</code>?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">By the time <code>after_model_callback</code> runs, raw tool outputs containing PII have already been sent to the model context and recorded in <code>session.events</code>. Scrub PII at the tool boundary (<code>after_tool_callback</code> and <code>before_tool_callback</code>) and keep <code>after_model_callback</code> as the final output backstop.</span>
+                        <span class="answer-text"><code>LoopAgent</code> exits silently when <code>max_iterations</code> trips—it raises no exception—so downstream steps still run. Have the exit tool set <code>tool_context.state["temp:approved"] = True</code> alongside <code>tool_context.actions.escalate = True</code>, and verify <code>temp:approved</code> in the downstream agent's <code>before_agent_callback</code>.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q5.</span> An agent uses <code>ReflectAndRetryToolPlugin(max_retries=3)</code> and returns <code>{"status": "error", "error_message": "..."}</code> dictionaries from its tools, yet the plugin never triggers a retry. Why?</p>
+                    <p><span class="q-num">Q5.</span> When delegating to a specialist, how does <code>sub_agents=[specialist]</code> differ from wrapping the specialist in <code>AgentTool(agent=specialist)</code>?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">By default, <code>ReflectAndRetryToolPlugin</code> only intercepts raised Python exceptions. When tools return structured error dictionaries instead of raising, you must override <code>extract_error_from_result</code> on the plugin so it recognizes the error dictionary and triggers reflection.</span>
+                        <span class="answer-text">With <code>sub_agents</code> (LLM transfer via <code>transfer_to_agent</code>), the child takes over the conversation and answers the user directly on the shared session history. With <code>AgentTool</code>, the parent calls the child like a function in an isolated child session, merges the child's state/artifact deltas back, and retains control.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q6.</span> Why does returning on the first <code>if event.is_final_response():</code> inside a <code>runner.run_async(...)</code> loop return an incomplete answer in a multi-agent pipeline?</p>
+                    <p><span class="q-num">Q6.</span> Why is scrubbing PII only inside <code>after_model_callback</code> insufficient when an agent queries external customer APIs or support tickets?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">In multi-agent workflows (<code>SequentialAgent</code>, <code>LoopAgent</code>, <code>sub_agents</code>), every sub-agent emits its own <code>is_final_response()</code> event when its turn completes. Always drain the entire <code>run_async</code> generator (filtering out thinking parts where <code>p.thought == True</code>) so you capture the final step's response.</span>
+                        <span class="answer-text">By the time <code>after_model_callback</code> runs, raw tool outputs containing PII have already been sent to the model context and committed to <code>session.events</code>. Scrub PII at the tool boundary (<code>after_tool_callback</code> and <code>before_tool_callback</code>) and keep <code>after_model_callback</code> as the final output backstop.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> When should you use <code>adk conformance test --mode=replay</code> vs. <code>adk eval</code> vs. the Agent Platform <strong>Gen AI Evaluation Service</strong>?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Use <code>adk conformance test --mode=replay</code> on every commit for sub-5s deterministic callback/routing checks with zero LLM calls; use <code>adk eval</code> (<code>*.test.json</code> / <code>*.evalset.json</code>) for in-repo CI golden trajectory gates; and use the managed <strong>Gen AI Evaluation Service</strong> for Adaptive Rubrics, custom Autoraters, 2-Step Agent Simulation from Agent Registry snapshots, Environment Simulation (503/429 fault injection), and Online Evaluation Monitors across any language or framework.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> Why does returning on the first <code>if event.is_final_response():</code> inside a <code>runner.run_async(...)</code> loop return an incomplete answer in a multi-agent pipeline?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">In multi-agent workflows, every sub-agent emits its own <code>is_final_response()</code> event when its turn finishes. Always drain the entire <code>run_async</code> generator (filtering out internal thinking parts where <code>p.thought == True</code>) so you capture the final agent's response.</span>
                     </div>
                 </div>
             </div>
@@ -1328,6 +1277,10 @@ print(asyncio.run(main(&quot;Hello!&quot;)))</code></pre>
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>
