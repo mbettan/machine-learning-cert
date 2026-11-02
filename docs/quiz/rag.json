@@ -5,79 +5,79 @@
   "questions": [
     {
       "id": "rag-q-01",
-      "section": "Context Strategies & Live State",
+      "section": "Retrieval Modes & Embedding Veracity",
       "guide_anchor": "when-to-use",
-      "question": "A customer-support assistant answers questions about return policies accurately from a vector store, but when customers ask for their live order shipment status or current account balance, it confidently returns outdated numbers with normal latency and zero error logs. What is the root cause and fix?",
+      "question": "A hospital pharmacy assistant answers dosing questions confidently, but the top-ranked passage comes from a formulary edition that was superseded last quarter; both editions are still indexed. An engineer proposes re-embedding the whole corpus with a larger embedding model. Why won't that fix it, and what will?",
       "options": [
         {
-          "text": "Route live transactional queries (orders, balances, inventory) to a deterministic API or SQL tool against the system of record.",
+          "text": "A larger model produces wider vectors that the current index cannot store, so retrieval will fail outright.",
+          "correct": false,
+          "why_wrong": "Dimension changes are handled by building a new index; the deeper problem is that both editions remain near-identical in meaning."
+        },
+        {
+          "text": "Embeddings encode meaning, not currency; tag chunks by edition and pre-filter on the current one.",
           "correct": true
         },
         {
-          "text": "Shorten the vector index refresh schedule from 24 hours to 15 minutes and increase the dense retrieval top-K from 5 to 25 chunks.",
+          "text": "Switch from cosine to Euclidean distance, which ranks older documents lower because their vectors drift over time.",
           "correct": false,
-          "why_wrong": "Even a 15-minute batch sync leaves mutable transactional records stale, and retrieving 25 historical snapshots causes the generator to blend old states with current ones."
+          "why_wrong": "Distance metrics are geometric and carry no notion of document age; stored vectors do not drift unless re-embedded."
         },
         {
-          "text": "Fine-tune the foundation model nightly on exported order-history tables so the model internalizes recent customer transactions in its weights.",
+          "text": "Raise top-K so both editions reach the prompt, letting the model notice the newer one and prefer it.",
           "correct": false,
-          "why_wrong": "Fine-tuning adapts style and format, not live transactional facts; weights freeze immediately after training and cannot provide per-record traceability."
-        },
-        {
-          "text": "Switch from cosine similarity to inner-product distance and apply a cross-encoder reranker over the order-status text chunks.",
-          "correct": false,
-          "why_wrong": "Changing vector distance metrics or reranking still searches static text snapshots rather than querying the authoritative transactional database."
+          "why_wrong": "Putting conflicting editions side by side invites blended answers; without explicit version metadata the model has no reliable signal."
         }
       ],
-      "explanation": "Similarity is not truth: vector search retrieves text snapshots that look semantically similar to the query, and the LLM blends outdated values into a confident wrong answer with no error signal. Mutable transactional state (order status, inventory counts, balances, ticket queues) must be served via live API or SQL tool calls.",
-      "key_takeaway": "Never index rapidly mutating transactional state into a RAG vector store; use live deterministic API or SQL tool calls.",
+      "explanation": "Two editions of the same formulary describe the same topic in nearly the same words, so any embedding model, however large, places them close together. Currency is a property of the document, not of its meaning. Store version metadata (`edition`, `is_latest`, `effective_date`) and apply it as a pre-filter inside the index scan so superseded text never reaches the prompt.",
+      "key_takeaway": "Embedding quality cannot tell versions apart; currency must come from metadata filters or authoritative live sources.",
       "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
         {
           "label": "Grounding Responses with RAG",
           "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
-        },
-        {
-          "label": "Claude Prompt Caching",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
         }
       ]
     },
     {
       "id": "rag-q-02",
-      "section": "Context Strategies & Working Memory",
+      "section": "Context Rot & Window Limits",
       "guide_anchor": "when-to-use",
-      "question": "An engineering team stuffs an entire 400,000-token repository manual into a 1M-token context window on every user query. Despite fitting well inside the advertised window limit, accuracy on facts located in the middle chapters drops sharply and Time-to-First-Token (TTFT) exceeds 12 seconds. Why?",
+      "question": "A team moves a long-document summarizer from an earlier Claude model to a Claude 4.5-generation model. Before, requests whose input plus max_tokens exceeded the context window failed with a validation error. Now the same requests succeed, but some responses end early. What changed, and how should the client react?",
       "options": [
         {
-          "text": "Attention dilution ('lost in the middle') degrades middle-passage recall and inflates prefill latency; retrieve only relevant chunks.",
+          "text": "The new model silently drops the oldest input tokens to make room, so the client should re-send the missing pages.",
+          "correct": false,
+          "why_wrong": "The API does not silently truncate input; it signals the condition through the stop_reason field on the response."
+        },
+        {
+          "text": "The API now accepts the request and stops at the window limit with stop_reason model_context_window_exceeded.",
           "correct": true
         },
         {
-          "text": "The tokenizer automatically truncates tokens beyond 128k unless rotary position embeddings (RoPE) are manually re-trained via LoRA adapters.",
+          "text": "The response hit max_tokens, so the client should raise max_tokens above the size of the context window.",
           "correct": false,
-          "why_wrong": "A 1M-token model processes all 400k tokens without silent truncation; the degradation comes from attention distribution across distracting middle tokens, not tokenizer truncation."
+          "why_wrong": "This is a different stop reason; raising max_tokens adds no room because the window is shared by input and output."
         },
         {
-          "text": "Prefix prompt caching is corrupting the middle tokens of the manual because cached KV blocks expire asynchronously during generation.",
+          "text": "The platform returned a 529 overloaded error that the SDK retried internally, yielding a partial completion.",
           "correct": false,
-          "why_wrong": "Prefix prompt caching stores exact KV states for identical prefixes and never alters token representations or degrades middle-context recall."
-        },
-        {
-          "text": "The manual exceeds the model's effective attention span; switching to a 2M-token window variant will restore middle-chapter recall.",
-          "correct": false,
-          "why_wrong": "A bigger window is the classic trap: adding capacity does not fix 'lost in the middle' attention dilution, and it raises cost and TTFT even further."
+          "why_wrong": "Overload errors are returned as errors, not as successful responses with truncated content."
         }
       ],
-      "explanation": "Advertised context window size is not working memory: attention dilution ('lost in the middle') degrades multi-fact recall well before the token limit is reached, while input cost and Time-to-First-Token grow linearly with prompt length. RAG keeps the prompt lean (~1.5k–3k relevant tokens) with exact citations.",
-      "key_takeaway": "Long-context windows do not replace RAG at scale due to 'lost in the middle' attention dilution, linear token cost, and high TTFT.",
+      "explanation": "On Claude 4.5 and newer models, the API accepts a request whose input plus `max_tokens` exceeds the context window; if generation then reaches the limit, it stops with `stop_reason: \"model_context_window_exceeded\"`. Earlier models return a validation error unless the `model-context-window-exceeded-2025-08-26` beta header is sent. Clients should branch on `stop_reason` and reduce or curate the input (for example, retrieve fewer, more relevant passages) rather than assume the output is complete.",
+      "key_takeaway": "Always check stop_reason: on Claude 4.5+ models, window exhaustion surfaces as model_context_window_exceeded rather than an error.",
       "doc_links": [
         {
-          "label": "Grounding Responses with RAG",
-          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+          "label": "Claude Context Windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
         },
         {
-          "label": "Claude Prompt Caching",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+          "label": "Claude Stop Reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
         }
       ]
     },
@@ -85,38 +85,38 @@
       "id": "rag-q-03",
       "section": "Indexing, Parsing & Chunking",
       "guide_anchor": "indexing",
-      "question": "A financial RAG pipeline ingests 10-K filings containing complex multi-column balance sheets and merged-cell tables. Using a standard plain-text PDF extractor and 500-token fixed-size chunking, the assistant hallucinates numbers whenever asked about quarterly revenue rows. What is the best ingestion fix?",
+      "question": "An insurer indexes 300 policy booklets. A chunk reading 'The deductible for this tier rises to $2,500 after the first claim' is retrieved for questions about several unrelated products, because the chunk never names the product or tier. Which index-time change most directly fixes this?",
       "options": [
         {
-          "text": "Parse tables into structured Markdown/HTML with a layout-aware parser, split on structural boundaries, and prepend section headers.",
+          "text": "Prepend a generated context line (booklet, product, section) to each chunk before indexing.",
           "correct": true
         },
         {
-          "text": "Reduce the fixed-size chunk length from 500 tokens to 64 tokens with a 50% sliding-window overlap so each table cell is indexed as its own vector.",
+          "text": "Increase the chunk overlap from 10% to 50% so that neighboring chunks repeat more of the surrounding sentences.",
           "correct": false,
-          "why_wrong": "Splitting a table into 64-token fragments detaches row labels and column headers from numeric cells, making it impossible to reconstruct which number belongs to which metric."
+          "why_wrong": "Overlap helps when a fact straddles a boundary, but the product name may sit pages earlier and still be missing from the chunk."
         },
         {
-          "text": "Keep plain-text extraction but switch the generator to a larger frontier model with Chain-of-Thought prompting to reconstruct the scrambled columns.",
+          "text": "Switch to a higher-dimensional embedding model so the vector captures finer semantic detail from the same text.",
           "correct": false,
-          "why_wrong": "Once a plain-text parser scrambles multi-column reading order and slices across table rows, even the strongest LLM cannot reliably guess which numbers belonged to which column."
+          "why_wrong": "A larger embedding cannot encode information that is absent from the chunk text; the product context is simply not there."
         },
         {
-          "text": "Apply product quantization (PQ) to the vector index and increase HNSW ef_search from 64 to 256 at query time.",
+          "text": "Add a cross-encoder reranker after retrieval so that irrelevant deductible chunks drop out of the final top-N.",
           "correct": false,
-          "why_wrong": "ANN index tuning controls vector search recall vs. latency, but cannot repair structural corruption introduced during PDF parsing and chunking."
+          "why_wrong": "The reranker scores the same context-free text, so it cannot tell which product the chunk belongs to either."
         }
       ],
-      "explanation": "Bad parsing looks like model hallucination downstream. Multi-column PDFs and financial tables require layout-aware parsing (such as Document AI Layout Parser) that keeps tables intact as Markdown/HTML, structure-aware chunking that never slices mid-table, and contextual header prepending (`Document > Section > Table`).",
-      "key_takeaway": "Never split a table mid-row with fixed-token chunking; use layout-aware parsing and keep tables intact with their column headers.",
+      "explanation": "Chunks often lose the referent that gave them meaning (which product, which section, which year). Contextual enrichment prepends a brief, document-aware description to each chunk before it is embedded and keyword-indexed, so both dense and sparse retrieval can match on the missing context. Structural headers (`Booklet > Product > Section`) are a cheaper variant of the same idea.",
+      "key_takeaway": "Restore missing referents at index time by prepending document and section context to each chunk before embedding.",
       "doc_links": [
-        {
-          "label": "Document AI Layout Parser for RAG",
-          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
-        },
         {
           "label": "Anthropic: Contextual Retrieval",
           "url": "https://www.anthropic.com/news/contextual-retrieval"
+        },
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
         }
       ]
     },
@@ -670,38 +670,38 @@
       "id": "rag-q-18",
       "section": "Semantic Caching & Latency Budget",
       "guide_anchor": "caching",
-      "question": "A production RAG system's answer quality gradually degrades over 90 days with zero code or prompt changes, while p95 latency and HTTP 200 error dashboards remain completely green. A teammate blames 'stale prefix prompt-cache hits' in the LLM provider. Why is that diagnosis wrong, and what is the real cause?",
+      "question": "A retailer's semantic answer cache uses LRU eviction with ample capacity and no other expiry rule. Two weeks after the return window changed from 30 to 14 days, many customers still receive the 30-day answer, while rarely asked questions show the new policy. What should the team add?",
       "options": [
         {
-          "text": "Prefix prompt caching only hits on byte-identical prefixes; silent 90-day degradation comes from corpus/retrieval drift or model changes.",
+          "text": "A larger cache capacity, so that the LRU policy keeps more of the updated answers in memory at the same time.",
+          "correct": false,
+          "why_wrong": "More capacity makes popular stale entries even less likely to be evicted; LRU size alone never forces a refresh."
+        },
+        {
+          "text": "Add a freshness policy: a TTL, version-hash keys on cited chunks and event-driven purges.",
           "correct": true
         },
         {
-          "text": "Prefix prompt caching uses approximate cosine similarity (`>= 0.85`) over the system prompt and randomly overwrites retrieved chunks after 30 days.",
+          "text": "A stricter similarity threshold, so that only near-identical questions are served from the cache going forward.",
           "correct": false,
-          "why_wrong": "This confuses an application-level semantic response cache with LLM prefix prompt caching; provider prefix caching is exact-token-match only and has a short TTL (minutes to hours)."
+          "why_wrong": "A stricter threshold reduces mismatched hits but still serves the outdated answer to exactly matching questions."
         },
         {
-          "text": "HNSW vector graphs automatically decay edge weights by 1% per day unless `VACUUM FULL` is executed weekly.",
+          "text": "A switch from LRU to LFU eviction, which removes the most frequently requested entries first to keep them fresh.",
           "correct": false,
-          "why_wrong": "HNSW edge links do not time-decay by calendar days; retrieval drift happens because new documents, stale versions, or shifting user query patterns alter the nearest-neighbor neighborhood."
-        },
-        {
-          "text": "Cross-encoder rerankers cache their softmax logits in browser cookies for 90 days unless `Cache-Control: no-transform` is set.",
-          "correct": false,
-          "why_wrong": "Reranking executes server-side inside the retrieval pipeline and never stores model logits in client browser cookies."
+          "why_wrong": "LFU evicts the least frequently used entries, so popular stale answers would be kept even longer than under LRU."
         }
       ],
-      "explanation": "This is a classic exam trap: **LLM prefix prompt caching** only reuses KV tensors when the leading token sequence is **byte-for-byte identical**—if retrieved chunks change, the prefix changes and causes a standard cache miss. Silent multi-month quality erosion with green infra metrics is caused by **corpus/retrieval drift** (accumulated zombie docs, new unindexed topics) or an unpinned model version change; diagnose by running the offline golden evaluation suite (`Recall@K`, `Faithfulness`).",
-      "key_takeaway": "Prefix prompt caching is exact-prefix-only and never causes stale RAG answers; silent multi-month degradation points to corpus/retrieval drift.",
+      "explanation": "LRU is a size policy: it only evicts an entry when capacity runs out, so frequently requested answers stay resident regardless of age. That is why the popular question keeps the old answer while rare questions miss and regenerate. Freshness needs a separate mechanism: a TTL aligned with the content update cadence, keys that include the index version and content hashes of the cited chunks, and event-driven purges from document-update webhooks or CDC.",
+      "key_takeaway": "Pair a size policy (LRU) with a freshness policy (TTL, version-hash keys, event-driven purge) for any RAG answer cache.",
       "doc_links": [
         {
-          "label": "Claude Prompt Caching",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
         },
         {
-          "label": "Gemini Context Caching",
-          "url": "https://ai.google.dev/gemini-api/docs/caching"
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
         }
       ]
     },
@@ -748,34 +748,34 @@
       "id": "rag-q-20",
       "section": "Evaluation, Grading & Rollback Gates",
       "guide_anchor": "evaluation",
-      "question": "An architect evaluates migrating a RAG generator from a flagship model (overall Faithfulness: 0.94) to a faster, cheaper Flash model. Across the 500-example stratified golden set, overall Faithfulness is 0.86 (above the 0.85 global target), but two complex regulatory strata score 0.71 and 0.73 against a 0.85 per-stratum minimum floor. What is the correct release decision?",
+      "question": "A legal research RAG system answers a contract question incorrectly. Tracing the request shows the correct clause ranked 7th in the first-stage hybrid top-100, but it is absent from the reranked top-5 passed to the model. Where should the team focus first?",
       "options": [
         {
-          "text": "Block a global cutover via the per-stratum rollback gate and route the two failing regulatory strata to the flagship model.",
+          "text": "The chunking strategy, because the clause was clearly split across chunk boundaries during document ingestion.",
+          "correct": false,
+          "why_wrong": "The clause was retrieved intact at rank 7, which shows parsing and chunking produced a findable unit."
+        },
+        {
+          "text": "The generation prompt, because the model should have inferred the missing clause from the passages it did receive.",
+          "correct": false,
+          "why_wrong": "The model cannot ground an answer in evidence it never saw; prompt changes do not fix a ranking loss upstream."
+        },
+        {
+          "text": "The first-stage retrievers, because a clause ranked 7th instead of 1st means the hybrid search is failing on recall.",
+          "correct": false,
+          "why_wrong": "Rank 7 out of 100 is a recall success; the evidence was lost later, when the candidate pool was narrowed."
+        },
+        {
+          "text": "The reranking stage or the final N, because the clause was recalled in the first stage but dropped while narrowing.",
           "correct": true
-        },
-        {
-          "text": "Approve a 100% global cutover to the cheaper model immediately since the aggregate mean (0.86) exceeds the 0.85 global threshold.",
-          "correct": false,
-          "why_wrong": "Relying on aggregate averages hides severe failures in high-risk, lower-volume strata (Simpson's paradox / tail-risk masking)."
-        },
-        {
-          "text": "Remove the two complex regulatory strata from the golden evaluation dataset so the new model passes all remaining strata.",
-          "correct": false,
-          "why_wrong": "Deleting failing test strata manipulates the benchmark while leaving production users exposed to unfaithful regulatory answers."
-        },
-        {
-          "text": "Replace LLM-as-Judge Faithfulness with BLEU and ROUGE-L n-gram overlap scores so the cheaper model's paraphrased outputs score higher.",
-          "correct": false,
-          "why_wrong": "BLEU and ROUGE-L measure surface lexical overlap and fail to detect factual inversions or subtle regulatory hallucinations."
         }
       ],
-      "explanation": "High-volume simple queries inflate aggregate evaluation averages and mask dangerous regressions in complex or high-stakes document categories. Production release gates must enforce **per-stratum minimum floors** (e.g., `Faithfulness >= 0.85` in *every* stratum); when a smaller model passes simple strata but fails complex ones, use **complexity/stratum routing** rather than a blanket cutover.",
-      "key_takeaway": "Enforce per-stratum minimum floors (never just global averages) and use model routing when a cheaper model only fails specific complex strata.",
+      "explanation": "A staged debugging funnel localizes RAG errors: was the right chunk in the first-stage candidates, in the reranked top-N and in the final prompt? Here recall succeeded and the loss happened during reranking, so the team should inspect reranker quality on this query type, consider a domain-tuned reranker or increase the final N, and add the case to the golden set.",
+      "key_takeaway": "Trace where evidence disappears (first stage, rerank, prompt) before changing chunking, retrieval or prompts.",
       "doc_links": [
         {
-          "label": "Check Grounding API",
-          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
         },
         {
           "label": "Anthropic: Demystifying Evals for Agents",
@@ -826,38 +826,38 @@
       "id": "rag-q-22",
       "section": "Failure Modes & Silent Drift",
       "guide_anchor": "failure-modes",
-      "question": "A RAG assistant's groundedness score on weekly spot checks falls from 0.91 to 0.78 over one month. No application code, Git-tracked prompts or retrieval configs changed. The managed LLM endpoint is called through a floating 'latest' alias, and the wiki corpus gained 4,000 new pages. What should the team do first?",
+      "question": "A team re-embeds its corpus with a newer embedding model into a new index and swaps the serving alias overnight. The next morning there are no errors and latency is normal, but top results look nearly random. The query service config was not touched. What is the most likely cause?",
       "options": [
         {
-          "text": "Rerun the golden evals, pin and audit model and prompt versions, and check the 4,000 new pages for indexing issues.",
+          "text": "The HNSW graph needs a larger ef_search value, because a freshly built index has not yet warmed up its graph links.",
+          "correct": false,
+          "why_wrong": "Graph search parameters trade recall for latency but cannot fix vectors that live in incompatible embedding spaces."
+        },
+        {
+          "text": "Queries are still embedded with the old model, so query vectors and index vectors come from different spaces.",
           "correct": true
         },
         {
-          "text": "Disable prompt caching, because cached KV prefixes go stale over time and silently degrade groundedness without code changes.",
+          "text": "The new embedding model produces longer vectors, which overflow the index and silently truncate stored embeddings.",
           "correct": false,
-          "why_wrong": "Prompt caching reuses exact prefix computation and does not change model outputs; disabling it is the classic tempting wrong answer for silent drift."
+          "why_wrong": "Vector Search indexes declare a fixed dimension and reject mismatched writes; dimension changes fail loudly, not silently."
         },
         {
-          "text": "Upgrade to the largest available model tier, since a stronger generator will compensate for whatever upstream drift occurred.",
+          "text": "The semantic cache still serves answers from the previous index, mixing old results with the new rankings.",
           "correct": false,
-          "why_wrong": "Upgrading without diagnosis treats the symptom; if the cause is corpus drift or a silent model swap, a bigger model may mask it while raising cost."
-        },
-        {
-          "text": "Raise retrieval top-K from 5 to 20 so the new wiki pages get more chances to appear in the context for every query.",
-          "correct": false,
-          "why_wrong": "More chunks add noise and 'lost in the middle' risk, and without evals the team has no evidence that retrieval recall is the cause."
+          "why_wrong": "A stale cache would return previously correct answers, not near-random rankings for fresh queries."
         }
       ],
-      "explanation": "Quality drift with no code change usually comes from outside the repo: a silent model or prompt update behind a floating alias, or corpus drift from new, duplicate or stale documents. The fix is diagnostic first: rerun the golden eval set to localize the regression, pin and audit model, prompt and embedding versions, and reindex or clean up affected content.",
-      "key_takeaway": "When quality drifts with no code change, rerun golden evals, pin and audit model and prompt versions, and inspect corpus changes before touching the architecture.",
+      "explanation": "Vectors produced by different embedding models are not comparable, even when their dimensions happen to match. If the index is migrated but the query encoder is not, nearest-neighbor search returns essentially arbitrary passages with no error signal. Migrations should version the index and the query model together, evaluate offline, then switch both in one atomic cutover while keeping the old index warm for rollback.",
+      "key_takeaway": "Always embed queries with the same model and version as the index, and switch both together during migrations.",
       "doc_links": [
         {
-          "label": "Agent Search Ranking API",
-          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+          "label": "Gemini Embedding Models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2"
         },
         {
-          "label": "Check Grounding API",
-          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
         }
       ]
     }

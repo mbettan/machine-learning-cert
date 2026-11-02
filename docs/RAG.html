@@ -81,7 +81,7 @@
                   "keywords": "RAG, Retrieval-Augmented Generation, Hybrid Search, BM25, HNSW, ScaNN, Reciprocal Rank Fusion, RRF, Cross-Encoder Reranking, Agentic RAG, GraphRAG, Vertex AI, Anthropic Claude, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/RAG.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-10-31",
+                  "dateModified": "2026-11-01",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -147,7 +147,7 @@
                     <span>Certification Study Notes</span>
                 </div>
                 <h1>Retrieval-Augmented Generation <em>(RAG)</em></h1>
-                <p class="cover-subtitle">Applied AI Architect study guide covering context strategies, hybrid retrieval, Reciprocal Rank Fusion (RRF), cross-encoder reranking, untrusted context &amp; refusal gates, Agentic RAG &amp; memory, GraphRAG, Google Cloud RAG, federated vs. ingested architectures, ACL security, semantic caching, and evaluation.</p>
+                <p class="cover-subtitle">Applied AI Architect study guide covering retrieval modes, hybrid retrieval, Reciprocal Rank Fusion (RRF), cross-encoder reranking, untrusted context &amp; refusal gates, Agentic RAG &amp; memory, GraphRAG, Google Cloud RAG, federated vs. ingested architectures, ACL security, semantic caching, and evaluation.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -180,7 +180,7 @@
                 </a>
                 <a href="#when-to-use" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>When to Use RAG &amp; Context Strategies</span>
+                    <span>When to Use RAG &amp; Retrieval Modes</span>
                 </a>
                 <a href="#architecture" class="toc-item">
                     <span class="toc-number">02</span>
@@ -343,7 +343,7 @@
                     </tr>
                     <tr>
                         <td>Live tool call (API / SQL)</td>
-                        <td>Live transactional state (order status, inventory, balances, ticket queues)</td>
+                        <td>Live transactional state (order status, stock levels, account balances, booking availability)</td>
                         <td><strong>Real-time</strong> (system of record)</td>
                         <td>Low (1 API/DB call)</td>
                         <td><span class="table-check"><strong>Exact</strong></span> (record ID + timestamp)</td>
@@ -385,40 +385,39 @@
 
         <div class="concept-card accent-blue">
             <h3>
-                <div class="icon-badge"><i class="fas fa-layer-group"></i></div>Four Context Strategies &amp; the Working-Memory Cliff
+                <div class="icon-badge"><i class="fas fa-layer-group"></i></div>Retrieval Modes &amp; Context-Window Utilization
             </h3>
-            <p>No single strategy carries a production workload, so real systems combine all four:</p>
+            <p>Information retrieval offers two complementary scoring families; production RAG usually runs both and fuses the rankings (see Retrieval):</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
                     <tr>
-                        <th>Strategy</th>
-                        <th>What It Does</th>
-                        <th>Where It Breaks Down</th>
+                        <th>Retrieval Mode</th>
+                        <th>How It Scores Relevance</th>
+                        <th>Strong On</th>
+                        <th>Weak On</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Monolithic</td>
-                        <td>Packs all needed material into a single prompt; a stable <strong>monolithic prefix</strong> pairs well with prompt caching (Claude cached reads cost ~5–10% of standard input tokens)</td>
-                        <td>Multi-turn histories that grow every turn: token spend and latency rise linearly until the window quietly fills up</td>
+                        <td>Dense vector (semantic)</td>
+                        <td>Embeds query and chunks into one vector space; ranks by cosine or dot-product distance</td>
+                        <td>Paraphrase, synonyms, cross-lingual intent</td>
+                        <td>Exact identifiers, rare tokens, negation</td>
                     </tr>
                     <tr>
-                        <td>Progressive</td>
-                        <td>Passes along only the state needed for the next turn; the standard choice for most production flows</td>
-                        <td>Long-horizon coherence, early-turn details dropped along the way, lower cache hit rates, and harder step-by-step replay during debugging</td>
+                        <td>Sparse keyword (BM25)</td>
+                        <td>Term overlap weighted by term frequency, inverse document frequency, and length normalization</td>
+                        <td>Product codes, error IDs, names, legal citations</td>
+                        <td>Paraphrased or vocabulary-mismatched questions</td>
                     </tr>
                     <tr>
-                        <td>Retrieval (RAG)</td>
-                        <td>Fetches a relevant slice just in time from a store too large to preload</td>
-                        <td>Cross-document synthesis, chunks that split tables or arguments, top-K recall misses; retrieval becomes a system to evaluate and maintain</td>
-                    </tr>
-                    <tr>
-                        <td>Compaction</td>
-                        <td>Condenses prior history at workflow boundaries or as the window fills</td>
-                        <td>Loses load-bearing specifics (IDs, exact figures, earlier rationale); <strong>effectively irreversible</strong>; measuring summary fidelity remains notoriously hard</td>
+                        <td>Hybrid</td>
+                        <td>Runs both in parallel, then fuses ranks with Reciprocal Rank Fusion (RRF)</td>
+                        <td>Mixed natural-language plus identifier queries</td>
+                        <td>Extra latency and two indexes to maintain</td>
                     </tr>
                 </tbody>
             </table>
@@ -427,20 +426,20 @@
         <div class="two-columns">
             <div class="concept-card accent-coral">
                 <h3>
-                    <div class="icon-badge"><i class="fas fa-mountain"></i></div>The Working-Memory Cliff
+                    <div class="icon-badge"><i class="fas fa-gauge-high"></i></div>Context Rot &amp; Window Limits
                 </h3>
-                <p>A context window behaves like a cliff edge, not a gentle slope—tokens inside the limit get full attention, while anything beyond it vanishes completely. Prompts that exceed the limit fail outright (<code>400</code> prompt too long), and requests that fit on input can still get cut off mid-reply (<code>model_context_window_exceeded</code>). Treat the window as a <strong>hard cap rather than a capacity goal</strong>: size your token budget for worst-case turn history + retrieved chunks + system instructions + reasoning scratchpad + safety headroom, bearing in mind that effective recall drops long before the token ceiling.</p>
+                <p>More context is not automatically better: accuracy and recall degrade as token count grows (<em>context rot</em>), so curate what enters the prompt instead of filling the space available. On Claude 4.5 and newer models, a request whose input plus <code>max_tokens</code> exceeds the window is accepted and stops with <code>stop_reason: model_context_window_exceeded</code> if generation reaches the limit; earlier models return a validation error unless the <code>model-context-window-exceeded-2025-08-26</code> beta header is sent.</p>
             </div>
 
             <div class="concept-card accent-cyan">
                 <h3>
-                    <div class="icon-badge"><i class="fas fa-chart-line"></i></div>Three-Part Executive Tradeoff Framing
+                    <div class="icon-badge"><i class="fas fa-chart-line"></i></div>Long Context vs. RAG Cost Model
                 </h3>
-                <p>When pitching long context over RAG, always surface:</p>
+                <p>Compare three cost drivers before choosing:</p>
                 <ul>
-                    <li><strong>1. The upside:</strong> Simpler architecture, cross-document visibility.</li>
-                    <li><strong>2. Production-scale economics:</strong> Unit token cost × monthly traffic, adjusted for prompt caching on static prefixes.</li>
-                    <li><strong>3. Lock-in / reversal cost:</strong> The engineering effort required to retrofit retrieval later once prompts and workflows assume whole-document access.</li>
+                    <li><strong>1. Token spend:</strong> Per-query input tokens × monthly volume, after prefix caching on static content.</li>
+                    <li><strong>2. Pipeline operations:</strong> The running cost of parsing, embedding, indexing, and evaluating a retrieval stack.</li>
+                    <li><strong>3. Growth headroom:</strong> The migration effort if the corpus later outgrows the context window.</li>
                 </ul>
             </div>
         </div>
@@ -456,8 +455,8 @@
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
-                <h4>Common Trap: "Similarity Is Not Truth"</h4>
-                <p>Never put mutable transactional records (order tracking, stock levels, live pricing, account balances) into a vector index. Vector search surfaces outdated snapshots that the generator blends into a confident wrong answer—with normal latency and zero error signals. Tweaking chunk sizes, sync frequency, or cosine cutoffs cannot solve an architectural mismatch: keep static reference knowledge in <strong>RAG</strong> and read mutable state via <strong>live API calls against your authoritative database</strong>.</p>
+                <h4>Common Trap: Treating Embedding Distance as Veracity</h4>
+                <p>Nearest-neighbor scores rank how close a passage's <em>meaning</em> is to the query; they carry no information about whether the passage is <em>current</em>. An indexed copy of a mutable record (an order, a price, a balance) is a snapshot frozen at ingestion time, so it can never be authoritative. Keep reference knowledge in <strong>RAG</strong> and query live state through <strong>API/SQL tools against the system of record</strong>.</p>
             </div>
         </div>
 
@@ -1573,16 +1572,55 @@
                     <li><strong>Entity masking before embedding:</strong> <em>"AAPL revenue in Q3 2025"</em> → <code>[COMPANY] revenue in [PERIOD]</code>, keeping real values as exact-match keys so Q3 is never served for Q4.</li>
                     <li><strong>Intent check:</strong> Light cross-encoder confirms the candidate hit means the same thing.</li>
                     <li><strong>Thresholds by risk:</strong> Strict (≥ 0.90) for legal/financial, looser (≈ 0.75) for general FAQ.</li>
-                    <li><strong>Invalidation &amp; ACLs:</strong> TTL + document-update webhooks + full purge on model migration + <strong>ACL scope in the cache key</strong>.</li>
+                    <li><strong>ACL scope in the cache key</strong>, or the cache serves one user's answer to another.</li>
                 </ul>
             </div>
 
             <div class="concept-card accent-amber">
                 <h3>
-                    <div class="icon-badge"><i class="fas fa-memory"></i></div>Trap: Blaming the Prompt Cache
+                    <div class="icon-badge"><i class="fas fa-memory"></i></div>Trap: Relying on LRU for Freshness
                 </h3>
-                <p><strong>Prefix prompt caching</strong> (such as Claude's prompt cache) only activates on <strong>byte-identical token prefixes</strong>, meaning it <strong>cannot return outdated retrieved passages</strong>: whenever retrieved chunks change, the prefix diverges and triggers a normal cache miss. "Stale prompt-cache hits" are a myth—turning off prefix caching during a quality regression just inflates latency and token spend without fixing the bug. Investigate corpus/retrieval drift instead. By contrast, the <em>semantic answer cache</em> <strong>can</strong> serve stale responses and requires explicit invalidation.</p>
+                <p><strong>LRU</strong> only decides <em>which</em> entry to drop when the cache is full; a popular, outdated answer stays hot indefinitely. Pair LRU (a size policy) with a <strong>TTL</strong> or <strong>version-hash keys</strong> (a freshness policy). Provider prefix (KV) prompt caches are keyed on exact prefix bytes, so edited chunks simply miss: they bound cost, not correctness.</p>
             </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Eviction / Invalidation Policy</th>
+                        <th>Mechanism</th>
+                        <th>Controls</th>
+                        <th>Use For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TTL (time to live)</td>
+                        <td>Entry expires a fixed time after it was written</td>
+                        <td>Freshness (bounded staleness)</td>
+                        <td>Content with a known update cadence</td>
+                    </tr>
+                    <tr>
+                        <td>LRU (least recently used)</td>
+                        <td>Evicts the coldest entry when capacity is reached</td>
+                        <td>Memory size only, <strong>not</strong> freshness</td>
+                        <td>Bounding cache cost under heavy traffic</td>
+                    </tr>
+                    <tr>
+                        <td>Version-hash keys</td>
+                        <td>Key includes the index version and content hashes of cited chunks; any change forces a miss</td>
+                        <td>Instant invalidation on re-index or embedding-model migration</td>
+                        <td>Corpora that are re-chunked or re-embedded</td>
+                    </tr>
+                    <tr>
+                        <td>Event-driven purge</td>
+                        <td>Document-update webhooks or CDC events delete entries citing the changed chunk</td>
+                        <td>Near-real-time freshness</td>
+                        <td>Policies, pricing, legal content</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -1756,8 +1794,8 @@
                         <td>Longer context window</td>
                     </tr>
                     <tr>
-                        <td>Long sessions fail or replies cut off</td>
-                        <td>Working-memory cliff → hard token budget, progressive state + compaction</td>
+                        <td>Long sessions degrade, then stop with <code>model_context_window_exceeded</code></td>
+                        <td>Context rot and window exhaustion → curate context, compaction, check <code>stop_reason</code></td>
                         <td>Bigger window</td>
                     </tr>
                     <tr>
@@ -1782,13 +1820,13 @@
                     </tr>
                     <tr>
                         <td>Wrong live order status, stock, or balance</td>
-                        <td>Similarity ≠ truth → live API/SQL tool on the system of record</td>
-                        <td>Streaming upserts, faster sync</td>
+                        <td>Mutable state in a vector index → live API/SQL tool on the system of record</td>
+                        <td>Re-embedding with a larger model</td>
                     </tr>
                     <tr>
                         <td>Quality drifts with <strong>no code change</strong></td>
-                        <td>Corpus drift or silent model/prompt update → rerun golden evals, audit versions, reindex</td>
-                        <td>Disabling prompt caching, bigger model</td>
+                        <td>Corpus drift or an unpinned model alias → pin model versions, rerun golden evals, reindex</td>
+                        <td>Bigger model</td>
                     </tr>
                     <tr>
                         <td>Rankings suddenly near-random</td>
@@ -1814,6 +1852,11 @@
                         <td>Cached answer for the wrong entity or date</td>
                         <td>Unmasked semantic cache → entity masking + cross-encoder intent check + webhook invalidation</td>
                         <td>Exact-string cache</td>
+                    </tr>
+                    <tr>
+                        <td>Popular cached answer stays outdated after a policy update</td>
+                        <td>LRU-only cache (size policy, no freshness) → TTL + version-hash keys + event-driven purge</td>
+                        <td>Larger cache capacity</td>
                     </tr>
                 </tbody>
             </table>
@@ -1874,7 +1917,7 @@
                 <div class="quiz-question">
                     <p><span class="q-num">Q1.</span> Why should live order status, inventory counts, or account balances never be served from a RAG vector index?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Because "similarity is not truth": vector search retrieves outdated text snapshots and the LLM blends them into a confident wrong answer with normal latency and zero error signals. Mutable transactional state must be queried via live API/SQL tool calls against the authoritative database.</span>
+                        <span class="answer-text">A vector index stores snapshots captured at ingestion time, and similarity scores say nothing about whether a snapshot is still current. Mutable transactional state belongs in live API/SQL tool calls against the authoritative database, which return the value as of the request.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
@@ -1896,9 +1939,9 @@
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q5.</span> RAG quality gradually degrades over three months with zero code changes and green latency/error dashboards. Someone blames stale prompt-cache hits. Are they right?</p>
+                    <p><span class="q-num">Q5.</span> A semantic answer cache uses LRU eviction only. After a pricing policy changes, users keep receiving the old answer. Why, and what fixes it?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">No. Prefix prompt caching only triggers on byte-identical token prefixes—if retrieved chunks change, the prefix changes and causes a normal cache miss. Gradual degradation without code changes points to corpus/retrieval drift or an unannounced model update; diagnose by running the golden evaluation suite (Recall@K, Faithfulness) and auditing corpus growth.</span>
+                        <span class="answer-text">LRU is a size policy: it evicts the least recently used entry only when capacity runs out, so a frequently requested answer never ages out. Add a freshness policy: a TTL matched to the content update cadence, version-hash keys that include the content hashes of cited chunks, and an event-driven purge triggered by document-update webhooks.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
