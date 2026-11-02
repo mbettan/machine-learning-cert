@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Platform: Identity, Security &amp; Governance: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Secure and govern Google Cloud agents: Agent Identity, auth manager, IAM &amp; Principal Access Boundary, Agent Gateway &amp; Registry policies, Model Armor, VPC-SC, PSC, CMEK, audit logs, SCC AI Protection and HITL.">
+    <meta name="keywords" content="Agent Identity, Agent Gateway, Agent Registry, Skill Registry, Principal Access Boundary, PAB, Unified Access Policy, Semantic Governance, Model Armor, Sensitive Data Protection, Gemini safety filters, VPC Service Controls, Private Service Connect, CMEK, data residency, Cloud Audit Logs, Security Command Center AI Protection, HITL, Professional Agentic Architect, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Agent Platform: Identity, Security &amp; Governance: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Secure and govern Google Cloud agents: Agent Identity, auth manager, IAM &amp; Principal Access Boundary, Agent Gateway &amp; Registry policies, Model Armor, VPC-SC, PSC, CMEK, audit logs, SCC AI Protection and HITL.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Agent Platform: Identity, Security &amp; Governance (Study Guide by Michaël Bettan)">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Agent Platform: Identity, Security &amp; Governance: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Secure and govern Google Cloud agents: Agent Identity, auth manager, IAM &amp; Principal Access Boundary, Agent Gateway &amp; Registry policies, Model Armor, VPC-SC, PSC, CMEK, audit logs, SCC AI Protection and HITL.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Agent Platform: Identity, Security &amp; Governance (Study Guide by Michaël Bettan)">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .diagram-figure {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 24px;
+        }
+        .diagram-figure svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html#article",
+                  "headline": "Agent Platform: Identity, Security & Governance: Study Guide | ML Cert Hub",
+                  "name": "Agent Platform: Identity, Security & Governance Study Guide",
+                  "description": "Secure and govern Google Cloud agents: Agent Identity, auth manager, IAM & Principal Access Boundary, Agent Gateway & Registry policies, Model Armor, VPC-SC, PSC, CMEK, audit logs, SCC AI Protection and HITL.",
+                  "keywords": "Agent Identity, Agent Gateway, Agent Registry, Skill Registry, Principal Access Boundary, Unified Access Policy, Semantic Governance, Model Armor, Sensitive Data Protection, VPC Service Controls, Private Service Connect, CMEK, Cloud Audit Logs, Security Command Center AI Protection, HITL, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Agent Platform: Identity, Security & Governance",
+                              "item": "https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Agent Platform: <em>Identity, Security &amp; Governance</em></h1>
+                <p class="cover-subtitle">How to secure and govern agents on Gemini Enterprise Agent Platform. Topics: who the agent <em>is</em> (Agent Identity), how it authenticates to tools (auth manager, Secret Manager), what it may reach (IAM, Principal Access Boundary), where its traffic is enforced (Agent Gateway + Agent Registry), what content it may see or emit (Model Armor, Sensitive Data Protection, Gemini safety filters), how its network and data are isolated (VPC-SC, PSC, CMEK, residency), how it's audited (Cloud Audit Logs, SCC AI Protection), and when a human must approve (HITL).</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Google Cloud / Professional Agentic Architect</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=agent-platform-security" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Agent Platform Security Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#identity-model" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Agent Identity Model</span>
+                </a>
+                <a href="#tool-auth" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Tool Authentication &amp; Secrets</span>
+                </a>
+                <a href="#access-boundaries" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Access Boundaries: IAM, Deny &amp; PAB</span>
+                </a>
+                <a href="#registry-gateway" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Agent Registry, Skill Registry &amp; Agent Gateway</span>
+                </a>
+                <a href="#gateway-policies" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Gateway Policies: UAP &amp; Semantic Governance</span>
+                </a>
+                <a href="#content-safety" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Content Safety: Model Armor, SDP &amp; Safety Filters</span>
+                </a>
+                <a href="#network-data" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Network &amp; Data Protection</span>
+                </a>
+                <a href="#audit-detection" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Audit, Observability &amp; Threat Detection</span>
+                </a>
+                <a href="#hitl-governance" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>HITL &amp; Governance at Scale</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Glossary, Self-Assessment &amp; Resources</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-link"></i></div>
+            <div class="callout-content">
+                <h4>Companion guides</h4>
+                <p>This guide covers only security and governance. Build/runtime/retrieval/evaluation are in <a href="AgentPlatform.html">Agent Platform</a>. Vendor-neutral guardrail concepts are in <a href="ResponsibleAI.html#guardrail-matrix">Responsible AI</a> (<a href="ResponsibleAI.html#stakes-hitl">stakes &amp; HITL</a>, <a href="ResponsibleAI.html#governance-lifecycle">governance lifecycle</a>). ADK-level controls are in <a href="ADK.html#callbacks-guardrails">ADK callbacks &amp; guardrails</a>, <a href="ADK.html#hitl-resilience">HITL</a> and <a href="ADK.html#security-sandboxing">sandboxing</a>. Protocols are in <a href="MCP.html">MCP</a> and <a href="A2A.html">A2A</a>. Operations are in <a href="AgentOps.html">AgentOps</a>.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-flask"></i></div>
+            <div class="callout-content">
+                <h4>Launch-stage warning</h4>
+                <p>Several controls here are <strong>Preview</strong> or <strong>Experimental</strong> (see the status table in §00). Preview features may change and have limited support. Re-check the docs before relying on a status.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <h3>The four governance components</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Component</th><th>Answers</th><th>Product</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Identity</strong></td><td><em>Who</em> is acting?</td><td>Agent Identity (SPIFFE-based per-agent principal), or service accounts (legacy/default)</td></tr>
+                    <tr><td><strong>Registry</strong></td><td><em>What</em> destinations exist and are approved?</td><td>Agent Registry (agents, MCP servers/tools, endpoints, skills)</td></tr>
+                    <tr><td><strong>Policies</strong></td><td><em>What</em> actions are allowed?</td><td>IAM allow/deny, Principal Access Boundary (PAB), Unified Access Policies on the gateway, Semantic Governance</td></tr>
+                    <tr><td><strong>Gateway</strong></td><td><em>Where</em> is it enforced?</td><td>Agent Gateway (Client-to-Agent ingress, Agent-to-Anywhere egress)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Content controls (Model Armor, SDP, Gemini safety filters), network/data controls (VPC-SC, PSC, CMEK, residency), detection (Audit Logs, SCC) and humans (HITL) sit on top of these four as defense in depth.</p>
+
+        <h3>"Which control prevents X?" (master decision table)</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Threat / requirement</th><th>Primary control</th><th>Why not the others</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Shared service-account key leaked; you need per-agent, non-impersonable credentials</td><td><strong>Agent Identity</strong></td><td>Service accounts are shared by default and can be impersonated</td></tr>
+                    <tr><td>Stolen agent access token replayed from another machine</td><td><strong>Agent Identity</strong> (certificate-bound tokens + default Context-Aware Access: mTLS + DPoP)</td><td>IAM roles don't stop replay of a valid token</td></tr>
+                    <tr><td>Agent must act on <em>a user's</em> Jira/GitHub data with that user's consent</td><td><strong>Auth manager, 3-legged OAuth</strong> (user-delegated)</td><td>An API key or the agent's own identity would act with the agent's authority, not the user's</td></tr>
+                    <tr><td>API key hard-coded in agent source</td><td><strong>Secret Manager</strong> (secret env var or ADK <code>SecretManagerClient</code>) + <code>secretAccessor</code> for the agent</td><td>Env-var plaintext and code are both visible to anyone who can read the deployment</td></tr>
+                    <tr><td>Agent can reach <em>any</em> project in the org despite narrow intent</td><td><strong>Principal Access Boundary</strong> (boundary on eligible resources)</td><td>Allow policies only grant; PAB caps eligibility no matter what roles exist</td></tr>
+                    <tr><td>A broad role must never include one dangerous permission</td><td><strong>IAM deny policy</strong></td><td>PAB limits <em>resources</em>, not specific permissions</td></tr>
+                    <tr><td>Agent may call MCP tool <code>get_order</code> but not <code>delete_order</code></td><td><strong>Unified Access Policy</strong> on Agent Gateway (CEL on <code>tool.name</code> / <code>destructive_hint</code>)</td><td>IAM on the Google Cloud API can't see MCP tool names</td></tr>
+                    <tr><td>Agent calls an unregistered external host</td><td><strong>Agent Gateway + Agent Registry</strong> (default-deny egress; UAP on <code>destination.unregistered.*</code>)</td><td>Model Armor screens content, not destinations</td></tr>
+                    <tr><td>An email in context instructs the agent to forward mail to an attacker (indirect injection → rogue tool call)</td><td><strong>Semantic Governance</strong> (intent alignment) + <strong>Model Armor</strong> prompt-injection filter</td><td>UAP sees an allowed tool name and can't judge intent</td></tr>
+                    <tr><td>Refund over a business limit (e.g., &gt;$75) must never auto-execute</td><td><strong>Semantic Governance</strong> natural-language constraint, or deterministic check + <strong>HITL tool confirmation</strong></td><td>Model Armor has no business rules</td></tr>
+                    <tr><td>Jailbreak / prompt injection / malicious URL in user input</td><td><strong>Model Armor</strong> (input template)</td><td>Gemini safety filters only cover harm categories</td></tr>
+                    <tr><td>Credit-card numbers leak in responses</td><td><strong>Model Armor SDP filter</strong> (advanced mode with de-identify template) / <strong>Sensitive Data Protection</strong></td><td>Safety filters don't detect custom infoTypes</td></tr>
+                    <tr><td>Hateful output from the model</td><td><strong>Gemini safety filters</strong> (model level) and/or <strong>Model Armor RAI filter</strong> (model-agnostic)</td><td>—</td></tr>
+                    <tr><td>Data exfiltration from Google APIs to an outside project</td><td><strong>VPC Service Controls</strong> perimeter</td><td>IAM alone can't stop a legitimately authorized identity copying data out</td></tr>
+                    <tr><td>Agent must reach on-prem/private VPC services</td><td><strong>PSC interface</strong> (network attachment)</td><td>Agent Runtime can't reach your private VPC/on-prem by default (Google-managed tenant)</td></tr>
+                    <tr><td>Regulator requires customer-controlled keys</td><td><strong>CMEK</strong> (<code>encryption_spec</code>, same-region key)</td><td>Google default encryption isn't customer-controlled</td></tr>
+                    <tr><td>Data and ML processing must stay in the EU</td><td><strong>Data residency</strong>: EU multi-region/regional endpoint; block the global endpoint</td><td>The global endpoint has no residency guarantee</td></tr>
+                    <tr><td>"Who changed the agent's IAM?"</td><td><strong>Cloud Audit Logs</strong> (Admin Activity, always on)</td><td>Data Access logs must be enabled explicitly</td></tr>
+                    <tr><td>Detect anomalous grants to agent identities / over-privileged agents</td><td><strong>SCC AI Protection</strong> + Event Threat Detection</td><td>Audit logs record but don't alert</td></tr>
+                    <tr><td>Irreversible, high-stakes action needs sign-off</td><td><strong>HITL</strong>: ADK tool confirmation (<code>require_confirmation</code>)</td><td>Automated filters can be wrong; accountability needs a human</td></tr>
+                    <tr><td>Hundreds of unknown agents/tools across teams (agent sprawl)</td><td><strong>Agent Registry</strong> (central catalog) + gateway default-deny + org policy</td><td>Ad-hoc spreadsheets aren't enforced</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Launch-stage status (as documented, 2026-10)</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Capability</th><th>Status</th><th>Note</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent Identity</td><td><strong>Preview</strong></td><td>Falls back to service accounts if not enabled</td></tr>
+                    <tr><td>Agent Identity auth manager</td><td>Preview with Agent Identity (verify)</td><td>—</td></tr>
+                    <tr><td>Agent Gateway</td><td><strong>GA</strong> for Agent Runtime + Gemini Enterprise (GE: egress only)</td><td>GKE, Cloud Run, cross-cloud: coming soon / early preview</td></tr>
+                    <tr><td>Agent Registry</td><td>GA (verify); <strong>standalone skills in Registry = Preview</strong></td><td>—</td></tr>
+                    <tr><td>Skill Registry</td><td><strong>Preview</strong></td><td>—</td></tr>
+                    <tr><td>Semantic Governance policies</td><td><strong>Preview</strong></td><td>—</td></tr>
+                    <tr><td>Token-management policies, extension bindings</td><td>Coming soon</td><td>—</td></tr>
+                    <tr><td>Agent Platform Threat Detection (SCC)</td><td><strong>Preview</strong>, Premium tier</td><td>—</td></tr>
+                    <tr><td>ADK tool confirmation (HITL)</td><td><strong>Experimental</strong></td><td>—</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>"Preview" isn't a reason to reject a control in a design question, but you must know which features are not GA. Some security controls (e.g., CMEK/VPC-SC support) aren't available for preview models.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: IDENTITY MODEL
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="identity-model">
+            <div class="section-divider-number">01</div>
+            <h2>Agent Identity Model</h2>
+        </div>
+
+        <h3>Three ways an agent proves who it is</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Option</th><th>What it is</th><th>Strengths</th><th>Weaknesses</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Default service agent</strong></td><td>AI Platform Reasoning Engine Service Agent <code>service-PROJECT_NUMBER@gcp-sa-aiplatform-re.iam.gserviceaccount.com</code> (<code>roles/aiplatform.reasoningEngineServiceAgent</code>)</td><td>Zero setup</td><td>Shared by every agent in the project, so no per-agent least privilege</td></tr>
+                    <tr><td><strong>Custom service account</strong></td><td>You attach your own SA</td><td>Per-workload roles possible</td><td>Can be shared and impersonated; key-management risk</td></tr>
+                    <tr><td><strong>Agent Identity</strong> (Preview)</td><td>Per-agent, SPIFFE-based, strongly attested principal tied to the agent's lifecycle and resource URI</td><td>Not shared, <strong>can't be impersonated</strong>, no long-lived keys; tokens bound to the agent's X.509 cert (24h, auto-rotated); Context-Aware Access enforces <strong>mTLS + DPoP</strong> by default</td><td>Preview; new principal on every redeploy (see traps)</td></tr>
+                    <tr><td><strong>Workload Identity Federation (WIF)</strong></td><td>Federates external/other-cloud workloads to Google Cloud without keys</td><td>Used by Agent Gateway / auth manager for cross-cloud and external identity exchange</td><td>Not an agent-native identity</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Agent Identity is supported on <strong>Agent Runtime, Gemini Enterprise, and Cloud Run</strong>.</p>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-id-badge"></i></div>Principal formats</h3>
+                <ul>
+                    <li><strong>SPIFFE ID:</strong> <code>spiffe://agents.global.org-ORG_ID.system.id.goog/resources/aiplatform/projects/PROJECT_NUMBER/locations/LOCATION/reasoningEngines/AGENT_ID</code></li>
+                    <li><strong>Single agent (IAM):</strong> <code>principal://agents.global.org-ORG_ID.system.id.goog/resources/aiplatform/projects/PROJECT_NUMBER/locations/LOCATION/reasoningEngines/AGENT_ID</code></li>
+                    <li><strong>All agents in a project:</strong> <code>principalSet://agents.global.org-ORG_ID.system.id.goog/attribute.platformContainer/aiplatform/projects/PROJECT_NUMBER</code></li>
+                    <li><strong>All agents in the org:</strong> <code>principalSet://…/attribute.platform/aiplatform</code></li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-toggle-on"></i></div>Enabling it</h3>
+                <ul>
+                    <li>SDK (<code>api_version="v1beta1"</code>): <code>client.runtimes.create(config={"identity_type": types.IdentityType.AGENT_IDENTITY, ...})</code>. You can create the identity <strong>before</strong> deploying code so you can set up IAM first, then add code with <code>client.runtimes.update(...)</code>.</li>
+                    <li>CLI: <code>agents-cli deploy --agent-identity</code>; for <code>adk deploy</code>, set it in <code>.agent_engine_config.json</code>.</li>
+                    <li>If the setting is absent, the agent runs as a service account.</li>
+                    <li>Default roles granted to the identity: <code>roles/aiplatform.agentContextEditor</code>, <code>roles/aiplatform.agentDefaultAccess</code>.</li>
+                    <li>Typical extra roles: <code>roles/aiplatform.expressUser</code>, <code>roles/serviceusage.serviceUsageConsumer</code>, <code>roles/browser</code>, <code>roles/secretmanager.secretAccessor</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Lifecycle and CI/CD traps</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Trap</th><th>Consequence</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent redeployed (new resource ID)</td><td>New principal, so <strong>old bindings don't apply</strong></td><td>After deploy, read <code>spec.effectiveIdentity</code>; put baseline roles on the project <strong><code>principalSet</code></strong>, which survives redeploys</td></tr>
+                    <tr><td>Agent deleted</td><td>IAM bindings <strong>remain</strong> (orphaned)</td><td>Remove bindings as part of teardown</td></tr>
+                    <tr><td>Granting legacy Cloud Storage bucket roles</td><td>Not supported for agent identities</td><td>Use the IAM predefined roles</td></tr>
+                    <tr><td>Parent agent delegates to a subagent (A2A)</td><td>Parent needs discovery + invoke rights</td><td>Grant the <strong>parent's agent identity</strong> <code>roles/agentregistry.viewer</code> and <code>roles/aiplatform.user</code> on the subagent; don't grant them to the user</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>"Use a service account key stored in the container" is never the answer. Prefer Agent Identity, or an attached SA with no exported keys.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: TOOL AUTH
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="tool-auth">
+            <div class="section-divider-number">02</div>
+            <h2>Tool Authentication &amp; Secrets</h2>
+        </div>
+
+        <h3>Two authorities</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Model</th><th>Agent acts as…</th><th>Mechanism</th><th>Use when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>User-delegated</strong></td><td>the end user (with consent)</td><td><strong>3-legged OAuth</strong> via the auth manager</td><td>Per-user data in SaaS (Jira, GitHub, Salesforce, ServiceNow, Workspace)</td></tr>
+                    <tr><td><strong>Agent's own authority</strong></td><td>itself</td><td>Agent Identity → Google Cloud APIs; <strong>OIDC ID tokens</strong> → external services (federation); <strong>2-legged OAuth</strong> (machine-to-machine); <strong>API key</strong>; HTTP basic (not recommended)</td><td>Shared back-end services, batch jobs, service-to-service calls</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Audit logs record <strong>both the agent and the user</strong> when the agent acts on a user's behalf, and only the agent when it acts on its own authority.</p>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-key"></i></div>Agent Identity auth manager</h3>
+                <ul>
+                    <li>A centralized <strong>credential vault and auth broker</strong>. "Auth providers" hold API keys, OAuth client IDs/secrets and delegated user tokens.</li>
+                    <li>Automates the OAuth dance: consent, code exchange, token refresh.</li>
+                    <li>ADK integration injects <code>Authorization</code> / <code>X-Goog-Api-Key</code> headers into tool and MCP calls, so the credentials never live in agent code.</li>
+                    <li>Access to auth providers is governed by IAM using the agent's SPIFFE identity. User grants can be viewed and revoked.</li>
+                    <li>With <strong>Agent Gateway + Gemini Enterprise</strong>, end-user credentials are encrypted by the auth manager and decrypted at the gateway, so the agent never sees the raw credential.</li>
+                    <li>Constraint: some providers (e.g., GitHub, Microsoft) support only a single scope.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-vault"></i></div>Secret Manager</h3>
+                <ul>
+                    <li>Agent Runtime secret env vars: <code>env_vars={"API_KEY": {"secret": "SECRET_ID", "version": "latest"}}</code>. Only <strong>same-project</strong> secrets can be referenced.</li>
+                    <li>Grant <code>roles/secretmanager.secretAccessor</code> to the agent identity. When secrets are injected as env vars at deploy time, also grant it to the Agent Platform service agent.</li>
+                    <li>ADK <code>SecretManagerClient</code> fetches secrets at runtime, so a rotated secret takes effect without a redeploy or restart.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule</h4>
+                <p>Per-user consent → 3LO through the auth manager. Static third-party key → Secret Manager (or an auth-manager API-key provider). Google Cloud API → the agent's own identity with least-privilege IAM. Never put secrets in code, prompts or plaintext env vars.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: ACCESS BOUNDARIES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="access-boundaries">
+            <div class="section-divider-number">03</div>
+            <h2>Access Boundaries: IAM, Deny &amp; PAB</h2>
+        </div>
+
+        <h3>Policy types compared</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Policy</th><th>Effect</th><th>Granularity</th><th>Answers</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>IAM allow policy</strong></td><td>Grants roles</td><td>Resource + role (+ condition)</td><td>"What <em>may</em> this principal do?"</td></tr>
+                    <tr><td><strong>IAM deny policy</strong></td><td>Denies specific permissions; overrides allow</td><td>Permission-level</td><td>"What must it <em>never</em> do, whatever its roles?"</td></tr>
+                    <tr><td><strong>Principal Access Boundary (PAB)</strong></td><td>Limits which resources a principal is <em>eligible</em> to access</td><td>Org/folder/project (up to 500 resources per policy, effect <code>ALLOW</code> only)</td><td>"Where can it <em>ever</em> operate?"</td></tr>
+                    <tr><td><strong>Unified Access Policy (gateway)</strong></td><td>Allow/deny on agent traffic through Agent Gateway</td><td>MCP tool, agent, endpoint, unregistered host/path/method</td><td>"Which tools and destinations?"</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Least privilege for agents</h3>
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Own identity</h4>
+                <p>Give each agent its own identity (Agent Identity), not the shared default service agent.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Narrow roles</h4>
+                <p>Grant specific predefined roles on specific resources. Avoid <code>Owner</code>/<code>Editor</code>. Put baseline roles on the project <code>principalSet</code>; per-agent extras on the agent's <code>principal://</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Deny + boundary</h4>
+                <p>Add deny policies for permissions that must never be used (e.g., IAM admin). Bind a <strong>PAB policy</strong> to the agents' principal set so they can't reach resources outside approved projects, even if someone over-grants.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Tool-level at gateway</h4>
+                <p>Govern tool-level access at the gateway (UAP) because Google Cloud IAM can't see MCP tool names.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-border-all"></i></div>PAB specifics</h3>
+            <ul>
+                <li>Rules list Resource Manager resources. PAB has an <code>enforcementVersion</code> and blocks only the permissions supported by that version.</li>
+                <li>Binding example: <code>gcloud iam principal-access-boundary-policies bindings create … --target-principal-set=…</code> (bound to a principal set, e.g., the agents in a project or org).</li>
+                <li>For agents, PAB can also be enforced on egress through Agent Gateway (via IAP).</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>PAB doesn't grant anything. A principal needs an allow-policy role <strong>and</strong> must be inside its boundary <strong>and</strong> must not be denied.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: REGISTRY & GATEWAY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="registry-gateway">
+            <div class="section-divider-number">04</div>
+            <h2>Agent Registry, Skill Registry &amp; Agent Gateway</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Agent Registry</h3>
+                <ul>
+                    <li>A central catalog for <strong>agents, MCP servers and tools, endpoints, and standalone skills</strong> (skills: Preview).</li>
+                    <li><strong>Automatic registration</strong> covers supported workloads in the governance project, including <strong>Google Cloud remote MCP servers</strong> (<code>https://&lt;service&gt;.googleapis.com/mcp</code>, enabled with the service API and requiring <code>roles/mcp.toolUser</code> / <code>mcp.tools.call</code> plus service IAM roles). <strong>Manual registration</strong> uses <code>Service</code> resources for remote, custom (e.g., MCP Toolbox for Databases or third-party SaaS connectors on Cloud Run/GKE), or cross-project components (<code>gcloud agent-registry mcp-servers list</code>).</li>
+                    <li>Governance-project model: single-project or cross-project.</li>
+                    <li>Agent Gateway <strong>queries the registry before routing</strong>, and policies reference registry identifiers (<code>urn:agent:</code> identifiers are for inventory, <strong>not</strong> for IAM bindings).</li>
+                    <li>Limit: up to 5,000 Agent Registry resources per gateway.</li>
+                    <li>Purpose: fight <strong>agent sprawl</strong>, fragmented tool access and redundant integrations.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-puzzle-piece"></i></div>Skill Registry (Preview)</h3>
+                <ul>
+                    <li>A secure, private, low-latency repository of <strong>skills</strong> (instructions + code + docs) that agents discover and load on demand.</li>
+                    <li>Includes a built-in <code>gcp-skill-registry</code> skill. Semantic Governance can constrain which skills an agent loads.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Agent Gateway</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Path</th><th>Direction</th><th>Typical controls</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Client-to-Agent</strong></td><td>Ingress (users/apps → agent)</td><td>mTLS termination, IAP access policy, Model Armor screening of ADK <code>streamQuery</code></td></tr>
+                    <tr><td><strong>Agent-to-Anywhere</strong></td><td>Egress (agent → tools, agents, LLMs, APIs)</td><td>UAPs, PAB, Semantic Governance, Model Armor on MCP <code>tools/call</code>, A2A messages and OpenAI-compatible payloads</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <ul>
+            <li>Mediates <strong>MCP, A2A, REST, gRPC</strong>, and inspects MCP JSON-RPC to extract tool names for policy.</li>
+            <li>Emits OpenTelemetry traces and access logs to Cloud Logging/Trace.</li>
+            <li>Works with the auth manager for OAuth and WIF.</li>
+            <li><strong>Deployment models:</strong> Google-managed for Agent Runtime + Gemini Enterprise. GKE, Cloud Run and cross-cloud (self-managed Envoy + WIF) are coming soon / early preview.</li>
+            <li>Org governance: custom org policy constraints can restrict which gateways may be associated with agents.</li>
+        </ul>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Limitations</h4>
+                <p>Gemini Enterprise supports only <strong>Agent-to-Anywhere (egress)</strong>; Client-to-Agent is for Agent Runtime. Ingress governs <code>query</code>/<code>streamQuery</code> only. All agents in the same project + region bind to the same egress/ingress gateway. SCC Agent Engine Threat Detection isn't available while a gateway is enabled. VPC-SC works with Agent Gateway when the agent uses VPC connectivity (route all egress through your VPC, restricted VIP).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: GATEWAY POLICIES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="gateway-policies">
+            <div class="section-divider-number">05</div>
+            <h2>Gateway Policies: UAP &amp; Semantic Governance</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-filter"></i></div>Unified Access Policies (IAM v3)</h3>
+                <ul>
+                    <li>Bound to the project that holds the gateway; enforced by IAP. The permission involved is <code>iap.googleapis.com/resources.egressViaIAP</code>.</li>
+                    <li><strong>Default-deny:</strong> nothing passes unless an allow rule matches. Rules can mix allow and deny effects; <strong>deny overrides allow</strong>.</li>
+                    <li>CEL conditions on attributes such as <code>destination.agent_registry.mcp_server.tool.name</code>, <code>…tool.annotations.read_only_hint</code> / <code>destructive_hint</code>, and <code>destination.unregistered.host</code>, <code>.path</code>, <code>.method</code>.</li>
+                    <li><strong>Rollout:</strong> <code>DRY_RUN</code> logs would-be violations to Cloud Audit Logs without blocking, then you switch to <code>ENFORCE</code>.</li>
+                    <li>Best practices: dry-run first; name specific tools (no wildcards); use deny rules as guardrails (e.g., deny <code>destructive_hint == true</code>); audit regularly.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>Semantic Governance (Preview)</h3>
+                <ul>
+                    <li><strong>Natural-language constraints</strong> evaluated by an LLM policy engine running in your VPC.</li>
+                    <li>Intercepts each <strong>proposed tool call</strong> and runs two checks: (1) <strong>alignment with user intent</strong> (on by default): does this call serve what the user asked? (2) <strong>business-constraint compliance</strong>: e.g., "refunds may not exceed $75".</li>
+                    <li>Verdict: <code>ALLOW</code> or <code>DENY</code> with a rationale. A custom denial message (≤1,000 chars) can replace the rationale.</li>
+                    <li>Mitigates <strong>context poisoning / indirect prompt injection</strong> and <strong>rogue actions</strong>. Can also govern which skills load.</li>
+                    <li>Complements IAM and UAP; <strong>doesn't replace them</strong>. Verdicts are probabilistic and can be wrong, so keep deterministic controls for hard limits.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Need</th><th>Use</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Hard allow/deny by tool name, host, method</td><td><strong>UAP</strong> (deterministic)</td></tr>
+                    <tr><td>"Does this action match what the user wanted?"</td><td><strong>Semantic Governance</strong></td></tr>
+                    <tr><td>Business rule expressible in natural language</td><td><strong>Semantic Governance</strong> (backed by a deterministic check for critical limits)</td></tr>
+                    <tr><td>Custom authorization logic</td><td>Service Extensions custom authorization engine</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: CONTENT SAFETY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="content-safety">
+            <div class="section-divider-number">06</div>
+            <h2>Content Safety: Model Armor, SDP &amp; Safety Filters</h2>
+        </div>
+
+        <h3>Model Armor</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Filter</th><th>Detects</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Responsible AI</td><td>Hate, harassment, sexually explicit, dangerous (CSAM always on)</td><td>Confidence: <code>HIGH</code>, <code>MEDIUM_AND_ABOVE</code>, <code>LOW_AND_ABOVE</code></td></tr>
+                    <tr><td>Prompt injection &amp; jailbreak</td><td>Attempts to override instructions</td><td>Inputs under 3 words return no match</td></tr>
+                    <tr><td>Sensitive Data Protection</td><td><strong>Basic:</strong> fixed infoTypes, inspect only. <strong>Advanced:</strong> SDP inspect + <strong>de-identify</strong> templates</td><td>Redaction needs advanced mode</td></tr>
+                    <tr><td>Malicious URL detection</td><td>Phishing/malware links</td><td>First 256 URLs screened</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <ul>
+            <li><strong>Templates</strong> hold filter configs. Enforcement is <strong>Inspect only</strong> or <strong>Inspect and block</strong>.</li>
+            <li><strong>Floor settings</strong> set a minimum baseline at org, folder or project level that every template must meet.</li>
+            <li>Best practice: separate <strong>input</strong> and <strong>output</strong> templates; start at High/Medium; run inspect-only to tune; then block.</li>
+            <li>Model-agnostic and cloud-agnostic; findings appear in <strong>Security Command Center</strong>.</li>
+            <li>Regional endpoints from a VPC need a PSC endpoint. Document (PDF) screening is via the API, not the gateway integration.</li>
+        </ul>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Model Armor on Agent Gateway</h3>
+            <ul>
+                <li>Templates must be in the <strong>same region</strong> as the gateway.</li>
+                <li>Ingress roles <code>roles/modelarmor.calloutUser</code> + <code>roles/modelarmor.user</code> for the Reasoning Engine service agent. Egress: the same roles for the Service Extensions service agent.</li>
+                <li><strong>Redaction</strong> requires an advanced SDP de-identify template <strong>and</strong> <code>INSPECT_AND_BLOCK</code>. If multiple detectors fire, the whole payload is blocked. Logs are redacted either way.</li>
+                <li>Ingress screens ADK <code>streamQuery</code>. Egress screens A2A SendMessage/AgentCard, MCP <code>tools/call</code>, <code>prompts/get</code>, tool-execution errors, and OpenAI-compatible LLM payloads. It does <strong>not</strong> screen <code>tools/list</code>, <code>resources/*</code>, notifications or MCP Streamable HTTP/SSE streams.</li>
+            </ul>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-user-secret"></i></div>Sensitive Data Protection (formerly DLP)</h3>
+                <ul>
+                    <li>infoType detection, inspection and de-identification (masking, tokenization) via templates.</li>
+                    <li>Use it inside Model Armor (advanced mode) for agent traffic, or directly to scan and de-identify data before it reaches a corpus or memory.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Gemini safety filters (model level)</h3>
+                <ul>
+                    <li>Non-configurable filters (e.g., CSAM, PII) always apply.</li>
+                    <li>Configurable harm categories: harassment, hate speech, sexually explicit, dangerous content.</li>
+                    <li>Thresholds: <code>BLOCK_LOW_AND_ABOVE</code>, <code>BLOCK_MEDIUM_AND_ABOVE</code>, <code>BLOCK_ONLY_HIGH</code>, <code>BLOCK_NONE</code>, <code>OFF</code>. Method: <code>SEVERITY</code> (default) or <code>PROBABILITY</code>.</li>
+                    <li>Per the docs, newer Gemini models default to <code>OFF</code> for configurable filters (verify for your model version).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Need</th><th>Gemini safety filters</th><th>Model Armor</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Scope</td><td>One Gemini call</td><td>Any model, any cloud, plus agent traffic via the gateway</td></tr>
+                    <tr><td>Prompt injection / jailbreak</td><td>✗</td><td>✓</td></tr>
+                    <tr><td>Sensitive data / redaction</td><td>✗ (beyond built-in)</td><td>✓ (SDP)</td></tr>
+                    <tr><td>Malicious URLs</td><td>✗</td><td>✓</td></tr>
+                    <tr><td>Central org baseline</td><td>✗</td><td>✓ floor settings</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: NETWORK & DATA
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="network-data">
+            <div class="section-divider-number">07</div>
+            <h2>Network &amp; Data Protection</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-shield"></i></div>VPC Service Controls</h3>
+                <ul>
+                    <li>Inside a perimeter, Agent Runtime keeps access to Google APIs, but <strong>public internet is blocked</strong>. For internet egress, use a PSC interface + RFC 1918 proxy VM + Cloud NAT.</li>
+                    <li>Without VPC-SC the Google-managed tenant keeps default internet access, but it <strong>can't reach your private VPC or on-prem</strong>; plan a PSC-I (plus proxy if needed).</li>
+                    <li>Deploys may need <strong>ingress rules</strong> for the Reasoning Engine service agent: pickle deploys need Cloud Storage + Artifact Registry; source deploys need Artifact Registry; bring-your-own-container needs none.</li>
+                    <li>Agent Identity APIs (<code>agentidentity.googleapis.com</code>, <code>agentidentitycredentials.googleapis.com</code>) can be added to a perimeter (restricted VIP), and agent identities can appear in ingress/egress rules.</li>
+                    <li>Violations are recorded as <strong>Policy Denied</strong> audit logs.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Private Service Connect</h3>
+                <ul>
+                    <li><strong>PSC interface (PSC-I):</strong> private egress from the agent to your VPC, on-prem or multicloud via a <strong>network attachment</strong> (subnet minimum /28). DNS peering resolves private names. Shared VPC is supported. <strong>Can't be changed without recreating the agent.</strong></li>
+                    <li><strong>PSC endpoint:</strong> private <em>ingress</em> to Google APIs or regional endpoints (e.g., Model Armor, a sandbox).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>CMEK</h3>
+            <ul>
+                <li>Set <code>encryption_spec</code> at creation, using a <strong>single-region key in the same region</strong>. <strong>Can't be changed after deploy.</strong></li>
+                <li>Grant <code>roles/cloudkms.cryptoKeyEncrypterDecrypter</code> to the <code>gcp-sa-aiplatform-re</code> service agent.</li>
+                <li>Not covered by your key: metadata such as display names, descriptions, service-account emails, method names and env vars, so don't put secrets there.</li>
+                <li>Security controls such as CMEK aren't supported for preview models.</li>
+            </ul>
+        </div>
+
+        <h3>Data residency</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Endpoint</th><th>At-rest data</th><th>ML processing</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Regional (e.g., <code>us-central1</code>)</td><td>In region</td><td>In region</td></tr>
+                    <tr><td>Jurisdictional multi-region (<code>us</code>, <code>eu</code>)</td><td>In jurisdiction</td><td>Within jurisdiction (EU excludes UK/CH)</td></tr>
+                    <tr><td><strong>Global</strong></td><td>In chosen location</td><td><strong>No residency guarantee</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Decision rule</h4>
+                <p>For a strict residency requirement, use a regional or jurisdictional endpoint and block the global endpoint with org policy.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: AUDIT & DETECTION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="audit-detection">
+            <div class="section-divider-number">08</div>
+            <h2>Audit, Observability &amp; Threat Detection</h2>
+        </div>
+
+        <h3>Cloud Audit Logs for Agent Platform</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Log type</th><th>Default</th><th>Captures</th><th>Viewer role</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Admin Activity</strong></td><td>Always on, can't be disabled</td><td>Config/metadata changes (create/delete/patch resources, <code>setIamPolicy</code>)</td><td><code>roles/logging.viewer</code></td></tr>
+                    <tr><td><strong>Data Access</strong></td><td><strong>Off: must be enabled</strong></td><td>Admin read, data read/write (e.g., model/endpoint usage)</td><td><code>roles/logging.privateLogViewer</code></td></tr>
+                    <tr><td><strong>Policy Denied</strong></td><td>On</td><td>Requests denied by a security policy (e.g., VPC-SC)</td><td><code>roles/logging.viewer</code></td></tr>
+                    <tr><td><strong>System Event</strong></td><td>Always on</td><td>Google-initiated changes</td><td><code>roles/logging.viewer</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <ul>
+            <li>UAP <code>DRY_RUN</code> results land in Cloud Audit Logs, which makes them a safe policy-tuning loop.</li>
+            <li>Agent Gateway emits OpenTelemetry traces and access logs (Agent Observability), so you can trace <em>which tool</em> was called and <em>with what verdict</em>.</li>
+        </ul>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-satellite-dish"></i></div>Security Command Center: AI Protection</h3>
+            <ul>
+                <li>AI asset inventory, the AI Security dashboard, vulnerability findings (Premium), threat detection, and Model Armor findings.</li>
+                <li><strong>Agent Platform Threat Detection</strong> for Agent Runtime (Preview, Premium). Event Threat Detection rules include <em>IAM Anomalous Grant to Agentic Identity</em>, <em>Agentic Identity Credential Used Outside of Google Cloud</em> and <em>Sensitive Role Granted by AI Agent</em>.</li>
+                <li>Premium capabilities include detection of over-privileged agents and attack paths.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>Audit logs <em>record</em>, and SCC <em>detects and alerts</em>. A question asking "be notified when an agent's credential is used from outside Google Cloud" points to SCC threat detection, not to enabling Data Access logs.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: HITL & GOVERNANCE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="hitl-governance">
+            <div class="section-divider-number">09</div>
+            <h2>HITL &amp; Governance at Scale</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-user-check"></i></div>Human-in-the-loop approvals</h3>
+            <ul>
+                <li>ADK <strong>tool confirmation</strong> (Experimental): <code>FunctionTool(fn, require_confirmation=True)</code>, or pass a function returning a bool (e.g., confirm only when <code>amount &gt; 1000</code>).</li>
+                <li>Advanced confirmation returns a structured payload (approve/modify). Remote approvals can arrive via the REST API, which suits async approval UIs.</li>
+                <li>ADK graph workflows can pause on a request-input node until a human responds.</li>
+                <li>Use HITL for <strong>irreversible, high-blast-radius, regulated, or novel</strong> actions. Use deterministic code for hard limits, and Semantic Governance/Model Armor for scalable screening. See <a href="ResponsibleAI.html#stakes-hitl">Responsible AI: stakes &amp; HITL</a> and <a href="ADK.html#hitl-resilience">ADK: HITL &amp; resilience</a>.</li>
+            </ul>
+        </div>
+
+        <h3>Governing agent sprawl</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Lever</th><th>Control</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Inventory</td><td>Agent Registry (auto + manual registration); SCC AI asset inventory</td></tr>
+                    <tr><td>Only approved destinations</td><td>Gateway default-deny + registry-backed UAPs</td></tr>
+                    <tr><td>Only approved gateways</td><td>Custom org policy constraints on gateway association</td></tr>
+                    <tr><td>Uniform content baseline</td><td>Model Armor floor settings at org/folder</td></tr>
+                    <tr><td>Uniform reach</td><td>PAB on the org/project agent principal set</td></tr>
+                    <tr><td>Residency</td><td>Org policy blocking the global endpoint</td></tr>
+                    <tr><td>Detection</td><td>SCC AI Protection; Audit Logs</td></tr>
+                    <tr><td>Lifecycle hygiene</td><td>Remove orphaned bindings on deletion; <code>principalSet</code> baselines for redeploys</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Layered defense, end to end</h3>
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Identity &amp; credentials</h4>
+                <p>Agent Identity with least-privilege roles + PAB. Auth manager (3LO/2LO/API keys) + Secret Manager.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Gateway &amp; intent</h4>
+                <p>Registry-backed, default-deny UAPs (dry-run → enforce). Semantic Governance on proposed tool calls.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Content &amp; network</h4>
+                <p>Model Armor input/output templates + SDP; Gemini safety filters. VPC-SC, PSC-I, CMEK, regional endpoints.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Human, audit, detect</h4>
+                <p>Tool confirmation for high-stakes actions. Cloud Audit Logs + SCC AI Protection.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: RESOURCES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">10</div>
+            <h2>Glossary, Self-Assessment &amp; Resources</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Agent Identity</dt>
+                <dd>A per-agent SPIFFE-based principal with certificate-bound, auto-rotated credentials (Preview).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Auth manager</dt>
+                <dd>Credential vault and OAuth broker for agent-to-tool auth.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>PAB</dt>
+                <dd>Principal Access Boundary, which caps the resources a principal is eligible to access.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>UAP</dt>
+                <dd>Unified Access Policy, an IAM v3 allow/deny policy enforced by IAP on Agent Gateway traffic.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Semantic Governance</dt>
+                <dd>LLM-evaluated natural-language constraints on proposed tool calls (Preview).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Floor settings</dt>
+                <dd>The Model Armor minimum baseline across templates.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>PSC-I</dt>
+                <dd>Private Service Connect interface for private agent egress.</dd>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related guides</h3>
+                <ul>
+                    <li><a href="AgentPlatform.html">Agent Platform</a>: build, runtime, retrieval and evaluation.</li>
+                    <li><a href="ResponsibleAI.html">Responsible AI</a>: vendor-neutral guardrail matrix, stakes &amp; HITL, governance lifecycle.</li>
+                    <li><a href="ADK.html">Agent Development Kit (ADK)</a>: callbacks &amp; guardrails, HITL, sandboxing.</li>
+                    <li><a href="AgentOps.html">AgentOps</a>, <a href="MCP.html">MCP</a> and <a href="A2A.html">A2A</a>: operations, tool protocol and agent federation.</li>
+                    <li><strong>Further reading, SAIF for agents:</strong> Google's <a href="https://saif.google/" target="_blank" rel="noopener">Secure AI Framework</a>, its <a href="https://saif.google/secure-ai-framework/saif-map" target="_blank" rel="noopener">risk map</a> and the paper <a href="https://research.google/pubs/an-introduction-to-googles-approach-for-secure-ai-agents/" target="_blank" rel="noopener">An introduction to Google's approach for secure AI agents</a>. Its three principles map here: well-defined human controllers (<a href="#identity-model">identity</a>, <a href="#hitl-governance">HITL</a>), carefully limited powers (<a href="#access-boundaries">IAM and PAB</a>, <a href="#gateway-policies">gateway policies</a>) and observable actions and planning (<a href="#audit-detection">audit and detection</a>).</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 48-minute Agent Platform Security &amp; Governance audio deep dive, open the 21-slide security deck and sketchnote infographic in the Hub Viewer, or drill scenario questions across Agent Identity, auth manager, PAB, Agent Gateway policies, Model Armor, VPC-SC/PSC/CMEK, audit logs, and HITL.</p>
+                <div class="audio-label" style="margin-top: 15px;">Agent Platform: Identity, Security &amp; Governance (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/AgentPlatformSecurity-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=agent-platform-security" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive Agent Platform Security Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> Why do bindings break after a redeploy, and how do you prevent it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">A redeploy creates a new resource ID and therefore a new principal. Read <code>spec.effectiveIdentity</code> in CI/CD and put baseline roles on the project <code>principalSet</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> IAM deny vs PAB?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Deny blocks specific permissions; PAB limits which resources are reachable at all. Neither grants access.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Why can't IAM alone stop a destructive MCP tool call?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Google Cloud IAM doesn't see MCP tool names; a gateway UAP on <code>tool.name</code>/<code>destructive_hint</code> does.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> When does Semantic Governance help where UAP can't?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">When the tool is allowed but the specific call doesn't match user intent (indirect injection) or breaks a business rule.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> What's needed to redact PII through Model Armor on the gateway?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">An advanced SDP de-identify template plus <code>INSPECT_AND_BLOCK</code>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> Which audit logs must you enable to see model usage?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Data Access logs. Viewing them requires Private Logs Viewer (<code>roles/logging.privateLogViewer</code>).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-book-open"></i></div>Sources (docs.cloud.google.com unless noted)</h3>
+            <ul>
+                <li>iam/docs/agent-identity-overview</li>
+                <li>gemini-enterprise-agent-platform/scale/runtime/agent-identity</li>
+                <li>gemini-enterprise-agent-platform/scale/runtime/manage-agent-access</li>
+                <li>gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent</li>
+                <li>iam/docs/auth-manager-overview</li>
+                <li>iam/docs/principal-access-boundary-policies</li>
+                <li>gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview</li>
+                <li>agent-registry/overview</li>
+                <li>gemini-enterprise-agent-platform/build/skill-registry</li>
+                <li>gemini-enterprise-agent-platform/govern/policies/overview-uap · iam-overview-uap · semantic-governance-overview</li>
+                <li>gemini-enterprise-agent-platform/govern/configure-model-armor</li>
+                <li>model-armor/overview</li>
+                <li>gemini-enterprise-agent-platform/models/capabilities/configure-safety-filters</li>
+                <li>gemini-enterprise-agent-platform/models/security-controls</li>
+                <li>gemini-enterprise-agent-platform/scale/runtime/private-service-connect-interface</li>
+                <li>gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls</li>
+                <li>gemini-enterprise-agent-platform/machine-learning/general/cmek</li>
+                <li>gemini-enterprise-agent-platform/resources/data-residency</li>
+                <li>gemini-enterprise-agent-platform/machine-learning/general/audit-logging</li>
+                <li>secret-manager/docs/integrate-secret-manager-with-adk</li>
+                <li>security-command-center/docs/ai-protection-overview</li>
+                <li>adk.dev/tools-custom/confirmation/</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Enterprise &amp; Low-Code Agents: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Gemini Enterprise (formerly Agentspace) study guide: editions, connectors and grounding, Agent Gallery, Workflow Builder (Agent Designer), ADK and A2A agent registration, governance, CX Agent Studio, flows, human handoff, and a low-code vs pro-code decision matrix.">
+    <meta name="keywords" content="Gemini Enterprise, Agentspace, Workflow Builder, Agent Designer, Agent Gallery, connectors, data stores, federated search, ADK agent registration, A2A agent, Model Armor, CX Agent Studio, Dialogflow CX, end_session, human handoff, Agent Runtime, Agent Search, Professional Agentic Architect, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Gemini Enterprise &amp; Low-Code Agents: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Gemini Enterprise (formerly Agentspace) study guide: editions, connectors and grounding, Agent Gallery, Workflow Builder (Agent Designer), ADK and A2A agent registration, governance, CX Agent Studio, flows, human handoff, and a low-code vs pro-code decision matrix.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Gemini Enterprise &amp; Low-Code Agents — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gemini Enterprise &amp; Low-Code Agents: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Gemini Enterprise (formerly Agentspace) study guide: editions, connectors and grounding, Agent Gallery, Workflow Builder (Agent Designer), ADK and A2A agent registration, governance, CX Agent Studio, flows, human handoff, and a low-code vs pro-code decision matrix.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Gemini Enterprise &amp; Low-Code Agents — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .concept-card {
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html#article",
+                  "headline": "Gemini Enterprise & Low-Code Agents: Study Guide | ML Cert Hub",
+                  "name": "Gemini Enterprise & Low-Code Agents Study Guide",
+                  "description": "Gemini Enterprise (formerly Agentspace) study guide: editions, connectors and grounding, Agent Gallery, Workflow Builder (Agent Designer), ADK and A2A agent registration, governance, CX Agent Studio, flows, human handoff, and a low-code vs pro-code decision matrix.",
+                  "keywords": "Gemini Enterprise, Agentspace, Workflow Builder, Agent Designer, Agent Gallery, connectors, data stores, federated search, ADK agent registration, A2A agent, Model Armor, CX Agent Studio, Dialogflow CX, end_session, human handoff, Agent Runtime, Agent Search, Professional Agentic Architect, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Gemini Enterprise & Low-Code Agents",
+                              "item": "https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Gemini Enterprise &amp; <em>Low-Code Agents</em></h1>
+                <p class="cover-subtitle">Employee-facing agents on Gemini Enterprise (formerly Agentspace) — editions, connectors and permissions-aware grounding, Google-made agents, the Agent Gallery, Agent Designer (now Workflow Builder), registering custom ADK and A2A agents, and admin governance — plus customer-facing agents in CX Agent Studio (the evolution of Dialogflow CX): instructions, tools, callbacks, evaluation, flows and human handoff, closed by a low-code vs pro-code decision matrix.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Google Cloud / Professional Agentic Architect</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=gemini-enterprise" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Gemini Enterprise Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#editions" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Editions &amp; Product Map</span>
+                </a>
+                <a href="#data-grounding" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Connectors, Data Stores &amp; Grounding</span>
+                </a>
+                <a href="#prebuilt-agents-gallery" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Google-made Agents, Agent Gallery &amp; Sharing</span>
+                </a>
+                <a href="#workflow-builder" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Agent Designer → Workflow Builder</span>
+                </a>
+                <a href="#custom-agents" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Bringing Custom ADK, A2A &amp; Dialogflow Agents</span>
+                </a>
+                <a href="#governance" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Governance &amp; Admin Controls</span>
+                </a>
+                <a href="#cx-agent-studio" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>CX Agent Studio for Customer-Facing Agents</span>
+                </a>
+                <a href="#cx-flows-handoff" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Flows, State Handlers &amp; Human Handoff</span>
+                </a>
+                <a href="#decision-matrix" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Low-Code vs Pro-Code Decision Matrix</span>
+                </a>
+                <a href="#exam-traps" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Exam Traps &amp; Architect Checklist</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Glossary, Sources &amp; Practice Quiz</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW & MENTAL MODEL
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Gemini Enterprise</strong> (formerly <strong>Google Agentspace</strong>) is Google Cloud's employee-facing agent platform: an intranet search engine, an AI assistant, and an agentic platform in one web app. It answers from permissions-aware search across Google and third-party data, runs Google-made agents, lets employees build their own no-code agents, and hosts custom agents built by developers. Customer-facing conversational agents live in a sibling product, <strong>Gemini Enterprise for Customer Experience (CX)</strong>, whose builder is <strong>CX Agent Studio</strong>. Pro-code agents are built with ADK on the <strong>Gemini Enterprise Agent Platform</strong> (the evolution of Vertex AI).</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Layer</th><th>Product</th><th>Primary audience</th><th>Build style</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Employee-facing app</strong></td><td>Gemini Enterprise (search, assistant, Agent Gallery, Workflow Builder)</td><td>Employees inside the company</td><td>No-code / low-code (Workflow Builder) plus registered custom agents</td></tr>
+                    <tr><td><strong>Customer-facing conversations</strong></td><td>Gemini Enterprise for CX — CX Agent Studio (console at ces.cloud.google.com)</td><td>End customers on chat and voice channels</td><td>Minimal-code, built on ADK, with optional Python callbacks and tools</td></tr>
+                    <tr><td><strong>Builder platform</strong></td><td>Gemini Enterprise Agent Platform — ADK, Agent Runtime, Agent Studio, Agent Search, Agent Gateway, Agent Registry</td><td>Developers and platform teams</td><td>Pro-code (ADK) and low-code prototyping (Agent Studio)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Old / legacy name</th><th>Current name</th><th>Note</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Google Agentspace</strong></td><td>Gemini Enterprise</td><td>Same product line, broadened to an agent platform</td></tr>
+                    <tr><td><strong>Agent Designer</strong></td><td>Workflow Builder</td><td>The exam guide still says "Agent Designer"; the docs now say Workflow Builder</td></tr>
+                    <tr><td><strong>NotebookLM Enterprise</strong></td><td>Gemini Notebook Enterprise</td><td>Included with Standard and Plus editions</td></tr>
+                    <tr><td><strong>Vertex AI</strong></td><td>Gemini Enterprise Agent Platform</td><td>Pro-code builder platform</td></tr>
+                    <tr><td><strong>Vertex AI Agent Engine</strong></td><td>Agent Runtime</td><td>API resource name is still <code>ReasoningEngine</code></td></tr>
+                    <tr><td><strong>Vertex AI Studio</strong></td><td>Agent Studio</td><td>Low-code designer for prompts, system instructions, and agent workflows</td></tr>
+                    <tr><td><strong>Vertex AI Search</strong></td><td>Agent Search</td><td>Grounding and search apps for custom builds</td></tr>
+                    <tr><td><strong>Dialogflow CX</strong></td><td>CX Agent Studio (evolution)</td><td>Dialogflow CX flows can still be called from CX Agent Studio</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Tip — The one-line mental model</h4>
+                <p>Employees → Gemini Enterprise (Workflow Builder first, register ADK/A2A agents when no-code runs out). Customers → CX Agent Studio. Developers who need full control of code, runtime and evals → ADK on Agent Runtime, then surface the agent in Gemini Enterprise or behind CX Agent Studio.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: EDITIONS & PRODUCT MAP
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="editions">
+            <div class="section-divider-number">01</div>
+            <h2>1. Editions &amp; Product Map</h2>
+        </div>
+
+        <div class="prose">
+            <p>Edition choice decides which builder features, data volume and security controls are available. Read the table as "what blocks me" rather than as a price list (prices are out of scope and change often).</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Edition</th><th>Seats</th><th>Pooled storage</th><th>Defining traits</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Business</strong></td><td>1–500 users</td><td>25 GiB</td><td>SaaS at business.gemini.google with no Google Cloud console or IAM; no full connector ecosystem, no Data Insights, no own full-code agents, no Agent Marketplace, no enterprise-grade security and compliance controls</td></tr>
+                    <tr><td><strong>Standard</strong></td><td>1+ users</td><td>30 GiB</td><td>Full Google Cloud administration; includes Gemini Notebook Enterprise</td></tr>
+                    <tr><td><strong>Plus</strong></td><td>1+ users</td><td>75 GiB</td><td>Everything in Standard with a larger storage pool and higher quotas; includes Gemini Notebook Enterprise</td></tr>
+                    <tr><td><strong>Pay-as-you-go</strong></td><td>1 seat minimum</td><td>Pay-as-you-go</td><td>Billed to an invoiced Cloud Billing account</td></tr>
+                    <tr><td><strong>Frontline (add-on)</strong></td><td>Requires 150+ Standard or Plus users</td><td>2 GiB</td><td>For frontline workers; uses only admin-provisioned agents; cannot author no-code agents or create or upload skills</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-circle-nodes"></i></div>What changes between editions</h3>
+            <ul>
+                <li><strong>Deep Research</strong> is available in all editions; <strong>Data Insights</strong> (preview) is in Standard, Plus, Pay-as-you-go and Frontline, not Business.</li>
+                <li><strong>No-code agent building</strong> (Workflow Builder, formerly Agent Designer) is <strong>GA</strong> per the release notes; which editions include it can change, so check the edition comparison.</li>
+                <li><strong>Custom full-code agents</strong> (ADK, A2A) and <strong>Agent Marketplace</strong> require a Google Cloud–administered edition, not Business.</li>
+                <li><strong>Agent creation quota</strong> applies to registrations: Standard 1 agent per user per day, Plus 10 per user per day (pooled), Frontline 0.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Choosing between the three Google products</h3>
+            <ul>
+                <li><strong>Gemini Enterprise</strong> — you want a ready-made, permissions-aware assistant and agent hub for employees.</li>
+                <li><strong>Gemini Enterprise Agent Platform</strong> — you are building your own agentic application, model pipeline, or search experience with code (ADK, Agent Runtime, Agent Search).</li>
+                <li><strong>Gemini Enterprise for CX</strong> — you are serving customers on web chat, apps or telephony with CX Agent Studio and Agent Assist.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Business edition is a dead end for platform requirements</h4>
+                <p>If the scenario needs IAM, VPC Service Controls, CMEK, custom ADK or A2A agents, or the full connector catalog, Business edition is the wrong answer even for a small team. Choose Standard or Plus.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: CONNECTORS, DATA STORES & GROUNDING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="data-grounding">
+            <div class="section-divider-number">02</div>
+            <h2>2. Connectors, Data Stores &amp; Grounding</h2>
+        </div>
+
+        <div class="prose">
+            <p>Gemini Enterprise grounds answers in <strong>data stores</strong> fed by <strong>connectors</strong>. A connector creates a separate data store per entity type — for example, a Jira connector yields stores for issues, comments, attachments and worklogs — and search respects source-system permissions.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mode</th><th>How it works</th><th>Strengths</th><th>Trade-offs</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Federated search</strong></td><td>Query is sent live to the third-party API; nothing is copied or stored</td><td>No storage cost, no copy of data, near-real-time</td><td>Lower answer quality; subject to the third-party's terms and rate limits</td></tr>
+                    <tr><td><strong>Data ingestion (indexing)</strong></td><td>Content and ACLs are copied into a Gemini Enterprise data store and indexed</td><td>Best search and answer quality, semantic ranking</td><td>Uses storage quota, needs sync time and scheduling</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Sync type</th><th>Covers</th><th>Exam-relevant gotcha</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Full sync</strong></td><td>All entities, including deletions and identity/ACL changes</td><td>Needed to propagate removed documents and permission changes</td></tr>
+                    <tr><td><strong>Incremental sync</strong></td><td>New and changed entities only</td><td>Does not propagate deletions or identity changes</td></tr>
+                    <tr><td><strong>Entity sync vs identity sync</strong></td><td>Content records vs user and group membership</td><td>Both must run for ACL-correct answers</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Data store options</h3>
+            <ul>
+                <li><strong>Structured vs unstructured</strong> stores; regions <strong>global, US or EU</strong> for data residency; <strong>CMEK</strong> for customer-managed encryption keys.</li>
+                <li><strong>Parsing</strong>: the <strong>layout parser</strong> is the default for PDF, HTML, DOCX, PPTX, XLSX and XLSM and does content-aware chunking; the <strong>OCR parser</strong> handles scanned PDFs; the <strong>digital parser</strong> handles machine-readable text; you can also bring your own parsed documents.</li>
+                <li><strong>Chunking</strong> splits documents into retrievable chunks for retrieval-augmented generation (RAG); chunk quality drives answer quality.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Multimodal content</h3>
+            <ul>
+                <li>The layout parser <strong>annotates images</strong> (BMP, GIF, JPEG, PNG, TIFF embedded in documents) and <strong>tables</strong> with generated descriptions, so a chunk can be retrieved by what an image or table shows.</li>
+                <li>Standalone audio and video files are not native unstructured-store document formats. A common design pattern is to pre-process them — for example, use Gemini to transcribe or describe them and ingest the text with metadata — or use Agent Platform Vision / Vision Warehouse for dedicated media search (design guidance; verify against current docs).</li>
+                <li>The assistant itself can analyze uploaded PDFs and images inside a conversation.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>Identity and access</h3>
+            <ul>
+                <li>Identity provider: <strong>Google Identity</strong> (recommended) or <strong>Workforce Identity Federation</strong> (the workforce pool must be global); one IdP type per location.</li>
+                <li>Search enforces source ACLs — users never see documents they cannot open in the source system (no privilege escalation). Third-party SaaS identities are mapped to the IdP identities.</li>
+                <li>A document's ACL can include up to 3,000 readers.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Federation is not "free quality"</h4>
+                <p>Federated search avoids copying data but gives lower-quality answers than ingestion. When the requirement is "best answer quality on Confluence content", pick ingestion; when it is "data must never be copied out of the SaaS tool", pick federation.</p>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-key"></i></div>
+            <div class="callout-content">
+                <h4>Key fact — Agent Search for custom builds</h4>
+                <p>When you build your own app or ADK agent instead of using the Gemini Enterprise web app, ground it with <strong>Agent Search</strong> (formerly Vertex AI Search) on the Agent Platform. Gemini Enterprise is the packaged employee experience; Agent Search is the developer building block.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: GOOGLE-MADE AGENTS, AGENT GALLERY & SHARING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="prebuilt-agents-gallery">
+            <div class="section-divider-number">03</div>
+            <h2>3. Google-made Agents, Agent Gallery &amp; Sharing</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Agent type</th><th>Who builds it</th><th>Examples / notes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Google-made agents</strong></td><td>Google</td><td>Core assistant, Deep Research, Gemini Notebook, Data Insights (preview), Co-Scientist</td></tr>
+                    <tr><td><strong>Workflow Builder agents</strong></td><td>Employees (no-code)</td><td>Chat agents and workflows; admin must turn on "Enable Workflow Builder"</td></tr>
+                    <tr><td><strong>Custom ADK agents</strong></td><td>Developers</td><td>Hosted on Agent Runtime, then registered in Gemini Enterprise</td></tr>
+                    <tr><td><strong>Custom A2A agents</strong></td><td>Developers or partners</td><td>Registered via agent card (preview) or imported from Agent Registry</td></tr>
+                    <tr><td><strong>Dialogflow agents</strong></td><td>Conversational designers</td><td>Existing Dialogflow agents surfaced in Gemini Enterprise</td></tr>
+                    <tr><td><strong>Marketplace agents (preview)</strong></td><td>Partners</td><td>A2A agents procured from Google Cloud Marketplace and integrated by an admin</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Agent Gallery</h3>
+            <ul>
+                <li>Filters: <strong>All, Pinned, Made by Google, From your organization, Your agents, Marketplace</strong>; users can pin favorites.</li>
+                <li><strong>+ New agent</strong> opens Workflow Builder; users invoke an agent in chat with <strong>@agent_name</strong>.</li>
+                <li>Agents can also be invoked programmatically through the <strong>StreamAssist API</strong> or the agent's Agent Registry A2A endpoint.</li>
+                <li>Admins can view each agent's identity (a SPIFFE ID, falling back to the Agent Registry resource ID).</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Agent state</th><th>Visible in gallery?</th><th>Users can interact?</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Private</strong></td><td>Only to the owner</td><td>Owner only</td></tr>
+                    <tr><td><strong>Enabled</strong></td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td><strong>Suspended</strong></td><td>Yes</td><td>No</td></tr>
+                    <tr><td><strong>Disabled</strong></td><td>No (hidden)</td><td>No</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-robot"></i></div>Sharing controls (admin)</h3>
+            <ul>
+                <li><strong>Enable agent sharing</strong> — allow users to share agents they built.</li>
+                <li><strong>Enable agent sharing without admin approval</strong> — skip the approval step.</li>
+                <li><strong>Enable End Users to share with Groups</strong> — allow sharing to Google Groups instead of individuals.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Idea Generation is gone</h4>
+                <p>The Idea Generation agent (preview) was removed in July 2026. Scenarios about brainstorming or hypothesis generation should point to the assistant, Deep Research, or Co-Scientist.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: AGENT DESIGNER → WORKFLOW BUILDER
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflow-builder">
+            <div class="section-divider-number">04</div>
+            <h2>4. Agent Designer → Workflow Builder</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Workflow Builder</strong> (renamed from <strong>Agent Designer</strong>) is the no-code / low-code builder inside Gemini Enterprise. It produces two artifact types.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Artifact</th><th>Behavior</th><th>How it starts</th><th>Best for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Chat agent</strong></td><td>Conversational and non-deterministic; single- or multi-step with subagents</td><td>User chats with it (@name); can also be scheduled</td><td>Q&amp;A over team knowledge, drafting, research helpers</td></tr>
+                    <tr><td><strong>Workflow</strong></td><td>Ordered steps with variables passed between them; supports branching and human approval</td><td>Manual (@name), Schedule (including cron), or Event (connector data change)</td><td>Repeatable business processes, triage, report generation</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-circle-nodes"></i></div>Building a chat agent</h3>
+            <ul>
+                <li>Create from a natural-language <strong>prompt</strong>, or choose <strong>Proceed to builder</strong> for the visual flow editor.</li>
+                <li>Each node has <strong>Name, Description, Instructions, Model</strong> (Flash for low latency, Pro for complex reasoning), <strong>Data &amp; tools, Knowledge files</strong> and <strong>Personalization</strong> (starter prompts; up to 3 shown at random).</li>
+                <li>A <strong>Schedule</strong> tab runs the agent on a timetable; leaving without <strong>Create</strong> saves a <strong>Draft</strong>.</li>
+                <li>Prompt mode cannot attach Google Cloud sources (BigQuery, Cloud Storage, Cloud SQL) — switch to the builder (designer) mode.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Building a workflow</h3>
+            <ul>
+                <li><strong>Triggers</strong>: Manual, Schedule, Event.</li>
+                <li><strong>Steps</strong>: <strong>Gemini Agent</strong> node (instructions, knowledge, connected apps, model — Gemini 3.0 or later — and output as text or a JSON schema), <strong>Condition</strong> (branching, filtering, loops), and <strong>Human-in-the-loop</strong> (request info or request approval).</li>
+                <li><strong>MCP servers</strong> and existing agents can be added as steps or tools.</li>
+                <li><strong>Versions</strong> can be saved, compared and restored; <strong>execution logs</strong> show each run.</li>
+                <li>Workflow connectors include Gmail, Calendar, Chat, Drive, Confluence, Jira, Teams, Notion, OneDrive, Outlook, Salesforce, SharePoint, ServiceNow and Slack.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Connector actions &amp; knowledge rules</h3>
+            <ul>
+                <li><strong>Search For Data</strong> actions are enabled per action; <strong>Add Or Update Data</strong> (write) actions are a connector-level, all-or-nothing toggle and require human review.</li>
+                <li>Write actions need the matching search actions enabled, otherwise the agent fails with <code>ENTITY_NOT_FOUND</code>.</li>
+                <li>A full Drive or OneDrive tool takes precedence over restricted knowledge — to scope access, split into two Gemini Agent nodes.</li>
+                <li>Uploaded knowledge files are placed in context every turn, up to 800,000 tokens combined; for large libraries (more than ~100 pages) connect a data store instead.</li>
+                <li>Builders can only use the connectors, tools and permissions an admin has provisioned.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>State-based design and prompt craft</h3>
+            <ul>
+                <li>A workflow is a <strong>state machine you can see</strong>: steps are states, Conditions are transition routes, Human-in-the-loop steps are approval gates, and variables carry state between steps.</li>
+                <li>Write node <strong>Instructions</strong> like a system prompt: role, goal, constraints, output format. Add <strong>few-shot examples</strong> for format-sensitive outputs and ask for <strong>step-by-step reasoning</strong> (chain of thought) on analytical nodes; prefer a JSON-schema output when the next step parses it.</li>
+                <li>For customer-facing state machines with pages, routes and event handlers, see CX Agent Studio and Dialogflow CX flows (sections 07–08).</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Chat agent vs workflow</h4>
+                <p>"Every Monday, pull new Jira bugs, summarize, and ask a lead to approve before posting to Chat" is a <strong>workflow</strong> (Schedule trigger, Gemini Agent step, Human-in-the-loop approval). An open-ended "ask me anything about our HR policies" helper is a <strong>chat agent</strong>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: BRINGING CUSTOM ADK, A2A & DIALOGFLOW AGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="custom-agents">
+            <div class="section-divider-number">05</div>
+            <h2>5. Bringing Custom ADK, A2A &amp; Dialogflow Agents</h2>
+        </div>
+
+        <div class="prose">
+            <p>When no-code is not enough, developers build agents in code and <strong>register</strong> them so employees use them inside Gemini Enterprise.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Path</th><th>Hosting requirement</th><th>Status</th><th>Key setup</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>ADK agent</strong></td><td>Must run on <strong>Agent Runtime</strong></td><td>Available (verify launch stage per feature)</td><td>Register in console, API, or with a single Agents CLI command; needs Gemini Enterprise Admin role and Discovery Engine API</td></tr>
+                    <tr><td><strong>A2A agent</strong></td><td>Any host exposing an A2A agent card (e.g., Cloud Run)</td><td>Preview</td><td>Paste the agent card JSON; A2A v0.3 streaming supported (v1.0+ via compatibility packages)</td></tr>
+                    <tr><td><strong>Agent Registry import</strong></td><td>A2A agent already in Agent Registry</td><td>Available (verify launch stage)</td><td>Import a governed agent instead of re-registering by hand</td></tr>
+                    <tr><td><strong>Dialogflow agent</strong></td><td>Dialogflow</td><td>Available (verify launch stage)</td><td>Surface an existing conversational agent</td></tr>
+                    <tr><td><strong>Marketplace agent</strong></td><td>Partner-hosted A2A agent</td><td>Preview</td><td>Procure in Cloud Marketplace, admin integrates and sets visibility</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>ADK agent registration details</h3>
+            <ul>
+                <li>Connection is VPC-SC compliant; the Agent Runtime instance can be in a different project.</li>
+                <li>The agent receives the signed-in user's email.</li>
+                <li>Optional <strong>OAuth authorization resource</strong> so the agent can act on third-party systems as the user: create an OAuth client (Web application) with redirect URIs <code>https://vertexaisearch.cloud.google.com/oauth-redirect</code> and <code>https://vertexaisearch.cloud.google.com/static/oauth/oauth.html</code>, then supply <code>clientId</code>, <code>clientSecret</code>, <code>authorizationUri</code> and <code>tokenUri</code> in <code>serverSideOauth2</code>. The registration references the engine via <code>adkAgentDefinition.provisionedReasoningEngine</code>.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>A2A agent registration details</h3>
+            <ul>
+                <li>On Cloud Run (<code>*.run.app</code>), grant <code>roles/run.invoker</code> to the Discovery Engine service agent; Gemini Enterprise then sends an OIDC token in <code>X-Serverless-Authorization</code> (not for custom domains, load balancers or gateways).</li>
+                <li>The end user's OAuth token travels in the <code>Authorization</code> header.</li>
+                <li>Agent card <code>securitySchemes</code>, API keys and custom headers are not used; if you front the agent with Apigee, validate the token there (VerifyJWT or a tokeninfo ServiceCallout).</li>
+                <li>Traffic to A2A agents registered this way <strong>does not go through Agent Gateway</strong>.</li>
+                <li>Each registration consumes the daily agent creation quota.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Console Model Armor does not cover custom agents</h4>
+                <p>The Model Armor setting in the Gemini Enterprise console screens the assistant only. ADK, A2A and Marketplace agents must call Model Armor (or equivalent guardrails) <strong>inside the agent code</strong>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: GOVERNANCE & ADMIN CONTROLS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="governance">
+            <div class="section-divider-number">06</div>
+            <h2>6. Governance &amp; Admin Controls</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Control</th><th>Where</th><th>What it governs</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>End-user feature toggles</strong></td><td>Gemini Enterprise admin console</td><td>"Enable Workflow Builder" and other features per app</td></tr>
+                    <tr><td><strong>Sharing settings</strong></td><td>Admin console</td><td>Agent sharing, approval-free sharing, sharing with Groups</td></tr>
+                    <tr><td><strong>Agent states</strong></td><td>Admin console</td><td>Private, Enabled, Suspended, Disabled per agent</td></tr>
+                    <tr><td><strong>Connector provisioning</strong></td><td>Admin console</td><td>Which data sources and actions builders can use</td></tr>
+                    <tr><td><strong>Identity provider</strong></td><td>Google Identity or Workforce Identity Federation</td><td>Who users are; ACL enforcement</td></tr>
+                    <tr><td><strong>Model Armor templates</strong></td><td>Admin console + Model Armor</td><td>Prompt and response screening for the assistant</td></tr>
+                    <tr><td><strong>VPC Service Controls, CMEK, data residency</strong></td><td>Google Cloud project</td><td>Exfiltration perimeter, key ownership, global/US/EU location</td></tr>
+                    <tr><td><strong>Agent identity, Agent Registry, Agent Gateway</strong></td><td>Agent Platform</td><td>Per-agent identity (SPIFFE), catalog of governed agents, policy enforcement on agent traffic</td></tr>
+                    <tr><td><strong>IAM roles</strong></td><td>Google Cloud IAM</td><td>Gemini Enterprise Admin for registration; least privilege for service agents</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-robot"></i></div>Model Armor for the assistant</h3>
+            <ul>
+                <li>Screens assistant prompts and responses; available in all editions at no extra cost, may add latency.</li>
+                <li>Recommended: two templates — a <strong>prompt template</strong> (prompt injection, jailbreak, sensitive data) and a <strong>response template</strong> (data leakage, harmful content, malicious URLs).</li>
+                <li>Uses <strong>INSPECT_AND_BLOCK</strong>; it blocks rather than de-identifies. A violation returns <code>answer.state = SKIPPED</code> with <code>CUSTOMER_POLICY_VIOLATION</code>.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-circle-nodes"></i></div>Layered governance pattern</h3>
+            <ul>
+                <li><strong>Data layer</strong>: ACL-aware connectors, full syncs for permission changes, data residency, CMEK.</li>
+                <li><strong>Agent layer</strong>: admin-provisioned connectors only, human review for write actions, sharing approval, suspend or disable misbehaving agents.</li>
+                <li><strong>Traffic layer</strong>: Model Armor (console for assistant, in-code for custom agents), Agent Gateway for agent traffic on the platform, OAuth on behalf of the user.</li>
+                <li><strong>Network layer</strong>: VPC Service Controls around Gemini Enterprise, Agent Runtime and data sources.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — "Suspend" vs "Disable"</h4>
+                <p>Suspended agents stay visible in the gallery but cannot be used (good for a temporary freeze with transparency); Disabled agents are hidden entirely.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: CX AGENT STUDIO FOR CUSTOMER-FACING AGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="cx-agent-studio">
+            <div class="section-divider-number">07</div>
+            <h2>7. CX Agent Studio for Customer-Facing Agents</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>CX Agent Studio</strong> is the minimal-code builder in <strong>Gemini Enterprise for CX</strong> (console: ces.cloud.google.com). It is built on ADK and is the evolution of Dialogflow CX, adding asynchronous tool calls, low-latency bidirectional streaming voice, and versioning with rollback.</p>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Agent application structure</h3>
+            <ul>
+                <li>An <strong>agent application</strong> is a tree: a <strong>root (steering) agent</strong> that routes to <strong>sub-agents</strong>.</li>
+                <li>Set the model globally or override it per sub-agent; design in English with automatic language detection for end users.</li>
+                <li>AI assistance: generate an agent from a description, <strong>Restructure instructions</strong> into XML tags (<code>role</code>, <code>persona</code>, <code>primary_goal</code>, <code>constraints</code>, <code>taskflow</code>, <code>subtask</code>, <code>step</code>, <code>trigger</code>, <code>action</code>, <code>examples</code>), <strong>Refine instructions</strong>, and hill-climb against test cases.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Instructions</h3>
+            <ul>
+                <li>Reference tools as <code>{@TOOL: tool_name}</code>, sub-agents as <code>{@AGENT: agent_name}</code>, and variables as <code>{username}</code>.</li>
+                <li><strong>Global instructions</strong> are inherited by every agent — put brand tone and DOs/DON'Ts there.</li>
+                <li>Modular conditional components (if/elif/else by channel, modality or variable values) keep one agent valid for chat and voice.</li>
+                <li><strong>Inline few-shot examples</strong> (<code>[user]</code>, <code>[model]</code>, <code>tool_code</code>, <code>tool_outputs</code>) teach format and tool use; use them sparingly — clear instructions first. The XML <code>taskflow</code> → <code>step</code> structure is the in-console equivalent of an explicit chain-of-thought procedure.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Tool type</th><th>Use it for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Data store / File search / Google Search</strong></td><td>Grounded answers from enterprise content, uploaded files, or the web</td></tr>
+                    <tr><td><strong>OpenAPI / Integration Connector / MCP</strong></td><td>Calling business APIs and enterprise systems</td></tr>
+                    <tr><td><strong>Salesforce, ServiceNow, Jira, Confluence, SharePoint</strong></td><td>Prebuilt SaaS actions</td></tr>
+                    <tr><td><strong>Python code / Client function / Widget</strong></td><td>Server-side logic, client-side actions, rich UI elements</td></tr>
+                    <tr><td><strong>Agent as a tool / A2A (preview)</strong></td><td>Delegating to another agent while keeping the session</td></tr>
+                    <tr><td><strong>System tools (e.g., <code>end_session</code>) / Google Maps (preview)</strong></td><td>Session control and handoff; location answers</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Tool execution &amp; callbacks</h3>
+            <ul>
+                <li>Tool names are snake_case. <strong>Synchronous</strong> tools should finish in under ~5 s; <strong>asynchronous</strong> tools (≈5–60 s) let the agent keep talking while the call completes.</li>
+                <li><strong>Callbacks</strong> are Python hooks equivalent to ADK: <code>before_agent</code> / <code>after_agent</code>, <code>before_model</code> / <code>after_model</code> (returning an <code>LlmResponse</code> skips the model), <code>before_tool</code> / <code>after_tool</code> (returning a dict skips the tool). Use them for deterministic guardrails, canned responses, and redaction.</li>
+                <li><strong>A2A tool</strong> delegation: the primary agent keeps the session; exchanges are text only; billing counts one session in the same project, otherwise two; roles include <code>roles/ces.client</code>, <code>roles/run.invoker</code> and <code>roles/aiplatform.user</code>, with Secret Manager for third-party credentials.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Evaluation test case</th><th>What it checks</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Scenario</strong></td><td>An AI-simulated user pursues a goal; tests open-ended robustness</td></tr>
+                    <tr><td><strong>Simulation</strong></td><td>Ordered goals and milestones; tests multi-step conversations</td></tr>
+                    <tr><td><strong>Golden</strong></td><td>An ideal path including tool calls; regression testing with semantic match (0–4)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>Evaluation metrics</h3>
+            <ul>
+                <li>Tool correctness, user goal satisfaction, goal completion, hallucinations, semantic match (golden only), scenario expectations; personas vary the simulated user.</li>
+                <li><strong>Task completion</strong> = user goal satisfied AND no hallucinations AND scenario expectations met.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: FLOWS, STATE HANDLERS & HUMAN HANDOFF
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="cx-flows-handoff">
+            <div class="section-divider-number">08</div>
+            <h2>8. Flows, State Handlers &amp; Human Handoff</h2>
+        </div>
+
+        <div class="prose">
+            <p>Dialogflow CX models conversations as explicit state machines. CX Agent Studio can call these flows when you need deterministic control.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dialogflow CX concept</th><th>Meaning</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Flow</strong></td><td>A conversation topic (e.g., "Authenticate caller") made of pages</td></tr>
+                    <tr><td><strong>Page</strong></td><td>A conversational state; can collect form parameters</td></tr>
+                    <tr><td><strong>State handler</strong></td><td>Has requirements, an optional fulfillment (response, parameter preset, webhook) and an optional transition target</td></tr>
+                    <tr><td><strong>Route</strong></td><td>Intent route or condition route that moves to another page or flow</td></tr>
+                    <tr><td><strong>Event handler</strong></td><td>Reacts to events such as <code>sys.no-match-default</code>, <code>sys.no-input-default</code>, or a flow failure escalating to a human (<code>END_FLOW_WITH_HUMAN_ESCALATION</code>)</td></tr>
+                    <tr><td><strong>Handler scope</strong></td><td>Flow-level, page-level, or form-parameter-level</td></tr>
+                    <tr><td><strong>Form parameters</strong></td><td>Slots a page must fill before it completes</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Flow-based agents in CX Agent Studio</h3>
+            <ul>
+                <li>A flow-based agent hands the conversation to a Dialogflow CX flow until it ends (END_SESSION), using DetectIntent; input and output variables are mapped between the two.</li>
+                <li>The Customer Engagement Suite service agent needs the Dialogflow API Client role.</li>
+                <li>CX Agent Studio agents are not drop-in replacements for Dialogflow playbooks; use a CX Agent Studio agent as the steering and routing layer.</li>
+                <li>Use flows for deterministic data collection, validation and authentication. Do not use flows for canned responses (use a callback) or intent classification (let the LLM route). Treat flows as black boxes — session parameters behave like implicit globals.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-robot"></i></div>Human handoff with end_session</h3>
+            <ul>
+                <li>Add the <code>end_session</code> system tool to the root agent and every sub-agent that may escalate.</li>
+                <li>Parameters (camelCase since August 1, 2026; old ALL_CAPS names remain supported): <code>escalationMessage</code>, <code>telephonyTransferCall</code> (<code>phoneNumber</code>, <code>sipUri</code>, <code>useOriginatingTrunk</code>), <code>liveAgentHandoff</code> (<code>endSession</code>, <code>sipRefer</code>, <code>uuiHeaders</code>, <code>xHeaders</code>).</li>
+                <li>With <strong>Agent Assist</strong>, keep <code>liveAgentHandoff.endSession</code> at its default <code>False</code> so the conversation transfers to the human agent with assist; set it to <code>True</code> only when not using Agent Assist. Agent Assist handoff works with the bidirectional API.</li>
+                <li>After a session ends, CX Agent Studio cannot reconnect to it.</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON — end_session call — transfer to a billing agent with Agent Assist</span>
+            </div>
+            <pre>{
+  "escalationMessage": "Transferring your call to a billing agent",
+  "telephonyTransferCall": { "phoneNumber": "+15552420836", "useOriginatingTrunk": true },
+  "liveAgentHandoff": { "endSession": false }
+}</pre>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Deterministic does not mean "all flows"</h4>
+                <p>Use LLM agents for understanding and routing, flows or callbacks for steps that must never vary (identity verification, payment capture, legally required wording).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: LOW-CODE VS PRO-CODE DECISION MATRIX
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="decision-matrix">
+            <div class="section-divider-number">09</div>
+            <h2>9. Low-Code vs Pro-Code Decision Matrix</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Criterion</th><th>Workflow Builder (Gemini Enterprise)</th><th>CX Agent Studio (Gemini Enterprise for CX)</th><th>Agent Studio (Agent Platform)</th><th>ADK on Agent Runtime</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Audience</strong></td><td>Employees</td><td>External customers</td><td>Developers prototyping</td><td>Developers and platform teams</td></tr>
+                    <tr><td><strong>Channels</strong></td><td>Gemini Enterprise web app, @mentions</td><td>Web chat, apps, telephony / voice</td><td>Console playground, export to code</td><td>Any (API, Gemini Enterprise, CX, custom UI)</td></tr>
+                    <tr><td><strong>Coding</strong></td><td>None</td><td>Minimal (optional Python callbacks and tools)</td><td>Low-code</td><td>Full code</td></tr>
+                    <tr><td><strong>Control flow</strong></td><td>Chat agents or step-based workflows with conditions and approvals</td><td>Root agent + sub-agents, optional deterministic flows</td><td>Prompt and workflow design</td><td>Any pattern (sequential, parallel, loop, custom)</td></tr>
+                    <tr><td><strong>Grounding</strong></td><td>Connectors, data stores, knowledge files</td><td>Data store, file search, Google Search tools</td><td>Google Search, Maps, RAG Engine, Agent Search</td><td>Agent Search, RAG Engine, MCP, custom tools</td></tr>
+                    <tr><td><strong>Evaluation</strong></td><td>Execution logs, versions</td><td>Scenario, simulation and golden test cases</td><td>Side-by-side prompt comparison</td><td>Agent evaluation services and custom eval suites</td></tr>
+                    <tr><td><strong>Governance</strong></td><td>Admin toggles, sharing approval, Model Armor</td><td>Versioning, rollback, callbacks, IAM</td><td>Project IAM</td><td>IAM, Agent Identity, Agent Gateway, in-code Model Armor</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-circle-nodes"></i></div>Decision rules</h3>
+            <ul>
+                <li>Employee productivity task with available connectors → <strong>Workflow Builder</strong>; escalate to ADK only when you need custom code, complex tools, or strict evals.</li>
+                <li>Customer-facing chat or voice with telephony, handoff and regression tests → <strong>CX Agent Studio</strong>.</li>
+                <li>Custom logic, multi-agent orchestration, or reuse across channels → <strong>ADK on Agent Runtime</strong>, then <strong>register</strong> in Gemini Enterprise (and/or call from CX Agent Studio via A2A or tools).</li>
+                <li>Partner or other-framework agent → expose it over <strong>A2A</strong> and register it.</li>
+                <li>Prototype prompts and system instructions → <strong>Agent Studio</strong>, then move to ADK for production.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: EXAM TRAPS & ARCHITECT CHECKLIST
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="exam-traps">
+            <div class="section-divider-number">10</div>
+            <h2>10. Exam Traps &amp; Architect Checklist</h2>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Name drift</h4>
+                <p>Agent Designer = Workflow Builder; Agentspace = Gemini Enterprise; Vertex AI Search = Agent Search; Agent Engine = Agent Runtime. Treat old and new names as the same product.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Where Model Armor applies</h4>
+                <p>Console Model Armor protects the Gemini Enterprise assistant only. Custom ADK/A2A agents need guardrails in code; CX Agent Studio uses callbacks and its own safety settings.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — A2A registration bypasses Agent Gateway</h4>
+                <p>If a scenario requires central gateway policy on every agent call, A2A agents registered directly in Gemini Enterprise do not satisfy it by default.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap — Write actions are all-or-nothing</h4>
+                <p>Connector "Add Or Update Data" is a connector-level toggle with human review, and it needs the related search actions enabled.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Architect checklist</h3>
+            <ul>
+                <li>Edition supports the requirement (no Business edition for IAM, VPC-SC, CMEK, custom agents).</li>
+                <li>Data mode chosen deliberately: ingestion for quality, federation for no-copy; full syncs scheduled for deletions and ACL changes.</li>
+                <li>Identity provider configured (Google Identity or global Workforce Identity Federation pool) and ACLs verified.</li>
+                <li>Builder path chosen with the decision matrix; custom agents hosted on Agent Runtime (ADK) or exposing an agent card (A2A).</li>
+                <li>OAuth on behalf of the user configured for third-party actions; least-privilege roles for service agents.</li>
+                <li>Guardrails: Model Armor templates for the assistant, in-code guardrails for custom agents, callbacks and flows for deterministic CX steps.</li>
+                <li>Human-in-the-loop for write actions and approvals; <code>end_session</code> handoff wired on every CX agent that can escalate.</li>
+                <li>Evaluation: CX golden and scenario test cases, workflow execution logs and versions, agent evals for ADK.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: GLOSSARY, SOURCES & PRACTICE QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">11</div>
+            <h2>11. Glossary, Sources &amp; Practice Quiz</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Gemini Enterprise</dt>
+                <dd>Google's employee-facing search, assistant and agent platform (formerly Agentspace).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Workflow Builder</dt>
+                <dd>No-code builder for chat agents and workflows in Gemini Enterprise (formerly Agent Designer).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Gallery</dt>
+                <dd>Catalog of Google-made, organization, personal and Marketplace agents inside Gemini Enterprise.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Federated search</dt>
+                <dd>Live query to a third-party source without copying data.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Data ingestion</dt>
+                <dd>Copying and indexing source content and ACLs into a data store for higher quality.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Layout parser</dt>
+                <dd>Default document parser with content-aware chunking and image and table annotation.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Runtime</dt>
+                <dd>Managed runtime for code agents (formerly Agent Engine; API resource <code>ReasoningEngine</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>A2A agent card</dt>
+                <dd>JSON description of an A2A agent's endpoint and skills used for registration.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Model Armor</dt>
+                <dd>Prompt and response screening service; console setting covers the assistant only.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>CX Agent Studio</dt>
+                <dd>Minimal-code builder for customer-facing agents, built on ADK, evolution of Dialogflow CX.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Global instructions</dt>
+                <dd>CX Agent Studio instructions inherited by every agent in an application.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Golden test case</dt>
+                <dd>CX evaluation case describing the ideal path, including tool calls, for regression testing.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>end_session</dt>
+                <dd>CX Agent Studio system tool for ending a session, transferring calls, and live-agent handoff.</dd>
+            </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Sources</h3>
+            <ul>
+                <li>Gemini Enterprise docs: editions, agents overview, Workflow Builder (chat agents and workflows), Agent Gallery, Marketplace agents, connectors and data stores, parsing and chunking, identity provider, ADK and A2A agent registration, Model Armor, choosing a product, release notes — <a href="https://docs.cloud.google.com/gemini/enterprise/docs">https://docs.cloud.google.com/gemini/enterprise/docs</a></li>
+                <li>CX Agent Studio docs: overview, agents, instructions, tools, A2A tool, callbacks, evaluation, flows — <a href="https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio">https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio</a></li>
+                <li>Agent Assist handoff from CX Agent Studio — <a href="https://docs.cloud.google.com/gemini-enterprise-cx/agent-assist/handoff-cxas">https://docs.cloud.google.com/gemini-enterprise-cx/agent-assist/handoff-cxas</a></li>
+                <li>Dialogflow CX concepts (pages, state handlers) — <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler">https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler</a></li>
+                <li>Gemini Enterprise Agent Platform overview — <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview">https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview</a></li>
+            </ul>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related guides</h3>
+                <ul>
+                    <li><a href="ADK.html">Agent Development Kit (ADK)</a> — code agents, callbacks, multi-agent patterns.</li>
+                    <li><a href="A2A.html">A2A Protocol</a> — agent cards, tasks, and cross-framework federation.</li>
+                    <li><a href="AgentPlatform.html">Agent Platform</a> — Agent Runtime, Agent Studio, Agent Search and the builder platform.</li>
+                    <li><a href="AgentPlatformSecurity.html">Agent Platform Security</a> — Agent Identity, Agent Gateway, Model Armor, VPC-SC.</li>
+                    <li><a href="RAG.html">RAG</a> and <a href="MCP.html">MCP</a> — retrieval pipelines and tool protocols.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 60-minute Gemini Enterprise &amp; Low-Code Agents audio deep dive, open the 21-slide architectural deck and sketchnote infographic in the Hub Viewer, or drill scenario questions on editions, grounding modes, Workflow Builder, custom agent registration, governance, and CX Agent Studio.</p>
+                <div class="audio-label" style="margin-top: 15px;">Gemini Enterprise, Workflow Builder &amp; CX Agent Studio (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/GeminiEnterprise-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=gemini-enterprise" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Gemini Enterprise Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> A 40-person startup on Business edition wants to register an ADK agent and put the project inside a VPC Service Controls perimeter. What must change?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Move to a Google Cloud–administered edition (Standard or Plus). Business edition has no Cloud console or IAM, no own full-code agents and no enterprise-grade security controls, so it cannot host registered ADK agents or VPC-SC.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> When do you prefer federated search over data ingestion?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">When data must not be copied or stored outside the source system and near-real-time access matters more than answer quality. Ingestion gives better quality but uses storage and sync time.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> A team wants a weekly report that gathers Salesforce updates, drafts a summary, and waits for a manager's approval before emailing it. Which Workflow Builder artifact and steps fit?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">A workflow with a Schedule trigger, a Gemini Agent step for the summary, a Human-in-the-loop approval step, and then the send step.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> Why does the Gemini Enterprise console Model Armor setting not protect a registered ADK agent?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The console setting screens only the Gemini Enterprise assistant. ADK, A2A and Marketplace agents must invoke Model Armor (or other guardrails) inside their own code.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> In CX Agent Studio, where do you put brand tone rules that every sub-agent must follow?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">In global instructions, which every agent in the application inherits.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> A CX Agent Studio agent escalates to a human agent who uses Agent Assist. How should <code>liveAgentHandoff.endSession</code> be set?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Leave it at the default <code>False</code> so the conversation transfers to the human agent with Agent Assist; set <code>True</code> only when not using Agent Assist.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

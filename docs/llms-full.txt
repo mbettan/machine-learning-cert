@@ -35,7 +35,6 @@ This file concatenates the full Markdown source of every study guide listed in h
 ================================================================================
 GUIDE: ML 101
 URL: https://mbettan.github.io/machine-learning-cert/ML101.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ML101.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=ml101
 Section: Foundation · AI Fundamentals
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
@@ -316,7 +315,6 @@ Q3. What is the difference between Supervised and Unsupervised learning?
 ================================================================================
 GUIDE: Generative AI 101
 URL: https://mbettan.github.io/machine-learning-cert/GenAI101.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/GenAI101.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=genai101
 Section: Foundation · AI Fundamentals
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
@@ -653,7 +651,6 @@ User Query ──▶ Embed / Hybrid Search ──▶ Retrieve & Rerank Chunks (A
 ================================================================================
 GUIDE: Prompt Engineering
 URL: https://mbettan.github.io/machine-learning-cert/PromptEngineering.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/PromptEngineering.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=prompt-engineering
 Section: Foundation · AI Fundamentals
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
@@ -1051,7 +1048,6 @@ This end-to-end vendor-invoice blueprint combines normalization contracts, nulla
 ================================================================================
 GUIDE: Agentic Design Patterns
 URL: https://mbettan.github.io/machine-learning-cert/ADP.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ADP.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adp
 Section: Foundation · Agent Architecture & Protocols
 Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
@@ -1459,7 +1455,6 @@ While a single multimodal LLM call with a JSON schema can easily summarize a cle
 ================================================================================
 GUIDE: Context Engineering & Reliability
 URL: https://mbettan.github.io/machine-learning-cert/ContextEngineering.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ContextEngineering.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=context-engineering
 Section: Foundation · Agent Architecture & Protocols
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
@@ -1905,7 +1900,6 @@ Next: query Denver hub scan log; re-check ticket at 14:00
 ================================================================================
 GUIDE: Agent Development Kit (ADK)
 URL: https://mbettan.github.io/machine-learning-cert/ADK.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ADK.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=adk
 Section: Foundation · Agent Architecture & Protocols
 Exam relevance: Google Professional Agentic Architect (core)
@@ -2444,7 +2438,6 @@ if __name__ == "__main__":
 ================================================================================
 GUIDE: Model Context Protocol (MCP)
 URL: https://mbettan.github.io/machine-learning-cert/MCP.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/MCP.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=mcp
 Section: Foundation · Agent Architecture & Protocols
 Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
@@ -3211,7 +3204,6 @@ MCP defines message format, methods, transports, capability metadata/versioning 
 ================================================================================
 GUIDE: Agent2Agent (A2A)
 URL: https://mbettan.github.io/machine-learning-cert/A2A.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/A2A.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=a2a
 Section: Foundation · Agent Architecture & Protocols
 Exam relevance: Google Professional Agentic Architect (core)
@@ -3408,7 +3400,6 @@ When an autonomous agent books travel, procures cloud SaaS, or pays per API call
 ================================================================================
 GUIDE: Retrieval-Augmented Generation (RAG)
 URL: https://mbettan.github.io/machine-learning-cert/RAG.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/RAG.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=rag
 Section: Foundation · Knowledge & Retrieval
 Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
@@ -3937,7 +3928,6 @@ Measure **retrieval**, **grounded generation**, and **refusal/safety** separatel
 ================================================================================
 GUIDE: Knowledge Engineering
 URL: https://mbettan.github.io/machine-learning-cert/KnowledgeEngineering.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/KnowledgeEngineering.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=knowledge-engineering
 Section: Foundation · Knowledge & Retrieval
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
@@ -4299,7 +4289,6 @@ The 7 steps build the knowledge layer once. A production agent also needs it to 
 ================================================================================
 GUIDE: AgentOps: Evals, Observability & Cost
 URL: https://mbettan.github.io/machine-learning-cert/AgentOps.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/AgentOps.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=agent-ops
 Section: Foundation · AgentOps & Responsible AI
 Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
@@ -4930,7 +4919,6 @@ Calculate **Net Monthly Benefit** across all four steps—ignoring **Step 4 (Hum
 ================================================================================
 GUIDE: Responsible AI: Guardrails, Safety & Governance
 URL: https://mbettan.github.io/machine-learning-cert/ResponsibleAI.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ResponsibleAI.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=responsible-ai
 Section: Foundation · AgentOps & Responsible AI
 Exam relevance: Google Professional Agentic Architect (core), Claude Certified Architect – Foundations (core)
@@ -5364,7 +5352,6 @@ Policies written in a presentation do not pass enterprise risk or regulatory aud
 ================================================================================
 GUIDE: Vibe Coding
 URL: https://mbettan.github.io/machine-learning-cert/vibecoding.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/vibecoding.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=vibe-coding
 Section: Foundation · Agentic Coding Practices
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
@@ -5688,7 +5675,6 @@ cm fix FINDING_042 -y --model gemini-4-argon
 ================================================================================
 GUIDE: Spec-Driven Development (IDD)
 URL: https://mbettan.github.io/machine-learning-cert/idd.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/idd.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=idd
 Section: Foundation · Agentic Coding Practices
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (supporting)
@@ -5983,7 +5969,6 @@ agents-cli publish gemini-enterprise --agent-runtime-id <RUNTIME_ID>
 ================================================================================
 GUIDE: Gemini & Google Models
 URL: https://mbettan.github.io/machine-learning-cert/Google.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/Google.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=google
 Section: Google
 Exam relevance: Google Professional Agentic Architect (supporting)
@@ -6255,7 +6240,6 @@ Metadata manifests (**C2PA Content Credentials**) provide rich cryptographic pro
 ================================================================================
 GUIDE: Gemini Enterprise & Low-Code Agents
 URL: https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/GeminiEnterprise.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=gemini-enterprise
 Section: Google
 Exam relevance: Google Professional Agentic Architect (core)
@@ -6643,7 +6627,6 @@ A: Leave it at the default `False` so the conversation transfers to the human ag
 ================================================================================
 GUIDE: Antigravity & Agents CLI
 URL: https://mbettan.github.io/machine-learning-cert/Antigravity.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/Antigravity.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=antigravity
 Section: Google
 Exam relevance: Google Professional Agentic Architect (core)
@@ -6970,7 +6953,6 @@ Prerequisites: Python 3.11+, `uv`, Node.js (for the skills), a coding agent. For
 ================================================================================
 GUIDE: Agent Platform: Build, Retrieve & Run
 URL: https://mbettan.github.io/machine-learning-cert/AgentPlatform.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/AgentPlatform.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=agent-platform
 Section: Google
 Exam relevance: Google Professional Agentic Architect (core)
@@ -7342,7 +7324,6 @@ This prevents "confused deputy" forensic blind spots during security incident re
 ================================================================================
 GUIDE: Agent Platform: Identity, Security & Governance
 URL: https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/AgentPlatformSecurity.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=agent-platform-security
 Section: Google
 Exam relevance: Google Professional Agentic Architect (core)
@@ -7775,7 +7756,6 @@ Audit logs record **both the agent and the user** when the agent acts on a user'
 ================================================================================
 GUIDE: Anthropic & Claude Models
 URL: https://mbettan.github.io/machine-learning-cert/Anthropic.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/Anthropic.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=anthropic
 Section: Anthropic
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
@@ -7906,7 +7886,6 @@ Anthropic operationalizes frontier risk governance through its **Responsible Sca
 ================================================================================
 GUIDE: Claude Platform & API
 URL: https://mbettan.github.io/machine-learning-cert/ClaudeAPI.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ClaudeAPI.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-api
 Section: Anthropic
 Exam relevance: Claude Certified Architect – Foundations (core)
@@ -8674,7 +8653,6 @@ messages.append({"role": "user", "content": [
 ================================================================================
 GUIDE: Claude Code
 URL: https://mbettan.github.io/machine-learning-cert/ClaudeCode.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ClaudeCode.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-code
 Section: Anthropic
 Exam relevance: Google Professional Agentic Architect (supporting), Claude Certified Architect – Foundations (core)
@@ -9278,7 +9256,6 @@ claude -p "Extract release notes" --json-schema '{"type":"object","properties":{
 ================================================================================
 GUIDE: Claude Agent SDK
 URL: https://mbettan.github.io/machine-learning-cert/ClaudeAgentSDK.html
-Markdown: https://mbettan.github.io/machine-learning-cert/md/ClaudeAgentSDK.md
 Practice quiz: https://mbettan.github.io/machine-learning-cert/quiz.html?topic=claude-agent-sdk
 Section: Anthropic
 Exam relevance: Claude Certified Architect – Foundations (core)

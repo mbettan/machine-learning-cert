@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Platform: Build, Retrieve &amp; Run — Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Gemini Enterprise Agent Platform v2.0 study guide: Agent Studio, Managed Agents API, Agent Runtime, Sessions, Memory Bank, retrieval, 2-step simulation, observability, prompt optimization and quotas.">
+    <meta name="keywords" content="Gemini Enterprise Agent Platform, Agent Runtime, Managed Agents API, Interactions API, Skill Registry, Agent Studio, agent-starter-pack, agents-cli, Sessions, Memory Bank, Example Store, Code Execution sandbox, Cloud Run, GKE, Agent Search, RAG Engine, Agent Retrieval, Vector Search, 2-Step Agent Simulation, Environment Simulation, OnlineEvaluator, Failure Cluster Analysis, Prompt Optimization, Dual-Attribution Audit Logs, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/AgentPlatform.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Agent Platform: Build, Retrieve &amp; Run — Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Gemini Enterprise Agent Platform v2.0 study guide: Agent Studio, Managed Agents API, Agent Runtime, Sessions, Memory Bank, retrieval, 2-step simulation, observability, prompt optimization and quotas.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/AgentPlatform.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Agent Platform: Build, Retrieve &amp; Run — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Agent Platform: Build, Retrieve &amp; Run — Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Gemini Enterprise Agent Platform v2.0 study guide: Agent Studio, Managed Agents API, Agent Runtime, Sessions, Memory Bank, retrieval, 2-step simulation, observability, prompt optimization and quotas.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Agent Platform: Build, Retrieve &amp; Run — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .preview-badge {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 1px 7px;
+            margin-left: 4px;
+            border-radius: 999px;
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            vertical-align: middle;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/AgentPlatform.html#article",
+                  "headline": "Agent Platform: Build, Retrieve & Run — Study Guide | ML Cert Hub",
+                  "name": "Agent Platform: Build, Retrieve & Run Study Guide",
+                  "description": "Gemini Enterprise Agent Platform v2.0 study guide: Agent Studio, Managed Agents API, Agent Runtime, Sessions, Memory Bank, retrieval, 2-step simulation, observability, prompt optimization and quotas.",
+                  "keywords": "Gemini Enterprise Agent Platform, Agent Runtime, Managed Agents API, Interactions API, Skill Registry, Agent Studio, agent-starter-pack, agents-cli, Sessions, Memory Bank, Example Store, Code Execution sandbox, Cloud Run, GKE, Agent Search, RAG Engine, Agent Retrieval, Vector Search, 2-Step Agent Simulation, Environment Simulation, OnlineEvaluator, Failure Cluster Analysis, Prompt Optimization, Dual-Attribution Audit Logs, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/AgentPlatform.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/AgentPlatform.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Agent Platform: Build, Retrieve & Run",
+                              "item": "https://mbettan.github.io/machine-learning-cert/AgentPlatform.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes · v2.0</span>
+                </div>
+                <h1>Agent Platform: <em>Build, Retrieve &amp; Run</em></h1>
+                <p class="cover-subtitle">Gemini Enterprise Agent Platform end-to-end engineering reference: the three build paths (Agent Studio, Managed Agents API + Skill Registry, and code-first ADK / LangGraph with <code>agent-starter-pack</code> &amp; <code>agents-cli</code>), Agent Runtime vs. Cloud Run vs. GKE, Context Engineering (Sessions, Memory Bank, Example Store), Code Execution sandboxing, enterprise grounding &amp; MCP servers, 2-step user simulation &amp; environment simulation, Agent Registry observability &amp; dual-attribution audit logs, failure cluster analysis &amp; prompt optimization, and FinOps quota controls.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Updated: <strong>October 2026 (v2.0)</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Google Cloud / Agentic AI Architect</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=agent-platform" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Agent Platform Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#platform-map" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Platform Map, Pillars &amp; Build Paths</span>
+                </a>
+                <a href="#agent-runtime" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Agent Runtime &amp; Managed Agents API</span>
+                </a>
+                <a href="#choosing-runtime" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Agent Runtime vs. Cloud Run vs. GKE</span>
+                </a>
+                <a href="#sessions-memory" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Context Engineering: Sessions, Memory &amp; Examples</span>
+                </a>
+                <a href="#code-execution" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Code Execution Sandbox</span>
+                </a>
+                <a href="#grounding-retrieval" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Grounding, Retrieval &amp; MCP Tooling</span>
+                </a>
+                <a href="#caching-state" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Caching &amp; External State</span>
+                </a>
+                <a href="#evaluation" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Evaluation, 2-Step Simulation &amp; Flywheels</span>
+                </a>
+                <a href="#observability" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Observability, Audit &amp; Prompt Optimization</span>
+                </a>
+                <a href="#cost-quotas" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Cost, Quotas &amp; Capacity</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Failure Modes &amp; Exam Traps</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Glossary, Related Guides &amp; Practice Quiz</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Definition</h3>
+                <p><strong>Gemini Enterprise Agent Platform</strong> is the evolution of Vertex AI for building, scaling, governing, and optimizing production agents on Google Cloud. This guide covers the <em>build, retrieve, run, and optimize</em> half: choosing among <strong>Agent Studio</strong>, the <strong>Managed Agents API</strong>, and code-first <strong>ADK / open frameworks</strong>, hosting agents on <strong>Agent Runtime</strong> (formerly Agent Engine), managed <strong>Sessions</strong>, <strong>Memory Bank</strong>, <strong>Example Store</strong>, and the <strong>Code Execution</strong> sandbox, choosing between Agent Runtime, Cloud Run, and GKE, enterprise retrieval and MCP tooling, 2-step user simulation and environment simulation, Agent Registry observability, programmatic prompt optimization, and FinOps quota management.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-route"></i></div>Companion Architecture Guides</h3>
+                <p>Cryptographic Agent Identity, IAM, Principal Access Boundary (PAB), VPC Service Controls, Model Armor, Sensitive Data Protection, and Agent Gateway policies live in <a href="AgentPlatformSecurity.html">Agent Platform Security &amp; Governance</a>. Code-level ADK patterns live in the <a href="ADK.html">ADK guide</a>; cross-agent wire protocols and A2UI/AP2 in <a href="A2A.html">A2A &amp; Interoperability</a>; vendor-neutral RAG in <a href="RAG.html">RAG</a>; Gemini 4 Argon and Model Garden in <a href="Google.html">Gemini &amp; Google Models</a>.</p>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental model — 5-part agent anatomy on Google Cloud</h4>
+                <p>The <strong>model</strong> (Gemini 4 Argon, Gemini 3.8 Flash…) is the reasoning brain; the <strong>orchestration layer</strong> (ADK, LangGraph, Managed Agents harness, or Agent Studio) wires the Think → Act → Observe loop; <strong>Agent Runtime</strong> is the managed body keeping long-running tasks alive; <strong>Sessions</strong> are short-term working memory for one conversation while <strong>Memory Bank</strong> is consolidated long-term memory across conversations; <strong>MCP servers, retrieval services, and the Code Execution sandbox</strong> are the hands and library; <strong>Evaluation + Observability + Agent Optimizer</strong> form the continuous AgentOps quality flywheel.</p>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Rule 0 — managed by default</h4>
+                <p>Choose the most managed component that meets the requirement. Move down the stack (<strong>Managed Agents API / Agent Studio</strong> → <strong>Agent Runtime</strong> → <strong>Cloud Run</strong> → <strong>GKE</strong>) only for a concrete engineering need: custom orchestration code, hosting stateless Streamable HTTP MCP servers, non-Python stacks, GPUs/self-hosted open weights, or kernel-level isolation.</p>
+            </div>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Naming, preview status and limits evolve</h4>
+                <p>Product names, preview status, quotas, and regional availability change frequently. Items marked <span class="preview-badge">Preview</span> are Pre-GA without GA SLAs. Verify current limits and pricing in official Google Cloud documentation before production commitment.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: PLATFORM MAP
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="platform-map">
+            <div class="section-divider-number">01</div>
+            <h2>1. Platform Map: Naming, Pillars &amp; Build Paths</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pillar</th><th>What it covers</th><th>Key components</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Build</strong></td><td>Create agents, mount skills/tools, and connect to enterprise data</td><td><strong>ADK</strong> (Python, Go, Java, TS), <strong>Agent Studio</strong> (low-code), <strong>Managed Agents API</strong> + <strong>Interactions API</strong> <span class="preview-badge">Preview</span>, <strong>Skill Registry</strong>, <strong>Agent Garden</strong>, <strong>Model Garden</strong> (200+ models), <strong>RAG Engine</strong>, <strong>Agent Search</strong>, <strong>Agent Retrieval</strong>, <code>agent-starter-pack</code>, <code>agents-cli</code></td></tr>
+                    <tr><td><strong>Scale</strong></td><td>Run stateful, multi-step agents reliably in production</td><td><strong>Agent Runtime</strong> (<code>reasoningEngines</code>), <strong>Sessions</strong>, <strong>Memory Bank</strong>, <strong>Example Store</strong> <span class="preview-badge">Preview</span>, <strong>Code Execution</strong> sandbox, <strong>A2A Agent Hosting</strong> <span class="preview-badge">Preview</span></td></tr>
+                    <tr><td><strong>Govern</strong></td><td>Control identity, discovery, egress, and security policy</td><td><strong>Agent Registry</strong>, <strong>Agent Identity</strong> (SPIFFE), <strong>Agent Gateway</strong>, <strong>Model Armor</strong>, governance policies → see <a href="AgentPlatformSecurity.html">Security guide</a></td></tr>
+                    <tr><td><strong>Optimize</strong></td><td>Simulate, evaluate, observe, and continuously improve quality</td><td><strong>Gen AI Evaluation Service</strong> (2-step user simulation, environment simulation, adaptive rubrics, trajectory metrics, <strong>Online Monitors</strong>), <strong>Agent Registry Observability</strong>, <strong>Failure Cluster Analysis</strong>, <strong>Prompt Optimization / Agent Optimizer</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Billing model:</strong> Agent Platform uses <strong>pay-as-you-go</strong> developer consumption (tokens, runtime vCPU/GiB-seconds, deployed index node-hours) with optional <strong>Provisioned Throughput (GSUs)</strong>; the <strong>Gemini Enterprise app</strong> (formerly Agentspace) is a separate per-seat subscription workspace where business users discover and invoke published agents.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Build Path</th><th>Builder &amp; Control Level</th><th>Loop, State &amp; Sandbox Ownership</th><th>Best Fit</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Agent Studio</strong> (low-code)</td><td>Domain experts &amp; rapid prototypers</td><td>Visual canvas configuring Gemini model, system prompt, grounding data stores, MCP tools, and sub-agents; 1-click deploy to <strong>Agent Runtime</strong> or <strong>Gemini Enterprise Workflow Builder</strong></td><td>Departmental assistants, rapid enterprise RAG validation before pro-code handoff</td></tr>
+                    <tr><td><strong>2. Managed Agents API</strong> <span class="preview-badge">Preview</span></td><td>Developers wanting a declarative REST/SDK harness</td><td>Pairs <strong>Agents API</strong> + mounted <strong>Skill Registry</strong> bundles with stateful <strong>Interactions API</strong> (<code>previous_interaction_id</code>, <code>background=true</code>). Google runs the loop, restarts, artifacts, and an isolated Linux sandbox with <strong>no network egress by default</strong> (powers <strong>Antigravity Agent</strong> &amp; <strong>Deep Research</strong>).</td><td>Autonomous coding, file/spreadsheet processing, and multi-hour synthesis with zero harness ops</td></tr>
+                    <tr><td><strong>3. Code-first ADK &amp; Open Frameworks</strong></td><td>Software &amp; AI engineers needing deterministic code control</td><td>Author custom control flow and callbacks in <strong>ADK</strong>, <strong>LangGraph</strong>, <strong>CrewAI</strong>, <strong>AG2</strong>, or <strong>LlamaIndex</strong>; scaffold Terraform + CI/CD eval gates via <code>agent-starter-pack</code> &amp; <code>agents-cli</code>; deploy to Agent Runtime, Cloud Run, or GKE</td><td>Complex multi-agent graphs, strict compliance guardrails, custom hybrid A2A meshes</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Current name</th><th>Former name</th><th>Exam / API note</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Gemini Enterprise Agent Platform</strong></td><td>Vertex AI</td><td>Evolution of the same platform; IAM permissions still use <code>aiplatform.*</code></td></tr>
+                    <tr><td><strong>Gemini Enterprise</strong> (end-user app)</td><td>Google Agentspace</td><td>Unified enterprise search + multi-agent hub supporting A2A and <strong>A2UI</strong></td></tr>
+                    <tr><td><strong>Agent Runtime</strong></td><td>Agent Engine / Reasoning Engine</td><td>The REST/gRPC resource remains <code>projects/…/locations/…/reasoningEngines/&lt;id&gt;</code></td></tr>
+                    <tr><td><strong>Agent Search</strong></td><td>Vertex AI Search</td><td>Turnkey managed search/RAG (<code>discoveryengine</code>) with connectors and native ACLs</td></tr>
+                    <tr><td><strong>Agent Retrieval</strong></td><td>Vector Search 2.0</td><td>Collections-based, self-tuning vector store with schema &amp; auto-embeddings</td></tr>
+                    <tr><td>Vector Search 1.0</td><td>Matching Engine</td><td>High-scale ScaNN ANN index-as-a-service</td></tr>
+                    <tr><td><strong>Workflow Builder</strong> (Gemini Enterprise)</td><td>Agent Designer</td><td>No-code builder for chat agents and scheduled workflows in Gemini Enterprise</td></tr>
+                    <tr><td><strong>Gemini 4 Argon / Gemini 3.x</strong></td><td>Gemini 1.5 / PaLM 2</td><td>Active frontier (<code>gemini-4-argon</code>) and agentic workhorse (<code>gemini-3.8-flash</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Model Garden pointer</h4>
+                <p>Model Garden catalogs Google first-party (Gemini 4 Argon, Gemini 3.8 Flash, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3), partner MaaS (Anthropic Claude, Mistral, DeepSeek), and open-weight models (Gemma 4, Gemma 3n, Llama). Model selection and tuning live in the <a href="Google.html">Google guide</a>. Gemini itself is served exclusively through managed Google endpoints — you cannot self-host Gemini on Cloud Run or GKE; open models such as Gemma 4 can be self-hosted there.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: AGENT RUNTIME
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agent-runtime">
+            <div class="section-divider-number">02</div>
+            <h2>2. Agent Runtime &amp; Production Tooling</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Agent Runtime</strong> is a fully managed, opinionated compute runtime for stateful agents: sub-second cold starts, long-running and multi-day asynchronous workflows, optional <code>min_instances</code> for warm capacity, IAM and VPC Service Controls enforcement, private VPC/on-prem egress through a <strong>Private Service Connect (PSC) interface</strong> network attachment, cryptographic <strong>Agent Identity</strong>, and built-in integration with Sessions, Memory Bank, Example Store, Code Execution, A2A, and OpenTelemetry.</p>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-puzzle-piece"></i></div>Framework &amp; protocol support</h3>
+                <ul>
+                    <li><strong>First-class native integration:</strong> ADK (Python: <code>adk deploy agent_engine</code> or <code>agents-cli</code>; Go via <code>adkgo</code>; Java &amp; TypeScript via containers)</li>
+                    <li><strong>SDK templates:</strong> LangChain, LangGraph, AG2, LlamaIndex <span class="preview-badge">Preview</span></li>
+                    <li><strong>Custom Python class:</strong> CrewAI or any custom class implementing <code>query</code> / <code>async_query</code> / <code>stream_query</code></li>
+                    <li><strong>A2A agent hosting:</strong> native <code>A2aAgent</code> wrapper <span class="preview-badge">Preview</span> exposing an <code>AgentCard</code> and task store on Agent Runtime</li>
+                    <li><strong>Any language:</strong> custom Dockerfile or Artifact Registry image conforming to the runtime HTTP contract</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>SDK, <code>agent-starter-pack</code> &amp; <code>agents-cli</code></h3>
+                <ul>
+                    <li><strong>Agent Platform SDK:</strong> <code>google-cloud-agentplatform</code> exposes <code>agentplatform.Client(project=…, location=…)</code> with <code>client.runtimes</code>, <code>client.sessions</code>, <code>client.sandboxes</code>, and <code>client.memory_banks</code> (replacing legacy <code>agent_engines</code>).</li>
+                    <li><strong><code>agent-starter-pack</code> &amp; <code>agents-cli</code>:</strong> scaffolds production Terraform IaC, Cloud Build / GitHub Actions CI/CD with automated <code>agents-cli eval</code> regression gates, OpenTelemetry spans, and BigQuery feedback sinks.</li>
+                    <li><strong>Managed Agents API</strong> <span class="preview-badge">Preview</span>: declarative <strong>Agents API</strong> + <strong>Skill Registry</strong> + stateful <strong>Interactions API</strong> running in an isolated Linux container with <strong>no network access by default</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Deployment method</th><th>Languages</th><th>Best for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Developer Connect</strong> (Git repository)</td><td>Python</td><td>GitOps CI/CD — builds and deploys directly from a connected Git repo</td></tr>
+                    <tr><td><strong>Source files</strong> (inline directory)</td><td>Python</td><td>Automated CI/CD pipelines and Terraform; no Cloud Storage staging bucket needed</td></tr>
+                    <tr><td><strong>Dockerfile</strong></td><td>Any</td><td>Custom OS packages or non-Python agents (Go, Java, TypeScript)</td></tr>
+                    <tr><td><strong>Container image</strong> (Artifact Registry)</td><td>Any</td><td>Pre-built, vulnerability-scanned images promoted across environments; <strong>lowest deployment latency</strong></td></tr>
+                    <tr><td><strong>SDK object</strong> (in-memory)</td><td>Python</td><td>Notebooks/Colab prototyping; the agent object must be serializable</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — reserved environment variables</h4>
+                <p>Do not set platform-managed variables such as <code>GOOGLE_CLOUD_PROJECT</code> or <code>PORT</code> in your deployment config, and avoid the <code>GOOGLE_CLOUD_AGENT_ENGINE</code> prefix for custom variables (except documented flags like <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code>).</p>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Exam tip</h4>
+                <p>Agent Runtime hosts stateful agent orchestrators, not standalone MCP tool servers. Deploy custom <strong>Streamable HTTP MCP servers</strong> on <strong>Cloud Run</strong> or <strong>GKE</strong>, register them in <strong>Agent Registry</strong>, and call them from your agent.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: CHOOSING A RUNTIME
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="choosing-runtime">
+            <div class="section-divider-number">03</div>
+            <h2>3. Choosing a Runtime: Agent Runtime vs. Cloud Run vs. GKE</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Criterion</th><th>Agent Runtime</th><th>Cloud Run</th><th>GKE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Best fit</strong></td><td>Stateful Python/ADK/LangGraph/A2A agents; fastest path to production</td><td>Polyglot containerized agents, webhook services, and <strong>Streamable HTTP MCP servers</strong></td><td>Self-hosted open weights (Gemma 4 on GPUs/TPUs), dense K8s fleets, custom kernel isolation</td></tr>
+                    <tr><td><strong>Ops overhead</strong></td><td>Lowest (fully managed agent harness)</td><td>Low (serverless containers)</td><td>Highest (you manage cluster &amp; node lifecycle)</td></tr>
+                    <tr><td><strong>State</strong></td><td>Built-in Sessions, Memory Bank, Example Store, Code Execution</td><td>Stateless — externalize to Agent Platform Sessions, Memorystore, Firestore, or Cloud SQL</td><td>StatefulSets, local SSDs, or external managed stores</td></tr>
+                    <tr><td><strong>Scaling &amp; duration</strong></td><td>Managed autoscaling; <code>min_instances</code> for warm capacity; multi-day workflows</td><td>Scale to zero; HTTP timeout up to <strong>60 minutes</strong>; Services, Jobs, Worker pools</td><td>Full control (HPA/VPA, node pools, GPU sharing)</td></tr>
+                    <tr><td><strong>Isolation &amp; security</strong></td><td>IAM, VPC-SC, PSC interface, Agent Identity, Code Execution sandbox</td><td>IAM, Direct VPC egress, built-in Agent Identity &amp; Agent Registry integration</td><td>Workload Identity Federation, <strong>GKE Sandbox (gVisor)</strong>, NetworkPolicies</td></tr>
+                    <tr><td><strong>Hosts MCP servers?</strong></td><td>No</td><td><strong>Yes</strong> (Streamable HTTP)</td><td><strong>Yes</strong></td></tr>
+                    <tr><td><strong>Weak spot</strong></td><td>No custom GPUs; non-Python stacks need a custom container</td><td>Ephemeral in-process memory lost on scale-to-zero</td><td>Operational &amp; platform engineering burden</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Python/ADK, minimal ops, managed memory</h4>
+                <p>→ <strong>Agent Runtime</strong> (or <strong>Managed Agents API</strong> for zero-code harness).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Already standardized on Cloud Run or GKE</h4>
+                <p>→ Reuse existing platform investments where ops tooling is mature.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Any language, scale-to-zero, or MCP servers</h4>
+                <p>→ <strong>Cloud Run</strong> (Streamable HTTP MCP servers &amp; event-driven webhooks).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>GPUs, Gemma 4 weights, gVisor isolation</h4>
+                <p>→ <strong>GKE</strong> with accelerator node pools and fine-grained NetworkPolicies.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Tiered model routing</h4>
+                <p>Route easy steps to <strong>Gemini 3.5 Flash-Lite</strong>, loops to <strong>3.8 Flash</strong>, hard plans to <strong>4 Argon</strong>.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — "stateless Cloud Run remembers"</h4>
+                <p>A Cloud Run instance can be replaced or scaled to zero at any moment. Conversation state kept in process RAM vanishes. Persist it in Agent Platform Sessions (<code>--session_service_uri agentengine://&lt;id&gt;</code>), Memorystore, Firestore, or Cloud SQL.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: SESSIONS, MEMORY BANK & EXAMPLE STORE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="sessions-memory">
+            <div class="section-divider-number">04</div>
+            <h2>4. Context Engineering: Sessions, Memory Bank &amp; Example Store</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 20px; color: var(--text-secondary);">Production agents apply <strong>context engineering</strong> — assembling only relevant recent events, compacted summaries, scoped long-term user facts, and top-<em>k</em> dynamic examples per turn to prevent <strong>context rot</strong> and runaway token spend.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Abstraction</th><th>Scope</th><th>Lifetime</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Session</strong></td><td>Chronological append-only sequence of <strong>events</strong> (messages, thoughts, tool calls/outputs) for one interaction</td><td>One conversation (apply sliding-window compaction on long threads)</td></tr>
+                    <tr><td><strong>State</strong></td><td>Mutable key-value scratchpad attached to a session (<code>temp:</code>, session, <code>user:</code>, <code>app:</code> prefixes in ADK)</td><td>Current turn or current conversation</td></tr>
+                    <tr><td><strong>Memory Bank</strong></td><td>LLM-extracted, consolidated semantic facts &amp; preferences about a user/entity</td><td>Persistent across sessions (governed by TTL &amp; revisions)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Sessions:</strong> ADK agents deployed to Agent Runtime get managed sessions automatically. Outside Agent Runtime (Cloud Run, GKE, local), point ADK at the managed service with <code>--session_service_uri agentengine://&lt;id&gt;</code>.</p>
+
+        <div class="concept-card accent-mint" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>Memory Bank</h3>
+            <ul>
+                <li><strong>Asynchronous LLM extraction &amp; consolidation:</strong> <code>GenerateMemories</code> extracts durable facts from session events in the background and <strong>consolidates</strong> them with existing memories (merging duplicates, updating changed preferences, resolving contradictions).</li>
+                <li><strong>Memory-as-a-tool:</strong> <code>CreateMemory</code> writes an explicit fact immediately when the agent decides to remember on command.</li>
+                <li><strong>Scoped retrieval:</strong> <code>RetrieveMemories</code> fetches by scope or <strong>semantic similarity search</strong> against the active user turn.</li>
+                <li><strong>Strict identity isolation:</strong> partitioned by an identity scope such as <code>{user_id, app_name}</code> — never share unscoped namespaces across users.</li>
+                <li><strong>Governance controls:</strong> custom <strong>Memory Topics</strong> (defining what to extract and what PII to ignore), multimodal input, <strong>TTL</strong> policies, auditable <strong>memory revisions</strong>, IAM Conditions, roles <code>roles/aiplatform.memoryViewer</code> / <code>roles/aiplatform.memoryEditor</code>, CMEK, and regional residency (<code>gcp.resourceLocations</code>).</li>
+                <li><strong>ADK integration:</strong> <code>VertexAiMemoryBankService</code>; trigger incremental extraction in callbacks via <code>add_events_to_memory</code> (preferred over full-session <code>add_session_to_memory</code>).</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — persistent memory poisoning</h4>
+                <p>Untrusted external tool outputs (emails, web pages, tickets) processed during memory extraction can plant malicious instructions into Memory Bank that replay across future sessions. Screen inputs with <strong>Model Armor</strong>, constrain <strong>Memory Topics</strong>, and audit memory revisions (<a href="AgentPlatformSecurity.html">Security guide</a>).</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-list-check"></i></div>Example Store <span class="preview-badge">Preview</span></h3>
+            <p>Stores curated few-shot input→trajectory/output demonstrations and injects only the most semantically relevant ones dynamically at inference time. The embedding model (e.g., <code>text-embedding-005</code>, <code>text-multilingual-embedding-002</code>, or <code>gemini-embedding-001</code>) is <strong>immutable after instance creation</strong>; changing embedding models requires creating a new instance. Default quota: 50 instances per project per region.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Need</th><th>Right Component</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Remember what <em>this user</em> said three turns ago in the chat</td><td><strong>Session</strong> events / scratchpad state</td></tr>
+                    <tr><td>Remember user preferences and recurring project context next month</td><td><strong>Memory Bank</strong></td></tr>
+                    <tr><td>Steer complex tool trajectories or output schemas with dynamic few-shot exemplars</td><td><strong>Example Store</strong> <span class="preview-badge">Preview</span></td></tr>
+                    <tr><td>Answer grounded in 50,000 permissioned enterprise documents</td><td><strong>Agent Search / Retrieval</strong> (<a href="#grounding-retrieval">Section 06</a>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: CODE EXECUTION SANDBOX
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="code-execution">
+            <div class="section-divider-number">05</div>
+            <h2>5. Code Execution Sandbox</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">The <strong>Code Execution</strong> sandbox runs untrusted, model-generated Python inside an isolated container: sub-second startup/execution, file I/O up to <strong>100 MB</strong>, and stateful sandbox files/variables persisting up to <strong>14 days</strong> (configurable TTL). ADK's <code>AgentEngineSandboxCodeExecutor</code> binds <strong>one sandbox per session</strong> so DataFrames and generated charts carry across turns — and can be invoked even when your agent runs on Cloud Run or GKE. Similarly, the <strong>Managed Agents API</strong> Linux sandbox blocks outbound network egress by default while mounting approved <strong>Skill Registry</strong> assets.</p>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental model — runtime vs. sandbox</h4>
+                <p>The <strong>runtime</strong> executes <em>trusted</em> orchestration code you wrote and reviewed (holding IAM/MCP credentials). The <strong>sandbox</strong> executes <em>untrusted</em> code synthesized by the model at runtime. Never run LLM-generated code via <code>exec()</code> inside the agent's own container.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — over-provisioning the sandbox</h4>
+                <p>Injecting service-account tokens or opening unrestricted internet egress inside a code sandbox defeats containment. Pass input data strictly as scoped files and read sanitized outputs back.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: GROUNDING & RETRIEVAL
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="grounding-retrieval">
+            <div class="section-divider-number">06</div>
+            <h2>6. Grounding, Retrieval &amp; MCP Tooling on Google Cloud</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Service</th><th>Type</th><th>Choose when</th><th>Watch out for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Agent Search</strong> (formerly Vertex AI Search)</td><td>Turnkey managed search/RAG</td><td>Enterprise corpora (Drive, SharePoint, Confluence, Jira, GCS, BigQuery) needing built-in parsing, hybrid search, reranking, and <strong>native document-level ACLs</strong></td><td>Less low-level control over custom chunking or bespoke embeddings</td></tr>
+                    <tr><td><strong>RAG Engine</strong></td><td>Code-first managed RAG pipeline</td><td>You want explicit control over parsers (Document AI Layout Parser, LLM parser), chunking, embeddings, and vector DB</td><td>Check regional &amp; model matrix (<code>gemini-4-argon</code> is not directly bound as a RAG Engine generator; Agent Retrieval corpora require supported regions + cosine metric)</td></tr>
+                    <tr><td><strong>Vector Search 1.0</strong></td><td>ScaNN ANN index-as-a-service</td><td>Tens of millions to billions of custom vectors (e.g., <code>gemini-embedding-2</code>) at single-digit-ms latency</td><td>Deployed index endpoints bill continuously even when idle</td></tr>
+                    <tr><td><strong>Agent Retrieval</strong> (formerly Vector Search 2.0)</td><td>Self-tuning collection store</td><td>Schema-aware collections of Data Objects with managed auto-embeddings or BYO embeddings</td><td>Exact KNN up to ~100k objects; create an ANN <strong>Collection Index</strong> beyond ~100k</td></tr>
+                    <tr><td><strong>Grounding with Google Search / Maps / Web</strong></td><td>Live public-index grounding</td><td>Fresh public facts, places/geospatial context, or enterprise web grounding (Parallel, Exa)</td><td>Must render required Search Suggestions &amp; attribution metadata</td></tr>
+                    <tr><td><strong>BigQuery</strong> (<code>VECTOR_SEARCH</code>)</td><td>In-warehouse SQL vectors</td><td>Analytical batch enrichment, warehouse joins, and offline evaluation pipelines</td><td>Multi-second startup latency — not a sub-100ms interactive chat store</td></tr>
+                    <tr><td><strong>AlloyDB / Cloud SQL</strong> (pgvector / ScaNN)</td><td>Operational OLTP vectors</td><td>Low-latency vector similarity filtered alongside live transactional SQL rows</td><td>You manage sizing, pooling (<code>MCP Toolbox</code>), and index tuning</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>RAG Engine pipeline</h3>
+                <p>Ingestion (local files, Cloud Storage, Google Drive, Slack/Jira connectors) → transformation (chunking via default parser, LLM parser, or <strong>Document AI Layout Parser</strong>) → embedding → <strong>corpus</strong> index → retrieval → generation. Vector store backends include <strong>RagManagedDb</strong> (default; KNN or ANN, CMEK), Vector Search, AlloyDB, and Pinecone. Supports VPC-SC and CMEK.</p>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-magnifying-glass-chart"></i></div>Precision &amp; citation verification</h3>
+                <ul>
+                    <li><strong>Ranking API</strong> (<code>semantic-ranker-default@latest</code>): stateless cross-encoder reranker applied to top-<em>N</em> candidates from any retriever.</li>
+                    <li><strong>Check Grounding API:</strong> scores claim-by-claim factual support against supplied context chunks to block hallucinations.</li>
+                    <li><strong>Grounding metadata:</strong> <code>webSearchQueries</code>, <code>searchEntryPoint</code>, <code>groundingChunks</code>, <code>groundingSupports</code> — render verifiable citations.</li>
+                    <li><strong>Agent Search grounding:</strong> attach up to <strong>10 data stores</strong> per request; IAM roles <code>roles/discoveryengine.viewer</code> / <code>editor</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>ADK built-in retrieval tools:</strong> <code>google_search</code> (web grounding), <code>VertexAiSearchTool</code> (Agent Search data store), <code>VertexAiRagRetrieval</code> (RAG Engine corpus), <code>VertexAiRagMemoryService</code> (RAG-backed memory).</p>
+
+        <div class="concept-card accent-mint" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>Google Cloud MCP servers &amp; enterprise tool integrations</h3>
+            <ul>
+                <li><strong>Google Cloud remote MCP servers:</strong> Google-hosted HTTP endpoints (<code>https://&lt;service&gt;.googleapis.com/mcp</code> or regional <code>.rep.googleapis.com/mcp</code>) auto-enabled with the service API and registered in <strong>Agent Registry</strong> (<code>urn:mcp:…</code>) across <strong>BigQuery</strong>, <strong>AlloyDB</strong>, <strong>Spanner / Bigtable / Firestore / Memorystore</strong>, <strong>GKE</strong>, <strong>Compute Engine</strong>, <strong>Pub/Sub</strong>, <strong>Apigee API Hub</strong>, <strong>Dataplex Knowledge Catalog</strong>, <strong>Looker</strong>, and <strong>Agent Retrieval</strong>. Requires <strong>MCP Tool User</strong> (<code>roles/mcp.toolUser</code> → <code>mcp.tools.call</code>) plus underlying service IAM roles.</li>
+                <li><strong>MCP Toolbox for Databases (<code>mcp-toolbox</code>):</strong> open-source MCP server managing connection pooling, OAuth/IAM auth, and parameterized SQL-injection-safe tools for Cloud SQL, AlloyDB, Spanner, BigQuery, and Looker.</li>
+                <li><strong>Custom &amp; SaaS MCP servers:</strong> host custom Streamable HTTP MCP servers on <strong>Cloud Run</strong> or <strong>GKE</strong>, or wrap enterprise ERPs/CRMs via <strong>Apigee</strong> and <strong>Application Integration (<code>ApplicationIntegrationToolset</code>)</strong>; govern discovery in <strong>Agent Registry</strong> and egress via <strong>Agent Gateway</strong> (<a href="AgentPlatformSecurity.html">Security guide</a>).</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — wrong distance metric</h4>
+                <p>When an Agent Retrieval / Vector Search index backs a RAG Engine corpus, configure the distance metric as <strong><code>COSINE</code></strong>. RAG Engine queries using cosine distance, so leaving the index at default <code>DOT_PRODUCT</code> fails with <code>FAILED_PRECONDITION</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: CACHING & EXTERNAL STATE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="caching-state">
+            <div class="section-divider-number">07</div>
+            <h2>7. Caching &amp; External State</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Store</th><th>Role in an agent system</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Gemini Context Caching</strong></td><td><strong>Implicit caching</strong> (on by default, zero storage fee; the <em>only</em> cache mode supported on <code>gemini-4-argon</code>) and <strong>Explicit caching</strong> (<code>cachedContents</code> with TTL + hourly storage on eligible Gemini 2.5/3.x base models) for large repeated instructions/corpora</td></tr>
+                    <tr><td><strong>Memorystore for Redis / Valkey</strong></td><td>Sub-millisecond hot cache, rate-limit/budget counters, idempotency locks, and <strong>semantic response caching</strong> via Redis HNSW/FLAT vector search</td></tr>
+                    <tr><td><strong>Firestore</strong></td><td>Serverless document store for real-time client state sync, HITL approval queues, and user profiles</td></tr>
+                    <tr><td><strong>Cloud SQL / AlloyDB</strong></td><td>ACID relational state; backs ADK <code>DatabaseSessionService</code> when SQL querying over sessions is required</td></tr>
+                    <tr><td><strong>Agent Platform Sessions</strong></td><td>Zero-ops managed session/event persistence for ADK and Agent Runtime</td></tr>
+                    <tr><td><strong>BigQuery</strong></td><td>Long-term analytics, audit/trace sinks, failure-cluster mining, and offline evaluation datasets — never hot-path turn state</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Semantic cache pattern:</strong> embed incoming query → vector lookup in Memorystore → if similarity ≥ threshold <em>within the caller's ACL partition</em>, return cached answer; otherwise invoke the agent and store with TTL.</p>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — caching across permission boundaries</h4>
+                <p>A global semantic cache shared across users can leak answers synthesized from restricted HR/finance documents to unauthorized callers. Always partition semantic cache keys by tenant/role/ACL scope or skip response caching for permission-sensitive corpora.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: EVALUATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="evaluation">
+            <div class="section-divider-number">08</div>
+            <h2>8. Optimize Part 1: Evaluation, 2-Step Simulation &amp; Golden Flywheels</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">The <strong>Gen AI Evaluation Service</strong> (<code>client.evals.evaluate()</code> / <code>agents-cli eval</code>) grades both final response quality and multi-step tool trajectories.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Metric family</th><th>What it does</th><th>Representative metrics</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Adaptive rubrics</strong> (recommended)</td><td>Autorater dynamically generates prompt-specific pass/fail tests per eval case, then scores the agent response against them</td><td><code>GENERAL_QUALITY</code></td></tr>
+                    <tr><td><strong>Static rubrics</strong></td><td>Applies fixed organization-wide pass/fail rules to every prompt</td><td>Custom brand tone / regulatory disclaimer rubrics</td></tr>
+                    <tr><td><strong>Agent &amp; faithfulness metrics</strong></td><td>Specialized LLM-as-judge autoraters for grounded agent turns</td><td><code>FINAL_RESPONSE_QUALITY</code>, <code>HALLUCINATION</code>, <code>TOOL_USE_QUALITY</code></td></tr>
+                    <tr><td><strong>Trajectory metrics</strong></td><td>Deterministically compares actual tool-call sequence/args against expected reference steps</td><td><code>trajectory_exact_match</code>, <code>trajectory_in_order_match</code>, <code>trajectory_any_order_match</code>, precision/recall</td></tr>
+                    <tr><td><strong>Computation metrics</strong></td><td>Fast, deterministic programmatic checks</td><td>JSON Schema validation, SQL AST check, exact match, ROUGE/BLEU</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-users"></i></div>2-Step Agent Simulation &amp; Environment Simulation</h3>
+                <ul>
+                    <li><strong>Prerequisite:</strong> requires an immutable <strong>Agent Registry version snapshot</strong> so multi-turn experiments are reproducible.</li>
+                    <li><strong>2-Step User Simulation:</strong> (1) inspects agent instructions &amp; tool schemas to synthesize a <code>Starting Prompt</code> + hidden <code>Conversation Plan</code> (persona, goal, edge-case constraints); (2) runs a simulated user LLM across multi-turn sessions to produce full traces.</li>
+                    <li><strong>Environment Simulation:</strong> intercepts tool calls during evals to inject deterministic faults (HTTP <code>503</code>, <code>429</code>, timeout spikes, mocked edge-case payloads) without mutating live production APIs.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>Online Monitors &amp; Golden-Dataset Flywheel</h3>
+                <ul>
+                    <li><strong>Online Evaluation (<code>OnlineEvaluator</code>):</strong> continuously samples live production OpenTelemetry GenAI traces and runs async autoraters to alert on quality regressions.</li>
+                    <li><strong>Production-to-Golden Flywheel:</strong> export thumbs-down user feedback, HITL escalations, and low-scoring online traces to BigQuery → redact PII via <strong>Sensitive Data Protection (SDP)</strong> → curate expected trajectories → append to the CI/CD golden regression suite (<code>agents-cli eval</code>).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Exam tip</h4>
+                <p>Final-answer metrics alone miss "right answer, wrong path" compliance bugs (e.g., issuing a refund without calling <code>verify_eligibility</code> first). Always pair outcome rubrics with <strong>trajectory metrics</strong> (<code>trajectory_in_order_match</code> / <code>trajectory_exact_match</code>) when tool ordering matters.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — over-permissive online monitors</h4>
+                <p>Online evaluation monitors run under a platform service agent with access to trace payloads and judge quota; restrict IAM permissions to create or edit monitors to prevent unauthorized trace inspection.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: OBSERVABILITY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="observability">
+            <div class="section-divider-number">09</div>
+            <h2>9. Optimize Part 2: Observability, Audit &amp; Prompt Optimization</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-chart-line"></i></div>OpenTelemetry &amp; 8 Agent Registry Views</h3>
+                <ul>
+                    <li><strong>Telemetry flags:</strong> set <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> (exports traces, metrics, and logs <em>without</em> raw prompt text) + <code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code>. Raw payload capture requires explicit opt-in via <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true</code> + SDP redaction.</li>
+                    <li><strong>8 Agent Registry Observability tabs:</strong> <strong>Overview</strong>, <strong>Evaluation</strong>, <strong>Models</strong>, <strong>Tools</strong> (per-tool &amp; per-MCP-server p95 latency + <em>"no-tool interactions"</em>), <strong>Usage</strong>, <strong>Logs</strong>, <strong>Traces</strong> (waterfall/DAG), and <strong>Topology</strong> (live graph of agents, A2A peers, models, and MCP servers) + native <strong>Model Armor</strong> spans.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-wand-magic-sparkles"></i></div>Dual-Attribution Audit, Failure Clusters &amp; Optimizer</h3>
+                <ul>
+                    <li><strong>Dual-Attribution Cloud Audit Logs (<code>is_agentic=true</code>):</strong> records <em>both</em> the cryptographic <strong>SPIFFE Agent Identity</strong> and the initiating <strong>human user principal</strong> to eliminate confused-deputy audit blind spots.</li>
+                    <li><strong>Failure Cluster Analysis:</strong> automatically groups failing simulation and production traces into root-cause clusters (e.g., ambiguous tool arg schemas, premature loop exits).</li>
+                    <li><strong>Prompt Optimization (<code>Agent Optimizer</code>):</strong> closed-loop programmatic optimizer that mutates system prompts/examples and validates candidates against your golden evalset via <code>client.evals</code> before rollout.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Production Symptom</th><th>First Diagnostic View &amp; Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Slow p95 turn responses</td><td><strong>Traces waterfall</strong> → check whether <code>thinking_level=HIGH</code> decode, serial MCP calls, or retrieval dominates</td></tr>
+                    <tr><td>Agent hallucinates instead of calling a tool</td><td><strong>Tools tab ("no-tool interactions")</strong> → sharpen tool docstring/schema + add trajectory eval</td></tr>
+                    <tr><td>Recurring errors or quality drop after model migration</td><td><strong>Failure Cluster Analysis</strong> + <strong>Evaluation tab</strong> → run programmatic <strong>Prompt Optimization</strong> against golden evals</td></tr>
+                    <tr><td>Unexpected token spend spike</td><td><strong>Models / Usage tabs</strong> → compact long session histories and align static prompt prefixes for implicit caching</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — logging raw prompts by default</h4>
+                <p>Enabling <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</code> writes raw user prompts and tool payloads into logs, risking PII exposure. Keep content capture disabled by default or pair it with SDP de-identification and restricted log buckets (<a href="AgentPlatformSecurity.html">Security guide</a>).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: COST, QUOTAS & CAPACITY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="cost-quotas">
+            <div class="section-divider-number">10</div>
+            <h2>10. Cost, Quotas &amp; Capacity</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Error / situation</th><th>Meaning</th><th>Architectural fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>429 <code>RESOURCE_EXHAUSTED</code></strong> on Standard PayGo</td><td>Shared regional pool contention or project TPM/QPM quota exceeded</td><td>Route stateless calls to the <strong><code>global</code> endpoint</strong>, use exponential backoff with jitter, enable <strong>Priority PayGo</strong> for critical bursts, or reserve <strong>Provisioned Throughput</strong> (GSUs; spills over to PayGo by default unless <code>X-Vertex-AI-LLM-Request-Type: dedicated</code> is set)</td></tr>
+                    <tr><td><strong>"Region temporarily at capacity"</strong> deploying to Agent Runtime</td><td>Physical regional compute pool saturation — <strong>not</strong> a project quota cap</td><td>Deploy to an alternate region, request smaller per-instance CPU/memory, or retry off-peak</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Agent Runtime representative default quotas</strong> (per project per region; verify current docs): query/streamQuery 90/min, session writes 100/min, append events 300/min, session reads 10,000/min, max 100 agent resources, Memory Bank writes 100/min and reads 300/min, sandbox executions 1,000/min.</p>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);"><strong>Six FinOps levers:</strong> (1) tiered routing (<code>3.5 Flash-Lite</code> → <code>3.8 Flash</code> → <code>4 Argon</code>); (2) right-size <code>thinking_level</code>; (3) byte-identical static prompt prefixes for zero-storage-cost <strong>implicit caching</strong>; (4) session compaction &amp; tool-output masking; (5) right-size <code>min_instances</code> and undeploy idle Vector Search 1.0 endpoints; (6) sample 1–5% of live traffic for <code>OnlineEvaluator</code> and run bulk offline evals on <strong>Flex PayGo</strong> or <strong>Batch inference</strong>.</p>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap — quota increase for a capacity error</h4>
+                <p>Filing an IAM/project quota increase ticket will never resolve <em>"Region temporarily at capacity"</em>. Switch region, reduce instance sizing, or retry instead.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: FAILURE MODES & EXAM TRAPS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">11</div>
+            <h2>11. Failure Modes &amp; Exam Traps</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Trap</th><th>Why it's wrong</th><th>Correct move</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Hosting a custom MCP server on Agent Runtime</td><td>Agent Runtime hosts stateful agents (<code>reasoningEngines</code>)</td><td>Deploy Streamable HTTP MCP servers on <strong>Cloud Run</strong> or <strong>GKE</strong></td></tr>
+                    <tr><td>Keeping chat history in Cloud Run memory</td><td>Serverless instances scale to zero or recycle</td><td>Externalize to Agent Platform Sessions, Memorystore, Firestore, or Cloud SQL</td></tr>
+                    <tr><td>Self-hosting Gemini 4 Argon / 3.8 Flash on GKE</td><td>Proprietary Gemini weights are served only via managed endpoints</td><td>Call managed Gemini APIs; self-host open models (<strong>Gemma 4</strong>) if weights are needed</td></tr>
+                    <tr><td>Running generated Python inside the agent container</td><td>Exposes IAM credentials and VPC access</td><td>Use the <strong>Code Execution sandbox</strong> or GKE Sandbox (<code>gVisor</code>)</td></tr>
+                    <tr><td>Building custom RAG when SharePoint/Drive ACL sync is required</td><td>Re-implements brittle connector &amp; permission logic</td><td>Use <strong>Agent Search</strong> with native ACL enforcement</td></tr>
+                    <tr><td>Default <code>DOT_PRODUCT</code> index under RAG Engine</td><td>RAG Engine queries cosine distance → <code>FAILED_PRECONDITION</code></td><td>Configure index metric as <strong><code>COSINE</code></strong></td></tr>
+                    <tr><td>Quota increase ticket for "region at capacity"</td><td>Physical pool exhaustion, not a project quota cap</td><td>Alternate region, smaller CPU/RAM, or retry</td></tr>
+                    <tr><td>Grading compliance agents only on final-answer quality</td><td>Misses skipped verification tools ("right answer, wrong path")</td><td>Add <strong>trajectory metrics</strong> (<code>trajectory_in_order_match</code>)</td></tr>
+                    <tr><td>Fault-testing resilience against live production APIs</td><td>Triggers real side effects &amp; non-reproducible states</td><td>Use <strong>Environment Simulation</strong> + <strong>2-Step Agent Simulation</strong></td></tr>
+                    <tr><td>Global semantic cache over ACL-protected documents</td><td>Leaks confidential answers across users</td><td>Partition cache keys by ACL/tenant scope</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: GLOSSARY, RELATED GUIDES & QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">12</div>
+            <h2>12. Glossary, Related Guides &amp; Practice Quiz</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Agent Runtime</dt>
+                <dd>Managed stateful agent hosting (formerly Agent Engine); API resource <code>reasoningEngines</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Managed Agents API <span class="preview-badge">Preview</span></dt>
+                <dd>Declarative <strong>Agents API</strong> + <strong>Skill Registry</strong> + stateful <strong>Interactions API</strong> with an isolated no-egress Linux sandbox.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Session / Event / State</dt>
+                <dd>One conversation, its ordered event log, and its mutable key-value scratchpad.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Memory Bank</dt>
+                <dd>Async LLM-extracted, consolidated, user-scoped long-term memory with TTL &amp; revisions.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Example Store <span class="preview-badge">Preview</span></dt>
+                <dd>Dynamic few-shot trajectory/example retrieval (embedding model locked at creation).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Code Execution sandbox</dt>
+                <dd>Sub-second isolated Python container (100 MB I/O, up to 14-day TTL) for untrusted generated code.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Search vs. RAG Engine</dt>
+                <dd>Turnkey connector + native-ACL enterprise search vs. code-first modular corpus RAG pipeline.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>2-Step &amp; Environment Simulation</dt>
+                <dd>Multi-turn user simulator (<code>Starting Prompt</code> + <code>Conversation Plan</code>) and deterministic tool-fault injector.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Dual-Attribution Audit Log</dt>
+                <dd>Cloud Audit Log (<code>is_agentic=true</code>) recording both SPIFFE Agent Identity and human principal.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Failure Clusters &amp; Agent Optimizer</dt>
+                <dd>Root-cause clustering of failed traces paired with automated closed-loop prompt optimization.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Provisioned Throughput</dt>
+                <dd>Reserved model capacity bought in GSUs for predictable latency &amp; throughput.</dd>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related guides</h3>
+                <ul>
+                    <li><a href="AgentPlatformSecurity.html">Agent Platform Security &amp; Governance</a>: Agent Identity, PAB, IAM, VPC-SC, Model Armor, SDP, Agent Registry &amp; Agent Gateway.</li>
+                    <li><a href="ADK.html">Agent Development Kit (ADK)</a> &amp; <a href="Antigravity.html">Antigravity &amp; Agents CLI</a>: pro-code agents, callbacks, and CI/CD workflows.</li>
+                    <li><a href="A2A.html">A2A &amp; Interoperability</a>: Agent2Agent v1.0, A2UI, AG-UI, MCP UI, AP2, and x402.</li>
+                    <li><a href="Google.html">Gemini &amp; Google Models</a>: Gemini 4 Argon, Gemini 3.8 Flash/Live, Gemma 4, and Model Garden. <a href="AgentOps.html">AgentOps</a>: vendor-neutral evals &amp; FinOps.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 71-minute Agent Platform audio deep dive, open the 21-slide architectural deck and sketchnote infographic in the Hub Viewer, or drill scenario-based questions on build paths (Agent Studio vs. Managed Agents API vs. ADK), Agent Runtime, Memory Bank, 2-step simulation, and prompt optimization.</p>
+                <div class="audio-label" style="margin-top: 15px;">Agent Platform: Build, Retrieve, Run &amp; Optimize (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/AgentPlatform-v2.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=agent-platform" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Agent Platform Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Sources</h3>
+            <ul>
+                <li>Gemini Enterprise Agent Platform overview &amp; release notes — docs.cloud.google.com/gemini-enterprise-agent-platform</li>
+                <li>Build (Agent Studio, Managed Agents API, Skill Registry, ADK), Scale (Agent Runtime, Sessions, Memory Bank, Example Store, Code Execution), and Optimize (Evaluation, Simulation, Observability, Prompt Optimization) — docs.cloud.google.com/gemini-enterprise-agent-platform</li>
+                <li>Choose your agentic AI architecture components — docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components</li>
+                <li><em>Introduction to Agents and Agent Architectures</em> (Google Cloud Whitepaper) — AgentOps flywheel, context engineering, and runtime patterns</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity &amp; Agents CLI: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Google Antigravity (App, agy CLI, IDE, SDK) study guide: artifacts and planning, rules, skills, MCP, hooks, plugins, subagents, permissions and terminal sandbox, Cloud Workstations, and Agents CLI to build, evaluate, deploy and publish ADK agents.">
+    <meta name="keywords" content="Google Antigravity, Antigravity CLI, agy, Antigravity IDE, Antigravity SDK, Agents CLI, agents-cli, ADK, Agent Runtime, Gemini Enterprise, SKILL.md, AGENTS.md, mcp_config.json, hooks.json, subagents, terminal sandbox, Cloud Workstations, Agent Sandbox GKE, Professional Agentic Architect, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/Antigravity.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Antigravity &amp; Agents CLI: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Google Antigravity (App, agy CLI, IDE, SDK) study guide: artifacts and planning, rules, skills, MCP, hooks, plugins, subagents, permissions and terminal sandbox, Cloud Workstations, and Agents CLI to build, evaluate, deploy and publish ADK agents.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/Antigravity.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Antigravity &amp; Agents CLI — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Antigravity &amp; Agents CLI: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Google Antigravity (App, agy CLI, IDE, SDK) study guide: artifacts and planning, rules, skills, MCP, hooks, plugins, subagents, permissions and terminal sandbox, Cloud Workstations, and Agents CLI to build, evaluate, deploy and publish ADK agents.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Antigravity &amp; Agents CLI — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/Antigravity.html#article",
+                  "headline": "Antigravity & Agents CLI: Study Guide | ML Cert Hub",
+                  "name": "Antigravity & Agents CLI Study Guide",
+                  "description": "Google Antigravity (App, agy CLI, IDE, SDK) study guide: artifacts and planning, rules, skills, MCP, hooks, plugins, subagents, permissions and terminal sandbox, Cloud Workstations, and Agents CLI to build, evaluate, deploy and publish ADK agents.",
+                  "keywords": "Google Antigravity, Antigravity CLI, agy, Antigravity IDE, Antigravity SDK, Agents CLI, agents-cli, ADK, Agent Runtime, Gemini Enterprise, SKILL.md, AGENTS.md, mcp_config.json, hooks.json, subagents, terminal sandbox, Cloud Workstations, Agent Sandbox GKE, Professional Agentic Architect, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/Antigravity.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/Antigravity.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Antigravity & Agents CLI",
+                              "item": "https://mbettan.github.io/machine-learning-cert/Antigravity.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Antigravity &amp; <em>Agents CLI</em></h1>
+                <p class="cover-subtitle">Google's agent-first developer harness (App, <code>agy</code> CLI, IDE and SDK) and the open-source Agents CLI: artifacts and planning, rules and skills, MCP, hooks and plugins, discovery precedence, subagents, permissions and the terminal sandbox, secure dev environments on Cloud Workstations and GKE, and the build → evaluate → deploy → publish lifecycle for ADK agents.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Google Cloud / Professional Agentic Architect</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=antigravity" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Antigravity &amp; Agents CLI Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#surfaces" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Surfaces: App, CLI, IDE &amp; SDK</span>
+                </a>
+                <a href="#agent-workflow" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Agent-First Workflow: Plans, Artifacts &amp; Verification</span>
+                </a>
+                <a href="#rules-skills" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Rules, Skills &amp; Workflows</span>
+                </a>
+                <a href="#mcp-hooks-plugins" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>MCP, Hooks &amp; Plugins</span>
+                </a>
+                <a href="#discovery-precedence" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Discovery &amp; Precedence</span>
+                </a>
+                <a href="#subagents" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Subagents, Browser Agent &amp; Parallel Work</span>
+                </a>
+                <a href="#permissions-sandbox" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Permissions, Execution Modes &amp; Terminal Sandbox</span>
+                </a>
+                <a href="#secure-environments" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Secure Dev Environments: Cloud Workstations &amp; GKE</span>
+                </a>
+                <a href="#agents-cli" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Agents CLI: Build → Evaluate → Deploy → Publish</span>
+                </a>
+                <a href="#lifecycle-comparison" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Dev-to-Prod Lifecycle &amp; Claude Code Comparison</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Exam Traps &amp; Failure Modes</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">12</span>
+                    <span>Glossary, Resources &amp; Practice Quiz</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>About these notes</h4>
+                <p>Independent study notes, grounded in the public Antigravity docs (antigravity.google/docs), the Google Cloud docs (Agent Platform, Cloud Workstations, GKE) and the Agents CLI docs (adk.dev, google.github.io/agents-cli). Antigravity and Agents CLI ship fast: flags, defaults and preview features change. Items marked <em>(verify)</em> could not be fully confirmed in official docs at writing time.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-rocket"></i></div>Google Antigravity</h3>
+                <p><strong>Google Antigravity</strong> is Google's agent-first development platform. You hand an agent a task, review the <strong>artifacts</strong> it produces (plans, diffs, walkthroughs, browser recordings), and approve key milestones. You no longer have to watch every keystroke.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>Agents CLI</h3>
+                <p><strong>Agents CLI</strong> (<code>agents-cli</code>, package <code>google-agents-cli</code>) is a separate, open-source tool. It gives any coding agent (Antigravity, Claude Code, Codex, Gemini CLI) a machine-readable way to <strong>scaffold, evaluate, deploy and publish ADK agents</strong> on Google Cloud.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Layer</th><th>Tool</th><th>Role</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Developer harness</td><td>Antigravity (App, CLI <code>agy</code>, IDE, SDK)</td><td>The coding agent you work with</td></tr>
+                    <tr><td>Agent-building expertise</td><td>Agents CLI skills + <code>agents-cli</code> commands</td><td>Teach the coding agent ADK, evals and deployment</td></tr>
+                    <tr><td>Agent framework</td><td>ADK (open source)</td><td>The code of the agent you ship</td></tr>
+                    <tr><td>Production runtime</td><td>Agent Runtime, Cloud Run, GKE → Gemini Enterprise</td><td>Where the shipped agent runs and is distributed</td></tr>
+                    <tr><td>Secure dev environment</td><td>Cloud Workstations, Agent Sandbox on GKE, Antigravity terminal sandbox</td><td>Where agent-run code is isolated</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Rule 0: harness ≠ runtime</h4>
+                <p>Antigravity is the <strong>developer's</strong> harness, not the production runtime of the agent you build. The agent you ship runs on Agent Runtime, Cloud Run or GKE.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: SURFACES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="surfaces">
+            <div class="section-divider-number">01</div>
+            <h2>Surfaces: App, CLI, IDE &amp; SDK</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Surface</th><th>What it is</th><th>Best for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Antigravity App</strong> (Antigravity 2.0)</td><td>Standalone desktop app that grew out of the original Agent Manager. Projects, conversations, Automations (scheduled runs), side panel with Subagents, Artifacts, Files changed and Terminals</td><td>Running and monitoring several agents across projects</td></tr>
+                    <tr><td><strong>Antigravity CLI</strong> (<code>agy</code>)</td><td>Terminal UI. Settings in <code>~/.gemini/antigravity-cli/settings.json</code>. Use <code>agy --help</code> for flags and <code>/help</code> for slash commands</td><td>Terminal-first and remote/headless work</td></tr>
+                    <tr><td><strong>Antigravity IDE</strong></td><td>Standalone AI-first IDE built on VS Code, plus editor extensions</td><td>In-editor work: Tab autocomplete/supercomplete, inline command (Cmd/Ctrl+I), agent side panel</td></tr>
+                    <tr><td><strong>Antigravity SDK</strong></td><td>Python package <code>google-antigravity</code> (<code>Agent</code>, <code>LocalAgentConfig</code>, <code>CapabilitiesConfig</code>)</td><td>Embedding agents in scripts, pipelines and tests</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-list-check"></i></div>Facts to remember</h3>
+            <ul>
+                <li>Sign-in is shared: signing in on one local surface signs you in on the others.</li>
+                <li>The SDK agent is <strong>read-only by default</strong>. Pass <code>capabilities=CapabilitiesConfig()</code> to enable write tools.</li>
+                <li><strong>Remote Control</strong> lets you drive App and CLI sessions from a browser. In the CLI, use <code>/remote-control</code>, <code>--remote-control</code> or <code>agy remote-control start</code>.</li>
+                <li><strong>Gemini CLI migration:</strong> on first launch, <code>agy</code> detects old Gemini CLI configs. <code>agy plugin import gemini</code> converts Gemini CLI extensions into Antigravity plugins.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: AGENT-FIRST WORKFLOW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agent-workflow">
+            <div class="section-divider-number">02</div>
+            <h2>Agent-First Workflow: Plans, Artifacts &amp; Verification</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-map"></i></div>Planning mode</h3>
+                <p>The agent researches the codebase, groups its work and produces an <strong>implementation plan</strong> artifact before it edits anything. Use it for multi-file changes, new features, migrations and security-sensitive work.</p>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Fast mode</h3>
+                <p>The agent acts right away. Use it for renames, one-off commands and small local fixes.</p>
+            </div>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Analysis &amp; discovery</h4>
+                <p><code>/plan</code> starts by exploring the codebase and the task.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Clarifying interview</h4>
+                <p>Runs only if the requirements are unclear.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Implementation plan</h4>
+                <p>Step-by-step tasks, <strong>verification gates</strong> and risks.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Review → execute</h4>
+                <p>You review and approve, then the agent executes.</p>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><code>/grill-me</code> interviews you one question at a time before work starts. Combine them with <code>/plan /grill-me &lt;task&gt;</code>.</p>
+            <p><strong>Artifacts</strong> are structured deliverables: implementation plans, code diffs, diagrams, images and browser recordings. A <strong>walkthrough</strong> artifact is produced at the end. It summarizes the changes and often includes screenshots or recordings of browser tasks.</p>
+            <p><strong>Steering:</strong> comment inline on a plan (like a doc). Then click <strong>Proceed</strong>, or click <strong>Review</strong> to send your comments as feedback.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Surface</th><th>Artifact review policy options</th><th>Default / guidance</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>App</td><td>Request review · Always proceed</td><td>Request review is recommended</td></tr>
+                    <tr><td>CLI (<code>artifactReviewPolicy</code>)</td><td><code>asks-for-review</code> · <code>agent-decides</code> · <code>always-proceed</code></td><td><code>asks-for-review</code> is the default. <code>agent-decides</code> currently behaves the same way</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap: plans vs. file edits</h4>
+                <p>The artifact review policy covers plans. File edits are controlled separately, by the <strong>agent mode</strong> (see <a href="#permissions-sandbox">section 07</a>).</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>Multi-file refactoring &amp; runtime optimization</h3>
+                <p>Use <strong>Planning mode</strong> (<code>/plan</code>) to inventory call sites across the repository, establish a baseline (existing test suite or latency/memory benchmark), apply incremental diffs, and run verification gates after each step before producing the final walkthrough artifact.</p>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-shield-virus"></i></div>Automated vulnerability patching</h3>
+                <p>Pair security scanner findings (SAST or dependency audit) with a <strong>security implementation plan</strong> and a <strong>Proof-of-Concept (PoC)</strong> reproduction test in an isolated sandbox (<code>workspaceWrite</code> / Seatbelt). The agent confirms the PoC reproduces the flaw before the fix, patches the root cause (e.g., parameterized queries, output encoding, path canonicalization, upgraded dependency), verifies that the PoC and regression tests pass, and records a security audit report artifact. Use <code>PreToolUse</code> / <code>PostToolUse</code> hooks to run linters or security scanners automatically on every edit.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: RULES, SKILLS & WORKFLOWS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="rules-skills">
+            <div class="section-divider-number">03</div>
+            <h2>Rules, Skills &amp; Workflows</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Rules</strong> are persistent constraints and invariants, such as "always use zod" or "never import internal/".</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>File</th><th>Frontmatter</th><th>Activation</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>AGENTS.md</code> / <code>GEMINI.md</code> (any directory)</td><td>None</td><td>Always on for that directory and below</td></tr>
+                    <tr><td><code>.agents/rules/*.md</code></td><td><strong>Required</strong>: <code>trigger</code></td><td><code>always_on</code> · <code>model_decision</code> (needs <code>description</code>) · <code>glob</code> (needs <code>globs</code>) · <code>manual</code></td></tr>
+                    <tr><td>Global: <code>~/.gemini/AGENTS.md</code>, <code>~/.gemini/GEMINI.md</code>, <code>~/.gemini/config/rules/*.md</code></td><td>Modular rules need frontmatter</td><td>All projects on the machine</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-scale-balanced"></i></div>Rule mechanics</h3>
+            <ul>
+                <li>Rules <strong>add up</strong>. When they conflict, the more specific directory rule wins. Each rule file is injected only once.</li>
+                <li>A missing or invalid <code>trigger</code> (for example camelCase <code>alwaysOn</code>) means the rule is <strong>silently discarded</strong>.</li>
+                <li><code>.agents/rules/</code> is scanned <strong>one level deep</strong>. Files in nested folders are ignored unless you register them in <code>.agents/rules.json</code>.</li>
+                <li>Budgets: each rule file is capped at <strong>24 KB</strong>. Always-on and global rules share a <strong>20,000-token</strong> budget. Rules over budget are reduced to a file-path pointer.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-book-open"></i></div>Skills: on-demand procedures and runbooks</h3>
+            <ul>
+                <li>Layout: <code>skills/&lt;name&gt;/SKILL.md</code> with <code>name</code> and <code>description</code> in the frontmatter. Optional folders: <code>scripts/</code>, <code>references/</code>, <code>examples/</code>, <code>resources/</code>.</li>
+                <li><strong>Progressive disclosure:</strong> only the name and description go into the context. The full body loads when the task matches. <strong>The description decides whether the skill ever activates.</strong></li>
+                <li>Keep <code>SKILL.md</code> short. Move bulky docs into <code>references/</code>. Wrap long command sequences in <code>scripts/</code>. Include steps to validate the work.</li>
+                <li>Rule or skill? A <strong>rule</strong> is a constraint. A <strong>skill</strong> is a workflow ("how to run DB migrations").</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-clock-rotate-left"></i></div>
+            <div class="callout-content">
+                <h4>Workflows (legacy, IDE)</h4>
+                <p>Markdown prompt sequences you run as <code>/workflow-name</code>. The docs say current workflows stop working on <strong>October 19, 2026</strong>. Migrate them to skills with <code>/migrate-workflows</code>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: MCP, HOOKS & PLUGINS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="mcp-hooks-plugins">
+            <div class="section-divider-number">04</div>
+            <h2>MCP, Hooks &amp; Plugins</h2>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>MCP servers: <code>mcp_config.json</code> (<code>mcpServers</code> map)</h3>
+            <ul>
+                <li>Locations: global <code>~/.gemini/config/mcp_config.json</code>, workspace <code>.agents/mcp_config.json</code>, plugin <code>plugins/&lt;name&gt;/mcp_config.json</code>.</li>
+                <li><strong>stdio</strong> (local): <code>command</code>, <code>args</code>, <code>env</code>. <strong>Streamable HTTP</strong> (remote): <code>url</code> (<code>serverUrl</code> is also accepted).</li>
+                <li>The legacy HTTP+SSE transport is <strong>not supported</strong>. For an SSE-only server, run a stdio bridge such as <code>mcp-remote</code>.</li>
+                <li>Discovered tools are added to the agent's toolset. Plugin tools get a namespace prefix when needed to avoid name clashes.</li>
+            </ul>
+        </div>
+
+        <div class="prose">
+            <p><strong>Hooks: <code>hooks.json</code></strong> (named hooks → event handlers)</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Event</th><th>Fires</th><th>Typical use</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>SessionStart</code></td><td>Once per new session</td><td>Inject startup context</td></tr>
+                    <tr><td><code>PreToolUse</code> (needs <code>matcher</code>)</td><td>Before a tool runs</td><td>Gate, block, audit, or rewrite arguments</td></tr>
+                    <tr><td><code>PostToolUse</code> (needs <code>matcher</code>)</td><td>After a tool runs</td><td>Lint, format, analyze</td></tr>
+                    <tr><td><code>PreInvocation</code></td><td>Before each model call</td><td>Inject reminders</td></tr>
+                    <tr><td><code>PostInvocation</code></td><td>Immediately after each model invocation completes</td><td>Inject follow-up steps; force the loop to continue or terminate</td></tr>
+                    <tr><td><code>Stop</code></td><td>When the loop ends</td><td>Block stopping until the goal is met</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>Hook outputs &amp; limits</h3>
+                <ul>
+                    <li><code>PreToolUse</code> returns <code>decision</code>: <code>allow</code> · <code>deny</code> · <code>ask</code> · <code>force_ask</code> (ignores cached approvals). It can also return <code>overwrite</code> (a shallow merge into the tool arguments).</li>
+                    <li><code>Stop</code> can return <code>decision: "continue"</code> to re-enter the loop.</li>
+                    <li>Only <code>type: "command"</code> is supported. Hooks run <strong>synchronously and block the loop</strong>, so keep them fast. Set <code>"enabled": false</code> to turn a hook off.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-puzzle-piece"></i></div>Plugins: namespaced bundles</h3>
+                <ul>
+                    <li><code>plugins/&lt;name&gt;/plugin.json</code>, plus optional <code>skills/</code>, <code>rules/</code> (a consolidated <code>AGENTS.md</code> is recommended), <code>hooks.json</code> at the plugin root, <code>mcp_config.json</code> and <code>agents/</code>.</li>
+                    <li>Discovered plugins are on by default. Your on/off choice is stored in <code>config.json</code>, never inside the plugin.</li>
+                    <li>Install: <code>agy plugin install &lt;name&gt;@antigravity-plugins-official</code>, a GitHub URL or a local directory. Or use <code>/plugin</code> in the TUI.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: DISCOVERY & PRECEDENCE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="discovery-precedence">
+            <div class="section-divider-number">05</div>
+            <h2>Discovery &amp; Precedence</h2>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Workspace</h4>
+                <p><code>.agents/</code> (also <code>.agent/</code>, <code>_agents/</code>, <code>_agent/</code>). The agent walks from the CWD up to the repo root. Commit this folder to share with the team.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Directory rules</h4>
+                <p><code>AGENTS.md</code>, <code>GEMINI.md</code> and <code>.agents/rules/*.md</code>, found by walking up from each file the agent reads or edits.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Global</h4>
+                <p><code>~/.gemini/config/</code> (applies only on this machine).</p>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Priority (highest → lowest).</strong> When two customizations have the same name, the higher one wins.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>#</th><th>Source</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>Workspace project (walking up from the CWD)</td></tr>
+                    <tr><td>2</td><td>Declared configs: workspace <code>skills.json</code> / <code>plugins.json</code></td></tr>
+                    <tr><td>3</td><td>Global discovery: <code>~/.gemini/config/</code></td></tr>
+                    <tr><td>4</td><td>Built-in customizations (mounted by name)</td></tr>
+                    <tr><td>5</td><td>Global declared configs</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prose">
+            <p><strong><code>skills.json</code> / <code>plugins.json</code></strong>: <code>entries</code> (paths scanned one level deep, with <code>include_only</code> / <code>exclude</code>) and <code>inherits</code> (other config files). Paths can be absolute, <code>~/</code>-relative, or relative to the workspace/repo root.</p>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-users"></i></div>
+            <div class="callout-content">
+                <h4>Team pattern</h4>
+                <p>Commit shared skills to <code>tools/agents/skills/</code>. Then commit <code>.agents/skills.json</code> with <code>{"entries":[{"path":"tools/agents/skills"}]}</code>. Anyone who clones the repo gets the skills automatically.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: SUBAGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="subagents">
+            <div class="section-divider-number">06</div>
+            <h2>Subagents, Browser Agent &amp; Parallel Work</h2>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>How subagents work</h3>
+            <ul>
+                <li>The main agent calls <code>invoke_subagent</code> with a role and a prompt. Each subagent <strong>starts with a clean context window</strong> and does not see the parent's history. Subagents run in parallel, in the background.</li>
+                <li><strong>Workspace modes:</strong> <code>inherit</code> (same folder), <code>branch</code> (an isolated <strong>Git worktree</strong>), <code>share</code> (shared repo storage).</li>
+                <li><strong>Built-in subagents:</strong> <code>research</code> (codebase exploration), <code>browser</code> (only through <code>/browser</code>), <code>self</code> (a clone of the caller).</li>
+                <li><strong>Custom subagents:</strong> <code>.agents/agents/&lt;name&gt;.md</code> (workspace), <code>~/.gemini/config/agents/</code> (global) or <code>plugins/&lt;name&gt;/agents/</code>. YAML frontmatter: <code>name</code>, <code>description</code>, <code>tools</code>, <code>model</code> (<code>inherit</code>/<code>flash</code>/<code>pro</code>), <code>commandExecutionPolicy</code> (default <code>sandbox</code>), <code>mcpServers</code>, <code>skills</code>, <code>mainAgent</code>, <code>subagent</code>. Known issue: a misspelled tool name in <code>tools</code> can make the subagent hang.</li>
+                <li><strong>Lifecycle:</strong> Running → Idle (sent its result; wakes up with full context when it gets a message) → Killed (permanent; temporary worktrees are cleaned up).</li>
+            </ul>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>CLI &amp; SDK</h3>
+                <ul>
+                    <li><strong>CLI:</strong> the <code>/agents</code> panel (Agent Manager) shows ID, role, state and current step. <code>Alt+J</code> jumps to the next pending approval. <code>Ctrl+K</code> approves in place.</li>
+                    <li><strong>SDK:</strong> dynamic self-cloning (<code>CapabilitiesConfig(enable_subagents=True)</code>) or static <code>SubagentConfig</code>. A custom tool given to a subagent must also be in the parent's <code>tools</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-globe"></i></div>Browser subagent &amp; Automations</h3>
+                <ul>
+                    <li><strong><code>/browser</code></strong> drives Google Chrome through the Chrome DevTools MCP server. Its context is isolated, every session is recorded as a WebM artifact, and it is hidden from the normal subagent list. It is not available in the IDE, and admins can turn it off.</li>
+                    <li><strong>Automations</strong> (App) run prompts on a schedule. <code>/schedule</code> sets a timer or recurring check inside a conversation.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: PERMISSIONS & SANDBOX
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="permissions-sandbox">
+            <div class="section-divider-number">07</div>
+            <h2>Permissions, Execution Modes &amp; Terminal Sandbox</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>Permission rules:</strong> <code>allow</code> / <code>ask</code> / <code>deny</code> lists with typed matchers: <code>command(npm test)</code>, <code>read_file(path)</code>, <code>write_file(src/)</code>, <code>read_url</code>, <code>execute_url</code>, <code>mcp</code>. <strong>Deny &gt; Ask &gt; Allow.</strong></p>
+            <p><strong>Defaults when no rule matches:</strong> reading and writing inside the workspace is allowed. Web actions (<code>read_url</code>, <code>execute_url</code>) default to <strong>Ask</strong>. Everything else (commands, MCP, files outside the workspace) defaults to Ask.</p>
+            <p><strong>CLI <code>agentMode</code></strong> (cycle with Shift+Tab)</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mode</th><th>Behavior</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>default</code></td><td>Asks you to review a diff before every file write</td></tr>
+                    <tr><td><code>accept-edits</code></td><td>Auto-approves file edits in the workspace. Commands still follow <code>toolPermission</code></td></tr>
+                    <tr><td><code>auto</code> <em>(Preview)</em></td><td>Auto-approves edits and runs commands <strong>in the sandbox</strong>. Commands that need to run outside the sandbox are auto-evaluated: safe, reversible ones run, risky ones pause</td></tr>
+                    <tr><td><code>plan</code></td><td>Plans before editing (adds <code>/plan</code> to the prompt)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prose">
+            <p><strong>CLI <code>toolPermission</code>:</strong> <code>request-review</code> (default) · <code>proceed-in-sandbox</code> · <code>strict</code> (asks before every tool call, even reads) · <code>always-proceed</code> (also turned on by <code>--dangerously-skip-permissions</code>). <code>strict</code> and <code>always-proceed</code> override <code>auto</code>.</p>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-box"></i></div>Terminal sandbox (<code>enableTerminalSandbox</code> / <code>--sandbox</code>; off by default, turned on automatically in <code>auto</code> mode)</h3>
+            <ul>
+                <li>Project folders are mounted read-write. <code>read_file</code> paths are mounted read-only and <code>write_file</code> paths read-write. Everything else is invisible (macOS/Linux). Files such as <code>.env</code> are blocked.</li>
+                <li>Network: in the CLI, sandboxed commands get <strong>no network by default</strong>. Domains allowed under <code>read_url</code> are added to the outbound allowlist.</li>
+                <li>A command that runs <strong>outside</strong> the sandbox runs on the host with <strong>full privileges</strong>. Business and enterprise accounts use <code>unsandboxed(...)</code> rules for this.</li>
+                <li>App security presets (Default, Full machine, Turbo) <strong>never turn the sandbox on</strong>. You must enable sandbox mode yourself. A common combo is sandbox + <em>Proceed in Sandbox</em>.</li>
+            </ul>
+        </div>
+
+        <div class="prose">
+            <p><strong>Other settings:</strong> non-workspace file access (off by default), internet access policy, command allow/deny lists, browser domain allowlist. Project settings override global settings.</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: SECURE ENVIRONMENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="secure-environments">
+            <div class="section-divider-number">08</div>
+            <h2>Secure Dev Environments: Cloud Workstations &amp; GKE</h2>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-desktop"></i></div>Cloud Workstations: managed dev environments on Google Cloud</h3>
+            <ul>
+                <li><strong>Cluster:</strong> region + VPC (not related to GKE clusters). <strong>Configuration:</strong> the template (VM type, persistent disk, container image, IDE, idle and running timeouts; access through IAM). <strong>Workstation:</strong> an instance started or stopped on demand.</li>
+                <li>Access through a browser IDE, local VS Code or JetBrains IDEs, or SSH. You can bring your own Linux container image, as long as its entrypoint runs a blocking process.</li>
+                <li><strong>Lock it down:</strong> put it inside a VPC Service Controls perimeter, use a <strong>private cluster</strong> (clients connect through Private Service Connect), <strong>turn off public IPs</strong> (org policy <code>constraints/compute.vmExternalIpAccess</code>), and also restrict the Compute Engine API.</li>
+                <li><strong>Agent-optimized development:</strong> set <code>idleAction=SUSPEND</code> with an <code>idleTimeout</code> (for example <code>1800s</code>). Add <strong>keep-alive lifecycle hooks</strong>: start <code>/google/scripts/keep_alive.sh</code> when the agent starts working and kill it when the agent waits for input. Samples for Claude Code and Antigravity CLI ship in <code>/google/samples/agents/keepalive/</code>. A suspended workstation keeps RAM, processes and agent context, and stops vCPU and memory charges.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Agent Sandbox on GKE</h3>
+            <p>A managed add-on that gives kernel-level isolation (gVisor) to untrusted, LLM-generated code. Pieces: <code>SandboxTemplate</code> (the blueprint) and <code>SandboxWarmPool</code> (pre-warmed pods). A core security policy that you cannot override requires gVisor and blocks <code>hostNetwork</code> and <code>hostPath</code>.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Need</th><th>Pick</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Stop a local coding agent from running wild on a laptop</td><td>Antigravity terminal sandbox + deny rules</td></tr>
+                    <tr><td>Corporate, exfiltration-safe dev box for humans and their coding agents</td><td>Cloud Workstations (private cluster, VPC-SC, no public IP)</td></tr>
+                    <tr><td>Run agent-generated code at scale inside a product</td><td>Agent Sandbox on GKE</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: AGENTS CLI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agents-cli">
+            <div class="section-divider-number">09</div>
+            <h2>Agents CLI: Build → Evaluate → Deploy → Publish</h2>
+        </div>
+
+        <div class="prose">
+            <p><strong>What it is:</strong> a single, machine-readable interface that coding agents use to drive ADK projects end to end. It packages expert knowledge of ADK, evaluation and Google Cloud deployment as <strong>skills</strong>. Source: <code>github.com/google/agents-cli</code>.</p>
+            <p><strong>Install.</strong> This is the only command you run yourself:</p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash — install Agents CLI</span>
+            </div>
+            <pre>uvx google-agents-cli setup        # installs agents-cli, ADK packages and skills into the coding agents on this machine
+# alternatives: pipx/pip install google-agents-cli &amp;&amp; agents-cli setup
+# skills only:  npx skills add google/agents-cli</pre>
+        </div>
+
+        <div class="prose">
+            <p>Prerequisites: Python 3.11+, <code>uv</code>, Node.js (for the skills), a coding agent. For deployment you also need the gcloud CLI and Terraform.</p>
+            <p><strong>Skills that activate</strong> (seen in the quickstarts): <code>google-agents-cli-workflow</code>, <code>-scaffold</code>, <code>-adk-code</code>, <code>-eval</code>, <code>-deploy</code>, <code>-publish</code>, <code>-observability</code>.</p>
+            <p><strong>Lifecycle commands</strong> (the coding agent usually runs them for you)</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Stage</th><th>Command</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Scaffold</td><td><code>agents-cli create &lt;name&gt; --prototype --yes</code> then <code>agents-cli install</code></td></tr>
+                    <tr><td>Smoke test</td><td><code>agents-cli run "&lt;prompt&gt;"</code></td></tr>
+                    <tr><td>Local UI</td><td><code>agents-cli playground</code> (ADK web UI, hot reload, localhost:8080)</td></tr>
+                    <tr><td>Evaluate</td><td><code>agents-cli eval run</code> (evalsets in <code>tests/eval/evalsets/*.evalset.json</code>, LLM-as-judge criteria in <code>tests/eval/eval_config.json</code>)</td></tr>
+                    <tr><td>Add deploy target</td><td><code>agents-cli scaffold enhance --deployment-target cloud_run</code></td></tr>
+                    <tr><td>Deploy</td><td><code>agents-cli deploy</code> (Agent Runtime, Cloud Run or GKE)</td></tr>
+                    <tr><td>Publish</td><td>Register an Agent Runtime agent with Gemini Enterprise in one Agents CLI command (<code>agents-cli publish gemini-enterprise</code>, e.g. <code>--agent-runtime-id</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Project layout</dt>
+                <dd><code>app/agent.py</code>, <code>app/fast_api_app.py</code>, <code>tests/{eval,integration,unit}</code>, <code>agents-cli-manifest.yaml</code>, <code>Dockerfile</code>, <code>GEMINI.md</code> (guidance for coding agents) and <code>.env</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Auth</dt>
+                <dd>A Gemini API key in <code>.env</code> (comment out the <code>GOOGLE_CLOUD_*</code> lines), <strong>or</strong> Application Default Credentials (<code>gcloud auth application-default login</code>) with the <code>GOOGLE_CLOUD_*</code> lines set.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Observability</dt>
+                <dd>Cloud Trace is on by default. Asking the agent to "set up observability" provisions a service account, a Cloud Storage bucket and a BigQuery dataset.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Templates</dt>
+                <dd><code>adk_a2a</code> (multi-agent over A2A) and <code>agentic_rag</code>. For a single-file learning agent, use <code>adk create</code> instead.</dd>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-question"></i></div>
+            <div class="callout-content">
+                <h4>Agent vs. human mode</h4>
+                <p>Agents CLI is built for two callers. In agent mode, your coding agent uses the installed Agents CLI skills and runs the commands for you, so it needs non-interactive flags (for example <code>--yes</code>). In human mode, you run the same commands yourself with the same syntax. Plugin options <em>(verify)</em>: check the current Agents CLI docs.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: LIFECYCLE & COMPARISON
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="lifecycle-comparison">
+            <div class="section-divider-number">10</div>
+            <h2>Dev-to-Prod Lifecycle &amp; Claude Code Comparison</h2>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Plan</h4>
+                <p>Plan in Antigravity (<code>/plan</code>) → design spec.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Scaffold</h4>
+                <p>Agents CLI skills scaffold the ADK project → <code>agents-cli run</code> / <code>playground</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Evaluate</h4>
+                <p>Write evalsets → <code>agents-cli eval run</code> → iterate until they pass.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Deploy</h4>
+                <p><code>agents-cli deploy</code> → Agent Runtime, Cloud Run or GKE.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Publish</h4>
+                <p>Publish to Gemini Enterprise. Gemini Enterprise passes the user's email to the agent. The Agent Runtime ↔ Gemini Enterprise connection is VPC-SC compliant.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">06</div>
+                <h4>Observe &amp; govern</h4>
+                <p>Observe with Cloud Trace. Govern with the Agent Platform services (see the Agent Platform guides).</p>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Vendor-neutral comparison</strong> (see the <a href="ClaudeCode.html">Claude Code guide</a>)</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Concept</th><th>Antigravity</th><th>Claude Code</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Always-on project memory</td><td><code>AGENTS.md</code> / <code>GEMINI.md</code></td><td><code>CLAUDE.md</code></td></tr>
+                    <tr><td>Skills</td><td><code>.agents/skills/&lt;name&gt;/SKILL.md</code></td><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td></tr>
+                    <tr><td>Subagents</td><td><code>.agents/agents/&lt;name&gt;.md</code></td><td><code>.claude/agents/&lt;name&gt;.md</code></td></tr>
+                    <tr><td>MCP config</td><td><code>mcp_config.json</code></td><td><code>.mcp.json</code></td></tr>
+                    <tr><td>Hooks</td><td><code>hooks.json</code> (<code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, …)</td><td><code>settings.json</code> hooks (<code>PreToolUse</code>, …)</td></tr>
+                    <tr><td>Permission precedence</td><td>Deny &gt; Ask &gt; Allow</td><td>deny → ask → allow</td></tr>
+                    <tr><td>Agent-building helper</td><td>Agents CLI works with <strong>both</strong></td><td>Agents CLI works with <strong>both</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Key point</h4>
+                <p>MCP servers and SKILL.md skills carry over between harnesses. Agents CLI installs the same skills into Antigravity, Claude Code and Codex.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: FAILURE MODES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">11</div>
+            <h2>Exam Traps &amp; Failure Modes</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Symptom</th><th>Root cause</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>A rule in <code>.agents/rules/</code> never applies</td><td>Missing or camelCase <code>trigger</code>, or file in a nested subfolder</td><td>Use snake_case <code>trigger</code>, keep the file flat, or register it in <code>rules.json</code></td></tr>
+                    <tr><td>A skill never activates</td><td>Vague <code>description</code></td><td>Say <strong>what</strong> the skill does and <strong>when</strong> to use it</td></tr>
+                    <tr><td>A huge always-on rule gets ignored</td><td>20k-token rules budget exceeded → reduced to a pointer</td><td>Switch to <code>model_decision</code> or a skill</td></tr>
+                    <tr><td>A remote MCP server fails</td><td>Legacy SSE endpoint</td><td>Point to the Streamable HTTP <code>/mcp</code> endpoint, or use a stdio bridge</td></tr>
+                    <tr><td>The agent wipes files on the host</td><td><code>always-proceed</code> / <code>--dangerously-skip-permissions</code> without a sandbox</td><td>Sandbox + <code>proceed-in-sandbox</code> + deny rules</td></tr>
+                    <tr><td>Parallel subagents overwrite each other</td><td>Shared workspace, overlapping scope</td><td><code>branch</code> (Git worktree) and non-overlapping scopes</td></tr>
+                    <tr><td>The agent slows to a crawl</td><td>Slow synchronous hook</td><td>Keep hooks fast. Move heavy work out of the loop</td></tr>
+                    <tr><td>A workstation loses agent state overnight</td><td>Idle timeout stops the VM</td><td><code>idleAction=SUSPEND</code> + keep-alive hooks</td></tr>
+                    <tr><td>Data exfiltration risk from dev VMs</td><td>Public IPs, public cluster</td><td>Private cluster, VPC-SC, <code>vmExternalIpAccess</code> constraint</td></tr>
+                    <tr><td>The agent shipped without evals</td><td>Deploy before evaluating</td><td><code>agents-cli eval run</code> with an evalset is a release gate</td></tr>
+                    <tr><td>Treating Antigravity as the agent runtime</td><td>Mixing up the dev harness and production</td><td>Deploy the ADK agent to Agent Runtime, Cloud Run or GKE</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: GLOSSARY & RESOURCES
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">12</div>
+            <h2>Glossary, Resources &amp; Practice Quiz</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>Artifact</dt>
+                <dd>A structured deliverable (plan, diff, walkthrough, recording) that you review in place of individual tool calls.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Planning vs. Fast mode</dt>
+                <dd>Plan-first execution vs. direct execution.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Progressive disclosure</dt>
+                <dd>Only the name and description of skills (and <code>model_decision</code> rules) go into the context until they are needed.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Plugin</dt>
+                <dd>A namespaced bundle of skills, rules, hooks, MCP servers and agents.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Terminal sandbox</dt>
+                <dd>An OS-level boundary for agent shell commands.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agents CLI</dt>
+                <dd>A skills and command toolkit that lets any coding agent build, evaluate, deploy and publish ADK agents.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Sandbox on GKE</dt>
+                <dd>A gVisor-isolated runtime for untrusted, LLM-generated code.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Workstation suspension</dt>
+                <dd><code>idleAction=SUSPEND</code> keeps VM memory and agent state through idle periods.</dd>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Official sources:</strong> antigravity.google/docs (overview, artifacts, implementation-plan, rules, skills, hooks, plugins, mcp, subagents, permissions, sandbox, settings, cli/gcli-migration) · adk.dev/get-started/agents-cli · docs.cloud.google.com/gemini-enterprise-agent-platform/agents/quickstart-adk · docs.cloud.google.com/gemini/enterprise/docs/register-and-manage-an-adk-agent · docs.cloud.google.com/workstations (overview, agent-optimized-development, VPC-SC &amp; private clusters) · docs.cloud.google.com/kubernetes-engine/docs/concepts/machine-learning/agent-sandbox.</p>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related guides</h3>
+                <ul>
+                    <li><a href="ADK.html">Agent Development Kit (ADK)</a>: the framework Agents CLI scaffolds, evaluates and deploys.</li>
+                    <li><a href="ClaudeCode.html">Claude Code &amp; Agent SDK</a>: the equivalent harness concepts (CLAUDE.md, skills, subagents, hooks, permissions).</li>
+                    <li><a href="MCP.html">MCP</a>: transports and server design behind <code>mcp_config.json</code>.</li>
+                    <li><a href="AgentOps.html">AgentOps</a> and <a href="ResponsibleAI.html">Responsible AI</a>: evaluation gates, observability and governance after deployment.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 69-minute Antigravity &amp; Agents CLI audio deep dive, open the 21-slide architectural deck and sketchnote infographic in the Hub Viewer, or drill scenario questions on surfaces, rules vs. skills, MCP transports, hooks, subagent isolation, sandboxing, and the Agents CLI lifecycle.</p>
+                <div class="audio-label" style="margin-top: 15px;">Google Antigravity &amp; Agents CLI: Dev-to-Prod Lifecycle (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/Antigravity-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=antigravity" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive Antigravity Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> Your new file in <code>.agents/rules/</code> has <code>trigger: alwaysOn</code> and the agent ignores it. Why?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The <code>trigger</code> value is invalid (camelCase), so the rule is <strong>silently discarded</strong>. Use <code>always_on</code>, and keep the file directly in <code>.agents/rules/</code> (nested folders need <code>rules.json</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> When should a piece of guidance be a rule and when a skill?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">A <strong>rule</strong> is a persistent constraint ("never import internal/"). A <strong>skill</strong> is an on-demand procedure ("how to run DB migrations"). Skills load through progressive disclosure: only the name and description sit in context until the task matches.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> A remote MCP server only exposes the legacy HTTP+SSE transport. How do you connect it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Antigravity does not support legacy SSE. Point to a Streamable HTTP endpoint (<code>url</code>) if one exists, or run a stdio bridge such as <code>mcp-remote</code> (<code>command</code>/<code>args</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> Two parallel subagents edit the same files and overwrite each other. What do you change?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Use the <code>branch</code> workspace mode so each subagent works in its own Git worktree, and give them non-overlapping scopes.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> You picked the App's "Full machine" preset. Are agent commands sandboxed?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">No. App security presets never turn the terminal sandbox on. Enable sandbox mode yourself, typically with <em>Proceed in Sandbox</em>. Commands that run outside the sandbox have full host privileges.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> A coding agent on a Cloud Workstation loses its in-memory state after lunch. What is the fix?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Set <code>idleAction=SUSPEND</code> with an <code>idleTimeout</code> and add keep-alive lifecycle hooks (start <code>keep_alive.sh</code> while the agent works, kill it when it waits for input). Suspension keeps RAM, processes and agent context.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> List the Agents CLI path from an empty folder to Gemini Enterprise.</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>uvx google-agents-cli setup</code> → <code>agents-cli create</code> + <code>install</code> → <code>run</code> / <code>playground</code> → <code>eval run</code> (release gate) → <code>scaffold enhance --deployment-target</code> if needed → <code>deploy</code> → register with Gemini Enterprise in one Agents CLI command (<code>agents-cli publish gemini-enterprise</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> Is Antigravity where your shipped ADK agent runs in production?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">No. Antigravity is the developer's harness. The ADK agent you ship runs on Agent Runtime, Cloud Run or GKE, and can be distributed through Gemini Enterprise.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
