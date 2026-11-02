@@ -313,23 +313,43 @@
             <div class="definition-item"><dt>Artifacts</dt><dd>Stateful interactive UI workspace rendered beside chat in <code>claude.ai</code> for live code, documents, and visual components.</dd></div>
         </div>
 
-        <div class="concept-card accent-mint" style="margin-top: 24px;">
-            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Interactive Practice Quiz &amp; Companion Tracks</h3>
-            <p>Test your mastery of the 3-Layer Claude Ecosystem Map, Constitutional AI priority weighting, Sparse Autoencoders, Attribution Graphs, Behavioral Vaccination, and ASL-3 safety containment with scenario-based multiple-choice questions and instant per-option explanations.</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
-                <a href="quiz.html?topic=anthropic" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 240px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
-                    <i class="fas fa-tasks"></i>
-                    <span>Launch Anthropic Foundational Models Practice Quiz →</span>
-                </a>
-                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 240px; border: 1px solid var(--card-border);">
-                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
-                    <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
-                </a>
+        <div class="two-columns" style="margin-top: 24px;">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Anthropic &amp; Claude Models Walkthrough Video</h3>
+                <p>A narrated visual walkthrough of the Claude 4.6/4.7+ family &amp; 3-layer ecosystem, Adaptive Thinking effort tiers, Constitutional AI (RLAIF), Sparse Autoencoders &amp; Attribution Graphs, Behavioral Vaccination, and RSP ASL-3 containment.</p>
+                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                    <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/Anthropic-v2.0.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                </div>
             </div>
-            <ul style="margin-top: 16px;">
-                <li><a href="ClaudeAPI.html">Claude Platform &amp; API</a>: Messages API, tool-use loop, <code>stop_reason</code>, streaming, structured outputs, adaptive thinking, prompt caching, and residency.</li>
-                <li><a href="ClaudeCode.html">Claude Code &amp; Agent SDK</a>: permission modes, <code>CLAUDE.md</code>, deterministic hooks, subagents, skills, plugins, MCP, and Managed Agents.</li>
-            </ul>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the Anthropic &amp; Claude Models audio deep dive, open the 2-column study guide PDF, 21-slide deck, and sketchnote infographic in the Hub Viewer, or test your mastery with scenario-based practice questions.</p>
+                <div class="audio-label" style="margin-top: 15px;">Anthropic &amp; Claude Models Architecture Deep Dive (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/Anthropic-v2.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=anthropic" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Anthropic Practice Quiz →</span>
+                    </a>
+                </div>
+                <ul style="margin-top: 14px;">
+                    <li><a href="ClaudeAPI.html">Claude Platform &amp; API</a>: Messages API, tool-use loop, <code>stop_reason</code>, streaming, structured outputs, adaptive thinking, prompt caching, and residency.</li>
+                    <li><a href="ClaudeCode.html">Claude Code</a> &amp; <a href="ClaudeAgentSDK.html">Claude Agent SDK</a>: permission modes, <code>CLAUDE.md</code>, deterministic hooks, subagents, skills, plugins, MCP, and Managed Agents.</li>
+                </ul>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════
