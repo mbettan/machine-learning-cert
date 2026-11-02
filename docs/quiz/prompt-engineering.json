@@ -943,33 +943,33 @@
       "id": "prompt-engineering-q-25",
       "section": "Validation & Feedback Loops",
       "guide_anchor": "validation-loops",
-      "question": "A platform team runs a structured PR security reviewer across 180 repositories. Developers can click 'Dismiss' on unhelpful inline comments, but the team currently stores only a boolean `dismissed=true` and struggles to figure out which code constructs cause recurring false positives. What schema addition enables systematic prompt refinement?",
+      "question": "A benefits-enrollment extractor routes uncertain records to human reviewers, who fix fields in a review UI. The team logs only `corrected=true` per record and cannot tell which prompt instruction to improve next. Which logging design best supports systematic prompt revision?",
       "options": [
         {
-          "text": "Store the raw floating-point embedding vector of the entire pull request diff whenever a developer clicks Dismiss.",
+          "text": "Store a full-page screenshot of the reviewer UI for every corrected record so analysts can browse examples during quarterly prompt reviews.",
           "correct": false,
-          "why_wrong": "Whole-diff embeddings blur dozens of unrelated files together and do not identify which specific rule construct misfired."
+          "why_wrong": "Screenshots cannot be aggregated by field or cause, so they never reveal which instruction is ambiguous."
         },
         {
-          "text": "Add a `detected_pattern` field (for example, `dynamic-sql-fstring` or `unverified-jwt-decode`) to each structured finding so dismissals can be aggregated by trigger construct.",
+          "text": "Log each override with the corrected field's schema path, the prompt version, and a reason code from a fixed list such as `missed_null`.",
           "correct": true
         },
         {
-          "text": "Remove the Dismiss button until developers write a 200-word free-text justification for every rejected comment.",
+          "text": "Append every corrected record verbatim to the system prompt each night as a growing list of mistakes the model should avoid repeating.",
           "correct": false,
-          "why_wrong": "High-friction justification forms cause developers to ignore the bot completely instead of providing clean telemetry."
+          "why_wrong": "An unbounded list of anti-pattern records bloats the prompt, breaks prefix caching, and steers worse than a few targeted contrast examples."
         },
         {
-          "text": "Append dismissed PR numbers directly into the system prompt every night as an ever-growing exclusion list.",
+          "text": "Have the model emit a self-rated confidence score per record and log only low-confidence records, ignoring the edits reviewers actually make.",
           "correct": false,
-          "why_wrong": "Listing opaque PR numbers teaches zero generalizable code patterns and breaks prompt caching every night."
+          "why_wrong": "Self-reported confidence is poorly calibrated, and discarding reviewer edits throws away the only ground-truth signal available."
         }
       ],
-      "explanation": "Including a structured `detected_pattern` identifier in every finding lets you join developer dismissal events directly back to the exact construct or rule that triggered the comment, making it straightforward to disable noisy patterns or craft targeted contrast examples.",
-      "key_takeaway": "Include a structured detected_pattern slug in review findings so developer dismissals cluster cleanly by root trigger.",
+      "explanation": "Structured override telemetry (which field, which prompt version, which failure reason) lets you aggregate corrections and see exactly which instruction or example is ambiguous. You then add a targeted contrast example and confirm the fix on the evaluation set before shipping the next prompt version.",
+      "key_takeaway": "Log reviewer overrides by field path, prompt version, and fixed reason code so corrections aggregate into prompt fixes.",
       "doc_links": [
         {
-          "label": "Claude Evaluation & Test Design",
+          "label": "Claude: Define Success & Build Evals",
           "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
         },
         {
@@ -1021,38 +1021,38 @@
       "id": "prompt-engineering-q-27",
       "section": "Batch vs. Synchronous SLAs",
       "guide_anchor": "batch-processing",
-      "question": "A county recorder's office ingests deed packets around the clock and contractually guarantees extracted index records within **30 hours** of upload. They use the Message Batches API (up to 24-hour processing window, 50% cost savings) plus ~45 minutes of OCR pre/post-processing. What batch submission schedule satisfies the 30-hour SLA worst case?",
+      "question": "A marketplace enriches 300,000 product listings overnight in two stages: stage 1 extracts attributes into a JSON schema, and stage 2 writes a short description from those attributes. Each Message Batches request is a single model turn. How should the pipeline be structured?",
       "options": [
         {
-          "text": "Submit one daily batch at midnight (`24h wait + 24h max batch window = 48h`), since most batches finish in under an hour anyway.",
+          "text": "Put both stages in one request and have the model call a `write_description` tool after extracting, letting the batch run that tool between turns.",
           "correct": false,
-          "why_wrong": "'Most finish within an hour' is typical behavior, not a contractual SLA; a 24h submission interval yields a ~48.75h worst case."
+          "why_wrong": "Each batch request returns one model response; your code cannot run a tool and then continue that same request."
         },
         {
-          "text": "Submit batches every 8 hours (`8h wait + 24h max batch window + 0.75h = 32.75h`), relying on retries to make up lost time.",
+          "text": "Submit the stage-2 batch together with stage 1 and instruct each stage-2 request to wait until the matching stage-1 output appears in its context.",
           "correct": false,
-          "why_wrong": "A packet arriving just after an 8-hour batch closes can take 32.75 hours even without retries, breaching the 30-hour SLA."
+          "why_wrong": "Batch requests are independent and share no state, so a stage-2 request can never see stage-1 output that was not in its own body."
         },
         {
-          "text": "Abandon batch processing altogether because no batch cadence can ever guarantee an SLA below 48 hours.",
-          "correct": false,
-          "why_wrong": "Any SLA comfortably above 24 hours + pipeline overhead can be met with Batches by choosing `interval <= SLA - 24h - overhead`."
-        },
-        {
-          "text": "Submit accumulated deed packets every 4 hours (`4h wait + 24h max batch window + 0.75h pipeline = 28.75h <= 30h`).",
+          "text": "Run stage 1 as a batch, validate its JSON in code, then submit a stage-2 batch embedding each valid record in a named tag, matched by `custom_id`.",
           "correct": true
+        },
+        {
+          "text": "Assume results come back in submission order and pair each stage-1 output with its stage-2 input by line number in the results file.",
+          "correct": false,
+          "why_wrong": "Batch results are not guaranteed to follow request order; `custom_id` is the supported way to correlate results with requests."
         }
       ],
-      "explanation": "Worst-case batch turnaround equals `submission_interval + 24h_max_batch_window + pipeline_overhead`. With 0.75h overhead and a 30h SLA, `submission_interval` must be under `5.25h`; a 4-hour schedule caps worst-case latency at `28.75h` while retaining the 50% batch discount.",
-      "key_takeaway": "Size batch submission intervals using worst-case math: interval + 24h batch window + overhead <= target SLA.",
+      "explanation": "Multi-stage work on a single-turn batch transport becomes a chain of batches: parse and validate stage-1 results in code, then embed only valid records, inside a clearly named tag, in the stage-2 requests. Meaningful `custom_id` values connect each record across stages.",
+      "key_takeaway": "Chain batches: validate stage output in code, pass it to the next batch inside named tags, and correlate by custom_id.",
       "doc_links": [
         {
-          "label": "Claude Message Batches API",
+          "label": "Claude Batch Processing",
           "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
         },
         {
-          "label": "Optimizing Cost and Intelligence",
-          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+          "label": "Gemini API Batch Mode",
+          "url": "https://ai.google.dev/gemini-api/docs/batch-mode"
         }
       ]
     },
@@ -1060,38 +1060,34 @@
       "id": "prompt-engineering-q-28",
       "section": "Batch vs. Synchronous SLAs",
       "guide_anchor": "batch-processing",
-      "question": "An engineering platform runs three Claude workloads: (A) a blocking pre-merge PR security gate developers wait on, (B) a multi-turn troubleshooting agent that queries live Postgres tables mid-investigation, and (C) an overnight single-shot schema extraction job across 80,000 support transcripts. Which workloads belong on the Message Batches API?",
+      "question": "A team submits a 40,000-request batch for a new sentiment prompt. Hours later every result is `errored` with `invalid_request_error`, because the request template included a parameter the target model does not accept. Which practice would have caught this cheaply before submission?",
       "options": [
         {
-          "text": "Workloads (A) and (C), because small 1-request PR batches always complete in under ten seconds.",
+          "text": "Submit two identical copies of the batch in parallel so that at least one copy is likely to pass validation if the other fails.",
           "correct": false,
-          "why_wrong": "Message Batches carries zero latency SLA regardless of batch size and can stall pre-merge gates for hours under load."
+          "why_wrong": "Both copies carry the same malformed bodies and fail identically, doubling cost without any chance of success."
         },
         {
-          "text": "Workloads (B) and (C), because a single batch item automatically pauses mid-run to execute local Python database callbacks.",
-          "correct": false,
-          "why_wrong": "A batched request executes one model turn only; it cannot run external tools mid-request and feed `tool_result` back in the same run."
-        },
-        {
-          "text": "Workload (C) only: (A) is latency-blocking and (B) needs multi-turn tool calls, while (C) is single-shot and async.",
+          "text": "Send a few representative request bodies through the synchronous Messages API first and confirm they return valid responses.",
           "correct": true
         },
         {
-          "text": "None of them, because `tool_use` schemas cannot be included inside Message Batches requests.",
+          "text": "Poll the batch status endpoint every second so the validation failures are noticed a few minutes earlier than with hourly checks.",
           "correct": false,
-          "why_wrong": "Single-shot forced `tool_use` extraction works cleanly in Batches because the `tool_use` input block itself is the final extracted output."
-        }
-      ],
-      "explanation": "Batch APIs fit latency-tolerant, single-turn workloads like (C)—including forced single-shot extraction tools where no follow-up `tool_result` turn is needed. Blocking developer checks (A) and multi-turn interactive tool loops (B) require synchronous API calls.",
-      "key_takeaway": "Reserve Batch APIs for non-blocking, single-turn workloads; keep blocking pre-merge checks and multi-turn tool loops synchronous.",
-      "doc_links": [
-        {
-          "label": "Claude Message Batches API",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+          "why_wrong": "Faster polling only reports the failure sooner; it does nothing to prevent malformed requests from being submitted."
         },
         {
-          "label": "Claude Tool Use Overview",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+          "text": "Move the workload permanently to synchronous calls, since there is no way to check batch request bodies before processing starts.",
+          "correct": false,
+          "why_wrong": "This gives up the batch discount unnecessarily; a quick synchronous dry run of the same bodies validates them before batching."
+        }
+      ],
+      "explanation": "Batch request bodies use the same shape as Messages API calls, so sending a handful synchronously surfaces parameter and schema errors in seconds. Only after the dry run succeeds should the full corpus go to the batch endpoint.",
+      "key_takeaway": "Dry-run a few batch request bodies on the synchronous API before submitting a large batch.",
+      "doc_links": [
+        {
+          "label": "Claude Batch Processing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
         }
       ]
     },
@@ -1099,38 +1095,34 @@
       "id": "prompt-engineering-q-29",
       "section": "Batch vs. Synchronous SLAs",
       "guide_anchor": "batch-processing",
-      "question": "A legal-ops team submits a 50,000-document batch job. When `processing_status` reaches `ended`, 49,400 items succeeded, 420 errored with context-window overflow on 900-page annexes, and 180 expired. Results arrived in a different order than submitted. How should recovery and future runs be engineered?",
+      "question": "An overnight batch of 12,000 ticket-classification requests ends with 11,700 `succeeded`, 220 `expired`, and 80 `errored` with `invalid_request_error`, because a template bug set `max_tokens` to 0 on those requests. What recovery plan is correct?",
       "options": [
         {
-          "text": "Zip the results array with the input array by list index `[0..49999]` and resubmit the entire 50,000-document batch from scratch.",
+          "text": "Resubmit the entire 12,000-request batch so that every stored result comes from one consistent run of the prompt.",
           "correct": false,
-          "why_wrong": "Batch results are returned out of order so index matching corrupts records, and re-running 49,400 succeeded items wastes money."
+          "why_wrong": "Rerunning 11,700 successful requests pays for them twice and adds no information."
         },
         {
-          "text": "Correlate via `custom_id`, resubmit only the 600 failed/expired IDs after chunking oversized annexes, and sample-test first.",
+          "text": "Resend all 300 failed requests unchanged, because resubmission lets the service retry any transient problem automatically.",
+          "correct": false,
+          "why_wrong": "The 80 errored requests are invalid as written and will fail again until the template bug is fixed."
+        },
+        {
+          "text": "Discard the 300 failures, since both expired and errored results mean the model could not classify those tickets.",
+          "correct": false,
+          "why_wrong": "Expiry reflects the processing window and errors reflect request bugs; neither says anything about ticket content."
+        },
+        {
+          "text": "Resend the 220 expired requests as-is, regenerate the 80 errored ones after fixing the template, and match results by `custom_id`.",
           "correct": true
-        },
-        {
-          "text": "Resubmit the 420 oversized annexes completely unchanged five more times because context-window errors are transient.",
-          "correct": false,
-          "why_wrong": "Context-window overflow is deterministic; resubmitting an unchunked oversized payload fails identically every time."
-        },
-        {
-          "text": "Request a billing refund for the 600 errored and expired items before submitting a replacement batch.",
-          "correct": false,
-          "why_wrong": "Errored, canceled, and expired batch items are not billed in the first place; only targeted resubmission by `custom_id` is needed."
         }
       ],
-      "explanation": "Batch results arrive out of order, making `custom_id` correlation mandatory. Because errored and expired items are unbilled, isolate just those 600 `custom_id`s, fix deterministic failures (chunking oversized documents), and resubmit only the delta.",
-      "key_takeaway": "Correlate batch results strictly by custom_id and resubmit only failed/expired items after fixing deterministic root causes like oversized inputs.",
+      "explanation": "Handle each result type on its own terms: expired requests were never processed and can be resent unchanged, while errored requests need the underlying request bug fixed first. Meaningful `custom_id` values let you rebuild exactly the failed subset and merge results regardless of order.",
+      "key_takeaway": "Resend expired batch items unchanged, fix errored ones first, and resubmit only failures keyed by custom_id.",
       "doc_links": [
         {
-          "label": "Claude Message Batches API",
+          "label": "Claude Batch Processing",
           "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
-        },
-        {
-          "label": "Claude API Errors",
-          "url": "https://platform.claude.com/docs/en/api/errors"
         }
       ]
     },
@@ -1138,38 +1130,38 @@
       "id": "prompt-engineering-q-30",
       "section": "Multi-Instance & Multi-Pass Review",
       "guide_anchor": "multi-pass-review",
-      "question": "An autonomous coding workflow uses one long Claude session to implement a 12-file OAuth token-refresh feature and then sends a final turn in that same session saying 'Critically audit your code above for subtle security flaws'. The audit passes, yet production ships a token-audience bypass the model justified during step 3. Why did self-review miss it, and what catches it?",
+      "question": "A contract-clause classifier prompt says 'Think step by step, then return JSON with `clause_type` and `risk`.' About 9% of replies start with a paragraph of reasoning before the JSON, which crashes the parser. Thinking mode is available. What is the cleanest fix?",
       "options": [
         {
-          "text": "Same-session review anchors on prior reasoning; run an independent reviewer instance with only the diff and rubric.",
+          "text": "Give reasoning its own channel (thinking mode or a `<thinking>`/`<answer>` split) and have code parse only the answer content.",
           "correct": true
         },
         {
-          "text": "The prompt lacked polite encouragement; keep the same session and change the final prompt to 'Pretend you are a hostile hacker'.",
+          "text": "Keep the prompt as written and strip every character before the first `{` with a regular expression before calling the parser.",
           "correct": false,
-          "why_wrong": "Persona wording inside the same conversation thread still leaves the generator's earlier rationalizations anchored in context."
+          "why_wrong": "The regex treats the symptom; reasoning text can itself contain braces, and the contract between prompt and parser stays broken."
         },
         {
-          "text": "Same-session review only works when switching to a smaller, faster model mid-session without clearing history.",
+          "text": "Delete the step-by-step instruction entirely and raise the temperature so the model answers more directly without preamble.",
           "correct": false,
-          "why_wrong": "Passing the biased generation transcript to a smaller model preserves the anchoring flaw while reducing analytical capability."
+          "why_wrong": "Removing reasoning lowers accuracy on hard clauses, and temperature does not control preamble (newer Claude models also reject non-default values)."
         },
         {
-          "text": "Self-review failed because JSON Schema output was not enabled on the initial code-generation turns.",
+          "text": "Tell the model to write its reasoning inside the `clause_type` string so that all generated text lands within the JSON object.",
           "correct": false,
-          "why_wrong": "Output formatting on earlier code-generation turns has nothing to do with reasoning-context anchoring during review."
+          "why_wrong": "This pollutes a data field, breaks enum values, and pushes scratch work into every downstream consumer."
         }
       ],
-      "explanation": "When a model reviews artifacts inside the same session that produced them, its prior reasoning trace remains in context and anchors it to defend its own design choices. An independent review call with fresh context (artifact/diff + rubric only) evaluates the code without that bias.",
-      "key_takeaway": "Always run verification and code review in an independent model instance without the generator's reasoning history.",
+      "explanation": "Reasoning and the final answer should travel on separate channels: Claude returns thinking blocks separately from text, Gemini flags thought parts, and prompted CoT can use a tag pair. Application code then consumes only the answer channel, keeping parsing reliable without sacrificing reasoning quality.",
+      "key_takeaway": "Isolate chain-of-thought from the final answer and parse only the answer channel.",
       "doc_links": [
         {
-          "label": "Building Effective Agents",
-          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+          "label": "Claude Extended Thinking",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
         },
         {
-          "label": "Claude Code Common Workflows",
-          "url": "https://code.claude.com/docs/en/common-workflows"
+          "label": "Gemini Thinking",
+          "url": "https://ai.google.dev/gemini-api/docs/thinking"
         }
       ]
     },
@@ -1177,38 +1169,38 @@
       "id": "prompt-engineering-q-31",
       "section": "Multi-Instance & Multi-Pass Review",
       "guide_anchor": "multi-pass-review",
-      "question": "When a monorepo PR touches 38 microservice files, stuffing the entire 14,000-line diff into one review call produces shallow comments on the first five files, misses null bugs in middle files, and misses a Protobuf field rename that broke a downstream consumer. Which review architecture resolves both local and cross-file blind spots?",
+      "question": "A release-notes generator drafts customer-facing notes from merged change summaries. Asking the same conversation to 'review your notes and improve them' rarely changes anything. Which multi-pass design most reliably improves quality while keeping each step inspectable?",
       "options": [
         {
-          "text": "Keep the single 38-file prompt and shuffle file order randomly on every commit so middle files eventually get reviewed.",
+          "text": "Append 'be extremely critical' to the same-session review turn and repeat that turn until the notes stop changing between runs.",
           "correct": false,
-          "why_wrong": "Randomly shuffling files leaves ~70% of each run diluted and still provides no systematic local + contract coverage."
+          "why_wrong": "The same context keeps anchoring on its own draft, and an open-ended loop has no deterministic stopping rule."
         },
         {
-          "text": "Run 38 isolated per-file passes only and delete cross-file checks, since type compilers catch every interface contract change.",
+          "text": "Ask for ten drafts in one response and have the model choose its favorite within that same reply before returning it.",
           "correct": false,
-          "why_wrong": "Isolated per-file passes alone miss semantic cross-file regressions (unit changes, JSON contract drift, ordering assumptions) that compilers allow."
+          "why_wrong": "Selection inside one reply has no independent judge and no rubric, so the choice is as anchored as the drafts."
         },
         {
-          "text": "Truncate every changed file to its first 25 lines so all 38 files fit inside a short, high-attention prompt.",
-          "correct": false,
-          "why_wrong": "Truncating files past line 25 blinds the reviewer to 90% of the executable logic in the pull request."
-        },
-        {
-          "text": "Run parallel per-file local review passes for file-scoped bugs, followed by a dedicated cross-file integration pass over the local findings and module interfaces.",
+          "text": "Chain separate calls: draft, then a critique call given only the draft, sources, and rubric, then a revise call applying its issues.",
           "correct": true
+        },
+        {
+          "text": "Raise `max_tokens` on the drafting call so the model has more room to self-correct before it finishes writing the notes.",
+          "correct": false,
+          "why_wrong": "A larger output budget changes length, not judgment; it adds no independent critique step."
         }
       ],
-      "explanation": "Splitting large reviews into focused per-file local passes prevents attention dilution and middle-section omissions on file-internal defects, while a separate cross-file integration pass inspects module interfaces and reconciles data-flow contracts across files.",
-      "key_takeaway": "For large multi-file reviews, pair parallel per-file local passes with a separate cross-file integration pass.",
+      "explanation": "A draft, critique, revise chain gives each step a focused context and a logged output. The critique call sees only the draft, the sources, and a rubric, so it is not anchored on the drafting reasoning, and the revise call applies a concrete issue list. Stop after one or two rounds or when the critique returns no issues.",
+      "key_takeaway": "Use a draft, critique, revise chain of separate calls instead of same-session self-review.",
       "doc_links": [
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        },
         {
           "label": "Building Effective Agents",
           "url": "https://www.anthropic.com/engineering/building-effective-agents"
-        },
-        {
-          "label": "Claude Long Context Tips",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
         }
       ]
     },
@@ -1216,38 +1208,38 @@
       "id": "prompt-engineering-q-32",
       "section": "Multi-Instance & Multi-Pass Review",
       "guide_anchor": "multi-pass-review",
-      "question": "A GitHub Actions pipeline runs `claude -p` on every push to an open pull request to post review comments and suggest missing unit tests. Developers report two annoyances: pushing a 2-line fix re-posts the same four inline review comments from commit 1, and suggested tests duplicate cases already in `tests/billing.spec.ts`. Which context update fixes both?",
+      "question": "A policy Q&A assistant answers from retrieved handbook passages but sometimes cites rules that are not in those passages. The team wants an automated check before answers reach employees. Which design gives the most trustworthy check?",
       "options": [
         {
-          "text": "Configure CI to run only on the initial PR open event and ignore all subsequent commits pushed before merge.",
+          "text": "Add 'double-check every citation against the passages' to the end of the answering prompt so the same call verifies its own output.",
           "correct": false,
-          "why_wrong": "Skipping subsequent commits lets newly introduced bugs in later pushes merge completely unreviewed."
+          "why_wrong": "Self-verification inside the generating call shares the same assumptions and rarely catches its own fabrications."
         },
         {
-          "text": "Delete all existing PR comments via the GitHub API on every push so re-posted duplicate comments look fresh.",
+          "text": "Ship answers whose self-reported confidence exceeds 0.9 directly and send only the remaining answers to a human for review.",
           "correct": false,
-          "why_wrong": "Wiping comment threads destroys developer discussion history and still generates duplicate test cases already in `tests/billing.spec.ts`."
+          "why_wrong": "Self-reported confidence is poorly calibrated; fabricated citations often come with high stated confidence."
         },
         {
-          "text": "Feed earlier review findings into follow-up runs so the reviewer flags only newly introduced or unaddressed defects, and supply existing test suites plus CLAUDE.md conventions during test generation.",
+          "text": "Ask the answering call to repeat each citation twice, since repeated quotations make fabricated policy text easier to notice.",
+          "correct": false,
+          "why_wrong": "Repetition adds no comparison against the source, so a fabricated quote is simply fabricated twice."
+        },
+        {
+          "text": "Send each answer to a separate grader call holding only the answer, the retrieved passages, and a grounding rubric, returning pass or fail per claim.",
           "correct": true
-        },
-        {
-          "text": "Pass `--bare` with zero files or test context so every CI run starts completely blind to repository history.",
-          "correct": false,
-          "why_wrong": "Running blind to prior findings and existing test suites guarantees both duplicate PR comments and duplicate test suggestions."
         }
       ],
-      "explanation": "Stateless CI runs cannot know what was already posted or tested unless you provide it: include prior structured findings so re-reviews emit only new or unaddressed defects, and supply existing test suites plus `CLAUDE.md` testing standards so generated tests cover genuinely untested branches.",
-      "key_takeaway": "In CI re-runs, pass prior findings to suppress duplicate PR comments and pass existing test files + CLAUDE.md conventions to avoid duplicate tests.",
+      "explanation": "An independent grader with a clean context (answer, sources, rubric) checks grounding without inheriting the generator's reasoning. Returning a structured verdict per claim lets code block or route ungrounded answers deterministically.",
+      "key_takeaway": "Check grounding with an independent grader call that sees only the answer, sources, and rubric.",
       "doc_links": [
         {
-          "label": "Claude Code Headless & CI Mode",
-          "url": "https://code.claude.com/docs/en/headless"
+          "label": "Reduce Hallucinations Guide",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
         },
         {
-          "label": "Claude Code GitHub Actions",
-          "url": "https://code.claude.com/docs/en/github-actions"
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
         }
       ]
     },
