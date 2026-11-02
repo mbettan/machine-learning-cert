@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Model Context Protocol (MCP): Study Guide | ML Cert Hub</title>
     <meta name="description" content="Vendor-neutral Model Context Protocol (MCP) study guide: host/client/server, tools vs. resources vs. prompts, tool description design, structured isError handling, stdio vs. Streamable HTTP, project vs. user scoping, OAuth 2.1 and MCP security.">
-    <meta name="keywords" content="Model Context Protocol, MCP, JSON-RPC 2.0, MCP tools, MCP resources, MCP prompts, resource catalog, tool descriptions, isError, error categories, isRetryable, stdio, Streamable HTTP, .mcp.json, environment variable expansion, OAuth 2.1, tool poisoning, prompt injection, server/discover, Michael Bettan, Michaël Bettan">
+    <meta name="keywords" content="Model Context Protocol, MCP, JSON-RPC 2.0, MCP tools, MCP resources, MCP prompts, resource catalog, tool descriptions, isError, JSON-RPC error codes, tool annotations, stdio, Streamable HTTP, .mcp.json, environment variable expansion, OAuth 2.1, tool poisoning, prompt injection, server/discover, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -78,10 +78,10 @@
                   "headline": "Model Context Protocol (MCP): Study Guide | ML Cert Hub",
                   "name": "Model Context Protocol (MCP) Study Guide",
                   "description": "Vendor-neutral Model Context Protocol (MCP) study guide: host/client/server, tools vs. resources vs. prompts, tool description design, structured isError handling, stdio vs. Streamable HTTP, project vs. user scoping, OAuth 2.1 and MCP security.",
-                  "keywords": "Model Context Protocol, MCP, JSON-RPC 2.0, MCP tools, MCP resources, MCP prompts, resource catalog, tool descriptions, isError, error categories, isRetryable, stdio, Streamable HTTP, .mcp.json, environment variable expansion, OAuth 2.1, tool poisoning, prompt injection, server/discover, Michael Bettan, Michaël Bettan",
+                  "keywords": "Model Context Protocol, MCP, JSON-RPC 2.0, MCP tools, MCP resources, MCP prompts, resource catalog, tool descriptions, isError, JSON-RPC error codes, tool annotations, stdio, Streamable HTTP, .mcp.json, environment variable expansion, OAuth 2.1, tool poisoning, prompt injection, server/discover, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/MCP.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-10-27",
+                  "dateModified": "2026-11-01",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -147,7 +147,7 @@
                     <span>Certification Study Notes</span>
                 </div>
                 <h1>Model Context <em>Protocol (MCP)</em></h1>
-                <p class="cover-subtitle">Vendor-neutral guide to the open protocol that connects AI applications to tools and context: host/client/server roles, when to use tools vs. resources vs. prompts, resource catalogs, tool descriptions as the selection signal, structured <code>isError</code> handling with retryable error categories, stdio vs. Streamable HTTP, project vs. user server scoping, OAuth 2.1 and the MCP threat model. Spec baseline: revision <strong>2026-07-28</strong>.</p>
+                <p class="cover-subtitle">Vendor-neutral guide to the open protocol that connects AI applications to tools and context: host/client/server roles, when to use tools vs. resources vs. prompts, resource catalogs, tool descriptions as the selection signal, JSON-RPC error codes vs. <code>isError</code> tool execution errors, stdio vs. Streamable HTTP, project vs. user server scoping, OAuth 2.1 and the MCP threat model. Spec baseline: revision <strong>2026-07-28</strong>.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -527,10 +527,7 @@ def inventory_get_stock(sku: str) -&gt; dict:
 @mcp.resource("inventory://catalog")
 def catalog() -&gt; str:
     """Compact index of product families and SKU ranges (content catalog)."""
-    return '{"kettles": "AB-10000..AB-19999", "toasters": "AB-20000..AB-29999"}'
-
-if __name__ == "__main__":
-    mcp.run()  # stdio by default; HTTP transport is configurable</pre>
+    return '{"kettles": "AB-10000..AB-19999", "toasters": "AB-20000..AB-29999"}'</pre>
         </div>
 
         <div class="two-columns">
@@ -561,84 +558,108 @@ if __name__ == "__main__":
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead><tr><th>Kind (spec)</th><th>Signal</th><th>Meaning</th><th>Who reacts</th></tr></thead>
+                <thead><tr><th>Channel (spec)</th><th>Signal</th><th>Meaning</th><th>Who reacts</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Protocol error</strong></td><td>JSON-RPC <code>error</code> object (unknown tool, malformed request, server error)</td><td>The request itself failed</td><td>Host/client code; models rarely recover</td></tr>
-                    <tr><td><strong>Tool execution error</strong></td><td><code>result.isError: true</code> + message in <code>content</code></td><td>Tool ran but failed (API failure, invalid input, business rule)</td><td><strong>The model</strong>, which reads the message and self-corrects</td></tr>
+                    <tr><td><strong>Protocol error</strong></td><td>JSON-RPC <code>error</code> object with a numeric <code>code</code> and a <code>message</code> (unknown tool, malformed request, unsupported method, server fault)</td><td>The request could not be processed as a valid MCP call</td><td>Host/client code; the model usually never sees it</td></tr>
+                    <tr><td><strong>Tool execution error</strong></td><td><code>CallToolResult</code> with <code>isError: true</code> and an explanation in <code>content</code></td><td>Tool ran but failed (upstream API failure, invalid argument values, business rule)</td><td><strong>The model</strong>, which reads the message and adjusts</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">The spec says errors originating <strong>inside the tool</strong> SHOULD be returned in the result with <code>isError: true</code>, not as a protocol error, otherwise the model can't see that an error occurred. Clients SHOULD pass tool execution errors to the model.</p>
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">The spec says errors originating <strong>inside the tool</strong> SHOULD be returned in the result with <code>isError: true</code>, not as a protocol error, otherwise the model can't see what went wrong. Clients SHOULD pass tool execution errors to the model. Recent revisions also classify <strong>input validation failures</strong> (for example a date in the past) as tool execution errors, so the model gets a chance to fix its arguments.</p>
 
         <div class="concept-card accent-coral">
-            <h3><div class="icon-badge"><i class="fas fa-tags"></i></div>Error categories &amp; retryability (design convention)</h3>
-            <p><code>isError</code> only says "this failed". Return <strong>structured metadata</strong> too so the agent picks the right recovery. The field names <code>errorCategory</code>, <code>isRetryable</code> and <code>message</code> are a common <strong>convention</strong>, not spec-defined fields.</p>
+            <h3><div class="icon-badge"><i class="fas fa-hashtag"></i></div>JSON-RPC 2.0 error codes</h3>
+            <p>MCP reuses the standard JSON-RPC 2.0 codes. Don't invent extra fields to carry meaning: use the <code>code</code>, a clear <code>message</code> and, if needed, the optional <code>data</code> member.</p>
             <div class="comparison-table-wrapper" style="margin-top: 14px;">
                 <table class="comparison-table">
-                    <thead><tr><th><code>errorCategory</code></th><th>Examples</th><th><code>isRetryable</code></th><th>Right reaction</th></tr></thead>
+                    <thead><tr><th>Code</th><th>Name</th><th>Typical MCP trigger</th></tr></thead>
                     <tbody>
-                        <tr><td><strong>transient</strong></td><td>Timeout, 503, rate limit, connection reset</td><td><code>true</code></td><td>Retry with bounded backoff, often locally</td></tr>
-                        <tr><td><strong>validation</strong></td><td>Wrong date format, missing field, out-of-range value</td><td><code>false</code> as-is</td><td>Model fixes the arguments, then calls again</td></tr>
-                        <tr><td><strong>business</strong></td><td>Refund over policy limit, item discontinued, account frozen</td><td><code>false</code></td><td>Don't retry; explain to the user plainly or escalate</td></tr>
-                        <tr><td><strong>permission</strong></td><td>403, missing scope, record outside the user's tenant</td><td><code>false</code></td><td>Don't retry blindly; escalate, request access or step up auth</td></tr>
+                        <tr><td><code>-32700</code></td><td>Parse error</td><td>The body is not valid JSON</td></tr>
+                        <tr><td><code>-32600</code></td><td>Invalid request</td><td>Valid JSON, but not a valid JSON-RPC request (e.g. missing <code>jsonrpc</code> or <code>method</code>)</td></tr>
+                        <tr><td><code>-32601</code></td><td>Method not found</td><td>The server does not implement the method, e.g. a capability it never advertised</td></tr>
+                        <tr><td><code>-32602</code></td><td>Invalid params</td><td>Wrong parameter structure, or <code>tools/call</code> names a tool that does not exist</td></tr>
+                        <tr><td><code>-32603</code></td><td>Internal error</td><td>Unexpected failure inside the server while handling the request</td></tr>
+                        <tr><td><code>-32000</code> … <code>-32099</code></td><td>Server error</td><td>Reserved for implementation-defined server errors; document any code you use</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="code-block">
-            <div class="code-block-header">
-                <div class="code-block-dots"><span></span><span></span><span></span></div>
-                <span class="code-block-lang">JSON — tool execution error with structured metadata (business rule)</span>
+        <div class="two-columns">
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-dots"><span></span><span></span><span></span></div>
+                    <span class="code-block-lang">JSON — protocol error (unknown tool)</span>
+                </div>
+                <pre>{ "jsonrpc": "2.0", "id": 3,
+  "error": {
+    "code": -32602,
+    "message": "Unknown tool: ship_parcel_v1" } }</pre>
             </div>
-            <pre>{ "jsonrpc": "2.0", "id": 7,
-  "result": {
-    "resultType": "complete",
+            <div class="code-block">
+                <div class="code-block-header">
+                    <div class="code-block-dots"><span></span><span></span><span></span></div>
+                    <span class="code-block-lang">JSON — tool execution error (model can fix it)</span>
+                </div>
+                <pre>{ "jsonrpc": "2.0", "id": 7,
+  "result": { "resultType": "complete",
     "isError": true,
     "content": [{ "type": "text",
-      "text": "Return window closed: order A-1001 was delivered 64 days ago; the policy allows 30." }],
-    "structuredContent": {
-      "errorCategory": "business",
-      "isRetryable": false,
-      "message": "Return window closed (64 days since delivery, limit 30).",
-      "userFacingMessage": "This order is past the 30-day return window, so I can't start a return automatically."
-    } } }</pre>
+      "text": "Pickup date 2026-10-02 is in the past.
+        Use a date on or after 2026-11-02 (YYYY-MM-DD)." }] } }</pre>
+            </div>
         </div>
-
-        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">If the tool declares an <code>outputSchema</code>, design it to allow this error envelope, or serialize the envelope as JSON inside the text <code>content</code> block.</p>
 
         <div class="two-columns">
             <div class="concept-card accent-purple">
-                <h3><div class="icon-badge"><i class="fas fa-circle-half-stroke"></i></div>Access failure vs. valid empty result</h3>
+                <h3><div class="icon-badge"><i class="fas fa-comment-dots"></i></div>Error text the model can act on</h3>
                 <ul>
-                    <li><strong>Query ran, matched nothing:</strong> <code>isError: false</code>, <code>results: []</code>, e.g. "0 matches for 'X'". A <strong>successful</strong> answer.</li>
-                    <li><strong>Backend unreachable, timed out or denied:</strong> <code>isError: true</code> with <code>transient</code> or <code>permission</code>. The agent must <strong>not</strong> conclude "there are no records".</li>
+                    <li><strong>What failed?</strong> Name the argument, record or upstream system.</li>
+                    <li><strong>Why?</strong> The rule or condition that was violated.</li>
+                    <li><strong>What would succeed?</strong> The valid format, range or next step.</li>
+                    <li><strong>Is repeating the call pointless?</strong> Say so when only the user or an administrator can unblock it.</li>
                 </ul>
+                <p>If the tool declares an <code>outputSchema</code>, <code>structuredContent</code> must conform to it; keep error explanations in <code>content</code> rather than bending the schema.</p>
             </div>
             <div class="concept-card accent-mint">
-                <h3><div class="icon-badge"><i class="fas fa-arrows-turn-to-dots"></i></div>Local recovery vs. propagation</h3>
+                <h3><div class="icon-badge"><i class="fas fa-circle-half-stroke"></i></div>Failure vs. a valid empty answer</h3>
                 <ul>
-                    <li><strong>Tool / server:</strong> retry transient failures with bounded backoff; validate inputs early with specific messages.</li>
-                    <li><strong>Subagent / worker:</strong> recover what it can locally; propagate only what it <strong>can't</strong> resolve.</li>
-                    <li><strong>Coordinator / host:</strong> receives unresolved errors <strong>with context</strong> (category, what was attempted, partial results) and decides: retry elsewhere, continue with gaps, ask the user or escalate.</li>
+                    <li><strong>Lookup ran, matched nothing:</strong> a normal result (<code>isError</code> absent or <code>false</code>) with an empty list, e.g. "0 shipments for customer C-88".</li>
+                    <li><strong>Backend unreachable or refused access:</strong> <code>isError: true</code> with a message saying the lookup <strong>could not be performed</strong>.</li>
                 </ul>
             </div>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>Retries are host policy, informed by annotations</h3>
+            <p>The protocol does not define retry semantics. Retry decisions live in the host or agent framework.</p>
+            <div class="comparison-table-wrapper" style="margin-top: 14px;">
+                <table class="comparison-table">
+                    <thead><tr><th>Signal</th><th>How it informs retries</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>idempotentHint: true</code></td><td>Repeating the call with the same arguments has no extra effect, so an automatic retry after a timeout is low risk</td></tr>
+                        <tr><td><code>idempotentHint: false</code> / <code>destructiveHint: true</code></td><td>Don't auto-retry blindly. Prefer a server-supported idempotency key argument, or confirm with the user first</td></tr>
+                        <tr><td><code>readOnlyHint: true</code></td><td>No side effects; retries only cost latency and quota</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Annotations are <strong>hints</strong>: treat them as untrusted unless the server itself is trusted. Bound every retry loop (attempts, backoff, overall timeout).</p>
         </div>
 
         <div class="two-columns">
             <div class="callout warning">
                 <div class="callout-icon"><i class="fas fa-ban"></i></div>
                 <div class="callout-content">
-                    <h4>Common trap: uniform "Operation failed"</h4>
-                    <p>The agent can't tell a timeout (retry) from a policy violation (stop and explain), so it wastes retries or gives up on errors it could have fixed.</p>
+                    <h4>Common trap: one generic error string for every failure</h4>
+                    <p>The model can't tell a typo it could fix from a condition only a human can resolve, so it loops on hopeless calls or gives up on recoverable ones.</p>
                 </div>
             </div>
             <div class="callout warning">
                 <div class="callout-icon"><i class="fas fa-ban"></i></div>
                 <div class="callout-content">
                     <h4>Common trap: <code>except: return []</code></h4>
-                    <p>Swallowing an exception into an empty list makes the agent report "no matching records" with confidence when the truth is "I couldn't check". Equally bad: aborting the whole workflow on one recoverable failure.</p>
+                    <p>Swallowing an exception into an empty list makes the model state "no records exist" with confidence when the truth is "I couldn't check".</p>
                 </div>
             </div>
         </div>
@@ -1094,7 +1115,8 @@ agent = LlmAgent(model="gemini-2.5-flash", name="stock_agent",
                     <tr><td>"Agent wastes turns listing things to find what exists"</td><td>Expose a <strong>resource catalog</strong></td></tr>
                     <tr><td>"Agent keeps picking the wrong one of two similar tools"</td><td>Improve <strong>descriptions</strong>; rename/split overlapping tools</td></tr>
                     <tr><td>"Tool failed; how does the model find out?"</td><td><code>isError: true</code> in the result, not a JSON-RPC error</td></tr>
-                    <tr><td>"Should the agent retry?"</td><td><code>errorCategory</code> + <code>isRetryable</code>; retry only transient errors</td></tr>
+                    <tr><td>"Should the agent retry?"</td><td>Host policy: retry idempotent/read-only tools with bounded backoff; confirm before repeating destructive calls</td></tr>
+                    <tr><td>"<code>tools/call</code> names a tool that doesn't exist"</td><td>Protocol error, JSON-RPC <code>-32602</code></td></tr>
                     <tr><td>"Query matched nothing"</td><td>Valid empty result, <code>isError: false</code></td></tr>
                     <tr><td>"Team needs the same server; secrets stay out of git"</td><td>Project-scoped config + <code>${VAR}</code> expansion</td></tr>
                     <tr><td>"Personal experimental server"</td><td>User-scoped config</td></tr>
@@ -1112,10 +1134,9 @@ agent = LlmAgent(model="gemini-2.5-flash", name="stock_agent",
             <div class="definition-item"><dt>CIMD</dt><dd>Client ID Metadata Document: OAuth <code>client_id</code> is an HTTPS URL to the client's metadata; replaces Dynamic Client Registration.</dd></div>
             <div class="definition-item"><dt>Confused deputy</dt><dd>A privileged component tricked into acting for an unauthorized party.</dd></div>
             <div class="definition-item"><dt>Elicitation</dt><dd>Server-initiated request for user input, in form mode (in-band) or URL mode (out-of-band).</dd></div>
-            <div class="definition-item"><dt>Error category</dt><dd>Convention classifying tool failures as transient, validation, business or permission.</dd></div>
             <div class="definition-item"><dt>Host / Client / Server</dt><dd>The AI app that owns consent / the per-server connector inside it / the program exposing tools, resources and prompts.</dd></div>
             <div class="definition-item"><dt><code>input_required</code></dt><dd>2026-07-28 result type asking the client to gather input and retry with <code>requestState</code>.</dd></div>
-            <div class="definition-item"><dt><code>isError</code> / <code>isRetryable</code></dt><dd>Spec flag marking a tool execution error the model should see / convention flag telling the agent whether retrying can succeed.</dd></div>
+            <div class="definition-item"><dt><code>isError</code> / JSON-RPC error code</dt><dd>Result flag marking a tool execution error the model should see / numeric <code>code</code> of a protocol error (<code>-32700</code>, <code>-32600</code>, <code>-32601</code>, <code>-32602</code>, <code>-32603</code>, or <code>-32000</code>…<code>-32099</code> for implementation-defined server errors).</dd></div>
             <div class="definition-item"><dt>Project vs. user scope</dt><dd>Server config committed with the repo and shared by the team (e.g. <code>.mcp.json</code>) vs. personal config across all of a user's projects.</dd></div>
             <div class="definition-item"><dt>PRM</dt><dd>Protected Resource Metadata (RFC 9728): tells clients which authorization servers protect the MCP server.</dd></div>
             <div class="definition-item"><dt>Resource catalog</dt><dd>A resource listing what content exists (docs index, schema, issue summary) so the agent skips exploratory tool calls.</dd></div>
@@ -1174,11 +1195,11 @@ agent = LlmAgent(model="gemini-2.5-flash", name="stock_agent",
                 </div>
                 <div class="quiz-question">
                     <p><span class="q-num">Q4.</span> A tool's backend times out. How should the result look?</p>
-                    <div class="quiz-answer"><span class="answer-text"><code>isError: true</code>, <code>errorCategory: "transient"</code>, <code>isRetryable: true</code> and a human-readable message. Retry locally with bounded backoff before propagating.</span></div>
+                    <div class="quiz-answer"><span class="answer-text">A <code>CallToolResult</code> with <code>isError: true</code> and a message saying the upstream system timed out. Whether to retry is host policy, safest for tools annotated <code>idempotentHint: true</code>.</span></div>
                 </div>
                 <div class="quiz-question">
                     <p><span class="q-num">Q5.</span> How do you distinguish "no matches" from "couldn't check"?</p>
-                    <div class="quiz-answer"><span class="answer-text">No matches = success with an empty result (<code>isError: false</code>). Couldn't check = <code>isError: true</code> with a transient or permission category.</span></div>
+                    <div class="quiz-answer"><span class="answer-text">No matches = normal result with an empty list. Couldn't check = <code>isError: true</code> with a message explaining the lookup could not be performed.</span></div>
                 </div>
                 <div class="quiz-question">
                     <p><span class="q-num">Q6.</span> Where do shared team servers and personal servers go?</p>
