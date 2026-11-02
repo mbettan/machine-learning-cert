@@ -241,38 +241,34 @@
       "id": "claude-agent-sdk-q-07",
       "section": "Coordinator–Subagent Orchestration & Decomposition",
       "guide_anchor": "orchestration",
-      "question": "A research coordinator always runs all five subagents (web, news, academic, financial, legal), even for \"What year was the company founded?\". Latency and cost are high. Which change fits the hub-and-spoke model?",
+      "question": "Bills for a monorepo agent occasionally spike. Logs show subagents spawning their own subagents four layers deep. Which configuration bounds this most directly?",
       "options": [
         {
-          "text": "Let subagents message each other directly so they can skip searches another one has done.",
+          "text": "Set max_turns=5 on the main query so it stops before any deep delegation can start.",
           "correct": false,
-          "why_wrong": "Hub-and-spoke routes everything through the coordinator; direct messaging loses observability and control."
+          "why_wrong": "max_turns counts the main loop's turns; each child runs its own loop, so depth and spend stay open."
         },
         {
-          "text": "Merge all five into one agent with every tool so a single call can answer any question.",
+          "text": "Delete the word \"delegate\" from every AgentDefinition description to discourage spawning.",
           "correct": false,
-          "why_wrong": "This drops isolation and tool scoping and raises mis-selection; the problem is selection, not agent count."
+          "why_wrong": "Descriptions guide routing; they do not remove the Agent tool or cap the tree."
         },
         {
-          "text": "Have the coordinator pick only the subagents a query needs, so a simple fact uses just one.",
+          "text": "Set CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH low (e.g. 1) and cap spend with max_budget_usd.",
           "correct": true
         },
         {
-          "text": "Keep the full pipeline but switch every subagent to the smallest model to cut cost per run.",
+          "text": "Raise CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS so the trees finish sooner and cost less.",
           "correct": false,
-          "why_wrong": "This treats the symptom; the coordinator should still decide which subagents the query actually needs."
+          "why_wrong": "That limit caps how many run at once; more concurrency does not reduce total spend."
         }
       ],
-      "explanation": "In hub-and-spoke orchestration the coordinator decides which subagents to invoke based on the query. Running the full pipeline for every request wastes time and money; selecting only the relevant specialists keeps the design while matching effort to the question.",
-      "key_takeaway": "The coordinator should select subagents per query instead of always running the full pipeline.",
+      "explanation": "Subagents can spawn subagents. The SDK bounds the tree with a spawn-depth limit (default 3; 1 stops children from spawning), a concurrency limit (default 20) and an optional max_budget_usd that counts subagent spend.",
+      "key_takeaway": "Bound agent trees with spawn depth and a budget cap, not with prompt wording.",
       "doc_links": [
         {
-          "label": "Subagents in the Claude Agent SDK",
+          "label": "Subagents in the Agent SDK",
           "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
-        },
-        {
-          "label": "Claude Multi-Agent Orchestration",
-          "url": "https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration"
         }
       ]
     },
@@ -280,38 +276,34 @@
       "id": "claude-agent-sdk-q-08",
       "section": "Coordinator–Subagent Orchestration & Decomposition",
       "guide_anchor": "orchestration",
-      "question": "A competitive-intelligence coordinator sends one subagent to cover \"industry news\" and another to cover \"press coverage of rivals\". Both return many of the same articles, token spend doubles and their summaries contradict each other. What should the coordinator change?",
+      "question": "You define two subagents, \"db-reviewer\" and \"sql-reviewer\", both described as \"Reviews database code.\" Claude hands migration reviews to either one seemingly at random. What is the best fix?",
       "options": [
         {
-          "text": "Let the two subagents message each other directly so they can agree on who handles each article.",
-          "correct": false,
-          "why_wrong": "Hub-and-spoke routes everything through the coordinator; peer-to-peer messaging loses observability and does not fix the overlapping assignments."
-        },
-        {
-          "text": "Give each subagent a distinct, non-overlapping scope, such as separate source types or subtopics.",
+          "text": "Rewrite each description as a distinct \"use when…\" line: migrations vs ORM code.",
           "correct": true
         },
         {
-          "text": "Add a deduplication subagent after both finish so overlapping articles are merged before synthesis.",
+          "text": "Give both agents model=\"opus\" so that Claude can judge better which one should review.",
           "correct": false,
-          "why_wrong": "This pays for the duplicated searching first and cleans up afterwards; the overlap comes from how the work was partitioned."
+          "why_wrong": "The model setting picks what runs the subagent; it does not change how Claude routes to it."
         },
         {
-          "text": "Tell both subagents in their prompts to be thorough and to cover every possible angle of the topic.",
+          "text": "Copy both agents' prompts into the main system prompt and stop using subagents for it.",
           "correct": false,
-          "why_wrong": "Broader instructions widen the overlap further; the scopes themselves need to be distinct."
+          "why_wrong": "That gives up context isolation instead of fixing the ambiguous routing."
+        },
+        {
+          "text": "Set background=True on one agent so that Claude learns to prefer the other one instead.",
+          "correct": false,
+          "why_wrong": "background controls blocking behaviour, not which agent Claude selects."
         }
       ],
-      "explanation": "Partitioning is a coordinator responsibility: each subagent gets a distinct subtopic or source type. Overlapping scopes produce duplicated work and conflicting findings, so the fix belongs in the assignments, not in a cleanup step afterwards or in peer messaging between subagents.",
-      "key_takeaway": "Partition subagent work into distinct, non-overlapping scopes to avoid duplicated effort and conflicting findings.",
+      "explanation": "Claude chooses a subagent from its description, which is the required field that says when to use it. Two identical descriptions give it nothing to choose by; make each one name the situations it owns.",
+      "key_takeaway": "AgentDefinition.description drives delegation; make descriptions mutually exclusive.",
       "doc_links": [
         {
-          "label": "Subagents in the Claude Agent SDK",
+          "label": "Subagents in the Agent SDK",
           "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
-        },
-        {
-          "label": "Claude Multi-Agent Orchestration",
-          "url": "https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration"
         }
       ]
     },
@@ -319,38 +311,38 @@
       "id": "claude-agent-sdk-q-09",
       "section": "Coordinator–Subagent Orchestration & Decomposition",
       "guide_anchor": "orchestration",
-      "question": "A team asks an agent to add tests to a large legacy codebase whose dependencies nobody fully understands. Which decomposition approach fits best?",
+      "question": "A nightly job must lint, type-check and then summarize results for the same repository, always in that order. A teammate proposes one agent that decides at runtime which subagents to spawn. What fits better?",
       "options": [
         {
-          "text": "A fixed pipeline of the same five steps for every module, decided before any code is read.",
+          "text": "Agent-led delegation, since letting the model choose always gives better coverage.",
           "correct": false,
-          "why_wrong": "Fixed prompt chains suit known, predictable steps; here the next steps depend on what the agent discovers."
+          "why_wrong": "When the order never changes, runtime choice adds cost and variance without adding value."
         },
         {
-          "text": "One prompt that loads every file at once and writes all of the tests in a single response.",
+          "text": "Launch one subagent per step in parallel so all three steps finish at the same time.",
           "correct": false,
-          "why_wrong": "This causes attention dilution and cannot adapt to dependencies found along the way."
+          "why_wrong": "The summary depends on the first two steps, so they are not independent."
         },
         {
-          "text": "Parallel fan-out with one subagent per file, each writing tests without any shared plan.",
+          "text": "A single query with tool_choice forced to the lint tool on every turn of the run.",
           "correct": false,
-          "why_wrong": "Fan-out fits independent subtasks; legacy dependencies need ordering and a shared, evolving plan."
+          "why_wrong": "Forcing a tool every turn stops the agent from finishing, and it only ever lints."
         },
         {
-          "text": "Adaptive: map the structure, find high-impact areas, then plan and revise as you learn.",
+          "text": "Run the three steps as a fixed sequence of query() calls in your own code.",
           "correct": true
         }
       ],
-      "explanation": "Open-ended investigations call for dynamic decomposition: generate subtasks from what you find, prioritize, and adapt the plan when new dependencies appear. Fixed chaining is for predictable multi-step work; fan-out is for independent subtasks.",
-      "key_takeaway": "Use adaptive decomposition for open-ended work and fixed chains only when steps are known up front.",
+      "explanation": "When the steps and their order are known in advance, encode them as a workflow in code. Agent-led delegation earns its cost when the next step depends on what was just found.",
+      "key_takeaway": "Use a coded workflow for fixed sequences and agent-led delegation for open-ended work.",
       "doc_links": [
         {
-          "label": "Subagents in the Claude Agent SDK",
-          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
+          "label": "How the agent loop works",
+          "url": "https://code.claude.com/docs/en/agent-sdk/agent-loop"
         },
         {
-          "label": "Claude Multi-Agent Orchestration",
-          "url": "https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration"
+          "label": "Subagents in the Agent SDK",
+          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
         }
       ]
     },
@@ -358,38 +350,34 @@
       "id": "claude-agent-sdk-q-10",
       "section": "Subagent Invocation, AgentDefinition & Context Passing",
       "guide_anchor": "subagents",
-      "question": "A coordinator is configured with tools=[\"Read\", \"Grep\", \"WebSearch\"] and a \"researcher\" AgentDefinition. It never delegates and runs every search itself, and the SDK init message lists no Agent or Task tool. What is the most likely fix?",
+      "question": "A coordinator spawns a \"log-scanner\" subagent and immediately reads the Agent tool result, expecting findings. The result shows status \"async_launched\" and no report. What is going on?",
       "options": [
         {
-          "text": "Add \"Agent\" to the coordinator's tools list (and allowed_tools) so the spawning tool is available.",
+          "text": "The subagent crashed at startup, and async_launched is the generic failure status.",
+          "correct": false,
+          "why_wrong": "async_launched acknowledges a successful background launch; it is not an error status."
+        },
+        {
+          "text": "Agent is missing from allowed_tools, so the call is queued until someone approves it.",
+          "correct": false,
+          "why_wrong": "An unapproved call is denied or routed to the permission flow; it is not reported as launched."
+        },
+        {
+          "text": "Subagents run in the background by default; the report arrives in a later turn.",
           "correct": true
         },
         {
-          "text": "Copy the researcher prompt into the coordinator's system prompt so both share instructions.",
+          "text": "The coordinator's max_turns is too low, so the report was cut down to a status line.",
           "correct": false,
-          "why_wrong": "Without the Agent tool the coordinator still cannot delegate, and merging prompts removes isolation."
-        },
-        {
-          "text": "Set model=\"opus\" on the AgentDefinition, because subagents on smaller models are skipped.",
-          "correct": false,
-          "why_wrong": "The model does not gate delegation; whether the spawning tool is in the coordinator's context does."
-        },
-        {
-          "text": "Rename the subagent to \"Task\", the only subagent name the coordinator knows how to invoke.",
-          "correct": false,
-          "why_wrong": "Task is the legacy name of the spawning tool itself, not a special subagent name."
+          "why_wrong": "Hitting max_turns ends the parent loop with error_max_turns; it does not shorten a subagent report."
         }
       ],
-      "explanation": "Claude spawns subagents through the Agent tool (legacy alias Task; the init message may still list it as Task). An explicit tools list keeps only the named built-ins in context, so leaving Agent out means AgentDefinitions are never used. Include \"Agent\" in tools and pre-approve it in allowed_tools, as the guide's coordinator example does.",
-      "key_takeaway": "Coordinators delegate via the Agent (Task) tool, so it must be in the coordinator's tools and approved.",
+      "explanation": "By default a spawned subagent runs as a background task: the Agent tool result says async_launched and the subagent's final message arrives later. Treat the launch result as an acknowledgement, not as the answer.",
+      "key_takeaway": "async_launched means the subagent is running in the background; wait for its report.",
       "doc_links": [
         {
-          "label": "Subagents in the Claude Agent SDK",
+          "label": "Subagents in the Agent SDK",
           "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
-        },
-        {
-          "label": "Anthropic: Multi-Agent Research System",
-          "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
         }
       ]
     },
@@ -397,38 +385,34 @@
       "id": "claude-agent-sdk-q-11",
       "section": "Subagent Invocation, AgentDefinition & Context Passing",
       "guide_anchor": "subagents",
-      "question": "A coordinator gathered 12 findings from a search subagent, then spawned a synthesis subagent with the prompt \"Write the report using the findings above.\" The report is generic and cites nothing. Why?",
+      "question": "A parent agent has already captured a failing test name and its stack trace. It delegates \"fix the failing test\" to a fresh \"fixer\" subagent, which then spends many turns re-running the whole suite. What is the most direct fix?",
       "options": [
         {
-          "text": "The synthesis subagent needs the web search tool so it can find the sources again itself.",
-          "correct": false,
-          "why_wrong": "Re-searching duplicates work and blurs roles; the fix is to pass the findings it was supposed to use."
-        },
-        {
-          "text": "Subagents inherit history by default, so compaction must have truncated the earlier findings.",
-          "correct": false,
-          "why_wrong": "Non-fork subagents start fresh; nothing was inherited, so nothing was truncated."
-        },
-        {
-          "text": "A non-fork subagent never sees the parent's history; put findings and metadata in its prompt.",
+          "text": "Copy the test name, stack trace and suspect paths into the Agent tool's prompt.",
           "correct": true
         },
         {
-          "text": "The synthesis prompt needs firmer wording, such as \"You MUST cite every source you receive.\"",
+          "text": "Set the fixer's model to \"inherit\" so that it shares the parent's conversation.",
           "correct": false,
-          "why_wrong": "It received no sources; stronger wording cannot create missing context."
-        }
-      ],
-      "explanation": "A normal subagent receives its own system prompt, the Agent tool's prompt string, project CLAUDE.md and its tools, but not the parent's conversation or tool results. Put complete findings in the prompt, with content separated from metadata (URL, document, page, date).",
-      "key_takeaway": "The Agent tool's prompt string is the only channel to a subagent; include everything it needs.",
-      "doc_links": [
-        {
-          "label": "Subagents in the Claude Agent SDK",
-          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
+          "why_wrong": "model only picks which model runs the subagent; it does not share any conversation history."
         },
         {
-          "label": "Anthropic: Multi-Agent Research System",
-          "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+          "text": "Add the stack trace to the parent's system prompt so every subagent inherits it.",
+          "correct": false,
+          "why_wrong": "A non-fork subagent does not receive the parent's system prompt or its history."
+        },
+        {
+          "text": "Raise the fixer's maxTurns so that it has room to find the failure by itself.",
+          "correct": false,
+          "why_wrong": "That pays for rediscovery instead of passing what the parent already knows."
+        }
+      ],
+      "explanation": "A non-fork subagent starts fresh: it sees its own system prompt, project CLAUDE.md and the Agent tool's prompt string. Anything the parent learned must be copied into that prompt; references like \"the error above\" point at nothing.",
+      "key_takeaway": "The Agent prompt string is the only way to hand a fresh subagent what the parent already knows.",
+      "doc_links": [
+        {
+          "label": "Subagents in the Agent SDK",
+          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
         }
       ]
     },
@@ -436,83 +420,79 @@
       "id": "claude-agent-sdk-q-12",
       "section": "Subagent Invocation, AgentDefinition & Context Passing",
       "guide_anchor": "subagents",
-      "question": "Logs show a coordinator spawning three independent research subagents one after another, each in its own turn, which triples latency. What change makes them run concurrently?",
+      "question": "A custom \"endpoint-mapper\" subagent spent 30 turns cataloguing an API. An hour later, in a new query() call, you ask a follow-up and the mapper starts from scratch. How do you continue from its earlier work?",
       "options": [
         {
-          "text": "Give each subagent a smaller model so every sequential call finishes a little faster.",
+          "text": "Set background=True on the AgentDefinition so the mapper stays alive between calls.",
           "correct": false,
-          "why_wrong": "Each call gets faster, but the three still run one after another."
+          "why_wrong": "background makes a subagent non-blocking inside a session; it does not carry state into a new session."
         },
         {
-          "text": "Chain the subagents so each passes its results to the next one through a shared file.",
+          "text": "Define an AgentDefinition with the same name; the SDK reuses that agent's transcript.",
           "correct": false,
-          "why_wrong": "Chaining adds dependencies and makes the work even more sequential."
+          "why_wrong": "Agent names do not link transcripts, and each query() call starts a new session by default."
         },
         {
-          "text": "Move all three searches into the coordinator so there are no delegation round-trips.",
+          "text": "Pass fork_session=True so the SDK attaches the most recent subagent to the new call.",
           "correct": false,
-          "why_wrong": "This loses context isolation and still runs the searches as sequential tool calls."
+          "why_wrong": "fork_session needs a session ID and copies the parent conversation; it does not target a subagent."
         },
         {
-          "text": "Have the coordinator emit all three Agent tool calls together in a single response.",
+          "text": "Resume the original session_id and name the earlier result's agentId in the new prompt.",
           "correct": true
         }
       ],
-      "explanation": "Subagents launched by multiple Agent tool calls in the same assistant response run in parallel. Spreading them across separate turns serializes the work.",
-      "key_takeaway": "Emit independent Agent calls in one coordinator response to run subagents in parallel.",
+      "explanation": "A custom subagent's Agent tool result ends with an agentId trailer. Resume the same session with resume=session_id and reference that agent ID in the prompt; the subagent continues with its full history of tool calls and reasoning.",
+      "key_takeaway": "Capture session_id and agentId to resume a subagent instead of re-running its exploration.",
       "doc_links": [
         {
-          "label": "Subagents in the Claude Agent SDK",
+          "label": "Subagents in the Agent SDK",
           "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
         },
         {
-          "label": "Anthropic: Multi-Agent Research System",
-          "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+          "label": "Sessions",
+          "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-13",
-      "section": "Hooks: Deterministic Enforcement vs Prompts",
+      "section": "Hooks: Lifecycle & Deterministic Enforcement",
       "guide_anchor": "hooks-enforcement",
-      "question": "A PreToolUse hook denies `terraform apply` until your app has recorded a verified change ticket. In testing, Claude keeps retrying the denied apply instead of verifying the ticket. What improves recovery?",
+      "question": "A PreToolUse hook rewrites every Write file_path to live under /sandbox. It returns updatedInput together with permissionDecision \"defer\" so a reviewer can look later. After resuming, files land at their original paths. Why?",
       "options": [
         {
-          "text": "Return {} from the hook after the third denial so that the loop can make some progress.",
+          "text": "updatedInput must sit at the top level of the hook output, outside hookSpecificOutput.",
           "correct": false,
-          "why_wrong": "An empty dict means allow, which defeats the guarantee the hook exists to provide."
+          "why_wrong": "It is the reverse: updatedInput belongs inside hookSpecificOutput."
         },
         {
-          "text": "Make permissionDecisionReason name the missing step: \"Call get_ticket, then retry.\"",
+          "text": "\"defer\" drops updatedInput; pair the rewrite with \"allow\" or \"ask\", or omit the decision.",
           "correct": true
         },
         {
-          "text": "Switch the decision to \"ask\" so that a human approves or rejects each apply attempt.",
+          "text": "Hooks can rewrite input only for MCP tools; built-in tools such as Write ignore it.",
           "correct": false,
-          "why_wrong": "This moves the burden onto humans and still doesn't tell Claude which step it skipped."
+          "why_wrong": "updatedInput works for built-in tools; rewriting a Write path is a standard use."
         },
         {
-          "text": "Move the rule into CLAUDE.md so the model learns the order before calling apply at all.",
+          "text": "The matcher should be lowercase \"write\", so the hook never ran for these calls.",
           "correct": false,
-          "why_wrong": "CLAUDE.md is guidance; keep the hook as the guarantee and make its denial reason actionable."
+          "why_wrong": "Tool names are case-sensitive and the built-in tool is \"Write\"; the hook did run."
         }
       ],
-      "explanation": "permissionDecisionReason is sent back to Claude. A deny that names the alternative path (verify the ticket, escalate) lets the model recover instead of retrying blindly. Returning {} allows the call, and deny takes precedence over defer, ask and allow.",
-      "key_takeaway": "Pair a hook's deny with a reason that tells Claude exactly which step to run instead.",
+      "explanation": "updatedInput is applied with \"allow\" (auto-approve), with \"ask\" (show for approval) or with no decision (normal permission evaluation). Returning \"defer\" ends the turn with stop_reason tool_deferred and discards the modified input.",
+      "key_takeaway": "Never pair updatedInput with \"defer\"; the rewrite is dropped.",
       "doc_links": [
         {
           "label": "Hooks in the Claude Agent SDK",
           "url": "https://code.claude.com/docs/en/agent-sdk/hooks"
-        },
-        {
-          "label": "Agent SDK Permissions & Rules",
-          "url": "https://code.claude.com/docs/en/agent-sdk/permissions"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-14",
-      "section": "Hooks: Deterministic Enforcement vs Prompts",
+      "section": "Hooks: Lifecycle & Deterministic Enforcement",
       "guide_anchor": "hooks-enforcement",
       "question": "Three backend tools return dates as Unix epoch, ISO 8601 and \"MM/DD/YY\". The agent sometimes compares dates wrongly. Where should you normalize them?",
       "options": [
@@ -551,358 +531,330 @@
     },
     {
       "id": "claude-agent-sdk-q-15",
-      "section": "Session State: Resume, Fork & Named Sessions",
+      "section": "Session State: Resume, Fork & Interrupt",
       "guide_anchor": "sessions",
-      "question": "After a two-hour codebase analysis session, you want to try two different refactoring strategies without losing the shared analysis. Which approach fits?",
+      "question": "A ClaudeSDKClient app calls interrupt() when a user clicks Stop, then immediately sends a new query and calls receive_response() once. The UI shows the old task's messages instead of the new answer. Why?",
       "options": [
         {
-          "text": "Resume the same session in two terminals so both strategies append to the one history.",
+          "text": "interrupt() closes the session, so the new query starts fresh and replays old history.",
           "correct": false,
-          "why_wrong": "Both runs would write into the same session and their histories would interleave."
+          "why_wrong": "The session stays open after an interrupt; nothing is replayed."
         },
         {
-          "text": "Fork the session once per strategy; each fork gets a new ID and the original is kept.",
+          "text": "interrupt() leaves buffered messages; drain them through the old ResultMessage first.",
           "correct": true
         },
         {
-          "text": "Run /compact, then begin each strategy in a fresh session holding only the summary.",
+          "text": "Every query after an interrupt must pass resume=session_id to reach the new turn.",
           "correct": false,
-          "why_wrong": "Fresh sessions lose the detailed analysis that forking would carry over."
+          "why_wrong": "ClaudeSDKClient keeps the same session, so resume is not needed."
         },
         {
-          "text": "Use continue_conversation=True in two processes so each one branches off automatically.",
+          "text": "interrupt() only works with single-shot query(), so this call was silently ignored.",
           "correct": false,
-          "why_wrong": "continue resumes the most recent session in place; it does not create a branch."
+          "why_wrong": "It is the reverse: interrupt() works only in streaming mode, which ClaudeSDKClient uses."
         }
       ],
-      "explanation": "fork_session (SDK) or --fork-session / /branch (CLI) copies the history into a new session ID and leaves the original unchanged. Forks share the filesystem, so isolate file edits with worktrees or checkpoints.",
-      "key_takeaway": "Fork a session to explore divergent approaches from a shared baseline.",
+      "explanation": "interrupt() sends a stop signal but does not clear the message buffer. Messages the interrupted task already produced, including its ResultMessage, stay in the stream and must be drained with receive_response() before reading the reply to the next query.",
+      "key_takeaway": "After interrupt(), drain the interrupted turn up to its ResultMessage before reading new output.",
       "doc_links": [
         {
-          "label": "Agent SDK Sessions: Resume & Fork",
-          "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
-        },
-        {
-          "label": "Configuring Agent SDK Sessions",
-          "url": "https://code.claude.com/docs/en/agent-sdk/configuration"
+          "label": "Python SDK reference",
+          "url": "https://code.claude.com/docs/en/agent-sdk/python"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-16",
-      "section": "Session State: Resume, Fork & Named Sessions",
+      "section": "Session State: Resume, Fork & Interrupt",
       "guide_anchor": "sessions",
-      "question": "You resume yesterday's investigation session, but teammates have since rewritten three modules. The agent keeps referring to functions that no longer exist. What is the best move?",
+      "question": "A multi-turn SDK worker is restarted by a deploy between two user requests. You stored session_id from the last ResultMessage. What restores the conversation for the next request?",
       "options": [
         {
-          "text": "Run /compact so the stale tool results get summarized and stop steering the agent.",
-          "correct": false,
-          "why_wrong": "Compaction keeps the stale conclusions, just in summary form."
-        },
-        {
-          "text": "Fork the session; the new branch automatically picks up the current versions of files.",
-          "correct": false,
-          "why_wrong": "Forks copy the transcript; they do not refresh earlier tool results."
-        },
-        {
-          "text": "Tell it which files changed so it re-reads them, or start fresh with a summary if much is stale.",
+          "text": "Call query() with resume=session_id (or continue_conversation=True).",
           "correct": true
         },
         {
-          "text": "Keep going, because resume re-reads every file automatically and the agent will self-correct.",
+          "text": "Call query() with fork_session=True and no ID so the SDK picks the newest transcript.",
           "correct": false,
-          "why_wrong": "Resume restores the conversation history; it does not re-run earlier tool calls."
-        }
-      ],
-      "explanation": "Resume when prior context is still valid. When files changed, name them so the agent re-analyzes them; if many tool results are stale, a new session seeded with a structured summary of valid findings beats stale history.",
-      "key_takeaway": "Tell resumed sessions what changed, or start fresh with a summary when much of the history is stale.",
-      "doc_links": [
-        {
-          "label": "Agent SDK Sessions: Resume & Fork",
-          "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
+          "why_wrong": "fork_session needs a session ID and creates a new branch rather than continuing."
         },
         {
-          "label": "Configuring Agent SDK Sessions",
-          "url": "https://code.claude.com/docs/en/agent-sdk/configuration"
+          "text": "Paste the previous transcript text into the new prompt string so nothing is lost.",
+          "correct": false,
+          "why_wrong": "That inflates the prompt and loses the structured history that resume restores."
+        },
+        {
+          "text": "Nothing special: query() reattaches to the most recent session in the directory.",
+          "correct": false,
+          "why_wrong": "query() starts a new session by default unless you pass continue or resume."
+        }
+      ],
+      "explanation": "Sessions persist on disk. resume=session_id reopens a specific session with its full history; continue_conversation=True picks the most recent one in the working directory. File changes made earlier are not rolled back.",
+      "key_takeaway": "Persist session_id and resume it after a restart; query() starts fresh by default.",
+      "doc_links": [
+        {
+          "label": "Sessions",
+          "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-17",
-      "section": "Structured Tool Errors (isError)",
+      "section": "Custom Tools & Tool Errors",
       "guide_anchor": "tool-errors",
-      "question": "An order-history tool returns an empty list whenever its database times out. During an outage the agent tells several customers they have no orders. How should the tool respond to a timeout?",
+      "question": "An in-process stock_level tool returns \"0 units\" whenever the inventory API times out. During an incident the agent places restock orders for items that are actually in stock. What should the handler do on a timeout?",
       "options": [
         {
-          "text": "Return an empty list plus a log entry so operators can investigate without confusing the agent.",
+          "text": "Let the exception propagate so the SDK ends the query before any order goes out.",
           "correct": false,
-          "why_wrong": "The agent still reads an empty list as \"no orders\"; the failure stays hidden from it."
+          "why_wrong": "An uncaught handler exception becomes an error result and the loop keeps going; nothing is terminated."
         },
         {
-          "text": "Return isError: true with the generic message \"Operation failed\" to keep the payload small.",
+          "text": "Return \"0 units (approximate)\" so the model knows to treat the number with care.",
           "correct": false,
-          "why_wrong": "A generic message hides whether a retry could work or what was attempted."
+          "why_wrong": "It is still a number, and Claude can still act on it as a fact."
         },
         {
-          "text": "Return isError: true with a transient category, isRetryable: true and the attempted lookup.",
+          "text": "Catch it and return is_error: True, saying the count is unknown and when to retry.",
           "correct": true
         },
         {
-          "text": "Retry inside the tool with no limit until the database answers, however long that takes.",
+          "text": "Retry inside the handler in a loop with no limit until the inventory API responds.",
           "correct": false,
-          "why_wrong": "Unbounded retries burn time and budget and hide the outage; retry a bounded number of times, then report."
+          "why_wrong": "That stalls the turn indefinitely and still tells Claude nothing about the outage."
         }
       ],
-      "explanation": "An empty result for a valid query is a success; a timeout is an access failure. Mark it with isError and a structured payload (category, retryability, what was attempted) so the agent can retry or tell the user honestly. errorCategory and isRetryable are an application-level convention, not MCP spec fields.",
-      "key_takeaway": "Never return an empty success on failure; return isError with a structured, actionable payload.",
+      "explanation": "A value of zero is a valid answer, so Claude treats it as fact. Mark the call as failed with is_error and say the value is unknown, plus a retry hint. Handler errors never stop the loop, so the message you compose is what Claude reasons about.",
+      "key_takeaway": "Unknown is not zero: report backend failures with is_error and say what is unknown.",
       "doc_links": [
         {
-          "label": "Handling Claude Tool Calls",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
-        },
-        {
-          "label": "Custom Tools in the Agent SDK",
+          "label": "Custom tools",
           "url": "https://code.claude.com/docs/en/agent-sdk/custom-tools"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-18",
-      "section": "Structured Tool Errors (isError)",
+      "section": "Custom Tools & Tool Errors",
       "guide_anchor": "tool-errors",
-      "question": "A refund tool rejects a request because the amount exceeds policy. It returns isError with \"Operation failed\", so the agent retries three times and then apologizes vaguely. How should the error be designed?",
+      "question": "A create_ticket tool rejects calls because the project key has the wrong case (\"ops\" instead of \"OPS\"). It returns is_error with \"Request failed\", and Claude gives up and apologizes. Which error text best helps Claude recover?",
       "options": [
         {
-          "text": "Mark it transient and retryable so the agent keeps trying until the refund works.",
-          "correct": false,
-          "why_wrong": "A policy violation will fail the same way on every retry."
-        },
-        {
-          "text": "Mark it a non-retryable business error that explains the policy and allowed options.",
+          "text": "\"Invalid project key 'ops'. Keys are uppercase; valid keys: OPS, SEC, WEB.\"",
           "correct": true
         },
         {
-          "text": "Return success with an empty result so the agent does not get stuck in a retry loop again.",
+          "text": "\"Request failed, please try again later.\" so the agent knows to retry the call.",
           "correct": false,
-          "why_wrong": "That is silent suppression; the agent would believe the refund succeeded."
+          "why_wrong": "It implies a transient fault; retrying with the same arguments fails again."
         },
         {
-          "text": "Raise an uncaught exception so the SDK stops the loop and hands control back to your code.",
+          "text": "Return success with an empty ticket ID so that the agent's loop is not interrupted.",
           "correct": false,
-          "why_wrong": "An uncaught exception becomes an error result carrying the raw message, and the loop continues."
+          "why_wrong": "Claude would report a ticket that does not exist."
+        },
+        {
+          "text": "\"Error 400\" with the raw HTTP status code and nothing else in the message body.",
+          "correct": false,
+          "why_wrong": "A bare status code does not say what to change."
         }
       ],
-      "explanation": "Categorize errors so the agent picks the right recovery: transient (retry), validation (fix input), permission (stop or escalate) and business (explain the rule and offer an allowed alternative). Business-rule failures are not retryable.",
-      "key_takeaway": "Business-rule failures should be non-retryable errors that explain the rule and the allowed alternative.",
+      "explanation": "Write the error for the next decision: when Claude can fix the problem by changing arguments, say exactly what was wrong and what values are accepted. Vague or retry-flavoured messages lead to giving up or useless retries.",
+      "key_takeaway": "If Claude can fix the call, the error message should say exactly how.",
       "doc_links": [
         {
-          "label": "Handling Claude Tool Calls",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
-        },
-        {
-          "label": "Custom Tools in the Agent SDK",
+          "label": "Custom tools",
           "url": "https://code.claude.com/docs/en/agent-sdk/custom-tools"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-19",
-      "section": "Tool Distribution, Scoping & tool_choice",
+      "section": "Tool Scoping & tool_choice",
       "guide_anchor": "tool-distribution",
-      "question": "An order-status subagent was given a generic run_sql tool. Logs show it sometimes joins tables to read other customers' data, and once it issued an UPDATE. The role only needs the status of the current customer's orders. What is the best tool design?",
+      "question": "A subagent that summarizes CI failures was given Bash so it could curl the CI API. Logs show it sometimes runs unrelated commands, such as deleting cache directories. Which change best applies least privilege?",
       "options": [
         {
-          "text": "Keep run_sql and add a system-prompt rule saying that only SELECT statements on orders are allowed.",
+          "text": "Keep Bash and add \"only use curl against the CI API\" to the subagent's prompt.",
           "correct": false,
-          "why_wrong": "Prompt rules are probabilistic; the tool can still run any statement against any table."
+          "why_wrong": "A prompt instruction is guidance, not a guarantee; Bash stays fully available."
         },
         {
-          "text": "Replace run_sql with a constrained fetch_order(order_id) tool that returns only the fields needed.",
+          "text": "Switch the session to acceptEdits so that destructive commands get reviewed first.",
+          "correct": false,
+          "why_wrong": "acceptEdits auto-approves file operations; it widens access rather than narrowing it."
+        },
+        {
+          "text": "Give the subagent every built-in tool so it never needs a Bash workaround again.",
+          "correct": false,
+          "why_wrong": "More tools mean more schema tokens and more room for misuse."
+        },
+        {
+          "text": "Swap Bash for an in-process get_build_log(job_id) tool; set tools to Read plus that tool.",
           "correct": true
-        },
-        {
-          "text": "Move run_sql to the coordinator so that every query the subagent needs goes through one hub.",
-          "correct": false,
-          "why_wrong": "This hands the same unconstrained tool to a more powerful agent and adds round-trips without limiting scope."
-        },
-        {
-          "text": "Keep run_sql and set tool_choice to {\"type\": \"any\"} so the agent always commits to a tool call.",
-          "correct": false,
-          "why_wrong": "tool_choice controls whether a tool is called, not what the tool is able to do."
         }
       ],
-      "explanation": "When misuse is the risk, replace generic tools with constrained ones that match the role: a fetch_order(order_id) tool can only read the intended record and fields. Prompt rules, routing changes and tool_choice leave the dangerous capability in place.",
-      "key_takeaway": "Swap generic, high-risk tools for constrained, role-specific tools instead of policing them with prompts.",
+      "explanation": "Scope each subagent to the narrowest tools its role needs. An in-process tool enforces the boundary in code (one job's log, read-only), and AgentDefinition.tools keeps Bash out of the subagent's context entirely.",
+      "key_takeaway": "Replace broad tools with narrow in-process tools when misuse is the risk.",
       "doc_links": [
         {
-          "label": "Custom Tools in the Agent SDK",
+          "label": "Custom tools",
           "url": "https://code.claude.com/docs/en/agent-sdk/custom-tools"
         },
         {
-          "label": "Agent SDK Tool Search at Scale",
-          "url": "https://code.claude.com/docs/en/agent-sdk/tool-search"
+          "label": "Subagents in the Agent SDK",
+          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-20",
-      "section": "Tool Distribution, Scoping & tool_choice",
-      "guide_anchor": "tool-distribution",
-      "question": "A document pipeline must call extract_metadata on each document before any enrichment tool, after which Claude should choose tools freely. How should you set tool_choice?",
+      "section": "Custom Tools & Tool Errors",
+      "guide_anchor": "tool-errors",
+      "question": "Claude issues four calls to your in-process get_price tool in one turn, but they execute one after another and add seconds of latency. The tool only reads data. What lets them run concurrently?",
       "options": [
         {
-          "text": "Use {\"type\": \"any\"} on every request so Claude always calls the tools in the right order.",
+          "text": "Set permission_mode=\"acceptEdits\" so that the four calls are approved as one batch.",
           "correct": false,
-          "why_wrong": "any forces some tool call but lets Claude pick which one, and forcing on every turn stops it from ever finishing."
+          "why_wrong": "Permission modes decide approval, not whether calls execute concurrently."
         },
         {
-          "text": "Force {\"type\": \"tool\", \"name\": \"extract_metadata\"} on the first request, then use auto.",
+          "text": "Wrap the handler body in asyncio.gather so the tool runs its own calls in parallel.",
+          "correct": false,
+          "why_wrong": "Each call is a separate handler invocation; gather inside one call cannot overlap the others."
+        },
+        {
+          "text": "Add annotations=ToolAnnotations(readOnlyHint=True) to the @tool definition.",
           "correct": true
         },
         {
-          "text": "Force extract_metadata on every request so the required order can never be violated.",
+          "text": "Register get_price as four separate tools so each call can get its own worker.",
           "correct": false,
-          "why_wrong": "Forcing a tool on every turn turns the agent into a fixed pipeline that cannot end with an answer."
-        },
-        {
-          "text": "Use {\"type\": \"none\"} on the first request and describe the required order in the prompt.",
-          "correct": false,
-          "why_wrong": "none disables tools entirely, and prompt-only ordering is not guaranteed."
+          "why_wrong": "Custom tools run sequentially by default no matter how many there are."
         }
       ],
-      "explanation": "tool_choice {\"type\": \"tool\"} guarantees a specific call. Use it for the mandatory first step and return to auto afterward. Forced calls skip thinking, and some models or extended-thinking setups restrict any/tool, so check per model.",
-      "key_takeaway": "Force a specific tool only for the mandatory step, then switch back to auto.",
+      "explanation": "Read-only built-ins such as Read, Glob and Grep can run concurrently, while custom tools default to sequential execution. Marking a custom tool readOnlyHint lets Claude batch it with other read-only calls. Keep the hint accurate; it is not enforced.",
+      "key_takeaway": "Set readOnlyHint on read-only custom tools so their calls can run in parallel.",
       "doc_links": [
         {
-          "label": "Custom Tools in the Agent SDK",
+          "label": "Custom tools",
           "url": "https://code.claude.com/docs/en/agent-sdk/custom-tools"
         },
         {
-          "label": "Agent SDK Tool Search at Scale",
-          "url": "https://code.claude.com/docs/en/agent-sdk/tool-search"
+          "label": "How the agent loop works",
+          "url": "https://code.claude.com/docs/en/agent-sdk/agent-loop"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-21",
-      "section": "Escalation & Ambiguity Resolution",
-      "guide_anchor": "escalation",
-      "question": "A customer writes \"Please just connect me to a person\" about a password reset the agent could finish in one step. What should the agent do?",
+      "section": "Permission Modes, Approvals & Clarifying Questions",
+      "guide_anchor": "approvals",
+      "question": "A worker uses allowed_tools=[\"Read\", \"Grep\"] with permission_mode=\"bypassPermissions\" to stay \"read-only\". An audit shows it ran Bash and Edit. Why?",
       "options": [
         {
-          "text": "Finish the password reset first, since the issue is simple and within the agent's ability.",
+          "text": "bypassPermissions ignores allowed_tools only when a canUseTool callback is also set.",
           "correct": false,
-          "why_wrong": "An explicit request for a human is honored right away, even when the issue is simple."
+          "why_wrong": "There is no such condition; the callback is not the reason unlisted tools ran."
         },
         {
-          "text": "Check a sentiment score and escalate only if frustration is above a threshold.",
-          "correct": false,
-          "why_wrong": "Sentiment is not the trigger; the explicit request is."
-        },
-        {
-          "text": "Hand off to a human right away with a structured summary, without trying the fix first.",
+          "text": "allowed_tools only pre-approves; unlisted tools fall to the mode, which approves them.",
           "correct": true
         },
         {
-          "text": "Ask the customer to explain why a human would help more before deciding whether to escalate.",
+          "text": "Read and Grep call Bash internally, and Bash inherits their pre-approval at runtime.",
           "correct": false,
-          "why_wrong": "This adds friction and ignores a clear, explicit request."
-        }
-      ],
-      "explanation": "Explicit requests for a human are an immediate escalation trigger. Pass a structured handoff (customer ID, issue, what was tried, recommended action), because the human usually cannot see the transcript.",
-      "key_takeaway": "Honor explicit requests for a human immediately and include a structured handoff summary.",
-      "doc_links": [
-        {
-          "label": "Approvals & Clarifications in Agent SDK",
-          "url": "https://code.claude.com/docs/en/agent-sdk/user-input"
+          "why_wrong": "Built-in tools do not pass approval to other tools."
         },
         {
-          "label": "Agent SDK Permissions & Rules",
+          "text": "allowed_tools applies only to subagents; the main agent reads settings.json instead.",
+          "correct": false,
+          "why_wrong": "allowed_tools applies to the main session as well."
+        }
+      ],
+      "explanation": "allowed_tools adds allow rules; it does not restrict anything. Calls that match no rule reach the permission-mode step, and bypassPermissions approves them. For a read-only worker, limit tools in context (tools=[...]) or pair allowed_tools with dontAsk.",
+      "key_takeaway": "allowed_tools does not constrain bypassPermissions; restrict with tools, deny rules or dontAsk.",
+      "doc_links": [
+        {
+          "label": "Agent SDK permissions",
           "url": "https://code.claude.com/docs/en/agent-sdk/permissions"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-22",
-      "section": "Escalation & Ambiguity Resolution",
-      "guide_anchor": "escalation",
-      "question": "get_customer returns three accounts named \"Dana Lee\". The agent picks the most recently active one and issues a refund to the wrong person. What should it have done?",
+      "section": "Permission Modes, Approvals & Clarifying Questions",
+      "guide_anchor": "approvals",
+      "question": "A research agent is configured with tools=[\"Read\", \"Glob\", \"Grep\"] and a canUseTool callback written to handle clarifying questions. Claude never asks anything and guesses between ambiguous options. What is missing?",
       "options": [
         {
-          "text": "Picked the account with the most orders, since frequent buyers contact support most often.",
+          "text": "permission_mode must be \"plan\", since clarifying questions exist only in planning.",
           "correct": false,
-          "why_wrong": "That is still a guess; any heuristic can select the wrong customer."
+          "why_wrong": "AskUserQuestion is available outside plan mode."
         },
         {
-          "text": "Asked the customer for another identifier, such as an email or order number, before acting.",
+          "text": "The callback must return PermissionResultDeny so Claude rephrases its call as a question.",
+          "correct": false,
+          "why_wrong": "A deny blocks a call; it does not make Claude ask the user anything."
+        },
+        {
+          "text": "\"AskUserQuestion\" has to be in the explicit tools list; leaving it out hides the tool.",
           "correct": true
         },
         {
-          "text": "Escalated to a human at once, since any duplicate name match is beyond the agent's authority.",
+          "text": "A UserPromptSubmit hook must forward each question to the canUseTool callback.",
           "correct": false,
-          "why_wrong": "The agent can resolve this by asking; escalation is for policy gaps, explicit requests or lack of progress."
-        },
-        {
-          "text": "Chosen the account whose address best matches the location of the current chat session.",
-          "correct": false,
-          "why_wrong": "Still a heuristic; ambiguity should be resolved by asking the customer, not by inference."
+          "why_wrong": "That hook fires when a prompt is submitted, not when Claude asks something."
         }
       ],
-      "explanation": "When a lookup returns multiple matches, ask for an additional identifier instead of choosing by heuristic. Acting on the wrong record is worse than one extra question.",
-      "key_takeaway": "Resolve ambiguous matches by asking for another identifier, never by heuristic selection.",
+      "explanation": "Clarifying questions go through the AskUserQuestion tool, which reaches canUseTool like any approval. It is available by default, but an explicit tools list hides everything not listed, so include \"AskUserQuestion\" and return answers keyed by question text.",
+      "key_takeaway": "With an explicit tools list, include AskUserQuestion or Claude cannot ask.",
       "doc_links": [
         {
-          "label": "Approvals & Clarifications in Agent SDK",
+          "label": "Handle approvals and user input",
           "url": "https://code.claude.com/docs/en/agent-sdk/user-input"
-        },
-        {
-          "label": "Agent SDK Permissions & Rules",
-          "url": "https://code.claude.com/docs/en/agent-sdk/permissions"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-23",
-      "section": "Error Propagation in Multi-Agent Systems",
+      "section": "Subagent Failures, Limits & Partial Results",
       "guide_anchor": "error-propagation",
-      "question": "In an acquisition due-diligence pipeline, the litigation-records subagent reports a structured failure because its court-records source is offline. The coordinator continues with the other findings, but the delivered report reads as complete and never mentions litigation. What should change?",
+      "question": "A \"migration-auditor\" subagent with maxTurns=15 returns output marked partial after covering two of three services. What should the coordinator do to finish the audit most efficiently?",
       "options": [
         {
-          "text": "Hold the report until the court-records source is back, then rerun the entire pipeline from scratch.",
-          "correct": false,
-          "why_wrong": "This discards good partial work and delays every finding because one source failed."
-        },
-        {
-          "text": "Have the synthesis step write the litigation section from the model's general knowledge of the company.",
-          "correct": false,
-          "why_wrong": "That invents unsourced findings and hides the fact that the real records were never checked."
-        },
-        {
-          "text": "Add a single line at the end stating that the overall confidence of this report is moderate.",
-          "correct": false,
-          "why_wrong": "A vague confidence label doesn't tell the reader which area is missing or why."
-        },
-        {
-          "text": "Have the synthesis state which areas are well supported and flag litigation as a gap, with the cause.",
+          "text": "Resume that subagent by its agentId so it keeps its history and covers the last service.",
           "correct": true
+        },
+        {
+          "text": "Spawn a new auditor with the same prompt and maxTurns=30 to redo the whole audit.",
+          "correct": false,
+          "why_wrong": "It throws away two services of finished work and pays for them again."
+        },
+        {
+          "text": "Treat the report as complete, since the SDK marks output partial only for optional work.",
+          "correct": false,
+          "why_wrong": "Partial means the turn limit was reached before the work finished."
+        },
+        {
+          "text": "Raise CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS so that the auditor is given more turns.",
+          "correct": false,
+          "why_wrong": "That setting caps simultaneous subagents; it does not change any agent's turns."
         }
       ],
-      "explanation": "Continuing with partial results is right, but the final synthesis needs coverage annotations: which findings are well supported and which areas have gaps because sources were unavailable. Otherwise readers treat a missing check as a clean result.",
-      "key_takeaway": "When proceeding with partial results, annotate coverage gaps and their cause in the final output.",
+      "explanation": "When a subagent reaches maxTurns, its output comes back marked partial and it can be resumed. Resuming by agentId keeps its tool results and reasoning, so it only has to cover what is left.",
+      "key_takeaway": "Resume a partial subagent by agentId instead of starting over.",
       "doc_links": [
         {
-          "label": "Subagents in the Claude Agent SDK",
+          "label": "Subagents in the Agent SDK",
           "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
-        },
-        {
-          "label": "Handling Claude Tool Calls",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-24",
-      "section": "Long Sessions & Large-Codebase Context",
+      "section": "Long Sessions & Context Compaction",
       "guide_anchor": "long-context",
       "question": "Deep into a long debugging session, the agent starts proposing \"typical\" fixes that ignore the specific classes it identified an hour earlier. What helps most from here on?",
       "options": [
@@ -941,79 +893,75 @@
     },
     {
       "id": "claude-agent-sdk-q-25",
-      "section": "Long Sessions & Large-Codebase Context",
+      "section": "Long Sessions & Context Compaction",
       "guide_anchor": "long-context",
-      "question": "After automatic summarization of a long support chat, the agent tells the customer their refund is \"about $40\". It had promised exactly $43.75 on order 88120. How do you prevent this?",
+      "question": "A long-running agent was told in its first prompt never to touch files under vendor/. Hours later, after a compact_boundary message appears in the stream, it edits vendor/ files. What is the most robust fix?",
       "options": [
         {
-          "text": "Keep exact amounts, dates and IDs in a persistent case-facts block outside the summary.",
+          "text": "Repeat the rule in every user message so that a recent copy is always present.",
+          "correct": false,
+          "why_wrong": "It helps sometimes, but it is still a prompt rule and costs tokens on every turn."
+        },
+        {
+          "text": "Raise max_turns so the history never gets long enough to be summarized at all.",
+          "correct": false,
+          "why_wrong": "max_turns bounds the loop; it does not control when compaction happens."
+        },
+        {
+          "text": "Send /compact by hand at the start so automatic compaction never runs later on.",
+          "correct": false,
+          "why_wrong": "Manual compaction does not prevent later automatic compaction, and it summarizes the rule too."
+        },
+        {
+          "text": "Move the rule to CLAUDE.md and add a PreToolUse deny for any write under vendor/.",
           "correct": true
-        },
-        {
-          "text": "Turn off summarization entirely and let the chat history grow for as long as it needs to.",
-          "correct": false,
-          "why_wrong": "Unbounded history eventually degrades or overflows; the fix is to protect key facts."
-        },
-        {
-          "text": "Ask the summarizer to be more precise by adding \"be accurate\" to its instructions.",
-          "correct": false,
-          "why_wrong": "Summaries blur numbers by nature; a softer instruction won't reliably preserve them."
-        },
-        {
-          "text": "Have the agent re-ask the customer for the amount whenever it needs to quote a figure.",
-          "correct": false,
-          "why_wrong": "This pushes the problem onto the customer and erodes trust."
         }
       ],
-      "explanation": "Summarization tends to round or drop precise values. Keep transactional facts (amounts, dates, order IDs, stated expectations) in a structured block that persists outside summarized history and is included in every prompt.",
-      "key_takeaway": "Store exact transactional facts in a persistent case-facts block that summaries cannot blur.",
+      "explanation": "Compaction replaces older history with a summary, so instructions from early in the conversation can be lost. Persistent rules belong in CLAUDE.md (loaded via setting_sources), and rules that must always hold belong in a hook.",
+      "key_takeaway": "Keep durable rules in CLAUDE.md and enforce must-hold rules with hooks, not the first prompt.",
       "doc_links": [
         {
-          "label": "Claude Context Compaction",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
+          "label": "How the agent loop works",
+          "url": "https://code.claude.com/docs/en/agent-sdk/agent-loop"
         },
         {
-          "label": "Anthropic: Context Engineering for Agents",
-          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+          "label": "Hooks in the Claude Agent SDK",
+          "url": "https://code.claude.com/docs/en/agent-sdk/hooks"
         }
       ]
     },
     {
       "id": "claude-agent-sdk-q-26",
-      "section": "Provenance & Multi-Source Synthesis",
+      "section": "Structured Results from Agents",
       "guide_anchor": "provenance",
-      "question": "Two credible sources report 2.1M and 2.6M monthly users for the same product. The synthesis agent prints 2.35M with no citation. What should the report contain?",
+      "question": "Your app needs the agent's final answer as JSON that matches a schema and is validated before your code reads it. Which approach fits the Agent SDK?",
       "options": [
         {
-          "text": "The average of the two figures, which is a fair compromise when credible sources disagree.",
+          "text": "Ask for JSON in the prompt and pull it out of ResultMessage.result with a regex.",
           "correct": false,
-          "why_wrong": "Averaging invents a number neither source reported and hides the disagreement."
+          "why_wrong": "Nothing validates the output, so malformed or partial JSON reaches your code."
         },
         {
-          "text": "Only the larger figure, since newer sources usually report larger user counts than old ones.",
-          "correct": false,
-          "why_wrong": "This picks by heuristic and silently drops a credible source."
-        },
-        {
-          "text": "Neither figure, because publishing conflicting data could mislead readers of the report.",
-          "correct": false,
-          "why_wrong": "Dropping the metric loses information the reader needs."
-        },
-        {
-          "text": "Both values with their sources and dates, plus an explicit note that the sources conflict.",
+          "text": "Pass output_format with a json_schema and read ResultMessage.structured_output.",
           "correct": true
+        },
+        {
+          "text": "Force tool_choice to a dummy tool on every turn so Claude always has to emit JSON.",
+          "correct": false,
+          "why_wrong": "Forcing a tool every turn stops the agent from finishing, and it is a Messages API setting."
+        },
+        {
+          "text": "Register a PostToolUse hook that converts the agent's final text answer into JSON.",
+          "correct": false,
+          "why_wrong": "PostToolUse runs after tool calls, not on the final answer."
         }
       ],
-      "explanation": "Preserve claim-to-source mappings through synthesis, including publication dates, which often explain apparent contradictions. Report conflicting values with attribution and let the coordinator or reader reconcile them.",
-      "key_takeaway": "Keep conflicting values with sources and dates and annotate the conflict; never average or pick silently.",
+      "explanation": "output_format={\"type\": \"json_schema\", \"schema\": ...} makes the SDK validate the final result and expose it as ResultMessage.structured_output. If no valid output is produced within the retry limit, the result subtype is error_max_structured_output_retries.",
+      "key_takeaway": "Use output_format for validated JSON results instead of parsing free text.",
       "doc_links": [
         {
-          "label": "Claude Citations API",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
-        },
-        {
-          "label": "Claude Search Results & Provenance",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/search-results"
+          "label": "Python SDK reference",
+          "url": "https://code.claude.com/docs/en/agent-sdk/python"
         }
       ]
     },

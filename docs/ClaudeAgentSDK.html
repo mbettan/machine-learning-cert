@@ -188,35 +188,35 @@
                 </a>
                 <a href="#hooks-enforcement" class="toc-item">
                     <span class="toc-number">05</span>
-                    <span>Hooks vs Prompt Guidance</span>
+                    <span>Hook Lifecycle &amp; Enforcement</span>
                 </a>
                 <a href="#sessions" class="toc-item">
                     <span class="toc-number">06</span>
-                    <span>Sessions: Resume &amp; Fork</span>
+                    <span>Sessions: Resume, Fork &amp; Interrupt</span>
                 </a>
                 <a href="#tool-errors" class="toc-item">
                     <span class="toc-number">07</span>
-                    <span>Structured Tool Errors</span>
+                    <span>Custom Tools &amp; Errors</span>
                 </a>
                 <a href="#tool-distribution" class="toc-item">
                     <span class="toc-number">08</span>
                     <span>Tool Scoping &amp; tool_choice</span>
                 </a>
-                <a href="#escalation" class="toc-item">
+                <a href="#approvals" class="toc-item">
                     <span class="toc-number">09</span>
-                    <span>Escalation &amp; Ambiguity</span>
+                    <span>Permission Modes &amp; Approvals</span>
                 </a>
                 <a href="#error-propagation" class="toc-item">
                     <span class="toc-number">10</span>
-                    <span>Error Propagation</span>
+                    <span>Subagent Failures &amp; Limits</span>
                 </a>
                 <a href="#long-context" class="toc-item">
                     <span class="toc-number">11</span>
-                    <span>Long Sessions &amp; Context</span>
+                    <span>Long Sessions &amp; Compaction</span>
                 </a>
                 <a href="#provenance" class="toc-item">
                     <span class="toc-number">12</span>
-                    <span>Provenance &amp; Synthesis</span>
+                    <span>Structured Results</span>
                 </a>
                 <a href="#managed-agents" class="toc-item">
                     <span class="toc-number">13</span>
@@ -416,55 +416,95 @@
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 03: 3. COORDINATOR–SUBAGENT ORCHESTRATION &amp; DECOMPOSITION
+             SECTION 03: 3. COORDINATOR–SUBAGENT ORCHESTRATION & DECOMPOSITION
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="orchestration">
             <div class="section-divider-number">03</div>
             <h2>3. Coordinator–Subagent Orchestration &amp; Decomposition</h2>
         </div>
 
-        <div class="prose"><p><strong>Hub-and-spoke:</strong> one <strong>coordinator</strong> decomposes the task, decides which subagents to invoke, passes each one the context it needs, aggregates results and handles errors. Subagents never talk to each other directly; <strong>all routing goes through the coordinator</strong> (observability, consistent error handling, controlled information flow).</p></div>
+        <div class="prose"><p><strong>Hub-and-spoke:</strong> the main agent is the only node that talks to every subagent. Children report back to it and never to each other, which keeps one place to log, budget and merge results.</p></div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Coordinator responsibility</th><th>Do</th><th>Avoid</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Select</strong></td><td>Pick subagents based on what the query needs (simple question → one agent)</td><td>Always running the full pipeline for every request</td></tr>
-                    <tr><td><strong>Partition</strong></td><td>Give each subagent a distinct subtopic or source type</td><td>Overlapping scopes → duplicated work and conflicting findings</td></tr>
-                    <tr><td><strong>Decompose</strong></td><td>Cover the whole question; check the decomposition against the original goal</td><td>Overly narrow subtasks that silently drop parts of a broad topic</td></tr>
-                    <tr><td><strong>Instruct</strong></td><td>State goals, scope and quality criteria</td><td>Step-by-step procedures that stop subagents from adapting</td></tr>
-                    <tr><td><strong>Refine</strong></td><td>Evaluate the synthesis for gaps, re-delegate targeted queries, re-synthesize</td><td>Accepting the first synthesis even when coverage is thin</td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Coordinator responsibility</th>
+<th>Do</th>
+<th>Avoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Delegate only when it pays</strong></td>
+<td>Answer a one-line lookup in the main agent; spawn when the work is verbose or parallel</td>
+<td>A subagent per request "just in case": every child costs a fresh context and its own API calls</td>
+</tr>
+<tr>
+<td><strong>Non-overlapping briefs</strong></td>
+<td>Give two children disjoint directories, services or questions</td>
+<td>Two children reading the same files and returning conflicting edits</td>
+</tr>
+<tr>
+<td><strong>Route</strong></td>
+<td>Write each <code>AgentDefinition.description</code> as a "use when…" sentence so Claude can tell agents apart</td>
+<td>Two agents with near-identical descriptions, so delegation is a coin toss</td>
+</tr>
+<tr>
+<td><strong>Brief</strong></td>
+<td>Say what "done" looks like and what to return</td>
+<td>Scripting every command, so the child cannot react to what it finds</td>
+</tr>
+<tr>
+<td><strong>Bound</strong></td>
+<td>Cap spend with <code>max_budget_usd</code> and nesting with <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code></td>
+<td>An unbounded tree: subagents can spawn their own subagents</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="prose"><p><strong>Choosing a decomposition pattern:</strong></p></div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Pattern</th><th>Use when</th><th>Example</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Prompt chaining (fixed sequential pipeline)</strong></td><td>Steps and order are known in advance; predictable multi-aspect work</td><td>Review each file individually → separate cross-file integration pass</td></tr>
-                    <tr><td><strong>Dynamic / adaptive decomposition</strong></td><td>Open-ended investigation; next steps depend on findings</td><td>"Add tests to a legacy codebase": map structure → find high-impact areas → prioritized plan that adapts as dependencies appear</td></tr>
-                    <tr><td><strong>Parallel fan-out</strong></td><td>Subtasks are independent</td><td>Search, document analysis and data lookup at the same time</td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Use when</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fixed workflow (code decides the order)</strong></td>
+<td>The steps never change</td>
+<td>Lint → type-check → summarize, each as its own <code>query()</code> call</td>
+</tr>
+<tr>
+<td><strong>Agent-led delegation</strong></td>
+<td>What to do next depends on what was found</td>
+<td>Incident triage: the agent reads alerts, then decides whether a log-reader or a config-diff subagent is worth spawning</td>
+</tr>
+<tr>
+<td><strong>Parallel fan-out</strong></td>
+<td>Children do not depend on each other</td>
+<td><code>style-checker</code>, <code>security-scanner</code> and <code>test-coverage</code> subagents on the same change</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
-                <h4>Exam trap — attention dilution</h4>
-                <p>One giant prompt reviewing 30 files at once gives shallow, inconsistent findings. Split into <strong>per-file local passes</strong> plus <strong>one cross-file integration pass</strong>.</p>
+                <h4>Exam trap — one context for everything</h4>
+                <p>stuffing every log, diff and doc into the main agent fills its window and triggers compaction early. Push verbose reading into subagents so only their short reports land in the parent.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 04: 4. SUBAGENT INVOCATION, AGENTDEFINITION &amp; CONTEXT PASSING
+             SECTION 04: 4. SUBAGENT INVOCATION, AGENTDEFINITION & CONTEXT PASSING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="subagents">
             <div class="section-divider-number">04</div>
@@ -474,17 +514,17 @@
         <div class="code-block">
             <div class="code-block-header">
                 <div class="code-block-dots"><span></span><span></span><span></span></div>
-                <span class="code-block-lang">Python — coordinator with an AgentDefinition subagent</span>
+                <span class="code-block-lang">Python</span>
             </div>
             <pre>from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition
 
 options = ClaudeAgentOptions(
-    allowed_tools=["Read", "Grep", "Glob", "Agent"],   <span class="comment"># the coordinator needs the Agent tool</span>
+    allowed_tools=["Read", "Grep", "Glob", "Agent"], <span class="comment">  # the coordinator needs the Agent tool</span>
     agents={
         "code-reviewer": AgentDefinition(
-            description="Security and quality review. Use for code review tasks.",  <span class="comment"># WHEN to delegate</span>
-            prompt="You are a code review specialist...",                           <span class="comment"># subagent system prompt</span>
-            tools=["Read", "Grep", "Glob"],                                         <span class="comment"># least privilege</span>
+            description="Security and quality review. Use for code review tasks.",<span class="comment">  # WHEN to delegate</span>
+            prompt="You are a code review specialist...",                         <span class="comment">  # subagent system prompt</span>
+            tools=["Read", "Grep", "Glob"],                                       <span class="comment">  # least privilege</span>
             model="sonnet",
         ),
     },
@@ -493,210 +533,387 @@ options = ClaudeAgentOptions(
 
         <div class="concept-card accent-cyan">
             <ul>
-                <li><strong>Spawning mechanism:</strong> Claude spawns subagents through the <strong><code>Agent</code> tool<strong> (legacy name </strong><code>Task</code></strong>, still accepted as an alias; older docs and exams say "Task tool"). The coordinator can only delegate if that tool is <strong>in context</strong> (with an explicit <code>tools</code> list, include <code>"Agent"</code>; a bare <code>disallowed_tools</code> entry removes it) <strong>and approved</strong> (docs examples also list <code>"Agent"</code> in <code>allowed_tools</code>, which only pre-approves calls).</li>
-                <li><strong><code>AgentDefinition</code> fields:</strong> <code>description</code> (required; tells the coordinator <em>when</em> to use it), <code>prompt</code> (required; system prompt), <code>tools</code> (omit = inherit all), <code>disallowedTools</code>, <code>model</code> (<code>"sonnet"</code>, <code>"opus"</code>, <code>"haiku"</code>, <code>"inherit"</code>, or full ID), <code>skills</code>, <code>mcpServers</code>, <code>maxTurns</code>, <code>memory</code>, <code>background</code>, <code>effort</code>, <code>permissionMode</code>, <code>omitClaudeMd</code> (TS).</li>
-                <li><strong>Fan-out limits:</strong> spawn depth and concurrency are capped by <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code> and <code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code> (verify current defaults).</li>
-            </ul>
+<li><strong>Spawning mechanism:</strong> Claude spawns subagents through the <strong><code>Agent</code> tool</strong> (legacy name <strong><code>Task</code></strong>, still accepted as an alias; older docs and exams say "Task tool"). The coordinator can only delegate if that tool is <strong>in context</strong> (with an explicit <code>tools</code> list, include <code>"Agent"</code>; a bare <code>disallowed_tools</code> entry removes it) <strong>and approved</strong> (docs examples also list <code>"Agent"</code> in <code>allowed_tools</code>, which only pre-approves calls).</li>
+<li><strong><code>AgentDefinition</code> fields:</strong> <code>description</code> (required; tells the coordinator <em>when</em> to use it), <code>prompt</code> (required; system prompt), <code>tools</code> (omit = inherit all), <code>disallowedTools</code>, <code>model</code> (<code>"sonnet"</code>, <code>"opus"</code>, <code>"haiku"</code>, <code>"inherit"</code>, or full ID), <code>skills</code>, <code>mcpServers</code>, <code>maxTurns</code>, <code>memory</code>, <code>background</code>, <code>effort</code>, <code>permissionMode</code>, <code>omitClaudeMd</code> (TS).</li>
+<li><strong>Fan-out limits (documented defaults):</strong> <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code> = <strong>3</strong> layers below the main agent (<code>1</code> stops subagents from spawning their own); <code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code> = <strong>20</strong> running at once; <code>max_budget_usd</code> has no default and counts subagent spend.</li>
+</ul>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>A (non-fork) subagent receives</th><th>It does <strong>not</strong> receive</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Its own system prompt (<code>AgentDefinition.prompt</code>) + the <strong>Agent tool's prompt string</strong></td><td>The parent's conversation history or tool results</td></tr>
-                    <tr><td>Project <code>CLAUDE.md</code> (via <code>setting_sources</code>, unless <code>omitClaudeMd</code>)</td><td>The parent's system prompt</td></tr>
-                    <tr><td>Its tool definitions (inherited or the <code>tools</code> subset)</td><td>Skill content, unless listed in <code>skills</code></td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>A (non-fork) subagent receives</th>
+<th>It does <strong>not</strong> receive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Its own system prompt (<code>AgentDefinition.prompt</code>) + the <strong>Agent tool's prompt string</strong></td>
+<td>The parent's conversation history or tool results</td>
+</tr>
+<tr>
+<td>Project <code>CLAUDE.md</code> (via <code>setting_sources</code>, unless <code>omitClaudeMd</code>)</td>
+<td>The parent's system prompt</td>
+</tr>
+<tr>
+<td>Its tool definitions (inherited or the <code>tools</code> subset)</td>
+<td>Skill content, unless listed in <code>skills</code></td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="callout tip">
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
                 <h4>Decision rule — context passing</h4>
-                <p>The <strong>only</strong> channel from coordinator to subagent is the prompt string. Put everything the subagent needs <strong>in that prompt</strong>: complete prior findings, file paths, error messages, decisions. Use a structured format that separates <strong>content</strong> from <strong>metadata</strong> (source URL, document name, page, date) so attribution survives.</p>
+                <p>A fresh subagent knows only what the Agent prompt string tells it. If the parent already found the failing test name, the stack trace or the file that owns a function, that text has to be <strong>copied into the prompt</strong>; a reference such as "the error above" points at nothing. Ask for a fixed-shape final report so the parent can parse it.</p>
             </div>
         </div>
 
         <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Return path:</strong> only the subagent's <strong>final message</strong> returns to the coordinator; intermediate tool output is discarded. Ask subagents to return structured results (or write artifacts to disk and return the path).</li>
-                <li><strong>Parallel subagents:</strong> emit <strong>multiple <code>Agent</code> tool calls in a single coordinator response</strong> to run them concurrently. Spreading them across separate turns serializes the work.</li>
-                <li><strong>Fork vs fresh subagent:</strong> a <em>fork</em> inherits the parent conversation; a normal subagent starts fresh. Use fresh subagents for isolation and independent review.</li>
-            </ul>
+<li><strong>Return path:</strong> only the subagent's <strong>final message</strong> returns to the parent; its intermediate tool calls stay inside the subagent. Large outputs belong on disk, with the path in the report.</li>
+<li><strong>Background by default:</strong> a spawned subagent runs in the background (<code>status: "async_launched"</code> in the Agent tool result) and its report arrives in a later turn; set <code>background</code> on the <code>AgentDefinition</code> to make the intent explicit.</li>
+<li><strong>Resume a subagent:</strong> a custom subagent's Agent tool result ends with <code>agentId: &lt;id&gt;</code>. Resume the same session (<code>resume=session_id</code>) and name that agent ID in the prompt to continue with its full history instead of re-exploring.</li>
+<li><strong>Fork vs fresh subagent:</strong> a <em>fork</em> inherits the parent conversation; a normal subagent starts fresh. Use fresh subagents for isolation and independent review.</li>
+</ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 05: 5. HOOKS: DETERMINISTIC ENFORCEMENT VS PROMPTS
+             SECTION 05: 5. HOOKS: LIFECYCLE & DETERMINISTIC ENFORCEMENT
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="hooks-enforcement">
             <div class="section-divider-number">05</div>
-            <h2>5. Hooks: Deterministic Enforcement vs Prompts</h2>
+            <h2>5. Hooks: Lifecycle &amp; Deterministic Enforcement</h2>
+        </div>
+
+        <div class="prose"><p><strong>Hook lifecycle (Python + TypeScript unless noted):</strong></p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+<thead>
+<tr>
+<th>Event</th>
+<th>Fires when</th>
+<th>Typical production use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>A prompt is submitted</td>
+<td>Inject tenant or ticket context</td>
+</tr>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>Before a tool runs (can block or rewrite)</td>
+<td>Guard shell commands, rewrite paths into a sandbox</td>
+</tr>
+<tr>
+<td><code>PermissionRequest</code></td>
+<td>A call needs a permission decision</td>
+<td>Route approvals to your own UI</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code> / <code>PostToolUseFailure</code></td>
+<td>After a tool succeeds / fails</td>
+<td>Audit log, redact secrets, normalize formats</td>
+</tr>
+<tr>
+<td><code>SubagentStart</code> / <code>SubagentStop</code></td>
+<td>A subagent spawns / finishes</td>
+<td>Trace fan-out; <code>SubagentStop</code> carries <code>agent_transcript_path</code></td>
+</tr>
+<tr>
+<td><code>PreCompact</code></td>
+<td>Before history is summarized (<code>trigger</code>: <code>manual</code> / <code>auto</code>)</td>
+<td>Archive the full transcript first</td>
+</tr>
+<tr>
+<td><code>Stop</code> / <code>Notification</code></td>
+<td>Main agent stops / emits a status message</td>
+<td>Persist state, page an operator</td>
+</tr>
+<tr>
+<td><code>SessionStart</code>, <code>SessionEnd</code>, <code>PostCompact</code></td>
+<td><strong>TypeScript only</strong></td>
+<td>Telemetry setup, cleanup, log the summary</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Need</th><th>Mechanism</th><th>Why</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>A rule that must <strong>always</strong> hold (identity verified before refund, refund cap, no writes to <code>.env</code>)</td><td><strong><code>PreToolUse</code> hook</strong> (or tool scoping / prerequisite gate in code)</td><td>Prompts are probabilistic: a non-zero share of runs will skip or misread the instruction</td></tr>
-                    <tr><td>Normalize or redact tool output before the model sees it</td><td><strong><code>PostToolUse</code> hook</strong> (<code>updatedToolOutput</code>, <code>additionalContext</code>)</td><td>One place to fix heterogeneous formats (Unix epoch vs ISO 8601, numeric status codes)</td></tr>
-                    <tr><td>Style, tone, preferred approach, soft priorities</td><td><strong>System prompt / <code>CLAUDE.md</code></strong></td><td>Guidance; occasional deviation is acceptable</td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Mechanism</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A rule that must hold on <strong>every</strong> call (no deletes outside staging, no writes to <code>.env</code>)</td>
+<td><strong><code>PreToolUse</code> hook</strong>, scoped deny rule or narrower tool</td>
+<td>Prompt instructions are followed most of the time, not all of the time</td>
+</tr>
+<tr>
+<td>Clean or annotate tool output before the model reads it</td>
+<td><strong><code>PostToolUse</code> hook</strong> (<code>updatedToolOutput</code>, <code>additionalContext</code>)</td>
+<td>One place to strip secrets or convert units</td>
+</tr>
+<tr>
+<td>Style, tone, preferred approach</td>
+<td><strong>System prompt / <code>CLAUDE.md</code></strong></td>
+<td>Guidance; occasional deviation is acceptable</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="code-block">
             <div class="code-block-header">
                 <div class="code-block-dots"><span></span><span></span><span></span></div>
-                <span class="code-block-lang">Python — PreToolUse refund guard registered with HookMatcher</span>
+                <span class="code-block-lang">Python</span>
             </div>
             <pre>from claude_agent_sdk import ClaudeAgentOptions, HookMatcher
 
-async def refund_guard(input_data, tool_use_id, context):
-    amount = input_data["tool_input"].get("amount", 0)
-    if amount &gt; 500:
+async def guard_kubectl(input_data, tool_use_id, context):
+    cmd = input_data["tool_input"].get("command", "")
+    if "kubectl delete" in cmd and "-n staging" not in cmd:
         return {"hookSpecificOutput": {
             "hookEventName": "PreToolUse",
             "permissionDecision": "deny",
-            "permissionDecisionReason": "Refunds over $500 need a human: call escalate_to_human with a handoff summary."}}
-    return {}   <span class="comment"># empty dict = allow unchanged</span>
+            "permissionDecisionReason": "Deletes run only with -n staging. "
+                "For other namespaces, write the planned change to ops/pending.md."}}
+    return {}<span class="comment">  # no opinion: the normal permission flow continues</span>
 
-options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__billing__process_refund", hooks=[refund_guard])]})</pre>
+options = ClaudeAgentOptions(
+    hooks={"PreToolUse": [HookMatcher(matcher="Bash", hooks=[guard_kubectl])]})</pre>
         </div>
 
         <div class="concept-card accent-coral">
             <ul>
-                <li><strong>Callback signature:</strong> <code>(input_data, tool_use_id, context)</code>; <code>input_data</code> has <code>tool_name</code>, <code>tool_input</code>, <code>hook_event_name</code> (plus <code>agent_id</code> / <code>agent_type</code> inside subagents).</li>
-                <li><strong><code>PreToolUse</code> outputs</strong> (in <code>hookSpecificOutput</code>): <code>permissionDecision</code> = <code>"allow"</code> | <code>"deny"</code> | <code>"ask"</code> | <code>"defer"</code>, <code>permissionDecisionReason</code> (sent to Claude), <code>updatedInput</code> (rewrite arguments). <code>"defer"</code> ends the turn with <code>stop_reason: "tool_deferred"</code> so you can resume later.</li>
-                <li><strong><code>PostToolUse</code> outputs:</strong> <code>additionalContext</code> (append to the tool result) and <code>updatedToolOutput</code> (replace the output before Claude sees it).</li>
-                <li><strong>Precedence:</strong> across hooks and permission rules, <strong><code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></strong>. One <code>deny</code> blocks the call.</li>
-                <li><strong>Prerequisite gate pattern:</strong> keep state in your app (for example, "verified customer ID returned by <code>get_customer</code>"); a <code>PreToolUse</code> hook on <code>process_refund</code> denies until that state exists, with a reason that tells Claude which step to run first.</li>
-                <li><strong>Deny + redirect:</strong> the <code>permissionDecisionReason</code> should name the alternative path (escalate, ask for ID), so the model recovers instead of retrying.</li>
-            </ul>
+<li><strong>Callback signature:</strong> <code>(input_data, tool_use_id, context)</code>; every input has <code>session_id</code>, <code>cwd</code>, <code>hook_event_name</code>; tool events add <code>tool_name</code> / <code>tool_input</code> (plus <code>agent_id</code> / <code>agent_type</code> inside subagents). <code>tool_use_id</code> pairs a <code>PreToolUse</code> with its <code>PostToolUse</code>.</li>
+<li><strong><code>PreToolUse</code> outputs</strong> (in <code>hookSpecificOutput</code>): <code>permissionDecision</code> = <code>"allow"</code> | <code>"deny"</code> | <code>"ask"</code> | <code>"defer"</code>, <code>permissionDecisionReason</code> (sent to Claude), <code>updatedInput</code>. <code>"defer"</code> ends the turn with <code>stop_reason: "tool_deferred"</code>.</li>
+<li><strong>Rewriting input:</strong> pair <code>updatedInput</code> with <code>"allow"</code> (auto-approve) or <code>"ask"</code>; omit the decision to send it through normal evaluation. <strong>Never pair it with <code>"defer"</code></strong>: the rewrite is dropped.</li>
+<li><strong>Top-level outputs:</strong> <code>systemMessage</code> is shown to the <strong>user</strong>, not the model; <code>continue</code> (<code>continue_</code> in Python) decides whether the agent keeps running.</li>
+<li><strong>Precedence:</strong> across hooks, <strong><code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></strong>. A hook <code>allow</code> does <strong>not</strong> skip deny or ask rules; a hook <code>deny</code> holds even in <code>bypassPermissions</code>.</li>
+<li><strong>Matchers:</strong> <code>"Bash"</code>, <code>"Write|Edit"</code>, or a regex such as <code>"^mcp__"</code>. A <code>Write|Edit</code> matcher does not see a file written through <code>Bash</code>.</li>
+<li><strong>Async hooks:</strong> return <code>{"async_": True}</code> (TS <code>async: true</code>) for logging or webhooks; the agent does not wait, so an async hook cannot block or rewrite.</li>
+</ul>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Exam trap</h4>
-                <p>"Add a stronger instruction in the system prompt (MUST, ALWAYS)" is the wrong answer whenever the scenario needs <strong>guaranteed</strong> compliance (money, identity, safety). Use a hook or code-level gate.</p>
+                <p>"Add a stronger instruction in the system prompt (MUST, NEVER)" is the wrong answer whenever a scenario needs a guarantee. The <code>permissionDecisionReason</code> on a deny should name the allowed path, so Claude changes course instead of retrying the same call.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 06: 6. SESSION STATE: RESUME, FORK &amp; NAMED SESSIONS
+             SECTION 06: 6. SESSION STATE: RESUME, FORK & INTERRUPT
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="sessions">
             <div class="section-divider-number">06</div>
-            <h2>6. Session State: Resume, Fork &amp; Named Sessions</h2>
+            <h2>6. Session State: Resume, Fork &amp; Interrupt</h2>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Operation</th><th>SDK</th><th>Claude Code CLI</th><th>Effect</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Continue</strong></td><td><code>continue_conversation=True</code></td><td><code>claude --continue</code> (<code>-c</code>)</td><td>Most recent session in the current directory; same session ID</td></tr>
-                    <tr><td><strong>Resume</strong></td><td><code>resume=session_id</code></td><td><code>claude --resume &lt;id-or-name&gt;</code> (<code>-r</code>), <code>/resume</code></td><td>Specific session; same ID; full prior context</td></tr>
-                    <tr><td><strong>Fork</strong></td><td><code>resume=id, fork_session=True</code> (<code>forkSession</code>)</td><td><code>--resume &lt;id&gt; --fork-session</code>, <code>/branch</code></td><td><strong>New</strong> session ID with a copy of the history; original unchanged</td></tr>
-                    <tr><td><strong>Name</strong></td><td>—</td><td><code>claude -n &lt;name&gt;</code> / <code>--name</code>, <code>/rename &lt;name&gt;</code></td><td>Resume later with <code>claude --resume &lt;name&gt;</code></td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>SDK</th>
+<th>Claude Code CLI</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Continue</strong></td>
+<td><code>continue_conversation=True</code></td>
+<td><code>claude --continue</code> (<code>-c</code>)</td>
+<td>Most recent session in the current directory; same session ID</td>
+</tr>
+<tr>
+<td><strong>Resume</strong></td>
+<td><code>resume=session_id</code></td>
+<td><code>claude --resume &lt;id-or-name&gt;</code> (<code>-r</code>), <code>/resume</code></td>
+<td>Specific session; same ID; full prior context</td>
+</tr>
+<tr>
+<td><strong>Fork</strong></td>
+<td><code>resume=id, fork_session=True</code> (<code>forkSession</code>)</td>
+<td><code>--resume &lt;id&gt; --fork-session</code>, <code>/branch</code></td>
+<td><strong>New</strong> session ID with a copy of the history; original unchanged</td>
+</tr>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>rename_session()</code> (TS <code>renameSession()</code>)</td>
+<td><code>claude -n &lt;name&gt;</code> / <code>--name</code>, <code>/rename &lt;name&gt;</code></td>
+<td>Resume later with <code>claude --resume &lt;name&gt;</code></td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="concept-card accent-pink">
             <ul>
-                <li><strong>Fork use case:</strong> from one shared analysis baseline, explore two divergent approaches (two testing strategies, two refactors) and compare, while the original stays resumable.</li>
-                <li><strong>Fork is transcript-only:</strong> the filesystem is shared. Forks that edit files collide unless isolated (worktrees, checkpoints).</li>
-            </ul>
+<li><strong>Fork use case:</strong> branch when you want to try another direction and keep the way back, e.g. after mapping an auth module, fork once to sketch an OAuth flow while the original thread stays untouched.</li>
+<li><strong>Fork is transcript-only:</strong> the filesystem is shared. Forks that edit files collide unless isolated (worktrees, checkpoints).</li>
+<li><strong>Interrupt:</strong> <code>await client.interrupt()</code> stops the running turn (streaming mode only). It does <strong>not</strong> clear the buffer: drain the interrupted turn's messages, including its <code>ResultMessage</code>, with <code>receive_response()</code> before reading the reply to your next query. Cancelling a tool this way does not fire <code>PostToolUseFailure</code>.</li>
+<li><strong>Resume after a crash:</strong> persist <code>ResultMessage.session_id</code> as soon as you see it; after a process restart, <code>resume=session_id</code> (or <code>continue_conversation=True</code> for the latest session in the directory) restores the conversation. Disk changes are not rolled back.</li>
+</ul>
         </div>
 
         <div class="callout tip">
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
-                <h4>Decision rule — resume vs start fresh</h4>
-                <p>Resume when prior context is <strong>still valid</strong>. If files changed since the analysis, <strong>tell the resumed session exactly which files changed</strong> for targeted re-analysis. If many prior tool results are <strong>stale</strong>, start a <strong>new session with a structured summary</strong> of the still-valid findings: stale tool output in history misleads the model more than a clean summary.</p>
+                <h4>Decision rule — resume or not</h4>
+                <p>a resumed session trusts every file it read earlier. If the code moved on, either name the changed paths in your first message so it re-reads them, or open a new session seeded with a short brief of what still holds; old tool output that contradicts the disk is worse than none.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 07: 7. STRUCTURED TOOL ERRORS (ISERROR)
+             SECTION 07: 7. CUSTOM TOOLS & TOOL ERRORS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="tool-errors">
             <div class="section-divider-number">07</div>
-            <h2>7. Structured Tool Errors (isError)</h2>
+            <h2>7. Custom Tools &amp; Tool Errors</h2>
         </div>
 
-        <div class="prose"><p><strong>Mechanics (grounded):</strong> an MCP tool result can set <strong><code>isError: true</code></strong>; SDK in-process tools return <code>{"content": [...], "is_error": True}</code> (Python) or <code>isError: true</code> (TS). A handler error does <strong>not</strong> stop the agent loop: an uncaught exception becomes an error result carrying the raw message, while a caught error lets you compose a message Claude can act on.</p></div>
-
-        <div class="prose"><p><strong>Design convention (application level, not MCP spec fields):</strong> put a structured payload in the error content so the agent can decide what to do next.</p></div>
+        <div class="prose"><p><strong>In-process tools:</strong> decorate an async handler with <code>@tool(name, description, input_schema)</code> (TS <code>tool()</code> with a Zod schema), wrap it with <code>create_sdk_mcp_server(name=..., version=..., tools=[...])</code>, pass the server in <code>mcp_servers</code>, and reference each tool as <code>mcp__&lt;server&gt;__&lt;tool&gt;</code> in <code>allowed_tools</code> and hook matchers. The handler returns <code>{"content": [{"type": "text", "text": ...}]}</code>.</p></div>
 
         <div class="code-block">
             <div class="code-block-header">
                 <div class="code-block-dots"><span></span><span></span><span></span></div>
-                <span class="code-block-lang">JSON — structured tool error (application-level convention)</span>
+                <span class="code-block-lang">Python</span>
             </div>
-            <pre>{ "isError": true,
-  "content": [{ "type": "text", "text": "{\"errorCategory\": \"transient\", \"isRetryable\": true, \"message\": \"Order service timed out after 10s\", \"attempted\": \"lookup_order(id=8812)\", \"suggestion\": \"Retry once; if it fails again, tell the customer and escalate\"}" }] }</pre>
+            <pre>from claude_agent_sdk import tool, create_sdk_mcp_server, ToolAnnotations
+
+@tool("stock_level", "Units on hand for one SKU in one warehouse",
+      {"sku": str, "warehouse": str}, annotations=ToolAnnotations(readOnlyHint=True))
+async def stock_level(args):
+    try:
+        units = await inventory.count(args["sku"], args["warehouse"])
+    except TimeoutError:
+        return {"content": [{"type": "text", "text":
+                "Inventory API timed out: count UNKNOWN, not zero. Retry in about 30s."}],
+                "is_error": True}
+    return {"content": [{"type": "text", "text": f"{units} units"}]}
+
+inv = create_sdk_mcp_server(name="inv", version="1.0.0", tools=[stock_level])
+<span class="comment"># ClaudeAgentOptions(mcp_servers={"inv": inv}, allowed_tools=["mcp__inv__stock_level"])</span></pre>
         </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+<li><strong>Parallelism:</strong> custom tools run <strong>sequentially by default</strong>. Set <code>readOnlyHint=True</code> so Claude can batch the tool with other read-only calls (<code>Read</code>, <code>Grep</code>, <code>Glob</code>); <code>Edit</code>, <code>Write</code> and <code>Bash</code> stay sequential. Annotations are metadata, not enforcement.</li>
+<li><strong>Approval policy (TypeScript):</strong> a tool-level <code>permission_policy</code> of <code>always_ask</code> stops <code>allowedTools</code> from approving it, so calls reach <code>canUseTool</code>; <code>always_deny</code> denies it at the deny-rule step.</li>
+<li><strong>Handler errors never stop the loop:</strong> an uncaught exception becomes an error result carrying the raw exception text. Catching the error and returning <code>is_error: True</code> (TS <code>isError: true</code>) lets you write the message Claude actually needs.</li>
+</ul>
+        </div>
+
+        <div class="prose"><p><strong>Write the error for the next decision.</strong> Ask "who can fix this?" and say so in the message:</p></div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th><code>errorCategory</code></th><th>Example</th><th><code>isRetryable</code></th><th>Agent should</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>transient</strong></td><td>Timeout, 503, rate limit</td><td><code>true</code></td><td>Retry with backoff (ideally locally inside the tool or subagent)</td></tr>
-                    <tr><td><strong>validation</strong></td><td>Malformed date, missing field</td><td><code>false</code> (until input fixed)</td><td>Fix the input and call again, or ask the user</td></tr>
-                    <tr><td><strong>permission</strong></td><td>Caller lacks access</td><td><code>false</code></td><td>Stop that path; escalate or use an authorized route</td></tr>
-                    <tr><td><strong>business</strong></td><td>Refund exceeds policy, account frozen</td><td><code>false</code></td><td>Explain the policy to the user and offer the allowed alternative</td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Who can fix it</th>
+<th>Example</th>
+<th>What the message should tell Claude</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude, by changing arguments</strong></td>
+<td>SKU format wrong, unknown warehouse code</td>
+<td>The accepted format or valid values</td>
+</tr>
+<tr>
+<td><strong>The user</strong></td>
+<td>Missing account number</td>
+<td>Exactly which detail to ask for (<code>AskUserQuestion</code>)</td>
+</tr>
+<tr>
+<td><strong>Time</strong></td>
+<td>Upstream 503, timeout</td>
+<td>That the value is unknown, plus when to retry</td>
+</tr>
+<tr>
+<td><strong>Nobody in this session</strong></td>
+<td>Caller not authorized, action outside policy</td>
+<td>To stop this path and report it, not retry</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
-                <h4>Exam trap — access failure vs valid empty result</h4>
-                <p>"No orders found" for a valid query is a <strong>successful</strong> result (<code>isError</code> false, <code>results: []</code>). A timeout is an <strong>error</strong>. Returning <code>[]</code> on a timeout makes the agent tell the customer "you have no orders": silent suppression. Returning a generic <code>"Operation failed"</code> hides whether a retry could work.</p>
+                <h4>Exam trap — unknown is not empty</h4>
+                <p>a tool that answers <code>0</code> or <code>[]</code> when its backend is unreachable gives Claude a confident wrong fact (it may reorder stock that exists). Return <code>is_error</code> with "unknown". A vague message has the same flaw in a different form: Claude has no way to know whether waiting would help.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 08: 8. TOOL DISTRIBUTION, SCOPING &amp; TOOL_CHOICE
+             SECTION 08: 8. TOOL SCOPING & TOOL_CHOICE
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="tool-distribution">
             <div class="section-divider-number">08</div>
-            <h2>8. Tool Distribution, Scoping &amp; tool_choice</h2>
+            <h2>8. Tool Scoping &amp; tool_choice</h2>
         </div>
 
-        <div class="concept-card accent-mint">
+        <div class="concept-card accent-blue">
             <ul>
-                <li><strong>Least tools per agent:</strong> give each subagent only the tools for its role (<code>AgentDefinition.tools</code>). More tools = more schema tokens and more mis-selection; tools from another role invite misuse (a synthesis agent with web search starts re-searching instead of synthesizing).</li>
-                <li><strong>Scoped variants:</strong> instead of handing a broad tool to every agent, expose a narrow one where needed (for example, a read-only <code>verify_claim</code> for the synthesis agent while full search stays with the search agent). Route other cross-role needs back through the coordinator.</li>
-                <li><strong>Replace generic tools with constrained ones</strong> when misuse is the risk (a <code>fetch_order(order_id)</code> tool instead of raw SQL access).</li>
-            </ul>
+<li><strong>Three different levers:</strong> <code>tools</code> decides what is <strong>in context</strong>; <code>allowed_tools</code> only <strong>pre-approves</strong>; a bare <code>disallowed_tools</code> entry <strong>removes</strong> a tool. Per subagent, use <code>AgentDefinition.tools</code> / <code>disallowedTools</code>.</li>
+<li><strong>Fewer, sharper tools:</strong> each extra schema costs tokens and adds a chance of picking the wrong tool. A subagent that summarizes CI failures needs <code>Read</code> and an in-process <code>get_build_log(job_id)</code>, not <code>Bash</code> with network access.</li>
+<li><strong>Narrow beats general:</strong> expose <code>get_build_log(job_id)</code> or <code>list_open_incidents(team)</code> instead of a raw shell or SQL tool when misuse is the risk; the handler enforces the scope in code.</li>
+<li><strong><code>tools=[]</code> + MCP:</strong> strips every built-in so Claude sees only your in-process tools, a common shape for embedded product agents.</li>
+</ul>
         </div>
 
         <div class="prose"><p><strong><code>tool_choice</code> (Messages API):</strong></p></div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Value</th><th>Behavior</th><th>Use for</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>{"type": "auto"}</code></td><td>Claude decides whether to call a tool (default when <code>tools</code> are provided)</td><td>Normal agent turns</td></tr>
-                    <tr><td><code>{"type": "any"}</code></td><td>Must call <strong>some</strong> tool, Claude picks which</td><td>Guarantee a structured tool call when several output schemas exist</td></tr>
-                    <tr><td><code>{"type": "tool", "name": "extract_metadata"}</code></td><td>Must call <strong>that</strong> tool</td><td>Force a mandatory first step (extract before enrich), then switch back to <code>auto</code></td></tr>
-                    <tr><td><code>{"type": "none"}</code></td><td>No tool calls (default when no <code>tools</code>)</td><td>Pure text turns</td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behavior</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"type": "auto"}</code></td>
+<td>Claude decides whether to call a tool (default when <code>tools</code> are provided)</td>
+<td>Normal agent turns</td>
+</tr>
+<tr>
+<td><code>{"type": "any"}</code></td>
+<td>Must call <strong>some</strong> tool, Claude picks which</td>
+<td>Guarantee a structured tool call when several output schemas exist</td>
+</tr>
+<tr>
+<td><code>{"type": "tool", "name": "classify_ticket"}</code></td>
+<td>Must call <strong>that</strong> tool</td>
+<td>Force one specific call on this turn, then return to <code>auto</code></td>
+</tr>
+<tr>
+<td><code>{"type": "none"}</code></td>
+<td>No tool calls (default when no <code>tools</code>)</td>
+<td>Pure text turns</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="callout warning">
@@ -708,129 +925,268 @@ options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__bil
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 09: 9. ESCALATION &amp; AMBIGUITY RESOLUTION
+             SECTION 09: 9. PERMISSION MODES, APPROVALS & CLARIFYING QUESTIONS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="escalation">
+        <div class="section-divider" id="approvals">
             <div class="section-divider-number">09</div>
-            <h2>9. Escalation &amp; Ambiguity Resolution</h2>
+            <h2>9. Permission Modes, Approvals &amp; Clarifying Questions</h2>
+        </div>
+
+        <div class="prose"><p><strong>Evaluation order for every tool call:</strong></p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+<thead>
+<tr>
+<th>Step</th>
+<th>Check</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Hooks</strong></td>
+<td>Can deny outright; a hook <code>allow</code> does not skip steps 2–3</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Deny rules</strong> (<code>disallowed_tools</code>, settings)</td>
+<td>Deny even in <code>bypassPermissions</code> and even after a hook <code>allow</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Ask rules</strong></td>
+<td>Fall through to <code>canUseTool</code>, even in <code>bypassPermissions</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Permission mode</strong></td>
+<td><code>bypassPermissions</code> approves; <code>acceptEdits</code> approves file operations; <code>plan</code> sends edits to the callback</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Allow rules</strong> (<code>allowed_tools</code>, settings)</td>
+<td>Approve matching calls</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong><code>canUseTool</code> callback</strong></td>
+<td>Skipped in <code>dontAsk</code> (the call is denied)</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Escalate to a human when…</th><th>Do <strong>not</strong> use as the trigger</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>The customer <strong>explicitly asks</strong> for a human → honor immediately, without investigating first</td><td><strong>Sentiment</strong> (frustration ≠ complexity; calm customers can have policy-gap cases)</td></tr>
-                    <tr><td><strong>Policy is silent or ambiguous</strong> for this request (exception, gap)</td><td><strong>Self-reported confidence</strong> scores from the model (poorly calibrated)</td></tr>
-                    <tr><td>The agent <strong>cannot make meaningful progress</strong> (repeated failures, missing authority)</td><td>"The case looks complex" without a concrete criterion</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="concept-card accent-blue">
-            <ul>
-                <li><strong>Write explicit criteria</strong> in the system prompt, with <strong>few-shot examples</strong> of escalate vs resolve.</li>
-                <li><strong>Frustrated but simple:</strong> acknowledge the frustration and offer the fix; escalate if the customer repeats the request for a human.</li>
-                <li><strong>Multi-concern requests:</strong> split the message into distinct issues (e.g. a refund <em>and</em> an address change), investigate each one (in parallel where independent) against the <strong>same verified customer context</strong>, then reply with <strong>one unified resolution</strong> that addresses every item, rather than answering only the first concern.</li>
-                <li><strong>Ambiguous identity:</strong> if a lookup returns multiple matches, <strong>ask for another identifier</strong>; never pick by heuristic (most recent, first row).</li>
-                <li><strong>Handoff summary:</strong> the human usually cannot see the transcript, so pass a structured summary: customer ID, issue, root cause, what was tried, amounts, recommended action.</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 10: 10. ERROR PROPAGATION IN MULTI-AGENT SYSTEMS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="error-propagation">
-            <div class="section-divider-number">10</div>
-            <h2>10. Error Propagation in Multi-Agent Systems</h2>
-        </div>
-
-        <div class="prose"><p><strong>Subagent rule:</strong> recover locally from transient failures (bounded retries); propagate only what you cannot resolve, as <strong>structured error context</strong>:</p></div>
-
-        <div class="code-block">
-            <div class="code-block-header">
-                <div class="code-block-dots"><span></span><span></span><span></span></div>
-                <span class="code-block-lang">JSON — subagent partial-failure payload</span>
-            </div>
-            <pre>{ "status": "partial", "failureType": "timeout", "attempted": "search('EU AI Act fines 2025', source=news)",
-  "partialResults": [ { "claim": "...", "source": "..." } ], "alternatives": ["retry later", "use regulator site"] }</pre>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Anti-pattern</th><th>Why it fails</th><th>Fix</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Silent suppression</strong> (return empty/success on failure)</td><td>Coordinator treats missing data as "nothing exists"</td><td>Mark the failure explicitly; keep partial results</td></tr>
-                    <tr><td><strong>Kill the whole workflow</strong> on one subagent failure</td><td>Throws away good partial work</td><td>Continue with what succeeded; annotate the gap</td></tr>
-                    <tr><td><strong>Generic status</strong> (<code>"search unavailable"</code>)</td><td>Coordinator can't choose retry vs alternative vs proceed</td><td>Failure type + attempted query + partial results + alternatives</td></tr>
-                    <tr><td><strong>Infinite retry</strong> in the subagent</td><td>Burns budget, hides an outage</td><td>Bounded retries, then propagate</td></tr>
-                </tbody>
-            </table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Behavior</th>
+<th>Fits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default</code></td>
+<td>No mode-based approvals; unmatched calls go to <code>canUseTool</code></td>
+<td>Interactive apps with an approval UI</td>
+</tr>
+<tr>
+<td><code>dontAsk</code></td>
+<td>Anything that would prompt is denied</td>
+<td>Locked-down workers with an explicit <code>allowed_tools</code> list</td>
+</tr>
+<tr>
+<td><code>acceptEdits</code></td>
+<td>File edits and filesystem operations auto-approved</td>
+<td>Trusted coding tasks in a sandbox</td>
+</tr>
+<tr>
+<td><code>plan</code></td>
+<td>Explores and plans; source edits never auto-approved</td>
+<td>"Show me the plan first" flows</td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td>A model classifier approves or blocks reviewed actions</td>
+<td>Fewer prompts where available</td>
+</tr>
+<tr>
+<td><code>bypassPermissions</code></td>
+<td>Calls reaching step 4 run, apart from a few documented exceptions (TS also needs <code>allowDangerouslySkipPermissions</code>)</td>
+<td>Disposable sandboxes only</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="concept-card accent-purple">
             <ul>
-                <li><strong>Coverage annotations:</strong> the final synthesis states which findings are well supported and which areas have gaps because sources were unavailable.</li>
-            </ul>
+<li><strong>Switch mid-session:</strong> <code>await client.set_permission_mode("acceptEdits")</code> (TS <code>setPermissionMode</code>) applies to the next tool request, e.g. start in <code>plan</code>, then switch once a human approves the plan.</li>
+<li><strong><code>canUseTool</code> results:</strong> <code>PermissionResultAllow(updated_input=...)</code> or <code>PermissionResultDeny(message=...)</code> (TS <code>{ behavior: "allow" | "deny" }</code>). The deny message goes back to Claude.</li>
+<li><strong>Clarifying questions:</strong> Claude asks through the <code>AskUserQuestion</code> tool, which also arrives in <code>canUseTool</code>. With an explicit <code>tools</code> list, include <code>"AskUserQuestion"</code>; return <code>answers</code> keyed by each question's text. It is not available inside subagents.</li>
+<li><strong>Subagent inheritance:</strong> a parent in <code>plan</code>, <code>acceptEdits</code>, <code>auto</code> or <code>bypassPermissions</code> imposes that mode on subagents; an <code>AgentDefinition.permissionMode</code> of <code>"bypassPermissions"</code> is never applied.</li>
+</ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam traps</h4>
+                <p><code>allowed_tools=["Read"]</code> with <code>bypassPermissions</code> still approves <code>Bash</code>, because unlisted tools fall through to the mode. A bare <code>allowed_tools</code> entry pre-approves that tool, so <code>canUseTool</code> never sees its calls. Checks that must see <strong>every</strong> call belong in a <code>PreToolUse</code> hook.</p>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 11: 11. LONG SESSIONS &amp; LARGE-CODEBASE CONTEXT
+             SECTION 10: 10. SUBAGENT FAILURES, LIMITS & PARTIAL RESULTS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="long-context">
-            <div class="section-divider-number">11</div>
-            <h2>11. Long Sessions &amp; Large-Codebase Context</h2>
+        <div class="section-divider" id="error-propagation">
+            <div class="section-divider-number">10</div>
+            <h2>10. Subagent Failures, Limits &amp; Partial Results</h2>
         </div>
 
-        <div class="prose"><p><strong>Symptoms of context degradation:</strong> inconsistent answers, references to "typical patterns" instead of the specific classes found earlier, forgotten constraints.</p></div>
+        <div class="prose"><p><strong>What the parent can observe:</strong> only the subagent's final message (plus <code>parent_tool_use_id</code> on streamed messages from inside it), the <code>SubagentStart</code> / <code>SubagentStop</code> hooks, and limit messages returned as Agent tool results.</p></div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
-                <thead>
-                    <tr><th>Technique</th><th>How</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Scratchpad file</strong></td><td>Agent writes key findings (file paths, decisions, facts) to a file and re-reads it for later questions</td></tr>
-                    <tr><td><strong>Subagent delegation</strong></td><td>Verbose exploration ("find all test files", "trace refund flow") runs in a subagent; only the summary returns</td></tr>
-                    <tr><td><strong>Phase summaries</strong></td><td>Summarize phase N's findings, then inject that summary into the prompts of phase N+1's subagents</td></tr>
-                    <tr><td><strong>Checkpoint manifest</strong></td><td>Workers persist structured checkpoints on disk; after an interruption, the orchestrator reloads that manifest to resume pending steps</td></tr>
-                    <tr><td><strong><code>/compact</code></strong></td><td>Compress a long interactive session when verbose discovery output fills context (<code>/clear</code> when switching tasks)</td></tr>
-                    <tr><td><strong>Case-facts block</strong></td><td>Keep exact amounts, dates, IDs and customer-stated expectations in a persistent block outside summarized history (summaries blur numbers)</td></tr>
-                    <tr><td><strong>Trim tool output</strong></td><td>Keep only the relevant fields (5 of 40) before results accumulate</td></tr>
-                    <tr><td><strong>Position</strong></td><td>Put key findings first and use clear section headers (models miss details buried in the middle of long inputs)</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 12: 12. PROVENANCE &amp; MULTI-SOURCE SYNTHESIS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="provenance">
-            <div class="section-divider-number">12</div>
-            <h2>12. Provenance &amp; Multi-Source Synthesis</h2>
-        </div>
-
-        <div class="concept-card accent-cyan">
-            <ul>
-                <li><strong>Claim→source mappings:</strong> subagents return each claim with its source URL or document name, the relevant excerpt, location (page/section) and <strong>publication or collection date</strong>. The synthesis agent must <strong>preserve and merge</strong> these mappings; summarizing without them loses attribution.</li>
-                <li><strong>Conflicts:</strong> when credible sources disagree, report <strong>both values with their sources</strong> and annotate the conflict; don't silently pick one. Let the coordinator decide how to reconcile.</li>
-                <li><strong>Dates prevent false contradictions:</strong> 2021 vs 2024 figures may both be right; require dates in structured outputs.</li>
-                <li><strong>Report structure:</strong> separate <strong>well-established</strong> from <strong>contested</strong> findings; keep the original methodology context.</li>
-                <li><strong>Match format to content:</strong> use tables for quantitative metrics, narrative paragraphs for event summaries, and bulleted lists for engineering notes rather than forcing a single layout.</li>
-            </ul>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What happens</th>
+<th>Design response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subagent hits its <code>maxTurns</code></td>
+<td>Output comes back <strong>marked partial</strong></td>
+<td>Resume it by <code>agentId</code> so it keeps its history, rather than spawning a fresh one</td>
+</tr>
+<tr>
+<td>Spawn refused at the concurrency cap</td>
+<td>Tool result: <code>Concurrent subagent limit reached</code></td>
+<td>Wait for running agents, or batch the work</td>
+</tr>
+<tr>
+<td>Spend cap reached</td>
+<td><code>Budget limit reached</code>; background subagents stop; the query ends</td>
+<td>Read <code>total_cost_usd</code>; finalize with what returned</td>
+</tr>
+<tr>
+<td>Subagent prose says "mostly done"</td>
+<td>Parent must guess what is missing</td>
+<td>Require a fixed status block in every report</td>
+</tr>
+</tbody>
+</table>
         </div>
 
         <div class="code-block">
             <div class="code-block-header">
                 <div class="code-block-dots"><span></span><span></span><span></span></div>
-                <span class="code-block-lang">JSON — claim→source mapping with a conflict</span>
+                <span class="code-block-lang">JSON</span>
             </div>
-            <pre>{ "claim": "Segment revenue grew 12% YoY", "source": "https://example.com/10-K-2024", "excerpt": "…increased 12%…",
-  "location": "p. 41", "published": "2025-02-14", "conflicts_with": [{ "source": "analyst note", "value": "9%", "published": "2024-11-02" }] }</pre>
+            <pre>{ "status": "partial",
+  "done": ["services/auth", "services/billing"],
+  "not_done": ["services/search"],
+  "reason": "maxTurns reached while tracing search indexer",
+  "resume_hint": "agentId a1b2: continue from indexer/worker.py" }</pre>
         </div>
+
+        <div class="concept-card accent-cyan">
+            <ul>
+<li><strong>Ask for the status block in <code>AgentDefinition.prompt</code>:</strong> <code>complete | partial | blocked</code>, what was done, what was not, and why. The parent can then resume, re-scope or report honestly.</li>
+<li><strong>Trace with hooks:</strong> <code>SubagentStop</code> gives <code>agent_id</code>, <code>agent_type</code> and <code>agent_transcript_path</code>, so you can log every child run without parsing the stream.</li>
+<li><strong>Treat reports as data:</strong> recent Claude Code versions scan a subagent's final message for instruction-shaped text before the parent reads it; still never let a report trigger privileged actions on its own.</li>
+</ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: 11. LONG SESSIONS & CONTEXT COMPACTION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="long-context">
+            <div class="section-divider-number">11</div>
+            <h2>11. Long Sessions &amp; Context Compaction</h2>
+        </div>
+
+        <div class="prose"><p><strong>Automatic compaction:</strong> near the context limit the SDK summarizes older history and emits a <code>SystemMessage</code> with <code>subtype: "compact_boundary"</code>. Instructions given early in the conversation may not survive the summary.</p></div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+<thead>
+<tr>
+<th>Technique</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Persistent rules in <code>CLAUDE.md</code></strong></td>
+<td>Rules that must survive compaction live in <code>CLAUDE.md</code> (loaded via <code>setting_sources</code>), not in the first user message</td>
+</tr>
+<tr>
+<td><strong>Steer the summary</strong></td>
+<td>Add a <code>CLAUDE.md</code> section telling the compactor what to keep (open TODOs, file paths, exact IDs)</td>
+</tr>
+<tr>
+<td><strong><code>PreCompact</code> hook</strong></td>
+<td>Archive the full transcript before summarizing; <code>trigger</code> is <code>manual</code> or <code>auto</code>, <code>custom_instructions</code> carries any focus text</td>
+</tr>
+<tr>
+<td><strong>Manual <code>/compact</code></strong></td>
+<td>Send <code>/compact</code> as the prompt string to compact on demand, e.g. between phases</td>
+</tr>
+<tr>
+<td><strong>Pinned facts file</strong></td>
+<td>Agent writes exact values (IDs, versions, thresholds) to a file and re-reads it; summaries blur numbers</td>
+</tr>
+<tr>
+<td><strong>Subagent delegation</strong></td>
+<td>Verbose exploration ("find every caller of <code>parse_token</code>") runs in a subagent; only the report enters the parent context</td>
+</tr>
+<tr>
+<td><strong>Lower a subagent's window</strong></td>
+<td>TS <code>AgentDefinition.autoCompactWindow</code> compacts a long-running subagent earlier</td>
+</tr>
+<tr>
+<td><strong>Trim tool output</strong></td>
+<td>Return only the fields Claude needs from custom tools</td>
+</tr>
+</tbody>
+</table>
+        </div>
+
+        <div class="prose"><p><strong>Symptoms of context degradation:</strong> inconsistent answers, generic advice instead of the specific files found earlier, forgotten constraints. Fix the cause (summary lost the detail) rather than repeating the question.</p></div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: 12. STRUCTURED RESULTS FROM AGENTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="provenance">
+            <div class="section-divider-number">12</div>
+            <h2>12. Structured Results from Agents</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <ul>
+<li><strong>Top-level structured output:</strong> pass <code>output_format={"type": "json_schema", "schema": ...}</code> and read the validated object from <code>ResultMessage.structured_output</code>; repeated schema failures end with <code>error_max_structured_output_retries</code>.</li>
+<li><strong>Subagent reports:</strong> subagents return free text, so put the report shape in <code>AgentDefinition.prompt</code> and validate it in the parent.</li>
+<li><strong>Validate in the parent:</strong> parse each report against the shape you asked for; a report that does not parse is a failed run, not a partial success.</li>
+<li><strong>Point at evidence:</strong> a code-audit finding should carry the file and line it is about, so a reviewer can open it directly.</li>
+</ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON</span>
+            </div>
+            <pre>{ "finding": "Token refresh skips expiry check", "severity": "high",
+  "evidence": { "file": "auth/refresh.py", "line": 88, "observed": "2026-03-02" },
+  "confidence_basis": "read code path; no test covers it" }</pre>
+        </div>
+
 
         <!-- ═══════════════════════════════════════
              SECTION 13: 13. MANAGED AGENTS
@@ -878,18 +1234,67 @@ options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__bil
                     <tr><th>Symptom / scenario</th><th>Root cause → correct fix</th><th>Tempting wrong answer</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Loop exits early whenever Claude says "Let me check…"</td><td>Termination keyed on text → loop on <code>stop_reason == "tool_use"</code>, stop on <code>end_turn</code></td><td>Raising the iteration cap</td></tr>
-                    <tr><td>Coordinator never delegates</td><td><code>Agent</code> (alias <code>Task</code>) tool not in context/approved → add <code>"Agent"</code> to the explicit <code>tools</code> list (and <code>allowed_tools</code>)</td><td>Rewriting subagent descriptions only</td></tr>
-                    <tr><td>Synthesis subagent asks "which sources?"</td><td>Subagents don't inherit parent context → pass full findings + metadata in the Agent prompt</td><td>Giving the subagent the parent's transcript file name</td></tr>
-                    <tr><td>3 research subagents run one after another</td><td>Calls spread over turns → emit multiple <code>Agent</code> calls in <strong>one</strong> response</td><td>Switching to a bigger model</td></tr>
-                    <tr><td>Agent refunds $900 despite "never above $500" in the prompt</td><td>Prompt compliance is probabilistic → <code>PreToolUse</code> hook denies and redirects to escalation</td><td>Repeating the rule in capitals</td></tr>
-                    <tr><td>Customer told "you have no orders" during an outage</td><td>Tool returned <code>[]</code> on timeout → <code>isError</code> with <code>transient</code>, <code>isRetryable: true</code></td><td>Retrying forever silently</td></tr>
-                    <tr><td>Report presents one revenue figure; sources disagreed</td><td>Synthesis dropped conflict → keep both values with sources and dates, annotate</td><td>Averaging the two numbers</td></tr>
-                    <tr><td>Resumed session reasons about functions that were deleted</td><td>Stale tool results → tell it which files changed, or start fresh with a summary</td><td><code>/compact</code> the stale session</td></tr>
-                    <tr><td>Escalations driven by an "angry" score miss policy-gap cases</td><td>Sentiment ≠ complexity → explicit criteria + few-shot examples</td><td>Lowering the sentiment threshold</td></tr>
-                    <tr><td>Multi-tenant SDK app leaks memory across tenants or fails with <code>ENOENT</code> in TS</td><td><code>setting_sources=[]</code> still loads auto memory, <code>~/.claude.json</code>, claude.ai MCP; TS <code>env</code> replaces <code>process.env</code></td><td><code>mcp_servers={}</code> without <code>strict_mcp_config=True</code></td></tr>
-                    <tr><td>PHI workload on Managed Agents "with deletion after each run"</td><td>Managed Agents is not BAA/ZDR eligible → Agent SDK / Messages API on eligible setup</td><td>Picking a US region</td></tr>
-                </tbody>
+<tr>
+<td>Loop exits early whenever Claude says "Let me check…"</td>
+<td>Termination keyed on text → loop on <code>stop_reason == "tool_use"</code>, stop on <code>end_turn</code></td>
+<td>Raising the iteration cap</td>
+</tr>
+<tr>
+<td>Coordinator never delegates</td>
+<td><code>Agent</code> (alias <code>Task</code>) tool not in context/approved → add <code>"Agent"</code> to the explicit <code>tools</code> list (and <code>allowed_tools</code>)</td>
+<td>Rewriting subagent descriptions only</td>
+</tr>
+<tr>
+<td>Debug subagent re-runs the whole test suite to find the failure the parent already saw</td>
+<td>Fresh subagents get only the Agent prompt → paste the failing test and stack trace into it</td>
+<td>Telling it to "check the error above"</td>
+</tr>
+<tr>
+<td>Four calls to a custom read-only tool run one at a time</td>
+<td>Custom tools default to sequential → set <code>readOnlyHint=True</code></td>
+<td>Splitting the tool into four tools</td>
+</tr>
+<tr>
+<td><code>kubectl delete</code> ran in production despite a prompt rule</td>
+<td>Prompt rules are guidance → <code>PreToolUse</code> hook on <code>Bash</code> denies with a redirecting reason</td>
+<td>Repeating the rule in capitals</td>
+</tr>
+<tr>
+<td>Agent reorders stock after the inventory API timed out</td>
+<td>Tool returned <code>0</code> on timeout → <code>is_error</code> saying the count is unknown, with a retry hint</td>
+<td>Retrying forever inside the handler</td>
+</tr>
+<tr>
+<td>Hook path rewrite silently ignored</td>
+<td><code>updatedInput</code> paired with <code>"defer"</code> → pair with <code>"allow"</code> or <code>"ask"</code></td>
+<td>Moving the rewrite into the prompt</td>
+</tr>
+<tr>
+<td>Resumed session calls a function a teammate deleted yesterday</td>
+<td>History holds old file reads → name the changed paths so it re-reads them, or seed a new session with a short brief</td>
+<td><code>/compact</code> the old session</td>
+</tr>
+<tr>
+<td><code>canUseTool</code> never fires in production</td>
+<td>Mode is <code>dontAsk</code> / <code>bypassPermissions</code>, or the tool has a bare <code>allowed_tools</code> entry → use <code>default</code> and drop the entry, or move the check to a hook</td>
+<td>Adding a second callback</td>
+</tr>
+<tr>
+<td>Agent "forgets" a rule after a long run</td>
+<td>Rule lived in the first prompt and was summarized away at <code>compact_boundary</code> → move it to <code>CLAUDE.md</code></td>
+<td>Raising <code>max_turns</code></td>
+</tr>
+<tr>
+<td>Multi-tenant SDK app leaks memory across tenants or fails with <code>ENOENT</code> in TS</td>
+<td><code>setting_sources=[]</code> still loads auto memory, <code>~/.claude.json</code>, claude.ai MCP; TS <code>env</code> replaces <code>process.env</code></td>
+<td><code>mcp_servers={}</code> without <code>strict_mcp_config=True</code></td>
+</tr>
+<tr>
+<td>PHI workload on Managed Agents "with deletion after each run"</td>
+<td>Managed Agents is not BAA/ZDR eligible → Agent SDK / Messages API on eligible setup</td>
+<td>Picking a US region</td>
+</tr>
+</tbody>
             </table>
         </div>
 
@@ -907,21 +1312,67 @@ options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__bil
                     <tr><th>Term</th><th>Definition</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong><code>stop_reason</code></strong></td><td>Why a response ended: <code>tool_use</code> (run tools, continue), <code>end_turn</code> (done), <code>max_tokens</code>, <code>pause_turn</code>, <code>refusal</code>, <code>stop_sequence</code>, <code>model_context_window_exceeded</code></td></tr>
-                    <tr><td><strong><code>ResultMessage.subtype</code></strong></td><td>SDK loop outcome: <code>success</code>, <code>error_max_turns</code>, <code>error_max_budget_usd</code>, <code>error_during_execution</code>, <code>error_max_structured_output_retries</code></td></tr>
-                    <tr><td><strong>Hub-and-spoke</strong></td><td>Coordinator routes all communication between isolated subagents</td></tr>
-                    <tr><td><strong><code>Agent</code> tool (alias <code>Task</code>)</strong></td><td>Tool Claude uses to spawn a subagent; must be available/approved for the coordinator</td></tr>
-                    <tr><td><strong><code>AgentDefinition</code></strong></td><td>Programmatic subagent: <code>description</code>, <code>prompt</code>, <code>tools</code>, <code>model</code>, plus optional limits</td></tr>
-                    <tr><td><strong><code>HookMatcher</code></strong></td><td>Registers SDK hook callbacks for an event and tool-name matcher</td></tr>
-                    <tr><td><strong><code>permissionDecision</code></strong></td><td><code>PreToolUse</code> hook verdict: <code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></td></tr>
-                    <tr><td><strong><code>fork_session</code></strong></td><td>Copies a session's history into a new session ID; original unchanged; filesystem not forked</td></tr>
-                    <tr><td><strong><code>isError</code></strong></td><td>MCP tool-result flag marking a failed call (<code>is_error</code> in Python SDK tools)</td></tr>
-                    <tr><td><strong><code>errorCategory</code> / <code>isRetryable</code></strong></td><td>App-level error payload fields: transient, validation, permission, business</td></tr>
-                    <tr><td><strong><code>tool_choice</code></strong></td><td><code>auto</code> / <code>any</code> / <code>tool</code> (forced) / <code>none</code></td></tr>
-                    <tr><td><strong>Claim→source mapping</strong></td><td>Claim + source + excerpt + location + date, preserved through synthesis</td></tr>
-                    <tr><td><strong>Manifest</strong></td><td>Known-location state export each agent writes so a coordinator can resume after a crash</td></tr>
-                    <tr><td><strong><code>agent_toolset_20260401</code> &amp; Vaults</strong></td><td>Managed Agents built-in toolset (<code>/workspace</code>) and server-side credential injection (<code>vault_ids</code>)</td></tr>
-                </tbody>
+<tr>
+<td><strong><code>stop_reason</code></strong></td>
+<td>Why a response ended: <code>tool_use</code> (run tools, continue), <code>end_turn</code> (done), <code>max_tokens</code>, <code>pause_turn</code>, <code>refusal</code>, <code>stop_sequence</code>, <code>model_context_window_exceeded</code></td>
+</tr>
+<tr>
+<td><strong><code>ResultMessage.subtype</code></strong></td>
+<td>SDK loop outcome: <code>success</code>, <code>error_max_turns</code>, <code>error_max_budget_usd</code>, <code>error_during_execution</code>, <code>error_max_structured_output_retries</code></td>
+</tr>
+<tr>
+<td><strong>Hub-and-spoke</strong></td>
+<td>Coordinator routes all communication between isolated subagents</td>
+</tr>
+<tr>
+<td><strong><code>Agent</code> tool (alias <code>Task</code>)</strong></td>
+<td>Tool Claude uses to spawn a subagent; must be available/approved for the coordinator</td>
+</tr>
+<tr>
+<td><strong><code>AgentDefinition</code></strong></td>
+<td>Programmatic subagent: <code>description</code>, <code>prompt</code>, <code>tools</code>, <code>model</code>, plus optional limits</td>
+</tr>
+<tr>
+<td><strong><code>HookMatcher</code></strong></td>
+<td>Registers SDK hook callbacks for an event and tool-name matcher</td>
+</tr>
+<tr>
+<td><strong><code>permissionDecision</code></strong></td>
+<td><code>PreToolUse</code> hook verdict: <code>deny</code> &gt; <code>defer</code> &gt; <code>ask</code> &gt; <code>allow</code></td>
+</tr>
+<tr>
+<td><strong><code>fork_session</code></strong></td>
+<td>Copies a session's history into a new session ID; original unchanged; filesystem not forked</td>
+</tr>
+<tr>
+<td><strong><code>isError</code></strong></td>
+<td>MCP tool-result flag marking a failed call (<code>is_error</code> in Python SDK tools)</td>
+</tr>
+<tr>
+<td><strong><code>readOnlyHint</code></strong></td>
+<td>Tool annotation that lets a custom tool run in parallel with other read-only calls</td>
+</tr>
+<tr>
+<td><strong><code>canUseTool</code> / <code>set_permission_mode</code></strong></td>
+<td>Runtime approval callback (step 6) / switch permission mode mid-session</td>
+</tr>
+<tr>
+<td><strong><code>tool_choice</code></strong></td>
+<td><code>auto</code> / <code>any</code> / <code>tool</code> (forced) / <code>none</code></td>
+</tr>
+<tr>
+<td><strong><code>compact_boundary</code> / <code>PreCompact</code></strong></td>
+<td>System message emitted after automatic compaction / hook that runs before it</td>
+</tr>
+<tr>
+<td><strong><code>interrupt()</code></strong></td>
+<td>Stops the running turn in streaming mode; drain buffered messages afterwards</td>
+</tr>
+<tr>
+<td><strong><code>agent_toolset_20260401</code> &amp; Vaults</strong></td>
+<td>Managed Agents built-in toolset (<code>/workspace</code>) and server-side credential injection (<code>vault_ids</code>)</td>
+</tr>
+</tbody>
             </table>
         </div>
 
@@ -976,21 +1427,21 @@ options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__bil
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> A synthesis subagent keeps asking which sources the research phase used. Why, and how do you fix it?</p>
+                    <p><span class="q-num">Q2.</span> A debugging subagent spends ten turns rediscovering a stack trace the parent already captured. Why, and what is the fix?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Non-fork subagents start fresh: they do not receive the coordinator's history, tool results or system prompt. The Agent tool's prompt string is the only channel, so pass the complete findings in it with content separated from metadata (URL, document, page, date).</span>
+                        <span class="answer-text">A non-fork subagent starts with a fresh context: it sees its own system prompt, project <code>CLAUDE.md</code> and the Agent tool&#39;s prompt string, never the parent&#39;s history. Copy the stack trace, failing test name and relevant file paths into that prompt.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> Why does a <code>PreToolUse</code> hook beat a capitalised system-prompt rule for a $500 refund cap?</p>
+                    <p><span class="q-num">Q3.</span> A <code>PreToolUse</code> hook returns <code>updatedInput</code> with <code>permissionDecision: "defer"</code>. What happens to the rewrite?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Prompt compliance is probabilistic; a hook runs in code on every matching call. Return <code>permissionDecision: "deny"</code> with a <code>permissionDecisionReason</code> that redirects Claude to escalation. Precedence is <code>deny &gt; defer &gt; ask &gt; allow</code>.</span>
+                        <span class="answer-text">It is dropped: <code>"defer"</code> discards <code>updatedInput</code>. Pair the rewrite with <code>"allow"</code> to auto-approve it, <code>"ask"</code> to show it for approval, or omit the decision so it flows through normal permission evaluation.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q4.</span> An order-lookup tool times out. Why is returning an empty list the wrong behaviour?</p>
+                    <p><span class="q-num">Q4.</span> An in-process inventory tool returns <code>0</code> when its backend times out. Why is that dangerous, and how should the handler respond?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">An empty list is a valid “no orders” result, so the agent would tell the customer they have none (silent suppression). Return an error result (<code>isError: true</code>) with a structured payload such as <code>errorCategory: "transient"</code> and <code>isRetryable: true</code>, plus what was attempted.</span>
+                        <span class="answer-text">Zero is a valid answer, so Claude treats it as fact and may act on it (for example, reorder stock). Catch the timeout and return <code>is_error: True</code> with text saying the count is unknown and when to retry. Uncaught exceptions also become error results, but with only the raw exception text.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
@@ -1006,9 +1457,9 @@ options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__bil
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q7.</span> Two sources report 9% and 12% growth for the same metric. What should the synthesis report contain?</p>
+                    <p><span class="q-num">Q7.</span> After a long run the agent ignores a rule you gave in the first prompt. What likely happened, and where should the rule live?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Both values, each with its source, excerpt, location and publication date, plus an explicit conflict annotation. Dates often explain the difference; never average or silently pick one.</span>
+                        <span class="answer-text">Automatic compaction summarized early history (the stream shows a <code>compact_boundary</code> system message) and the rule did not survive. Put persistent rules in <code>CLAUDE.md</code> loaded through <code>setting_sources</code>, and use a <code>PreCompact</code> hook if you need the full transcript archived.</span>
                     </div>
                 </div>
             </div>
