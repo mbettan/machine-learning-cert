@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentOps: Evals, Observability &amp; Cost: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="AgentOps v2.0 study guide: 3-tier grading hierarchy, Gen AI Evaluation Service autoraters, Adaptive Rubrics &amp; 2-Step Agent Simulation, pass@k vs. pass^k, 4-level test pyramid, OpenTelemetry gen_ai.* tracing &amp; dual-attribution logs, LM Feedback Flywheel &amp; Agent Optimizer, Agent Runtime vs. Cloud Run vs. GKE selection, resilience stack, shadow/A/B rollouts, and 4-step FinOps ROI.">
+    <meta name="keywords" content="AgentOps, Gen AI Evaluation Service, Autoraters, Adaptive Rubrics, 2-Step Agent Simulation, Environment Simulation, Agent Optimizer, Prompt Optimizer, LM Feedback Flywheel, Failure Cluster Analysis, Online Evaluation Monitors, Agent Runtime, Cloud Run, GKE Agent Sandbox, Agent Substrate, pass@k, pass^k, OpenTelemetry, AI FinOps, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/AgentOps.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="AgentOps: Evals, Observability &amp; Cost: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="AgentOps v2.0 study guide: 3-tier grading hierarchy, Gen AI Evaluation Service autoraters, Adaptive Rubrics &amp; 2-Step Agent Simulation, pass@k vs. pass^k, OpenTelemetry gen_ai.* tracing, LM Feedback Flywheel &amp; Agent Optimizer, Agent Runtime vs. Cloud Run vs. GKE selection, resilience stack, and 4-step FinOps ROI.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/AgentOps.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="AgentOps: Evals, Observability &amp; Cost — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AgentOps: Evals, Observability &amp; Cost: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="AgentOps v2.0 study guide: 3-tier grading hierarchy, Gen AI Evaluation Service autoraters, Adaptive Rubrics &amp; 2-Step Agent Simulation, pass@k vs. pass^k, OpenTelemetry gen_ai.* tracing, LM Feedback Flywheel &amp; Agent Optimizer, Agent Runtime vs. Cloud Run vs. GKE selection, resilience stack, and 4-step FinOps ROI.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="AgentOps: Evals, Observability &amp; Cost — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        .diagram-figure {
+            margin: 18px 0 24px 0;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+        }
+        .diagram-figure svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/AgentOps.html#article",
+                  "headline": "AgentOps: Evals, Observability & Cost: Study Guide | ML Cert Hub",
+                  "name": "AgentOps: Evals, Observability & Cost Study Guide",
+                  "description": "AgentOps v2.0 study guide: 3-tier grading hierarchy, Gen AI Evaluation Service autoraters, Adaptive Rubrics & 2-Step Agent Simulation, pass@k vs. pass^k, OpenTelemetry gen_ai.* tracing, LM Feedback Flywheel & Agent Optimizer, Agent Runtime vs. Cloud Run vs. GKE selection, resilience stack, and 4-step FinOps ROI.",
+                  "keywords": "AgentOps, Gen AI Evaluation Service, Autoraters, Adaptive Rubrics, 2-Step Agent Simulation, Environment Simulation, Agent Optimizer, Prompt Optimizer, LM Feedback Flywheel, Failure Cluster Analysis, Online Evaluation Monitors, Agent Runtime, Cloud Run, GKE Agent Sandbox, Agent Substrate, pass@k, pass^k, OpenTelemetry, AI FinOps, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/AgentOps.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/AgentOps.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "AgentOps: Evals, Observability & Cost",
+                              "item": "https://mbettan.github.io/machine-learning-cert/AgentOps.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/AgentOps.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes · v2.0</span>
+                </div>
+                <h1>AgentOps: Evals, Observability <em>&amp; Cost</em></h1>
+                <p class="cover-subtitle">Production engineering for non-deterministic AI systems (PAA Sec 4 Core · CCAR-F D5): the 3-tier grading hierarchy, Gen AI Evaluation Service autoraters, Adaptive Rubrics &amp; 2-Step Agent Simulation, <code>pass@k</code> vs. <code>pass^k</code> math, the 4-level test pyramid, OpenTelemetry <code>gen_ai.*</code> tracing &amp; dual-attribution audit logs, the LM Feedback Flywheel &amp; <code>Agent Optimizer</code>, Agent Runtime vs. Cloud Run vs. GKE selection, the 4-layer resilience stack, shadow/A/B rollouts, and 4-step enterprise FinOps ROI.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Category: <strong>Foundation · v2.0</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=agent-ops" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: AgentOps Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#grading-hierarchy" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Evaluation Strategy &amp; 3-Tier Grading Hierarchy</span>
+                </a>
+                <a href="#managed-eval-autoraters" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Managed Evaluation, Autoraters &amp; Simulation</span>
+                </a>
+                <a href="#pass-metrics" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>Non-Deterministic Metrics: pass@k vs. pass^k</span>
+                </a>
+                <a href="#test-pyramid" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>4-Level Agent Test Pyramid &amp; Integration Seams</span>
+                </a>
+                <a href="#observability-drift" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Observability, Tracing &amp; Drift Detection</span>
+                </a>
+                <a href="#feedback-flywheel" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>LM Feedback Flywheel, Clustering &amp; Agent Optimizer</span>
+                </a>
+                <a href="#runtime-selection" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE</span>
+                </a>
+                <a href="#resilience-stack" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Production Resilience Stack &amp; Fault Isolation</span>
+                </a>
+                <a href="#rollouts-ab" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Safe Rollouts: Shadow Mode vs. 4-Element A/B Testing</span>
+                </a>
+                <a href="#finops-roi" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>Token Economics, Heavy-Tail Sizing &amp; 4-Step ROI</span>
+                </a>
+                <a href="#failure-modes" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>Failure Modes, Glossary &amp; Self-Assessment</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-compass"></i></div>Definition</h3>
+                <p><strong>AgentOps</strong> (AI Evaluation, Observability, Runtime Engineering, and Production FinOps) is the operational control plane that transforms a probabilistic language model and multi-step tool loop into a reliable, auditable, and economically viable production service. Classical binary unit tests and HTTP <code>200 OK</code> uptime checks cannot detect silent quality regressions, "right answer, wrong trajectory" policy violations, or heavy-tail cost explosions.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Why Production AI Fails Without Ops</h3>
+                <ul>
+                    <li><strong>Silent quality &amp; trajectory regressions:</strong> A prompt edit, retrieval tweak, or unpinned model alias can drop faithfulness by 20%—or skip mandatory identity verification—while every HTTP response remains <code>200 OK</code>.</li>
+                    <li><strong>Compounding step decay:</strong> A 90% single-step accuracy drops to <strong>59.0%</strong> across a 5-step sequential workflow ($0.90^5$).</li>
+                    <li><strong>Integration seam &amp; runtime mismatches:</strong> Isolated components score &gt;95% yet fail across seams, while deploying stateful agents to ephemeral RAM or hosting standalone MCP servers on Agent Runtime hits hard boundaries.</li>
+                    <li><strong>Unbounded heavy-tail costs:</strong> Sizing budgets on median (<code>p50</code>) tokens causes 4×–15× budget overruns when multi-agent fan-out, <code>thinking_level=HIGH</code> loops, retries, and human review labor hit production scale.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Mental Model: Probabilistic Core, Deterministic Containment</h4>
+                <p>Treat prompts and model weights as <strong>probabilistic components</strong>, and treat your evaluation harness, simulation sandbox, OpenTelemetry <code>gen_ai.*</code> trace pipeline, runtime boundary, resilience stack, and FinOps ledger as the <strong>deterministic containment vessel</strong> around them. You cannot eliminate sampling variance inside the model, so you bound, measure, optimize, and price it at every boundary.</p>
+            </div>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Simulate &amp; Grade</h4>
+                <p>Enforce the 3-tier grading ladder, Adaptive Rubrics, 2-Step Agent Simulation, and Environment Simulation.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Verify Seams &amp; pass^k</h4>
+                <p>Gate releases on worst-case consistency (<code>pass^k</code>), <code>trajectory_in_order_match</code>, and L3 seam tests.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Observe &amp; Optimize</h4>
+                <p>Stream OTel <code>gen_ai.*</code> + dual-attribution logs, Online Monitors, Failure Clusters, and <code>Agent Optimizer</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Scale, Roll Out &amp; Price</h4>
+                <p>Match runtimes (Agent Runtime / Cloud Run / GKE), isolate faults, run Shadow → A/B, and subtract Step 4 Review Tax.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: EVALUATION STRATEGY & 3-TIER GRADING HIERARCHY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="grading-hierarchy">
+            <div class="section-divider-number">01</div>
+            <h2>1. Evaluation Strategy &amp; The 3-Tier Grading Hierarchy</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 148" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3-Tier Evaluation Grading Cascade">
+  <defs>
+    <marker id="arr-blue-1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-green-1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#059669"/>
+    </marker>
+    <marker id="arr-amber-1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#d97706"/>
+    </marker>
+    <marker id="arr-red-1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="916" height="144" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <!-- Input Box -->
+  <rect x="12" y="16" width="136" height="84" rx="5" fill="#ffffff" stroke="#64748b" stroke-width="1.3"/>
+  <rect x="12" y="16" width="136" height="20" rx="5" fill="#475569"/>
+  <text x="80" y="29.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#ffffff">EVALUATION INPUT</text>
+  <text x="80" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="600" fill="#0f172a">Prompt + Candidate</text>
+  <text x="80" y="63" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="600" fill="#0f172a">+ Reference Context</text>
+  <text x="80" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#475569">Stratified Golden Set</text>
+  <text x="80" y="91" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#475569">(50% / 30% / 20%)</text>
+
+  <!-- Arrow Input -> Tier 1 -->
+  <line x1="148" y1="58" x2="178" y2="58" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-blue-1)"/>
+
+  <!-- Tier 1 Box -->
+  <rect x="180" y="12" width="214" height="92" rx="5" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+  <rect x="180" y="12" width="214" height="21" rx="5" fill="#059669"/>
+  <text x="287" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.6" font-weight="700" fill="#ffffff">TIER 1: Deterministic Code Graders</text>
+  <rect x="190" y="38" width="194" height="15" rx="3" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="0.8"/>
+  <text x="287" y="48.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.4" font-weight="600" fill="#047857">$0 · Milliseconds · 100% Reproducible</text>
+  <text x="190" y="66" font-family="Inter, sans-serif" font-size="7.8" fill="#1e293b">• Strict JSON Schema / Pydantic / Regex</text>
+  <text x="190" y="79" font-family="Inter, sans-serif" font-size="7.8" fill="#1e293b">• AST compile &amp; execution unit tests</text>
+  <text x="190" y="92" font-family="Inter, sans-serif" font-size="7.8" fill="#1e293b">• Tool signature &amp; sequence invariants</text>
+
+  <!-- Tier 1 Fail Branch -->
+  <path d="M 287 104 L 287 128 L 408 128" fill="none" stroke="#dc2626" stroke-width="1.4" marker-end="url(#arr-red-1)"/>
+  <text x="342" y="123" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" font-weight="700" fill="#dc2626">FAIL</text>
+  <rect x="410" y="115" width="224" height="24" rx="4" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+  <text x="522" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.8" font-weight="600" fill="#b91c1c">Hard Fail Gate (Stop early; $0 LLM spend)</text>
+
+  <!-- Arrow Tier 1 -> Tier 2 -->
+  <line x1="394" y1="58" x2="438" y2="58" stroke="#059669" stroke-width="1.6" marker-end="url(#arr-green-1)"/>
+  <rect x="401" y="42" width="30" height="12" rx="2" fill="#ecfdf5"/>
+  <text x="416" y="50.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" font-weight="700" fill="#047857">PASS</text>
+
+  <!-- Tier 2 Box -->
+  <rect x="440" y="12" width="220" height="92" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <rect x="440" y="12" width="220" height="21" rx="5" fill="#2563eb"/>
+  <text x="550" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.6" font-weight="700" fill="#ffffff">TIER 2: Calibrated LLM-as-Judge</text>
+  <rect x="450" y="38" width="200" height="15" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="0.8"/>
+  <text x="550" y="48.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.3" font-weight="600" fill="#1d4ed8">Anchored 1–3 Rubric · CoT Before Score</text>
+  <text x="450" y="66" font-family="Inter, sans-serif" font-size="7.8" fill="#1e293b">• Swap (A, B) &amp; (B, A) to kill order bias</text>
+  <text x="450" y="79" font-family="Inter, sans-serif" font-size="7.8" fill="#1e293b">• Cross-family/tier model in clean context</text>
+  <text x="450" y="92" font-family="Inter, sans-serif" font-size="7.8" fill="#1e293b">• Grades faithfulness, tone &amp; completeness</text>
+
+  <!-- Arrow Tier 2 -> Tier 3 -->
+  <line x1="660" y1="45" x2="706" y2="45" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr-amber-1)"/>
+  <text x="683" y="39" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.8" font-weight="700" fill="#b45309">Audit/Edge</text>
+
+  <!-- Arrow Tier 2 -> CI Gate -->
+  <path d="M 660 82 L 706 118" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#arr-green-1)"/>
+  <text x="674" y="108" font-family="JetBrains Mono, monospace" font-size="6.8" font-weight="700" fill="#047857">High Conf</text>
+
+  <!-- Tier 3 Box -->
+  <rect x="708" y="12" width="198" height="84" rx="5" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+  <rect x="708" y="12" width="198" height="21" rx="5" fill="#7c3aed"/>
+  <text x="807" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#ffffff">TIER 3: Human Domain Experts</text>
+  <rect x="716" y="38" width="182" height="15" rx="3" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="0.8"/>
+  <text x="807" y="48.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.3" font-weight="600" fill="#6d28d9">Golden Set &amp; Calibration (κ ≥ 0.75)</text>
+  <text x="716" y="66" font-family="Inter, sans-serif" font-size="7.7" fill="#1e293b">• Curate stratified golden baseline</text>
+  <text x="716" y="79" font-family="Inter, sans-serif" font-size="7.7" fill="#1e293b">• Audit novel/ambiguous edge slices</text>
+  <text x="716" y="91" font-family="Inter, sans-serif" font-size="7.7" fill="#1e293b">• Align Tier 2 rubrics vs human labels</text>
+
+  <!-- CI Gate Pill -->
+  <rect x="708" y="106" width="198" height="32" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1.2"/>
+  <text x="807" y="120" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#065f46">Emit Eval Metrics &amp; CI/CD Gate</text>
+  <text x="807" y="131.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" fill="#047857">Per-slice diffs + release approval</text>
+</svg>
+</div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-eye-slash"></i></div>Why "Vibe Checks" Fail in Production</h3>
+                <ul>
+                    <li><strong>Zero statistical power:</strong> Eyeballing 5–10 interactive prompts cannot distinguish a 15% accuracy regression from normal sampling noise.</li>
+                    <li><strong>Confirmation bias:</strong> Engineers naturally test clean, happy-path phrasing and overlook malformed inputs, empty retrieval results, or multi-intent edge cases.</li>
+                    <li><strong>Whack-a-mole regressions:</strong> Editing a system prompt to fix one visible failure frequently triggers false refusals or schema breakage on twenty uninspected slices.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-compass-drafting"></i></div>Eval-Driven Development (EDD) Lifecycle</h3>
+                <ul>
+                    <li><strong>Define "done" before tuning:</strong> Establish quantitative targets for accuracy, refusal rate, <code>p95</code> latency, and cost per task first.</li>
+                    <li><strong>Stratified golden dataset:</strong> Combine happy-path production distribution (50%), boundary/edge cases like empty context or long history (30%), and adversarial/safety probes (20%).</li>
+                    <li><strong>Version-lock all inputs:</strong> Pin golden set version, rubric version, prompt hash, tool schemas, and model snapshot ID; inspect per-slice diffs rather than aggregate means alone.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Grader Class</th>
+                        <th>What It Verifies</th>
+                        <th>Speed &amp; Cost</th>
+                        <th>Reproducibility</th>
+                        <th>Architectural Rule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tier 1</strong></td>
+                        <td><strong>Deterministic Code Graders</strong></td>
+                        <td>Exact match, regex/forbidden strings, JSON Schema &amp; Pydantic validation, AST/compile checks, execution unit tests, tool-call signature &amp; sequence invariants</td>
+                        <td>Milliseconds · <strong>$0</strong></td>
+                        <td><strong>100% deterministic</strong></td>
+                        <td><strong>Always prefer first.</strong> Never use an LLM judge to check syntax, field presence, or math that code can verify.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tier 2</strong></td>
+                        <td><strong>Calibrated LLM-as-Judge</strong></td>
+                        <td>Open-ended semantic properties: factual faithfulness to source context, completeness, tone, reasoning coherence, policy adherence</td>
+                        <td>Seconds · <strong>Token cost per eval</strong></td>
+                        <td>High (when anchored &amp; calibrated)</td>
+                        <td>Run only after Tier 1 passes; use anchored rubrics with CoT critique <em>before</em> score, calibrated against Tier 3.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tier 3</strong></td>
+                        <td><strong>Human Domain Calibration</strong></td>
+                        <td>High-stakes clinical/legal/financial accuracy, ambiguous domain edge cases, golden-set labeling, and calibrating Tier 2 judges</td>
+                        <td>Hours/days · <strong>$50–$200+/hr</strong></td>
+                        <td>Subject to inter-rater variance</td>
+                        <td>Use to build the golden set, audit novel failure slices, and compute agreement ($\kappa \ge 0.75$) with Tier 2 judges.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>LLM-as-Judge Bias</th>
+                        <th>How It Distorts Evals</th>
+                        <th>Production Engineering Mitigation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Verbosity (Length) Bias</strong></td>
+                        <td>Judges systematically reward longer, polite, multi-paragraph answers even when padded with fluff or subtle hallucinations.</td>
+                        <td>Grade atomic factual claims (precision/recall) rather than holistic prose; add explicit conciseness penalties to the rubric.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Positional (Order) Bias</strong></td>
+                        <td>In pairwise A/B grading, judges favor whichever candidate appears in Slot A (primacy bias) or Slot B (recency bias).</td>
+                        <td><strong>Swap A/B order on every pair:</strong> evaluate both <code>(A, B)</code> and <code>(B, A)</code>; award a win only if the same candidate wins both passes (otherwise record a tie).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Self-Preference Bias</strong></td>
+                        <td>A model favors outputs that match its own phrasing distribution and overlooks reasoning flaws it would make itself.</td>
+                        <td>Use a <strong>different model family or higher capability tier</strong> as judge, and always execute the judge in a <strong>clean, isolated <code>messages[]</code> context</strong>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Score Inflation &amp; Scale Drift</strong></td>
+                        <td>Unanchored 1–10 or 1–100 scales cluster arbitrarily around 7–9 with high run-to-run variance.</td>
+                        <td>Use decomposed <strong>binary (<code>Pass</code>/<code>Fail</code>) criteria</strong> or low-granularity <strong>1–3 or 1–5 anchored rubrics</strong> with explicit behavioral definitions per integer.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Post-Hoc Rationalization</strong></td>
+                        <td>Emitting the numeric score <em>first</em> locks the judge's subsequent explanation into justifying the chosen number.</td>
+                        <td>Require structured output where the step-by-step <strong><code>critique</code> / <code>reasoning</code> field is generated before the <code>score</code> field</strong>.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-ruler-combined"></i></div>Calibrating Judges Against Humans</h3>
+                <ul>
+                    <li><strong>Step 1 — Human inter-annotator baseline:</strong> Have 2–3 domain experts independently label 100–300 stratified examples. If humans disagree with each other, rewrite the rubric before blaming the LLM judge.</li>
+                    <li><strong>Step 2 — Cohen's Kappa ($\kappa$):</strong> Measure chance-corrected agreement ($\kappa = \frac{p_o - p_e}{1 - p_e}$) on binary/categorical rubrics. Require <strong>$\kappa \ge 0.75$</strong> before gating CI/CD releases.</li>
+                    <li><strong>Step 3 — Spearman's $\rho$ &amp; Confusion Matrix:</strong> Use Spearman rank correlation on ordinal 1–5 scales, and track False-Pass Rate (judge says Pass, human says Fail) separately from False-Fail Rate.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-code"></i></div>Anchored Judge Schema Pattern</h3>
+                <pre><code class="language-python">from pydantic import BaseModel, Field
+
+class FaithfulnessRubric(BaseModel):
+    extracted_claims: list[str] = Field(
+        description="Atomic factual claims in candidate answer."
+    )
+    unsupported_claims: list[str] = Field(
+        description="Claims missing from source context."
+    )
+    critique: str = Field(
+        description="Evidence check BEFORE scoring."
+    )
+    score: int = Field(
+        ge=1, le=3,
+        description="1=Hallucination; 2=Incomplete; 3=Faithful."
+    )</code></pre>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap: In-Thread Self-Grading &amp; Using LLM Judges for Syntax</h4>
+                <p>Never ask the same conversation thread that generated an artifact to grade its own work in the next turn—prior reasoning tokens stay in <code>messages[]</code> and induce severe self-confirmation bias. Equally important: never pay a Tier 2 LLM judge to check whether an output is valid JSON, contains 3 bullet points, or calls the right tool name; enforce those in <strong>Tier 1 deterministic code</strong> at $0 cost and 100% reliability.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: MANAGED EVALUATION FRAMEWORKS, AUTORATERS & SIMULATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="managed-eval-autoraters">
+            <div class="section-divider-number">02</div>
+            <h2>2. Managed Evaluation Frameworks, Autoraters &amp; Simulation</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 132" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2-Step Agent Simulation and Environment Simulation Pipeline">
+  <defs>
+    <marker id="arr-sim-2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="916" height="128" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="10" y="12" width="188" height="108" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1.4"/>
+  <rect x="10" y="12" width="188" height="21" rx="5" fill="#475569"/>
+  <text x="104" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">1. Agent Registry Snapshot</text>
+  <text x="18" y="48" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Immutable agent version ID</text>
+  <text x="18" y="63" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• System prompt + tool schemas</text>
+  <text x="18" y="78" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Works with 0 prod chat logs</text>
+  <text x="104" y="104" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.0" fill="#475569">Reproducible baseline</text>
+
+  <line x1="198" y1="66" x2="220" y2="66" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-sim-2)"/>
+
+  <rect x="222" y="12" width="236" height="108" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <rect x="222" y="12" width="236" height="21" rx="5" fill="#2563eb"/>
+  <text x="340" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">2. 2-Step Agent Simulation</text>
+  <text x="230" y="48" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• <tspan font-weight="700">Step 1:</tspan> Generates Starting Prompts</text>
+  <text x="230" y="60" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  + hidden Conversation Plans</text>
+  <text x="230" y="76" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• <tspan font-weight="700">Step 2:</tspan> Simulated user LLM runs</text>
+  <text x="230" y="88" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  multi-turn dialogue to completion</text>
+  <text x="340" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.0" fill="#1d4ed8">Multi-turn persona stress test</text>
+
+  <line x1="458" y1="66" x2="480" y2="66" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-sim-2)"/>
+
+  <rect x="482" y="12" width="214" height="108" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+  <rect x="482" y="12" width="214" height="21" rx="5" fill="#d97706"/>
+  <text x="589" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">3. Environment Simulation</text>
+  <text x="490" y="48" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Intercepts outbound tool calls</text>
+  <text x="490" y="63" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Injects HTTP 503 / 429, timeouts</text>
+  <text x="490" y="78" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  &amp; mocked edge-case payloads</text>
+  <text x="589" y="104" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.0" fill="#b45309">Zero live backend side effects</text>
+
+  <line x1="696" y1="66" x2="718" y2="66" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-sim-2)"/>
+
+  <rect x="720" y="12" width="190" height="108" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+  <rect x="720" y="12" width="190" height="21" rx="5" fill="#059669"/>
+  <text x="815" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">4. Autoraters &amp; Trajectory</text>
+  <text x="728" y="48" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Adaptive Rubrics (pass/fail)</text>
+  <text x="728" y="63" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• trajectory_in_order_match</text>
+  <text x="728" y="78" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Failure Cluster Analysis</text>
+  <text x="815" y="104" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.0" fill="#047857">Release readiness verdict</text>
+</svg>
+</div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Evaluation Tooling Tier</th>
+                        <th>Primary Mechanism</th>
+                        <th>Speed &amp; Variance</th>
+                        <th>Best Fit &amp; Architectural Boundary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Deterministic Harness Replay</strong><br><code>adk conformance test --mode=replay</code></td>
+                        <td>Replays recorded LLM responses from <code>adk conformance record</code> baselines against live agent code, callbacks, and state transitions.</td>
+                        <td><strong>&lt; 5 seconds · $0 · Zero variance</strong></td>
+                        <td>Every git commit / pre-commit hook verifying that callback guardrails, <code>state_delta</code> logic, and routing code did not regress.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. In-Repo CI Gate</strong><br><code>adk eval</code> · <code>agents-cli eval run</code></td>
+                        <td>Runs <code>*.test.json</code> and <code>*.evalset.json</code> suites against live models, grading <code>tool_trajectory_avg_score</code> (<code>EXACT</code>, <code>IN_ORDER</code>, <code>ANY_ORDER</code>), rubrics, and <code>custom_metrics</code>.</td>
+                        <td><strong>1–5 minutes · Low cost</strong></td>
+                        <td>Pull-request blocking gates inside GitHub Actions or Cloud Build for code-first ADK repositories (<code>tests/eval/</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Cloud-Scale Managed Evaluation</strong><br><strong>Gen AI Evaluation Service</strong> (<code>client.evals</code>)</td>
+                        <td>Framework-agnostic managed service providing <strong>Adaptive Rubrics</strong>, <strong>Custom Autoraters</strong>, <strong>2-Step Agent Simulation</strong>, <strong>Environment Simulation</strong>, and <strong>Online Evaluation Monitors</strong>.</td>
+                        <td><strong>Minutes to continuous · Managed scale</strong></td>
+                        <td>Cross-language/cross-framework agents (ADK, LangGraph, Managed Agents, Cloud Run), model migrations (e.g., to <code>gemini-4-argon</code>), synthetic stress-testing, and live production trace scoring.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Gen AI Evaluation Metric Family</th>
+                        <th>Reference Needed?</th>
+                        <th>How It Works</th>
+                        <th>Canonical Built-In Metrics &amp; Use Cases</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Adaptive Rubrics</strong><br><em>(Recommended Default)</em></td>
+                        <td><strong>No</strong> (Reference-free)</td>
+                        <td>Dynamically generates a <strong>tailored set of pass/fail unit-test rubrics</strong> unique to <em>each individual prompt</em> in the dataset, then scores the candidate response against every check.</td>
+                        <td><code>GENERAL_QUALITY</code>, multi-turn instruction adherence across diverse open-ended prompts where one static checklist would be vague or brittle.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Static Rubrics</strong></td>
+                        <td><strong>No</strong></td>
+                        <td>Applies an identical organization-wide pass/fail rubric across every prompt in the suite.</td>
+                        <td>Mandatory regulatory disclaimers, brand voice rules, PII refusal formatting, policy invariants.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agent Outcome &amp; Grounding Autoraters</strong></td>
+                        <td><strong>No</strong> (Context-grounded)</td>
+                        <td>Specialized LLM-as-judge autoraters inspecting full conversation traces and retrieved/tool context.</td>
+                        <td><code>FINAL_RESPONSE_QUALITY</code>, <code>HALLUCINATION</code> (faithfulness to tool/RAG context), <code>TOOL_USE_QUALITY</code>, <code>SAFETY</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trajectory Metrics</strong></td>
+                        <td><strong>Yes</strong> (Golden tool trace)</td>
+                        <td>Deterministic comparison between the agent's executed tool sequence/arguments and a reference trajectory.</td>
+                        <td><code>trajectory_exact_match</code> (strict compliance order), <code>trajectory_in_order_match</code> (required milestones in order, extra read calls allowed), <code>trajectory_any_order_match</code>, <code>trajectory_precision</code> / <code>recall</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Computation &amp; Custom Autoraters</strong></td>
+                        <td><strong>Configurable</strong></td>
+                        <td>Deterministic code metrics ($0 judge spend) or custom calibrated LLM autoraters registered in <code>client.evals</code>.</td>
+                        <td><code>EXACT_MATCH</code>, <code>ROUGE</code>, JSON Schema / SQL AST checks, plus proprietary clinical, legal, or underwriting domain autoraters.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-comments"></i></div>2-Step Agent Simulation</h3>
+                <p>Requires an immutable <strong>Agent Registry</strong> snapshot so every benchmark is reproducible—even when <strong>zero historical production chat logs exist</strong>:</p>
+                <ul>
+                    <li><strong>Step 1 (Scenario Synthesis):</strong> Reads system instructions and tool schemas to auto-generate diverse <code>Starting Prompts</code> paired with hidden <code>Conversation Plans</code> (user persona, goal, constraints).</li>
+                    <li><strong>Step 2 (Multi-Turn Execution):</strong> A simulated user LLM conducts multi-turn dialogue with the target agent until completion, abandonment, or <code>max_turns</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-plug-circle-exclamation"></i></div>Environment Simulation</h3>
+                <p>Intercepts outbound tool calls during evaluation to inject deterministic faults and edge cases <strong>without touching live production backends</strong>:</p>
+                <ul>
+                    <li>Simulates <code>HTTP 503 Service Unavailable</code>, <code>429 RESOURCE_EXHAUSTED</code>, 12-second latency spikes, malformed JSON, and empty rows.</li>
+                    <li>Proves retry, circuit-breaker, fallback, and escalation paths work safely before exposing payment or ERP APIs.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Compliance Trap: "Right Answer, Wrong Path" in Outcome-Only Grading</h4>
+                <p>Grading a refund or clinical agent solely with <code>FINAL_RESPONSE_QUALITY</code> or <code>multi_turn_task_success_v1</code> will pass an agent that issued a refund <em>without</em> calling <code>verify_customer_identity</code> or <code>check_return_eligibility</code> first. Whenever policy mandates verification steps, <strong>always pair outcome autoraters with <code>trajectory_in_order_match</code> or <code>trajectory_exact_match</code></strong> plus a forbidden-tool custom check.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: NON-DETERMINISTIC METRICS: pass@k vs. pass^k
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="pass-metrics">
+            <div class="section-divider-number">03</div>
+            <h2>3. Non-Deterministic Metrics: <code>pass@k</code> vs. <code>pass^k</code></h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-dice-one"></i></div><code>pass@k</code> — At-Least-One Success</h3>
+                <p><strong>Formula:</strong> $\text{pass}@k = 1 - (1 - p)^k$ (where $p$ is single-trial success rate).</p>
+                <ul>
+                    <li><strong>Meaning:</strong> Chance of seeing <strong>one or more successes across $k$ independent runs</strong>.</li>
+                    <li><strong>As $k$ grows:</strong> Score <strong>rises toward 100%</strong>, masking high single-run failure rates (e.g., $p = 0.70$ yields $\text{pass}@5 = 99.8\%$).</li>
+                    <li><strong>Valid use case:</strong> Offline code generation, unit-test synthesis, or candidate brainstorming where a <strong>deterministic verifier</strong> (compiler, test runner, or human reviewer) filters the $k$ candidates and selects the single working solution.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-check-double"></i></div><code>pass^k</code> — Consistent Every-Run Reliability</h3>
+                <p><strong>Formula:</strong> $\text{pass}^k = p^k$ (chance that <strong>every run across $k$ trials</strong> succeeds).</p>
+                <ul>
+                    <li><strong>Meaning:</strong> Probability that an agent succeeds across $k$ consecutive independent trials without a single failure.</li>
+                    <li><strong>As $k$ grows:</strong> Score <strong>decays exponentially</strong> ($p = 0.90$ drops to $\text{pass}^5 = 59.0\%$ and $\text{pass}^{10} = 34.9\%$).</li>
+                    <li><strong>Valid use case:</strong> <strong>Mandatory for customer-facing agents</strong>, unattended production automation, and pipelines executing mutating tools where every single invocation must work reliably.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Single-Run Accuracy ($p$)</th>
+                        <th><code>pass@1</code> / <code>pass^1</code></th>
+                        <th><code>pass@5</code> ($1 - (1-p)^5$)</th>
+                        <th><code>pass^5</code> ($p^5$)</th>
+                        <th><code>pass^10</code> ($p^{10}$)</th>
+                        <th>Production Readiness Verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0.70 (70%)</strong></td>
+                        <td>70.0%</td>
+                        <td>99.8%</td>
+                        <td><strong>16.8%</strong></td>
+                        <td><strong>2.8%</strong></td>
+                        <td>Viable only when a compiler/test runner picks 1 of 5 samples; fails 83% of 5-run live suites.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>0.85 (85%)</strong></td>
+                        <td>85.0%</td>
+                        <td>99.99%</td>
+                        <td><strong>44.4%</strong></td>
+                        <td><strong>19.7%</strong></td>
+                        <td>Fails more than half the time across 5 consecutive runs.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>0.90 (90%)</strong></td>
+                        <td>90.0%</td>
+                        <td>99.999%</td>
+                        <td><strong>59.0%</strong></td>
+                        <td><strong>34.9%</strong></td>
+                        <td>Classic trap: looks like "90% accurate," yet <strong>41% of 5-run batches contain a failure</strong>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>0.95 (95%)</strong></td>
+                        <td>95.0%</td>
+                        <td>&gt;99.999%</td>
+                        <td><strong>77.4%</strong></td>
+                        <td><strong>59.9%</strong></td>
+                        <td>Minimum single-turn baseline before adding deterministic validation gates.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>0.99 (99%)</strong></td>
+                        <td>99.0%</td>
+                        <td>&gt;99.999%</td>
+                        <td><strong>95.1%</strong></td>
+                        <td><strong>90.4%</strong></td>
+                        <td>Production-grade step consistency (achieved by combining strict schemas + code guardrails).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-link-slash"></i></div>Compounding Multi-Step Accuracy Across Sequential Agent Hops</h3>
+            <p>The exact same exponential law governs a single run of a <strong>multi-step sequential workflow</strong>. If an agent must complete $M$ sequential steps (e.g., <em>Classify Intent → Rewrite Query → Select Tool → Validate Payload → Synthesize Answer</em>) with step reliabilities $p_1, p_2, \dots, p_M$, overall trajectory reliability is the product $\prod_{i=1}^M p_i$:</p>
+            <ul>
+                <li><strong>The Multi-Step Cliff:</strong> A 6-step agent where every individual step achieves <strong>92% isolated accuracy</strong> completes the full workflow on the first pass only $0.92^6 \approx \mathbf{60.6\%}$ of the time.</li>
+                <li><strong>How to bend the compounding curve:</strong>
+                    <ol>
+                        <li><strong>Convert probabilistic hops into deterministic code ($p = 1.00$):</strong> If 3 of the 6 steps are handled by deterministic workflow orchestration (<code>SequentialAgent</code>) and strict schema parsers, the probabilistic chain shrinks from $0.92^6$ (60.6%) to $0.92^3$ (<strong>77.9%</strong>).</li>
+                        <li><strong>Add step-level verification &amp; local self-correction gates:</strong> Validate tool arguments in code before executing the tool; if a step fails validation with $p = 0.90$ but gets one bounded local retry, effective step reliability rises from $0.90$ to $1 - (1 - 0.90)^2 = \mathbf{0.99}$.</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common Trap: Reporting <code>pass@5</code> to Justify Launching an Autonomous Agent</h4>
+                <p>If an engineering team reports <em>"Our support agent achieved 99.9% <code>pass@5</code> on the benchmark"</em> when single-run accuracy is 85%, do not approve launch. A live customer does not see the best of 5 parallel timelines, and you cannot execute mutating tools (like issuing refunds or canceling subscriptions) 5 times hoping one succeeds. Gate unattended agents strictly on <strong><code>pass^k</code></strong>.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: THE 4-LEVEL AGENT TEST PYRAMID & INTEGRATION SEAMS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="test-pyramid">
+            <div class="section-divider-number">04</div>
+            <h2>4. The 4-Level Agent Test Pyramid &amp; Integration Seams</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 182" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The 4-Level Agent Test Pyramid">
+  <rect x="2" y="2" width="916" height="178" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <!-- Column Headers -->
+  <text x="16" y="18" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#475569" letter-spacing="0.4">CADENCE · SPEED · COST</text>
+  <text x="450" y="18" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#1e3a8a" letter-spacing="0.4">4-LEVEL AGENT VERIFICATION PYRAMID</text>
+  <text x="904" y="18" text-anchor="end" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#475569" letter-spacing="0.4">SCOPE &amp; PRIMARY DEFECTS CAUGHT</text>
+
+  <!-- LEVEL 4 (Top) -->
+  <rect x="14" y="27" width="215" height="30" rx="4" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+  <text x="22" y="40" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#5b21b6">L4 · Continuous in Production</text>
+  <text x="22" y="51" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#6d28d9">1%–5% Async Sample · Prod Budget</text>
+  <line x1="229" y1="42" x2="366" y2="42" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="2,2"/>
+  <polygon points="390,25 510,25 542,59 358,59" fill="#7c3aed" stroke="#5b21b6" stroke-width="1.2"/>
+  <text x="450" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.3" font-weight="700" fill="#ffffff">L4: Live Canary &amp; Prod</text>
+  <text x="450" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.3" fill="#ede9fe">Online Eval Monitors</text>
+  <line x1="534" y1="42" x2="645" y2="42" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="2,2"/>
+  <rect x="645" y="27" width="261" height="30" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="653" y="40" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#0f172a">Catches Input &amp; Data Drift</text>
+  <text x="653" y="51" font-family="Inter, sans-serif" font-size="7.4" fill="#475569">Unseen user phrasing, 3P API shifts, live tail latency</text>
+
+  <!-- LEVEL 3 (Upper-Mid) -->
+  <rect x="14" y="64" width="215" height="30" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+  <text x="22" y="77" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#1e40af">L3 · Nightly / Pre-Release Gate</text>
+  <text x="22" y="88" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#1d4ed8">Minutes · Moderate Token Spend</text>
+  <line x1="229" y1="79" x2="334" y2="79" stroke="#3b82f6" stroke-width="1" stroke-dasharray="2,2"/>
+  <polygon points="354,62 546,62 582,96 318,96" fill="#2563eb" stroke="#1d4ed8" stroke-width="1.2"/>
+  <text x="450" y="77" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.6" font-weight="700" fill="#ffffff">L3: Trajectory &amp; Seam Integration</text>
+  <text x="450" y="89" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.4" fill="#dbeafe">2-Step Sim + Environment Sim (503/429)</text>
+  <line x1="568" y1="79" x2="645" y2="79" stroke="#3b82f6" stroke-width="1" stroke-dasharray="2,2"/>
+  <rect x="645" y="64" width="261" height="30" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="653" y="77" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#0f172a">Catches Integration Seam Bugs</text>
+  <text x="653" y="88" font-family="Inter, sans-serif" font-size="7.4" fill="#475569">Format drift, swallowed tool errors, infinite loops</text>
+
+  <!-- LEVEL 2 (Lower-Mid) -->
+  <rect x="14" y="101" width="215" height="30" rx="4" fill="#ecfeff" stroke="#67e8f9" stroke-width="1"/>
+  <text x="22" y="114" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#0e7490">L2 · Every PR / Model Bump</text>
+  <text x="22" y="125" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#0891b2">Seconds · Low Cost · Golden Set</text>
+  <line x1="229" y1="116" x2="294" y2="116" stroke="#0891b2" stroke-width="1" stroke-dasharray="2,2"/>
+  <polygon points="314,99 586,99 622,133 278,133" fill="#0891b2" stroke="#0e7490" stroke-width="1.2"/>
+  <text x="450" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.8" font-weight="700" fill="#ffffff">L2: Single-Step Component Evals</text>
+  <text x="450" y="126" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.4" fill="#cffafe">Isolated Router, Extractor, Rewriter or Synthesizer</text>
+  <line x1="606" y1="116" x2="645" y2="116" stroke="#0891b2" stroke-width="1" stroke-dasharray="2,2"/>
+  <rect x="645" y="101" width="261" height="30" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="653" y="114" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#0f172a">Catches Prompt &amp; Slice Regressions</text>
+  <text x="653" y="125" font-family="Inter, sans-serif" font-size="7.4" fill="#475569">Single-hop classification drift, local hallucinations</text>
+
+  <!-- LEVEL 1 (Base) -->
+  <rect x="14" y="138" width="215" height="32" rx="4" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+  <text x="22" y="151" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#047857">L1 · Every Commit / Pre-Hook</text>
+  <text x="22" y="163" font-family="JetBrains Mono, monospace" font-size="7.2" font-weight="600" fill="#059669">Milliseconds · $0 · 100% Mocked/Replay</text>
+  <line x1="229" y1="154" x2="254" y2="154" stroke="#059669" stroke-width="1" stroke-dasharray="2,2"/>
+  <polygon points="274,136 626,136 664,172 236,172" fill="#059669" stroke="#047857" stroke-width="1.2"/>
+  <text x="450" y="152" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="#ffffff">L1: Deterministic Unit &amp; Replay Tests</text>
+  <text x="450" y="165" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" fill="#d1fae5">JSON Schemas, Callbacks, adk conformance test --mode=replay</text>
+  <line x1="646" y1="154" x2="645" y2="154" stroke="#059669" stroke-width="1"/>
+  <rect x="645" y="138" width="261" height="32" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="653" y="151" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#0f172a">Catches Schema &amp; Callback Bugs</text>
+  <text x="653" y="163" font-family="Inter, sans-serif" font-size="7.4" fill="#475569">Template KeyErrors, state_delta bugs, retry math</text>
+</svg>
+</div>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">L1</div>
+                <h4>Unit &amp; Replay Tests</h4>
+                <p>Schemas, parsers, callbacks, and <code>adk conformance test --mode=replay</code> (ms, $0, every commit).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">L2</div>
+                <h4>Single-Step Component Evals</h4>
+                <p>Isolated router, extractor, rewriter, or RAG synthesis call against a frozen golden dataset (per PR / model bump).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">L3</div>
+                <h4>Trajectory &amp; Seam Integration</h4>
+                <p>Multi-turn tool loops, state handoffs, and Environment Simulation fault injection (pre-release / nightly).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">L4</div>
+                <h4>Canary &amp; Online Monitors</h4>
+                <p>Shadow runs, canary slices, and sampled async <code>OnlineEvaluator</code> autoraters on live traffic (continuous).</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Pyramid Level</th>
+                        <th>Target Under Test</th>
+                        <th>Dependencies &amp; Mocks</th>
+                        <th>Cadence &amp; Cost</th>
+                        <th>Primary Defects Caught</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Level 1: Deterministic Unit &amp; Replay Tests</strong></td>
+                        <td>Tool JSON schemas, Pydantic validators, prompt builders, PII scrubbers, <code>adk conformance test --mode=replay</code></td>
+                        <td><strong>LLM 100% mocked / replayed</strong> from recorded fixtures; pure deterministic execution</td>
+                        <td>Every save / pre-commit · <strong>Milliseconds · $0</strong></td>
+                        <td>Missing template variables, broken callbacks/<code>state_delta</code>, parser crashes on malformed JSON, off-by-one retry logic.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Level 2: Single-Step Component Evals</strong></td>
+                        <td>A single LLM hop in isolation (intent classifier, entity extractor, query rewriter, answer generator)</td>
+                        <td><strong>Live LLM</strong> + frozen golden input and pre-recorded context snapshot</td>
+                        <td>Every PR touching prompts/models · <strong>Seconds · Low cost</strong></td>
+                        <td>Classification drift, extraction regressions, prompt instruction conflicts, single-turn hallucination.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Level 3: Trajectory &amp; Seam Integration</strong></td>
+                        <td>End-to-end multi-turn loop across 2–8 steps: tool selection, state handoffs, subagent coordination, error recovery</td>
+                        <td><strong>Live LLM + Environment Simulation / sandbox tools</strong> (injected <code>503</code>, <code>429</code>, and empty-result fixtures)</td>
+                        <td>Pre-release gate / nightly · <strong>Minutes · Moderate cost</strong></td>
+                        <td><strong>Integration seam bugs</strong>, infinite tool loops, swallowed tool errors, observation flooding, context collapse.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Level 4: Live Canary &amp; Online Monitors</strong></td>
+                        <td>Full deployed production system serving real customer traffic</td>
+                        <td><strong>100% live stack</strong> (canary cohort, shadow fork, or 1–5% sampled <code>OnlineEvaluator</code>)</td>
+                        <td>Continuous in production · <strong>Fixed % of prod budget</strong></td>
+                        <td>Input/data drift, unseen user phrasing, third-party API latency/schema shifts, cache invalidation bugs.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-puzzle-piece"></i></div>Why Integration Seams Hide Silent Bugs (Compound Error Cascades)</h3>
+            <p>An <strong>integration seam</strong> is the contract boundary where the output of Component A becomes the input of Component B. In production, every component can score <strong>&gt;95% on isolated component evals</strong> while the end-to-end system fails on <strong>&gt;40% of real workflows</strong> because Level 2 tests feed clean, hand-crafted inputs to each component rather than the messy, truncated, or slightly shifted outputs actually emitted by upstream components.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Integration Seam Failure Mode</th>
+                        <th>Why Component A Passes Level 2</th>
+                        <th>How Component B Fails Across the Seam</th>
+                        <th>Architectural Remediation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Implicit Format &amp; Schema Drift</strong></td>
+                        <td>Entity extractor returns dates as <code>"Oct 26, 2026"</code> or wraps JSON in Markdown fences (marked correct by a lenient L2 grader).</td>
+                        <td>Downstream SQL/API tool requires strict ISO-8601 <code>2026-10-26</code> or raw JSON and throws a hard validation error.</td>
+                        <td>Enforce <strong>strict structured outputs</strong> (<code>output_schema</code> / JSON Schema) at every seam and verify with L1/L3 contract assertions.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Unbounded Tool Output &amp; Silent Truncation</strong></td>
+                        <td>Log-fetching tool dumps 40,000 raw tokens into context (diluting model attention), or middleware naively slices the first 4,000 characters.</td>
+                        <td>Attention degrades across turns (<em>context rot</em>) or the stack trace at the bottom is cut off, causing a confident <em>"No errors found."</em></td>
+                        <td>Truncate structurally (keep head + tail + error lines) and attach explicit metadata (<code>truncated: true, omitted_lines: 850</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State Loss During Context Compaction</strong></td>
+                        <td>Sliding-window summarizer compresses 12 prior turns into a concise 3-sentence prose summary.</td>
+                        <td>Summarizer drops an exact UUID, booking ID, or policy flag read in Turn 2 that Turn 14 needs to execute a tool safely.</td>
+                        <td>Persist exact IDs, constraints, and slot values in structured <strong>Session <code>state</code></strong> (<code>session.state</code>), never solely in summarized prose.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Swallowed Tool Errors (Empty vs. Failure)</strong></td>
+                        <td>Tool wrapper catches an upstream <code>504 Gateway Timeout</code> and returns <code>[]</code> or <code>""</code> so the Python process doesn't raise.</td>
+                        <td>The LLM treats <code>[]</code> as factual ground truth and tells the customer <em>"You have no active subscriptions."</em></td>
+                        <td>Return explicit structured error blocks (<code>is_error: true</code>, error type, retryability) so the model distinguishes outage from empty data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coupled Stage Distribution Shift</strong></td>
+                        <td>Query rewriter expands a 6-word user question into a 90-word keyword-stuffed paragraph (looks thorough in L2).</td>
+                        <td>Dense embedding model was tuned on short questions; top-5 retrieval recall drops by 30% on 90-word inputs.</td>
+                        <td>Test <em>Query Rewriter + Retriever</em> as a coupled pair in Level 3 seam evals measuring end-to-end <code>Recall@K</code>.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-vial-circle-check"></i></div>
+            <div class="callout-content">
+                <h4>How to Grade Level 3 Multi-Turn Trajectories Without Brittle Tests</h4>
+                <p>Do not assert an exact character-for-character transcript or rigid read-tool ordering when multiple valid search paths exist. Instead grade three invariants: <strong>(1) Final sandbox state</strong> (did the database/ticket reach the right state?), <strong>(2) Safety &amp; ordering milestones</strong> (<code>trajectory_in_order_match</code>: e.g., <code>verify_caller_identity</code> MUST execute before <code>issue_refund</code>, and <code>delete_tenant</code> is NEVER called), and <strong>(3) Fault-injection recovery</strong> (how the agent behaves when Environment Simulation returns <code>is_error: true</code> or HTTP <code>503</code>).</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: OBSERVABILITY, DISTRIBUTED TRACING & DRIFT DETECTION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="observability-drift">
+            <div class="section-divider-number">05</div>
+            <h2>5. Observability, Distributed Tracing &amp; Drift Detection</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 184" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OpenTelemetry Distributed Agent Trace Hierarchy">
+  <rect x="2" y="2" width="916" height="180" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <!-- Parent Trace Header Bar -->
+  <rect x="10" y="10" width="900" height="24" rx="4" fill="#1e3a8a"/>
+  <text x="20" y="25.5" font-family="JetBrains Mono, monospace" font-size="8.2" font-weight="700" fill="#ffffff">TRACE: trace_id="tr_9f8a..." · session_id="sess_42" · is_agentic=true</text>
+  <text x="900" y="25.5" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" font-weight="600" fill="#93c5fd">Total Turn Duration: 2,826 ms</text>
+
+  <!-- Column Subheaders -->
+  <text x="20" y="47" font-family="Inter, sans-serif" font-size="7.6" font-weight="700" fill="#475569">OTEL gen_ai.* SPAN HIERARCHY</text>
+  <text x="295" y="47" font-family="Inter, sans-serif" font-size="7.6" font-weight="700" fill="#475569">WATERFALL TIMELINE (0 ms ────────────────────► 2,826 ms)</text>
+  <text x="635" y="47" font-family="Inter, sans-serif" font-size="7.6" font-weight="700" fill="#475569">DURATION &amp; KEY SPAN ATTRIBUTES</text>
+  <line x1="10" y1="51" x2="910" y2="51" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Tree guide line -->
+  <line x1="22" y1="34" x2="22" y2="164" stroke="#64748b" stroke-width="1.3"/>
+  <!-- Timeline grid lines -->
+  <line x1="295" y1="51" x2="295" y2="176" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="400" y1="51" x2="400" y2="176" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="510" y1="51" x2="510" y2="176" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="620" y1="51" x2="620" y2="176" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- Span 1 -->
+  <line x1="22" y1="65" x2="34" y2="65" stroke="#64748b" stroke-width="1.3"/>
+  <text x="38" y="68" font-family="JetBrains Mono, monospace" font-size="8" font-weight="600" fill="#0f172a">Span 1: model_armor.screen_input</text>
+  <rect x="295" y="57" width="8" height="15" rx="2" fill="#059669"/>
+  <text x="635" y="68" font-family="JetBrains Mono, monospace" font-size="7.6" fill="#047857"><tspan font-weight="700">14 ms</tspan> | verdict=ALLOW · sdp_scrubbed=true</text>
+
+  <!-- Span 2 -->
+  <line x1="22" y1="88" x2="34" y2="88" stroke="#64748b" stroke-width="1.3"/>
+  <text x="38" y="91" font-family="JetBrains Mono, monospace" font-size="8" font-weight="600" fill="#0f172a">Span 2: retrieval.agent_search</text>
+  <rect x="303" y="80" width="24" height="15" rx="2" fill="#0891b2"/>
+  <text x="635" y="91" font-family="JetBrains Mono, monospace" font-size="7.6" fill="#0e7490"><tspan font-weight="700">82 ms</tspan> | top_k=20 → rerank=5 · store="policy-v4"</text>
+
+  <!-- Span 3 -->
+  <line x1="22" y1="112" x2="34" y2="112" stroke="#64748b" stroke-width="1.3"/>
+  <text x="38" y="115" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#1e3a8a">Span 3: gen_ai.chat (Turn 1)</text>
+  <rect x="327" y="104" width="128" height="16" rx="2" fill="#2563eb"/>
+  <rect x="327" y="104" width="32" height="16" rx="2" fill="#1d4ed8"/>
+  <text x="343" y="114.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.5" fill="#ffffff">TTFT</text>
+  <text x="635" y="114" font-family="JetBrains Mono, monospace" font-size="7.6" fill="#1d4ed8"><tspan font-weight="700">1,180 ms</tspan> | finish="tool_calls" · cached=4,200</text>
+  <text x="635" y="124.5" font-family="JetBrains Mono, monospace" font-size="7.1" fill="#475569">model="gemini-3.8-flash" · thinking_level="MEDIUM"</text>
+
+  <!-- Span 4 -->
+  <line x1="22" y1="140" x2="34" y2="140" stroke="#64748b" stroke-width="1.3"/>
+  <text x="38" y="143" font-family="JetBrains Mono, monospace" font-size="8" font-weight="600" fill="#0f172a">Span 4: gen_ai.execute_tool (mcp:order)</text>
+  <rect x="455" y="132" width="62" height="15" rx="2" fill="#d97706"/>
+  <text x="635" y="143" font-family="JetBrains Mono, monospace" font-size="7.6" fill="#b45309"><tspan font-weight="700">640 ms</tspan> | status=OK · is_error=false · retry=1</text>
+
+  <!-- Span 5 -->
+  <line x1="22" y1="164" x2="34" y2="164" stroke="#64748b" stroke-width="1.3"/>
+  <text x="38" y="167" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#5b21b6">Span 5: gen_ai.chat (Turn 2)</text>
+  <rect x="517" y="156" width="103" height="16" rx="2" fill="#7c3aed"/>
+  <text x="635" y="167" font-family="JetBrains Mono, monospace" font-size="7.6" fill="#6d28d9"><tspan font-weight="700">910 ms</tspan> | finish="stop" · cached=4,680</text>
+</svg>
+</div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>OpenTelemetry <code>gen_ai.*</code> Distributed Tracing</h3>
+                <p>Instrument every workflow with <strong>OpenTelemetry Semantic Conventions for Generative AI</strong> (<code>gen_ai.*</code> attributes across <code>invoke_agent</code>, <code>chat</code>, and <code>execute_tool</code> spans) so traces render uniformly across <strong>Google Cloud Trace</strong>, <strong>Agent Registry Observability</strong>, and vendor-neutral APMs:</p>
+                <ul>
+                    <li><strong>Correlation attributes:</strong> <code>trace_id</code>, <code>span_id</code>, <code>session_id</code>, provider <code>request-id</code>, <code>workflow_name</code>.</li>
+                    <li><strong>Version attributes:</strong> <code>gen_ai.request.model</code> (pinned ID), <code>prompt_template_version</code>, <code>tool_schema_hash</code>, <code>rag_index_version</code>.</li>
+                    <li><strong>Token &amp; control attributes:</strong> <code>input_tokens</code>, <code>output_tokens</code>, <code>thinking_tokens</code>, <code>thinking_level</code>, <code>cached_tokens</code>, <code>finish_reason</code> / <code>stop_reason</code>, <code>retry_count</code>, <code>fallback_used</code>.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-user-shield"></i></div>PII-Safe Telemetry &amp; Dual-Attribution Audit Logs</h3>
+                <p>Production observability must diagnose failures and prove actor provenance without turning logs into a compliance liability:</p>
+                <ul>
+                    <li><strong>Metadata-first default spans:</strong> Enabling <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> exports latency waterfalls, token/cache counts, and error codes—<strong>never raw user prompts or PII</strong>.</li>
+                    <li><strong>SDP-scrubbed payload vault:</strong> Enable raw message capture (<code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true</code>) only with <strong>Sensitive Data Protection (SDP)</strong> de-identification templates and RBAC-restricted Cloud Logging buckets (<code>roles/logging.privateLogViewer</code>).</li>
+                    <li><strong>Dual-Attribution Audit Logging (<code>is_agentic=true</code>):</strong> Cloud Audit Logs tag agent actions with <code>is_agentic=true</code> and record <strong>both</strong> the cryptographic SPIFFE <strong>Agent Identity</strong> (<code>spiffe://...</code>) and the initiating <strong>human principal</strong>—eliminating "confused deputy" blind spots.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Production Issue (PAA 4.2)</th>
+                        <th>Diagnostic Signature in Cloud Trace / Agent Observability</th>
+                        <th>Root Cause &amp; Engineering Remediation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Agent Reasoning Loops</strong></td>
+                        <td><code>Traces</code> waterfall shows 8–15 consecutive <code>gen_ai.chat</code> &harr; <code>execute_tool</code> spans calling the exact same tool with identical or oscillating arguments until <code>max_turns</code> aborts.</td>
+                        <td>Ambiguous tool error message (e.g., returning <code>""</code> instead of actionable schema feedback) or missing loop cap. Return structured error hints (<code>ReflectAndRetryToolPlugin</code>), enforce <code>max_llm_calls</code> / <code>max_iterations</code>, and break cycles with deterministic state flags.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool Invocation Latency Spikes</strong></td>
+                        <td>End-to-end turn <code>p95</code> jumps to 14s while LLM <code>ttft_ms</code> and decode time stay &lt;1.2s; <code>Tools</code> tab highlights a single MCP server <code>p95</code> at 11.5s or 5 serial tool spans.</td>
+                        <td>Unpooled database connections, cross-region VPC hops, or sequential execution of independent reads. Co-locate runtimes with data, use <code>MCP Toolbox</code> connection pooling, and fan out independent reads concurrently (<code>ParallelAgent</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ignored Tools ("No-Tool Interactions")</strong></td>
+                        <td><code>Tools</code> tab shows high <strong>"no-tool interaction"</strong> rate alongside elevated <code>HALLUCINATION</code> autorater flags on domain questions.</td>
+                        <td>Vague or overlapping tool docstrings/schemas cause the model to guess from parametric memory instead of calling the tool. Sharpen tool descriptions and add <code>trajectory_in_order_match</code> CI gates.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Model Prefill / Thinking Bottlenecks</strong></td>
+                        <td><code>Models</code> &amp; <code>Traces</code> tabs show <code>thinking_tokens</code> dominating <code>total_generation_ms</code> on simple classification hops, or high <code>ttft_ms</code> with <code>cached_tokens = 0</code>.</td>
+                        <td><code>thinking_level="HIGH"</code> over-allocated to routine steps, or dynamic timestamps placed at line 1 busting prefix caching. Route simple steps to <code>gemini-3.5-flash-lite</code> (<code>minimal</code>) or <code>gemini-3.8-flash</code> (<code>low</code>), and move volatile state after <code>static_instruction</code>.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>SLI Dimension</th>
+                        <th>Key Production Metrics</th>
+                        <th>Typical SLO Target</th>
+                        <th>Why Mean/Average Hides Problems</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Responsiveness</strong></td>
+                        <td>Streaming <strong>TTFT</strong> (<code>p50</code>, <code>p95</code>, <code>p99</code>); End-to-End Turn Latency; Tool Execution Latency</td>
+                        <td><code>p95 TTFT &lt; 800 ms</code><br><code>p95 Turn &lt; 5.0 s</code></td>
+                        <td>Fast 1-turn cache hits hide 25-second <code>p99</code> multi-tool stalls that cause users to abandon sessions.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Pipeline Reliability</strong></td>
+                        <td>Upstream <code>429</code>/<code>5xx</code> rate; Tool error rate (<code>is_error: true</code>); Fallback trigger rate; Truncation rate (<code>stop_reason: "max_tokens"</code>)</td>
+                        <td><code>&lt; 0.5%</code> unhandled error<br><code>&lt; 2.0%</code> fallback rate</td>
+                        <td>HTTP <code>200 OK</code> responses with <code>stop_reason: "refusal"</code> or <code>"max_tokens"</code> look healthy to standard web monitors.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Cost &amp; Cache Efficiency</strong></td>
+                        <td>Prompt Cache Hit Ratio (<code>cached_tokens / total_input</code>); Token Cost per Resolved Task; <code>p95</code> Turns per Session</td>
+                        <td><code>Cache Hit &gt; 75%</code><br><code>Cost/Task &lt; $0.08</code></td>
+                        <td>A broken cache breakpoint (0% hit rate) 5&times;–10&times;s input token spend without raising a single functional error.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Semantic Quality</strong></td>
+                        <td>Sampled <strong>Online Evaluation Monitor</strong> pass rates (<code>HALLUCINATION</code>, <code>TOOL_USE_QUALITY</code>) on 1%–5% live traces; Implicit UX signals</td>
+                        <td><code>Faithfulness &ge; 96%</code><br><code>Escalation &lt; 12%</code></td>
+                        <td>Semantic accuracy can degrade silently over weeks due to data drift while latency and uptime remain 100% green.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Production Drift Type</th>
+                        <th>Underlying Cause</th>
+                        <th>Diagnostic Signature in Telemetry</th>
+                        <th>Correct Engineering Fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Input / Data Drift</strong><br><em>(The World Changed)</em></td>
+                        <td>Real-world customer queries, new product SKUs, updated regulations, or external API schemas shift away from your static golden set and RAG index.</td>
+                        <td>Pinned model ID and prompt hash are unchanged, infrastructure SLIs are green, but <strong>retrieval similarity drops</strong>, out-of-domain queries rise, and Online Monitor faithfulness declines gradually.</td>
+                        <td><strong>1.</strong> Track query embedding distribution shift &amp; retrieval score histograms.<br><strong>2.</strong> Refresh the RAG / Agent Search corpus.<br><strong>3.</strong> Feed SDP-scrubbed failing traces into the <strong>LM Feedback Flywheel</strong> to expand the golden set.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Model / Provider Drift</strong><br><em>(The System Changed)</em></td>
+                        <td>Pointing production at a floating model alias (e.g., <code>-latest</code>), an unannounced provider update, or an unvalidated prompt/tool-schema deployment.</td>
+                        <td>Sudden step-change inflection in output token length, refusal rate, JSON parse failures, or tool-call frequency across all query categories at once.</td>
+                        <td><strong>1.</strong> <strong>Pin immutable model snapshot IDs</strong> and Agent Registry versions.<br><strong>2.</strong> Gate cutovers on L2/L3 evals (using <strong>Data-Driven Prompt Optimizer</strong> for model family migrations).<br><strong>3.</strong> Keep the prior pinned ID ready for instant rollback.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: LM FEEDBACK FLYWHEEL, FAILURE CLUSTERING & AGENT OPTIMIZER
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="feedback-flywheel">
+            <div class="section-divider-number">06</div>
+            <h2>6. LM Feedback Flywheel, Failure Clustering &amp; Agent Optimizer</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LM Feedback Flywheel, Failure Cluster Analysis, and Agent Optimizer">
+  <defs>
+    <marker id="arr-fly-6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#059669"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="916" height="166" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+
+  <rect x="12" y="14" width="196" height="142" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="1.4"/>
+  <rect x="12" y="14" width="196" height="22" rx="5" fill="#2563eb"/>
+  <text x="110" y="28.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">1. Live Signals &amp; Online Monitors</text>
+  <text x="20" y="51" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Cloud Trace <tspan font-family="JetBrains Mono, monospace" font-size="7">gen_ai.*</tspan> spans</text>
+  <text x="20" y="65" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Thumbs-down, re-query, escalation</text>
+  <text x="20" y="79" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• <tspan font-weight="700">OnlineEvaluator</tspan> (1%–5% async</text>
+  <text x="20" y="91" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">  reference-free autoraters)</text>
+  <rect x="20" y="104" width="180" height="42" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="110" y="119" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="700" fill="#1d4ed8">SDP PII De-Identification</text>
+  <text x="110" y="133" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#334155">Cloud Logging → BigQuery Sink</text>
+
+  <line x1="208" y1="85" x2="232" y2="85" stroke="#059669" stroke-width="1.6" marker-end="url(#arr-fly-6)"/>
+
+  <rect x="234" y="14" width="212" height="142" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+  <rect x="234" y="14" width="212" height="22" rx="5" fill="#d97706"/>
+  <text x="340" y="28.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">2. Failure Cluster Analysis</text>
+  <text x="242" y="51" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Auto Loss Analysis groups 1,000s</text>
+  <text x="242" y="63" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">  of failing traces by root cause</text>
+  <text x="242" y="79" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Ranked by <tspan font-weight="700">Frequency × Severity</tspan></text>
+  <rect x="242" y="94" width="196" height="52" rx="4" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="250" y="109" font-family="JetBrains Mono, monospace" font-size="7" font-weight="700" fill="#b45309">Cluster #1 (34%): relative dates</text>
+  <text x="250" y="122" font-family="JetBrains Mono, monospace" font-size="7" fill="#92400e">Cluster #2 (19%): skipped page 2</text>
+  <text x="250" y="135" font-family="JetBrains Mono, monospace" font-size="7" fill="#92400e">Cluster #3 (11%): ignored tool</text>
+
+  <line x1="446" y1="85" x2="470" y2="85" stroke="#059669" stroke-width="1.6" marker-end="url(#arr-fly-6)"/>
+
+  <rect x="472" y="14" width="208" height="142" rx="5" fill="#ffffff" stroke="#7c3aed" stroke-width="1.4"/>
+  <rect x="472" y="14" width="208" height="22" rx="5" fill="#7c3aed"/>
+  <text x="576" y="28.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">3. Permanent Evalset &amp; Holdout</text>
+  <text x="480" y="51" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Replay recorded tool fixtures</text>
+  <text x="480" y="65" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Grade outcomes &amp; safety order,</text>
+  <text x="480" y="77" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">  never brittle prose transcripts</text>
+  <text x="480" y="93" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• Reserve <tspan font-weight="700">held-out validation split</tspan></text>
+  <text x="480" y="105" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">  to prevent optimizer overfitting</text>
+  <rect x="480" y="118" width="192" height="28" rx="4" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="576" y="135" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="700" fill="#6d28d9">agents-cli eval run (CI Gate)</text>
+
+  <line x1="680" y1="85" x2="704" y2="85" stroke="#059669" stroke-width="1.6" marker-end="url(#arr-fly-6)"/>
+
+  <rect x="706" y="14" width="202" height="142" rx="5" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+  <rect x="706" y="14" width="202" height="22" rx="5" fill="#059669"/>
+  <text x="807" y="28.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.2" font-weight="700" fill="#ffffff">4. Programmatic Optimizer</text>
+  <text x="714" y="51" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• <tspan font-weight="700">Zero-Shot Optimizer:</tspan> cold-start</text>
+  <text x="714" y="63" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">  prompt hygiene (0 labeled rows)</text>
+  <text x="714" y="79" font-family="Inter, sans-serif" font-size="7.5" fill="#1e293b">• <tspan font-weight="700">Data-Driven / Agent Optimizer:</tspan></text>
+  <text x="714" y="93" font-family="JetBrains Mono, monospace" font-size="7" fill="#047857">  - instruction</text>
+  <text x="714" y="106" font-family="JetBrains Mono, monospace" font-size="7" fill="#047857">  - demonstration (Example Store)</text>
+  <text x="714" y="119" font-family="JetBrains Mono, monospace" font-size="7" fill="#047857">  - instruction_and_demo</text>
+  <text x="714" y="136" font-family="Inter, sans-serif" font-size="7.3" fill="#475569">Fixes clusters &amp; model migrations!</text>
+</svg>
+</div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-rotate"></i></div>5-Step Closed-Loop LM Feedback Flywheel</h3>
+            <p>Drift detection tells you <em>that</em> quality moved; the <strong>LM Feedback Flywheel</strong> ensures every production failure class is discovered automatically, grouped by root cause, fixed programmatically without "prompt whack-a-mole," and permanently guarded against in CI/CD:</p>
+            <ol>
+                <li><strong>Capture Multi-Source Signals:</strong> Collect explicit user signals (thumbs-down, bug reports), implicit friction (immediate re-query, abandonment, HITL escalation), and automated <strong>Online Evaluation Monitors (<code>OnlineEvaluator</code>)</strong> sampling 1%–5% of live Cloud Trace spans asynchronously with reference-free autoraters (<code>HALLUCINATION</code>, <code>TOOL_USE_QUALITY</code>, <code>GENERAL_QUALITY</code>). <em>IAM rule:</em> restrict monitor creation/editing IAM permissions because online monitors read trace payloads and incur judge token spend.</li>
+                <li><strong>Scrub Before Storage:</strong> Export flagged <code>trace_id</code> payloads to BigQuery via Cloud Logging sinks after passing through <strong>Sensitive Data Protection (SDP)</strong> de-identification templates so fixtures never leak PII or secrets.</li>
+                <li><strong>Triage via Failure Cluster Analysis (Auto Loss Analysis):</strong> Instead of patching individual support tickets, run <strong>Failure Cluster Analysis</strong> over low-scoring traces and failed simulation runs to group raw failures into ranked root-cause buckets (<code>Frequency &times; Severity</code>).</li>
+                <li><strong>Reproduce &amp; Codify Outcomes (Not Brittle Transcripts):</strong> Convert top cluster traces into reproducible <code>evalset</code> cases with recorded tool fixtures, asserting end states and required safety milestones (<code>trajectory_in_order_match</code>) rather than exact prose transcripts.</li>
+                <li><strong>Protect Generalization with a Held-Out Split &amp; Watch Saturation:</strong> Keep a <strong>held-out validation slice</strong> of production failures invisible to both engineers and automated prompt optimizers during tuning (preventing memorization/overfitting), and refresh suites that saturate near 100%.</li>
+            </ol>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Optimizer Engine</th>
+                        <th>Inputs Required</th>
+                        <th>Optimization Modes &amp; Mechanism</th>
+                        <th>When to Choose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Zero-Shot Optimizer</strong><br>(<code>client.prompt_optimizer.optimize_prompt</code>)</td>
+                        <td><strong>Only the raw prompt / system instruction</strong> (zero labeled examples or eval dataset required).</td>
+                        <td><code>optimization_mode="zero_shot"</code>: Analyzes prompt structure against model best practices and immediately returns <code>suggested_prompt</code> plus <code>applicable_guidelines</code> (fixing ambiguous constraints, missing role boundaries, and redundant rules).</td>
+                        <td>Cold-start prototyping, cleaning up ad-hoc developer prompts in seconds, or preparing an initial baseline before collecting golden data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data-Driven Optimizer &amp; <code>Agent Optimizer</code></strong><br>(Custom Optimization Job)</td>
+                        <td>System instructions + prompt template + <strong>labeled/scored sample dataset</strong> + <strong>Gen AI Evaluation metrics</strong> + <strong>target model ID</strong>.</td>
+                        <td>Runs an iterative closed-loop job (<code>evaluate &rarr; analyze failure clusters &rarr; mutate prompt/demos &rarr; re-evaluate on target model</code>) across three modes:<br>&bull; <strong><code>instruction</code></strong>: Rewrites system instructions only.<br>&bull; <strong><code>demonstration</code></strong>: Selects optimal few-shot examples (or populates <strong>Example Store</strong>).<br>&bull; <strong><code>instruction_and_demo</code></strong>: Jointly optimizes instructions and demonstrations.</td>
+                        <td><strong>1.</strong> Fixing ranked <strong>Failure Clusters</strong> without regressing existing evals.<br><strong>2.</strong> <strong>Model migrations</strong> (adapting prompts to <code>gemini-4-argon</code> or distilling a frontier prompt down to <code>gemini-3.5-flash-lite</code> / <code>Gemma 4</code>).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: DEPLOYMENT RUNTIME SELECTION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="runtime-selection">
+            <div class="section-divider-number">07</div>
+            <h2>7. Deployment Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE</h2>
+        </div>
+
+        <p style="margin-bottom: 16px;">Apply <strong>Rule 0 (Managed by Default)</strong> when choosing Google Cloud compute runtimes (PAA Section 4.2): start at the most managed runtime that satisfies your language, protocol, accelerator, and isolation constraints—escalating to GKE only when self-hosted open-weight models on GPUs/TPUs or custom Kubernetes kernel sandboxes require it.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Architectural Dimension</th>
+                        <th>Agent Runtime <em>(formerly Agent Engine)</em></th>
+                        <th>Cloud Run <em>(Services &amp; Jobs)</em></th>
+                        <th>Google Kubernetes Engine (GKE)</th>
+                        <th>Managed Agents API <em>(Preview)</em></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Primary Workload Fit</strong></td>
+                        <td>Stateful Python/ADK, LangGraph, CrewAI, or A2A orchestrators (<code>reasoningEngines</code>) needing turnkey agent ops</td>
+                        <td><strong>Custom Streamable HTTP MCP servers</strong>, polyglot agents (TS, Java, Go, Python), webhook/Pub/Sub event-driven agents</td>
+                        <td><strong>Self-hosted open-weight models (<code>Gemma 4</code>, <code>Llama</code>) on GPUs/TPUs</strong>, dense multi-agent meshes, strict kernel-isolated sandboxes</td>
+                        <td>Declarative autonomous coding, research, and file-processing agents (<code>Agents API</code> + <code>Interactions API</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operational Overhead</strong></td>
+                        <td><strong>Lowest</strong> (fully managed agent container lifecycle)</td>
+                        <td><strong>Low</strong> (serverless container-to-URL, scales to zero)</td>
+                        <td><strong>Highest</strong> (cluster, node pools, networking, controller upgrades)</td>
+                        <td><strong>Zero</strong> (Google runs the loop and no-egress Linux container)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State &amp; Memory Model</strong></td>
+                        <td><strong>Built-in:</strong> Native <strong>Agent Platform Sessions</strong>, <strong>Memory Bank</strong>, <strong>Example Store</strong>, and <strong>Code Execution</strong> sandbox</td>
+                        <td><strong>Stateless / Ephemeral RAM:</strong> Local memory vanishes on scale-in; attach external <strong>Sessions</strong> (<code>agentengine://</code>), <strong>Memorystore</strong>, <strong>Firestore</strong>, or <strong>Cloud SQL</strong></td>
+                        <td>StatefulSets, <strong>Agent Substrate</strong> (<code>&lt;1s</code> auto-snapshot/restore of memory &amp; files on GKE Standard), or external managed DBs</td>
+                        <td>Server-side state chained via <code>previous_interaction_id</code> and <code>environment_id</code> (<code>global</code> endpoint)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scaling &amp; Duration</strong></td>
+                        <td>Managed autoscaling; <code>min_instances</code> for zero cold start; supports long-running / multi-day async workflows</td>
+                        <td>Scales <code>0 &rarr; N</code> rapidly; HTTP timeout up to <strong>60 minutes</strong>; Cloud Run Jobs for batch backfills</td>
+                        <td>Granular HPA/VPA, custom queue metrics, GPU time-slicing, Spot VMs, <strong>Committed Use Discounts (CUDs)</strong></td>
+                        <td>Synchronous streaming or <code>background=True</code> multi-hour async execution</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hosts Custom MCP Servers?</strong></td>
+                        <td><strong>No</strong> (consumes MCP/A2A, does not host standalone MCP servers)</td>
+                        <td><strong>Yes — Primary serverless choice</strong> for Streamable HTTP <code>/mcp</code> servers</td>
+                        <td><strong>Yes</strong> — High-density, stateful, or private in-cluster MCP fleets</td>
+                        <td><strong>No</strong> (supports server-side tools only)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom GPUs / Self-Hosted Models?</strong></td>
+                        <td><strong>No</strong> (calls managed model APIs)</td>
+                        <td><strong>Limited</strong> (serverless GPU inference for lightweight bursts)</td>
+                        <td><strong>Yes — Primary choice</strong> for vLLM/TGI serving of <strong>Gemma 4</strong> on GPUs/TPUs <em>(never proprietary Gemini weights!)</em></td>
+                        <td><strong>No</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code Sandbox Isolation</strong></td>
+                        <td>Managed <strong>Code Execution</strong> micro-container (<code>&lt;1s</code> startup, 100 MB I/O, up to 14-day TTL)</td>
+                        <td>Call external Agent Platform Code Execution sandbox API</td>
+                        <td><strong>Agent Sandbox on GKE</strong> (<code>SandboxTemplate</code> + <code>SandboxWarmPool</code> pre-warmed <strong>gVisor</strong> pods; blocks <code>hostNetwork</code>/<code>hostPath</code>)</td>
+                        <td>Built-in isolated Linux container (outbound network disabled by default)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>GKE Sub-Architectures: Substrate vs. Sandbox</h3>
+                <ul>
+                    <li><strong>Agent Substrate on GKE (Actor-Based, GKE Standard):</strong> Best for high-density stateful agents that frequently go idle between user turns. Active agents multiplex over a shared pool of warm Pods; idle agents automatically checkpoint memory and filesystem state to storage and restore in <strong><code>&lt; 1 second</code></strong>, maximizing node utilization.</li>
+                    <li><strong>Agent Sandbox on GKE (Pod-Based, Autopilot or Standard):</strong> Best when each agent or untrusted code execution requires a dedicated Kubernetes Pod (<code>Sandbox</code> / <code>SandboxClaim</code> CRDs, <code>SandboxWarmPool</code> for sub-second startup), full <code>PodSpec</code> sidecars, GPUs/TPUs, and mandatory <strong>gVisor</strong> kernel isolation enforced via Validating Admission Policy.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Runtime Capacity, Quota &amp; Env Traps</h3>
+                <ul>
+                    <li><strong><code>"Region temporarily at capacity"</code> vs. <code>429 RESOURCE_EXHAUSTED</code>:</strong> <code>"Region temporarily at capacity"</code> on Agent Runtime deploy means <strong>physical regional compute pool exhaustion</strong> (filing an IAM/quota increase ticket will NOT fix it—deploy to an alternate region or right-size vCPU/RAM). By contrast, <code>429 RESOURCE_EXHAUSTED</code> on Gemini inference is TPM/PayGo contention—route stateless calls to the <strong><code>global</code> endpoint</strong>, enable <strong>Priority PayGo</strong>, or purchase <strong>Provisioned Throughput (GSUs)</strong>.</li>
+                    <li><strong>GSU Non-Coverage Rule:</strong> Provisioned Throughput does <strong>not</strong> cover Batch Prediction or internal calls made by managed services like Agent Search.</li>
+                    <li><strong>Reserved Env Vars &amp; Auto-Registration:</strong> Never override <code>GOOGLE_CLOUD_PROJECT</code>, <code>PORT</code>, or custom <code>GOOGLE_CLOUD_AGENT_ENGINE*</code> vars. Cloud Run auto-registers in <strong>Agent Registry</strong> only when deployed with <code>--functional-type=agent</code> + <code>--identity-type=agent-identity</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: PRODUCTION RESILIENCE STACK & FAULT ISOLATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resilience-stack">
+            <div class="section-divider-number">08</div>
+            <h2>8. Production Resilience Stack &amp; Fault Isolation</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 146" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="4-Layer Production Resilience Stack">
+  <defs>
+    <marker id="arr-esc-4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="916" height="142" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Layer 1 -->
+  <rect x="10" y="12" width="202" height="122" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <rect x="10" y="12" width="202" height="22" rx="5" fill="#2563eb"/>
+  <text x="111" y="26.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.3" font-weight="700" fill="#ffffff">LAYER 1: Backoff + Full Jitter</text>
+  <rect x="18" y="39" width="186" height="14" rx="3" fill="#eff6ff"/>
+  <text x="111" y="49" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#1d4ed8">Scope: RPC / SDK Client Call</text>
+  <text x="18" y="66" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Targets: 429, 500, 502, 503, 504, 529</text>
+  <text x="18" y="79" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Honor <tspan font-family="JetBrains Mono, monospace" font-size="7.1">Retry-After</tspan>; single retry owner</text>
+  <text x="18" y="92" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Fail fast on 400/401/403/refusal</text>
+  <text x="18" y="105" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Require <tspan font-family="JetBrains Mono, monospace" font-size="7.1">idempotency_key</tspan> on writes</text>
+  <text x="111" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.9" fill="#475569">Uniform(0, min(T_cap, T_0·2^k))</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="212" y1="73" x2="242" y2="73" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-esc-4)"/>
+  <text x="227" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.6" font-weight="700" fill="#dc2626">Retries</text>
+  <text x="227" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.6" font-weight="700" fill="#dc2626">Exhausted</text>
+
+  <!-- Layer 2 -->
+  <rect x="244" y="12" width="202" height="122" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+  <rect x="244" y="12" width="202" height="22" rx="5" fill="#d97706"/>
+  <text x="345" y="26.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.3" font-weight="700" fill="#ffffff">LAYER 2: Circuit Breaker</text>
+  <rect x="252" y="39" width="186" height="14" rx="3" fill="#fffbeb"/>
+  <text x="345" y="49" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#b45309">Closed ──► Open ──► Half-Open</text>
+  <text x="252" y="66" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Shared across worker pool per</text>
+  <text x="252" y="77" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  upstream endpoint / region</text>
+  <text x="252" y="91" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Trips Open on &gt;50% error rate</text>
+  <text x="252" y="104" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Fails fast in <tspan font-weight="700">&lt;1 ms</tspan> (prevents</text>
+  <text x="252" y="115" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  thread/socket pool starvation)</text>
+  <text x="345" y="127" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.9" fill="#b45309">Probes 1–3 calls after cooldown</text>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="446" y1="73" x2="476" y2="73" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-esc-4)"/>
+  <text x="461" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.6" font-weight="700" fill="#dc2626">Breaker</text>
+  <text x="461" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.6" font-weight="700" fill="#dc2626">OPEN</text>
+
+  <!-- Layer 3 -->
+  <rect x="478" y="12" width="204" height="122" rx="5" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+  <rect x="478" y="12" width="204" height="22" rx="5" fill="#7c3aed"/>
+  <text x="580" y="26.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.3" font-weight="700" fill="#ffffff">LAYER 3: Orchestration Fallbacks</text>
+  <rect x="486" y="39" width="188" height="14" rx="3" fill="#f5f3ff"/>
+  <text x="580" y="49" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#6d28d9">3-Step Pre-Validated Hierarchy</text>
+  <text x="486" y="66" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• <tspan font-weight="700">3a. Global / Cross-Region:</tspan> Same</text>
+  <text x="486" y="77" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  pinned model via global / secondary</text>
+  <text x="486" y="91" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• <tspan font-weight="700">3b. Cross-Tier Model:</tspan> Validated on</text>
+  <text x="486" y="102" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  its own L2/L3 fallback eval suite</text>
+  <text x="486" y="116" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• <tspan font-weight="700">3c. Deterministic:</tspan> Lexical/cached</text>
+  <text x="486" y="127" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  search results (zero 500 pages)</text>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="682" y1="73" x2="712" y2="73" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr-esc-4)"/>
+  <text x="697" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.6" font-weight="700" fill="#dc2626">Fallbacks</text>
+  <text x="697" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.6" font-weight="700" fill="#dc2626">Exhausted</text>
+
+  <!-- Layer 4 -->
+  <rect x="714" y="12" width="196" height="122" rx="5" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+  <rect x="714" y="12" width="196" height="22" rx="5" fill="#059669"/>
+  <text x="812" y="26.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.3" font-weight="700" fill="#ffffff">LAYER 4: Graceful Escalation</text>
+  <rect x="722" y="39" width="180" height="14" rx="3" fill="#ecfdf5"/>
+  <text x="812" y="49" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#047857">Warm Human Operator Handoff</text>
+  <text x="722" y="66" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Persist full session state &amp; history</text>
+  <text x="722" y="80" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Attach <tspan font-family="JetBrains Mono, monospace" font-size="7.1">trace_id</tspan>, verified entities</text>
+  <text x="722" y="92" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  &amp; completed tool outputs</text>
+  <text x="722" y="106" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Route to human queue or async</text>
+  <text x="722" y="118" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">  callback without losing work</text>
+</svg>
+</div>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">L1</div>
+                <h4>Backoff + Full Jitter</h4>
+                <p>Call-site retry owned by ONE layer; honor <code>Retry-After</code>; require idempotency keys on mutating tools.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">L2</div>
+                <h4>Circuit Breaker</h4>
+                <p>Service-boundary state machine (<code>Closed → Open → Half-Open</code>) preventing thread-pool starvation.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">L3</div>
+                <h4>Model &amp; Route Fallback</h4>
+                <p>Orchestration failover across <code>global</code>/secondary regions, pre-validated model tiers, or deterministic search.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">L4</div>
+                <h4>Graceful Escalation</h4>
+                <p>Structured handoff to a human queue with <code>trace_id</code>, state summary, and verified entities intact.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Resilience Layer</th>
+                        <th>Architectural Placement</th>
+                        <th>Trigger Condition</th>
+                        <th>Exact Mechanism &amp; Design Rules</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Layer 1: Exponential Backoff with Full Jitter</strong></td>
+                        <td><strong>RPC / SDK Client Boundary</strong> (owned by exactly <em>one</em> layer—never stack custom loops on top of SDK default retries)</td>
+                        <td>Transient capacity or transport errors: HTTP <code>408</code>, <code>409</code>, <code>429</code> (rate limit), <code>500</code>, <code>502</code>, <code>503</code>, <code>504</code>, <code>529</code> (overloaded)</td>
+                        <td><strong>1.</strong> Respect <code>Retry-After</code> header first.<br><strong>2.</strong> Otherwise sleep $t = \text{Uniform}(0, \min(T_{\text{cap}}, T_{\text{base}} \cdot 2^{\text{attempt}}))$ to prevent synchronized retry storms.<br><strong>3.</strong> Fail fast on terminal <code>400</code>, <code>401</code>, <code>403</code>, <code>404</code>, spend-cap <code>429</code> (no <code>Retry-After</code>), and HTTP <code>200</code> refusals.<br><strong>4.</strong> Enforce deterministic <strong><code>idempotency_key</code></strong> on all mutating tool retries.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Layer 2: Circuit Breaker</strong></td>
+                        <td><strong>Service / Dependency Boundary</strong> (shared state across worker processes per upstream endpoint)</td>
+                        <td>Sliding-window failure rate or slow-call rate exceeds threshold (e.g., &gt;50% <code>5xx</code>/<code>529</code> over 20 calls)</td>
+                        <td>Transitions <strong><code>Closed → Open</code></strong> and rejects calls in <code>&lt; 1 ms</code> without opening sockets, protecting application threads/memory. After cooldown, enters <strong><code>Half-Open</code></strong> to test 1–3 probe requests before resetting to <code>Closed</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Layer 3: Model &amp; Routing Fallbacks</strong></td>
+                        <td><strong>Orchestration Layer</strong> (invoked when Layer 1 exhausts retries or Layer 2 circuit is <code>Open</code>)</td>
+                        <td>Primary model/region unavailable, circuit breaker tripped, or latency budget exceeded</td>
+                        <td><strong>3a. Global / Cross-Region:</strong> Same model snapshot via <code>global</code> endpoint or secondary region.<br><strong>3b. Cross-Tier Fallback:</strong> Route to a faster/higher-quota model tier (e.g., <code>gemini-4-argon</code> &rarr; <code>gemini-3.8-flash</code> or <code>Opus</code> &rarr; <code>Sonnet</code>) using a <strong>prompt &amp; parameter config specifically validated on that fallback model's eval suite</strong>.<br><strong>3c. Deterministic Fallback:</strong> Return lexical/vector search results or cached FAQ answers.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Layer 4: Graceful Degradation &amp; Escalation</strong></td>
+                        <td><strong>Workflow / UX Boundary</strong> (terminal safety net when automated recovery is exhausted)</td>
+                        <td>All fallbacks exhausted, <code>max_turns</code> budget reached, or high-risk policy trigger</td>
+                        <td>Persist full session state and route to a human operator queue with a structured bundle: <code>trace_id</code>, user intent, verified entities, tool outputs already gathered, and exact failure reason.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-key"></i></div>Idempotency Keys on Mutating Tools</h3>
+                <p>If an agent calls <code>issue_refund(order_id="991", amount=50)</code> and receives an HTTP <code>504 Gateway Timeout</code>, your code does not know whether the payment processor committed the refund before the connection dropped. Retrying blindly risks double-refunding the customer. Always pass a deterministic <strong><code>idempotency_key = sha256(session_id + turn_idx + tool_name + canonical_json(args))</code></strong> so Memorystore/Redis or the downstream API safely returns the cached receipt on duplicate attempts.</p>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-bolt-lightning"></i></div>Why Stacked Retries Cause Outages</h3>
+                <p>Official LLM SDKs (<code>google-genai</code>, <code>anthropic</code>) automatically retry transient errors <strong>2 times by default</strong> (3 total attempts). If a developer wraps the SDK call in a custom 5-attempt retry loop AND an agent orchestration framework retries failed steps 3 times, a single user request generates $3 \times 5 \times 3 = \mathbf{45\text{ upstream calls}}$ during a rate-limit event—turning a minor 10-second <code>429</code> blip into a total self-inflicted denial of service.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 09: SAFE ROLLOUTS: SHADOW MODE VS. 4-ELEMENT A/B TESTING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="rollouts-ab">
+            <div class="section-divider-number">09</div>
+            <h2>9. Safe Rollouts: Shadow Mode vs. 4-Element A/B Testing</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 118" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Progressive Safe Rollout Pipeline">
+  <defs>
+    <marker id="arr-roll-5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="916" height="114" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Stage 1 -->
+  <rect x="10" y="12" width="204" height="94" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1.4"/>
+  <rect x="10" y="12" width="204" height="21" rx="5" fill="#475569"/>
+  <text x="112" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.4" font-weight="700" fill="#ffffff">1. Offline &amp; Sim</text>
+  <rect x="18" y="38" width="188" height="14" rx="3" fill="#f1f5f9"/>
+  <text x="112" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#334155">Golden + 2-Step Sim</text>
+  <text x="18" y="64" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• 0% user exposure (mocked tools)</text>
+  <text x="18" y="77" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Verifies schema, rubric &amp; regressions</text>
+  <text x="18" y="90" font-family="Inter, sans-serif" font-size="7.6" fill="#64748b">• Blind spot: live load &amp; unseen queries</text>
+
+  <line x1="214" y1="59" x2="236" y2="59" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-roll-5)"/>
+
+  <!-- Stage 2 -->
+  <rect x="238" y="12" width="212" height="94" rx="5" fill="#ffffff" stroke="#7c3aed" stroke-width="1.4"/>
+  <rect x="238" y="12" width="212" height="21" rx="5" fill="#7c3aed"/>
+  <text x="344" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.4" font-weight="700" fill="#ffffff">2. Shadow Mode (Dark Launch)</text>
+  <rect x="246" y="38" width="196" height="14" rx="3" fill="#f5f3ff"/>
+  <text x="344" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#6d28d9">Async Live Fork · 0 User Risk</text>
+  <text x="246" y="64" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Stub/block all mutating write tools!</text>
+  <text x="246" y="77" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Validates real p99 latency &amp; spend</text>
+  <text x="246" y="90" font-family="Inter, sans-serif" font-size="7.6" fill="#64748b">• Blind spot: multi-turn user replies</text>
+
+  <line x1="450" y1="59" x2="472" y2="59" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-roll-5)"/>
+
+  <!-- Stage 3 -->
+  <rect x="474" y="12" width="202" height="94" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+  <rect x="474" y="12" width="202" height="21" rx="5" fill="#d97706"/>
+  <text x="575" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.4" font-weight="700" fill="#ffffff">3. Canary Release (1%–5%)</text>
+  <rect x="482" y="38" width="186" height="14" rx="3" fill="#fffbeb"/>
+  <text x="575" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#b45309">Auto-Rollback on SLO Breach</text>
+  <text x="482" y="64" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Small sticky slice of live traffic</text>
+  <text x="482" y="77" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Live tools + closed-loop interaction</text>
+  <text x="482" y="90" font-family="Inter, sans-serif" font-size="7.6" fill="#64748b">• Catches infra saturation &amp; UX bugs</text>
+
+  <line x1="676" y1="59" x2="698" y2="59" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr-roll-5)"/>
+
+  <!-- Stage 4 -->
+  <rect x="700" y="12" width="210" height="94" rx="5" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+  <rect x="700" y="12" width="210" height="21" rx="5" fill="#059669"/>
+  <text x="805" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.4" font-weight="700" fill="#ffffff">4. Controlled A/B Experiment</text>
+  <rect x="708" y="38" width="194" height="14" rx="3" fill="#ecfdf5"/>
+  <text x="805" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.1" font-weight="600" fill="#047857">4 Mandatory Elements Pre-Locked</text>
+  <text x="708" y="64" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Sticky user/session split (1 variable)</text>
+  <text x="708" y="77" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Primary metric + guardrail metrics</text>
+  <text x="708" y="90" font-family="Inter, sans-serif" font-size="7.6" fill="#1e293b">• Fixed sample size N (no early peeking)</text>
+</svg>
+</div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-user-secret"></i></div>When to Use Shadow Mode (Dark Launch)</h3>
+                <ul>
+                    <li><strong>How it works:</strong> The production router serves the baseline model's response to the user while asynchronously duplicating the live input to the candidate pipeline in the background.</li>
+                    <li><strong>What it validates:</strong> Real-world <code>p95</code>/<code>p99</code> latency under live concurrency, crash/exception rates, token consumption, cache hit ratios, single-turn tool selection, and Tier 2 autorater parity on real long-tail inputs.</li>
+                    <li><strong>Two hard limitations of Shadow Mode:</strong>
+                        <ol>
+                            <li><strong>Cannot measure multi-turn user reaction:</strong> In turn 2, the user replies to what the <em>baseline</em> model said in turn 1, not what the shadow model would have said—making multi-turn shadow trajectories counterfactual after turn 1.</li>
+                            <li><strong>Must sandbox mutating tools:</strong> Never let a shadow agent execute live write tools (sending emails, charging cards, mutating DB rows); intercept all writes with read-only stubs.</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-flask-vial"></i></div>The 4 Mandatory Elements of a Production A/B Test</h3>
+                <ol>
+                    <li><strong>Falsifiable Hypothesis &amp; Sticky Randomization Unit:</strong> State a specific target (e.g., <em>"+3% resolution rate"</em>) and randomize by <strong><code>user_id</code> or <code>session_id</code></strong> (never per HTTP request, which mixes models mid-conversation and ruins prefix caching).</li>
+                    <li><strong>Controlled Single-Variable Split:</strong> Isolate <strong>one change per arm</strong>. Never swap the model tier, rewrite the system prompt, and alter retrieval top-K simultaneously in the same treatment group.</li>
+                    <li><strong>Primary Metric + Explicit Guardrail Metrics:</strong> Pair the primary outcome metric (resolution rate, acceptance rate, rubric score) with non-inferiority guardrails (<code>p95</code> latency, cost per resolved task, refusal rate, <code>HALLUCINATION</code> monitor rate).</li>
+                    <li><strong>Pre-Committed Sample Size &amp; Stopping Rule:</strong> Fix required sample size $N$ and minimum duration via power analysis beforehand. Never stop early the first day $p &lt; 0.05$ ("peeking" / p-hacking), which inflates false positives above 25%.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Evaluation Dimension</th>
+                        <th>Offline &amp; 2-Step Sim</th>
+                        <th>Shadow Mode (Dark Launch)</th>
+                        <th>Canary Release (1%–5%)</th>
+                        <th>4-Element A/B Experiment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>User Exposure Risk</strong></td>
+                        <td>Zero (synthetic/historical data)</td>
+                        <td><strong>Zero</strong> (candidate output discarded)</td>
+                        <td>Low (bounded 1%–5% blast radius)</td>
+                        <td>Moderate (full treatment cohort)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Measures Real P99 Latency &amp; Load?</strong></td>
+                        <td>No</td>
+                        <td><strong>Yes</strong> (at live traffic volume)</td>
+                        <td>Partial (small slice)</td>
+                        <td><strong>Yes</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Measures Multi-Turn User Reaction?</strong></td>
+                        <td>Simulated personas only</td>
+                        <td><strong>No</strong> (user reacts to baseline)</td>
+                        <td><strong>Yes</strong> (closed-loop)</td>
+                        <td><strong>Yes</strong> (statistically powered)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mutating Tool Execution</strong></td>
+                        <td>Environment Simulation / mocks</td>
+                        <td><strong>MUST be stubbed / read-only</strong></td>
+                        <td>Live (with circuit breakers)</td>
+                        <td>Live</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: TOKEN ECONOMICS, HEAVY-TAIL SIZING & ENTERPRISE TCO / ROI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="finops-roi">
+            <div class="section-divider-number">10</div>
+            <h2>10. Token Economics, Heavy-Tail Sizing &amp; Enterprise TCO / ROI Analysis</h2>
+            <div class="diagram-figure span-cols">
+<svg viewBox="0 0 920 138" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Enterprise AI TCO and ROI Waterfall">
+  <defs>
+    <marker id="arr-roi-6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="916" height="134" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Step 1 -->
+  <rect x="10" y="12" width="164" height="114" rx="5" fill="#ffffff" stroke="#64748b" stroke-width="1.3"/>
+  <rect x="10" y="12" width="164" height="20" rx="5" fill="#475569"/>
+  <text x="92" y="25.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#ffffff">STEP 1: Baseline Cost</text>
+  <text x="92" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#0f172a">$600,000/mo</text>
+  <text x="92" y="61" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.3" fill="#334155">Manual Human Spend</text>
+  <line x1="20" y1="68" x2="164" y2="68" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="92" y="81" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.9" fill="#475569">Vol × Hours × Labor Rate</text>
+  <text x="92" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#475569">50k claims × 0.20 hr</text>
+  <text x="92" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#475569">× $60/hr loaded rate</text>
+
+  <!-- Arrow 1->2 -->
+  <line x1="174" y1="69" x2="194" y2="69" stroke="#475569" stroke-width="1.4" marker-end="url(#arr-roi-6)"/>
+  <text x="184" y="61" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.8" font-weight="700" fill="#2563eb">×80%</text>
+
+  <!-- Step 2 -->
+  <rect x="196" y="12" width="168" height="114" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="1.4"/>
+  <rect x="196" y="12" width="168" height="20" rx="5" fill="#2563eb"/>
+  <text x="280" y="25.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#ffffff">STEP 2: Gross Value</text>
+  <text x="280" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#1d4ed8">$480,000/mo</text>
+  <text x="280" y="61" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.3" fill="#1e3a8a">Gross Labor Captured</text>
+  <line x1="206" y1="68" x2="354" y2="68" stroke="#dbeafe" stroke-width="1"/>
+  <text x="280" y="81" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.9" fill="#1d4ed8">Baseline × Auto% × Saved%</text>
+  <text x="280" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#475569">40,000 automated claims</text>
+  <text x="280" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#dc2626" font-weight="600">Trap: Stopping ROI here!</text>
+
+  <!-- Minus Sign 1 -->
+  <circle cx="376" cy="69" r="9" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/>
+  <text x="376" y="73" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" fill="#b45309">−</text>
+
+  <!-- Step 3 -->
+  <rect x="388" y="12" width="168" height="114" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+  <rect x="388" y="12" width="168" height="20" rx="5" fill="#d97706"/>
+  <text x="472" y="25.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#ffffff">STEP 3: Total AI OpEx</text>
+  <text x="472" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#b45309">−$30,000/mo</text>
+  <text x="472" y="61" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.3" fill="#92400e">Tail-Adjusted AI Spend</text>
+  <line x1="398" y1="68" x2="546" y2="68" stroke="#fde68a" stroke-width="1"/>
+  <text x="472" y="81" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.9" fill="#b45309">p95 Tokens + Infra + Eng</text>
+  <text x="472" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#475569">$9k tokens/judges + $6k DB</text>
+  <text x="472" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.2" fill="#475569">+ $15k amortized eng</text>
+
+  <!-- Minus Sign 2 -->
+  <circle cx="568" cy="69" r="9" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2"/>
+  <text x="568" y="73" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" fill="#dc2626">−</text>
+
+  <!-- Step 4 -->
+  <rect x="580" y="12" width="174" height="114" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.4"/>
+  <rect x="580" y="12" width="174" height="20" rx="5" fill="#dc2626"/>
+  <text x="667" y="25.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#ffffff">STEP 4: Human Review Tax</text>
+  <text x="667" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#b91c1c">−$315,000/mo</text>
+  <text x="667" y="61" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.3" fill="#991b1b">Audit + Exception Rework</text>
+  <line x1="590" y1="68" x2="744" y2="68" stroke="#fecaca" stroke-width="1"/>
+  <text x="667" y="81" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.1" fill="#475569">• Audit: 40k × $6 = $240k</text>
+  <text x="667" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.1" fill="#475569">• Rework: 2.5k × $30 = $75k</text>
+  <text x="667" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.1" font-weight="600" fill="#b91c1c">#1 Hidden ROI Killer</text>
+
+  <!-- Equals Sign -->
+  <circle cx="766" cy="69" r="9" fill="#ecfdf5" stroke="#059669" stroke-width="1.2"/>
+  <text x="766" y="73" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#047857">=</text>
+
+  <!-- Net Benefit -->
+  <rect x="778" y="12" width="132" height="114" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/>
+  <rect x="778" y="12" width="132" height="20" rx="5" fill="#059669"/>
+  <text x="844" y="25.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#ffffff">NET MONTHLY ROI</text>
+  <text x="844" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="700" fill="#065f46">+$135,000/mo</text>
+  <text x="844" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.3" font-weight="600" fill="#047857">Verified Net Benefit</text>
+  <line x1="786" y1="68" x2="902" y2="68" stroke="#a7f3d0" stroke-width="1"/>
+  <text x="844" y="82" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.9" fill="#065f46">Step 2 − Step 3 − Step 4</text>
+  <text x="844" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.1" fill="#047857">(vs $450k if Step 4</text>
+  <text x="844" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.1" fill="#047857">was ignored!)</text>
+</svg>
+</div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-chart-area"></i></div>Heavy-Tail Token Distributions (<code>p95</code>/<code>p99</code> vs. <code>p50</code>)</h3>
+                <p>Token consumption in production AI systems follows a <strong>heavy-tailed (Pareto / log-normal) distribution</strong>, never a symmetric normal curve:</p>
+                <ul>
+                    <li><strong>Why median (<code>p50</code>) budgeting fails:</strong> A typical <code>p50</code> chat turn might use 3,000 tokens ($0.01), while the <code>p95</code>–<code>p99</code> tail consists of 15-turn agent debugging loops, 50-page PDF uploads, large MCP JSON payloads, <code>thinking_level="HIGH"</code> blocks, and retries consuming 150,000–500,000+ tokens.</li>
+                    <li><strong>Quadratic multi-turn billing ($O(N^2)$):</strong> Because conversation history is re-sent on every turn, an $N$-turn loop without caching or compaction bills earlier turns $N$ times.</li>
+                    <li><strong>Sizing rule:</strong> Budget monthly spend and TPM rate limits using the <strong>distribution mean or explicit <code>p50</code>/<code>p90</code>/<code>p99</code> weighted buckets</strong>, and enforce hard per-session caps (<code>max_turns</code>, observation pruning) to clip runaway tails.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-cubes-stacked"></i></div>The Multi-Agent Token Multiplier (~15&times;) &amp; 6 Levers</h3>
+                <p>Autonomous <strong>multi-agent workflows consume ~15&times; more tokens</strong> than single-turn chat (~4&times; more than a single-agent tool loop). Bend the cost curve with six architectural levers:</p>
+                <ul>
+                    <li><strong>1. Tiered model routing:</strong> <code>gemini-3.5-flash-lite</code> (<code>Haiku</code>) for guardrails/extraction &rarr; <code>gemini-3.8-flash</code> (<code>Sonnet</code>) for tool loops &rarr; <code>gemini-4-argon</code> (<code>Opus</code>) for complex synthesis (50%–80% savings).</li>
+                    <li><strong>2. Prefix-aligned context caching:</strong> Automatic <strong>implicit caching</strong> on <code>gemini-4-argon</code> &amp; <code>3.x</code> (&ge;4,096 tokens, <strong>zero storage fee</strong>, ~90–95% read discount) vs. explicit <code>cachedContents</code> / <code>cache_control</code> (TTL storage/write cost; <code>gemini-4-argon</code> supports implicit only). Keep static prefixes at byte 0!</li>
+                    <li><strong>3. Thinking / effort right-sizing:</strong> Use <code>thinking_level="minimal"</code> / <code>"low"</code> (<code>effort: "low"</code>) on routine hops—thinking tokens bill at <strong>output token rates</strong>.</li>
+                    <li><strong>4. Batch / Flex inference (~50% off):</strong> Use Batch Prediction / Flex PayGo / Message Batches (&le;24h SLA) for offline evalsets and bulk autoraters (Provisioned Throughput GSUs do <em>not</em> cover Batch).</li>
+                    <li><strong>5. Observation masking &amp; Code Execution:</strong> Prune verbose JSON/HTML in <code>after_tool_callback</code> and store exact IDs in <code>session.state</code> before compacting prose.</li>
+                    <li><strong>6. Idle infra hygiene:</strong> Suspend idle Cloud Workstations (<code>idleAction=SUSPEND</code>) and undeploy unused Vector Search 1.0 index endpoints.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>ROI Step</th>
+                        <th>Formula</th>
+                        <th>Worked Example (50,000 Insurance Claims / Month)</th>
+                        <th>Common FinOps Mistake</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Step 1: Baseline Human Task Cost</strong></td>
+                        <td>$\text{Volume} \times t_{\text{manual}} \times R_{\text{labor}}$</td>
+                        <td>$50,000 \times 0.20\text{ hr (12 min)} \times \$60/\text{hr} = \mathbf{\$600,000/\text{mo}}$</td>
+                        <td>Using base salary instead of fully loaded hourly labor cost.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Step 2: Gross Automation Value</strong></td>
+                        <td>$\text{Baseline} \times f_{\text{auto}} \times s_{\text{saved}}$</td>
+                        <td>80% automated (40k claims $\times \$12.00$) = $\mathbf{\$480,000/\text{mo}}$ gross savings</td>
+                        <td>Assuming 100% of queries are automated on day one.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Step 3: Total AI Operating Cost</strong></td>
+                        <td>$C_{\text{tokens (p95)}} + C_{\text{infra}} + C_{\text{eng}}$</td>
+                        <td>$\$9,000\text{ (tail tokens + Online Monitors)} + \$6,000\text{ (infra)} + \$15,000\text{ (eng)} = \mathbf{\$30,000/\text{mo}}$</td>
+                        <td>Pricing only <code>p50</code> happy-path tokens and ignoring online judge/retry overhead.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Step 4: Mandatory Human-Review &amp; Exception Tax</strong></td>
+                        <td>$(N_{\text{audited}} \times t_{\text{audit}} \times R_{\text{auditor}}) + (N_{\text{err}} \times t_{\text{fix}} \times R_{\text{spec}})$</td>
+                        <td>40k audited $\times 6\text{ min ($\$6$)} = \$240\text{k}$ + 2,500 errors $\times 20\text{ min ($\$30$)} = \$75\text{k} \rightarrow \mathbf{\$315,000/\text{mo}}$</td>
+                        <td><strong>Ignoring human verification and error-rework labor (#1 cause of negative ROI in production).</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Net Monthly Benefit</strong></td>
+                        <td>$\text{Step 2} - \text{Step 3} - \text{Step 4}$</td>
+                        <td>$\$480,000 - \$30,000 - \$315,000 = \mathbf{+\$135,000/\text{mo}}$ (vs. $\$450\text{k}$ if Step 4 was omitted!)</td>
+                        <td>Deploying low-precision workflows where human audit + rework exceeds manual baseline cost.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Architectural Readiness Classification</th>
+                        <th>Diagnostic Criteria</th>
+                        <th>Canonical Scenario</th>
+                        <th>Required Engineering Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Feasible as Scoped</strong></td>
+                        <td>Accuracy ceiling, latency physics (<code>p95</code>), unit economics, and governance rules all align with current capabilities.</td>
+                        <td>Internal IT helpdesk agent grounded on Agent Search with 4s streaming TTFT and cited sources.</td>
+                        <td>Build Level 1–3 eval suite and proceed to MVP rollout.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Feasible with Constraints</strong></td>
+                        <td>Core task is solvable, but synchronous latency or zero-review autonomy conflicts with physics/risk.</td>
+                        <td>Automated legal contract redlining across 60 clauses requested in <code>&lt; 800 ms</code> with autonomous client transmission.</td>
+                        <td><strong>Re-scope constraints:</strong> Shift to async background execution (<code>background=True</code>, 30–60s) and add a mandatory human approval gate (HITL).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Not Feasible</strong></td>
+                        <td>Fundamental physics or economic conflict: requires 100.00% zero-defect determinism without human review, sub-10ms control loops, or token cost exceeds task value by 10&times;.</td>
+                        <td>Sub-5ms high-frequency trading execution or unreviewed autonomous clinical dosing from raw audio.</td>
+                        <td><strong>Decline LLM for the critical path;</strong> use deterministic code or classical tabular ML instead.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: PRODUCTION FAILURE MODES, GLOSSARY & SELF-ASSESSMENT
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="failure-modes">
+            <div class="section-divider-number">11</div>
+            <h2>11. Production Failure Modes, Glossary &amp; Self-Assessment</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Observed Production Symptom</th>
+                        <th>Root Cause</th>
+                        <th>Correct Engineering Remediation</th>
+                        <th>Trap / Wrong Fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Compliance agent scores 97% on <code>FINAL_RESPONSE_QUALITY</code> yet issues refunds without checking eligibility</td>
+                        <td><strong>"Right answer, wrong path"</strong> blind spot in outcome-only grading</td>
+                        <td>Pair outcome autoraters with <strong><code>trajectory_in_order_match</code></strong> and a forbidden-tool check</td>
+                        <td>Raising the <code>FINAL_RESPONSE_QUALITY</code> threshold from 0.90 to 0.99</td>
+                    </tr>
+                    <tr>
+                        <td>Team has zero historical chat logs and cannot test multi-turn edge cases or <code>503</code> tool outages safely</td>
+                        <td>Relying solely on static single-turn prompts or live prod backends</td>
+                        <td>Run <strong>2-Step Agent Simulation</strong> (from an Agent Registry snapshot) + <strong>Environment Simulation</strong> fault injection</td>
+                        <td>Running load/fault tests directly against live production payment APIs</td>
+                    </tr>
+                    <tr>
+                        <td>Manual prompt edits to fix one bug cluster keep breaking three unrelated instructions</td>
+                        <td>Manual "prompt whack-a-mole" without closed-loop optimization</td>
+                        <td>Cluster traces via <strong>Failure Cluster Analysis</strong>, keep a <strong>held-out split</strong>, and run <strong>Data-Driven Prompt Optimizer / Agent Optimizer</strong></td>
+                        <td>Appending contradictory ALL-CAPS warnings to the bottom of the system prompt</td>
+                    </tr>
+                    <tr>
+                        <td>Deploying a custom Streamable HTTP MCP server onto Agent Runtime fails</td>
+                        <td><strong>Agent Runtime</strong> hosts stateful orchestrators (<code>reasoningEngines</code>), not standalone MCP servers</td>
+                        <td>Host custom Streamable HTTP MCP servers on <strong>Cloud Run</strong> (or <strong>GKE</strong>) and register them in <strong>Agent Registry</strong></td>
+                        <td>Embedding external MCP server daemons inside <code>session.state</code></td>
+                    </tr>
+                    <tr>
+                        <td>Architect proposes self-hosting <code>gemini-4-argon</code> on GKE GPUs for VPC isolation</td>
+                        <td><strong>Proprietary Gemini weights cannot be self-hosted</strong> on customer clusters</td>
+                        <td>Call managed Gemini endpoints inside <strong>VPC Service Controls</strong> (+ GSUs if needed), or self-host open-weight <strong>Gemma 4</strong> on GKE</td>
+                        <td>Creating a GKE GPU node pool to pull <code>gemini-4-argon</code> container weights</td>
+                    </tr>
+                    <tr>
+                        <td>Agent Runtime deployment fails with <code>"Region temporarily at capacity"</code></td>
+                        <td><strong>Physical regional compute pool exhaustion</strong> (not an IAM or project quota cap)</td>
+                        <td>Deploy to an alternate supported region, right-size vCPU/RAM, or retry off-peak</td>
+                        <td>Filing a Gemini TPM quota increase ticket and blocking launch in that region</td>
+                    </tr>
+                    <tr>
+                        <td>LLM judge scores padded, wordy answers higher than concise accurate ones</td>
+                        <td><strong>Verbosity bias</strong> &amp; unanchored 1–10 holistic scale</td>
+                        <td>Use binary or 1–3 anchored rubrics, <strong>Adaptive Rubrics</strong>, and require CoT critique <em>before</em> the score</td>
+                        <td>Expanding the scale to 1–100 or setting judge temperature to 0.9</td>
+                    </tr>
+                    <tr>
+                        <td>Pairwise judge picks Candidate A 68% of the time regardless of content</td>
+                        <td><strong>Positional (primacy) bias</strong> in pairwise evaluation</td>
+                        <td>Run every comparison twice (<code>(A,B)</code> and <code>(B,A)</code>); require consistent victory across both passes</td>
+                        <td>Keeping the baseline permanently in Slot A</td>
+                    </tr>
+                    <tr>
+                        <td>Agent passes benchmark with 99% <code>pass@5</code> but fails 41% of live 5-run batches</td>
+                        <td>Evaluating with <strong><code>pass@k</code></strong> instead of <strong><code>pass^k</code></strong> ($0.90^5 = 59\%$)</td>
+                        <td>Gate production agents on <strong><code>pass^k</code></strong> and replace probabilistic hops with deterministic code gates</td>
+                        <td>Executing mutating tools 5 times in parallel in production</td>
+                    </tr>
+                    <tr>
+                        <td>Every component scores &gt;95% in Level 2 evals, but end-to-end tasks fail 45% of the time</td>
+                        <td><strong>Integration seam mismatch</strong> (schema drift, context collapse, or swallowed <code>""</code> errors)</td>
+                        <td>Add <strong>Level 3 Trajectory &amp; Seam Integration Tests</strong> with strict schemas, <code>session.state</code> slots, and <code>is_error: true</code></td>
+                        <td>Tuning isolated Level 2 prompts further</td>
+                    </tr>
+                    <tr>
+                        <td>During a 2-minute <code>429</code>/<code>529</code> event, worker threads hit 100% and the web tier crashes</td>
+                        <td>Stacked retry loops (SDK $\times$ custom wrapper) + missing <strong>Circuit Breaker</strong></td>
+                        <td>Enforce a <strong>single retry owner</strong> with full jitter + <code>Retry-After</code>, and trip a <strong>Layer 2 Circuit Breaker</strong> into Layer 3 fallback</td>
+                        <td>Increasing retry attempts from 5 to 20</td>
+                    </tr>
+                    <tr>
+                        <td>Customer is billed twice after a payment tool times out (<code>504</code>) and is retried</td>
+                        <td>Missing <strong>idempotency key</strong> on a mutating tool call</td>
+                        <td>Attach deterministic <code>idempotency_key</code> (<code>hash(session_id + turn + args)</code>) and deduplicate downstream</td>
+                        <td>Disabling all retries on read-only tools as well</td>
+                    </tr>
+                    <tr>
+                        <td>Shadow mode test accidentally sends real cancellation emails to live customers</td>
+                        <td>Shadow pipeline invoked <strong>live mutating tools</strong> without a sandbox</td>
+                        <td>Intercept/mock all state-mutating tools in shadow mode; permit only read-only retrieval or stubbed writes</td>
+                        <td>Reducing shadow traffic from 100% to 10%</td>
+                    </tr>
+                    <tr>
+                        <td>AI saves 75% of drafting time, yet total department operating cost increases</td>
+                        <td>Omitted <strong>Step 4 Human-Review &amp; Exception Tax</strong> (manual audit + specialist error rework)</td>
+                        <td>Include human verification and rework labor in Step 4 ROI; use calibrated confidence + Tier 1 gates to focus human review</td>
+                        <td>Treating gross time saved as net financial savings</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>3-Tier Grading Hierarchy</dt>
+                <dd>Evaluation ladder: <strong>Tier 1</strong> Deterministic Code ($0, ms, 100% reproducible) &rarr; <strong>Tier 2</strong> Calibrated LLM-as-Judge / Autorater &rarr; <strong>Tier 3</strong> Human Domain Expert.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Adaptive Rubrics</dt>
+                <dd>Gen AI Evaluation Service autorater paradigm that dynamically generates prompt-specific binary pass/fail tests per query and aggregates weighted verdicts.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>2-Step Agent Simulation</dt>
+                <dd>Synthetic multi-turn stress testing: (1) generate diverse scenarios &amp; personas from an Agent Registry snapshot, then (2) run multi-turn User Simulator + Environment Simulation dialogues.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Failure Cluster Analysis</dt>
+                <dd>Automated loss analysis grouping low-scoring online traces or failed simulation runs into ranked root-cause clusters for targeted evalset expansion and prompt optimization.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Optimizer</dt>
+                <dd>Closed-loop data-driven prompt optimization job (<code>instruction</code>, <code>demonstration</code>, or <code>instruction_and_demo</code>) tuning instructions and Example Store shots against Gen AI Evaluation metrics.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Dual-Attribution Audit Log</dt>
+                <dd>Cloud Audit Log entry tagged <code>is_agentic=true</code> recording both the cryptographic SPIFFE Agent Identity and the initiating human user principal.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Substrate vs. Sandbox</dt>
+                <dd>GKE sub-architectures: <strong>Agent Substrate</strong> multiplexes actor-based stateful agents with <code>&lt;1s</code> snapshot/restore; <strong>Agent Sandbox</strong> isolates pods with <strong>gVisor</strong> via <code>SandboxTemplate</code> / <code>SandboxWarmPool</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Cohen's Kappa ($\kappa$)</dt>
+                <dd>Chance-corrected agreement metric ($\kappa = \frac{p_o - p_e}{1 - p_e}$) used to verify Tier 2 LLM judge alignment with Tier 3 human experts (target $\kappa \ge 0.75$).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>pass@k vs. pass^k</dt>
+                <dd><code>pass@k</code> ($1-(1-p)^k$) measures <em>at least one</em> success across $k$ tries; <code>pass^k</code> ($p^k$) measures <em>all $k$ trials succeeding</em>—mandatory for unattended production agents.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Integration Seam</dt>
+                <dd>The boundary where Component A's output feeds Component B's input; tested by Level 3 trajectory tests to catch format, truncation, context collapse, and error-swallowing bugs.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Input vs. Model Drift</dt>
+                <dd><strong>Input Drift:</strong> external world/queries shift away from frozen RAG &amp; evalsets. <strong>Model Drift:</strong> unpinned model alias shifts behavior overnight.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Circuit Breaker</dt>
+                <dd>Service-boundary state machine (<code>Closed &rarr; Open &rarr; Half-Open</code>) that fails fast in <code>&lt;1 ms</code> when error thresholds breach, preventing thread-pool exhaustion.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Shadow Mode (Dark Launch)</dt>
+                <dd>Asynchronous duplication of live input to a candidate pipeline (with mutating tools sandboxed) to measure real <code>p99</code> latency, errors, and autorater scores at zero user risk.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Human-Review Tax (Step 4 ROI)</dt>
+                <dd>Mandatory labor cost of human auditors reviewing flagged AI outputs and specialists fixing errors—subtracted in Step 4 of enterprise ROI.</dd>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related Guides</h3>
+                <ul>
+                    <li><a href="AgentPlatform.html">Google Agent Platform</a>: Managed Evaluation Service, Agent Registry, Sessions, Memory Bank, and Runtime architecture.</li>
+                    <li><a href="ADK.html">Agent Development Kit (ADK)</a>: Local <code>adk eval</code>, conformance replay tests, workflow agents, and Gemini 4 Argon routing.</li>
+                    <li><a href="ClaudeAPI.html">Claude Platform &amp; API</a>: Messages API, tool-use loop, <code>stop_reason</code>, prompt caching, and Message Batches.</li>
+                    <li><a href="RAG.html">Retrieval-Augmented Generation (RAG)</a>: Hybrid search, chunking, reranking, and RAG triad evaluation.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 65-minute AgentOps audio deep dive, open the 2-column study guide PDF, 21-slide deck, and sketchnote infographic in the Hub Viewer, or drill 38 scenario-based questions on the 3-tier grading ladder, autoraters, <code>pass@k</code> vs. <code>pass^k</code>, OTel <code>gen_ai.*</code> tracing, and heavy-tail FinOps.</p>
+                <div class="audio-label" style="margin-top: 15px;">Production AgentOps: Evals, Observability &amp; Cost (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/AgentOps-v2.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=agent-ops" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch AgentOps Practice Quiz &rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> A regulated refunds agent passes 98% of cases on <code>FINAL_RESPONSE_QUALITY</code>, yet an audit discovers it occasionally issues refunds without calling <code>check_refund_eligibility</code> first. Why did outcome grading miss this, and what Gen AI Evaluation configuration fixes it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Outcome-only autoraters suffer from the <strong>"right answer, wrong path"</strong> blind spot—approving polite refund confirmations even when mandatory policy lookups were skipped. Pair <code>FINAL_RESPONSE_QUALITY</code> + <code>HALLUCINATION</code> with <strong>process/trajectory metrics</strong>: specifically <strong><code>trajectory_in_order_match</code></strong> (requiring <code>verify_identity &rarr; check_refund_eligibility &rarr; issue_refund</code> in chronological order while allowing extra read-only lookups) plus a Tier 1 check blocking forbidden destructive tools.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> An autonomous refund-processing agent has a single-run accuracy of $p = 0.90$. The engineering lead reports a <code>pass@5</code> score of $99.999\%$ and argues the agent is ready for unattended production launch. Why is this metric misleading, and what is its actual 5-run consistency?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><code>pass@5</code> ($1 - 0.10^5 = 99.999\%$) measures the probability that <em>at least one</em> of 5 attempts succeeds, which is only valid when a deterministic verifier can select a single working candidate before any side effects occur. In unattended production, every run impacts a real customer, so the required metric is <strong><code>pass^5</code></strong> ($0.90^5 = \mathbf{59.0\%}$)—meaning <strong>41% of 5-run batches will contain at least one failure</strong>.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> You are launching a brand-new healthcare scheduling agent with zero historical production chat logs and cannot run stress or fault-injection tests against the live hospital EHR API. How do you evaluate multi-turn edge cases and HTTP <code>503</code> tool outages pre-deployment?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Use <strong>2-Step Agent Simulation</strong> paired with <strong>Environment Simulation</strong> in the Gen AI Evaluation Service: (1) generate diverse synthetic user scenarios and adversarial personas from the agent's <strong>Agent Registry</strong> snapshot, then (2) run multi-turn conversations between the LLM User Simulator and your candidate agent while Environment Simulation mocks the EHR tools and deterministically injects <code>503</code> timeouts and malformed responses.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> Online Evaluation Monitors flag 600 failing traces this week. Whenever an engineer manually edits the 4,500-token system prompt to fix one bug, two older capabilities regress. How should you systematize remediation?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Replace manual "prompt whack-a-mole" with the <strong>LM Feedback Flywheel + Data-Driven Prompt Optimizer (<code>Agent Optimizer</code>)</strong>: (1) scrub traces with <strong>SDP</strong>, (2) group them via <strong>Failure Cluster Analysis</strong> ranked by frequency &times; severity, (3) codify top clusters as outcome-graded <code>evalset</code> cases while holding out a separate validation slice to prevent overfitting, and (4) run a <strong>Data-Driven Prompt Optimizer</strong> job (<code>instruction_and_demo</code> mode) to tune instructions and Example Store demonstrations without regressing the suite.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> Map three Google Cloud workloads to the optimal runtime (<strong>Agent Runtime</strong>, <strong>Cloud Run</strong>, or <strong>GKE</strong>): (a) a stateful Python ADK orchestrator needing built-in Sessions and Memory Bank; (b) a stateless TypeScript Streamable HTTP MCP server scaling to zero; (c) serving fine-tuned open-weight <code>Gemma 4</code> on L4 GPUs alongside gVisor-sandboxed code execution pods.</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><strong>(a) Agent Runtime:</strong> Lowest-overhead managed runtime for stateful Python/ADK orchestrators with native Sessions, Memory Bank, Example Store, and Code Execution. <strong>(b) Cloud Run:</strong> Primary serverless runtime for custom Streamable HTTP MCP servers and polyglot stateless services (Agent Runtime does not host standalone MCP servers). <strong>(c) GKE:</strong> Required for self-hosting open-weight <code>Gemma 4</code> on GPU/TPU node pools and running pod-isolated <strong>Agent Sandbox on GKE</strong> (<code>SandboxWarmPool</code> + <code>gVisor</code>).</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> During a regional capacity event returning <code>HTTP 529 Overloaded</code>, your service wraps the default SDK client inside a custom 5-attempt retry loop with a fixed 2-second sleep. Within 60 seconds, all application web workers freeze. What two mechanisms failed, and where should each fix be placed?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><strong>(1) Retry amplification &amp; thundering herd at Layer 1:</strong> Official SDKs already retry twice by default (3 attempts), so a 5-attempt wrapper multiplies traffic to $3 \times 5 = 15$ synchronized requests per call. Have a <strong>single retry owner</strong> using <strong>exponential backoff with full jitter</strong> and honoring <code>Retry-After</code>. <strong>(2) Missing Layer 2 Circuit Breaker:</strong> Holding threads open across 15 retries exhausts the worker pool; place a <strong>Circuit Breaker</strong> at the service boundary that trips <code>Open</code> when error rates breach threshold and routes immediately to <strong>Layer 3</strong> <code>global</code>/cross-region or cross-tier model fallbacks.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> You want to validate a new customer-support agent prompt that can call <code>lookup_order</code> (read) and <code>issue_credit_refund</code> (write). What can Shadow Mode safely test, what must be sandboxed during shadow mode, and why do you still need a 4-Element A/B Test afterward?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Shadow mode safely validates live <code>p95</code> latency, token spend, crash rates, first-turn tool selection, and async autorater scores on real traffic, provided <strong><code>issue_credit_refund</code> (and all mutating tools) are intercepted/mocked in a read-only sandbox</strong> so customers aren't double-refunded. You still need a live 4-Element A/B test (sticky session randomization, single-variable isolation, guardrail metrics, and pre-committed sample size) because shadow mode <strong>cannot measure multi-turn user reactions</strong> to the candidate's replies or true ticket resolution rates.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> A pilot agent shows a median (<code>p50</code>) cost of $0.03 per conversation. The team multiplies $0.03 by 1,000,000 monthly sessions ($30,000/mo) and claims $200,000/mo in gross labor savings without human review costs. Why will this business case fail in production?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">It fails on two counts: <strong>(1) Heavy-tail token distribution:</strong> Multi-turn loops, large tool outputs, thinking tokens, retries, and subagent fan-out (~15&times; multiplier) create a steep <code>p95</code>/<code>p99</code> tail where the true mean cost per session is $3\times$–$10\times$ higher than the <code>p50</code> median. <strong>(2) Omitting Step 4 (Human-Review &amp; Exception Tax):</strong> Subtracting the mandatory labor cost of human auditors verifying flagged outputs and specialists fixing false positives is essential to compute net enterprise ROI.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

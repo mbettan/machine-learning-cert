@@ -1,0 +1,1485 @@
+{
+  "topic_id": "agent-ops",
+  "title": "AgentOps: Evals, Observability & Cost",
+  "guide_url": "AgentOps.html",
+  "questions": [
+    {
+      "id": "agent-ops-q-01",
+      "section": "Evaluation Strategy & 3-Tier Grading Hierarchy",
+      "guide_anchor": "grading-hierarchy",
+      "question": "A platform team wants to gate every pull request on whether an extraction agent returns valid JSON containing three required ISO-8601 date fields and calls only approved tool names. A developer proposes sending every candidate response to a frontier LLM judge with a detailed grading prompt. What is the best evaluation architecture?",
+      "options": [
+        {
+          "text": "Check JSON schema, ISO-8601 dates, and allowed tool names with Tier 1 deterministic code graders in CI, reserving Tier 2 LLM judges for semantic quality.",
+          "correct": true
+        },
+        {
+          "text": "Run an ensemble of three frontier LLM judges in parallel at temperature 0 and require a two-thirds majority vote on whether the JSON syntax, field types, and ISO-8601 date strings are valid before merging.",
+          "correct": false,
+          "why_wrong": "Paying three frontier LLM calls to verify syntax and date formatting wastes tokens and adds latency when deterministic code checks those properties at $0 cost with 100% reliability."
+        },
+        {
+          "text": "Route every pull request candidate output to Tier 3 human domain experts in an annotation queue so they can manually inspect all JSON fields and sign off on every commit before merging.",
+          "correct": false,
+          "why_wrong": "Human annotation takes hours and is reserved for building golden sets and calibrating judges, never for mechanical syntax checks in CI."
+        },
+        {
+          "text": "Ask the extraction agent in a second conversational turn to inspect its own JSON output against the schema specification and return a boolean flag confirming full structural compliance.",
+          "correct": false,
+          "why_wrong": "In-thread self-grading suffers from self-confirmation bias and still uses probabilistic inference where a deterministic Pydantic or JSON Schema check is 100% exact."
+        }
+      ],
+      "explanation": "The 3-Tier Grading Hierarchy dictates always starting at Tier 1 (Deterministic Code Graders) for structural, syntactic, and signature properties such as JSON schema validity, regex/date formats, and allowed tool calls. Tier 1 checks run in milliseconds at $0 cost with 100% reproducibility. Tier 2 (Calibrated LLM-as-Judge) should only be invoked after Tier 1 passes to grade open-ended semantic properties like faithfulness or tone.",
+      "key_takeaway": "Never pay an LLM judge to verify syntax, schema compliance, or tool signatures that Tier 1 deterministic code can assert at $0 and 100% reliability.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-02",
+      "section": "Evaluation Strategy & 3-Tier Grading Hierarchy",
+      "guide_anchor": "grading-hierarchy",
+      "question": "During a pairwise A/B evaluation comparing two summarization prompts, an LLM-as-Judge awards a 69% win rate to whichever prompt's output is placed in Slot A, even when the exact same pair of summaries is re-submitted in reversed order. How should the evaluation harness eliminate this bias?",
+      "options": [
+        {
+          "text": "Ask the judge to output a 1-to-100 score for Slot A and Slot B simultaneously on the first line without explaining its reasoning so generation finishes before any positional drift can occur.",
+          "correct": false,
+          "why_wrong": "Unanchored 1-to-100 scales introduce severe score inflation and scale drift, and omitting reasoning before the score worsens post-hoc rationalization without fixing slot bias."
+        },
+        {
+          "text": "Run each pair twice in swapped orders (A, B) and (B, A); count a win only if the same candidate wins both passes, and mark split results as a tie.",
+          "correct": true
+        },
+        {
+          "text": "Always place the production baseline summary in Slot A and the challenger summary in Slot B across all evaluation runs so the positional bias remains constant across every experiment.",
+          "correct": false,
+          "why_wrong": "Locking the baseline into the favored slot systematically penalizes every challenger and prevents detecting true quality improvements."
+        },
+        {
+          "text": "Concatenate both candidate summaries into a single merged text block and ask the exact same model checkpoint that generated the summaries to pick whichever writing style it prefers.",
+          "correct": false,
+          "why_wrong": "Using the generator checkpoint introduces self-preference bias, and concatenating without swapped runs does not remove primacy or recency order effects."
+        }
+      ],
+      "explanation": "LLM judges exhibit strong positional bias (primacy bias toward Slot A or recency bias toward Slot B) in pairwise comparisons. Running every comparison twice—once as (A, B) and once as (B, A)—and requiring a candidate to win both orderings neutralizes slot bias; inconsistent outcomes are recorded as ties.",
+      "key_takeaway": "Mitigate pairwise positional bias by running every pair in both (A, B) and (B, A) orderings and requiring a consistent winner across both passes.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-03",
+      "section": "Evaluation Strategy & 3-Tier Grading Hierarchy",
+      "guide_anchor": "grading-hierarchy",
+      "question": "An engineering team builds a Tier 2 LLM-as-Judge to grade RAG faithfulness. Currently, the judge uses a 1–100 integer scale, outputs the numeric score on the first line followed by its explanation, and runs inside the same conversation history that generated the answer. Which set of changes best fixes this judge?",
+      "options": [
+        {
+          "text": "Keep the in-thread conversation history so the judge understands the agent's original intent, but narrow the numeric scale from 1–100 down to 1–10 and average three consecutive judge runs.",
+          "correct": false,
+          "why_wrong": "Grading inside the generator's conversation history preserves prior reasoning tokens and causes severe self-confirmation bias, and an unanchored 1–10 scale still drifts."
+        },
+        {
+          "text": "Keep the numeric score on line 1 for easier regex parsing, switch to a smaller model from the same family, and validate agreement using raw percentage match without human annotations.",
+          "correct": false,
+          "why_wrong": "Emitting the score before the critique locks the model into post-hoc rationalization, and raw percentage agreement without human ground truth or chance correction is invalid."
+        },
+        {
+          "text": "Run the judge in a fresh context window with a 1–3 anchored rubric, require structured critique before the score, and calibrate to human labels (kappa >= 0.75).",
+          "correct": true
+        },
+        {
+          "text": "Replace the LLM judge rubric with an embedding cosine similarity check between the generated answer and the user question so that neither an LLM judge nor human calibration is needed.",
+          "correct": false,
+          "why_wrong": "Cosine similarity between the question and answer measures topical overlap, not whether the factual claims are faithful to the retrieved source documents."
+        }
+      ],
+      "explanation": "A calibrated Tier 2 judge must: (1) execute in a clean, isolated context window (preferably using a different model family or tier to avoid self-preference bias), (2) use binary or low-granularity 1–3/1–5 anchored rubrics where each level has an explicit definition, (3) generate step-by-step claim critique BEFORE emitting the score to prevent post-hoc rationalization, and (4) validate alignment against Tier 3 human domain annotations using Cohen's kappa (>= 0.75).",
+      "key_takeaway": "Calibrate LLM judges in an isolated context using 1–3/1–5 anchored rubrics, structured critique-before-score, and Cohen's kappa >= 0.75 against human experts.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-04",
+      "section": "Evaluation Strategy & 3-Tier Grading Hierarchy",
+      "guide_anchor": "grading-hierarchy",
+      "question": "Before calibrating an automated LLM judge, three senior clinicians independently grade 150 medical summarization outputs using the team's newly drafted 1–5 rubric. Inter-annotator agreement among the three human clinicians is only kappa = 0.31. What should the team do next?",
+      "options": [
+        {
+          "text": "Proceed immediately with fine-tuning the Tier 2 LLM judge on the majority-vote human labels and deploy the resulting judge as a blocking release gate in the continuous integration pipeline.",
+          "correct": false,
+          "why_wrong": "When human experts cannot agree (kappa = 0.31), the rubric itself is ambiguous; training or calibrating an automated judge on noisy labels institutionalizes noise."
+        },
+        {
+          "text": "Discard human calibration entirely and let a frontier LLM judge define the ground-truth clinical standards on its own because models are more deterministic than human raters.",
+          "correct": false,
+          "why_wrong": "An uncalibrated LLM judge has systematic blind spots (verbosity, self-preference) and cannot establish clinical ground truth without human expert alignment."
+        },
+        {
+          "text": "Expand the grading rubric scale from 1–5 to 1–50 so the three human clinicians have much finer numerical granularity to express subtle clinical disagreements on borderline summaries.",
+          "correct": false,
+          "why_wrong": "Higher scale granularity reduces inter-rater reliability even further; tightening agreement requires simpler, clearer behavioral anchors."
+        },
+        {
+          "text": "Rewrite the rubric with concrete behavioral anchors and binary criteria until human inter-rater agreement is high, then calibrate the LLM judge.",
+          "correct": true
+        }
+      ],
+      "explanation": "Tier 3 human annotations serve as the reference ground truth for calibrating Tier 2 LLM judges. If domain experts themselves achieve low inter-annotator agreement (kappa = 0.31), the evaluation rubric is underspecified or subjective. The team must first refine the rubric—decomposing vague scores into explicit binary checks and concrete examples—until human raters agree consistently, and only then calibrate the LLM judge.",
+      "key_takeaway": "If human experts disagree on the calibration set, fix the ambiguous rubric first—an LLM judge cannot be calibrated against inconsistent human ground truth.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-05",
+      "section": "Non-Deterministic Metrics: pass@k vs. pass^k",
+      "guide_anchor": "pass-metrics",
+      "question": "An unattended order-cancellation agent has a single-run task accuracy of p = 0.90 on the golden evaluation set. The product manager notes that pass@5 is 99.999% and wants to deploy the agent to handle live customer cancellation requests autonomously. Which assessment is correct?",
+      "options": [
+        {
+          "text": "Approve the launch immediately because a 99.999% pass@5 score mathematically proves that fewer than 1 in 100,000 live customer cancellation sessions will experience a failure.",
+          "correct": false,
+          "why_wrong": "pass@5 measures the chance that at least 1 of 5 attempts succeeds, which does not apply when a live customer experiences a single execution path."
+        },
+        {
+          "text": "Block autonomous launch: unattended customer agents require pass^k consistency, and at p = 0.90 the agent's pass^5 reliability is only 59.0% (0.90^5).",
+          "correct": true
+        },
+        {
+          "text": "Approve launch as long as the production orchestrator spawns 5 parallel agent instances on every customer request and commits all 5 mutating database tool calls.",
+          "correct": false,
+          "why_wrong": "Running 5 parallel instances against mutating cancellation tools causes duplicate side effects and 5x token spend without a deterministic filter to pick the right run."
+        },
+        {
+          "text": "Block launch because pass@5 is calculated by dividing single-run accuracy by k (0.90 / 5 = 18.0%), meaning 82% of single-turn customer requests will fail on the first try.",
+          "correct": false,
+          "why_wrong": "Single-run accuracy is 90%, not 18%; the actual consistency metric across 5 independent trials is pass^5 = 0.90^5 = 59.0%."
+        }
+      ],
+      "explanation": "pass@k = 1 - (1 - p)^k measures the probability that at least one of k independent attempts succeeds, which is appropriate only when a downstream verifier (such as a compiler or unit test suite) can automatically filter candidates. For customer-facing agents and unattended automation, every run must succeed, so the governing metric is pass^k = p^k. With p = 0.90, pass^5 = 0.90^5 = 59.0% and pass^10 = 0.90^10 = 34.9%.",
+      "key_takeaway": "Gate customer-facing agents and unattended automation on pass^k (p^k), never pass@k; at p = 0.90, pass^5 drops to 59%.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-06",
+      "section": "Non-Deterministic Metrics: pass@k vs. pass^k",
+      "guide_anchor": "pass-metrics",
+      "question": "In which of the following engineering scenarios is `pass@k` (for k = 8) the most appropriate primary evaluation metric, rather than `pass^k`?",
+      "options": [
+        {
+          "text": "An offline coding tool generates 8 candidate patches in a sandbox and runs the deterministic pytest suite to pick the single passing patch.",
+          "correct": true
+        },
+        {
+          "text": "A live healthcare triage chatbot answers patient symptom questions in real time without a human clinician reviewing the response before it is displayed to the patient.",
+          "correct": false,
+          "why_wrong": "Real-time patient-facing responses cannot sample 8 answers and rely on at least one being safe; every single turn requires high pass^k consistency."
+        },
+        {
+          "text": "An automated enterprise billing workflow executes outbound wire transfers and updates general-ledger accounting entries every night without human review.",
+          "correct": false,
+          "why_wrong": "Unattended financial mutation workflows require every execution to succeed reliably (pass^k), not at-least-one-of-eight."
+        },
+        {
+          "text": "A customer support voice agent authenticates callers over the phone and updates their primary shipping addresses and payment methods during a live call.",
+          "correct": false,
+          "why_wrong": "A live voice caller experiences one trajectory in real time; you cannot run 8 parallel conversations with the caller and discard 7."
+        }
+      ],
+      "explanation": "pass@k (at-least-one success across k samples) is the right metric when the system can generate k candidates in parallel and apply a fast, 100% deterministic verifier—such as a compiler, type-checker, or unit test suite—to select a single verified winner before presenting it or taking side effects.",
+      "key_takeaway": "Use pass@k only when a deterministic downstream verifier (compiler, test runner, formal checker) can automatically select one working candidate out of k samples.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-07",
+      "section": "Non-Deterministic Metrics: pass@k vs. pass^k",
+      "guide_anchor": "pass-metrics",
+      "question": "A sequential agent workflow executes 5 independent probabilistic LLM steps in series (Intent Classification -> Query Formulation -> Tool Selection -> Payload Extraction -> Final Synthesis). Each individual step achieves 90% accuracy in isolated evaluations. What is the expected first-pass end-to-end success rate of the workflow, and what is the most effective architectural way to raise it?",
+      "options": [
+        {
+          "text": "End-to-end success is 90.0% because total workflow reliability equals the minimum accuracy among its sequential steps; raise it by increasing `max_tokens` across all 5 model calls.",
+          "correct": false,
+          "why_wrong": "Independent sequential probabilities multiply (0.90^5 = 59.0%) rather than taking the minimum, and max_tokens does not fix reasoning or schema errors."
+        },
+        {
+          "text": "End-to-end success is 99.999% (1 - 0.10^5); raise it even further by decomposing the 5 steps into 10 smaller sequential autonomous subagent calls.",
+          "correct": false,
+          "why_wrong": "1 - 0.10^5 is the formula for parallel pass@5, not sequential step execution; doubling the number of sequential probabilistic hops lowers reliability to 0.90^10 = 34.9%."
+        },
+        {
+          "text": "Success is 59.0% (0.90^5); raise it by replacing probabilistic hops with deterministic code/schemas (p=1.0) and adding step validation gates.",
+          "correct": true
+        },
+        {
+          "text": "End-to-end success is 45.0% (0.90 / 2); raise it by removing all strict JSON tool schemas so the model can pass unconstrained natural-language prose between the 5 sequential steps.",
+          "correct": false,
+          "why_wrong": "Removing schemas increases integration seam errors between steps; strict schemas and deterministic gates are required to prevent compounding decay."
+        }
+      ],
+      "explanation": "When an agent executes M sequential steps with independent success probabilities p_1, ..., p_M, end-to-end workflow success compounds multiplicatively: P(success) = p^M. Five steps at 90% accuracy yield 0.90^5 = 59.0%. Replacing probabilistic LLM steps with deterministic code where possible (setting p_i = 1.0) and placing programmatic validation/retry gates between steps dramatically reduces compounding failure.",
+      "key_takeaway": "Sequential step probabilities multiply (p^M); shrink the number of probabilistic hops and insert deterministic validation gates between steps.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-08",
+      "section": "4-Level Agent Test Pyramid & Integration Seams",
+      "guide_anchor": "test-pyramid",
+      "question": "A multi-stage technical support pipeline consists of a Query Rewriter, a Hybrid Retriever, a Log-Fetching Tool, and an Answer Synthesizer. In isolated Level 2 component evaluations, all four modules score above 95%. In production, however, 42% of customer tickets receive incorrect answers. What is the most likely root cause?",
+      "options": [
+        {
+          "text": "The Level 2 golden dataset contains too many test cases, causing the offline evaluation harness to overfit the aggregate percentage calculation across runs.",
+          "correct": false,
+          "why_wrong": "A larger golden set improves statistical precision and does not cause a 42% gap between isolated tests and end-to-end execution."
+        },
+        {
+          "text": "The team used deterministic Python unit tests at Level 1 instead of calling an LLM-as-Judge to verify whether their Pydantic JSON schemas are valid.",
+          "correct": false,
+          "why_wrong": "Level 1 deterministic tests are the right way to verify JSON schemas; the failure occurs at the runtime handoffs (seams) between components."
+        },
+        {
+          "text": "The underlying language model weights are mutating on every API request because the engineering team enabled prompt caching on the static system instructions.",
+          "correct": false,
+          "why_wrong": "Prompt caching reuses KV-cache prefixes identically and never mutates model weights or degrades end-to-end accuracy."
+        },
+        {
+          "text": "Integration seam failures between stages (format drift, silent log truncation, or swallowed tool errors) that isolated Level 2 evals never exercise.",
+          "correct": true
+        }
+      ],
+      "explanation": "This is a classic Compound Error Cascade caused by Integration Seam Failures. Isolated Level 2 component evals feed clean, idealized inputs to each stage. In end-to-end execution, Component A's actual output (e.g., an over-expanded query, a truncated log payload, or an empty string returned on a tool timeout) violates Component B's implicit input assumptions. Level 3 Trajectory & Seam Integration Tests catch these handoff bugs.",
+      "key_takeaway": "High isolated component scores can hide catastrophic end-to-end failures when integration seams between components suffer from format drift, truncation, or swallowed errors.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-09",
+      "section": "4-Level Agent Test Pyramid & Integration Seams",
+      "guide_anchor": "test-pyramid",
+      "question": "To keep token costs down, a middleware wrapper truncates the output of `fetch_build_logs` to the first 3,000 characters before appending the `tool_result` to `messages[]`. When builds fail, the CI debugging agent repeatedly concludes 'Build succeeded with zero errors' because compiler stack traces appear at the bottom of the 25,000-character log. How should this seam be fixed?",
+      "options": [
+        {
+          "text": "Truncate structurally (preserving tail + error lines) and attach explicit metadata (`truncated: true`, `omitted_lines`, and pagination offsets).",
+          "correct": true
+        },
+        {
+          "text": "Remove all truncation limits and dump the entire raw 500,000-character build log directory directly into `messages[]` on every turn regardless of context window limits.",
+          "correct": false,
+          "why_wrong": "Dumping unbounded logs blows up token spend, triggers context confusion ('lost in the middle'), and eventually hits HTTP 400 / model_context_window_exceeded."
+        },
+        {
+          "text": "Keep the silent 3,000-character head slice, but add a system prompt instruction telling the model to guess what compiler errors might have occurred at the end of the file.",
+          "correct": false,
+          "why_wrong": "Asking the model to guess unseen stack traces invites hallucination instead of providing the actual failure ground truth."
+        },
+        {
+          "text": "Upgrade the agent from a balanced model tier to the largest frontier model tier so it can infer the missing stack trace solely from the initial environment setup lines.",
+          "correct": false,
+          "why_wrong": "No model tier can see a stack trace that was silently deleted before reaching the context window."
+        }
+      ],
+      "explanation": "Silent head-only truncation at the tool-output seam strips away load-bearing evidence (like stack traces at the end of a log) without telling the model anything was omitted. Truncation must be structural (keeping the head, tail, and lines matching error patterns) and transparent—returning explicit metadata (`truncated: true`, total lines, and an offset parameter so the agent can page through specific sections if needed).",
+      "key_takeaway": "Never silently truncate tool outputs at the head; preserve structural tails/error lines and include explicit `truncated: true` + pagination metadata.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-10",
+      "section": "4-Level Agent Test Pyramid & Integration Seams",
+      "guide_anchor": "test-pyramid",
+      "question": "A team is designing their CI/CD verification pipeline across the 4-Level Agent Test Pyramid. Which mapping of test scope to execution cadence is most appropriate for production engineering?",
+      "options": [
+        {
+          "text": "Run only Level 4 live production monitoring on 100% of customer traffic using human domain annotators and skip Levels 1, 2, and 3 to maximize engineering velocity.",
+          "correct": false,
+          "why_wrong": "Skipping offline levels exposes live customers to broken schemas and regressions, and 100% live human annotation is slow and economically impossible at scale."
+        },
+        {
+          "text": "Run L1 mocked unit tests per commit, L2 single-step evals on prompt/model PRs, L3 trajectory/seam tests pre-release, and L4 async sampling in prod.",
+          "correct": true
+        },
+        {
+          "text": "Run full Level 3 multi-agent trajectory suites against live production customer databases on every local file save, and run Level 1 unit tests once a quarter.",
+          "correct": false,
+          "why_wrong": "Level 3 trajectory tests take minutes and incur token costs, and running tests against live production databases risks corrupting customer state."
+        },
+        {
+          "text": "Mock the language model across all four levels of the agent test pyramid so that CI/CD gates and production monitoring never incur any API token charges.",
+          "correct": false,
+          "why_wrong": "Mocking the LLM in Levels 2, 3, and 4 makes it impossible to test prompt changes, model upgrades, trajectory decisions, or live production drift."
+        }
+      ],
+      "explanation": "The 4-Level Agent Test Pyramid balances speed, cost, and fidelity: Level 1 (mocked LLM, pure code tests on schemas/parsers/regexes) runs in milliseconds at $0 on every commit; Level 2 (single-step golden set evals) runs on PRs touching prompts or models; Level 3 (multi-turn trajectory & seam integration tests with sandbox tools and fault injection) gates releases; and Level 4 (canary + sampled async judges) monitors live production continuously.",
+      "key_takeaway": "Match test pyramid level to cadence: L1 mocked unit tests on every commit, L2 single-step evals on PRs, L3 trajectory/seam tests pre-release, and L4 async sampling in prod.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-11",
+      "section": "4-Level Agent Test Pyramid & Integration Seams",
+      "guide_anchor": "test-pyramid",
+      "question": "In a multi-agent workflow, a Research Subagent queries internal documentation to find the exact REST API endpoint and JSON payload schema required to provision a workspace, then returns a 3-sentence conversational summary to the Coordinator. When the Executor Subagent tries to call the API based on that summary, 35% of calls fail with 400 schema errors. What is the best fix?",
+      "options": [
+        {
+          "text": "Instruct the Research Subagent to write a much longer 10-paragraph conversational essay so the Executor Subagent has more prose context before calling the REST endpoint.",
+          "correct": false,
+          "why_wrong": "Longer prose still paraphrases field names and types while inflating token usage and context confusion."
+        },
+        {
+          "text": "Configure the Executor Subagent to ignore HTTP 400 validation errors and retry the exact same malformed JSON payload 10 times using exponential backoff with jitter.",
+          "correct": false,
+          "why_wrong": "HTTP 400 is a terminal client validation error; retrying an identical malformed payload fails every time."
+        },
+        {
+          "text": "Pass the verbatim structured artifact (exact endpoint URL and raw JSON schema) across the subagent seam instead of a prose summary.",
+          "correct": true
+        },
+        {
+          "text": "Merge all subagents into a single prompt and disable all server-side JSON schema validation on the downstream provisioning REST API so no 400 errors are thrown.",
+          "correct": false,
+          "why_wrong": "Disabling API validation corrupts downstream backend state; the defect is lossy prose summarization at the subagent handoff seam."
+        }
+      ],
+      "explanation": "When a downstream step requires exact code, SQL column names, or API schemas, passing a natural-language prose summary across the subagent seam introduces lossy paraphrasing (omitting required fields, altering casing, or dropping types). Subagents must return verbatim structured artifacts or write exact schemas/files to a shared state store.",
+      "key_takeaway": "Pass verbatim structured artifacts (schemas, IDs, code) across subagent seams—never rely on lossy prose summaries when downstream tools need exact syntax.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Claude Evaluation & Test Design",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-12",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "A healthcare AI team needs end-to-end observability across their RAG and tool-use pipeline to diagnose latency spikes and unexpected truncations, but strict HIPAA compliance forbids storing Protected Health Information (PHI) in their central APM telemetry cluster. How should they design their OpenTelemetry instrumentation?",
+      "options": [
+        {
+          "text": "Disable all structured logging and distributed tracing in production and rely solely on monthly cloud billing invoices to estimate pipeline latency and health.",
+          "correct": false,
+          "why_wrong": "Disabling telemetry leaves the team blind to latency bottlenecks, tool failures, cache misses, and truncation spikes."
+        },
+        {
+          "text": "Log full raw user prompts and medical records in standard OpenTelemetry span attributes, but rename the attribute key from `prompt` to `internal_encrypted_debug_blob` for security.",
+          "correct": false,
+          "why_wrong": "Renaming a field is security through obscurity and still leaks unredacted PHI into the central APM cluster."
+        },
+        {
+          "text": "Ask the LLM at the end of every turn to generate its own JSON telemetry log with PHI removed and send that model-generated string directly to the APM cluster.",
+          "correct": false,
+          "why_wrong": "Using an LLM to redact PHI for logs adds latency and token cost and is non-deterministic—it can accidentally leak PHI or hallucinate token counts."
+        },
+        {
+          "text": "Emit metadata-only OTel spans by default (IDs, versions, token counts, `ttft_ms`, `stop_reason`) and deterministically scrub PHI before vaulting sampled payloads.",
+          "correct": true
+        }
+      ],
+      "explanation": "Production AI telemetry should be metadata-first by default: every OpenTelemetry span records `trace_id`, `span_id`, pinned `model` ID, `prompt_version_hash`, token usage (`input_tokens`, `output_tokens`, `cache_read_input_tokens`), `ttft_ms`, `stop_reason`, and `retry_count`—none of which contain raw user text. When full text samples are needed for debugging or Level 4 evals, they must pass through a deterministic PII/PHI scrubber before storage in an encrypted, access-controlled audit store with strict retention TTLs.",
+      "key_takeaway": "Log structured metadata (IDs, versions, token counts, latencies, stop_reason) in default OTel spans; scrub PII deterministically before storing sampled payloads in an encrypted vault.",
+      "doc_links": [
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-13",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "An enterprise tax-advisory assistant has used a pinned model snapshot (`claude-sonnet-4-6`) and an unchanged system prompt hash for four months. Infrastructure SLIs (HTTP 200 rate, `p95` TTFT, tool latency) are completely green, yet human escalation rates have climbed from 8% to 24% since new annual tax regulations took effect last month. What is happening, and what is the correct fix?",
+      "options": [
+        {
+          "text": "Input / Data Drift on the new tax rules: refresh the RAG corpus and expand the golden eval set with PII-scrubbed production failure traces.",
+          "correct": true
+        },
+        {
+          "text": "Model / Provider Drift is occurring because the pinned snapshot weights decayed over four months; roll back the application container image to its initial release.",
+          "correct": false,
+          "why_wrong": "A pinned model snapshot ID and locked prompt hash do not change over time; rolling back identical code will not add the new tax regulations."
+        },
+        {
+          "text": "The service-boundary circuit breaker is stuck in the Half-Open state; increase the SDK `max_retries` setting from 2 to 10 to lower the customer escalation rate.",
+          "correct": false,
+          "why_wrong": "Infrastructure SLIs and error rates are green, so retries and circuit breakers are not the cause of semantic knowledge staleness."
+        },
+        {
+          "text": "Ephemeral prompt cache poisoning is corrupting the system instructions across tenants; disable all `cache_control` breakpoints across every API request.",
+          "correct": false,
+          "why_wrong": "Prompt caching stores exact token prefixes for 5–60 minutes and cannot cause a gradual month-long shift on new regulatory topics."
+        }
+      ],
+      "explanation": "When the model snapshot ID and prompt hash are pinned and infrastructure metrics are healthy, a gradual rise in escalations alongside shifting user topics indicates Input / Data Drift (the external world changed while the RAG corpus and golden evaluation set stayed frozen). Remediate by updating the RAG index with the new tax documents and sampling failing production traces (after PII redaction) for Tier 3 annotation to update the golden evaluation dataset.",
+      "key_takeaway": "When model IDs and prompts are pinned but accuracy degrades on new real-world topics, diagnose Input / Data Drift: refresh the RAG corpus and update the golden set.",
+      "doc_links": [
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-14",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "With zero application deployments or RAG index updates over the weekend, a customer service pipeline pointing to a generic `-latest` model alias experiences a sudden Monday morning step-change: average output tokens drop by 45%, `stop_reason: \"refusal\"` spikes by 4x across all query categories, and downstream JSON parsers begin failing. What is the root cause and fix?",
+      "options": [
+        {
+          "text": "Input / Data Drift caused by weekend customer traffic patterns; wait two full business weeks for user query topics to return to their normal weekday distribution.",
+          "correct": false,
+          "why_wrong": "A sudden simultaneous step-change in output length, refusals, and formatting across all categories points to a model change, not gradual user topic drift."
+        },
+        {
+          "text": "Model / Provider Drift from an unpinned alias: pin an immutable model ID in config, roll back to the prior pin, and gate upgrades on L2/L3 evals.",
+          "correct": true
+        },
+        {
+          "text": "Network packet loss truncating HTTP response bodies mid-flight; add a 5-attempt exponential backoff loop around the local JSON parser function.",
+          "correct": false,
+          "why_wrong": "HTTP responses are arriving complete with `stop_reason: \"refusal\"`, which is a model behavior shift, not a network transport error."
+        },
+        {
+          "text": "Monthly token quota exhaustion on the workspace; switch the real-time chat transport from streaming SSE to the asynchronous 24-hour Message Batches API.",
+          "correct": false,
+          "why_wrong": "Quota exhaustion returns HTTP 429, whereas the symptoms here are behavioral shifts in completed HTTP 200 responses."
+        }
+      ],
+      "explanation": "Pointing production traffic at a floating alias (rather than an immutable pinned model ID) exposes the application to Model / Provider Drift whenever the alias advances to a newer checkpoint with different verbosity, refusal thresholds, or formatting habits. Production systems must pin the exact model ID in configuration, keep the prior pinned ID for instant rollback, and run automated regression evals before promoting any new model pin.",
+      "key_takeaway": "Prevent sudden Model / Provider Drift by pinning exact immutable model IDs in config, keeping the prior pin for instant rollback, and gating upgrades on offline evals.",
+      "doc_links": [
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-15",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "A streaming code-assistant dashboard shows green HTTP 200 uptime (99.95%) and a healthy mean response time of 2.1 seconds, yet enterprise users complain that complex refactoring prompts frequently stall for 20+ seconds before the first character appears or stop mid-function. Which SLI additions will expose these two issues?",
+      "options": [
+        {
+          "text": "Track only average daily CPU utilization on the frontend web server and total monthly HTTP 404 Not Found counts across all static assets and stylesheets.",
+          "correct": false,
+          "why_wrong": "Frontend CPU and HTTP 404s have no visibility into LLM prefill latency (`ttft_ms`) or HTTP 200 output truncation (`stop_reason: \"max_tokens\"`)."
+        },
+        {
+          "text": "Replace the mean latency chart with `p10` minimum latency and log the character length of the API bearer token on every outbound HTTP request to the provider.",
+          "correct": false,
+          "why_wrong": "`p10` measures the fastest 10% of requests, hiding the slow tail even further, and logging API key metadata does nothing for latency or truncation."
+        },
+        {
+          "text": "Track `p95`/`p99` Time to First Token (`ttft_ms`) for prefill stalls, and alert on `stop_reason` rates (`max_tokens`, `model_context_window_exceeded`).",
+          "correct": true
+        },
+        {
+          "text": "Run a weekly offline script that checks whether the total number of input tokens billed across all enterprise tenants is an even or odd integer.",
+          "correct": false,
+          "why_wrong": "Aggregate token parity has no relationship to streaming responsiveness or truncated completions."
+        }
+      ],
+      "explanation": "Average latency masks heavy-tail delays, and HTTP 200 status codes mask truncated or refused generations. To monitor user-perceived responsiveness on streaming endpoints, track `p50`/`p95`/`p99` Time to First Token (`ttft_ms`) alongside end-to-end turn latency. To catch mid-function cutoffs that return HTTP 200, alert on the rate of non-`end_turn` stop reasons such as `max_tokens` and `model_context_window_exceeded`.",
+      "key_takeaway": "Monitor p95/p99 TTFT (`ttft_ms`) for streaming responsiveness and alert on `stop_reason` distributions (`max_tokens`, `refusal`) that HTTP 200 status checks miss.",
+      "doc_links": [
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-16",
+      "section": "Production Resilience Stack & Fault Isolation",
+      "guide_anchor": "resilience-stack",
+      "question": "An engineering team uses the official SDK (which retries transient errors 2 times by default, making up to 3 attempts) and wraps every `messages.create()` call in a custom 4-attempt retry loop with a fixed 1-second sleep. When the upstream API experiences a 30-second rate-limit brownout (`HTTP 429`), what happens and how should it be fixed?",
+      "options": [
+        {
+          "text": "Each request makes only 1 attempt because the custom wrapper overrides the SDK; fix it by increasing the custom retry loop from 4 to 15 attempts.",
+          "correct": false,
+          "why_wrong": "The custom loop wraps the SDK call, multiplying attempts rather than overriding them; increasing retries worsens the outage."
+        },
+        {
+          "text": "The fixed 1-second sleep automatically desynchronizes all workers; fix the remaining 429s by configuring the loop to retry HTTP 400 and 401 errors too.",
+          "correct": false,
+          "why_wrong": "Fixed-interval sleeps keep concurrent workers synchronized in lockstep waves, and HTTP 400/401 are terminal errors that must never be retried."
+        },
+        {
+          "text": "The SDK converts HTTP 429 responses into `stop_reason: \"refusal\"`; fix it by appending the refusal turn to `messages[]` and resending immediately.",
+          "correct": false,
+          "why_wrong": "HTTP 429 is a transport/rate-limit status code, not an HTTP 200 content refusal."
+        },
+        {
+          "text": "Stacked loops multiply each call into 12 synchronized attempts (3x4); use a single retry owner honoring `Retry-After` and full-jitter backoff.",
+          "correct": true
+        }
+      ],
+      "explanation": "When an application stacks its own 4-attempt loop around an SDK client that already performs 3 attempts (initial + 2 retries), a single logical call fans out into up to 12 upstream hits. Combined with a fixed 1-second sleep, all concurrent workers fire in synchronized waves (a thundering herd). Exactly ONE layer must own retries, honoring the `Retry-After` header first and otherwise using exponential backoff with full jitter.",
+      "key_takeaway": "Never stack custom retry loops on top of SDK default retries; let one layer own retries, honor `Retry-After`, and apply exponential backoff with full jitter.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-17",
+      "section": "Production Resilience Stack & Fault Isolation",
+      "guide_anchor": "resilience-stack",
+      "question": "An autonomous billing agent calls `charge_customer_card(customer_id=\"c_88\", amount_cents=4900)`. The payment gateway processes the charge, but a transient network blip causes the gateway to return `HTTP 504 Gateway Timeout` to the agent host. If Layer 1 retry logic automatically retries the tool call, how do you prevent charging the customer twice?",
+      "options": [
+        {
+          "text": "Pass a deterministic `idempotency_key` (hashed from `session_id`, turn index, tool name, and args) so the payment gateway deduplicates the retry.",
+          "correct": true
+        },
+        {
+          "text": "Set `temperature: 0` on the LLM request so the model generates a brand-new random UUID v4 transaction identifier on every subsequent retry attempt.",
+          "correct": false,
+          "why_wrong": "Generating a new random UUID on a retry tells the payment gateway that the retry is a brand-new charge, guaranteeing a double bill."
+        },
+        {
+          "text": "Add a system prompt instruction telling the model 'Please do not double-charge customers when an upstream HTTP 504 gateway timeout error occurs.'",
+          "correct": false,
+          "why_wrong": "Neither the model nor the caller knows whether the upstream server committed the transaction before the 504 timeout without an idempotency key."
+        },
+        {
+          "text": "Catch every HTTP 504 timeout in the tool wrapper and return `content: \"Payment succeeded\"` with `is_error: false` without ever retrying the call.",
+          "correct": false,
+          "why_wrong": "If the 504 occurred before the gateway reached the processor, swallowing the error leaves the order unpaid while reporting success."
+        }
+      ],
+      "explanation": "When a mutating tool call fails with an ambiguous transport error (`502`, `503`, `504`, or socket reset), the caller cannot know whether the side effect was committed server-side. Retrying safely requires passing a deterministic `idempotency_key` (e.g., a hash of `session_id + turn_index + tool_name + canonical_args`) that remains identical across retries of the same logical action, allowing the downstream service to return the original receipt without re-executing the charge.",
+      "key_takeaway": "Every mutating tool must require a deterministic `idempotency_key` across retries so upstream timeouts never cause duplicate side effects.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-18",
+      "section": "Production Resilience Stack & Fault Isolation",
+      "guide_anchor": "resilience-stack",
+      "question": "During a 12-minute regional outage of the primary LLM endpoint, every incoming web request sits inside a 45-second exponential backoff loop. Within two minutes, all 400 application worker threads are blocked waiting on sleeping timers, causing health checks and unrelated REST endpoints on the same server to fail. Which resilience control was missing, and where does it belong?",
+      "options": [
+        {
+          "text": "A Layer 1 prompt cache breakpoint inside the system prompt so the model responds directly from local web-server CPU memory without making network socket calls.",
+          "correct": false,
+          "why_wrong": "Prompt caching lives on the provider's inference servers, not in local application memory, and still requires a network call to the endpoint."
+        },
+        {
+          "text": "A Layer 2 Circuit Breaker at the service boundary (`Closed -> Open -> Half-Open`) that fails fast in <1 ms into a Layer 3 fallback when error rates spike.",
+          "correct": true
+        },
+        {
+          "text": "A longer 300-second HTTP socket timeout on the SDK client so all 400 worker threads wait patiently until the 12-minute regional outage resolves on its own.",
+          "correct": false,
+          "why_wrong": "Increasing socket timeouts holds worker threads open even longer, accelerating thread-pool and memory exhaustion."
+        },
+        {
+          "text": "A synchronous Tier 2 LLM-as-Judge call attached to every failed request to write a post-mortem explaining why the regional endpoint returned HTTP 503.",
+          "correct": false,
+          "why_wrong": "Calling another LLM during an outage adds more network load and thread blocking when the cause is already known to be HTTP 503."
+        }
+      ],
+      "explanation": "Layer 1 retries handle brief, isolated blips, but during a sustained upstream outage, holding threads open across multi-second backoff timers starves the application's worker pool (cascading failure). A Layer 2 Circuit Breaker sits at the service boundary across all workers: when the sliding-window failure rate breaches threshold, it trips `Open` and rejects calls in sub-millisecond time so the orchestration layer (Layer 3) can immediately route to a secondary region, fallback model tier, or degraded cache.",
+      "key_takeaway": "Use a Layer 2 Circuit Breaker (`Closed -> Open -> Half-Open`) at the service boundary to fail fast during sustained outages and prevent thread-pool starvation.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-19",
+      "section": "Production Resilience Stack & Fault Isolation",
+      "guide_anchor": "resilience-stack",
+      "question": "An orchestration layer configures a Layer 3 cross-tier fallback: if the primary frontier model endpoint trips its circuit breaker on `HTTP 529 Overloaded`, traffic automatically fails over to a smaller, faster model tier using the exact same complex 8-page system prompt and 25-tool schema. During a live failover event, JSON parse errors and wrong tool selections jump to 38%. Why did the fallback fail?",
+      "options": [
+        {
+          "text": "Circuit breakers are only permitted to route traffic directly to human queues and cannot trigger automated cross-region or cross-tier model fallbacks.",
+          "correct": false,
+          "why_wrong": "Circuit breakers routinely trigger Layer 3 automated model or region fallbacks before escalating to Layer 4 humans."
+        },
+        {
+          "text": "HTTP 529 is a terminal client authentication error, so failing over to another model tier with the same workspace API key is always rejected with 401.",
+          "correct": false,
+          "why_wrong": "HTTP 529 indicates upstream model capacity overload, not an authentication failure (which is 401)."
+        },
+        {
+          "text": "Prompts and 25-tool schemas aren't automatically portable across tiers; a cross-tier fallback needs its own prompt/schema validated on the eval suite.",
+          "correct": true
+        },
+        {
+          "text": "Smaller model tiers do not support structured JSON outputs or tool calling under any system prompt or schema configuration in production environments.",
+          "correct": false,
+          "why_wrong": "Fast/balanced tiers support strict tool calling and structured outputs, but they require scoped schemas and prompts tuned and evaluated for their capability profile."
+        }
+      ],
+      "explanation": "A smaller fallback model has a different capability ceiling and sensitivity to bulky prompts or 25-tool schemas than a frontier model. Wiring a cross-tier fallback without testing the fallback model on your golden evaluation set trades an availability outage for a silent quality/parsing outage. Either fail over to the same model snapshot in another region/platform (3a), or maintain a simplified, eval-verified fallback prompt/toolset for the smaller tier (3b).",
+      "key_takeaway": "Never assume a frontier model's complex prompt works unchanged on a smaller fallback tier; validate every cross-tier fallback configuration on your eval suite.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Claude API Errors Reference",
+          "url": "https://platform.claude.com/docs/en/api/errors"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-20",
+      "section": "Safe Rollouts: Shadow Mode vs. 4-Element A/B Testing",
+      "guide_anchor": "rollouts-ab",
+      "question": "A team wants to validate a newly engineered customer-support agent on live production traffic using Shadow Mode (dark launch) before exposing any customers to its responses. The agent has access to `get_order_status` (read) and `issue_instant_refund` (write). What is the mandatory configuration for the shadow pipeline, and what can shadow mode NOT measure?",
+      "options": [
+        {
+          "text": "Allow both read and write tools to execute live in shadow mode so latency is realistic, which also lets shadow mode measure 5-turn user satisfaction scores.",
+          "correct": false,
+          "why_wrong": "Executing `issue_instant_refund` in shadow mode will issue real duplicate refunds to customers, and shadow mode cannot measure multi-turn user reaction."
+        },
+        {
+          "text": "Mock/sandbox mutating tools (`issue_instant_refund`) in shadow mode; note it cannot measure multi-turn user reactions since users reply to the baseline.",
+          "correct": true
+        },
+        {
+          "text": "Display both the baseline response and the shadow response side-by-side to 100% of live customers and require them to click which reply they prefer.",
+          "correct": false,
+          "why_wrong": "Showing candidate outputs to live users is an interactive side-by-side eval, not shadow mode (where candidate outputs are hidden from users)."
+        },
+        {
+          "text": "Run the shadow pipeline synchronously in the critical request path before returning the baseline response so the user waits for both models to finish.",
+          "correct": false,
+          "why_wrong": "Shadow mode forks traffic asynchronously in the background so it never adds latency or failure risk to the user's critical path."
+        }
+      ],
+      "explanation": "In Shadow Mode (dark launch), live requests are forked asynchronously to the candidate pipeline while the user receives only the production baseline response. Two rules govern shadow mode: (1) all state-mutating tools (`issue_instant_refund`, sending emails, database writes) MUST be stubbed or blocked in a read-only sandbox to prevent duplicate real-world side effects, and (2) shadow mode can measure single-turn latency, crash rates, token cost, and judge scores, but it CANNOT measure multi-turn user reactions because the user responds to the baseline model's turn 1, not the shadow model's turn 1.",
+      "key_takeaway": "In Shadow Mode, always sandbox mutating tools and remember it cannot measure multi-turn user reactions—use a live Canary or A/B test for closed-loop interaction.",
+      "doc_links": [
+        {
+          "label": "Deploying to Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent"
+        },
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-21",
+      "section": "Safe Rollouts: Shadow Mode vs. 4-Element A/B Testing",
+      "guide_anchor": "rollouts-ab",
+      "question": "An engineering team launches a production A/B test to evaluate a new RAG reranker. Their load balancer randomly assigns 50% of individual HTTP requests to Control (A) and 50% to Treatment (B). On Day 2, after 300 requests, the team notices a p-value of 0.042 on answer helpfulness and immediately terminates the experiment to roll Treatment B out to 100% of users. Which two fatal experimental flaws occurred?",
+      "options": [
+        {
+          "text": "Per-request randomization mixed A and B inside the same multi-turn user session, and stopping early on Day 2 ('peeking') violated a pre-committed sample size.",
+          "correct": true
+        },
+        {
+          "text": "They used an even 50/50 traffic split instead of a 99/1 split, and they evaluated statistical significance using a p-value instead of inter-rater Cohen's kappa.",
+          "correct": false,
+          "why_wrong": "A 50/50 split maximizes statistical power, and p-values are standard for hypothesis tests when sample sizes are pre-committed."
+        },
+        {
+          "text": "They isolated only a single variable (the reranker) instead of changing the model tier, system prompt, and UI layout simultaneously in Treatment B.",
+          "correct": false,
+          "why_wrong": "Isolating a single variable is a mandatory best practice; bundling multiple changes destroys causal attribution."
+        },
+        {
+          "text": "They executed the A/B experiment on live customer traffic instead of running it exclusively against mocked Level 1 deterministic unit test fixtures.",
+          "correct": false,
+          "why_wrong": "A/B tests by definition run on live traffic after offline and shadow gates pass."
+        }
+      ],
+      "explanation": "A valid production A/B test requires all 4 mandatory elements: (1) a falsifiable hypothesis with sticky user/session-level randomization (randomizing per HTTP request mixes A and B across turns of the same conversation, breaking coherence and prompt caching), (2) single-variable isolation, (3) primary outcome metric paired with guardrail metrics (latency, cost, refusals), and (4) a pre-committed sample size and stopping rule (stopping the first moment p < 0.05 is p-hacking/peeking and causes >25% false-positive rates).",
+      "key_takeaway": "Always randomize A/B tests stickily by user or session (never per HTTP turn) and run to your pre-committed sample size without early peeking.",
+      "doc_links": [
+        {
+          "label": "Deploying to Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent"
+        },
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-22",
+      "section": "Safe Rollouts: Shadow Mode vs. 4-Element A/B Testing",
+      "guide_anchor": "rollouts-ab",
+      "question": "In a well-designed production A/B experiment comparing two agent prompting strategies, Treatment B increases the primary metric (Verified Ticket Resolution Rate) from 72.0% to 75.5% (statistically significant at the pre-committed sample size). Before promoting Treatment B to 100% of production, what must the team verify against their guardrail metrics?",
+      "options": [
+        {
+          "text": "Verify that Treatment B generated at least 3x more output tokens per turn than Control A so customers feel they received a more thorough response.",
+          "correct": false,
+          "why_wrong": "Higher token consumption is a cost and latency liability, not a goal; cost per resolved task is a guardrail ceiling."
+        },
+        {
+          "text": "Verify that the experiment also upgraded the underlying model family and redesigned the chat UI at the same time so all improvements ship together.",
+          "correct": false,
+          "why_wrong": "Changing model, prompt, and UI together violates single-variable isolation and makes it impossible to know what caused the shift."
+        },
+        {
+          "text": "Verify that guardrail metrics (`p95` latency, cost per resolved ticket, refusal rate, and error rate) did not breach their non-inferiority bounds.",
+          "correct": true
+        },
+        {
+          "text": "Nothing else needs to be checked; whenever the primary metric achieves a statistically significant lift, secondary cost and latency metrics can be ignored.",
+          "correct": false,
+          "why_wrong": "A prompt that lifts resolution by 3.5% while increasing `p95` latency to 40s or multiplying token cost by 8x can break SLAs and bankrupt unit economics."
+        }
+      ],
+      "explanation": "Element 3 of the 4-Element A/B Testing framework pairs the primary outcome metric with explicit Guardrail Metrics (non-inferiority bounds on `p95`/`p99` latency, token cost per resolved task, refusal rate, and tool error rate). A treatment that improves accuracy by 3% by spinning in 15-turn loops that triple latency and 6x token spend fails the guardrail check and must be refined or tier-routed before rollout.",
+      "key_takeaway": "Always pair your primary A/B test metric with explicit guardrail metrics (p95 latency, cost per resolved task, refusal rate, error rate).",
+      "doc_links": [
+        {
+          "label": "Deploying to Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent"
+        },
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-23",
+      "section": "Token Economics, Heavy-Tail Sizing & 4-Step ROI",
+      "guide_anchor": "finops-roi",
+      "question": "During an initial small-scale prototype evaluation, an internal coding assistant exhibits a median (`p50`) consumption of 4,200 tokens ($0.02) per session. The operations team multiplies $0.02 by 150,000 projected monthly sessions and budgets $3,000/month. In production, session volume matches the forecast, yet the actual bill exceeds $24,000. Why did the median-based budget forecast fail?",
+      "options": [
+        {
+          "text": "Enabling Server-Sent Events (SSE) streaming in production multiplied per-token billing rates by 7x compared to synchronous pilot API calls in staging.",
+          "correct": false,
+          "why_wrong": "Streaming changes only delivery transport and perceived TTFT; it has zero effect on per-token pricing."
+        },
+        {
+          "text": "Prompt caching reads are billed at 10x the standard base input token price whenever workspace cache hit rates exceed 80% across multi-turn sessions.",
+          "correct": false,
+          "why_wrong": "Prompt cache reads cost roughly 0.1x (90% discount) of base input price, reducing spend rather than multiplying it."
+        },
+        {
+          "text": "Pinning an immutable model snapshot ID in production carries a 700% per-token surcharge compared to calling a floating `-latest` model alias in dev.",
+          "correct": false,
+          "why_wrong": "Pinned model snapshot IDs have the exact same token pricing as aliases."
+        },
+        {
+          "text": "Token usage is heavy-tailed: `p95`/`p99` multi-turn loops (with O(N^2) resent history, large tool outputs, and retries) dominate total spend over `p50`.",
+          "correct": true
+        }
+      ],
+      "explanation": "Production LLM token consumption is heavily right-skewed (Pareto/log-normal). While the `p50` median session may be a short 2-turn exchange (4,000 tokens), the `p95`–`p99` tail involves 15–25 turn agent loops (where conversation history is re-sent and billed on every turn, growing quadratically as O(N^2)), large tool results, extended thinking, and retries—consuming 150,000 to 500,000+ tokens per session. Always budget using the full distribution mean or `p95`-weighted buckets, and enforce `max_turns` + tool payload pruning.",
+      "key_takeaway": "Never budget AI spend by multiplying the p50 median by volume; size for the p95/p99 heavy tail and O(N^2) multi-turn history growth.",
+      "doc_links": [
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-24",
+      "section": "Token Economics, Heavy-Tail Sizing & 4-Step ROI",
+      "guide_anchor": "finops-roi",
+      "question": "An architecture team replaces a single-turn RAG Q&A endpoint with an autonomous multi-agent system (1 Coordinator + 4 Parallel Subagents + 1 Verifier) for every incoming user query. Based on production FinOps benchmarks, what order-of-magnitude token multiplier should they expect, and which combination of levers best bends that cost curve down?",
+      "options": [
+        {
+          "text": "Expect ~15x token spend; bend it down via tiered model routing (Planner -> Executor -> Worker), prompt caching, tool pruning, and Message Batches (50% off).",
+          "correct": true
+        },
+        {
+          "text": "Expect 0.25x (75% lower) token consumption because splitting a prompt across 4 parallel subagents automatically divides input token billing by four.",
+          "correct": false,
+          "why_wrong": "Spawning 4 subagents duplicates system prompts, tool schemas, and multi-hop tool loops across 4 separate contexts, multiplying total tokens by ~15x vs. single-turn chat."
+        },
+        {
+          "text": "Expect ~15x higher token consumption; mitigate by setting `effort: \"max\"` on all 4 subagents and placing dynamic per-request timestamps before `cache_control`.",
+          "correct": false,
+          "why_wrong": "`effort: \"max\"` maximizes expensive thinking tokens (billed as output), and placing dynamic timestamps before the breakpoint causes a 0% cache hit rate."
+        },
+        {
+          "text": "Expect ~1.05x token consumption; mitigate by replacing the asynchronous Message Batches API with synchronous serial loops on the largest frontier model tier.",
+          "correct": false,
+          "why_wrong": "Multi-agent fan-out multiplies tokens by ~15x (not 1.05x), and synchronous frontier calls forfeit the 50% batch discount and tier savings."
+        }
+      ],
+      "explanation": "Autonomous multi-agent architectures consume roughly ~15x more tokens than single-turn chat interactions due to parallel subagent initialization (system prompts + tool schemas), multi-turn tool/thinking loops inside each worker, and coordinator synthesis passes. Engineers bend this curve via: (1) Planner -> Executor -> Worker model tier routing (50–80% savings), (2) Prompt caching on static prefixes (~90% read discount), (3) Message Batches for offline/async workloads (50% discount), (4) Tool output pruning / CodeMode, and (5) Low effort on simple extraction hops.",
+      "key_takeaway": "Autonomous multi-agent workflows consume ~15x more tokens than single-turn chat; control spend with tiered model routing, prompt caching, tool pruning, and Message Batches.",
+      "doc_links": [
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Claude Message Batches",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-25",
+      "section": "Token Economics, Heavy-Tail Sizing & 4-Step ROI",
+      "guide_anchor": "finops-roi",
+      "question": "A legal operations department processes 10,000 vendor contracts/month. Manually reviewing a contract takes 0.5 hours at $100/hr ($50/contract = $500,000/month baseline). An AI workflow automates 80% of contracts (8,000 contracts), saving 100% of initial drafting time ($400,000 gross savings), with total AI token + infra + engineering OpEx of $25,000/month. However, compliance rules require a paralegal ($80/hr) to spend 15 minutes (0.25 hr) auditing every AI-processed contract, and on 1,000 contracts/month a senior attorney ($200/hr) must spend 30 minutes (0.5 hr) fixing AI errors. What is the true Net Monthly Benefit using the 4-Step Enterprise ROI model?",
+      "options": [
+        {
+          "text": "$400,000/month, because Gross Automation Value (8,000 automated contracts x $50 baseline cost) represents the direct labor capacity unlocked by the AI model.",
+          "correct": false,
+          "why_wrong": "Stopping at Step 2 (Gross Automation Value) ignores both Step 3 (AI OpEx) and Step 4 (Mandatory Human-Review & Exception Tax)."
+        },
+        {
+          "text": "$115,000/month ($400k Gross Savings - $25k AI OpEx - $160k Paralegal Audit Tax - $100k Attorney Rework Tax).",
+          "correct": true
+        },
+        {
+          "text": "$375,000/month ($400,000 gross savings minus $25,000 AI token and infrastructure operating cost), since paralegal and attorney salaries are fixed sunk costs.",
+          "correct": false,
+          "why_wrong": "Omitting Step 4 (Human-Review & Exception Tax) is the #1 reason enterprise AI business cases fail; audit and rework consume real labor capacity."
+        },
+        {
+          "text": "-$125,000/month, because the $500,000 baseline human cost in Step 1 must be subtracted directly from the $375,000 net automation value at the end.",
+          "correct": false,
+          "why_wrong": "Step 1 ($500,000) is the reference baseline used to compute Step 2 ($400,000 gross savings); you subtract Step 3 ($25k) and Step 4 ($260k) from Step 2."
+        }
+      ],
+      "explanation": "Follow the 4-Step Enterprise ROI formula: Step 1 (Baseline Cost) = 10,000 x 0.5 hr x $100 = $500,000. Step 2 (Gross Automation Value) = 80% x $500,000 = $400,000. Step 3 (Total AI OpEx) = $25,000. Step 4 (Mandatory Human-Review & Exception Tax) = Paralegal Audit (8,000 x 0.25 hr x $80 = $160,000) + Attorney Rework (1,000 x 0.5 hr x $200 = $100,000) = $260,000. Net Monthly Benefit = $400,000 - $25,000 - $260,000 = $115,000/month.",
+      "key_takeaway": "Net Enterprise ROI = Step 2 (Gross Savings) - Step 3 (Tail-Adjusted AI OpEx) - Step 4 (Human Audit + Error-Rework Labor Tax).",
+      "doc_links": [
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-26",
+      "section": "Token Economics, Heavy-Tail Sizing & 4-Step ROI",
+      "guide_anchor": "finops-roi",
+      "question": "A mortgage lender proposes an AI system that ingests a 120-page borrower tax-and-title packet, cross-verifies 45 underwriting rules across three external credit bureaus, and renders a final legally binding loan approval in under 500 milliseconds inside the borrower's checkout modal with zero human underwriting review. Under the 3-Tier Architectural Feasibility framework, what verdict and recommendation should you deliver?",
+      "options": [
+        {
+          "text": "Feasible as Scoped: enable prompt caching and streaming SSE on the smallest model tier so all 120 pages and 3 external API calls complete in 400 milliseconds.",
+          "correct": false,
+          "why_wrong": "Prefilling 120 pages, calling 3 external bureaus, and verifying 45 underwriting rules cannot physically complete in <500 ms, and unreviewed binding credit decisions violate regulatory governance."
+        },
+        {
+          "text": "Not Feasible under any architecture: language models cannot read tax documents or call external APIs, so the entire mortgage underwriting process must remain 100% paper-based.",
+          "correct": false,
+          "why_wrong": "The core document extraction and rule-checking capability is well within model limits once the unrealistic <500 ms synchronous SLA and zero-oversight constraint are re-scoped."
+        },
+        {
+          "text": "Feasible with Constraints: re-scope from a <500 ms sync modal to an async workflow that drafts the underwriting dossier and gates binding approval on human review.",
+          "correct": true
+        },
+        {
+          "text": "Feasible as Scoped: use `pass@10` by running 10 parallel frontier models at `effort: \"max\"` to guarantee sub-500 ms latency and 100% zero-defect compliance.",
+          "correct": false,
+          "why_wrong": "Running 10 parallel frontier models at `effort: \"max\"` increases latency and 10x's cost without solving external API latency or regulatory sign-off."
+        }
+      ],
+      "explanation": "The core capability (extracting structured data from a 120-page packet and checking 45 underwriting criteria) is solvable, but two operational constraints conflict with physics and governance: (1) a <500 ms synchronous SLA for 120 pages + 3 external bureau RPCs, and (2) 100% autonomous binding credit sign-off without human review. Classifying this as 'Feasible with Constraints' and re-scoping to an asynchronous pipeline with confidence-gated human underwriter review makes the project viable.",
+      "key_takeaway": "Use 'Feasible with Constraints' when the core AI task works but latency or autonomy demands must be re-scoped to async processing + human-in-the-loop gates.",
+      "doc_links": [
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-27",
+      "section": "Token Economics, Heavy-Tail Sizing & 4-Step ROI",
+      "guide_anchor": "finops-roi",
+      "question": "A robotics company asks your team to use a cloud-hosted frontier LLM API in the closed-loop motor controller of an autonomous warehouse forklift, requiring a hard real-time torque adjustment decision every 4 milliseconds with 100.000% deterministic reproducibility. Which architectural readiness classification applies?",
+      "options": [
+        {
+          "text": "Feasible as Scoped: set `temperature: 0` and `cache_control: {\"type\": \"ephemeral\"}` so the cloud API responds deterministically in under 4 milliseconds.",
+          "correct": false,
+          "why_wrong": "Network round-trip latency to a cloud API alone exceeds 4 ms by an order of magnitude, and LLM inference is neither hard real-time nor 100% deterministic."
+        },
+        {
+          "text": "Feasible with Constraints: batch the 4-millisecond forklift motor torque adjustments into the overnight Message Batches API (24-hour SLA) to get a 50% cost discount.",
+          "correct": false,
+          "why_wrong": "You cannot defer real-time physical motor torque adjustments for a moving forklift into a 24-hour asynchronous batch queue."
+        },
+        {
+          "text": "Feasible as Scoped: wrap the cloud LLM call in a 5-attempt exponential backoff with full jitter loop whenever a 4-millisecond motor deadline is missed.",
+          "correct": false,
+          "why_wrong": "Exponential backoff sleeps for hundreds of milliseconds to seconds, which cannot satisfy a 4-millisecond hard real-time control loop."
+        },
+        {
+          "text": "Not Feasible: <4 ms hard real-time control loops and 100% determinism violate cloud LLM physics; use classical control theory or edge ML.",
+          "correct": true
+        }
+      ],
+      "explanation": "When a proposed use case conflicts fundamentally with physical latency bounds (e.g., <4 ms hard real-time control loops over a cloud API) or demands 100% zero-defect determinism without human or code verification on the critical path, the verdict is Not Feasible. Architects must decline putting an LLM in the critical control loop and recommend deterministic control algorithms or classical edge models instead.",
+      "key_takeaway": "Render a 'Not Feasible' verdict when hard real-time physics (<10ms loops) or unverified zero-defect determinism conflict with probabilistic LLM inference.",
+      "doc_links": [
+        {
+          "label": "Optimizing Cost & Intelligence",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-28",
+      "section": "Failure Modes, Glossary & Self-Assessment",
+      "guide_anchor": "failure-modes",
+      "question": "During a database maintenance window, the `query_customer_subscriptions` tool catches a `ConnectionRefusedError` and returns an empty list `[]` so the agent loop does not crash. Consequently, the customer support agent confidently informs 400 customers: 'I checked your account and confirmed you have no active subscriptions.' How do you remediate this failure mode?",
+      "options": [
+        {
+          "text": "Stop swallowing exceptions as `[]`; return a `tool_result` with `is_error: true` and an error message so the agent can retry or escalate.",
+          "correct": true
+        },
+        {
+          "text": "Add a line to the system prompt saying 'Never tell a customer they have no active subscriptions, even when the database query returns an empty list.'",
+          "correct": false,
+          "why_wrong": "Forbidding the agent from ever reporting zero subscriptions breaks legitimate responses for customers who genuinely have no subscriptions."
+        },
+        {
+          "text": "Upgrade the model tier to Opus and set `effort: \"high\"` so the model can deduce from the empty array `[]` that the database is undergoing maintenance.",
+          "correct": false,
+          "why_wrong": "An empty array `[]` is indistinguishable from a valid zero-row query result regardless of model size or reasoning effort."
+        },
+        {
+          "text": "Configure a Tier 2 LLM-as-Judge to rewrite every empty array `[]` into a random sample of three mock subscriptions before the assistant reads the tool result.",
+          "correct": false,
+          "why_wrong": "Fabricating mock subscriptions in production causes severe hallucination and data corruption."
+        }
+      ],
+      "explanation": "Returning `[]` or `\"\"` when a tool fails conflates 'the query succeeded and found zero records' with 'the database is unreachable.' The model trusts the tool observation as ground truth and confidently states that no records exist. Always propagate tool failures explicitly using `is_error: true` with a concise diagnostic message (and verify this behavior in Level 3 fault-injection tests).",
+      "key_takeaway": "Never swallow tool exceptions as empty strings or `[]`; return `is_error: true` so the agent distinguishes system outages from zero-record query results.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-29",
+      "section": "Failure Modes, Glossary & Self-Assessment",
+      "guide_anchor": "failure-modes",
+      "question": "A customer support agent has a 9,000-token system prompt containing static policy manuals and a `cache_control: {\"type\": \"ephemeral\"}` breakpoint at the end of the system block. However, OpenTelemetry spans show `cache_read_input_tokens = 0` on 100% of production requests, and input token spend is 6x higher than modeled. Inspection shows line 1 of the system prompt is `f\"Current UTC timestamp: {datetime.now().isoformat()} | User ID: {user_id}\"`. What is the fix?",
+      "options": [
+        {
+          "text": "Change the cache TTL from 5 minutes to 1 hour (`\"ttl\": \"1h\"`) so the dynamic timestamp prefix stays cached in server memory twelve times longer across turns.",
+          "correct": false,
+          "why_wrong": "Because every request has a unique timestamp at byte 0, the prefix never matches; a 1-hour TTL only doubles the cache write penalty (2x vs. 1.25x) with 0 reads."
+        },
+        {
+          "text": "Randomly toggle `tool_choice` between `\"auto\"` and `\"any\"` on alternating turns to force the upstream prompt cache index to refresh its prefix table.",
+          "correct": false,
+          "why_wrong": "Changing `tool_choice` or tool definitions invalidates the entire prompt cache hierarchy (`tools -> system -> messages`)."
+        },
+        {
+          "text": "Keep the 9,000-token static policy manual before the `cache_control` breakpoint, and move dynamic values (`timestamp`, `user_id`) after the breakpoint.",
+          "correct": true
+        },
+        {
+          "text": "Split the 9,000-token system prompt across 12 separate `cache_control` breakpoints inside the same API request so at least 11 of the static blocks hit.",
+          "correct": false,
+          "why_wrong": "A request supports at most 4 cache breakpoints, and placing dynamic text at the start still invalidates every subsequent breakpoint."
+        }
+      ],
+      "explanation": "Prompt caching requires an exact byte-for-byte prefix match in the hierarchy `tools -> system -> messages`. Injecting a per-request timestamp or `user_id` at the start of the `system` prompt alters the prefix on every single call, causing 100% cache writes (at a 1.25x or 2x write premium) and 0% cache reads. Place all static instructions and schemas before the `cache_control` breakpoint and append dynamic per-request variables after the breakpoint.",
+      "key_takeaway": "Keep everything before a `cache_control` breakpoint 100% static and byte-identical; put dynamic timestamps, user IDs, and ticket data after the breakpoint.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-30",
+      "section": "Failure Modes, Glossary & Self-Assessment",
+      "guide_anchor": "failure-modes",
+      "question": "A compliance team deploys an AI document-classification assistant that flags 100% of low-confidence outputs for manual audit. Because the prompt was tuned to be overly cautious, the assistant flags 85% of all incoming documents, and human reviewers spend 14 minutes auditing and correcting each flagged document (compared to 12 minutes to process a document manually from scratch before AI). What FinOps failure mode has occurred, and how should it be resolved?",
+      "options": [
+        {
+          "text": "The Step 1 Baseline Task Cost was calculated too high; lower the hourly accounting rate of the human compliance reviewers in the finance spreadsheet so the net ROI formula turns positive.",
+          "correct": false,
+          "why_wrong": "Manipulating spreadsheet labor rates does not change the operational reality that reviewers are spending 14 minutes per flagged doc vs. 12 minutes manually."
+        },
+        {
+          "text": "Disable all human compliance review immediately and let the low-precision assistant auto-submit 100% of regulatory filings without improving its classification accuracy.",
+          "correct": false,
+          "why_wrong": "Removing human review on a low-precision compliance workflow causes regulatory violations and costly downstream error rework."
+        },
+        {
+          "text": "Switch the classification assistant from the Message Batches API to synchronous streaming so human reviewers receive the flagged documents 500 milliseconds sooner.",
+          "correct": false,
+          "why_wrong": "Streaming latency does not reduce the 14 minutes of manual audit labor per flagged document and forfeits the 50% batch discount."
+        },
+        {
+          "text": "Step 4 Human-Review Tax exceeds Step 2 Gross Savings (negative ROI); add Tier 1 pre-checks and calibrate confidence thresholds so humans review only ambiguous cases.",
+          "correct": true
+        }
+      ],
+      "explanation": "When an AI system has a high false-flag or error rate and human review takes longer (14 min) than manual baseline processing (12 min), the Step 4 Mandatory Human-Review & Exception Tax wipes out Step 2 Gross Savings and produces a negative net ROI. To restore positive unit economics, improve precision (`pass^k`), offload structural checks to $0 Tier 1 deterministic validators, and calibrate confidence routing against the golden set so humans only review the small slice where the model is genuinely uncertain.",
+      "key_takeaway": "When human audit + rework time approaches manual baseline time, Step 4 Review Tax turns net ROI negative; use Tier 1 gates and calibrated confidence routing to shrink review volume.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-31",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "feedback-flywheel",
+      "question": "A support agent keeps mis-routing refund requests that mention store credit. Users flag it with thumbs-down, an engineer patches the prompt, and two releases later the same failure returns. Which change stops the recurrence?",
+      "options": [
+        {
+          "text": "Raise the sampling rate of the async judge from 5% to 25% of live traffic",
+          "correct": false,
+          "why_wrong": "More sampling finds failures sooner but does not stop a fixed failure from silently coming back."
+        },
+        {
+          "text": "Reproduce the failure from its trace and add it to the regression suite that gates every release",
+          "correct": true
+        },
+        {
+          "text": "Add a sentence to the system prompt that lists store-credit refunds as a known edge case to handle",
+          "correct": false,
+          "why_wrong": "That repeats the original patch; nothing checks the behavior when later prompt or model changes ship."
+        },
+        {
+          "text": "Move the agent from a pinned model snapshot to the provider's latest alias to pick up fixes sooner",
+          "correct": false,
+          "why_wrong": "A floating alias introduces model drift and removes the stable baseline needed to verify a fix."
+        }
+      ],
+      "explanation": "The feedback flywheel turns each production failure into a permanent eval case: capture the signal with its trace_id, triage by root cause, reproduce offline with recorded tool fixtures, codify the expected outcome, then gate releases on the new case plus the existing suite. A prompt patch without a regression case can be undone by any later change.",
+      "key_takeaway": "Every fixed production failure should become a regression case that gates future releases.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Demystifying evals for AI agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        },
+        {
+          "label": "ADK: Evaluate agents",
+          "url": "https://adk.dev/evaluate/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-32",
+      "section": "Managed Gen AI Evaluation, Autoraters & Agent Simulation",
+      "guide_anchor": "managed-eval-autoraters",
+      "question": "A financial services agent passes 97% of pre-release evaluation cases when scored solely on `FINAL_RESPONSE_QUALITY`, yet a compliance audit reveals that in 14% of approved refunds the agent skipped calling `check_aml_watchlist` and `verify_refund_policy` before executing `issue_refund`. What evaluation blind spot occurred, and which Gen AI Evaluation configuration closes it?",
+      "options": [
+        {
+          "text": "Raise the `FINAL_RESPONSE_QUALITY` pass threshold from 0.90 to 0.99 and switch the autorater temperature from 0.0 to 0.7.",
+          "correct": false,
+          "why_wrong": "Outcome-only text judges inspect the politeness and clarity of the final message, not whether intermediate compliance tools were invoked first."
+        },
+        {
+          "text": "Outcome-only 'right answer, wrong path' blind spot; add `trajectory_in_order_match` plus `HALLUCINATION` and forbidden-tool checks.",
+          "correct": true
+        },
+        {
+          "text": "Replace all evaluation metrics with `BLEU` and `ROUGE-L` lexical n-gram overlap against a single reference paragraph written by compliance.",
+          "correct": false,
+          "why_wrong": "Lexical n-gram overlap on final prose has zero visibility into tool-call trajectories and penalizes valid paraphrasing."
+        },
+        {
+          "text": "Assert `trajectory_exact_match` across every read-only search and formatting helper so any extra lookup fails the build.",
+          "correct": false,
+          "why_wrong": "`trajectory_exact_match` is overly brittle when optional read-only lookups vary; `trajectory_in_order_match` enforces mandatory safety ordering without penalizing valid extra reads."
+        }
+      ],
+      "explanation": "Outcome-only evaluation suffers from the 'right answer, wrong path' blind spot: an agent can generate a convincing refund confirmation while skipping mandatory compliance checks. Pairing outcome autoraters (`FINAL_RESPONSE_QUALITY`, `HALLUCINATION`) with process/trajectory evaluation—specifically `trajectory_in_order_match` to enforce chronological ordering (`verify_identity -> check_aml_watchlist -> verify_refund_policy -> issue_refund`) and a Tier 1 check for forbidden tools—catches skipped safety gates without breaking when optional read-only lookups occur.",
+      "key_takeaway": "Eliminate 'right answer, wrong path' blind spots by pairing outcome autoraters with `trajectory_in_order_match` for required safety milestones.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Evaluate Agents",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/agent-evaluation"
+        },
+        {
+          "label": "Gen AI Evaluation Service Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/evaluation-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-33",
+      "section": "Managed Gen AI Evaluation, Autoraters & Agent Simulation",
+      "guide_anchor": "managed-eval-autoraters",
+      "question": "An engineering team is preparing to launch a brand-new airline rebooking agent. Because the service has not launched yet, they have zero historical chat logs, and security policy prohibits running load or fault-injection tests against the live passenger reservation mainframe. How should they evaluate multi-turn edge cases and HTTP `503` reservation API brownouts before launch?",
+      "options": [
+        {
+          "text": "Deploy directly to 100% of production traffic for 48 hours with Online Evaluation Monitors enabled so real passengers generate the initial failure dataset.",
+          "correct": false,
+          "why_wrong": "Using live customers as an untested fault-injection harness violates progressive delivery and risks corrupting real reservations."
+        },
+        {
+          "text": "Run 2-Step Agent Simulation from an Agent Registry snapshot paired with Environment Simulation to mock tools and inject `503` faults.",
+          "correct": true
+        },
+        {
+          "text": "Run Shadow Mode on an unrelated FAQ chatbot's traffic while pointing the rebooking agent's write tools at the live passenger mainframe.",
+          "correct": false,
+          "why_wrong": "Shadow mode cannot simulate multi-turn interactive dialogue on an unlaunched product, and live write tools must never execute in shadow mode."
+        },
+        {
+          "text": "Use the Zero-Shot Prompt Optimizer alone as a release gate since it mathematically guarantees 100% tool-error recovery without running trajectories.",
+          "correct": false,
+          "why_wrong": "Zero-Shot Optimizer improves static prompt phrasing without executing multi-turn trajectories or testing `503` fault handling."
+        }
+      ],
+      "explanation": "Gen AI Evaluation Service provides 2-Step Agent Simulation for cold-start multi-turn testing: Step 1 generates diverse synthetic user scenarios and adversarial personas from an Agent Registry snapshot (prompts, tools, policies), and Step 2 runs multi-turn conversations between an LLM User Simulator and the candidate agent. Pairing this with Environment Simulation replaces live external backends with realistic mocked state and deterministic fault injection (`503`, `429`, malformed JSON).",
+      "key_takeaway": "When historical logs are missing or live backends are off-limits, combine 2-Step Agent Simulation with Environment Simulation fault injection.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Evaluate Agents",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/agent-evaluation"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-34",
+      "section": "Managed Gen AI Evaluation, Autoraters & Agent Simulation",
+      "guide_anchor": "managed-eval-autoraters",
+      "question": "You need to evaluate an enterprise research agent across 800 diverse prompts—ranging from SQL debugging to executive memo drafting—where writing a static reference answer for every prompt is impractical, yet a generic 1–5 holistic score fails to catch missing prompt-specific constraints. Which Gen AI Evaluation Service autorater paradigm fits best?",
+      "options": [
+        {
+          "text": "Adaptive Rubrics, which dynamically generate prompt-specific binary pass/fail tests per query and aggregate weighted verdicts.",
+          "correct": true
+        },
+        {
+          "text": "Computation-based `exact_match` against an empty reference string so every non-empty completion receives a deterministic binary score.",
+          "correct": false,
+          "why_wrong": "`exact_match` cannot grade open-ended synthesis without a single canonical string, and comparing against an empty string fails valid answers."
+        },
+        {
+          "text": "Static Rubrics configured with a single 1–100 integer prompt ('Rate overall helpfulness from 1 to 100') shared across all 800 prompts.",
+          "correct": false,
+          "why_wrong": "Unanchored 1–100 holistic scales suffer from severe mid-scale clustering and miss query-specific constraints."
+        },
+        {
+          "text": "Self-grading inside the research agent's own system prompt by asking `gemini-4-argon` to append `<self_score>5/5</self_score>` at the end of every memo.",
+          "correct": false,
+          "why_wrong": "In-session self-grading suffers from self-preference bias and shares the exact same blind spots that produced the response."
+        }
+      ],
+      "explanation": "Adaptive Rubrics (`FINAL_RESPONSE_QUALITY`, `GENERAL_QUALITY`, `INSTRUCTION_FOLLOWING`) solve heterogeneous, reference-free evaluation by dynamically generating tailored binary pass/fail rubric items for each individual prompt (for example, checking SQL syntax on query #1 and executive tone + bullet limits on query #2) and aggregating the binary verdicts transparently.",
+      "key_takeaway": "Use Adaptive Rubrics for reference-free open-ended evaluation across diverse prompts where each query implies distinct pass/fail constraints.",
+      "doc_links": [
+        {
+          "label": "Gen AI Evaluation Service Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/evaluation-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-35",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "In Agent Registry's Observability dashboard, your domain Q&A agent shows clean HTTP 200 status codes and sub-second latency, but `HALLUCINATION` online monitor alerts jumped from 2% to 19% after 12 new MCP tools were added. The `Tools` tab reveals a surge in 'no-tool interactions' on questions that require database lookups. What is the root cause and fix?",
+      "options": [
+        {
+          "text": "Regional compute pool exhaustion (`Region temporarily at capacity`); file a Gemini TPM quota increase ticket and add 5 SDK retries.",
+          "correct": false,
+          "why_wrong": "HTTP 200 responses are succeeding in under a second; there is no capacity error or HTTP 429 rate limiting."
+        },
+        {
+          "text": "Ambiguous or overlapping tool schemas caused the model to skip tools and guess; sharpen tool docstrings and enforce `trajectory_in_order_match`.",
+          "correct": true
+        },
+        {
+          "text": "Enable `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true` on public Cloud Logging buckets without SDP templates so users can inspect raw prompts.",
+          "correct": false,
+          "why_wrong": "Logging unredacted user prompts to broad buckets leaks PII and does nothing to fix tool-selection confusion."
+        },
+        {
+          "text": "Disable Dual-Attribution Audit Logging (`is_agentic=true`) so the SPIFFE agent identity stops conflicting with the human user principal.",
+          "correct": false,
+          "why_wrong": "Dual-attribution audit logs record actor provenance for security forensics and do not prevent the LLM from emitting tool calls."
+        }
+      ],
+      "explanation": "In Agent Registry Observability, a spike in 'no-tool interactions' paired with rising `HALLUCINATION` scores indicates Ignored Tools: adding 12 overlapping or poorly described MCP schemas confused tool selection, causing the model to answer from parametric memory instead of querying the database. Remediate by sharpening tool descriptions/boundaries (or scoping tools per sub-agent) and gating releases on `trajectory_in_order_match`.",
+      "key_takeaway": "High 'no-tool interactions' + rising hallucinations diagnose Ignored Tools from ambiguous schemas; sharpen tool descriptions and gate trajectories.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-36",
+      "section": "LM Feedback Flywheel, Failure Clustering & Agent Optimizer",
+      "guide_anchor": "feedback-flywheel",
+      "question": "Your team wants to migrate a complex 3,800-token orchestrator prompt from a frontier model to `gemini-3.8-flash` to cut inference spend by 65%, while also fixing two recurring error patterns discovered in last month's SDP-scrubbed production traces. Manual prompt edits keep breaking older behaviors. Which workflow solves this systematically?",
+      "options": [
+        {
+          "text": "Run Zero-Shot Optimizer with zero examples and deploy directly to 100% of production without a held-out validation dataset.",
+          "correct": false,
+          "why_wrong": "Zero-Shot Optimizer does not use scored trace data, target-model evaluation loops, or failure clusters, and skipping a held-out split risks regressions."
+        },
+        {
+          "text": "Append every single failing user transcript verbatim into the static system prompt until the prompt exceeds 150,000 tokens.",
+          "correct": false,
+          "why_wrong": "Stuffing raw transcripts bloats latency and cost, causes context rot, and overfits to specific historical phrasing."
+        },
+        {
+          "text": "Group traces via Failure Cluster Analysis, reserve a held-out split, and run Data-Driven Optimizer (`instruction_and_demo`) targeting `gemini-3.8-flash`.",
+          "correct": true
+        },
+        {
+          "text": "Point the production traffic router at a floating `-latest` alias and disable `agents-cli eval run` so CI pipelines stop failing on prompt diffs.",
+          "correct": false,
+          "why_wrong": "Floating aliases introduce Model Drift, and disabling CI evaluation gates guarantees silent regressions reach users."
+        }
+      ],
+      "explanation": "Data-Driven Prompt Optimizer (`Agent Optimizer`) automates model migrations and cluster remediation by running an iterative closed loop (`evaluate -> analyze failure clusters -> mutate instructions/demos -> re-evaluate on target model`) across `instruction`, `demonstration` (populating Example Store), or `instruction_and_demo` modes. Keeping a held-out validation split hidden from the optimizer verifies true generalization rather than prompt memorization.",
+      "key_takeaway": "Use Failure Cluster Analysis + Data-Driven Optimizer (`instruction_and_demo`) with a held-out validation split for model migrations and regression-free fixes.",
+      "doc_links": [
+        {
+          "label": "Optimize Prompts Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/prompts/prompt-optimizer"
+        },
+        {
+          "label": "Data-Driven Prompt Optimizer",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/prompts/data-driven-optimizer"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-37",
+      "section": "Deployment Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "runtime-selection",
+      "question": "An enterprise architect must choose Google Cloud runtimes for three components: (1) a stateful Python ADK orchestrator requiring managed Sessions and Memory Bank with minimal ops; (2) a custom TypeScript Streamable HTTP MCP server that scales to zero; and (3) serving fine-tuned open-weight `Gemma 4` on L4 GPUs alongside untrusted multi-tenant code sandboxes. Which mapping follows Rule 0?",
+      "options": [
+        {
+          "text": "(1) Agent Runtime, (2) Cloud Run, (3) GKE with GPU node pools and Agent Sandbox (`gVisor` + `SandboxWarmPool`).",
+          "correct": true
+        },
+        {
+          "text": "(1) Agent Runtime, (2) Agent Runtime hosting the standalone TypeScript MCP server, (3) Agent Runtime self-hosting `gemini-4-argon` weights on GPUs.",
+          "correct": false,
+          "why_wrong": "Agent Runtime does not host standalone MCP servers or custom GPU model weights, and proprietary `gemini-4-argon` weights cannot be self-hosted anywhere."
+        },
+        {
+          "text": "(1) Cloud Run storing session history in local container RAM, (2) GKE bare-metal StatefulSets, (3) Cloud Functions v1 without accelerators.",
+          "correct": false,
+          "why_wrong": "Cloud Run local RAM is wiped on scale-to-zero recycles, GKE adds unnecessary ops for a simple serverless MCP server, and Cloud Functions cannot serve GPU LLMs."
+        },
+        {
+          "text": "(1) Managed Agents API hosting custom C++ GPU kernels, (2) BigQuery Stored Procedures, (3) Cloud Workstations with public IPs for prod traffic.",
+          "correct": false,
+          "why_wrong": "Managed Agents API does not host custom GPU kernels, BigQuery is not an HTTP MCP server runtime, and Cloud Workstations are developer IDEs, not production runtimes."
+        }
+      ],
+      "explanation": "Following Rule 0 (Managed by Default): (1) Agent Runtime provides the lowest operational overhead for stateful Python/ADK orchestrators with built-in Sessions, Memory Bank, and Example Store; (2) Cloud Run is the primary serverless runtime for custom Streamable HTTP MCP servers and polyglot services (since Agent Runtime does not host standalone MCP servers); and (3) GKE is required when self-hosting open-weight models (`Gemma 4`) on GPUs/TPUs and isolating untrusted code in pre-warmed `gVisor` pods via Agent Sandbox on GKE.",
+      "key_takeaway": "Map stateful ADK orchestrators to Agent Runtime, custom HTTP MCP servers to Cloud Run, and open-weight GPU serving + gVisor sandboxes to GKE.",
+      "doc_links": [
+        {
+          "label": "Choose Agentic AI Architecture Components",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Sandbox on GKE",
+          "url": "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/agent-sandbox"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-38",
+      "section": "Deployment Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "runtime-selection",
+      "question": "During launch week, two incidents occur: (A) deploying a new Agent Runtime instance in `us-central1` fails with `\"Region temporarily at capacity\"`; and (B) your nightly 20,000-row offline evaluation job ignores your newly purchased Provisioned Throughput (GSUs) and incurs PayGo charges. What explains both behaviors and resolves them?",
+      "options": [
+        {
+          "text": "(A) Missing `roles/owner` IAM binding on the service account; (B) GSUs only cover Batch Prediction when `GOOGLE_CLOUD_PROJECT` is overridden at runtime.",
+          "correct": false,
+          "why_wrong": "`Region temporarily at capacity` is physical compute exhaustion (not IAM), GSUs never cover Batch Prediction, and `GOOGLE_CLOUD_PROJECT` is a reserved variable that must not be overridden."
+        },
+        {
+          "text": "(A) Physical regional compute exhaustion—deploy to an alternate region or right-size resources; (B) GSUs exclude Batch Prediction—use Batch/Flex ~50% pricing for nightly evals.",
+          "correct": true
+        },
+        {
+          "text": "(A) Gemini TPM quota limit—file a quota ticket and wait in `us-central1`; (B) Prefix `GOOGLE_CLOUD_AGENT_ENGINE_BATCH=true` to force Batch onto GSUs.",
+          "correct": false,
+          "why_wrong": "Quota tickets do not add physical compute hardware to an exhausted region, custom `GOOGLE_CLOUD_AGENT_ENGINE*` env vars are reserved/prohibited, and GSUs do not cover Batch."
+        },
+        {
+          "text": "(A) Invalid `thinking_level` enum on `gemini-4-argon`; (B) Provisioned Throughput requires disabling implicit caching via explicit `cachedContents` on `gemini-4-argon`.",
+          "correct": false,
+          "why_wrong": "Model parameter errors return HTTP 400 at inference time (not deployment capacity errors), and `gemini-4-argon` supports automatic implicit caching rather than explicit `cachedContents`."
+        }
+      ],
+      "explanation": "`\"Region temporarily at capacity\"` during Agent Runtime deployment indicates physical regional compute pool exhaustion rather than a project quota or IAM issue—resolve it by deploying to an alternate supported region, right-sizing vCPU/RAM, or retrying off-peak. Separately, Provisioned Throughput (GSUs) reserves real-time serving capacity and explicitly does NOT cover Batch Prediction or internal calls made by other managed services (like Agent Search); run nightly offline evals on Batch Prediction / Flex PayGo (~50% discount) and keep GSUs for steady real-time traffic.",
+      "key_takeaway": "`Region temporarily at capacity` requires region failover/right-sizing (not a quota ticket), and Provisioned Throughput (GSUs) never covers Batch Prediction.",
+      "doc_links": [
+        {
+          "label": "Choose Agentic AI Architecture Components",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    }
+  ]
+}
