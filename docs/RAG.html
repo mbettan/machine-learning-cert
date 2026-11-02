@@ -13,8 +13,8 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
+    <title>Retrieval-Augmented Generation (RAG): Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Master Retrieval-Augmented Generation (RAG): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
     <meta name="keywords" content="RAG, Retrieval-Augmented Generation, Hybrid Search, BM25, HNSW, ScaNN, Reciprocal Rank Fusion, RRF, Cross-Encoder Reranking, Agentic RAG, GraphRAG, Vertex AI, Anthropic Claude, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -32,8 +32,8 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
+    <meta property="og:title" content="Retrieval-Augmented Generation (RAG): Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Master Retrieval-Augmented Generation (RAG): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/RAG.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -41,8 +41,8 @@
     <meta property="og:image:alt" content="Retrieval-Augmented Generation (RAG) — Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
+    <meta name="twitter:title" content="Retrieval-Augmented Generation (RAG): Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Master Retrieval-Augmented Generation (RAG): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Retrieval-Augmented Generation (RAG) — Study Guide by Michaël Bettan">
 
@@ -75,14 +75,13 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/RAG.html#article",
-                  "headline": "Retrieval-Augmented Generation (RAG v3.0): Study Guide | ML Cert Hub",
+                  "headline": "Retrieval-Augmented Generation (RAG): Study Guide | ML Cert Hub",
                   "name": "Retrieval-Augmented Generation (RAG) Study Guide",
-                  "description": "Master Retrieval-Augmented Generation (RAG v3.0): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.",
+                  "description": "Master Retrieval-Augmented Generation (RAG): hybrid search, RRF, cross-encoder reranking, Agentic RAG, GraphRAG, ACL security, and Vertex AI patterns.",
                   "keywords": "RAG, Retrieval-Augmented Generation, Hybrid Search, BM25, HNSW, ScaNN, Reciprocal Rank Fusion, RRF, Cross-Encoder Reranking, Agentic RAG, GraphRAG, Vertex AI, Anthropic Claude, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/RAG.html",
                   "inLanguage": "en",
-                  "version": "3.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-31",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -121,6 +120,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/RAG.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -149,10 +152,6 @@
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
                         <span>Author: <strong>Michaël Bettan</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-tag"></i>
-                        <span>Version: <strong>3.0</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-layer-group"></i>
@@ -1254,7 +1253,7 @@
                 <h3>
                     <div class="icon-badge"><i class="fas fa-table"></i></div>Structured Data (Text-to-SQL)
                 </h3>
-                <p>Embeddings are bad at <code>SUM</code>, <code>AVG</code>, sorting, and joins. Route quantitative questions to <strong>Text-to-SQL</strong>: retrieve the relevant schema → generate <strong>read-only</strong> SQL → execute → put the exact result in the prompt. BigQuery and AlloyDB AI can also combine SQL filters and vector search in one query.</p>
+                <p>Embeddings are bad at <code>SUM</code>, <code>AVG</code>, sorting, and joins. Route quantitative questions to <strong>Text-to-SQL</strong>: retrieve the relevant schema → generate <strong>read-only</strong> SQL → execute → put the exact result in the prompt. BigQuery and AlloyDB AI can also combine SQL filters and vector search in one query. For choosing between parameterized query tools and NL2SQL, and the guardrails for model-written SQL, see <a href="KnowledgeEngineering.html#structured-data-tools">Knowledge engineering: structured data tools</a>.</p>
             </div>
 
             <div class="concept-card accent-amber">
@@ -1273,60 +1272,46 @@
             <h2>RAG on Google Cloud</h2>
         </div>
 
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">This guide stays vendor-neutral. Google Cloud's managed retrieval services (Agent Search, RAG Engine, Vector Search 1.0 and Agent Retrieval, Grounding with Google Search, the Ranking and Check grounding APIs, and in-database vectors) are covered in depth in the <a href="AgentPlatform.html#grounding-retrieval">Agent Platform guide: Grounding &amp; Retrieval</a>. Quick decision map:</p>
+
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
                     <tr>
                         <th>Google Cloud Option</th>
-                        <th>What It Is (Effort · ACLs)</th>
                         <th>Choose When</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td>Agent Search (formerly Vertex AI Search)</td>
+                        <td>Turnkey managed RAG: connectors, parsing, chunking, hybrid retrieval and <strong>native ACLs</strong> with the least engineering</td>
+                    </tr>
+                    <tr>
+                        <td>RAG Engine</td>
+                        <td>Code-first managed pipeline when you need control over parsing, chunking, embeddings and the vector DB</td>
+                    </tr>
+                    <tr>
+                        <td>Vector Search 1.0 / Agent Retrieval</td>
+                        <td>Custom embeddings and ANN at large scale inside your own pipeline (you build parsing, storage and ACL <code>restricts</code>)</td>
+                    </tr>
+                    <tr>
+                        <td>BigQuery · AlloyDB / Cloud SQL (<code>pgvector</code>)</td>
+                        <td>In-database vectors: BigQuery for analytics; AlloyDB/Cloud SQL for operational data</td>
+                    </tr>
+                    <tr>
                         <td>Grounding with Google Search</td>
-                        <td>Gemini's built-in web grounding; exposed in ADK as the <code>google_search</code> tool (no effort · public web only)</td>
-                        <td>Current public facts, news</td>
-                    </tr>
-                    <tr>
-                        <td>Vertex AI Search</td>
-                        <td>Turnkey enterprise search and RAG (lowest · 100+ connectors, <strong>native ACLs</strong>)</td>
-                        <td>Enterprise search/chat fast, with SaaS permissions</td>
-                    </tr>
-                    <tr>
-                        <td>Vertex AI RAG Engine</td>
-                        <td>Managed, code-first RAG: <code>RagCorpus</code>, wired into ADK via <code>VertexAiRagMemoryService</code> with <code>similarity_top_k</code> and <code>vector_distance_threshold</code> (moderate · pluggable vector DBs)</td>
-                        <td>Control over chunking, embeddings, backend</td>
-                    </tr>
-                    <tr>
-                        <td>Custom Pipeline</td>
-                        <td>Document AI + embeddings + <strong>Vector Search</strong> + your store (highest · you build <code>restricts</code>)</td>
-                        <td>Huge scale, custom rerankers, GraphRAG</td>
+                        <td>Current public web facts (ADK <code>google_search</code> tool)</td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div class="diagram-block">
-            <div class="diagram-title"><i class="fab fa-google"></i> Google Cloud Reference RAG Stack</div>
-            <div class="architecture-flow">
-                <div class="arch-node input">Document AI<br><small>Layout Parsing</small></div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-node process">Vertex Embeddings<br><small>gemini-embedding-001</small></div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-node storage">Vector Search (ScaNN)<br><small>+ Firestore / Bigtable</small></div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-node process">Ranking API<br><small>Cross-Encoder</small></div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-node output">Gemini + Model Armor<br><small>&amp; Check Grounding API</small></div>
-            </div>
         </div>
 
         <div class="callout info">
             <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
             <div class="callout-content">
                 <h4>Naming Update</h4>
-                <p>Older exam material refers to <strong>PaLM 2</strong> and <strong>Matching Engine</strong>. Those are now <strong>Gemini</strong> and <strong>Vertex AI Vector Search</strong>. BigQuery and AlloyDB AI cover structured and in-database vector search.</p>
+                <p>Older material refers to <strong>PaLM 2</strong>, <strong>Matching Engine</strong> and <strong>Vertex AI Search</strong>. Those are now <strong>Gemini</strong>, <strong>Vector Search</strong> and <strong>Agent Search</strong> on Gemini Enterprise Agent Platform.</p>
             </div>
         </div>
 
@@ -1844,8 +1829,8 @@
 
         <div class="two-columns">
             <div class="concept-card accent-blue">
-                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>RAG v3.0 Production Blueprint Video</h3>
-                <p>A comprehensive walkthrough of the RAG v3.0 production architecture, retrieval pipelines, and enterprise trade-offs.</p>
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>RAG Production Blueprint Video</h3>
+                <p>A comprehensive walkthrough of the RAG production architecture, retrieval pipelines, and enterprise trade-offs.</p>
                 <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
                     <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
                         <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/RAG-v3.0.mp4" type="video/mp4">
@@ -1855,9 +1840,9 @@
             </div>
 
             <div class="concept-card accent-pink">
-                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads (v3.0)</h3>
-                <p>Listen to the RAG v3.0 audio deep dive or view the study guide, slide deck, and architecture infographic.</p>
-                <div class="audio-label" style="margin-top: 15px;">Architecting Production RAG Systems (Podcast v3.0)</div>
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the RAG audio deep dive or view the study guide, slide deck, and architecture infographic.</p>
+                <div class="audio-label" style="margin-top: 15px;">Architecting Production RAG Systems (Podcast)</div>
                 <div class="audio-wrapper">
                     <audio controls controlsList="nodownload" oncontextmenu="return false;">
                         <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/RAG-v3.0.mp3" type="audio/mpeg">
@@ -1931,6 +1916,10 @@
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>

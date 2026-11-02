@@ -30,7 +30,17 @@
         }
       ],
       "explanation": "Similarity is not truth: vector search retrieves text snapshots that look semantically similar to the query, and the LLM blends outdated values into a confident wrong answer with no error signal. Mutable transactional state (order status, inventory counts, balances, ticket queues) must be served via live API or SQL tool calls.",
-      "key_takeaway": "Never index rapidly mutating transactional state into a RAG vector store; use live deterministic API or SQL tool calls."
+      "key_takeaway": "Never index rapidly mutating transactional state into a RAG vector store; use live deterministic API or SQL tool calls.",
+      "doc_links": [
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
     },
     {
       "id": "rag-q-02",
@@ -59,7 +69,17 @@
         }
       ],
       "explanation": "Advertised context window size is not working memory: attention dilution ('lost in the middle') degrades multi-fact recall well before the token limit is reached, while input cost and Time-to-First-Token grow linearly with prompt length. RAG keeps the prompt lean (~1.5k–3k relevant tokens) with exact citations.",
-      "key_takeaway": "Long-context windows do not replace RAG at scale due to 'lost in the middle' attention dilution, linear token cost, and high TTFT."
+      "key_takeaway": "Long-context windows do not replace RAG at scale due to 'lost in the middle' attention dilution, linear token cost, and high TTFT.",
+      "doc_links": [
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        },
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ]
     },
     {
       "id": "rag-q-03",
@@ -88,7 +108,17 @@
         }
       ],
       "explanation": "Bad parsing looks like model hallucination downstream. Multi-column PDFs and financial tables require layout-aware parsing (such as Document AI Layout Parser) that keeps tables intact as Markdown/HTML, structure-aware chunking that never slices mid-table, and contextual header prepending (`Document > Section > Table`).",
-      "key_takeaway": "Never split a table mid-row with fixed-token chunking; use layout-aware parsing and keep tables intact with their column headers."
+      "key_takeaway": "Never split a table mid-row with fixed-token chunking; use layout-aware parsing and keep tables intact with their column headers.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
     },
     {
       "id": "rag-q-04",
@@ -117,7 +147,17 @@
         }
       ],
       "explanation": "Orphaned chunks lose their subject ('it', 'the policy', 'this tier') when separated from their parent heading. Prepending the document title, section breadcrumb, and a concise contextual summary before computing dense embeddings and BM25 terms resolves pronoun ambiguity and boosts both lexical and semantic recall.",
-      "key_takeaway": "Eliminate orphaned chunks by prepending document/section hierarchy headers and contextual summaries before indexing."
+      "key_takeaway": "Eliminate orphaned chunks by prepending document/section hierarchy headers and contextual summaries before indexing.",
+      "doc_links": [
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
     },
     {
       "id": "rag-q-05",
@@ -146,7 +186,17 @@
         }
       ],
       "explanation": "Short user questions and long informational passages have different lexical distributions. Asymmetric embedding models use distinct task prefixes (`RETRIEVAL_DOCUMENT` during offline indexing vs. `RETRIEVAL_QUERY` during online search) to map questions and passages into compatible vector coordinates.",
-      "key_takeaway": "Always pair `RETRIEVAL_DOCUMENT` at index time with `RETRIEVAL_QUERY` at search time when using asymmetric embedding models."
+      "key_takeaway": "Always pair `RETRIEVAL_DOCUMENT` at index time with `RETRIEVAL_QUERY` at search time when using asymmetric embedding models.",
+      "doc_links": [
+        {
+          "label": "Gemini Embedding Models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2"
+        },
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        }
+      ]
     },
     {
       "id": "rag-q-06",
@@ -175,7 +225,17 @@
         }
       ],
       "explanation": "Dense cosine scores lie in [-1, 1] whereas BM25 scores are unbounded [0, ∞) and vary wildly by query length and term rarity. Reciprocal Rank Fusion (`RRF(d) = ∑ 1 / (k + r_m(d))`, typically `k = 60`) merges candidate lists using only rank positions—requiring zero score calibration—before a cross-encoder reranks the top pool.",
-      "key_takeaway": "Never add raw BM25 and cosine scores; fuse ranked lists with Reciprocal Rank Fusion (RRF, k=60) and rerank the top candidates."
+      "key_takeaway": "Never add raw BM25 and cosine scores; fuse ranked lists with Reciprocal Rank Fusion (RRF, k=60) and rerank the top candidates.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        }
+      ]
     },
     {
       "id": "rag-q-07",
@@ -204,7 +264,17 @@
         }
       ],
       "explanation": "Bi-encoders encode passages independently offline so millions of vectors can be searched in milliseconds via ANN (`HNSW`/`ScaNN`), but compress each passage into a single vector. Cross-encoders feed `(query, passage)` together through full transformer self-attention—capturing subtle negation, qualifiers, and multi-hop relevance—at a compute cost that is only viable on a small candidate pool (top 30–50).",
-      "key_takeaway": "Bi-encoders + BM25 provide fast O(log N) candidate recall; cross-encoders provide high-precision joint-attention reranking on the top 30–50 pool."
+      "key_takeaway": "Bi-encoders + BM25 provide fast O(log N) candidate recall; cross-encoders provide high-precision joint-attention reranking on the top 30–50 pool.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        }
+      ]
     },
     {
       "id": "rag-q-08",
@@ -233,7 +303,17 @@
         }
       ],
       "explanation": "When retrieval returns weak or irrelevant evidence, passing those chunks to the generator invites it to guess from parametric memory. A deterministic **pre-generation abstention gate** checks if `max(reranker_score) < τ_ret` and immediately returns a clean refusal (saving LLM latency and tokens), while a **post-generation groundedness/NLI check** verifies every claim and citation before display.",
-      "key_takeaway": "Use a pre-generation reranker score floor (skip LLM call when evidence is weak) plus a post-generation faithfulness/citation gate."
+      "key_takeaway": "Use a pre-generation reranker score floor (skip LLM call when evidence is weak) plus a post-generation faithfulness/citation gate.",
+      "doc_links": [
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        },
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        }
+      ]
     },
     {
       "id": "rag-q-09",
@@ -262,7 +342,17 @@
         }
       ],
       "explanation": "Accumulating raw tool outputs across a multi-step loop causes context pollution and goal drift. Separating working memory (`scratchpad.md` distilled state) from raw tool transcripts—condensing verified findings after each step and re-reading the scratchpad before acting—keeps the active context compact and recoverable.",
-      "key_takeaway": "Prevent multi-step context drift with a persistent scratchpad (`Read → Refine → Repeat`) and prune raw tool outputs after distilling key facts."
+      "key_takeaway": "Prevent multi-step context drift with a persistent scratchpad (`Read → Refine → Repeat`) and prune raw tool outputs after distilling key facts.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        }
+      ]
     },
     {
       "id": "rag-q-10",
@@ -291,7 +381,17 @@
         }
       ],
       "explanation": "Comparative and multi-part questions fail under single-vector search because one embedding averages competing entities or time periods. Query decomposition breaks the question into targeted sub-queries, runs hybrid retrieval + reranking for each sub-question, and merges the grounded evidence before generation.",
-      "key_takeaway": "Use query decomposition for multi-entity or multi-period comparative questions rather than relying on a single averaged query embedding."
+      "key_takeaway": "Use query decomposition for multi-entity or multi-period comparative questions rather than relying on a single averaged query embedding.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        }
+      ]
     },
     {
       "id": "rag-q-11",
@@ -320,7 +420,17 @@
         }
       ],
       "explanation": "In a supply-chain or organizational hierarchy, the document linking `Supplier X -> Component A` shares zero vocabulary or semantic overlap with the contract linking `SKU Z -> Customer SLA`. GraphRAG extracts entities and edges into a knowledge graph (plus hierarchical community summaries) so queries can traverse multi-hop paths and pull the supporting text chunks.",
-      "key_takeaway": "Choose GraphRAG when queries require multi-hop relationship traversal or global thematic synthesis across a corpus."
+      "key_takeaway": "Choose GraphRAG when queries require multi-hop relationship traversal or global thematic synthesis across a corpus.",
+      "doc_links": [
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
     },
     {
       "id": "rag-q-12",
@@ -349,7 +459,17 @@
         }
       ],
       "explanation": "On Google Cloud, **Vertex AI Search** is the turnkey managed RAG offering (managed connectors, parsing, chunking, hybrid retrieval, reranking, grounding, and ACLs). **Vertex AI Vector Search (ScaNN)** is for custom low-latency ANN at massive scale, **AlloyDB/Cloud SQL (`pgvector`)** is for operational SQL + vector ACID joins, and **BigQuery Vector Search** is for batch warehouse analytics.",
-      "key_takeaway": "Use Vertex AI Search for turnkey enterprise RAG with managed ingestion and ACLs; use Vertex AI Vector Search (ScaNN) when you need custom embeddings/ANN at extreme scale."
+      "key_takeaway": "Use Vertex AI Search for turnkey enterprise RAG with managed ingestion and ACLs; use Vertex AI Vector Search (ScaNN) when you need custom embeddings/ANN at extreme scale.",
+      "doc_links": [
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
     },
     {
       "id": "rag-q-13",
@@ -378,7 +498,17 @@
         }
       ],
       "explanation": "When strict data residency/zero-copy rules prohibit replicating data or embeddings into a central index—or when zero-lag native permission enforcement is mandatory—**Federated Retrieval** queries each source system's search API at runtime using the user's delegated credentials (`On-Behalf-Of` token), trading higher tail latency (`max(source latencies)`) for zero-copy compliance.",
-      "key_takeaway": "Choose Federated Retrieval when zero-copy residency or zero-lag native ACL enforcement outweighs custom hybrid/reranking control."
+      "key_takeaway": "Choose Federated Retrieval when zero-copy residency or zero-lag native ACL enforcement outweighs custom hybrid/reranking control.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        },
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        }
+      ]
     },
     {
       "id": "rag-q-14",
@@ -407,7 +537,17 @@
         }
       ],
       "explanation": "Post-filtering (retrieving top-K globally, then dropping unauthorized chunks) causes **recall collapse** whenever a user's authorized subset is a small fraction of the corpus, and can leak document existence via timing. Always enforce **metadata pre-filtering** (`acl_groups`, `tenant_id`, `is_latest = true`) inside the vector and lexical index scan, paired with a live ACL re-check on the final top-N chunks.",
-      "key_takeaway": "Never rely on post-filtering for ACLs or version filtering; enforce metadata pre-filtering inside the index scan."
+      "key_takeaway": "Never rely on post-filtering for ACLs or version filtering; enforce metadata pre-filtering inside the index scan.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
     },
     {
       "id": "rag-q-15",
@@ -436,7 +576,17 @@
         }
       ],
       "explanation": "Input guardrails only inspect the user's prompt before search; **indirect prompt injection** enters *after* retrieval via untrusted documents or tool payloads. Defense-in-depth orders checks **cheap and fast first**: (1) strip hidden text/HTML comments at ingestion, (2) run a **fail-closed** post-retrieval screening classifier over retrieved chunks before prompt hydration, (3) isolate context in `<document>` tags, and (4) enforce least-privilege tool access (never grant write/email tools to a read-only RAG synthesizer).",
-      "key_takeaway": "Input guardrails do not stop indirect prompt injection; screen retrieved chunks fail-closed before prompt hydration and enforce least-privilege tool registries."
+      "key_takeaway": "Input guardrails do not stop indirect prompt injection; screen retrieved chunks fail-closed before prompt hydration and enforce least-privilege tool registries.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
     },
     {
       "id": "rag-q-16",
@@ -465,7 +615,17 @@
         }
       ],
       "explanation": "Vectors from two different embedding models (or model versions) live in incompatible geometric coordinate spaces and **cannot** be compared via dot product or cosine similarity. Any embedding model change requires a **Blue/Green index migration**: build Index B in the background with v2 embeddings, dual-write live document updates to both indexes, validate Recall@K and Faithfulness on the golden set, and atomically switch the production traffic alias.",
-      "key_takeaway": "Never mix embeddings from two model versions in one index; always use Blue/Green shadow indexing with an atomic alias cutover."
+      "key_takeaway": "Never mix embeddings from two model versions in one index; always use Blue/Green shadow indexing with an atomic alias cutover.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
     },
     {
       "id": "rag-q-17",
@@ -494,7 +654,17 @@
         }
       ],
       "explanation": "Appending new `v2` chunks without invalidating superseded `v1` chunks leaves **Zombie Chunks** in the index that have almost identical semantic similarity to the query. An event-driven CDC pipeline must key chunks deterministically (`doc_id + version + chunk_id`), mark superseded revisions `is_latest = false` (or delete them), and enforce `is_latest = true` during retrieval pre-filtering.",
-      "key_takeaway": "Prevent Zombie Chunks by tombstoning superseded document versions on update and enforcing `is_latest = true` in retrieval pre-filters."
+      "key_takeaway": "Prevent Zombie Chunks by tombstoning superseded document versions on update and enforcing `is_latest = true` in retrieval pre-filters.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Vector Search Indexes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/create-manage-index"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
     },
     {
       "id": "rag-q-18",
@@ -523,7 +693,17 @@
         }
       ],
       "explanation": "This is a classic exam trap: **LLM prefix prompt caching** only reuses KV tensors when the leading token sequence is **byte-for-byte identical**—if retrieved chunks change, the prefix changes and causes a standard cache miss. Silent multi-month quality erosion with green infra metrics is caused by **corpus/retrieval drift** (accumulated zombie docs, new unindexed topics) or an unpinned model version change; diagnose by running the offline golden evaluation suite (`Recall@K`, `Faithfulness`).",
-      "key_takeaway": "Prefix prompt caching is exact-prefix-only and never causes stale RAG answers; silent multi-month degradation points to corpus/retrieval drift."
+      "key_takeaway": "Prefix prompt caching is exact-prefix-only and never causes stale RAG answers; silent multi-month degradation points to corpus/retrieval drift.",
+      "doc_links": [
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
     },
     {
       "id": "rag-q-19",
@@ -552,7 +732,17 @@
         }
       ],
       "explanation": "Queries that differ only by a date, region, SKU, or tenant ('Q2 APAC' vs. 'Q3 EMEA') have very high dense cosine similarity (`> 0.92`). A production semantic cache must partition keys by **ACL scope + corpus version + extracted hard entities/timeframes**, and raise the similarity threshold (`>= 0.95`).",
-      "key_takeaway": "Never key a semantic response cache on vector similarity alone; partition by ACL scope, corpus version, and extracted entities/dates."
+      "key_takeaway": "Never key a semantic response cache on vector similarity alone; partition by ACL scope, corpus version, and extracted entities/dates.",
+      "doc_links": [
+        {
+          "label": "Claude Prompt Caching",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
     },
     {
       "id": "rag-q-20",
@@ -581,7 +771,17 @@
         }
       ],
       "explanation": "High-volume simple queries inflate aggregate evaluation averages and mask dangerous regressions in complex or high-stakes document categories. Production release gates must enforce **per-stratum minimum floors** (e.g., `Faithfulness >= 0.85` in *every* stratum); when a smaller model passes simple strata but fails complex ones, use **complexity/stratum routing** rather than a blanket cutover.",
-      "key_takeaway": "Enforce per-stratum minimum floors (never just global averages) and use model routing when a cheaper model only fails specific complex strata."
+      "key_takeaway": "Enforce per-stratum minimum floors (never just global averages) and use model routing when a cheaper model only fails specific complex strata.",
+      "doc_links": [
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        },
+        {
+          "label": "Anthropic: Demystifying Evals for Agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+      ]
     },
     {
       "id": "rag-q-21",
@@ -610,7 +810,17 @@
         }
       ],
       "explanation": "RAG splits into two phases. Offline: parse, chunk, attach metadata (doc_id, page, date, acl), embed and index whenever a source changes, so the expensive work happens once. Online: embed only the query (with the same model and version as the corpus), run hybrid search for top-K, rerank to top-N and generate with citations.",
-      "key_takeaway": "Do corpus parsing, chunking and embedding offline on document change; the online path should only embed the query, retrieve, rerank and generate."
+      "key_takeaway": "Do corpus parsing, chunking and embedding offline on document change; the online path should only embed the query, retrieve, rerank and generate.",
+      "doc_links": [
+        {
+          "label": "Agent Platform RAG Engine",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
+        },
+        {
+          "label": "Anthropic: Contextual Retrieval",
+          "url": "https://www.anthropic.com/news/contextual-retrieval"
+        }
+      ]
     },
     {
       "id": "rag-q-22",
@@ -639,7 +849,17 @@
         }
       ],
       "explanation": "Quality drift with no code change usually comes from outside the repo: a silent model or prompt update behind a floating alias, or corpus drift from new, duplicate or stale documents. The fix is diagnostic first: rerun the golden eval set to localize the regression, pin and audit model, prompt and embedding versions, and reindex or clean up affected content.",
-      "key_takeaway": "When quality drifts with no code change, rerun golden evals, pin and audit model and prompt versions, and inspect corpus changes before touching the architecture."
+      "key_takeaway": "When quality drifts with no code change, rerun golden evals, pin and audit model and prompt versions, and inspect corpus changes before touching the architecture.",
+      "doc_links": [
+        {
+          "label": "Agent Search Ranking API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/ranking"
+        },
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        }
+      ]
     }
   ]
 }
