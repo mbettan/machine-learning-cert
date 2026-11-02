@@ -5,12 +5,12 @@
   "questions": [
     {
       "id": "adp-q-01",
-      "section": "Architectural Triage & 4-Decision Sequence",
+      "section": "Architectural Triage & Sequential Decision Framework",
       "guide_anchor": "triage-decomposition",
-      "question": "A product team wants to build an automated enterprise procurement assistant and immediately starts drafting a 12-agent prompt hierarchy before defining what parts of the process require an LLM. According to the 4-Decision Sequence, what is the correct order of architectural decisions they must complete before writing prompts?",
+      "question": "A product team wants to build an automated enterprise procurement assistant and immediately starts drafting a 12-agent prompt hierarchy before defining what parts of the process require an LLM. According to the Sequential Decision Framework, what is the correct order of architectural decisions they must complete before writing prompts?",
       "options": [
         {
-          "text": "(1) Decide if an LLM is needed via 3-bucket triage, (2) pick work shape, (3) choose routing/hosting, and (4) wrap with guardrails.",
+          "text": "(1) Problem decomposition across Tripartite Execution Regimes, (2) pick work shape, (3) choose routing/hosting, and (4) wrap with guardrails.",
           "correct": true
         },
         {
@@ -29,8 +29,8 @@
           "why_wrong": "Jumping straight to an autonomous ReAct loop ignores work-shape selection and exposes database mutations without first isolating deterministic rules and human approval gates."
         }
       ],
-      "explanation": "The 4-Decision Sequence enforces architectural discipline before any prompt engineering: first decide whether an LLM should be in the loop at all (using 3-Bucket Decomposition), second pick the simplest work shape (Single Call vs. Workflow vs. Autonomous Agent), third determine model tier routing and hosting, and fourth wrap probabilistic steps with deterministic guardrails and verification.",
-      "key_takeaway": "Run the 4-Decision Sequence (LLM needed? -> Work shape? -> Routing/hosting? -> Guardrails?) before writing prompts or picking frameworks.",
+      "explanation": "The Sequential Decision Framework enforces architectural discipline before any prompt engineering: first decide whether an LLM should be in the loop at all (using Tripartite Execution Regimes: Deterministic Code vs. Probabilistic LLM vs. Human-in-the-Loop), second pick the simplest work shape (Single Call vs. Workflow vs. Autonomous Agent), third determine model tier routing and hosting, and fourth wrap probabilistic steps with deterministic guardrails and verification.",
+      "key_takeaway": "Run the Sequential Decision Framework (LLM needed? -> Work shape? -> Routing/hosting? -> Guardrails?) before writing prompts or picking frameworks.",
       "doc_links": [
         {
           "label": "Anthropic: Building Effective Agents",
@@ -44,17 +44,17 @@
     },
     {
       "id": "adp-q-02",
-      "section": "Architectural Triage & 4-Decision Sequence",
+      "section": "Architectural Triage & Sequential Decision Framework",
       "guide_anchor": "triage-decomposition",
       "question": "A subscription billing assistant uses a frontier LLM to read a customer's cancellation email, compute the pro-rated refund from the contract start date and daily tier rate, and execute the refund API call. In production, 2% of refunds have subtle rounding and leap-year errors. What is the root architectural defect and fix?",
       "options": [
         {
           "text": "The prompt lacks enough few-shot arithmetic examples; add ten worked leap-year calculation examples and enable high reasoning effort on the frontier model so it computes the pro-rated refund accurately.",
           "correct": false,
-          "why_wrong": "Date arithmetic and fee calculations are Bucket 1 deterministic logic; keeping them in a probabilistic prompt still leaves tail-risk calculation errors while increasing latency and token spend."
+          "why_wrong": "Date arithmetic and fee calculations are Regime 1 deterministic logic; keeping them in a probabilistic prompt still leaves tail-risk calculation errors while increasing latency and token spend."
         },
         {
-          "text": "Deterministic drift: let the LLM classify cancellation intent, run date and pro-rata math in deterministic code (Bucket 1), and gate large payouts with HITL (Bucket 3).",
+          "text": "Deterministic drift: let the LLM classify cancellation intent, run date and pro-rata math in deterministic code (Regime 1), and gate large payouts with HITL (Regime 3).",
           "correct": true
         },
         {
@@ -68,8 +68,8 @@
           "why_wrong": "Sampling settings do not turn a token predictor into an exact calculator, and modern frontier models reject non-default sampling parameters or still exhibit variance."
         }
       ],
-      "explanation": "Delegating exact arithmetic, date windows, or RBAC enforcement to a language model causes deterministic drift—silent tail-risk failures where probabilistic token generation miscalculates edge cases. By the 3-Bucket Work Decomposition Matrix, unstructured intent classification belongs in Bucket 2 (LLM), exact pro-rata math belongs in Bucket 1 (deterministic code), and high-blast-radius irreversible payouts belong in Bucket 3 (HITL).",
-      "key_takeaway": "Never delegate exact math, date windows, or RBAC to prompts; execute Bucket 1 rules in deterministic code to prevent deterministic drift.",
+      "explanation": "Delegating exact arithmetic, date windows, or RBAC enforcement to a language model causes deterministic drift—silent tail-risk failures where probabilistic token generation miscalculates edge cases. Under Tripartite Execution Regimes, unstructured intent classification belongs in Regime 2 (LLM), exact pro-rata math belongs in Regime 1 (deterministic code), and high-blast-radius irreversible payouts belong in Regime 3 (HITL).",
+      "key_takeaway": "Never delegate exact math, date windows, or RBAC to prompts; execute Regime 1 rules in deterministic code to prevent deterministic drift.",
       "doc_links": [
         {
           "label": "Anthropic: Building Effective Agents",
@@ -83,9 +83,9 @@
     },
     {
       "id": "adp-q-03",
-      "section": "Architectural Triage & 4-Decision Sequence",
+      "section": "Architectural Triage & Sequential Decision Framework",
       "guide_anchor": "triage-decomposition",
-      "question": "A cloud operations agent can diagnose service alerts, restart stateless staging pods, and delete production customer tenant databases when deprovisioning accounts. To prevent unreviewed damage without causing reviewer rubber-stamping, how should the team allocate controls across Bucket 1 (Deterministic Code) and Bucket 3 (HITL)?",
+      "question": "A cloud operations agent can diagnose service alerts, restart stateless staging pods, and delete production customer tenant databases when deprovisioning accounts. To prevent unreviewed damage without causing reviewer rubber-stamping, how should the team allocate controls across Regime 1 (Deterministic Code) and Regime 3 (HITL)?",
       "options": [
         {
           "text": "Require synchronous human approval in Slack before every diagnostic log read, staging pod restart, and production database deletion so no tool call executes without human sign-off.",
@@ -98,17 +98,17 @@
           "why_wrong": "Prose instructions in a system prompt are advisory and can be bypassed by context confusion or indirect prompt injection; post-hoc weekly log review cannot undo a dropped database."
         },
         {
-          "text": "Enforce tenant scoping and staging allowlists via pre-tool code hooks (Bucket 1), and pause for durable HITL approval (Bucket 3) showing exact arguments before production deletes.",
+          "text": "Enforce tenant scoping and staging allowlists via pre-tool code hooks (Regime 1), and pause for durable HITL approval (Regime 3) showing exact arguments before production deletes.",
           "correct": true
         },
         {
           "text": "Run three parallel autonomous agents with diverse personas to vote on whether the production database deletion is safe, proceeding automatically whenever at least two of the three agents agree.",
           "correct": false,
-          "why_wrong": "Multi-agent voting is still probabilistic (Bucket 2) and cannot hold legal or operational accountability for an irreversible high-blast-radius production deletion."
+          "why_wrong": "Multi-agent voting is still probabilistic (Regime 2) and cannot hold legal or operational accountability for an irreversible high-blast-radius production deletion."
         }
       ],
-      "explanation": "Effective governance separates fast programmatic guardrails from high-consequence human checkpoints. Bucket 1 (deterministic pre-tool hooks) enforces schema rules, environment allowlists, and tenant scoping in milliseconds on every call, while Bucket 3 (HITL) pauses execution and persists state only on high-blast-radius, irreversible actions—presenting the exact tool arguments (e.g., tenant_id and database name) for human sign-off.",
-      "key_takeaway": "Automate rule checks in fast Bucket 1 code hooks and reserve Bucket 3 HITL checkpoints for irreversible, high-blast-radius actions.",
+      "explanation": "Effective governance separates fast programmatic guardrails from high-consequence human checkpoints. Regime 1 (deterministic pre-tool hooks) enforces schema rules, environment allowlists, and tenant scoping in milliseconds on every call, while Regime 3 (HITL) pauses execution and persists state only on high-blast-radius, irreversible actions—presenting the exact tool arguments (e.g., tenant_id and database name) for human sign-off.",
+      "key_takeaway": "Automate rule checks in fast Regime 1 code hooks and reserve Regime 3 HITL checkpoints for irreversible, high-blast-radius actions.",
       "doc_links": [
         {
           "label": "Anthropic: Building Effective Agents",
@@ -122,32 +122,32 @@
     },
     {
       "id": "adp-q-04",
-      "section": "Architectural Triage & 4-Decision Sequence",
+      "section": "Architectural Triage & Sequential Decision Framework",
       "guide_anchor": "triage-decomposition",
-      "question": "An insurance claims pipeline must verify whether an uploaded file is a valid PDF under 25 MB, extract medical narrative summaries from physician notes, enforce that payout amounts do not exceed the policy cap in SQL, and approve exceptions above $50,000. Which 3-Bucket assignment is architecturally sound?",
+      "question": "An insurance claims pipeline must verify whether an uploaded file is a valid PDF under 25 MB, extract medical narrative summaries from physician notes, enforce that payout amounts do not exceed the policy cap in SQL, and approve exceptions above $50,000. Which assignment across Tripartite Execution Regimes is architecturally sound?",
       "options": [
         {
-          "text": "Bucket 1 (Code): PDF size check; Bucket 2 (LLM): extracting narrative summaries and approving $50,000 policy exceptions via a rubric prompt; Bucket 3 (HITL): auditing SQL policy-cap queries.",
+          "text": "Regime 1 (Code): PDF size check; Regime 2 (LLM): extracting narrative summaries and approving $50,000 policy exceptions via a rubric prompt; Regime 3 (HITL): auditing SQL policy-cap queries.",
           "correct": false,
-          "why_wrong": "High-value policy exceptions require human accountability (Bucket 3), whereas SQL cap enforcement is deterministic code (Bucket 1) that does not need manual human auditing on every run."
+          "why_wrong": "High-value policy exceptions require human accountability (Regime 3), whereas SQL cap enforcement is deterministic code (Regime 1) that does not need manual human auditing on every run."
         },
         {
-          "text": "Bucket 1 (Code): SQL policy-cap check; Bucket 2 (LLM): inspecting raw binary headers for PDF validity and summarizing notes; Bucket 3 (HITL): reviewing every claim regardless of dollar amount.",
+          "text": "Regime 1 (Code): SQL policy-cap check; Regime 2 (LLM): inspecting raw binary headers for PDF validity and summarizing notes; Regime 3 (HITL): reviewing every claim regardless of dollar amount.",
           "correct": false,
           "why_wrong": "Sending raw binary files to an LLM to check MIME type and file size wastes tokens on a $0 code check, and reviewing every small claim creates severe approval fatigue."
         },
         {
-          "text": "Bucket 1 (Code): regex extraction of unstructured medical narratives; Bucket 2 (LLM): calculating policy-cap deductibles and co-pays; Bucket 3 (HITL): approving $50,000 payout exceptions.",
+          "text": "Regime 1 (Code): regex extraction of unstructured medical narratives; Regime 2 (LLM): calculating policy-cap deductibles and co-pays; Regime 3 (HITL): approving $50,000 payout exceptions.",
           "correct": false,
-          "why_wrong": "This swaps Buckets 1 and 2: regex breaks on unstructured clinical prose, while LLM deductible arithmetic introduces deterministic drift."
+          "why_wrong": "This swaps Regimes 1 and 2: regex breaks on unstructured clinical prose, while LLM deductible arithmetic introduces deterministic drift."
         },
         {
-          "text": "Bucket 1 (Code): PDF validation and SQL cap check; Bucket 2 (LLM): extracting medical narrative summaries; Bucket 3 (HITL): approving exceptions above $50,000.",
+          "text": "Regime 1 (Code): PDF validation and SQL cap check; Regime 2 (LLM): extracting medical narrative summaries; Regime 3 (HITL): approving exceptions above $50,000.",
           "correct": true
         }
       ],
-      "explanation": "File metadata validation (MIME type, size limits) and policy-cap threshold comparisons are exact deterministic checks (Bucket 1). Synthesizing unstructured physician narratives requires semantic comprehension (Bucket 2). Granting high-value exceptions above $50,000 carries financial accountability and belongs in Bucket 3 (HITL).",
-      "key_takeaway": "Map metadata gates and cap math to Bucket 1, unstructured clinical synthesis to Bucket 2, and high-value exceptions to Bucket 3.",
+      "explanation": "File metadata validation (MIME type, size limits) and policy-cap threshold comparisons are exact deterministic checks (Regime 1). Synthesizing unstructured physician narratives requires semantic comprehension (Regime 2). Granting high-value exceptions above $50,000 carries financial accountability and belongs in Regime 3 (HITL).",
+      "key_takeaway": "Map metadata gates and cap math to Regime 1, unstructured clinical synthesis to Regime 2, and high-value exceptions to Regime 3.",
       "doc_links": [
         {
           "label": "Anthropic: Building Effective Agents",
@@ -161,9 +161,9 @@
     },
     {
       "id": "adp-q-05",
-      "section": "Work-Shape Spectrum & 5-Factor Matrix",
+      "section": "Work-Shape Spectrum & Architectural Criteria",
       "guide_anchor": "work-shape-matrix",
-      "question": "A fintech compliance team needs a system that takes a standardized wire-transfer JSON payload, enriches it with customer KYC records from one internal REST endpoint, classifies risk into three tiers with a rationale, and responds within 2.5 seconds under a strict 1.5x token cost ceiling. Using the 5-Factor Pattern Matrix, which work shape fits best?",
+      "question": "A fintech compliance team needs a system that takes a standardized wire-transfer JSON payload, enriches it with customer KYC records from one internal REST endpoint, classifies risk into three tiers with a rationale, and responds within 2.5 seconds under a strict 1.5x token cost ceiling. Using Architectural Evaluation Criteria, which work shape fits best?",
       "options": [
         {
           "text": "A single Augmented LLM call preceded by a deterministic code fetch of the KYC record, using structured JSON output to return the risk tier and rationale in one turn.",
@@ -185,7 +185,7 @@
           "why_wrong": "Orchestrator-Workers is designed for unpredictable task decomposition and costs 3-5x+ tokens and multiple roundtrips, which is unnecessary when the single KYC lookup is known upfront."
         }
       ],
-      "explanation": "By the 5-Factor Selection Matrix, when the task path is 100% predictable (fetch one known KYC record + classify), the latency budget is under 3 seconds, and the token cost ceiling is ~1-1.5x baseline, a single Augmented LLM call (with deterministic pre-fetching and structured output) is the optimal architecture.",
+      "explanation": "Using Architectural Evaluation Criteria, when the task path is 100% predictable (fetch one known KYC record + classify), the latency budget is under 3 seconds, and the token cost ceiling is ~1-1.5x baseline, a single Augmented LLM call (with deterministic pre-fetching and structured output) is the optimal architecture.",
       "key_takeaway": "When the data lookup is fixed, latency is under ~3s, and token budget is ~1x, use a single Augmented LLM call with deterministic pre-fetch.",
       "doc_links": [
         {
@@ -200,7 +200,7 @@
     },
     {
       "id": "adp-q-06",
-      "section": "Work-Shape Spectrum & 5-Factor Matrix",
+      "section": "Work-Shape Spectrum & Architectural Criteria",
       "guide_anchor": "work-shape-matrix",
       "question": "An autonomous agent executes a 12-step sequential chain of tool calls without intermediate verification. If each individual LLM reasoning step has a 95% probability of selecting the right action and parameters, what happens to the end-to-end reliability of the run, and what architectural mechanism counteracts this property?",
       "options": [
@@ -224,7 +224,7 @@
           "why_wrong": "Compounding error rates stem from unverified intermediate decisions propagating through reasoning turns, not from output token truncation."
         }
       ],
-      "explanation": "One of the four core behavioral properties of probabilistic systems is compounding multi-step error rates: at 95% per-step accuracy, an unverified 12-step sequence succeeds only 0.95^12 ≈ 54% of the time because an early mistake poisons downstream steps. Grounding each step against deterministic environmental feedback (compilers, test suites, schema gates) resets the error curve before bad state propagates.",
+      "explanation": "One of the core operating characteristics of probabilistic systems is compounding multi-step error rates: at 95% per-step accuracy, an unverified 12-step sequence succeeds only 0.95^12 ≈ 54% of the time because an early mistake poisons downstream steps. Grounding each step against deterministic environmental feedback (compilers, test suites, schema gates) resets the error curve before bad state propagates.",
       "key_takeaway": "Multi-step errors compound exponentially (p^N); insert deterministic ground-truth checks after intermediate steps to arrest error propagation.",
       "doc_links": [
         {
@@ -239,7 +239,7 @@
     },
     {
       "id": "adp-q-07",
-      "section": "Work-Shape Spectrum & 5-Factor Matrix",
+      "section": "Work-Shape Spectrum & Architectural Criteria",
       "guide_anchor": "work-shape-matrix",
       "question": "A developer builds an enterprise contract analyzer that takes uploaded PDFs—many of which are blurry smartphone photos or multi-column scans with garbled OCR—and sends the raw extracted text straight to an LLM prompt. Users report that the assistant invents plausible indemnity figures whenever a scanned table is unreadable. Which behavioral property explains this, and what is the primary fix?",
       "options": [
@@ -847,9 +847,9 @@
           "why_wrong": "Truncating a 3,000-token operational playbook to 250 characters deletes the actual step-by-step commands and verification rules."
         },
         {
-          "text": "Place the trigger keywords inside a `## When to Use` heading at the very bottom of each `SKILL.md` markdown body and omit YAML frontmatter descriptions entirely.",
+          "text": "Place trigger keywords exclusively inside the markdown body of each `SKILL.md` and omit YAML frontmatter metadata entirely.",
           "correct": false,
-          "why_wrong": "Before a skill is activated, the agent only sees the YAML frontmatter `name` and `description`; trigger text buried inside the markdown body is invisible at startup."
+          "why_wrong": "Before a skill is activated, the agent only inspects YAML frontmatter metadata (name and description); trigger instructions placed only inside the markdown body are invisible during skill selection."
         }
       ],
       "explanation": "3-Level Progressive Disclosure for Procedural Memory (Skills) keeps startup context lean: Level 1 loads only the YAML frontmatter `name` and `description` (~60-100 tokens per skill) so the model knows when to invoke it; Level 2 loads the full `SKILL.md` instructions (<5,000 tokens) only when activated; and Level 3 runs bundled `scripts/` via shell/sandbox so script source code never enters the context window (only stdout/stderr is returned).",
@@ -888,7 +888,7 @@
         {
           "text": "Deterministic Drift: the team placed creative marketing tone guidelines inside probabilistic prompts instead of hardcoding them in SQL stored procedures.",
           "correct": false,
-          "why_wrong": "Creative copywriting is genuinely Bucket 2 probabilistic work; the error is using three sequential persona agents where one structured prompt suffices."
+          "why_wrong": "Creative copywriting is genuinely Regime 2 probabilistic work; the error is using three sequential persona agents where one structured prompt suffices."
         }
       ],
       "explanation": "By the Agent Theater Litmus Test, multi-agent orchestration is justified if and only if subagents have distinct tools/permissions, private data scopes, isolated context windows to contain noisy exploration, parallel I/O, or an independent cold-context verification role. Chaining three persona prompts with identical tools and shared context simply multiplies token cost and latency.",

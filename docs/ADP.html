@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agentic Design Patterns (ADP): Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
+    <meta name="description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: Sequential Decision Framework, Tripartite Execution Regimes (Deterministic Code vs. Probabilistic LLM vs. HITL), Architectural Evaluation Criteria, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
     <meta name="keywords" content="Agentic Design Patterns, ADP, AI Agents, Workflows vs Agents, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, ReAct, Plan-and-Execute, ReWOO, LLMCompiler, Context Rot, HandoffContract, Poka-Yoke, ACI, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -33,7 +33,7 @@
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Agentic Design Patterns (ADP): Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
+    <meta property="og:description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: Sequential Decision Framework, Tripartite Execution Regimes (Deterministic Code vs. Probabilistic LLM vs. HITL), Architectural Evaluation Criteria, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ADP.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -42,7 +42,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Agentic Design Patterns (ADP): Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
+    <meta name="twitter:description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: Sequential Decision Framework, Tripartite Execution Regimes (Deterministic Code vs. Probabilistic LLM vs. HITL), Architectural Evaluation Criteria, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Agentic Design Patterns (ADP) — Study Guide by Michaël Bettan">
 
@@ -90,7 +90,7 @@
                   "@id": "https://mbettan.github.io/machine-learning-cert/ADP.html#article",
                   "headline": "Agentic Design Patterns (ADP): Study Guide | ML Cert Hub",
                   "name": "Agentic Design Patterns (ADP) Study Guide",
-                  "description": "Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory & context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.",
+                  "description": "Vendor-neutral Agentic Design Patterns (ADP) study guide: Sequential Decision Framework, Tripartite Execution Regimes (Deterministic Code vs. Probabilistic LLM vs. HITL), Architectural Evaluation Criteria, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory & context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.",
                   "keywords": "Agentic Design Patterns, ADP, AI Agents, Workflows vs Agents, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, ReAct, Plan-and-Execute, ReWOO, LLMCompiler, Context Rot, HandoffContract, Poka-Yoke, ACI, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ADP.html",
                   "inLanguage": "en",
@@ -160,7 +160,7 @@
                     <span>Certification Study Notes</span>
                 </div>
                 <h1>Agentic Design <em>Patterns (ADP)</em></h1>
-                <p class="cover-subtitle">Vendor-neutral architectural guide for designing reliable AI systems: the 4-Decision Sequence, 3-Bucket Work Decomposition (Deterministic Code vs. Probabilistic LLM vs. HITL), the 5-Factor Pattern Selection Matrix, the 5 canonical workflow patterns, autonomous reasoning loops (ReAct, Plan-and-Execute, Reflection), 4-tier memory &amp; context compaction, multi-agent topologies &amp; typed <code>HandoffContract</code> schemas, and production failure modes.</p>
+                <p class="cover-subtitle">Vendor-neutral architectural guide for designing reliable AI systems: Sequential Decision Framework, Tripartite Execution Regimes (Deterministic Code vs. Probabilistic LLM vs. HITL), Architectural Evaluation Criteria, the 5 canonical workflow patterns, autonomous reasoning loops (ReAct, Plan-and-Execute, Reflection), 4-tier memory &amp; context engineering, multi-agent topologies &amp; typed <code>HandoffContract</code> schemas, and production failure modes.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -193,11 +193,11 @@
                 </a>
                 <a href="#triage-decomposition" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>Architectural Triage &amp; 4-Decision Sequence</span>
+                    <span>Architectural Triage &amp; Sequential Decision Framework</span>
                 </a>
                 <a href="#work-shape-matrix" class="toc-item">
                     <span class="toc-number">02</span>
-                    <span>Work-Shape Spectrum &amp; 5-Factor Matrix</span>
+                    <span>Work-Shape Spectrum &amp; Architectural Evaluation Criteria</span>
                 </a>
                 <a href="#workflow-patterns" class="toc-item">
                     <span class="toc-number">03</span>
@@ -281,7 +281,7 @@
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="triage-decomposition">
             <div class="section-divider-number">01</div>
-            <h2>1. Architectural Triage &amp; The 4-Decision Sequence</h2>
+            <h2>1. Architectural Triage &amp; Sequential Decision Framework</h2>
         </div>
 
         <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Before writing a single system prompt or selecting an agent framework, resolve four sequential architectural decisions. Skipping Decision 1 or 2 is the primary cause of over-engineered, brittle, or unsafe deployments.</p>
@@ -290,12 +290,12 @@
             <div class="process-step">
                 <div class="process-step-number">01</div>
                 <h4>Should an LLM be in the loop?</h4>
-                <p>Decompose the business process into the <strong>3-Bucket Matrix</strong> (Deterministic Code vs. Probabilistic LLM vs. Human-in-the-Loop).</p>
+                <p>Decompose the business process across <strong>Tripartite Execution Regimes</strong> (Deterministic Code vs. Probabilistic LLM vs. Human-in-the-Loop).</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">02</div>
                 <h4>What work shape fits?</h4>
-                <p>Select Single Augmented Call, Composable Workflow, or Autonomous Agent using the <strong>5-Factor Selection Matrix</strong>.</p>
+                <p>Select Single Augmented Call, Composable Workflow, or Autonomous Agent using <strong>Architectural Evaluation Criteria</strong>.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">03</div>
@@ -312,19 +312,19 @@
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Bucket</th><th>Execution Engine</th><th>What Belongs Here</th><th>Canonical Examples</th><th>Why Other Buckets Fail</th></tr>
+                    <tr><th>Execution Regime</th><th>Execution Engine</th><th>What Belongs Here</th><th>Canonical Examples</th><th>Why Other Regimes Fail</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Bucket 1: Deterministic Code</strong></td><td>Plain application code, SQL, regex, type schemas, policy hooks</td><td>Exact arithmetic, schema validation, RBAC &amp; permission enforcement, idempotency keys, database writes, PII redaction, hard policy gates</td><td>Fee &amp; tax math, date arithmetic, checking <code>amount &lt;= 500</code>, enforcing <code>user_id</code> tenant scoping, verifying cited section headers exist in source text</td><td>LLMs introduce <strong>deterministic drift</strong> (silent tail-risk math or rule violations); humans are too slow and inconsistent at scale</td></tr>
-                    <tr><td><strong>Bucket 2: Probabilistic Model (LLM)</strong></td><td>Augmented LLM, Workflow node, or Agent loop</td><td>Unstructured synthesis, semantic classification, ambiguous entity extraction, fuzzy matching, multi-step planning over open-ended inputs</td><td>Summarizing conflicting legal clauses, triaging free-text support tickets, diagnosing novel stack traces across a codebase, drafting code diffs</td><td>Rigid code/regex shatters on phrasing variations; humans cannot manually read 50,000 documents per hour</td></tr>
-                    <tr><td><strong>Bucket 3: Human-in-the-Loop (HITL)</strong></td><td>Human reviewer via durable approval queue / UI checkpoint</td><td>High-blast-radius irreversible actions, novel policy exceptions, regulated sign-offs, subjective value trade-offs</td><td>Approving a <code>$25,000</code> wire refund, executing a production database drop, granting an exception to legal policy, merging security-critical PRs</td><td>Code lacks contextual judgment for novel exceptions; models cannot bear legal, financial, or ethical accountability</td></tr>
+                    <tr><td><strong>Regime 1: Deterministic Code</strong></td><td>Plain application code, SQL, regex, type schemas, policy hooks</td><td>Exact arithmetic, schema validation, RBAC &amp; permission enforcement, idempotency keys, database writes, PII redaction, hard policy gates</td><td>Fee &amp; tax math, date arithmetic, checking <code>amount &lt;= 500</code>, enforcing <code>user_id</code> tenant scoping, verifying cited section headers exist in source text</td><td>LLMs introduce <strong>deterministic invariant degradation</strong> (silent tail-risk math or rule violations); humans are too slow and inconsistent at scale</td></tr>
+                    <tr><td><strong>Regime 2: Probabilistic Model (LLM)</strong></td><td>Augmented LLM, Workflow node, or Agent loop</td><td>Unstructured synthesis, semantic classification, ambiguous entity extraction, fuzzy matching, multi-step planning over open-ended inputs</td><td>Summarizing conflicting legal clauses, triaging free-text support tickets, diagnosing novel stack traces across a codebase, drafting code diffs</td><td>Rigid code/regex shatters on phrasing variations; humans cannot manually read 50,000 documents per hour</td></tr>
+                    <tr><td><strong>Regime 3: Human-in-the-Loop (HITL)</strong></td><td>Human reviewer via durable approval queue / UI checkpoint</td><td>High-blast-radius irreversible actions, novel policy exceptions, regulated sign-offs, subjective value trade-offs</td><td>Approving a <code>$25,000</code> wire refund, executing a production database drop, granting an exception to legal policy, merging security-critical PRs</td><td>Code lacks contextual judgment for novel exceptions; models cannot bear legal, financial, or ethical accountability</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="two-columns">
             <div class="concept-card accent-coral">
-                <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Preventing Deterministic Drift</h3>
+                <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Hard Invariant Enforcement in Code (Preventing Deterministic Drift)</h3>
                 <p><strong>Deterministic drift</strong> occurs when a team delegates exact, rule-bound logic—such as calculating pro-rated subscription refunds, enforcing role-based access control (RBAC), checking date eligibility windows, or redacting Social Security Numbers—to a system prompt instead of application code.</p>
                 <ul>
                     <li><strong>Why it is dangerous:</strong> Even when a frontier model follows a prompt rule on most test cases, probabilistic token sampling guarantees a non-zero tail-risk failure rate—especially under <strong>instruction crowding</strong> (long prompts with 20+ competing rules) or adversarial prompt injection.</li>
@@ -334,8 +334,8 @@
             <div class="concept-card accent-amber">
                 <h3><div class="icon-badge"><i class="fas fa-user-check"></i></div>HITL Checkpoints vs. Programmatic Guardrails</h3>
                 <ul>
-                    <li><strong>Guardrail callbacks (Bucket 1 — milliseconds):</strong> Deterministic pre/post hooks enforcing PII redaction, budget caps, allowlisted paths, and JSON schemas on every turn without human latency.</li>
-                    <li><strong>HITL approval (Bucket 3 — seconds to hours):</strong> Planned pause before an irreversible or regulated action commits. Persist session state so the workflow can pause indefinitely and resume cleanly.</li>
+                    <li><strong>Guardrail callbacks (Regime 1 — milliseconds):</strong> Deterministic pre/post hooks enforcing PII redaction, budget caps, allowlisted paths, and JSON schemas on every turn without human latency.</li>
+                    <li><strong>HITL approval (Regime 3 — seconds to hours):</strong> Planned pause before an irreversible or regulated action commits. Persist session state so the workflow can pause indefinitely and resume cleanly.</li>
                     <li><strong>Concrete argument inspection:</strong> Reviewers must inspect and approve concrete tool arguments (<code>issue_refund(order_id="ORD-891", amount_usd=490.00)</code>), never vague model prose.</li>
                     <li><strong>Avoid approval fatigue:</strong> Gate by risk tier (e.g., auto-approve refunds <code>&lt;= $50</code> in code; require HITL for <code>&gt; $50</code>) so human reviewers do not rubber-stamp alerts.</li>
                 </ul>
@@ -343,32 +343,32 @@
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 02: WORK-SHAPE SPECTRUM & 5-FACTOR MATRIX
+             SECTION 02: WORK-SHAPE SPECTRUM & ARCHITECTURAL CRITERIA
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="work-shape-matrix">
             <div class="section-divider-number">02</div>
-            <h2>2. The Work-Shape Spectrum &amp; 5-Factor Pattern Matrix</h2>
+            <h2>2. The Work-Shape Spectrum &amp; Architectural Evaluation Criteria</h2>
         </div>
 
-        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Once Bucket 2 (the probabilistic slice) is isolated, evaluate five architectural factors to choose between a <strong>Single Augmented LLM Call</strong>, a <strong>Composable Workflow</strong>, and an <strong>Autonomous Agent</strong>.</p>
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Once Regime 2 (the probabilistic slice) is isolated, evaluate architectural criteria to choose between a <strong>Single Augmented LLM Call</strong>, a <strong>Composable Workflow</strong>, and an <strong>Autonomous Agent</strong>.</p>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Selection Factor</th><th>Single Augmented LLM Call</th><th>Composable Workflow (DAG / Chain)</th><th>Autonomous Agent (Open Loop)</th></tr>
+                    <tr><th>Evaluation Criterion</th><th>Single Augmented LLM Call</th><th>Composable Workflow (DAG / Chain)</th><th>Autonomous Agent (Open Loop)</th></tr>
                 </thead>
                 <tbody>
                     <tr><td><strong>1. Task Path Predictability</strong></td><td><strong>Fully known (1 step):</strong> Input maps directly to output with retrieved context or a single tool lookup.</td><td><strong>Known decomposition (<em>K</em> steps):</strong> Multi-step process where the sequence, branches, or fan-out categories are fixed in advance.</td><td><strong>Unknown / emergent (<em>N</em> steps):</strong> Step <em>N+1</em> depends entirely on what tool observation <em>N</em> revealed (e.g., debugging an unknown bug).</td></tr>
                     <tr><td><strong>2. Latency Budget</strong></td><td><strong>Sub-second to ~3 s:</strong> Single model roundtrip; ideal for synchronous inline UI responses.</td><td><strong>~3 s to ~15 s:</strong> Predictable bounded latency (<em>K</em> sequential stages or 1 parallel fan-out + join).</td><td><strong>Seconds to minutes+:</strong> Open-ended <em>O(N)</em> sequential turns; requires streaming progress UI or background execution.</td></tr>
                     <tr><td><strong>3. Error Blast Radius &amp; Reversibility</strong></td><td><strong>Low / read-only:</strong> Output is displayed to a user or validated by caller code before any state mutation.</td><td><strong>Medium / gated:</strong> Intermediate code gates catch bad outputs between stages before downstream side-effects run.</td><td><strong>High if ungated:</strong> Multi-turn tool mutations can compound; requires sandboxing, file checkpoints, and HITL gates on writes.</td></tr>
                     <tr><td><strong>4. Token Cost Ceiling</strong></td><td><strong>~1× baseline:</strong> Minimal prompt overhead; highest prompt-cache hit ratio.</td><td><strong>~3–5× baseline:</strong> Bounded multiplier across <em>K</em> focused prompts; easy to route cheap tiers to simple nodes.</td><td><strong>~10–15×+ baseline:</strong> Context accumulates across turns and tool outputs; requires strict token/turn caps and compaction.</td></tr>
-                    <tr><td><strong>5. Auditability &amp; Compliance</strong></td><td><strong>High:</strong> Single input/output pair; trivial to log and reproduce.</td><td><strong>Highest for multi-step:</strong> Deterministic transitions and explicit code gate pass/fail logs satisfy strict regulatory audits.</td><td><strong>Complex:</strong> Non-deterministic trajectories require full event-ledger tracing (<code>tool_trajectory</code>) and replay harnesses.</td></tr>
+                    <tr><td><strong>5. Auditability &amp; Compliance Rigor</strong></td><td><strong>High:</strong> Single input/output pair; trivial to log and reproduce.</td><td><strong>Highest for multi-step:</strong> Deterministic transitions and explicit code gate pass/fail logs satisfy strict regulatory audits.</td><td><strong>Complex:</strong> Non-deterministic trajectories require full event-ledger tracing (<code>tool_trajectory</code>) and replay harnesses.</td></tr>
                 </tbody>
             </table>
         </div>
 
         <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-dice"></i></div>Four Behavioral Properties of Probabilistic Systems</h3>
+            <h3><div class="icon-badge"><i class="fas fa-dice"></i></div>Operating Characteristics of Probabilistic Systems</h3>
             <div class="definition-grid">
                 <div class="definition-item">
                     <dt>1. Non-determinism</dt>
@@ -461,25 +461,19 @@
             </ul>
         </div>
 
-        <pre><code class="language-python">def run_evaluator_optimizer(source_doc: str, max_iterations: int = 3) -&gt; dict:
-    feedback = None
-    for attempt in range(1, max_iterations + 1):
-        draft = call_generator_llm(source_doc, prior_feedback=feedback)
-
-        # Deterministic gate first: verify every cited section heading exists in source_doc
-        missing_refs = [c.section_heading for c in draft.citations if c.section_heading not in source_doc]
-        if missing_refs:
-            feedback = f"Cited sections missing from source text: {missing_refs}"
-            continue
-
-        # Cold-context adversarial critic (sees only source_doc, draft, and rubric)
-        verdict = call_critic_llm(source_doc=source_doc, draft=draft)
-        if verdict.approved:
-            return {"status": "approved", "output": draft, "iterations": attempt}
-        feedback = verdict.actionable_critique
-
-    # Max iterations reached without passing rubric -> fail closed to HITL escalation
-    return {"status": "escalation_required", "draft": draft, "reason": feedback}</code></pre>
+        <div class="comparison-table-wrapper" style="margin-top: 16px; margin-bottom: 24px;">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Loop Phase</th><th>Agent / Mechanism</th><th>Inputs &amp; Context</th><th>Exit / Escalation Criteria</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Generation</strong></td><td>Generator LLM</td><td>Task brief + prior critic feedback (if any)</td><td>Emits structured draft with cited section headers</td></tr>
+                    <tr><td><strong>Pre-Critic Gate</strong></td><td>Deterministic Code</td><td>Source text + draft citations</td><td>Deterministically checks that cited headers exist in source text; fails fast if missing</td></tr>
+                    <tr><td><strong>Evaluation</strong></td><td>Cold-Context Critic LLM</td><td>Source text + draft + rubric (<code>include_contents='none'</code>)</td><td>Emits <code>approved: bool</code> and actionable critique; loop terminates if <code>approved == True</code></td></tr>
+                    <tr><td><strong>Termination / Fallback</strong></td><td>Deterministic Guard</td><td>Iteration counter (<code>attempt &lt;= max_iterations</code>)</td><td>If <code>attempt &gt; max_iterations</code> without approval, fails closed to HITL escalation</td></tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
@@ -619,43 +613,20 @@
             </div>
         </div>
 
-        <pre><code class="language-python">def run_bounded_agent_loop(messages: list, max_turns: int = 12, max_usd: float = 0.50) -&gt; dict:
-    seen_calls: dict[tuple[str, str], int] = {}
-    spent_usd = 0.0
-
-    for turn in range(1, max_turns + 1):
-        if spent_usd &gt;= max_usd:
-            return {"status": "stopped", "reason": "budget_ceiling_exceeded", "turns": turn - 1}
-
-        resp = call_model(messages=messages, tools=TOOL_SCHEMAS)
-        spent_usd += estimate_cost(resp.usage)
-        messages.append({"role": "assistant", "content": resp.content})
-
-        if resp.stop_reason == "end_turn":
-            return {"status": "completed", "answer": extract_text(resp.content), "turns": turn}
-
-        if resp.stop_reason == "tool_use":
-            tool_results = []
-            for block in [b for b in resp.content if b.type == "tool_use"]:
-                sig = (block.name, json.dumps(block.input, sort_keys=True))
-                seen_calls[sig] = seen_calls.get(sig, 0) + 1
-                if seen_calls[sig] &gt;= 3:
-                    tool_results.append({
-                        "type": "tool_result", "tool_use_id": block.id, "is_error": True,
-                        "content": f"Loop breaker: {block.name} called 3x with identical args. Try another approach or escalate."
-                    })
-                    continue
-                try:
-                    out = execute_tool_safely(block.name, block.input)
-                    tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": out})
-                except Exception as exc:
-                    tool_results.append({
-                        "type": "tool_result", "tool_use_id": block.id, "is_error": True,
-                        "content": f"{type(exc).__name__}: {exc}. Check parameter constraints or escalate."
-                    })
-            messages.append({"role": "user", "content": tool_results})
-
-    return {"status": "stopped", "reason": "max_turns_exceeded", "turns": max_turns}</code></pre>
+        <div class="comparison-table-wrapper" style="margin-top: 16px; margin-bottom: 24px;">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Loop Guardrail Dimension</th><th>Detection Mechanism</th><th>Runtime Action on Trigger</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Turn Budget</strong></td><td>Counter tracking total completed model roundtrips</td><td>Halts execution when <code>turn &gt; max_turns</code>; returns <code>error_max_turns</code></td></tr>
+                    <tr><td><strong>Financial Cost Ceiling</strong></td><td>Cumulative token spend tracker (<code>spent_usd &gt;= max_usd</code>)</td><td>Immediately terminates session; emits <code>budget_ceiling_exceeded</code></td></tr>
+                    <tr><td><strong>Duplicate Call Trap</strong></td><td>Hash map tracking <code>(tool_name, hash(canonical_args))</code> across recent turns</td><td>Intercepts 3rd duplicate invocation; returns <code>is_error: true</code> loop-breaker feedback</td></tr>
+                    <tr><td><strong>Structured Tool Errors</strong></td><td>Exception handler wrapping tool execution harness</td><td>Emits <code>{"type": "tool_result", "is_error": true, "content": "..."}</code> with corrective advice</td></tr>
+                    <tr><td><strong>Completion Signal</strong></td><td>Inspects <code>stop_reason == "end_turn"</code> and output schema</td><td>Returns completed payload with final answer and turn count</td></tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- ═══════════════════════════════════════
              SECTION 05: MEMORY ARCHITECTURE & CONTEXT BUDGET
@@ -837,24 +808,13 @@
             </div>
         </div>
 
-        <pre><code class="language-python">from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field
-
-class Citation(BaseModel):
-    source_id: str
-    section_heading: str
-    verbatim_quote: str
-
-class HandoffContract(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
+        <pre><code class="language-python">class HandoffContract(BaseModel):
     task_id: str
     status: Literal["completed", "partial", "blocked", "escalation_required"]
     confidence_band: Literal["high", "medium", "low"]
-    summary: str = Field(max_length=1200, description="Compact synthesis returned to the coordinator")
-    artifact_uri: str | None = Field(default=None, description="Path/URI to full diff or dataset on disk/storage")
-    verified_citations: list[Citation] = Field(default_factory=list)
-    blocking_reason: str | None = None</code></pre>
+    summary: str = Field(max_length=1200, description="Compact synthesis")
+    artifact_uri: str | None = Field(default=None, description="Artifact path")
+    verified_citations: list[dict] = Field(default_factory=list)</code></pre>
 
         <!-- ═══════════════════════════════════════
              SECTION 07: ANTI-PATTERNS, FAILURE MODES & CHECKLIST
@@ -898,7 +858,7 @@ class HandoffContract(BaseModel):
         <div class="concept-card accent-mint">
             <h3><div class="icon-badge"><i class="fas fa-clipboard-check"></i></div>8-Point Pre-Production Architectural Checklist</h3>
             <ul>
-                <li><strong>1. 3-Bucket Triage Verified:</strong> Are all math, schema validation, RBAC, and hard compliance rules executed in deterministic code (Bucket 1), and all high-blast-radius irreversible actions gated by HITL (Bucket 3)?</li>
+                <li><strong>1. Execution Regime Triage Verified:</strong> Are all math, schema validation, RBAC, and hard compliance rules executed in deterministic code (Regime 1), and all high-blast-radius irreversible actions gated by HITL (Regime 3)?</li>
                 <li><strong>2. Complexity Ladder Justified:</strong> Have you proven with an evaluation baseline that a single Augmented LLM call or deterministic Workflow cannot meet the bar before deploying an Autonomous Agent?</li>
                 <li><strong>3. Pre-LLM Epistemic Gating Active:</strong> Does deterministic code validate file types, input completeness, and composite extraction quality <em>before</em> spending model tokens, with <code>escalation_required = True</code> as the safe default?</li>
                 <li><strong>4. Loop Hygiene Enforced:</strong> Does every agent and evaluator-optimizer loop enforce <code>max_turns</code> / <code>max_iterations</code>, token budget ceilings, duplicate tool-call detection, and explicit escalation when the cap trips?</li>
@@ -919,19 +879,19 @@ class HandoffContract(BaseModel):
 
         <div class="definition-grid">
             <div class="definition-item">
-                <dt>3-Bucket Work Decomposition</dt>
-                <dd>Triage framework dividing logic into <strong>Bucket 1 (Deterministic Code)</strong> for math/validation/RBAC, <strong>Bucket 2 (Probabilistic LLM)</strong> for unstructured synthesis/planning, and <strong>Bucket 3 (HITL)</strong> for irreversible or accountability-bearing decisions.</dd>
+                <dt>Tripartite Execution Regimes</dt>
+                <dd>Triage framework dividing logic into <strong>Regime 1 (Deterministic Code)</strong> for math/validation/RBAC, <strong>Regime 2 (Probabilistic LLM)</strong> for unstructured synthesis/planning, and <strong>Regime 3 (HITL)</strong> for irreversible or accountability-bearing decisions.</dd>
             </div>
             <div class="definition-item">
-                <dt>4-Decision Sequence</dt>
+                <dt>Sequential Decision Framework</dt>
                 <dd>Ordered architectural triage run before prompt writing: (1) Should an LLM be used at all? → (2) What work shape fits? → (3) How is it routed/hosted? → (4) What guardrails and verification wrap it?</dd>
             </div>
             <div class="definition-item">
-                <dt>5-Factor Pattern Matrix</dt>
+                <dt>Architectural Evaluation Criteria</dt>
                 <dd>Rubric comparing Single Call, Composable Workflow, and Autonomous Agent across path predictability, latency budget, error blast radius, token cost ceiling (~1× vs. 3–5× vs. ~15×), and auditability.</dd>
             </div>
             <div class="definition-item">
-                <dt>Deterministic Drift</dt>
+                <dt>Deterministic Invariant Degradation (Deterministic Drift)</dt>
                 <dd>Silent reliability failure caused by delegating exact arithmetic, schema validation, or policy enforcement to probabilistic prompt instructions instead of deterministic code.</dd>
             </div>
             <div class="definition-item">
@@ -1028,9 +988,9 @@ class HandoffContract(BaseModel):
             </div>
             <div class="quiz-body">
                 <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> What is the 4-Decision Sequence, and why must it run before prompt engineering?</p>
+                    <p><span class="q-num">Q1.</span> What is the Sequential Decision Framework, and why must it run before prompt engineering?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text"><strong>(1)</strong> Should an LLM be in the loop at all? (3-Bucket decomposition: Deterministic Code vs. Probabilistic LLM vs. HITL), <strong>(2)</strong> What work shape fits? (Single Call vs. Workflow vs. Autonomous Agent), <strong>(3)</strong> Where and how is it routed/hosted? (model tiers, effort, batch/stream, residency), and <strong>(4)</strong> What deterministic guardrails and verification wrap it? Running this sequence first prevents delegating exact math/RBAC to prompts (<em>deterministic drift</em>) or building a 15× token autonomous agent where a 2-step workflow suffices.</span>
+                        <span class="answer-text"><strong>(1)</strong> Problem decomposition &amp; triage across Tripartite Execution Regimes (Deterministic Code vs. Probabilistic LLM vs. HITL), <strong>(2)</strong> Work-shape selection (Single Call vs. Workflow vs. Autonomous Agent), <strong>(3)</strong> Routing and hosting (model tiers, effort, batch/stream, residency), and <strong>(4)</strong> Deterministic guardrails and verification wrapping. Running this sequence first prevents delegating exact math/RBAC to prompts (<em>deterministic drift</em>) or building a 15× token autonomous agent where a 2-step workflow suffices.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
