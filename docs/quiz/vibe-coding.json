@@ -952,7 +952,7 @@
         {
           "text": "Keep defaults unchanged because every Antigravity desktop preset enables OS Seatbelt sandboxing automatically without configuration.",
           "correct": false,
-          "why_wrong": "In Antigravity App Secure-Mode presets (including \"Full machine\"), Terminal Sandbox is off by default until explicitly enabled, whereas CLI `auto` mode enables `--sandbox` automatically."
+          "why_wrong": "In Antigravity App profiles (including Full machine and Enterprise presets), Terminal Sandbox is off by default until explicitly enabled, whereas individual Default/Auto and CLI auto mode enable sandboxing automatically."
         },
         {
           "text": "Add an `Allow` rule for the project folder only, because `Allow` rules override `Deny` rules whenever paths overlap.",
@@ -965,8 +965,8 @@
           "why_wrong": "Agent Substrate on GKE is a distributed stateful actor framework on Kubernetes, not a local desktop terminal sandbox."
         }
       ],
-      "explanation": "In Google Antigravity, Terminal Sandbox (`enableTerminalSandbox`) is off by default in desktop App presets (whereas CLI `auto` mode auto-enables `--sandbox`). Enabling it activates OS-level Seatbelt/`bubblewrap` confinement blocking `.env` reads and unauthorized network egress, with permission precedence strictly following `Deny > Ask > Allow`.",
-      "key_takeaway": "Antigravity App presets leave Terminal Sandbox off by default; enable it explicitly and rely on `Deny > Ask > Allow` precedence.",
+      "explanation": "In Google Antigravity, Terminal Sandbox (`enableTerminalSandbox`) is off by default in Full machine, Turbo, and Enterprise presets (whereas individual Default/Auto presets and CLI `auto` mode auto-enable `--sandbox`). Enabling it activates OS-level Seatbelt/`bubblewrap` confinement blocking `.env` reads and unauthorized network egress, with permission precedence strictly following `Deny > Ask > Allow`.",
+      "key_takeaway": "Full machine and Enterprise presets leave Terminal Sandbox off by default; enable it explicitly and rely on `Deny > Ask > Allow` precedence.",
       "doc_links": [
         {
           "label": "Antigravity Terminal Sandbox",
@@ -1162,10 +1162,10 @@
         {
           "text": "Disable the SAST tool completely because CodeMender can only remediate vulnerabilities discovered by `cm find`.",
           "correct": false,
-          "why_wrong": "CodeMender is not restricted to `cm find`; `cm report import` ingests external SAST SARIF findings directly."
+          "why_wrong": "CodeMender is not restricted to `cm find`; `cm report import --file ./findings.json` ingests external scanner JSON findings directly."
         },
         {
-          "text": "Run `cm report import` on the SAST output, then run `cm verify --sandbox` to confirm exploitability with a real PoC.",
+          "text": "Run `cm report import --file ./findings.json` on the report, then run `cm verify FINDING_ID` to confirm exploitability with a real PoC (sandbox on by default).",
           "correct": true
         },
         {
@@ -1179,8 +1179,8 @@
           "why_wrong": "Filename heuristics cannot prove exploitability; `cm verify` compiles and executes an actual PoC exploit inside a sandbox."
         }
       ],
-      "explanation": "CodeMender's `cm report import` ingests third-party SAST/Wiz findings, and `cm verify --sandbox` synthesizes, compiles, and executes a concrete Proof-of-Concept (PoC) exploit locally inside a process sandbox—escalating only confirmed exploitable vulnerabilities to `cm fix`.",
-      "key_takeaway": "Use `cm report import` + `cm verify --sandbox` to turn noisy external SAST alerts into PoC-confirmed vulnerabilities.",
+      "explanation": "CodeMender's `cm report import --file ./findings.json` ingests third-party SAST and Wiz JSON findings, and `cm verify FINDING_ID` synthesizes, compiles, and executes a concrete Proof-of-Concept (PoC) exploit locally inside a process sandbox (on by default)—escalating only confirmed exploitable vulnerabilities to `cm fix FINDING_ID -y`.",
+      "key_takeaway": "Use `cm report import --file ./findings.json` + `cm verify FINDING_ID` to turn noisy external alerts into PoC-confirmed vulnerabilities with default sandboxing.",
       "doc_links": [
         {
           "label": "Google DeepMind CodeMender Research",
