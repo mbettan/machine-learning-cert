@@ -925,25 +925,38 @@ options = ClaudeAgentOptions(hooks={"PreToolUse": [HookMatcher(matcher="mcp__bil
             </table>
         </div>
 
-        <div class="concept-card accent-pink" style="margin-top: 22px;">
-            <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
-            <p>Listen to the 56-minute Claude Agent SDK audio deep dive, or open the 2-column study guide PDF, the 21-slide Claude Agent SDK Architecture &amp; Orchestration Blueprint deck, and the Standard sketchnote infographic in the Hub Viewer.</p>
-            <div class="audio-label" style="margin-top: 15px;">Orchestrating Reliable Agents with the Claude Agent SDK (Podcast)</div>
-            <div class="audio-wrapper">
-                <audio controls controlsList="nodownload" oncontextmenu="return false;">
-                    <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeAgentSDK-v1.0.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
+        <div class="two-columns" style="margin-top: 22px;">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Claude Agent SDK Architecture Walkthrough Video</h3>
+                <p>A narrated visual walkthrough of the Claude Agent SDK execution loop, <code>stop_reason</code> handling, coordinator–subagent isolation, deterministic <code>PreToolUse</code> hooks, session resumption and forking, structured tool errors, and Claude Managed Agents.</p>
+                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                    <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeAgentSDK-v1.0.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                </div>
             </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
-                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
-                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
-                    <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
-                </a>
-                <a href="quiz.html?topic=claude-agent-sdk" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
-                    <i class="fas fa-tasks"></i>
-                    <span>Launch Interactive Claude Agent SDK Practice Quiz →</span>
-                </a>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 56-minute Claude Agent SDK audio deep dive, or open the 2-column study guide PDF, the 21-slide Claude Agent SDK Architecture &amp; Orchestration Blueprint deck, and the Standard sketchnote infographic in the Hub Viewer.</p>
+                <div class="audio-label" style="margin-top: 15px;">Orchestrating Reliable Agents with the Claude Agent SDK (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/ClaudeAgentSDK-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=claude-agent-sdk" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive Claude Agent SDK Practice Quiz →</span>
+                    </a>
+                </div>
             </div>
         </div>
 
