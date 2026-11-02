@@ -1237,9 +1237,9 @@
           "why_wrong": "Cache TTL has no effect on context poisoning, and higher effort in the same polluted context still inherits the poisoned premise and confirmation bias."
         },
         {
-          "text": "Add a system-prompt output style midway through the session to switch the agent from Builder persona to Reviewer persona.",
+          "text": "Modify the system prompt instructions midway through the conversation to switch the model from Builder persona to Reviewer persona.",
           "correct": false,
-          "why_wrong": "Mutating system mid-session invalidates both the system and messages prompt caches while leaving the poisoned history and builder turns inside messages[]."
+          "why_wrong": "Mutating the system prompt mid-conversation invalidates both system and message prompt caches, while failing to clear the poisoned reasoning from earlier turns in messages[]."
         }
       ],
       "explanation": "Context poisoning occurs when a hallucination or faulty premise in an early turn is referenced repeatedly; summarization/compaction preserves the poisoned premise in condensed form, so you must truncate or reset history prior to the bad turn. For verification, the Builder–Reviewer pattern requires a separate messages.create() call with a fresh messages[] array containing only the specification and candidate artifact so the reviewer is not biased by the builder's trajectory.",
@@ -1259,38 +1259,34 @@
       "id": "claude-api-q-33",
       "section": "Explicit Criteria & Few-Shot",
       "guide_anchor": "prompt-criteria",
-      "question": "A code-review bot's \"comment accuracy\" category produces so many false positives that developers now ignore its security findings too. The team proposes adding \"only report findings you are highly confident about\" to the prompt. What should they do instead?",
+      "question": "A clinic's appointment bot writes replies that go straight to an SMS gateway, which displays raw characters. Its system prompt, itself written as nested markdown bullets, says \"Do not use markdown.\" Replies still contain asterisks and bullet lists about a third of the time. Which revision is most likely to help?",
       "options": [
         {
-          "text": "Add the confidence instruction and have the model print a 1–10 score on every finding so developers can filter out the low scores themselves.",
-          "correct": false,
-          "why_wrong": "Confidence wording doesn't define what qualifies, so precision barely moves; it also pushes filtering onto developers who already distrust the output."
-        },
-        {
-          "text": "Write explicit report/skip criteria with contrast examples, and pause the noisy category until its measured precision recovers.",
+          "text": "State the target (plain-prose sentences), explain that SMS shows raw symbols, and rewrite the prompt itself in plain prose.",
           "correct": true
         },
         {
-          "text": "Move the reviewer to the most capable model tier with higher effort so it naturally becomes more careful about which comments it flags.",
+          "text": "Repeat \"NEVER USE MARKDOWN\" in capitals at both the top and bottom of the system prompt so the prohibition carries more weight.",
           "correct": false,
-          "why_wrong": "A bigger model with the same vague instruction still has no definition of what to report; the defect is the criteria, not capability."
+          "why_wrong": "Louder prohibitions still name no target format and give no reason, and the markdown-styled prompt keeps pulling output toward markdown."
         },
         {
-          "text": "Keep every category enabled but merge them into one list, so the accurate security findings outweigh the noisy comment findings overall.",
+          "text": "Set a low temperature so the formatting choice becomes deterministic and the markdown stops appearing in the replies.",
           "correct": false,
-          "why_wrong": "Noise in one category erodes trust in all of them; merging hides per-category precision instead of fixing the cause."
+          "why_wrong": "Sampling settings do not define a format; a deterministic reply can just as easily be deterministic markdown."
+        },
+        {
+          "text": "Add a regex post-processor that strips every asterisk and dash and leave the prompt as is, since formatting can't be steered.",
+          "correct": false,
+          "why_wrong": "Formatting is steerable through the prompt, and blind stripping mangles legitimate text such as hyphenated names or negative amounts."
         }
       ],
-      "explanation": "Vague confidence instructions don't improve precision because they don't say what counts. Categorical report/skip criteria plus contrast examples define the boundary, and temporarily disabling a high-noise category restores trust while its criteria are rewritten and re-measured.",
-      "key_takeaway": "Fix false positives with explicit categorical criteria and examples, not 'be confident' wording; pause noisy categories while you fix them.",
+      "explanation": "Current prompting guidance is to tell Claude what to do rather than what not to do, to give the motivation behind a constraint so Claude can generalize from it, and to match the prompt's own style to the desired output, since markdown in the prompt tends to produce markdown in the reply.",
+      "key_takeaway": "Describe the format you want, explain why, and write the prompt in that same style.",
       "doc_links": [
         {
           "label": "Claude Prompting Best Practices",
           "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
-        },
-        {
-          "label": "Increasing Output Consistency",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency"
         }
       ]
     },
@@ -1298,38 +1294,38 @@
       "id": "claude-api-q-34",
       "section": "Explicit Criteria & Few-Shot",
       "guide_anchor": "prompt-criteria",
-      "question": "A recipe extractor has detailed instructions, yet results for informal amounts such as \"a pinch\" or \"a couple of cups\" vary between runs and the quantity field is sometimes empty. What is the most effective next step?",
+      "question": "A refactoring assistant forwards user requests such as \"any ideas for speeding this up?\" to Claude with file-edit tools attached. Users complain that Claude answers with a list of ideas but never edits the file, while the product's intent is that Claude applies edits by default. What change matches current guidance?",
       "options": [
         {
-          "text": "Add another paragraph listing every informal unit seen so far, each with its exact gram or millilitre conversion, so the model can look every one of them up.",
-          "correct": false,
-          "why_wrong": "Rule lists only match what was enumerated; examples teach a judgment that generalizes to phrasings nobody listed."
-        },
-        {
-          "text": "Make the quantity a required number in the schema so the model can no longer leave it empty in any response it returns.",
-          "correct": false,
-          "why_wrong": "Requiring a value the source may not state pushes the model to fabricate one, and it still doesn't show how to read informal amounts."
-        },
-        {
-          "text": "Add a few varied, tagged examples showing how informal amounts are extracted, including an explicit null when no quantity is stated.",
+          "text": "Phrase requests as explicit actions (\"Change this function to...\") or add a default-to-action instruction to the system prompt.",
           "correct": true
         },
         {
-          "text": "Set temperature to 0 so the same informal phrase is always converted identically across runs and the variance disappears.",
+          "text": "Set tool_choice to {\"type\": \"any\"} on every turn so Claude must call an edit tool even when the user only wants an explanation.",
           "correct": false,
-          "why_wrong": "Non-default temperature returns 400 on Claude 4.7+, and consistency of a wrong interpretation is not correctness."
+          "why_wrong": "Forcing a tool call on every turn breaks purely informational requests; the issue is how the request is worded, not tool availability."
+        },
+        {
+          "text": "Raise max_tokens sharply, because Claude stops at suggestions when it predicts an edit would exceed its output budget.",
+          "correct": false,
+          "why_wrong": "There is no such behavior; recent models follow instructions precisely, so a request for ideas gets ideas."
+        },
+        {
+          "text": "Remove the tool descriptions so Claude stops weighing which tool to use and goes straight to editing the file.",
+          "correct": false,
+          "why_wrong": "Descriptions are what let Claude choose tools correctly; removing them degrades tool use without changing the suggest-only wording."
         }
       ],
-      "explanation": "Few-shot examples are the most reliable lever when instructions alone give inconsistent results. Relevant, diverse examples in <example> tags show both the format and the judgment for ambiguous inputs, including when to return null rather than guess.",
-      "key_takeaway": "When instructions give inconsistent output, add a few varied, tagged examples that show the judgment, including explicit nulls.",
+      "explanation": "Recent Claude models are trained for precise instruction following: asking for suggestions tends to yield suggestions. Be explicit about the action, or set a system-level default that tells Claude to implement changes rather than only suggest them, inferring intent when it is unclear.",
+      "key_takeaway": "If you want Claude to act, ask for the action or set a default-to-action system instruction.",
       "doc_links": [
         {
           "label": "Claude Prompting Best Practices",
           "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
         },
         {
-          "label": "Increasing Output Consistency",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency"
+          "label": "Claude Tool Use Overview",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
         }
       ]
     },
@@ -1337,38 +1333,34 @@
       "id": "claude-api-q-35",
       "section": "Structured Outputs",
       "guide_anchor": "structured-outputs",
-      "question": "A pipeline receives scanned documents that may be invoices, receipts or contracts, each with its own extraction tool. With default settings Claude sometimes answers in prose instead of calling any tool. The pinned model accepts forced tool use. Which setting fits best?",
+      "question": "A team sends a hand-written JSON schema in output_config.format that sets \"minimum\": 0 on quantity and \"maxLength\": 80 on sku. Every request now returns 400. They still want those rules enforced on the results. What is the best approach?",
       "options": [
         {
-          "text": "Set tool_choice to {\"type\": \"any\"} so Claude must call one of the extraction tools while still choosing the one that matches.",
+          "text": "Pass a Pydantic model to client.messages.parse(), which moves constraints into descriptions and validates the response.",
           "correct": true
         },
         {
-          "text": "Set tool_choice to {\"type\": \"tool\", \"name\": \"extract_invoice\"} for every document so the output is always structured, whatever the type.",
+          "text": "Wrap the schema in an anyOf with a second, unconstrained branch so the API accepts the request and still applies the limits.",
           "correct": false,
-          "why_wrong": "Forcing the invoice schema onto receipts and contracts produces wrong or invented fields; the document type is unknown up front."
+          "why_wrong": "Unsupported keywords are rejected wherever they appear, and an unconstrained branch would let invalid values through anyway."
         },
         {
-          "text": "Keep tool_choice auto and add \"always respond in JSON\" to the system prompt so prose answers stop appearing in the results.",
+          "text": "Replace minimum with a pattern on the quantity field, since pattern constraints apply to integers and strings alike.",
           "correct": false,
-          "why_wrong": "With auto, Claude may still reply in text; prompt prose is best effort and gives no structural guarantee."
+          "why_wrong": "pattern is a string keyword and cannot validate an integer; numeric constraints such as minimum are simply not supported."
         },
         {
-          "text": "Set tool_choice to {\"type\": \"none\"} and parse the JSON that Claude writes in its text reply after each document.",
+          "text": "Drop structured outputs and ask for JSON in the prompt, because constrained decoding can't coexist with validation rules.",
           "correct": false,
-          "why_wrong": "none disables tool calls entirely, so you lose the schema-validated tool input and are back to parsing free text."
+          "why_wrong": "That gives up the schema guarantee; the SDK helpers keep constrained decoding and still validate the original rules."
         }
       ],
-      "explanation": "auto lets the model answer in text; any requires a tool call but lets Claude pick which; a named tool forces one schema. With several schemas and an unknown document type, any guarantees structured output without forcing the wrong schema.",
-      "key_takeaway": "Unknown document type with several extraction tools: tool_choice any. A specific mandatory step: force that named tool.",
+      "explanation": "Structured outputs do not support numerical constraints (minimum, maximum, multipleOf) or string length constraints, and unsupported features return 400. The SDK's parse() helper, or transform_schema() for raw schemas, removes those keywords, notes them in field descriptions, adds additionalProperties: false, and validates the response against the original constraints.",
+      "key_takeaway": "Let the SDK transform unsupported schema constraints and validate them client-side instead of sending them raw.",
       "doc_links": [
         {
           "label": "Claude Structured Outputs",
           "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
-        },
-        {
-          "label": "Claude Strict Tool Use",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
         }
       ]
     },
@@ -1376,30 +1368,30 @@
       "id": "claude-api-q-36",
       "section": "Structured Outputs",
       "guide_anchor": "structured-outputs",
-      "question": "An invoice extractor's schema marks po_number as a required string. About 40% of invoices have no PO number, and auditors keep finding plausible PO numbers that don't exist. What is the best fix?",
+      "question": "A lead-capture extractor uses JSON outputs with properties declared in the order notes, name, email, company; only name and email are required. A downstream script writes the parsed object's values into CSV columns by position, and the columns keep coming out shifted. What is the cause and fix?",
       "options": [
         {
-          "text": "Add a retry loop that asks again until the returned PO number matches the company's PO format regular expression.",
-          "correct": false,
-          "why_wrong": "The value is absent from the source, so retries just produce a format-valid fabrication that passes the regex."
-        },
-        {
-          "text": "Put an enum of every known PO number in the schema so that only real values can ever be produced by the model.",
-          "correct": false,
-          "why_wrong": "The list changes constantly and an enum still forces a pick when no PO exists, so fabrication continues in another form."
-        },
-        {
-          "text": "Drop strict tool use and switch to free-text answers so the model can explain in its own words whenever the PO number is missing.",
-          "correct": false,
-          "why_wrong": "Losing the schema guarantee creates parsing problems; the defect is the required field, fixed by making it nullable."
-        },
-        {
-          "text": "Make po_number nullable or optional, instruct \"use null if not stated\", and check null rates on invoices known to lack one.",
+          "text": "Required properties are emitted first; mark all four required (nullable where needed) or map CSV columns by key.",
           "correct": true
+        },
+        {
+          "text": "Structured outputs return keys in a random order on each call, so the script should sort the keys alphabetically first.",
+          "correct": false,
+          "why_wrong": "The order is deterministic: required properties in schema order, then optional ones; alphabetical sorting fixes nothing."
+        },
+        {
+          "text": "Add a propertyOrdering keyword to the schema, which makes the API emit properties exactly in the order they are listed.",
+          "correct": false,
+          "why_wrong": "No such keyword is among the supported schema features; ordering follows the documented required-first rule."
+        },
+        {
+          "text": "Switch to strict tool use, because JSON outputs reorder properties while tool inputs always keep the declared order.",
+          "correct": false,
+          "why_wrong": "Strict tool use runs on the same constrained-decoding pipeline and schema rules, so positional parsing would stay fragile."
         }
       ],
-      "explanation": "A required field that the source often lacks pushes the model to satisfy the schema by inventing a value. Nullable (or optional) fields make 'not stated' a valid answer, and an explicit instruction plus measurement confirms nulls appear where they should.",
-      "key_takeaway": "Fields the source may lack should be nullable or optional; required fields with absent data invite fabrication.",
+      "explanation": "With structured outputs, properties keep their schema order with one caveat: required properties come first, followed by optional ones. If position matters, mark every property required (using a nullable type for values that may be absent) or parse by key.",
+      "key_takeaway": "Structured outputs put required properties before optional ones; never rely on positional order without making all fields required.",
       "doc_links": [
         {
           "label": "Claude Structured Outputs",
@@ -1415,38 +1407,38 @@
       "id": "claude-api-q-37",
       "section": "Validation & Retry",
       "guide_anchor": "validation-retry",
-      "question": "An extractor uses strict tool use. Code validation finds that in 6% of documents the line items sum to 1,140 while stated_total says 1,240. In other documents the total appears only on a remittance page that is never sent. Which retry policy is right?",
+      "question": "A contract summarizer uses JSON outputs with max_tokens set to 1024. About 4% of responses on long contracts fail to parse even though structured outputs are on, and every failing response has stop_reason \"max_tokens\". What should the handler do?",
       "options": [
         {
-          "text": "Retry the sum mismatches with the document, failed output and exact error; flag the missing-page cases or fetch the page instead of retrying.",
+          "text": "Check stop_reason before parsing; on max_tokens, retry with a higher max_tokens instead of trusting the partial output.",
           "correct": true
         },
         {
-          "text": "Retry every validation failure up to five times with the message \"be more careful\" until all documents pass validation.",
+          "text": "Repair the truncated JSON by closing any open brackets and quotes, since everything written before the cutoff is schema-valid.",
           "correct": false,
-          "why_wrong": "Generic feedback gives little to correct, and for absent data the loop eventually returns an invented total that passes."
+          "why_wrong": "Closing brackets hides missing required fields and cut-off values; the documented remedy is retrying with a higher limit."
         },
         {
-          "text": "Do nothing: strict tool use guarantees schema compliance, so these extractions are already correct by construction.",
+          "text": "Report the failures as a platform bug, because structured outputs guarantee a schema-valid body on every single call.",
           "correct": false,
-          "why_wrong": "Strict schemas eliminate syntax and type errors, not semantic ones such as sums that don't match or missing information."
+          "why_wrong": "The docs list max_tokens truncation and refusals as cases where output may not match the schema."
         },
         {
-          "text": "Remove line items from the schema entirely so the extracted total can never disagree with them, which ends these validation failures for good.",
+          "text": "Retry the identical request up to three times, because truncation is random and a later attempt will usually fit.",
           "correct": false,
-          "why_wrong": "That hides the signal; comparing a calculated total with the stated total is exactly how semantic errors are caught."
+          "why_wrong": "The same long contract with the same limit will most likely be cut off again; the budget has to change."
         }
       ],
-      "explanation": "Retry with specific error feedback works when the source can resolve the error, such as an arithmetic slip or misread digit. It cannot help when the information is absent from the input; then the right move is to flag, fetch the missing source or route to review.",
-      "key_takeaway": "Retry with specific errors for fixable mistakes; never retry for information that isn't in the input.",
+      "explanation": "Structured outputs guarantee schema compliance in most cases, but a response that hits max_tokens may be incomplete, and a refusal (stop_reason \"refusal\", HTTP 200) may not match the schema either. Inspect stop_reason before parsing and retry truncated responses with a larger max_tokens.",
+      "key_takeaway": "Always branch on stop_reason before parsing structured output; max_tokens means incomplete.",
       "doc_links": [
         {
           "label": "Claude Structured Outputs",
           "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
         },
         {
-          "label": "Claude API Errors Reference",
-          "url": "https://platform.claude.com/docs/en/api/errors"
+          "label": "Handling Stop Reasons",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons"
         }
       ]
     },
@@ -1454,38 +1446,38 @@
       "id": "claude-api-q-38",
       "section": "Validation & Retry",
       "guide_anchor": "validation-retry",
-      "question": "Developers dismiss about 30% of an AI reviewer's findings, and nobody can tell which review rules cause the dismissals. What design change enables systematic analysis?",
+      "question": "A ticket router uses strict tool use with an enum of queue values such as \"tier one\" and \"tier two\". Its dispatcher looks the value up in a dictionary keyed by the exact enum strings, and a small share of calls crash with KeyError on \"tier Two\". Those responses carried no error and a normal stop_reason. What is the right fix?",
       "options": [
         {
-          "text": "Ask the reviewer to attach a longer natural-language justification to every finding so developers dismiss fewer of them.",
-          "correct": false,
-          "why_wrong": "Free-text justifications can't be aggregated, and they don't reveal which criteria generate the false positives."
-        },
-        {
-          "text": "Run the reviewer twice and post only the findings that both runs agree on, discarding any finding that appears once.",
-          "correct": false,
-          "why_wrong": "A systematically bad criterion agrees with itself across runs; this adds cost without showing which rules are noisy."
-        },
-        {
-          "text": "Add a detected_pattern field to each finding and group dismissals by pattern to find, then rewrite, the noisy criteria.",
+          "text": "Match enum values case-insensitively in the dispatcher, and avoid enum values that differ only in capitalization.",
           "correct": true
         },
         {
-          "text": "Remove the dismiss button so developers must answer every finding in detail before the pull request can be merged.",
+          "text": "Treat the value as schema-invalid and retry until the exact string returns, since strict mode guarantees enum casing.",
           "correct": false,
-          "why_wrong": "This suppresses the feedback signal and adds friction, further eroding trust instead of diagnosing the cause."
+          "why_wrong": "Capitalization of enum and const values is explicitly not guaranteed, so retries waste calls and can vary again."
+        },
+        {
+          "text": "Shorten the tool description so the grammar compiles a stricter enum that restores exact capitalization.",
+          "correct": false,
+          "why_wrong": "Description length has no bearing on the casing caveat, which applies to every enum in constrained decoding."
+        },
+        {
+          "text": "Switch from strict tool use to JSON outputs, because the casing caveat applies only to tool inputs.",
+          "correct": false,
+          "why_wrong": "The caveat applies equally to JSON outputs and strict tool use, which share the same grammar pipeline."
         }
       ],
-      "explanation": "A structured detected_pattern field names the construct behind each finding. Aggregating dismissals by that field turns developer feedback into data that shows which criteria produce false positives, so those prompts can be rewritten and re-measured.",
-      "key_takeaway": "Tag findings with detected_pattern so dismissals can be analyzed per pattern and noisy criteria fixed.",
+      "explanation": "Structured outputs do not guarantee the capitalization of string enum and const values; Claude may return a value that differs only in case, typically in the first letter of a word after a space, with no error or special stop_reason. Compare case-insensitively and avoid enum values that differ only in capitalization.",
+      "key_takeaway": "Normalize enum casing in code; constrained decoding does not guarantee capitalization.",
       "doc_links": [
         {
           "label": "Claude Structured Outputs",
           "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
         },
         {
-          "label": "Claude API Errors Reference",
-          "url": "https://platform.claude.com/docs/en/api/errors"
+          "label": "Claude Strict Tool Use",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
         }
       ]
     },
@@ -1493,35 +1485,31 @@
       "id": "claude-api-q-39",
       "section": "Long-Session Facts",
       "guide_anchor": "long-session-facts",
-      "question": "A support agent handles multi-issue sessions of 40+ turns. After rolling summarization is enabled, it misquotes refund amounts and deadlines. Each order lookup returns about 45 fields, of which 5 matter. What is the best change?",
+      "question": "A tutoring app adds {\"type\": \"memory_20250818\", \"name\": \"memory\"} to its tools so Claude can remember each student's weak topics across sessions. Claude issues view and create calls on /memories, but the app's loop answers with an empty tool_result, and nothing is recalled the next day. What is missing?",
       "options": [
         {
-          "text": "Summarize more often and tell the summarizer to \"preserve every important detail\" so amounts and dates survive each pass.",
-          "correct": false,
-          "why_wrong": "Summaries still paraphrase numbers and dates; exact facts need a structured store your code owns, outside the summary."
-        },
-        {
-          "text": "Keep a code-maintained case-facts block re-injected every turn, and trim each order lookup to its relevant fields before appending it.",
+          "text": "A client-side handler that runs each memory command against per-student storage and rejects paths outside /memories.",
           "correct": true
         },
         {
-          "text": "Send only the latest user message on each turn so the prompt stays short and focused on the current customer question.",
+          "text": "A beta header that makes Anthropic persist /memories server-side for each API key so memory survives across conversations.",
           "correct": false,
-          "why_wrong": "The API is stateless; dropping history loses commitments and coherence rather than preserving facts."
+          "why_wrong": "The memory tool is client-side: Claude only requests operations, and storage lives in infrastructure the application controls."
         },
         {
-          "text": "Move to a model with a larger context window and keep the full 45-field lookups in history for maximum completeness and accuracy.",
+          "text": "An input_schema for the memory tool listing each command, because Claude cannot call a tool without defined parameters.",
           "correct": false,
-          "why_wrong": "Bloated tool output keeps crowding the context and burying facts mid-input; a bigger window doesn't fix summary loss."
+          "why_wrong": "For this Anthropic-provided tool the type and name are the entire configuration; no input schema is defined."
+        },
+        {
+          "text": "Server-side compaction, which turns each finished conversation into memory files that load automatically next time.",
+          "correct": false,
+          "why_wrong": "Compaction summarizes history inside a conversation; it does not create files that persist across separate sessions."
         }
       ],
-      "explanation": "Progressive summarization condenses exact amounts, dates and IDs into vague text. A persistent case-facts block maintained by code keeps them authoritative, and trimming tool outputs to relevant fields stops irrelevant data from accumulating on every turn.",
-      "key_takeaway": "Keep exact transactional facts in a code-owned case-facts block and trim tool outputs before they enter history.",
+      "explanation": "With the memory tool, Claude checks /memories before a task and issues view, create and edit commands. The application must execute each command against storage it controls, such as a per-user directory or database keys, return the result in a tool_result, and validate every path to block traversal outside /memories. SDK helpers can provide the handler.",
+      "key_takeaway": "The memory tool persists nothing by itself; your handler implements and secures the storage.",
       "doc_links": [
-        {
-          "label": "Claude Context Compaction",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
-        },
         {
           "label": "Claude Memory Tool",
           "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool"
@@ -1532,38 +1520,34 @@
       "id": "claude-api-q-40",
       "section": "Long-Session Facts",
       "guide_anchor": "long-session-facts",
-      "question": "A synthesis step receives instructions at the top followed by 12 concatenated subagent reports (about 60k tokens). Reviewers notice that findings from the middle reports are often missing from the final answer. What should the team change?",
+      "question": "A procurement agent loads a 6,000-token vendor policy once through a load_policy tool, then makes dozens of web_fetch calls. With context editing set to clear_tool_uses_20250919 at its defaults, late in long runs it starts approving purchases that the policy forbids. Which change fixes this without disabling clearing?",
       "options": [
         {
-          "text": "Raise max_tokens on the synthesis call so the model has more room to cover every report in its final answer.",
-          "correct": false,
-          "why_wrong": "max_tokens caps output length; it does nothing about how reliably the model uses content buried mid-input."
-        },
-        {
-          "text": "Shuffle the order of the reports on every run so that no report stays in the middle position for long.",
-          "correct": false,
-          "why_wrong": "Randomizing position makes omissions unpredictable instead of fixing them; structure and placement are the fix."
-        },
-        {
-          "text": "Ask each subagent to return longer, more detailed prose with its full reasoning so its findings stand out more clearly in the combined input.",
-          "correct": false,
-          "why_wrong": "Longer prose makes the input bigger and the middle harder to use; structured, concise outputs help downstream synthesis."
-        },
-        {
-          "text": "Put the reports first and the instructions last, open with a key-findings summary, and give each report an explicit header or tag.",
+          "text": "Add load_policy to exclude_tools so its result is never cleared, while old web_fetch results still are.",
           "correct": true
+        },
+        {
+          "text": "Set clear_tool_inputs to true so the policy text moves out of the tool result and into the preserved tool call.",
+          "correct": false,
+          "why_wrong": "clear_tool_inputs clears the call parameters as well, removing more context rather than preserving the policy."
+        },
+        {
+          "text": "Raise keep to 50 tool uses so the policy result stays among the most recent pairs however long a run gets.",
+          "correct": false,
+          "why_wrong": "keep retains the most recent pairs and the policy is the oldest, so enough fetches still push it out, at a large context cost."
+        },
+        {
+          "text": "Set clear_at_least to 6,000 input tokens, which tells the strategy to skip any single tool result of that size.",
+          "correct": false,
+          "why_wrong": "clear_at_least is the minimum amount to clear per activation, a cache trade-off, not a way to protect a result."
         }
       ],
-      "explanation": "Long inputs show a lost-in-the-middle effect. Anthropic's long-context guidance puts long documents at the top and the query at the end; leading with a key-findings summary and clear section headers or XML tags further reduces omissions.",
-      "key_takeaway": "Mitigate lost-in-the-middle: documents first, query last, a summary up front and clear headers per source.",
+      "explanation": "clear_tool_uses_20250919 clears the oldest tool results once input passes the trigger (100,000 tokens by default), keeping the last 3 tool uses by default. exclude_tools lists tools whose uses and results are never cleared, which preserves critical context such as policies while bulky fetch results are still removed.",
+      "key_takeaway": "Protect must-keep tool results with exclude_tools when using tool-result clearing.",
       "doc_links": [
         {
-          "label": "Claude Context Compaction",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
-        },
-        {
-          "label": "Claude Memory Tool",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool"
+          "label": "Claude Context Editing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"
         }
       ]
     },
@@ -1571,35 +1555,31 @@
       "id": "claude-api-q-41",
       "section": "Multi-Pass Review",
       "guide_anchor": "multi-pass-review",
-      "question": "A contract-drafting pipeline asks the drafting session to check its own clauses, and lawyers keep finding issues it approved. The proposed fix is to send the full drafting transcript, including the drafter's reasoning, to a larger model tier for review. What actually makes the review independent?",
+      "question": "A release-notes generator uses one large prompt that drafts notes from commit logs, checks them against a style guide and outputs a final version. When a wrong version number ships, nobody can tell which stage introduced it, and product wants publishing blocked whenever the style check finds a blocker. What restructuring fits?",
       "options": [
         {
-          "text": "A separate call with a fresh messages list holding only the spec, the rubric and the draft; the same model can run it.",
+          "text": "Chain separate calls (draft, review against criteria, refine), log each output and branch on the review before publishing.",
           "correct": true
         },
         {
-          "text": "The larger tier itself: a more capable reviewer overrides the drafter's reasoning even while it reads the full transcript.",
+          "text": "Keep one call but request a JSON object with draft, review and final fields, which gives the same control as separate calls.",
           "correct": false,
-          "why_wrong": "Independence comes from context, not tier; the transcript still anchors the reviewer to the drafter's own rationale."
+          "why_wrong": "All three fields are produced in one pass, so nothing can stop or alter the final version based on the review."
         },
         {
-          "text": "Keeping review in the drafting session but raising effort to max, so the model reconsiders each clause more deeply.",
+          "text": "Raise effort to high on the single call so the model checks more thoroughly and wrong version numbers stop appearing.",
           "correct": false,
-          "why_wrong": "The drafting context keeps its own reasoning in view, and more thinking doesn't remove that anchor."
+          "why_wrong": "More effort adds no inspection points or gate, and it still won't show which stage introduced an error."
         },
         {
-          "text": "Passing the reviewer a summary of the drafter's reasoning instead of the transcript, so it knows why each clause exists.",
+          "text": "Add \"think step by step and double-check versions\" to the prompt so the reasoning shows where each stage went wrong.",
           "correct": false,
-          "why_wrong": "A reasoning summary still carries the drafter's rationale into review; the reviewer should judge the draft against the spec alone."
+          "why_wrong": "It is still a single pass with no gate before publishing, and reasoning text is not a reliable audit log."
         }
       ],
-      "explanation": "Self-review is weak because the generating context keeps its own reasoning and tends to defend it. Independence comes from context: a new request whose messages hold only the spec or rubric and the artifact. The reviewer can be the same model; a different tier is optional and doesn't help if the generator's reasoning comes along.",
-      "key_takeaway": "Reviewer independence comes from a fresh context (spec + artifact only), not from a bigger or different model.",
+      "explanation": "Explicit prompt chaining remains useful when you need to inspect intermediate outputs or enforce a pipeline structure. The common pattern is self-correction: generate a draft, review it against criteria, then refine, each as a separate API call so you can log, evaluate or branch at any point.",
+      "key_takeaway": "Chain draft, review and refine as separate calls when you need logging and gates between stages.",
       "doc_links": [
-        {
-          "label": "Claude Evaluation & Test Design",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
-        },
         {
           "label": "Claude Prompting Best Practices",
           "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
@@ -1610,38 +1590,34 @@
       "id": "claude-api-q-42",
       "section": "Human Review & Calibration",
       "guide_anchor": "human-review",
-      "question": "An extraction pipeline reports 97% overall field accuracy, and leadership wants to stop human review of high-confidence extractions. The model emits per-field confidence scores that were never checked against labels. What should happen first?",
+      "question": "Reviewers at an insurer must confirm every answer a benefits assistant gives from 200-page plan PDFs. Today the prompt asks Claude to quote supporting passages, but reviewers sometimes can't find a quote verbatim and spend minutes searching. What change most speeds up review?",
       "options": [
         {
-          "text": "Approve the change, because 97% comfortably beats the 95% target and the confidence scores already filter out the weak extractions.",
-          "correct": false,
-          "why_wrong": "An aggregate can hide failing segments, and uncalibrated self-reported confidence isn't a reliable filter yet."
-        },
-        {
-          "text": "Check accuracy per document type and field, calibrate thresholds on labeled validation data, and keep stratified sampling.",
+          "text": "Enable citations on every document block and show reviewers each cited_text with its page location beside the answer.",
           "correct": true
         },
         {
-          "text": "Review only low-confidence items from now on and stop sampling high-confidence ones so reviewer time is saved.",
+          "text": "Enable citations and set output_config.format to a JSON schema, so the answer and its citations arrive as one validated object.",
           "correct": false,
-          "why_wrong": "Without sampling auto-approved items you never measure their error rate or notice new error patterns."
+          "why_wrong": "Citations and structured outputs are incompatible; combining them returns a 400 error."
         },
         {
-          "text": "Sample 1% of all documents at random for review each week, regardless of document type, field or source system.",
+          "text": "Enable citations only on the largest plan document in each request to save cost, and leave smaller attachments unchanged.",
           "correct": false,
-          "why_wrong": "Plain random sampling under-samples rare document types; stratify by segment to measure each one."
+          "why_wrong": "Citations must be enabled on all or none of the documents in a request."
+        },
+        {
+          "text": "Keep prompt-based quoting but raise max_tokens so Claude has room to quote longer passages reviewers can recognize.",
+          "correct": false,
+          "why_wrong": "Longer prompted quotes are still unverified and cost output tokens, whereas cited_text does not count toward output."
         }
       ],
-      "explanation": "A high headline accuracy rate can hide weak extraction quality on rarer form layouts or individual fields. Validate per segment, calibrate field-level confidence thresholds against labeled data, and keep stratified random sampling of high-confidence items to track error rates and drift.",
-      "key_takeaway": "Before cutting human review, check accuracy per segment, calibrate confidence on labeled data and keep stratified sampling.",
+      "explanation": "With citations.enabled on documents, the API parses citations into structured locations (for example page_location for PDFs) and extracts cited_text directly, so citations always point to valid locations in the provided documents. cited_text does not count toward output tokens, and reviewers can jump straight to the evidence.",
+      "key_takeaway": "Use the Citations feature, not prompted quotes, when humans must verify answers against source documents.",
       "doc_links": [
         {
-          "label": "Claude Evaluation & Test Design",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
-        },
-        {
-          "label": "Reducing Hallucinations in Claude",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+          "label": "Claude Citations",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
         }
       ]
     },
@@ -1649,38 +1625,34 @@
       "id": "claude-api-q-43",
       "section": "Message Batches",
       "guide_anchor": "batches",
-      "question": "A team must deliver extraction results within 30 hours of each document's arrival and wants the 50% Message Batches discount. Which plan is sound?",
+      "question": "A quarterly backfill must summarize 240,000 archived tickets at the batch discount. The plan is to submit them all as one Message Batch and download the results at a compliance review about six weeks later. What must change?",
       "options": [
         {
-          "text": "Submit one batch per day at midnight, since most batches finish within an hour and 30 hours is then easy to meet.",
-          "correct": false,
-          "why_wrong": "There's no latency SLA: a document arriving after midnight can wait about 24 h plus up to 24 h of processing, about 48 h."
-        },
-        {
-          "text": "Use batches, but let each request run its multi-step database tool loop inside the batch to finish extraction.",
-          "correct": false,
-          "why_wrong": "Your code can't execute tools mid-request in a batch; each request returns one response, so multi-turn tool loops need sync calls."
-        },
-        {
-          "text": "Submit a batch every 4 hours (worst case 4 + 24 = 28 h), match results by custom_id, and resubmit only failed requests.",
+          "text": "Split into batches of at most 100,000 requests and 256 MB each, and download results within 29 days of creation.",
           "correct": true
         },
         {
-          "text": "Submit every 4 hours and, whenever any single request fails, resubmit the entire batch so that all results stay together in one file.",
+          "text": "Nothing, because batch limits apply per day rather than per batch, and results stay downloadable as long as the batch exists.",
           "correct": false,
-          "why_wrong": "Resubmitting everything re-bills successful requests; resubmit only the failed custom_ids, with fixes where needed."
+          "why_wrong": "The 100,000-request or 256 MB limit applies to each batch, and results can only be downloaded for 29 days."
+        },
+        {
+          "text": "Keep one batch but use a 1-hour cache TTL, which raises the per-batch request ceiling and extends result retention.",
+          "correct": false,
+          "why_wrong": "Cache duration only affects prompt-cache hits for shared context; it changes neither batch limits nor retention."
+        },
+        {
+          "text": "Split into three batches and simply wait for the review, since batches never expire and results remain until fetched.",
+          "correct": false,
+          "why_wrong": "Batches expire if processing isn't done within 24 hours, and results are removed 29 days after creation."
         }
       ],
-      "explanation": "Batches cost half price but have a processing window of up to 24 hours and no latency guarantee. The submission interval plus 24 hours must fit inside the SLA, results are matched by custom_id, and only failed requests are resubmitted.",
-      "key_takeaway": "Batch SLA math: submission interval + 24 h must fit the SLA; resubmit only failures by custom_id.",
+      "explanation": "A Message Batch is limited to 100,000 requests or 256 MB, whichever comes first. Most batches finish within an hour; unfinished requests expire after 24 hours. Results are available for 29 days after creation, after which the batch is still visible but its results can no longer be downloaded.",
+      "key_takeaway": "Respect the per-batch size cap and persist batch results well inside the 29-day window.",
       "doc_links": [
         {
           "label": "Claude Message Batches",
           "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
-        },
-        {
-          "label": "Optimizing Cost & Intelligence",
-          "url": "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
         }
       ]
     }
