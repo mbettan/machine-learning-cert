@@ -78,6 +78,81 @@
     return safeUrl;
   }
 
+  function getSafeExternalHttpsUrl(rawUrl) {
+    if (typeof rawUrl !== 'string' || !rawUrl.trim()) return null;
+    try {
+      const parsed = new URL(rawUrl.trim());
+      if (parsed.protocol !== 'https:' || !parsed.hostname) return null;
+      return { href: parsed.href, hostname: parsed.hostname.toLowerCase() };
+    } catch (_err) {
+      return null;
+    }
+  }
+
+  function classifyDocHost(hostname) {
+    const h = String(hostname || '').toLowerCase();
+    if (
+      h === 'google.com' ||
+      h.endsWith('.google.com') ||
+      h.endsWith('.googleapis.com') ||
+      h === 'adk.dev' ||
+      h.endsWith('.adk.dev') ||
+      h === 'ai.google.dev' ||
+      h.endsWith('.google') ||
+      h === 'google.github.io' ||
+      h === 'googleapis.github.io' ||
+      h === 'tensorflow.org' ||
+      h.endsWith('.tensorflow.org')
+    ) {
+      return { className: 'doc-pill-gcp', icon: '☁️' };
+    }
+    if (
+      h === 'anthropic.com' ||
+      h.endsWith('.anthropic.com') ||
+      h === 'claude.com' ||
+      h.endsWith('.claude.com') ||
+      h === 'transformer-circuits.pub' ||
+      h.endsWith('.transformer-circuits.pub')
+    ) {
+      return { className: 'doc-pill-anthropic', icon: '✦' };
+    }
+    return { className: 'doc-pill-spec', icon: '🌐' };
+  }
+
+  function createDocPill(href, labelText, variantClass, iconGlyph) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'doc-pill ' + variantClass;
+    a.setAttribute('href', href);
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'doc-pill-icon';
+    iconSpan.setAttribute('aria-hidden', 'true');
+    iconSpan.textContent = iconGlyph;
+
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'doc-pill-label';
+    labelSpan.textContent = labelText;
+
+    const extSpan = document.createElement('span');
+    extSpan.className = 'doc-pill-ext';
+    extSpan.setAttribute('aria-hidden', 'true');
+    extSpan.textContent = '↗';
+
+    const srSpan = document.createElement('span');
+    srSpan.className = 'visually-hidden';
+    srSpan.textContent = ' (opens in new tab)';
+
+    a.appendChild(iconSpan);
+    a.appendChild(labelSpan);
+    a.appendChild(extSpan);
+    a.appendChild(srSpan);
+    li.appendChild(a);
+    return li;
+  }
+
   function shuffleOptionsFor(questions) {
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
@@ -243,15 +318,19 @@
     const explanationEl = document.getElementById('mcq-explanation-text');
     const distractorList = document.getElementById('mcq-distractor-list');
     const takeawayEl = document.getElementById('mcq-takeaway-text');
-    const deepLink = document.getElementById('mcq-deep-link');
+    const docLinksList = document.getElementById('mcq-doc-links-list');
 
     if (!feedbackBox) return;
     if (!answerRecord) {
       feedbackBox.hidden = true;
+      feedbackBox.classList.remove('feedback-correct', 'feedback-wrong');
       return;
     }
 
     feedbackBox.hidden = false;
+    feedbackBox.classList.toggle('feedback-correct', Boolean(answerRecord.isCorrect));
+    feedbackBox.classList.toggle('feedback-wrong', !answerRecord.isCorrect);
+
     if (banner) {
       banner.className =
         'mcq-feedback-banner ' + (answerRecord.isCorrect ? 'banner-correct' : 'banner-wrong');
@@ -293,8 +372,25 @@
       takeawayEl.textContent = q.key_takeaway || '';
     }
 
-    if (deepLink && topicData) {
-      deepLink.setAttribute('href', getSafeGuideHref(topicData.guide_url, q.guide_anchor));
+    if (docLinksList && topicData) {
+      docLinksList.replaceChildren();
+
+      const guideHref = getSafeGuideHref(topicData.guide_url, q.guide_anchor);
+      const notesLabel = 'Notes: ' + (q.section || topicData.title || 'Study Guide');
+      docLinksList.appendChild(createDocPill(guideHref, notesLabel, 'doc-pill-notes', '📖'));
+
+      const externalLinks = Array.isArray(q.doc_links) ? q.doc_links : [];
+      for (let i = 0; i < externalLinks.length; i++) {
+        const item = externalLinks[i];
+        if (!item || typeof item.label !== 'string') continue;
+        const label = item.label.trim();
+        const safeExternal = getSafeExternalHttpsUrl(item.url);
+        if (!label || !safeExternal) continue;
+        const styleInfo = classifyDocHost(safeExternal.hostname);
+        docLinksList.appendChild(
+          createDocPill(safeExternal.href, label, styleInfo.className, styleInfo.icon)
+        );
+      }
     }
   }
 
@@ -564,10 +660,13 @@
       topicData = data;
       allQuestions = Array.isArray(data.questions) ? data.questions : [];
 
+      // Strip a trailing "Practice Quiz" from the deck title so it is not repeated.
+      const baseTitle = String(data.title || topicSlug.toUpperCase())
+        .replace(/\s*[—–-]?\s*practice quiz\s*$/i, '').trim() || topicSlug.toUpperCase();
       if (titleEl) {
-        titleEl.textContent = (data.title || topicSlug.toUpperCase()) + ' — Practice Quiz';
+        titleEl.textContent = baseTitle + ' — Practice Quiz';
       }
-      document.title = (data.title || topicSlug.toUpperCase()) + ' Practice Quiz | ML Certification Hub';
+      document.title = baseTitle + ' Practice Quiz | ML Certification Hub';
 
       if (guideLink && data.guide_url) {
         guideLink.setAttribute('href', getSafeGuideHref(data.guide_url, null));
