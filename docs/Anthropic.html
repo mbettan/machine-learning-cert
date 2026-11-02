@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anthropic Foundational Models & Claude: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), the 3-Layer Claude Ecosystem Map, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).">
+    <meta name="description" content="Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), enterprise deployment surfaces, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).">
     <meta name="keywords" content="Anthropic, Claude, Claude Opus, Claude Sonnet, Claude Haiku, Constitutional AI, RLAIF, Mechanistic Interpretability, Sparse Autoencoders, Responsible Scaling Policy, ASL-3, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -32,7 +32,7 @@
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Anthropic Foundational Models & Claude: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), the 3-Layer Claude Ecosystem Map, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).">
+    <meta property="og:description" content="Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), enterprise deployment surfaces, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/Anthropic.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -41,7 +41,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Anthropic Foundational Models & Claude: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), the 3-Layer Claude Ecosystem Map, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).">
+    <meta name="twitter:description" content="Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), enterprise deployment surfaces, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Anthropic Foundational Models — Study Guide by Michaël Bettan">
 
@@ -60,11 +60,11 @@
                   "@id": "https://mbettan.github.io/machine-learning-cert/Anthropic.html#article",
                   "headline": "Anthropic Foundational Models & Claude: Study Guide | ML Cert Hub",
                   "name": "Anthropic Foundational Models Study Guide",
-                  "description": "Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), the 3-Layer Claude Ecosystem Map, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).",
+                  "description": "Study guide on Anthropic Claude foundational models (Opus, Sonnet, Haiku), enterprise deployment surfaces, Constitutional AI (RLAIF), mechanistic interpretability (SAEs), and the Responsible Scaling Policy (ASL-3).",
                   "keywords": "Anthropic, Claude, Claude Opus, Claude Sonnet, Claude Haiku, Constitutional AI, RLAIF, Mechanistic Interpretability, Sparse Autoencoders, Responsible Scaling Policy, ASL-3, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/Anthropic.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-10-27",
+                  "dateModified": "2026-11-01",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Intermediate",
                   "author": {
@@ -122,7 +122,7 @@
             <div class="cover-content">
                 <div class="cover-eyebrow"><i class="fas fa-graduation-cap"></i> Study Notes — Foundational AI</div>
                 <h1>Anthropic Foundational Models<br><em>Study Guide</em></h1>
-                <p class="cover-subtitle">Focused reference on the 3-Layer Claude Ecosystem Map, Constitutional AI (CAI), mechanistic interpretability, and the Responsible Scaling Policy (RSP).</p>
+                <p class="cover-subtitle">Focused reference on enterprise deployment surfaces, Constitutional AI (CAI), mechanistic interpretability, and the Responsible Scaling Policy (RSP).</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item"><i class="fas fa-calendar-alt"></i><span>Updated: <strong>October 2026</strong></span></div>
                     <div class="cover-meta-item"><i class="fas fa-tag"></i><span>Category: <strong>Anthropic</strong></span></div>
@@ -142,7 +142,7 @@
         <nav class="toc">
             <div class="toc-header"><i class="fas fa-list-ol"></i><h2>Table of Contents</h2></div>
             <div class="toc-columns">
-                <a href="#philosophy" class="toc-item"><span class="toc-number">01</span><span>Core Philosophy &amp; Ecosystem Map</span></a>
+                <a href="#philosophy" class="toc-item"><span class="toc-number">01</span><span>Core Philosophy &amp; Deployment Surfaces</span></a>
                 <a href="#cai" class="toc-item"><span class="toc-number">02</span><span>Constitutional AI (CAI) &amp; Alignment</span></a>
                 <a href="#interpretability" class="toc-item"><span class="toc-number">03</span><span>Mechanistic Interpretability &amp; Steering</span></a>
                 <a href="#safety" class="toc-item"><span class="toc-number">04</span><span>Frontier Safety: RSP &amp; ASL Framework</span></a>
@@ -151,11 +151,11 @@
         </nav>
 
         <!-- ═══════════════════════════════════════
-             SECTION 01: PHILOSOPHY & ECOSYSTEM MAP
+             SECTION 01: PHILOSOPHY & DEPLOYMENT SURFACES
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="philosophy">
             <div class="section-divider-number">01</div>
-            <h2>Core Philosophy &amp; The 3-Layer Claude Ecosystem Map</h2>
+            <h2>Core Philosophy &amp; Enterprise Deployment Surfaces</h2>
         </div>
 
         <div class="concept-card accent-mint">
@@ -185,12 +185,12 @@
         </div>
 
         <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>The 3-Layer Claude Ecosystem Map</h3>
-            <p>The Claude platform is organized into three distinct architectural layers separating end-user workspaces, programmable builder harnesses, and cloud delivery routes:</p>
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Enterprise Deployment Surfaces &amp; Workspaces</h3>
+            <p>This guide groups Claude surfaces into three tiers of its own: end-user workspaces, builder harnesses, and cloud platforms:</p>
             <ul>
-                <li><strong>Layer 1 — End-User Entry Points:</strong> Interactive surfaces for daily reasoning and no-code automation, including <strong>Web &amp; Mobile (<code>claude.ai</code>)</strong> with stateful <strong>Artifacts</strong>, the <strong>Desktop App &amp; Cowork</strong> (an app-hosted GUI virtual machine for multi-step file and knowledge work without coding), and <strong>Productivity Connectors</strong> (Slack, Excel, PowerPoint).</li>
-                <li><strong>Layer 2 — Builder &amp; Engineering Interfaces:</strong> Programmable tooling for software teams, spanning the stateless <strong>Direct API (<code>POST /v1/messages</code>)</strong>, the terminal-based <strong>Agentic Coding CLI (<code>Claude Code</code>)</strong>, the embeddable <strong>Programmable Harness (<code>Agent SDK</code>)</strong>, and the cloud-hosted <strong>Runtime (<code>Managed Agents</code>)</strong> structured around four core primitives: <strong>Agent</strong> (model, prompt, tools, MCP, skills), <strong>Environment</strong> (cloud or self-hosted sandbox), <strong>Session</strong> (stateful running instance), and <strong>Events</strong> (SSE-streamed messages, tool executions, and mid-run interrupts).</li>
-                <li><strong>Layer 3 — Cloud Delivery Routes:</strong> Enterprise provisioning and residency channels across the <strong>First-Party Anthropic API</strong> (with <code>inference_geo</code> controls), <strong>Amazon Bedrock</strong>, <strong>Google Cloud Vertex AI</strong>, and <strong>Microsoft Azure Foundry</strong>.</li>
+                <li><strong>Tier 1 — End-User Workspaces:</strong> Interactive surfaces for daily reasoning and no-code automation, including <strong>Web &amp; Mobile (<code>claude.ai</code>)</strong> with stateful <strong>Artifacts</strong>, the <strong>Desktop App &amp; Cowork</strong> (an app-hosted GUI virtual machine for multi-step file and knowledge work without coding), and <strong>Productivity Connectors</strong> (Slack, Excel, PowerPoint).</li>
+                <li><strong>Tier 2 — Builder &amp; Agentic Harnesses:</strong> Programmable tooling for software teams, spanning the stateless <strong>Direct API (<code>POST /v1/messages</code>)</strong>, the terminal-based <strong>Agentic Coding CLI (<code>Claude Code</code>)</strong>, the embeddable <strong>Programmable Harness (<code>Agent SDK</code>)</strong>, and the cloud-hosted <strong>Runtime (<code>Managed Agents</code>)</strong> structured around four core primitives: <strong>Agent</strong> (model, prompt, tools, MCP, skills), <strong>Environment</strong> (cloud or self-hosted sandbox), <strong>Session</strong> (stateful running instance), and <strong>Events</strong> (SSE-streamed messages, tool executions, and mid-run interrupts).</li>
+                <li><strong>Tier 3 — Multi-Cloud Infrastructure:</strong> Enterprise provisioning and residency channels across the <strong>First-Party Anthropic API</strong> (with <code>inference_geo</code> controls), <strong>Amazon Bedrock</strong>, <strong>Google Cloud Vertex AI</strong>, and <strong>Microsoft Foundry</strong>.</li>
             </ul>
         </div>
 
@@ -316,7 +316,7 @@
         <div class="two-columns" style="margin-top: 24px;">
             <div class="concept-card accent-blue">
                 <h3><div class="icon-badge"><i class="fas fa-video"></i></div>Anthropic &amp; Claude Models Walkthrough Video</h3>
-                <p>A narrated visual walkthrough of the Claude 4.6/4.7+ family &amp; 3-layer ecosystem, Adaptive Thinking effort tiers, Constitutional AI (RLAIF), Sparse Autoencoders &amp; Attribution Graphs, Behavioral Vaccination, and RSP ASL-3 containment.</p>
+                <p>A narrated visual walkthrough of the Claude 4.6/4.7+ family &amp; enterprise deployment surfaces, Adaptive Thinking effort tiers, Constitutional AI (RLAIF), Sparse Autoencoders &amp; Attribution Graphs, Behavioral Vaccination, and RSP ASL-3 containment.</p>
                 <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
                     <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
                         <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/anthropic/Anthropic-v2.0.mp4" type="video/mp4">

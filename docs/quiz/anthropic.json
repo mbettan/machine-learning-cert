@@ -5,7 +5,7 @@
   "questions": [
     {
       "id": "anthropic-q-01",
-      "section": "Core Philosophy & Ecosystem Map",
+      "section": "Core Philosophy & Enterprise Deployment Surfaces",
       "guide_anchor": "philosophy",
       "question": "A product team migrating from a legacy Claude 3.5 workflow to a frontier Claude 4.6 / 4.7+ architecture wants to control reasoning depth dynamically per request rather than maintaining manual budget_tokens configurations. Which mechanism replaces manual token-budget thinking?",
       "options": [
@@ -21,7 +21,7 @@
         {
           "text": "Splitting every user prompt across multiple stateless turns inside claude.ai Artifacts to force deeper reflection before answering.",
           "correct": false,
-          "why_wrong": "Artifacts is an interactive UI workspace in Layer 1, not the API compute-allocation mechanism for reasoning depth."
+          "why_wrong": "Artifacts is an interactive UI workspace in Tier 1, not the API compute-allocation mechanism for reasoning depth."
         },
         {
           "text": "Attaching a Sparse Autoencoder feature dictionary directly to the HTTP request header to expand internal chain-of-thought traces.",
@@ -44,85 +44,85 @@
     },
     {
       "id": "anthropic-q-02",
-      "section": "Core Philosophy & Ecosystem Map",
+      "section": "Core Philosophy & Enterprise Deployment Surfaces",
       "guide_anchor": "philosophy",
-      "question": "An operations analyst who does not write code needs Claude to reorganize hundreds of local PDFs, extract invoice tables across folders, and compile a summary spreadsheet on their laptop without touching a terminal. Which surface in the 3-Layer Claude Ecosystem Map fits this workflow?",
+      "question": "A regulated insurer wants to use Claude, but its security team requires that all inference requests stay inside the company's existing AWS account so they inherit its IAM policies, consolidated billing and regional controls. Which surface in this guide's three-tier map fits that requirement?",
       "options": [
         {
-          "text": "Claude Code running in headless CI mode with a custom bash permission hook and a local MCP filesystem server.",
+          "text": "Desktop Cowork on employee laptops, with each analyst signed in to an individual claude.ai account.",
           "correct": false,
-          "why_wrong": "Claude Code is a Layer 2 terminal-based engineering CLI designed for software developers and automated pipelines."
+          "why_wrong": "Cowork is a Tier 1 end-user workspace authenticated through Claude accounts, not through the insurer's AWS IAM and billing."
         },
         {
-          "text": "Desktop Cowork, which runs multi-step file and knowledge tasks inside an app-hosted GUI VM.",
+          "text": "Claude Managed Agents, running agent sessions on Anthropic's hosted runtime and environments.",
+          "correct": false,
+          "why_wrong": "Managed Agents is a Tier 2 builder harness hosted by Anthropic; it does not route requests through the customer's AWS account."
+        },
+        {
+          "text": "Claude models invoked through Amazon Bedrock, a Tier 3 cloud platform.",
           "correct": true
         },
         {
-          "text": "Direct POST /v1/messages API calls routed through Amazon Bedrock with custom client-side Python tool-use loops.",
+          "text": "The claude.ai web app on a Team plan, with SSO configured through the insurer's identity provider.",
           "correct": false,
-          "why_wrong": "The Direct Messages API and Bedrock belong to Layers 2 and 3 and require custom software engineering to orchestrate."
-        },
-        {
-          "text": "Claude Managed Agents provisioned via the programmable Agent SDK inside a remote cloud container cluster.",
-          "correct": false,
-          "why_wrong": "Managed Agents and the Agent SDK are Layer 2 builder interfaces for engineering teams, not no-code desktop workspaces."
+          "why_wrong": "SSO controls sign-in to a Tier 1 workspace, but requests still run on Anthropic's service rather than inside the AWS account."
         }
       ],
-      "explanation": "In Layer 1 (End-User Entry Points), the Claude Desktop app includes Cowork, an app-hosted virtual machine (VM) that lets non-developers delegate multi-step local file and document workflows without using terminal commands.",
-      "key_takeaway": "Cowork (Layer 1) runs inside an app-hosted desktop VM to automate multi-step knowledge work without coding.",
+      "explanation": "Tier 3 of this guide's map covers cloud platforms that serve Claude models: Anthropic's own API, Amazon Bedrock, Google Cloud Vertex AI and Microsoft Foundry. When governance requires inference to stay inside an existing cloud account, calling Claude through that provider (here, Amazon Bedrock) lets requests inherit the account's IAM roles, billing and regional configuration.",
+      "key_takeaway": "Pick a Tier 3 cloud platform such as Amazon Bedrock when inference must inherit an existing cloud account's IAM, billing and regional controls.",
       "doc_links": [
         {
-          "label": "Anthropic: Building Effective Agents",
-          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+          "label": "Claude on Amazon Bedrock",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock"
         },
         {
-          "label": "Choosing the Right Claude Model",
-          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+          "label": "Claude on Vertex AI",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai"
         }
       ]
     },
     {
       "id": "anthropic-q-03",
-      "section": "Core Philosophy & Ecosystem Map",
+      "section": "Core Philosophy & Enterprise Deployment Surfaces",
       "guide_anchor": "philosophy",
-      "question": "A platform engineering team is mapping their enterprise AI architecture onto Anthropic's 3-Layer Claude Ecosystem Map. How are Claude Code, the Claude Agent SDK, and Managed Agents classified relative to Amazon Bedrock and Google Cloud Vertex AI?",
+      "question": "A platform engineering team is mapping their enterprise AI architecture onto this guide's three-tier surface map. How are Claude Code, the Claude Agent SDK, and Managed Agents classified relative to Amazon Bedrock and Google Cloud Vertex AI?",
       "options": [
         {
-          "text": "Claude Code, Agent SDK, and Managed Agents are Layer 1 end-user workspaces, while Bedrock and Vertex AI are Layer 2 APIs.",
+          "text": "Claude Code, Agent SDK, and Managed Agents are Tier 1 end-user workspaces, while Bedrock and Vertex AI are Tier 2 APIs.",
           "correct": false,
-          "why_wrong": "Layer 1 is for end-user surfaces like claude.ai and Cowork; Bedrock and Vertex AI are Layer 3 cloud delivery routes."
+          "why_wrong": "Tier 1 is for end-user surfaces like claude.ai and Cowork; Bedrock and Vertex AI are Tier 3 cloud platforms."
         },
         {
-          "text": "Claude Code, Agent SDK, and Managed Agents are Layer 2 builder interfaces; Bedrock and Vertex AI are Layer 3 cloud routes.",
+          "text": "Claude Code, Agent SDK, and Managed Agents are Tier 2 builder harnesses; Bedrock and Vertex AI are Tier 3 cloud platforms.",
           "correct": true
         },
         {
-          "text": "All five components belong to Layer 3 cloud delivery routes because they execute workloads outside the claude.ai web browser.",
+          "text": "All five components belong to Tier 3 cloud platforms because they execute workloads outside the claude.ai web browser.",
           "correct": false,
-          "why_wrong": "Layer 3 covers infrastructure provisioning and cloud residency channels, whereas programmable harnesses live in Layer 2."
+          "why_wrong": "Tier 3 covers infrastructure provisioning and cloud residency channels, whereas programmable harnesses live in Tier 2."
         },
         {
-          "text": "Bedrock and Vertex AI are Layer 1 productivity connectors, while Claude Code and Managed Agents are Layer 3 safety classifiers.",
+          "text": "Bedrock and Vertex AI are Tier 1 productivity connectors, while Claude Code and Managed Agents are Tier 3 safety classifiers.",
           "correct": false,
-          "why_wrong": "Cloud providers are Layer 3 delivery channels, and Claude Code/Managed Agents are Layer 2 engineering interfaces, not safety classifiers."
+          "why_wrong": "Cloud providers are Tier 3 cloud platforms, and Claude Code/Managed Agents are Tier 2 builder harnesses, not safety classifiers."
         }
       ],
-      "explanation": "Layer 2 (Builder & Engineering Interfaces) contains programmable surfaces—the Direct Messages API, Claude Code CLI, Claude Agent SDK, and Managed Agents—while Layer 3 (Cloud Delivery Routes) provides enterprise infrastructure, IAM, and data residency via First-Party API, Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Azure Foundry.",
-      "key_takeaway": "Layer 2 holds programmable builder harnesses (API, Claude Code, Agent SDK, Managed Agents); Layer 3 holds cloud delivery routes.",
+      "explanation": "Tier 2 (Builder & Agentic Harnesses) contains programmable surfaces\u2014the Direct Messages API, Claude Code CLI, Claude Agent SDK, and Managed Agents\u2014while Tier 3 (Multi-Cloud Infrastructure) provides enterprise infrastructure, IAM, and data residency via First-Party API, Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Foundry.",
+      "key_takeaway": "Tier 2 holds programmable builder harnesses (API, Claude Code, Agent SDK, Managed Agents); Tier 3 holds cloud platforms.",
       "doc_links": [
         {
-          "label": "Anthropic: Building Effective Agents",
-          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+          "label": "Claude Managed Agents Overview",
+          "url": "https://platform.claude.com/docs/en/managed-agents/overview"
         },
         {
-          "label": "Choosing the Right Claude Model",
-          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+          "label": "Claude in Microsoft Foundry",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry"
         }
       ]
     },
     {
       "id": "anthropic-q-04",
-      "section": "Core Philosophy & Ecosystem Map",
+      "section": "Core Philosophy & Enterprise Deployment Surfaces",
       "guide_anchor": "philosophy",
       "question": "How did the alignment profile and context capacity evolve from the Legacy Baseline (Claude 2) to the Frontier Architecture (Claude 4.6+)?",
       "options": [
@@ -161,9 +161,9 @@
     },
     {
       "id": "anthropic-q-05",
-      "section": "Core Philosophy & Ecosystem Map",
+      "section": "Core Philosophy & Enterprise Deployment Surfaces",
       "guide_anchor": "philosophy",
-      "question": "A user on claude.ai asks Claude to build an interactive React dashboard and iteratively edits the live visual component in a dedicated side-by-side workspace next to the conversation. Which Layer 1 capability provides this stateful UI workspace?",
+      "question": "A user on claude.ai asks Claude to build an interactive React dashboard and iteratively edits the live visual component in a dedicated side-by-side workspace next to the conversation. Which Tier 1 capability provides this stateful UI workspace?",
       "options": [
         {
           "text": "Artifacts, the stateful side-by-side workspace in claude.ai for live code, documents, and visuals.",
@@ -185,7 +185,7 @@
           "why_wrong": "Two-Party Authorization is an ASL-3 weight-security control requiring dual human approval for infrastructure access."
         }
       ],
-      "explanation": "Artifacts is the stateful interactive UI workspace in claude.ai (Layer 1) that renders live code, documents, and visual components alongside the chat stream so users can inspect and iterate on outputs in place.",
+      "explanation": "Artifacts is the stateful interactive UI workspace in claude.ai (Tier 1) that renders live code, documents, and visual components alongside the chat stream so users can inspect and iterate on outputs in place.",
       "key_takeaway": "Artifacts provides the stateful side-by-side workspace in claude.ai for live code, documents, and interactive visuals.",
       "doc_links": [
         {
@@ -283,27 +283,27 @@
       "question": "When values conflict during a conversation, in what strict priority order (from highest to lowest) does Claude's Constitution resolve trade-offs?",
       "options": [
         {
-          "text": "1. Genuinely Helpful → 2. Compliant → 3. Broadly Ethical → 4. Broadly Safe (Lowest Priority)",
+          "text": "1. Genuinely Helpful \u2192 2. Compliant \u2192 3. Broadly Ethical \u2192 4. Broadly Safe (Lowest Priority)",
           "correct": false,
           "why_wrong": "This inverts the hierarchy; helpfulness is Tier 4 and never overrides safety, ethics, or compliance."
         },
         {
-          "text": "1. Broadly Safe → 2. Broadly Ethical → 3. Compliant → 4. Genuinely Helpful",
+          "text": "1. Broadly Safe \u2192 2. Broadly Ethical \u2192 3. Compliant \u2192 4. Genuinely Helpful",
           "correct": true
         },
         {
-          "text": "1. Compliant → 2. Genuinely Helpful → 3. Broadly Safe → 4. Broadly Ethical (Lowest Priority)",
+          "text": "1. Compliant \u2192 2. Genuinely Helpful \u2192 3. Broadly Safe \u2192 4. Broadly Ethical (Lowest Priority)",
           "correct": false,
           "why_wrong": "Broadly Safe (preserving human oversight and systemic boundaries) is always Tier 1, followed by Broadly Ethical."
         },
         {
-          "text": "1. Broadly Ethical → 2. Genuinely Helpful → 3. Broadly Safe → 4. Compliant (Lowest Priority)",
+          "text": "1. Broadly Ethical \u2192 2. Genuinely Helpful \u2192 3. Broadly Safe \u2192 4. Compliant (Lowest Priority)",
           "correct": false,
           "why_wrong": "Broadly Safe outranks all other tiers, and Genuinely Helpful sits at Tier 4 below Compliant."
         }
       ],
       "explanation": "Constitutional AI resolves value trade-offs across a four-tier hierarchy: (1) Broadly Safe (never undermine human oversight or shutdown controls), (2) Broadly Ethical (honesty and refusing severe harm), (3) Compliant (adhering to operational/domain guidelines), and (4) Genuinely Helpful (fulfilling intent without preachy refusals).",
-      "key_takeaway": "The 4-tier Constitutional priority order is: 1. Broadly Safe → 2. Broadly Ethical → 3. Compliant → 4. Genuinely Helpful.",
+      "key_takeaway": "The 4-tier Constitutional priority order is: 1. Broadly Safe \u2192 2. Broadly Ethical \u2192 3. Compliant \u2192 4. Genuinely Helpful.",
       "doc_links": [
         {
           "label": "Anthropic: Constitutional AI Research",
@@ -341,7 +341,7 @@
           "why_wrong": "Constitutional reasoning is intrinsic to the model's alignment, not delegated to browser cookies."
         }
       ],
-      "explanation": "Under the Holistic Weighting Rule, the four-tier priority hierarchy is evaluated contextually—weighing plausibility, severity, and intent together rather than executing a brittle keyword gate—so dual-use defensive or educational prompts receive helpful, non-preachy answers.",
+      "explanation": "Under the Holistic Weighting Rule, the four-tier priority hierarchy is evaluated contextually\u2014weighing plausibility, severity, and intent together rather than executing a brittle keyword gate\u2014so dual-use defensive or educational prompts receive helpful, non-preachy answers.",
       "key_takeaway": "Holistic weighting balances plausibility, severity, and context so remote theoretical risks do not trigger false refusals.",
       "doc_links": [
         {
@@ -358,38 +358,38 @@
       "id": "anthropic-q-10",
       "section": "Constitutional AI (CAI) & Alignment",
       "guide_anchor": "cai",
-      "question": "A fintech VP assumes that because Claude is trained with Constitutional AI, the model will automatically refuse to mention competitor mortgage rates, enforce a $250 refund cap, and redact internal account IDs without any extra engineering. Why is this assumption flawed?",
+      "question": "An agent with infrastructure access is migrating a database. The operator's system prompt tells it to finish as fast as possible, and a later instruction asks it to switch off the monitoring hook that lets on-call engineers pause the agent, because the hook slows the run. How does Claude's published priority ordering resolve this?",
       "options": [
         {
-          "text": "Constitutional AI is only active when using the claude.ai web interface and is disabled on the Direct Messages API and Bedrock.",
+          "text": "Comply fully, because operator instructions in the system prompt take precedence over every other consideration.",
           "correct": false,
-          "why_wrong": "Constitutional AI is baked into the foundation model weights and applies across all interfaces and cloud routes."
+          "why_wrong": "Operators customize behavior within Anthropic's bounds; their instructions do not outrank being broadly safe."
         },
         {
-          "text": "Foundation-layer CAI only stops universal catastrophic/ethical harm; product business rules require application-layer guardrails.",
+          "text": "Comply fully, because being genuinely helpful is the first priority whenever no third party is directly harmed.",
+          "correct": false,
+          "why_wrong": "Helpfulness is the last of the four priorities; it is weighed after safety, ethics and guideline compliance."
+        },
+        {
+          "text": "Refuse the whole migration and end the session, since any request touching oversight makes the task unsafe.",
+          "correct": false,
+          "why_wrong": "The ordering is weighed holistically; the safe path is to decline the oversight change, not abandon a legitimate task."
+        },
+        {
+          "text": "Continue the migration but decline to disable the pause hook, since not undermining oversight outranks helpfulness.",
           "correct": true
-        },
-        {
-          "text": "Competitor mentions and refund caps are governed by ASL-3 Constitutional Classifiers, which require a separate enterprise license.",
-          "correct": false,
-          "why_wrong": "ASL-3 Constitutional Classifiers guard against catastrophic misuse like CBRN synthesis, not company-specific refund or branding rules."
-        },
-        {
-          "text": "Constitutional AI only runs during Phase 1 supervised fine-tuning and is stripped out during Phase 2 RLAIF optimization.",
-          "correct": false,
-          "why_wrong": "Both Phase 1 (Critique & Revision) and Phase 2 (RLAIF) enforce the Constitution in the final aligned model."
         }
       ],
-      "explanation": "Model-level alignment (Constitutional AI) operates at the Foundation Layer to eliminate universal catastrophic, ethical, and oversight harms. Enforcing organization-specific business rules—such as competitor policies, refund caps, tool permissions, and PII redaction—remains the responsibility of Application Layer prompts, hooks, and guardrails.",
-      "key_takeaway": "Foundation-layer CAI stops universal catastrophic/ethical harm; application-layer guardrails must enforce your domain business rules.",
+      "explanation": "The constitution orders Claude's priorities as broadly safe, broadly ethical, compliant with Anthropic's guidelines, and genuinely helpful, weighed holistically. Not undermining appropriate human oversight (such as the ability to pause or stop an agent) sits in the highest tier, so Claude can keep helping with the legitimate migration while declining the specific step that removes the oversight control and explaining why.",
+      "key_takeaway": "Being broadly safe, including preserving humans' ability to pause or stop an agent, outranks helpfulness and operator speed goals.",
       "doc_links": [
+        {
+          "label": "Claude's Constitution",
+          "url": "https://www.anthropic.com/constitution"
+        },
         {
           "label": "Anthropic: Constitutional AI Research",
           "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback"
-        },
-        {
-          "label": "Mitigating Jailbreaks & Prompt Injection",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
         }
       ]
     },
@@ -458,7 +458,7 @@
           "why_wrong": "SAEs decompose dense internal neural activations into human-interpretable concepts (like sycophancy or code vulnerabilities), not JSON schemas."
         }
       ],
-      "explanation": "Because neural networks compress far more concepts than they have physical neurons (superposition), individual neurons become polysemantic—firing on unrelated concepts. Sparse Autoencoders (SAEs) decompile these dense activations into sparse, human-readable monosemantic features.",
+      "explanation": "Because neural networks compress far more concepts than they have physical neurons (superposition), individual neurons become polysemantic\u2014firing on unrelated concepts. Sparse Autoencoders (SAEs) decompile these dense activations into sparse, human-readable monosemantic features.",
       "key_takeaway": "SAEs resolve neural superposition by decomposing dense, polysemantic neuron activations into readable monosemantic features.",
       "doc_links": [
         {
@@ -498,7 +498,7 @@
         }
       ],
       "explanation": "The Stream Algorithm eliminates the quadratic bottleneck of long-context mechanistic interpretability by hierarchically pruning 97% to 99% of negligible token-to-token interactions, enabling causal circuit attribution across 100k+ token contexts in near-linear time.",
-      "key_takeaway": "The Stream Algorithm hierarchically prunes 97–99% of irrelevant token interactions to scale circuit attribution to 100k+ tokens.",
+      "key_takeaway": "The Stream Algorithm hierarchically prunes 97\u201399% of irrelevant token interactions to scale circuit attribution to 100k+ tokens.",
       "doc_links": [
         {
           "label": "Anthropic Transformer Circuits Research",
@@ -517,21 +517,21 @@
       "question": "An alignment researcher wants to detect when a model's internal state is drifting toward deception or hallucination during inference BEFORE any harmful tokens are emitted to the user. Which interpretability construct enables this runtime monitoring?",
       "options": [
         {
-          "text": "Persona Vectors — low-rank directions in activation space representing behavioral traits.",
+          "text": "Persona Vectors \u2014 low-rank directions in activation space representing behavioral traits.",
           "correct": true
         },
         {
-          "text": "Artifacts — stateful frontend containers in claude.ai that log rendered HTML diffs after a chat turn finishes.",
+          "text": "Artifacts \u2014 stateful frontend containers in claude.ai that log rendered HTML diffs after a chat turn finishes.",
           "correct": false,
           "why_wrong": "Artifacts is a user-facing UI workspace in claude.ai and only renders tokens after they have already been generated."
         },
         {
-          "text": "Two-Party Authorization — dual-engineer approval gates triggered before any production infrastructure SSH session.",
+          "text": "Two-Party Authorization \u2014 dual-engineer approval gates triggered before any production infrastructure SSH session.",
           "correct": false,
           "why_wrong": "Two-Party Authorization protects model weight storage infrastructure, not inference-time activation drift."
         },
         {
-          "text": "Phase 1 Critique transcripts — static supervised fine-tuning datasets generated offline prior to model release.",
+          "text": "Phase 1 Critique transcripts \u2014 static supervised fine-tuning datasets generated offline prior to model release.",
           "correct": false,
           "why_wrong": "Phase 1 SFT transcripts are created offline during training and do not monitor live inference activations."
         }
@@ -565,7 +565,7 @@
           "correct": true
         },
         {
-          "text": "By running every user prompt through three separate cloud providers in Layer 3 and majority-voting on the output.",
+          "text": "By running every user prompt through three separate cloud providers in Tier 3 and majority-voting on the output.",
           "correct": false,
           "why_wrong": "Multi-cloud ensembling does not alter internal weight resilience or prevent a model from faking alignment during training."
         },
@@ -648,7 +648,7 @@
           "why_wrong": "ASL tiers govern Anthropic's proprietary frontier models, mandating strict API and weight-security controls."
         },
         {
-          "text": "Textbook summaries are processed exclusively inside Layer 1 Cowork VMs rather than the Direct Messages API.",
+          "text": "Textbook summaries are processed exclusively inside Tier 1 Cowork VMs rather than the Direct Messages API.",
           "correct": false,
           "why_wrong": "ASL classification is a property of the model's capabilities across all surfaces, not restricted to Cowork."
         }
@@ -673,26 +673,26 @@
       "question": "When a frontier model is deployed under ASL-3 containment, what runtime deployment defense continuously inspects live input and output streams to block multi-turn CBRN uplift and universal jailbreaks?",
       "options": [
         {
-          "text": "Constitutional Classifiers — low-latency sentinel models filtering live I/O streams.",
+          "text": "Constitutional Classifiers \u2014 low-latency sentinel models filtering live I/O streams.",
           "correct": true
         },
         {
-          "text": "Sparse Autoencoders — dictionary-learning networks that rewrite user prompts into base64 before inference.",
+          "text": "Sparse Autoencoders \u2014 dictionary-learning networks that rewrite user prompts into base64 before inference.",
           "correct": false,
           "why_wrong": "SAEs are interpretability tools for decomposing internal activations, not real-time I/O stream classifiers."
         },
         {
-          "text": "Phase 1 SFT Self-Critique — forcing the model to run three offline fine-tuning epochs before emitting each token.",
+          "text": "Phase 1 SFT Self-Critique \u2014 forcing the model to run three offline fine-tuning epochs before emitting each token.",
           "correct": false,
           "why_wrong": "Phase 1 SFT happens during model training, whereas Constitutional Classifiers are low-latency runtime sentinels."
         },
         {
-          "text": "Cowork Virtual Machines — isolating every HTTP API call inside a local macOS desktop GUI container environment.",
+          "text": "Cowork Virtual Machines \u2014 isolating every HTTP API call inside a local macOS desktop GUI container environment.",
           "correct": false,
-          "why_wrong": "Cowork is a Layer 1 desktop workspace feature for end users, not an ASL-3 API stream safeguard."
+          "why_wrong": "Cowork is a Tier 1 desktop workspace feature for end users, not an ASL-3 API stream safeguard."
         }
       ],
-      "explanation": "Under ASL-3, Deployment Defenses mandate low-latency Constitutional Classifiers—sentinel models that continuously inspect live input and output streams to intercept multi-turn CBRN synthesis and jailbreak attempts with minimal false-positive impact.",
+      "explanation": "Under ASL-3, Deployment Defenses mandate low-latency Constitutional Classifiers\u2014sentinel models that continuously inspect live input and output streams to intercept multi-turn CBRN synthesis and jailbreak attempts with minimal false-positive impact.",
       "key_takeaway": "ASL-3 deployment defenses use real-time Constitutional Classifiers to filter input/output streams against CBRN uplift and jailbreaks.",
       "doc_links": [
         {
@@ -731,7 +731,7 @@
           "why_wrong": "The Stream Algorithm prunes interpretability attribution graphs, not the deployed model's weight parameters."
         }
       ],
-      "explanation": "ASL-3 Hardened Weight Security mandates Two-Party Authorization (2PA)—requiring dual human approval for sensitive infrastructure actions—combined with strict egress bandwidth throttling so automated security systems can detect and sever weight exfiltration before multi-gigabyte theft completes.",
+      "explanation": "ASL-3 Hardened Weight Security mandates Two-Party Authorization (2PA)\u2014requiring dual human approval for sensitive infrastructure actions\u2014combined with strict egress bandwidth throttling so automated security systems can detect and sever weight exfiltration before multi-gigabyte theft completes.",
       "key_takeaway": "ASL-3 weight security pairs Two-Party Authorization (2PA) with strict egress bandwidth throttling to stop weight theft.",
       "doc_links": [
         {
@@ -795,7 +795,7 @@
           "why_wrong": "Dual approval is 2PA, AI preference scoring is RLAIF, and the desktop GUI VM is Cowork."
         },
         {
-          "text": "SAE: extracts monosemantic features; Stream Algorithm: prunes 97–99% of token links; Persona Vectors: trait directions.",
+          "text": "SAE: extracts monosemantic features; Stream Algorithm: prunes 97\u201399% of token links; Persona Vectors: trait directions.",
           "correct": true
         },
         {
@@ -809,8 +809,8 @@
           "why_wrong": "This confuses interpretability methods with Constitutional AI priority tiers, Phase 1 SFT, and ASL-3 Constitutional Classifiers."
         }
       ],
-      "explanation": "In Anthropic's mechanistic interpretability stack, Sparse Autoencoders (SAEs) decompose polysemantic neural superposition into readable monosemantic features, the Stream Algorithm hierarchically prunes 97–99% of irrelevant token interactions for 100k+ context attribution, and Persona Vectors capture low-rank activation directions for behavioral drift detection and steering.",
-      "key_takeaway": "SAEs extract monosemantic features, the Stream Algorithm prunes 97–99% of token interactions, and Persona Vectors track behavioral traits.",
+      "explanation": "In Anthropic's mechanistic interpretability stack, Sparse Autoencoders (SAEs) decompose polysemantic neural superposition into readable monosemantic features, the Stream Algorithm hierarchically prunes 97\u201399% of irrelevant token interactions for 100k+ context attribution, and Persona Vectors capture low-rank activation directions for behavioral drift detection and steering.",
+      "key_takeaway": "SAEs extract monosemantic features, the Stream Algorithm prunes 97\u201399% of token interactions, and Persona Vectors track behavioral traits.",
       "doc_links": [
         {
           "label": "Anthropic Responsible Scaling Policy",
@@ -833,7 +833,7 @@
           "correct": true
         },
         {
-          "text": "2PA is the overarching governance framework, ASL is a Phase 1 SFT dataset, and RSP is a Layer 1 desktop GUI application.",
+          "text": "2PA is the overarching governance framework, ASL is a Phase 1 SFT dataset, and RSP is a Tier 1 desktop GUI application.",
           "correct": false,
           "why_wrong": "RSP is the governance policy, ASLs are the biosafety-inspired capability tiers, and 2PA is an ASL-3 weight-access safeguard."
         },
@@ -887,7 +887,7 @@
           "why_wrong": "Forward-planning circuits select target rhyming words ahead of time when composing poetry, not when answering factual entity queries."
         }
       ],
-      "explanation": "Attribution graphs revealed four core findings: a shared cross-lingual universal 'language of thought', forward planning (choosing poetry rhymes before writing a line), unfaithful backward reasoning from wrong hints, and a default reluctance to speculate—where hallucinations happen because misfiring 'known-entity' circuits inhibit the default 'don't know' circuit.",
+      "explanation": "Attribution graphs revealed four core findings: a shared cross-lingual universal 'language of thought', forward planning (choosing poetry rhymes before writing a line), unfaithful backward reasoning from wrong hints, and a default reluctance to speculate\u2014where hallucinations happen because misfiring 'known-entity' circuits inhibit the default 'don't know' circuit.",
       "key_takeaway": "Circuit tracing shows hallucinations occur when misfiring 'known-entity' circuits inhibit the model's default 'don't know' refusal circuit.",
       "doc_links": [
         {
@@ -941,23 +941,23 @@
     },
     {
       "id": "anthropic-q-25",
-      "section": "Core Philosophy & Ecosystem Map",
+      "section": "Core Philosophy & Enterprise Deployment Surfaces",
       "guide_anchor": "philosophy",
-      "question": "An engineering team is deploying long-running autonomous workflows on Anthropic's hosted runtime (Claude Managed Agents) in Layer 2. Around which four core architectural primitives is Managed Agents structured?",
+      "question": "An engineering team is deploying long-running autonomous workflows on Anthropic's hosted runtime (Claude Managed Agents) in the builder harness tier (Tier 2). Around which four core architectural primitives is Managed Agents structured?",
       "options": [
         {
           "text": "Artifacts, Cowork VMs, Slack Connectors, and PowerPoint Add-ins running inside the claude.ai consumer web application.",
           "correct": false,
-          "why_wrong": "Artifacts, Cowork, and Productivity Connectors belong to Layer 1 (End-User Entry Points), not the Layer 2 Managed Agents runtime."
+          "why_wrong": "Artifacts, Cowork, and Productivity Connectors belong to Tier 1 (End-User Workspaces), not the Tier 2 Managed Agents runtime."
         },
         {
           "text": "Agent, Environment, Session, and Events (SSE-streamed messages, tool runs, and interrupts).",
           "correct": true
         },
         {
-          "text": "Amazon Bedrock IAM roles, Google Vertex AI service accounts, Azure Foundry subscriptions, and egress bandwidth throttles.",
+          "text": "Amazon Bedrock IAM roles, Google Vertex AI service accounts, Microsoft Foundry subscriptions, and egress bandwidth throttles.",
           "correct": false,
-          "why_wrong": "Cloud IAM accounts belong to Layer 3 (Cloud Delivery Routes) and egress throttling is an ASL-3 weight-security control."
+          "why_wrong": "Cloud IAM accounts belong to Tier 3 (Multi-Cloud Infrastructure) and egress throttling is an ASL-3 weight-security control."
         },
         {
           "text": "Sparse Autoencoders, Attribution Graphs, Persona Vectors, and Behavioral Vaccination steering hooks.",
@@ -965,16 +965,12 @@
           "why_wrong": "Those four components belong to Anthropic's mechanistic interpretability and activation-steering research stack, not Managed Agents."
         }
       ],
-      "explanation": "In Layer 2 of the Claude Ecosystem Map, Claude Managed Agents provides a hosted cloud harness built around four core primitives: Agent (the model, system prompt, tools, MCP servers, and skills), Environment (the cloud or self-hosted container sandbox), Session (a stateful running execution instance), and Events (SSE-streamed messages, tool executions, and mid-run steering interrupts).",
+      "explanation": "In Tier 2 of this guide's surface map, Claude Managed Agents provides a hosted cloud harness built around four core primitives: Agent (the model, system prompt, tools, MCP servers, and skills), Environment (the cloud or self-hosted container sandbox), Session (a stateful running execution instance), and Events (SSE-streamed messages, tool executions, and mid-run steering interrupts).",
       "key_takeaway": "Claude Managed Agents is built around four core primitives: Agent, Environment, Session, and Events.",
       "doc_links": [
         {
-          "label": "Anthropic: Building Effective Agents",
-          "url": "https://www.anthropic.com/engineering/building-effective-agents"
-        },
-        {
-          "label": "Choosing the Right Claude Model",
-          "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+          "label": "Claude Managed Agents Overview",
+          "url": "https://platform.claude.com/docs/en/managed-agents/overview"
         }
       ]
     }
