@@ -14,8 +14,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Context Engineering &amp; Reliability: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Context engineering and agent reliability: context budget and placement, pinned facts, compaction, sessions, state and memory, subagent isolation, structured error propagation, escalation, confidence calibration and provenance across Claude and Google ADK.">
-    <meta name="keywords" content="context engineering, agent memory, context window, compaction, context editing, prompt caching, lost in the middle, ADK sessions, ADK state, Memory Bank, Claude memory tool, subagents, error propagation, escalation, confidence calibration, provenance, Michael Bettan, Michaël Bettan">
+    <meta name="description" content="Context engineering for long-running agents: context budget and placement, sliding-window trimming, summary prefixes and compaction, tool-result clearing, scratchpads and structured note-taking, just-in-time retrieval, sessions, state and memory, and subagent context isolation across Claude and Google ADK.">
+    <meta name="keywords" content="context engineering, context window, compaction, context editing, tool result clearing, sliding window, summary prefix, scratchpad, structured note-taking, just-in-time retrieval, prompt caching, ADK compaction, ADK state, Memory Bank, Claude memory tool, subagents, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -33,7 +33,7 @@
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Context Engineering &amp; Reliability: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Context engineering and agent reliability: context budget and placement, pinned facts, compaction, sessions, state and memory, subagent isolation, structured error propagation, escalation, confidence calibration and provenance across Claude and Google ADK.">
+    <meta property="og:description" content="Context engineering for long-running agents: context budget and placement, sliding-window trimming, summary prefixes and compaction, tool-result clearing, scratchpads and structured note-taking, just-in-time retrieval, sessions, state and memory, and subagent context isolation across Claude and Google ADK.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ContextEngineering.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -42,7 +42,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Context Engineering &amp; Reliability: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Context engineering and agent reliability: context budget and placement, pinned facts, compaction, sessions, state and memory, subagent isolation, structured error propagation, escalation, confidence calibration and provenance across Claude and Google ADK.">
+    <meta name="twitter:description" content="Context engineering for long-running agents: context budget and placement, sliding-window trimming, summary prefixes and compaction, tool-result clearing, scratchpads and structured note-taking, just-in-time retrieval, sessions, state and memory, and subagent context isolation across Claude and Google ADK.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Context Engineering &amp; Reliability: Study Guide by Michaël Bettan">
 
@@ -79,8 +79,8 @@
                   "@id": "https://mbettan.github.io/machine-learning-cert/ContextEngineering.html#article",
                   "headline": "Context Engineering & Reliability: Study Guide | ML Cert Hub",
                   "name": "Context Engineering & Reliability Study Guide",
-                  "description": "Context engineering and agent reliability: context budget and placement, pinned facts, compaction, sessions, state and memory, subagent isolation, structured error propagation, escalation, confidence calibration and provenance across Claude and Google ADK.",
-                  "keywords": "context engineering, agent memory, context window, compaction, context editing, prompt caching, lost in the middle, ADK sessions, ADK state, Memory Bank, Claude memory tool, subagents, error propagation, escalation, confidence calibration, provenance, Michael Bettan, Michaël Bettan",
+                  "description": "Context engineering for long-running agents: context budget and placement, sliding-window trimming, summary prefixes and compaction, tool-result clearing, scratchpads and structured note-taking, just-in-time retrieval, sessions, state and memory, and subagent context isolation across Claude and Google ADK.",
+                  "keywords": "context engineering, context window, compaction, context editing, tool result clearing, sliding window, summary prefix, scratchpad, structured note-taking, just-in-time retrieval, prompt caching, ADK compaction, ADK state, Memory Bank, Claude memory tool, subagents, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ContextEngineering.html",
                   "inLanguage": "en",
                   "dateModified": "2026-11-01",
@@ -149,7 +149,7 @@
                     <span>Certification Study Notes</span>
                 </div>
                 <h1>Context Engineering <em>&amp; Reliability</em></h1>
-                <p class="cover-subtitle">Cross-vendor study guide (Claude and Google ADK) covering per-turn context assembly, context budget and placement, pinned facts, compaction and context editing, sessions, state and long-term memory, subagent isolation, structured error propagation, validation loops, escalation, confidence calibration, provenance and caching.</p>
+                <p class="cover-subtitle">Cross-vendor study guide (Claude and Google ADK) covering per-turn context assembly, context budget and placement, sliding-window trimming, summary prefixes and compaction, tool-result clearing, scratchpads and structured note-taking, just-in-time retrieval, sessions, state and memory, subagent context isolation and caching.</p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-user"></i>
@@ -190,58 +190,50 @@
                 </a>
                 <a href="#long-sessions" class="toc-item">
                     <span class="toc-number">03</span>
-                    <span>Long Sessions &amp; Compaction</span>
+                    <span>Sliding Windows, Summaries &amp; Compaction</span>
+                </a>
+                <a href="#tool-result-clearing" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Tool-Result Clearing</span>
+                </a>
+                <a href="#scratchpads" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Scratchpads &amp; Note-Taking</span>
+                </a>
+                <a href="#just-in-time-retrieval" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Just-in-Time Retrieval</span>
                 </a>
                 <a href="#sessions-memory" class="toc-item">
-                    <span class="toc-number">04</span>
+                    <span class="toc-number">07</span>
                     <span>Session vs. State vs. Memory</span>
                 </a>
                 <a href="#multi-agent-context" class="toc-item">
-                    <span class="toc-number">05</span>
-                    <span>Multi-Agent Isolation &amp; Handoffs</span>
-                </a>
-                <a href="#error-propagation" class="toc-item">
-                    <span class="toc-number">06</span>
-                    <span>Error Propagation</span>
-                </a>
-                <a href="#validation-retry" class="toc-item">
-                    <span class="toc-number">07</span>
-                    <span>Validation &amp; Retry Loops</span>
-                </a>
-                <a href="#escalation" class="toc-item">
                     <span class="toc-number">08</span>
-                    <span>Escalation &amp; Ambiguity</span>
+                    <span>Subagent Context Isolation</span>
                 </a>
-                <a href="#human-review" class="toc-item">
+                <a href="#strategy-selection" class="toc-item">
                     <span class="toc-number">09</span>
-                    <span>Human Review &amp; Calibration</span>
-                </a>
-                <a href="#provenance" class="toc-item">
-                    <span class="toc-number">10</span>
-                    <span>Provenance &amp; Uncertainty</span>
+                    <span>Choosing a Strategy</span>
                 </a>
                 <a href="#caching-cost" class="toc-item">
-                    <span class="toc-number">11</span>
+                    <span class="toc-number">10</span>
                     <span>Caching &amp; Cost</span>
                 </a>
                 <a href="#security-operations" class="toc-item">
-                    <span class="toc-number">12</span>
+                    <span class="toc-number">11</span>
                     <span>Security &amp; Operations</span>
                 </a>
                 <a href="#failure-modes" class="toc-item">
-                    <span class="toc-number">13</span>
+                    <span class="toc-number">12</span>
                     <span>Failure Modes &amp; Anti-Patterns</span>
                 </a>
-                <a href="#code-example" class="toc-item">
-                    <span class="toc-number">14</span>
-                    <span>Minimal Code Example</span>
-                </a>
                 <a href="#glossary" class="toc-item">
-                    <span class="toc-number">15</span>
+                    <span class="toc-number">13</span>
                     <span>Glossary</span>
                 </a>
                 <a href="#resources" class="toc-item">
-                    <span class="toc-number">16</span>
+                    <span class="toc-number">14</span>
                     <span>Practice Quiz &amp; Self-Assessment</span>
                 </a>
             </div>
@@ -258,20 +250,20 @@
         <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Definition</h3>
 
         <div class="concept-card accent-blue">
-            <p>Context engineering is the per-call discipline of choosing which tokens enter a model&#x27;s finite context window (instructions, tool definitions, exact facts, retrieved memories, history and tool results), in what form and in what order, and what gets persisted outside the window so an agent stays correct across long sessions, multiple agents and partial failures.</p>
+            <p>Context engineering is the per-call discipline of choosing which tokens enter a model&#x27;s finite context window (instructions, tool definitions, working state, retrieved material, history and tool results), in what form and in what order, and what is moved outside the window so a long-running agent stays coherent after hundreds of turns.</p>
         </div>
 
         <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">What context engineering solves for</h3>
 
         <div class="concept-card accent-amber">
-            <p>A model is stateless: at any step it knows only what the harness placed in the window for that call. Long sessions overflow the window, summaries blur exact numbers, verbose tool output crowds out instructions, subagents inherit noise or receive too little, and failed lookups quietly become &quot;no data&quot;. Reliability is the other half of the same problem: errors must travel with enough structure to act on, unresolvable uncertainty must reach a human, and every synthesized claim must keep its source.</p>
+            <p>A model is stateless: at each step it sees only what the harness placed in the window for that call. Agents running in a loop keep producing tokens (tool payloads, reasoning, drafts) and most of them stop mattering a few turns later. Left alone, the window fills, recall of the details that still matter drops, and the agent either hits the hard limit or slowly drifts away from its instructions. Context engineering keeps the window small, current and high-signal for the whole run.</p>
         </div>
 
         <div class="callout tip">
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
                 <h4>Mental model</h4>
-                <p>the context window is a desk, not a filing cabinet. The model works only with what is on the desk this turn. Context engineering decides what goes on the desk, in which pile and in which order, and what gets filed away (state, files, memory) with a label that lets the agent fetch it back.</p>
+                <p>treat the window like a kitchen counter during a long dinner service. Only the ingredients for the dish being plated stay on the counter; finished pans go to the sink (clearing), prep notes go on the whiteboard (scratchpad), the pantry is opened only when a recipe calls for something (just-in-time retrieval), and a second cook works a separate station (subagent).</p>
             </div>
         </div>
 
@@ -280,30 +272,30 @@
             <div class="architecture-flow">
                 <div class="arch-node input">Stable prefix<br><small>instructions, tool schemas, examples</small></div>
                 <div class="arch-arrow">+</div>
-                <div class="arch-node storage">Pinned facts &amp; retrieved memory<br><small>case facts, state, memories</small></div>
+                <div class="arch-node storage">Working state &amp; summary prefix<br><small>state, scratchpad excerpt, digest</small></div>
                 <div class="arch-arrow">+</div>
-                <div class="arch-node process">Working history<br><small>compacted summary, trimmed tool results</small></div>
+                <div class="arch-node process">Recent window<br><small>last turns, newest tool results</small></div>
                 <div class="arch-arrow">→</div>
-                <div class="arch-node output">Model call<br><small>then persist what must outlive the turn</small></div>
+                <div class="arch-node output">Model call<br><small>then offload notes, state and handles</small></div>
             </div>
             <pre style="margin-top: 14px;"><code>┌──────────────────────── one model call (finite window) ────────────────────────┐
 │  1. Stable prefix    instructions · tool schemas · examples       cacheable    │
-│  2. Pinned facts     IDs · amounts · dates · limits · commitments verbatim     │
-│  3. Retrieved        state values · memories · documents          selected     │
-│  4. Working history  compacted summary · recent turns · results   pruned       │
+│  2. Working state    task values read by key · scratchpad excerpt exact        │
+│  3. Summary prefix   compacted digest of older turns              rolling      │
+│  4. Recent window    last N turns · newest tool results           verbatim     │
 │  5. Current input    user message or task brief                   last         │
 └───────────────────────────────────────┬────────────────────────────────────────┘
                                         ▼
-               persist what must outlive the turn: state · files · memory</code></pre>
+        offload what can wait: notes files · state · memory · fetchable handles</code></pre>
         </div>
 
         <div class="concept-card accent-pink">
             <ul>
-                <li><strong>Scope of this guide:</strong> context budget and placement, long sessions, sessions and memory, multi-agent handoffs, then the reliability layer (error propagation, validation loops, escalation, human review, provenance), caching and security.</li>
-                <li><strong>Vendors covered:</strong> Claude (Messages API, Agent SDK, Claude Code) and Google (ADK, Agent Platform Sessions and Memory Bank, Gemini API). Mechanisms differ; the decisions are the same.</li>
-                <li><strong>Related guides:</strong> <a href="ClaudeAgentSDK.html#sessions">Claude Agent SDK</a> for session operations and MCP <code>isError</code>, <a href="ADK.html#state-memory">ADK</a> for state prefixes and memory services, <a href="ADP.html#memory-context">Agentic design patterns</a> for the memory taxonomy, <a href="AgentPlatform.html#sessions-memory">Agent Platform</a> for managed Sessions and Memory Bank, <a href="ClaudeCode.html#claude-md">Claude Code</a> for <code>CLAUDE.md</code> and <code>/compact</code>, <a href="AgentOps.html#grading-hierarchy">AgentOps</a> for evaluation.</li>
-                <li><strong>Official documentation:</strong> Claude <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows" target="_blank" rel="noopener">context windows</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/context-editing" target="_blank" rel="noopener">context editing</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/compaction-on-demand" target="_blank" rel="noopener">compaction</a>, <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool" target="_blank" rel="noopener">memory tool</a> and <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching</a>; Claude Code <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">memory</a> and <a href="https://code.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK sessions</a>; ADK <a href="https://adk.dev/sessions/state/" target="_blank" rel="noopener">state</a>, <a href="https://adk.dev/sessions/memory/" target="_blank" rel="noopener">memory</a>, <a href="https://adk.dev/context/compaction/" target="_blank" rel="noopener">compaction</a> and <a href="https://adk.dev/context/caching/" target="_blank" rel="noopener">caching</a>; <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank" target="_blank" rel="noopener">Memory Bank</a>; Gemini API <a href="https://ai.google.dev/gemini-api/docs/caching" target="_blank" rel="noopener">caching</a>.</li>
-                <li><strong>Further reading:</strong> the agent-as-context-curator framing is credited to <em>Introduction to Agents</em> (Blount, Gulli, Saboo, Zimmermann and Vuskovic; Google, 2026). The attention-budget view is credited to Anthropic&#x27;s engineering post <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents</a>. The position effect is from Liu et al., <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Lost in the middle: how language models use long contexts</a> (TACL 2024).</li>
+                <li><strong>Scope of this guide:</strong> budget and placement, long-session techniques (sliding windows, summary prefixes, compaction), tool-result clearing, scratchpads and structured note-taking, just-in-time retrieval, sessions and memory, subagent context isolation, strategy selection, caching and security.</li>
+                <li><strong>Vendors covered:</strong> Claude (Messages API context management, memory tool, Agent SDK, Claude Code) and Google (ADK compaction and state, Agent Platform Sessions and Memory Bank, Gemini API caching). Mechanisms differ; the design decisions are shared.</li>
+                <li><strong>Related guides:</strong> <a href="ClaudeAgentSDK.html#sessions">Claude Agent SDK</a> for session operations, <a href="ADK.html#state-memory">ADK</a> for state prefixes and memory services, <a href="ADP.html#memory-context">Agentic design patterns</a> for the memory taxonomy, <a href="AgentPlatform.html#sessions-memory">Agent Platform</a> for managed Sessions and Memory Bank, <a href="ClaudeCode.html#claude-md">Claude Code</a> for <code>CLAUDE.md</code> and auto-compact.</li>
+                <li><strong>Official documentation:</strong> Claude <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows" target="_blank" rel="noopener">context windows</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/context-editing" target="_blank" rel="noopener">context editing</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/compaction-on-demand" target="_blank" rel="noopener">compaction</a>, <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool" target="_blank" rel="noopener">memory tool</a> and <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching</a>; ADK <a href="https://adk.dev/sessions/state/" target="_blank" rel="noopener">state</a>, <a href="https://adk.dev/sessions/memory/" target="_blank" rel="noopener">memory</a>, <a href="https://adk.dev/context/compaction/" target="_blank" rel="noopener">compaction</a> and <a href="https://adk.dev/context/caching/" target="_blank" rel="noopener">caching</a>; <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank" target="_blank" rel="noopener">Memory Bank</a>; Gemini API <a href="https://ai.google.dev/gemini-api/docs/caching" target="_blank" rel="noopener">caching</a>.</li>
+                <li><strong>Further reading:</strong> the attention-budget view, just-in-time retrieval, structured note-taking and the compaction, notes and subagent trio are described in Anthropic&#x27;s engineering post <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents</a>. The position effect is from Liu et al., <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Lost in the middle: how language models use long contexts</a> (TACL 2024).</li>
             </ul>
         </div>
 
@@ -322,11 +314,11 @@
                 </thead>
                 <tbody>
                     <tr><td><strong>Prompt engineering</strong></td><td>Authoring</td><td>Wording, structure and examples of one instruction; written once, reused on every call</td></tr>
-                    <tr><td><strong>Context engineering</strong></td><td>Per-turn assembly</td><td>Selects, orders, compresses and isolates everything in the window on every call, including tool results and history</td></tr>
-                    <tr><td><strong>State</strong></td><td>Exact working data</td><td>Key/value values the harness reads and writes deterministically (IDs, flags, step outputs); never approximated</td></tr>
-                    <tr><td><strong>Memory</strong></td><td>Long-term recall</td><td>Facts extracted across sessions and fetched by search; recall is probabilistic and can be stale</td></tr>
-                    <tr><td><strong>Retrieval (RAG)</strong></td><td>Shared knowledge</td><td>Documents valid for every user (policies, manuals); not a user&#x27;s personal history</td></tr>
-                    <tr><td><strong>Reliability engineering</strong></td><td>Failure handling</td><td>Structured errors, validation, escalation rules, calibrated review and provenance, so failures stay visible and actionable</td></tr>
+                    <tr><td><strong>Context engineering</strong></td><td>Per-turn curation</td><td>Selects, orders, compresses, offloads and isolates everything in the window on every call</td></tr>
+                    <tr><td><strong>State</strong></td><td>Exact working data</td><td>Key/value values the harness reads and writes deterministically (IDs, flags, step outputs)</td></tr>
+                    <tr><td><strong>Scratchpad</strong></td><td>Agent-written notes</td><td>Files the agent writes and re-reads during a task (plan, progress, open questions); outlives a context reset, usually not the task</td></tr>
+                    <tr><td><strong>Memory</strong></td><td>Long-term recall</td><td>Facts extracted across sessions and fetched by search or a memory tool; recall is probabilistic and can be stale</td></tr>
+                    <tr><td><strong>Retrieval (RAG)</strong></td><td>Shared knowledge</td><td>Documents valid for every user (policies, manuals), fetched up front or on demand</td></tr>
                 </tbody>
             </table>
         </div>
@@ -335,17 +327,18 @@
 
         <div class="concept-card accent-purple">
             <ul>
-                <li><strong>Pin</strong> keeps decision-critical values verbatim in a block that is re-sent every turn and never summarized (amounts, dates, identifiers, limits, promises made to the user).</li>
-                <li><strong>Prune</strong> removes what the model no longer needs: old tool results, irrelevant fields, superseded drafts, finished subtasks.</li>
-                <li><strong>Partition</strong> gives a noisy subtask its own window (a subagent or an agent-as-tool) and returns only a distilled, structured result.</li>
-                <li><strong>Persist</strong> moves information out of the window into state, files or memory, together with a way to fetch it back (a key, a path, a search tool).</li>
-                <li><strong>Place</strong> orders what remains: stable content first so it caches, key facts at the edges of long inputs, the question last.</li>
+                <li><strong>Trim</strong> drops the oldest turns once the window passes a size (a sliding window over history).</li>
+                <li><strong>Summarize</strong> replaces a span of older turns with a digest that sits in front of the recent turns (summary prefix, compaction).</li>
+                <li><strong>Clear</strong> removes stale tool results or thinking blocks while leaving the rest of the conversation intact (context editing).</li>
+                <li><strong>Offload</strong> writes information to a file, state or memory and keeps only a handle (path, key, query) in the window.</li>
+                <li><strong>Fetch late</strong> keeps references instead of payloads and loads data with a tool when a step needs it (just-in-time retrieval).</li>
+                <li><strong>Isolate</strong> gives a noisy subtask its own window (subagent or agent-as-tool) and brings back a short digest.</li>
             </ul>
         </div>
 
         <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Mapping to the common framing:</strong> pin and persist correspond to <em>write</em>, retrieval to <em>select</em>, prune to <em>compress</em> and partition to <em>isolate</em> (the four strategies in the <a href="ADP.html#memory-context">Agentic design patterns guide</a>); place adds ordering, which matters for both recall and caching.</li>
+                <li><strong>Mapping to the common framing:</strong> offload corresponds to <em>write</em>, fetch late to <em>select</em>, trim, summarize and clear to <em>compress</em>, and isolate to <em>isolate</em> (the four strategies in the <a href="ADP.html#memory-context">Agentic design patterns guide</a>).</li>
             </ul>
         </div>
 
@@ -353,7 +346,7 @@
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
                 <h4>Key rule</h4>
-                <p>every token competes for the same attention budget. A larger window raises the ceiling but does not remove the competition: adding irrelevant tokens lowers recall of the relevant ones.</p>
+                <p>every token draws on the same attention budget. A bigger window raises the ceiling, but irrelevant tokens still lower recall of the relevant ones, so the goal is the smallest set of high-signal tokens for the current step.</p>
             </div>
         </div>
 
@@ -361,13 +354,12 @@
 
         <div class="concept-card accent-pink">
             <ol>
-                <li><strong>Load:</strong> fetch session events, exact state and the pinned facts block for this user and task.</li>
-                <li><strong>Retrieve:</strong> add memories or documents relevant to the current input, or expose a search tool and let the agent decide.</li>
-                <li><strong>Prune:</strong> clear stale tool results, project tool output down to the needed fields and compact old turns once a token threshold is crossed.</li>
-                <li><strong>Place:</strong> stable prefix first, then pinned facts and retrieved items, then recent history, then the current input.</li>
-                <li><strong>Call:</strong> count tokens before sending when close to the limit; reserve room for the output.</li>
-                <li><strong>Validate:</strong> check tool results and model output against schemas and business rules; route each error by category.</li>
-                <li><strong>Persist:</strong> commit state changes, update pinned facts, write the scratchpad or manifest and extract memories when the session ends.</li>
+                <li><strong>Load:</strong> read session events, the working state for this task and, if the task uses one, the current scratchpad.</li>
+                <li><strong>Reduce:</strong> apply the history policy (sliding window, summary prefix or compaction) and clear tool results that can be re-fetched.</li>
+                <li><strong>Fetch:</strong> pull in only the documents or memories the next step needs, or expose search tools and let the agent decide.</li>
+                <li><strong>Place:</strong> stable prefix first, then working state and the summary prefix, then recent turns, then the current input.</li>
+                <li><strong>Call:</strong> count tokens when close to the limit and reserve room for the output.</li>
+                <li><strong>Offload:</strong> after the call, write new decisions to state or the scratchpad and replace bulky results with handles.</li>
             </ol>
         </div>
 
@@ -375,8 +367,8 @@
 
         <div class="concept-card accent-blue">
             <ul>
-                <li><strong>Short, single-turn tasks:</strong> one well-written prompt with the needed document is enough; pinning, compaction and memory add cost with no benefit.</li>
-                <li><strong>Everything already fits and stays relevant:</strong> a 20-turn chat with small tool results needs no compaction; measure before adding machinery.</li>
+                <li><strong>Short, single-turn tasks:</strong> one well-written prompt with the needed document is enough; compaction, notes and memory add cost with no benefit.</li>
+                <li><strong>Everything fits and stays relevant:</strong> a 20-turn chat with small tool results needs no trimming; measure before adding machinery.</li>
                 <li><strong>Shared reference knowledge:</strong> put it in retrieval or the stable prefix, not in per-user memory.</li>
             </ul>
         </div>
@@ -397,9 +389,9 @@
                 <li><strong>Window sizes differ by model:</strong> current Claude models default to a 1M-token window with up to 128k output tokens, while legacy models keep 200k; check the model page rather than assuming.</li>
                 <li><strong>Count, don&#x27;t guess:</strong> Claude exposes a token counting endpoint (<code>POST /v1/messages/count_tokens</code>, returning <code>input_tokens</code>) and Gemini exposes <code>count_tokens</code>; character heuristics (about four characters per token in English) are only rough planning numbers.</li>
                 <li><strong>Recount when you switch models:</strong> tokenizers change between model generations (Anthropic documents roughly 30% more tokens for the same text with the tokenizer introduced in Opus 4.7), so a prompt that fit before can overflow or cost more after an upgrade.</li>
-                <li><strong>Let the agent see its budget:</strong> recent Claude models receive a context-awareness note after tool calls with tokens used and remaining, which helps them wrap up or save notes before the limit.</li>
-                <li><strong>Tool definitions are a fixed tax:</strong> every tool schema is sent on every call. Thirty tools with verbose descriptions consume budget before the first user word; scope tools per agent.</li>
-                <li><strong>Context rot:</strong> recall of a specific detail degrades as total tokens grow, well before the hard limit. Treat the usable window as smaller than the advertised one.</li>
+                <li><strong>Let the agent see its budget:</strong> recent Claude models receive a context-awareness note after tool calls with tokens used and remaining, which helps them wrap up or write notes before the limit.</li>
+                <li><strong>Tool definitions are a fixed tax:</strong> every tool schema is sent on every call. A bloated tool set also creates ambiguous choices; if an engineer cannot say which tool fits a situation, the model cannot either. Keep a minimal set per agent.</li>
+                <li><strong>Context rot:</strong> recall of a specific detail degrades gradually as total tokens grow, well before the hard limit. Treat the usable window as smaller than the advertised one.</li>
             </ul>
         </div>
 
@@ -407,10 +399,11 @@
 
         <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Lost in the middle:</strong> models use information at the start and end of a long input more reliably than information buried in the middle (Liu et al.). Put the facts that drive the decision at the top or bottom, never between two long documents.</li>
+                <li><strong>Position effect:</strong> models use information at the start and end of a long input more reliably than material buried in the middle (Liu et al.). Keep the instruction that governs the step near an edge.</li>
                 <li><strong>Long documents first, question last:</strong> for large inputs, place documents above the instructions and the question at the end; Anthropic&#x27;s long-context guidance reports better answers with this order.</li>
-                <li><strong>Label what you place:</strong> wrap documents and facts in named sections or XML-style tags (<code>&lt;case_facts&gt;</code>, <code>&lt;document source=&quot;...&quot; date=&quot;...&quot;&gt;</code>) so the model and the reader can refer to them precisely.</li>
-                <li><strong>Restate the critical constraint near the end:</strong> for very long contexts, a one-line reminder of the hard limit right before the question costs little and counters drift.</li>
+                <li><strong>Label what you place:</strong> wrap documents and notes in named sections or XML-style tags (<code>&lt;notes&gt;</code>, <code>&lt;document source=&quot;...&quot; date=&quot;...&quot;&gt;</code>) so the model can refer to them precisely.</li>
+                <li><strong>Prompt altitude:</strong> write instructions specific enough to steer behavior but general enough to act as heuristics. Hard-coded if-else rules are brittle; vague guidance assumes context the model does not have.</li>
+                <li><strong>Examples over rule lists:</strong> a few diverse, canonical examples steer more reliably per token than a long list of edge-case rules.</li>
             </ul>
         </div>
 
@@ -422,104 +415,60 @@
             </div>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Pinned facts block</h3>
-
-        <h4 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.05rem; color: var(--text-primary);">Scenario: outage planning at Tideline Utilities</h4>
-
-        <div class="concept-card accent-mint">
-            <p><em>A grid engineer and a planning agent spend three hours scheduling a feeder outage.</em></p>
-        </div>
-
-        <div class="concept-card accent-blue">
-            <ul>
-                <li><strong>What went wrong:</strong> after the harness summarized older turns, the agent proposed a switching plan with &quot;roughly 4 MW&quot; of transferable load (the engineer had said 4.2 MW) and dropped the dialysis clinic that must stay energized.</li>
-                <li><strong>Root cause:</strong> the exact values lived only in conversation text, and summarization turns exact values into approximations and drops &quot;minor&quot; exceptions.</li>
-                <li><strong>Fix:</strong> a pinned block, owned by the harness and re-injected at the top of every call, that summarization never touches.</li>
-            </ul>
-        </div>
-
-        <pre><code class="language-xml">&lt;case_facts updated=&quot;2026-11-03T10:42Z&quot;&gt;
-  feeder: F-2207 | outage window: 2026-11-14 06:00–09:30 local
-  transferable load cap: 4.2 MW (engineer, turn 6)
-  must stay energized: Harbor Dialysis Center (meter 88-1043)
-  crew limit: 6 | switching order requires supervisor sign-off
-&lt;/case_facts&gt;</code></pre>
-
-        <div class="concept-card accent-amber">
-            <ul>
-                <li><strong>Update rule:</strong> the harness (or a dedicated tool such as <code>update_case_fact(key, value, source)</code>) changes the block; the model never rewrites it freehand.</li>
-                <li><strong>Provenance inside the block:</strong> record who stated each value and when, so a later contradiction can be resolved instead of silently overwritten.</li>
-                <li><strong>Anti-pattern (summary as the only record):</strong> trusting a running summary to carry amounts, dates and identifiers. Summaries are for narrative; exact values belong in pinned facts or state.</li>
-            </ul>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Trimming tool output at the boundary</h3>
-
-        <h4 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.05rem; color: var(--text-primary);">Scenario: fleet telemetry</h4>
-
-        <div class="concept-card accent-pink">
-            <p>*A dispatch agent calls <code>get_vehicle_status</code>, which returns 60 fields for each of 200 trucks.*</p>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <ul>
-                <li><strong>Symptom:</strong> after three calls the window is mostly raw JSON; the agent forgets the dispatcher&#x27;s delivery-priority rule stated at the start.</li>
-                <li><strong>Fix:</strong> project at the tool boundary: return only <code>vehicle_id</code>, <code>location</code>, <code>fuel_pct</code> and <code>eta_next_stop</code>, filtered to the region in question. Aggregate when the agent needs a count, not rows.</li>
-                <li><strong>Anti-pattern (ask the model to ignore it):</strong> &quot;focus only on fuel level&quot; in the prompt still pays the tokens and still dilutes attention. Remove data in code, before it reaches the window.</li>
-            </ul>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Technique</th><th>Where</th><th>Effect</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Field projection</strong></td><td>Tool implementation</td><td>Return the 4 fields needed, not 60</td></tr>
-                    <tr><td><strong>Server-side filtering and pagination</strong></td><td>Tool parameters (<code>region</code>, <code>limit</code>, <code>cursor</code>)</td><td>The agent asks for the slice it needs</td></tr>
-                    <tr><td><strong>Aggregation</strong></td><td>Tool implementation</td><td>&quot;37 trucks below 20% fuel&quot; instead of 200 rows</td></tr>
-                    <tr><td><strong>Post-tool hook or callback</strong></td><td>Claude <code>PostToolUse</code> hook; ADK <code>after_tool_callback</code></td><td>Normalize or truncate results the tool owner cannot change</td></tr>
-                    <tr><td><strong>Reference instead of payload</strong></td><td>Files API, ADK artifacts</td><td>Store the full result; pass a handle and a summary</td></tr>
-                </tbody>
-            </table>
-        </div>
-
         <!-- ═══════════════════════════════════════
-             SECTION 03: LONG SESSIONS AND COMPACTION
+             SECTION 03: LONG SESSIONS: SLIDING WINDOWS, SUMMARY PREFIXES AND COMPACTION
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="long-sessions">
             <div class="section-divider-number">03</div>
-            <h2>Long sessions and compaction</h2>
+            <h2>Long sessions: sliding windows, summary prefixes and compaction</h2>
         </div>
 
         <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Symptoms of an overloaded session</h3>
 
         <div class="concept-card accent-blue">
             <ul>
-                <li><strong>Generic answers:</strong> the agent refers to &quot;typical patterns&quot; instead of the specific files, IDs or decisions found earlier.</li>
-                <li><strong>Constraint drift:</strong> rules stated early stop being applied.</li>
-                <li><strong>Repetition:</strong> the agent re-runs searches whose results it already has, because those results are buried or were cleared without a note.</li>
+                <li><strong>Generic answers:</strong> the agent talks about &quot;the usual approach&quot; instead of the specific file, ticket or decision it found earlier.</li>
+                <li><strong>Instruction drift:</strong> a rule stated early stops being applied after many large tool calls.</li>
+                <li><strong>Repeated work:</strong> the agent re-runs searches whose results it already has, because those results are buried or were dropped without a trace.</li>
             </ul>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Techniques by vendor</h3>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">History policies</h3>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Technique</th><th>Claude</th><th>Google ADK and Gemini</th><th>Use when</th></tr>
+                    <tr><th>Policy</th><th>How it works</th><th>Keeps</th><th>Loses</th><th>Fits</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Summarize old turns (compaction)</strong></td><td>Messages API compaction (on demand or at a token threshold); Claude Code auto-compact and <code>/compact [focus]</code></td><td><code>EventsCompactionConfig</code> on the <code>App</code> (sliding window or token threshold)</td><td>The transcript keeps growing and older detail matters only as narrative</td></tr>
-                    <tr><td><strong>Clear stale tool results (context editing)</strong></td><td><code>clear_tool_uses_20250919</code> edit; <code>clear_thinking_20251015</code> for old thinking blocks</td><td>Prune or rebuild history in a callback from state</td><td>Tool payloads dominate and are re-fetchable</td></tr>
-                    <tr><td><strong>Start fresh with a brief</strong></td><td>New session seeded with a structured summary; <code>/clear</code> in Claude Code (the old session stays reachable via <code>/resume</code>)</td><td>New session; state and memory carry what matters</td><td>Many prior results are stale (files changed, data updated)</td></tr>
-                    <tr><td><strong>Externalize to files</strong></td><td>Scratchpad file, memory tool directory (<code>/memories</code>), <code>CLAUDE.md</code></td><td>Artifacts, state, Memory Bank</td><td>Findings must survive compaction, restarts or handoffs</td></tr>
-                    <tr><td><strong>Isolate exploration</strong></td><td>Subagents (fresh window, summary back)</td><td><code>AgentTool</code>, <code>include_contents=&#x27;none&#x27;</code></td><td>Discovery generates bulky output the parent does not need</td></tr>
+                    <tr><td><strong>Sliding window (trimming)</strong></td><td>Send only the last N turns or last K tokens; drop older turns</td><td>Recent detail, verbatim</td><td>Everything older, abruptly</td><td>Chat where old turns rarely matter</td></tr>
+                    <tr><td><strong>Summary prefix</strong></td><td>A rolling digest of older turns is placed before the recent window and refreshed as turns age out</td><td>Gist of older turns plus recent detail</td><td>Exact wording of summarized turns</td><td>Assistants with long back-and-forth</td></tr>
+                    <tr><td><strong>Compaction (reset with summary)</strong></td><td>Near a threshold, summarize the whole conversation and continue in a fresh window seeded with the summary</td><td>Decisions, open issues, key artifacts</td><td>Redundant tool output and chatter</td><td>Long agentic runs with tool use</td></tr>
+                    <tr><td><strong>Overlapping compaction</strong></td><td>Each new summary covers a span that overlaps the previous one</td><td>Continuity across summary boundaries</td><td>Some extra tokens</td><td>Event-based compaction in ADK</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Claude and ADK knobs</h3>
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Sliding windows are cheap but blunt:</strong> they need no extra model call, yet a constraint stated in turn 3 disappears at turn 3 + N. Anything that must survive belongs in the system prompt, state or a notes file, never only in early turns.</li>
+                <li><strong>Summary prefixes trade fidelity for continuity:</strong> the digest is generated by a model, so it paraphrases. Keep values that must stay exact (amounts, IDs, deadlines) in state or a scratchpad that the summarizer never rewrites.</li>
+                <li><strong>Compaction is the usual first lever for long agent runs:</strong> Anthropic describes Claude Code compaction as summarizing the history while keeping architectural decisions, unresolved bugs and implementation details, discarding redundant tool output, and continuing with the summary plus the five most recently accessed files.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Tuning a compaction prompt</h3>
+
+        <div class="concept-card accent-pink">
+            <ol>
+                <li><strong>Collect real traces:</strong> pick long, messy runs where a later step depended on an early detail.</li>
+                <li><strong>Maximize recall first:</strong> write the summary instructions so nothing that a later step used is dropped.</li>
+                <li><strong>Then raise precision:</strong> remove categories of content the agent never needed again (raw tool payloads, superseded drafts).</li>
+                <li><strong>Re-test on new traces:</strong> overly aggressive summaries lose details whose importance appears only later.</li>
+            </ol>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Vendor mechanisms</h3>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
@@ -527,54 +476,231 @@
                     <tr><th>Mechanism</th><th>Identifier and key parameters</th><th>Behavior</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>On-demand compaction</strong></td><td>Top-level <code>compaction: {&quot;type&quot;: &quot;summarize&quot;, &quot;instructions&quot;: ...}</code> (beta <code>compact-2026-09-04</code>)</td><td>Your app decides when; Claude returns a signed <code>compaction</code> block that you send first in later <code>messages</code>, in place of the summarized turns</td></tr>
-                    <tr><td><strong>Threshold compaction</strong></td><td>Edit <code>compact_20260112</code> (beta <code>compact-2026-01-12</code>); <code>trigger</code> defaults to 150,000 input tokens; optional <code>instructions</code>; <code>pause_after_compaction</code></td><td>Server summarizes when input crosses the trigger; pausing returns <code>stop_reason: &quot;compaction&quot;</code> so you can inspect or re-pin facts</td></tr>
-                    <tr><td><strong>Tool-result clearing</strong></td><td>Edit <code>clear_tool_uses_20250919</code> (beta <code>context-management-2025-06-27</code>); <code>trigger</code>, <code>keep</code> (recent tool uses kept), <code>clear_at_least</code>, <code>exclude_tools</code>, <code>clear_tool_inputs</code></td><td>Replaces old tool results with placeholders once the trigger is crossed</td></tr>
-                    <tr><td><strong>Thinking clearing</strong></td><td>Edit <code>clear_thinking_20251015</code> with <code>keep: {&quot;type&quot;: &quot;thinking_turns&quot;, ...}</code>; listed first in <code>edits</code></td><td>Drops older thinking blocks</td></tr>
-                    <tr><td><strong>Claude Code</strong></td><td><code>/compact [focus]</code>, auto-compact (<code>autoCompactWindow</code> setting), <code>/context</code>, <code>/clear</code></td><td>Project-root <code>CLAUDE.md</code> is re-read from disk after compaction, so durable rules belong there</td></tr>
-                    <tr><td><strong>Agent SDK</strong></td><td><code>compact_boundary</code> system message with <code>compact_metadata</code> (<code>pre_tokens</code>, <code>trigger</code>)</td><td>Lets the harness log compactions and re-inject pinned facts afterwards</td></tr>
-                    <tr><td><strong>ADK</strong></td><td><code>EventsCompactionConfig(compaction_interval, overlap_size)</code> or token mode (<code>token_threshold</code> with <code>event_retention_size</code>, set together) on <code>App</code></td><td>Summarizes older event ranges into a compacted event; recent events stay verbatim</td></tr>
+                    <tr><td><strong>Claude on-demand compaction</strong></td><td>Top-level <code>compaction: {&quot;type&quot;: &quot;summarize&quot;, &quot;instructions&quot;: ...}</code> (beta <code>compact-2026-09-04</code>)</td><td>Your app decides when; Claude returns a signed <code>compaction</code> block that you send first in later <code>messages</code>, in place of the summarized turns</td></tr>
+                    <tr><td><strong>Claude threshold compaction</strong></td><td>Edit <code>compact_20260112</code> (beta <code>compact-2026-01-12</code>); <code>trigger</code> defaults to 150,000 input tokens; optional <code>instructions</code>; <code>pause_after_compaction</code></td><td>Server summarizes when input crosses the trigger; pausing returns <code>stop_reason: &quot;compaction&quot;</code> so you can inspect the summary or re-insert notes</td></tr>
+                    <tr><td><strong>Claude Code</strong></td><td>Auto-compact (<code>autoCompactWindow</code> setting), <code>/compact [focus]</code>, <code>/context</code>, <code>/clear</code></td><td>Project-root <code>CLAUDE.md</code> is re-read from disk after compaction, so durable rules belong there</td></tr>
+                    <tr><td><strong>Agent SDK</strong></td><td><code>compact_boundary</code> system message with <code>compact_metadata</code> (<code>pre_tokens</code>, <code>trigger</code>)</td><td>Lets the harness log compactions and re-inject state afterwards</td></tr>
+                    <tr><td><strong>ADK event compaction</strong></td><td><code>EventsCompactionConfig(compaction_interval, overlap_size, summarizer)</code> on <code>App</code>; token mode uses <code>token_threshold</code> with <code>event_retention_size</code></td><td>Every <code>compaction_interval</code> completed events, older events are summarized; <code>overlap_size</code> re-includes earlier compacted events so summaries overlap; recent events stay verbatim</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="concept-card accent-pink">
-            <ul>
-                <li><strong>Compaction instructions matter:</strong> tell the summarizer what to keep verbatim (open decisions, file paths, IDs, user commitments). Both Claude compaction modes accept <code>instructions</code>, <code>/compact</code> accepts a focus, and a <code>CLAUDE.md</code> section can describe what compaction must preserve.</li>
-                <li><strong>Compaction is lossy by design:</strong> keep pinned facts and state outside the summarized region so compaction can never alter them.</li>
-                <li><strong>Clearing needs a breadcrumb:</strong> when a tool result is cleared, leave a short placeholder (what was fetched and how to fetch it again) so the agent does not assume the data never existed.</li>
-            </ul>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: migrating 1,400 cron scripts at Quarry Data</h3>
-
-        <div class="concept-card accent-blue">
-            <p><em>An agent is moving a decade of cron scripts to a workflow orchestrator across a large monorepo, over several days.</em></p>
-        </div>
-
         <div class="concept-card accent-purple">
-            <ol>
-                <li><strong>Discovery in subagents:</strong> &quot;list every script that writes to the billing schema&quot; runs in subagents; each returns a table of paths, schedules and owners rather than raw grep output.</li>
-                <li><strong>Scratchpad file:</strong> the coordinator records decisions in <code>MIGRATION_NOTES.md</code> (naming convention chosen, scripts deferred and why) and re-reads it before each phase.</li>
-                <li><strong>Phase summaries:</strong> at the end of each phase the coordinator writes a summary of verified findings and injects it into the briefs for the next phase&#x27;s subagents.</li>
-                <li><strong>Crash-recovery manifest:</strong> every agent writes its progress to a known path (<code>.agent-state/manifest.json</code>: phase, completed items, pending items, last artifact); after a crash or a new session, the coordinator loads the manifest and resumes instead of rediscovering.</li>
-                <li><strong>Resume or restart:</strong> if the repo changed overnight, the coordinator either resumes and names the changed files for targeted re-analysis, or starts a fresh session from the manifest when most earlier results are stale.</li>
-            </ol>
+            <ul>
+                <li><strong>Choose the summarizer model deliberately:</strong> ADK accepts a custom <code>LlmEventSummarizer</code> with its own model, so a smaller, cheaper model can write summaries while the main agent runs on a larger one.</li>
+                <li><strong>Steer what survives:</strong> both Claude compaction modes accept <code>instructions</code>, <code>/compact</code> accepts a focus string and ADK accepts a custom summarizer prompt. Name the categories to keep verbatim (open decisions, file paths, user commitments).</li>
+            </ul>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap</h4>
-                <p>compacting a session whose tool results are stale. Compaction preserves the stale conclusions in shorter form. Re-verify or start fresh from a summary of the findings that are still valid.</p>
+                <p>relying on early turns to carry a rule once a sliding window or compaction is enabled. Restate durable rules in the system prompt or a re-read file such as <code>CLAUDE.md</code>, so trimming can never remove them.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 04: SESSION VS. STATE VS. MEMORY
+             SECTION 04: TOOL-RESULT CLEARING AND CONTEXT EDITING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="tool-result-clearing">
+            <div class="section-divider-number">04</div>
+            <h2>Tool-result clearing and context editing</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Lightest-touch compaction:</strong> once a tool result has been read and acted on, the agent rarely needs the raw payload again. Clearing it frees space without asking a model to rewrite anything, which is why Anthropic describes tool-result clearing as one of the safest forms of compaction.</li>
+                <li><strong>Calls stay visible:</strong> by default Claude clears only the tool results and keeps the original tool calls, so the agent still knows what it asked for and can call the tool again if it needs the data.</li>
+                <li><strong>Token-efficient tools reduce the need to clear:</strong> tools that paginate, filter on the server and return handles to large objects put fewer tokens in the window to begin with.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Claude context editing strategies</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Strategy</th><th>Key parameters</th><th>Behavior</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Tool-result clearing</strong> (<code>clear_tool_uses_20250919</code>, beta <code>context-management-2025-06-27</code>)</td><td><code>trigger</code> (when clearing starts), <code>keep</code> (recent tool uses kept, default 3), <code>clear_at_least</code>, <code>exclude_tools</code>, <code>clear_tool_inputs</code></td><td>Replaces older tool results with placeholders once the prompt crosses the trigger</td></tr>
+                    <tr><td><strong>Thinking-block clearing</strong> (<code>clear_thinking_20251015</code>)</td><td><code>keep: {&quot;type&quot;: &quot;thinking_turns&quot;, &quot;value&quot;: N}</code> or <code>&quot;all&quot;</code></td><td>Drops thinking blocks from older assistant turns; listed first in <code>edits</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code class="language-json">&quot;context_management&quot;: {&quot;edits&quot;: [{
+  &quot;type&quot;: &quot;clear_tool_uses_20250919&quot;,
+  &quot;trigger&quot;: {&quot;type&quot;: &quot;input_tokens&quot;, &quot;value&quot;: 60000},
+  &quot;keep&quot;: {&quot;type&quot;: &quot;tool_uses&quot;, &quot;value&quot;: 4},
+  &quot;exclude_tools&quot;: [&quot;memory&quot;]
+}]}</code></pre>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Protect tools whose results stay relevant:</strong> list them in <code>exclude_tools</code> (a memory tool, a configuration lookup that the whole task depends on).</li>
+                <li><strong>Pair clearing with notes:</strong> when the memory tool is enabled and the context approaches the clearing threshold, Claude receives an automatic warning so it can save important information to memory files first, then look it up later instead of keeping it in the window.</li>
+                <li><strong>Mind the cache:</strong> clearing tool results invalidates the cached prefix from the cleared point. Use <code>clear_at_least</code> so each clearing event frees enough tokens to justify the cache write.</li>
+                <li><strong>ADK equivalent:</strong> there is no built-in clearing strategy; prune or rewrite history in a <code>before_model_callback</code>, or store bulky outputs as artifacts and keep a reference in the event.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: shipment tracing at Larchmont Freight</h3>
+
+        <div class="concept-card accent-pink">
+            <p><em>A tracing agent calls a carrier API about 40 times per investigation; each response is a large JSON document.</em></p>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Before:</strong> after 25 calls the window is mostly raw carrier responses and the agent stops applying the customer&#x27;s &quot;ground only&quot; constraint.</li>
+                <li><strong>After:</strong> tool-result clearing triggers at 60k input tokens and keeps the last four results; the <code>shipment_policy</code> lookup is excluded from clearing; the agent writes each confirmed scan event to a <code>trace.md</code> notes file as it goes.</li>
+                <li><strong>Outcome:</strong> the window stays under the trigger for the rest of the run, the constraint stays visible and earlier findings remain one file read away.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap</h4>
+                <p>clearing with no breadcrumb. If an agent sees neither the result nor a placeholder or note, it assumes the lookup never happened and repeats it.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: SCRATCHPADS AND STRUCTURED NOTE-TAKING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="scratchpads">
+            <div class="section-divider-number">05</div>
+            <h2>Scratchpads and structured note-taking</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Definition:</strong> the agent periodically writes notes to storage outside the window (a <code>NOTES.md</code>, a to-do list, a progress file) and reads them back when it needs them, typically after a compaction, a context reset or a new session.</li>
+                <li><strong>Why it works:</strong> notes give persistence with little overhead. A short progress file carries goals, completed steps and dependencies across dozens of tool calls that would otherwise be trimmed or summarized away.</li>
+                <li><strong>Agent-written, agent-read:</strong> unlike state, which the harness owns, the scratchpad is curated by the agent itself, which decides what is worth remembering.</li>
+            </ul>
+        </div>
+
+        <pre><code class="language-markdown"># trace.md (agent scratchpad)
+Goal: locate pallet LF-88213; customer requires ground transport only
+Done: origin scan Reno 11-02 06:10; hub scan Denver 11-03 21:44
+Open: no scan since Denver; carrier ticket CT-5512 pending
+Next: query Denver hub scan log; re-check ticket at 14:00</code></pre>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Ephemeral vs. Durable notes</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Kind</th><th>Lifetime</th><th>Examples</th><th>Clean-up</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Ephemeral scratchpad</strong></td><td>One task or run</td><td>Working plan, intermediate tallies, hypotheses being tested</td><td>Delete or archive when the task closes</td></tr>
+                    <tr><td><strong>Task progress file</strong></td><td>Until the task completes, across resets and sessions</td><td><code>progress.md</code>, to-do list, test status</td><td>Removed at completion</td></tr>
+                    <tr><td><strong>Durable memory</strong></td><td>Across tasks and sessions</td><td>User preferences, project conventions, lessons learned</td><td>Consolidated and expired by policy</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Vendor mechanisms</h3>
+
+        <div class="concept-card accent-cyan">
+            <ul>
+                <li><strong>Claude memory tool</strong> (<code>memory_20250818</code>) is client-side: Claude issues <code>view</code>, <code>create</code>, <code>str_replace</code>, <code>insert</code>, <code>delete</code> and <code>rename</code> commands against a <code>/memories</code> directory that your application stores. With the tool enabled, Claude is instructed to check the directory before starting and to record progress as it works.</li>
+                <li><strong>Claude Code</strong> keeps durable project guidance in the <code>CLAUDE.md</code> hierarchy and auto memory (<code>MEMORY.md</code>); a plain notes file in the repository works as a task scratchpad.</li>
+                <li><strong>ADK</strong> offers <code>temp:</code> state for values that live only within one invocation, session state for task progress, and artifacts (<code>ArtifactService</code>) for larger, versioned notes files.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Note-taking workflow</h3>
+
+        <div class="concept-card accent-mint">
+            <ol>
+                <li><strong>Seed:</strong> at task start, create the notes file with the goal and constraints.</li>
+                <li><strong>Append at milestones:</strong> after each confirmed finding or decision, write one line; avoid logging every tool call.</li>
+                <li><strong>Re-read at boundaries:</strong> after compaction, clearing or a new session, read the file before acting.</li>
+                <li><strong>Prune:</strong> collapse completed sections so the file itself stays small.</li>
+                <li><strong>Close out:</strong> delete the ephemeral parts and promote only durable lessons to long-term memory.</li>
+            </ol>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <ul>
+                <li><strong>Anti-pattern (notes as a transcript):</strong> copying raw tool output into the scratchpad recreates the bloat the file was meant to avoid.</li>
+                <li><strong>Anti-pattern (ephemeral notes promoted wholesale):</strong> turning a task&#x27;s working notes into permanent memory fills future sessions with stale hypotheses.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: JUST-IN-TIME RETRIEVAL
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="just-in-time-retrieval">
+            <div class="section-divider-number">06</div>
+            <h2>Just-in-time retrieval</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Up-front retrieval</strong> embeds and searches a corpus before inference and pastes the top results into the window. It is fast at run time, but the agent receives whatever the retriever ranked highly, relevant or not, and the index can be stale.</li>
+                <li><strong>Just-in-time retrieval</strong> keeps lightweight identifiers (file paths, stored queries, URLs, record IDs) and loads the data with a tool only when a step needs it. Anthropic describes agents writing targeted queries and using commands like <code>head</code> and <code>tail</code> on large data instead of loading whole objects into the window.</li>
+                <li><strong>Metadata is signal:</strong> folder names, file sizes, naming conventions and timestamps tell the agent what a reference is for before it opens it.</li>
+                <li><strong>Progressive disclosure:</strong> each lookup informs the next, so the agent assembles understanding layer by layer and keeps only what the current step needs in the window.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Up-front vs. Just-in-time vs. Hybrid</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Approach</th><th>Latency</th><th>Freshness</th><th>Risk</th><th>Fits</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Up-front</strong></td><td>Lowest at run time</td><td>As fresh as the index</td><td>Window filled with loosely relevant chunks</td><td>Stable corpora, single-shot Q&amp;A</td></tr>
+                    <tr><td><strong>Just-in-time</strong></td><td>Higher (extra tool calls)</td><td>Reads the source directly</td><td>Wasted calls and dead ends without good tools and heuristics</td><td>Codebases, large datasets, fast-changing sources</td></tr>
+                    <tr><td><strong>Hybrid</strong></td><td>Medium</td><td>Mixed</td><td>Two systems to maintain</td><td>Some essentials preloaded, the rest explored on demand</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <ul>
+                <li><strong>Hybrid in practice:</strong> Claude Code drops <code>CLAUDE.md</code> files into the window at start, then uses <code>glob</code> and <code>grep</code> style tools to find and open files just in time, which avoids stale indexes.</li>
+                <li><strong>Give the agent good handles:</strong> list or search tools that return names, sizes and short previews, plus read tools with ranges or pagination, keep exploration cheap.</li>
+                <li><strong>Cap exploration:</strong> set a tool-call budget or ask for a plan before broad searches, so the agent does not burn context on dead ends.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: policy lookups at Fernhill Insurance</h3>
+
+        <div class="concept-card accent-cyan">
+            <p><em>An underwriting assistant answers questions over 3,000 policy documents that change weekly.</em></p>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <ul>
+                <li><strong>Before:</strong> each question preloads the top 20 chunks from a nightly vector index; answers sometimes quote last week&#x27;s wording and the window carries about 30k tokens of loosely related text.</li>
+                <li><strong>After:</strong> the assistant starts with a short catalog (product line, document ID, effective date) and opens only the two or three documents it selects, reading the relevant section by heading.</li>
+                <li><strong>Outcome:</strong> answers cite the current version, and the per-question context shrinks to the sections actually read.</li>
+            </ul>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Note</h4>
+                <p><em>Illustrative figures:</em> the scenario numbers are invented to show the pattern; measure retrieval cost and quality on your own corpus.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: SESSION VS. STATE VS. MEMORY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="sessions-memory">
-            <div class="section-divider-number">04</div>
+            <div class="section-divider-number">07</div>
             <h2>Session vs. State vs. Memory</h2>
         </div>
 
@@ -584,10 +710,10 @@
                     <tr><th>Store</th><th>Holds</th><th>Lifetime</th><th>Recall</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Session (history)</strong></td><td>The ordered turns and tool calls of one conversation</td><td>One conversation (resumable)</td><td>Replayed into the window, usually compacted</td></tr>
+                    <tr><td><strong>Session (history)</strong></td><td>The ordered turns and tool calls of one conversation</td><td>One conversation (resumable)</td><td>Replayed into the window, usually trimmed or compacted</td></tr>
                     <tr><td><strong>State</strong></td><td>Exact key/value working data</td><td>Session, user or app scope</td><td>Deterministic read by key</td></tr>
                     <tr><td><strong>Memory</strong></td><td>Extracted facts about a user or domain, across sessions</td><td>Long term, with consolidation and expiry</td><td>Search (similarity or tool call); probabilistic</td></tr>
-                    <tr><td><strong>Files and artifacts</strong></td><td>Large or binary outputs, scratchpads, manifests</td><td>Until deleted</td><td>Read by name or path</td></tr>
+                    <tr><td><strong>Files and artifacts</strong></td><td>Large outputs, scratchpads, notes</td><td>Until deleted</td><td>Read by name or path</td></tr>
                 </tbody>
             </table>
         </div>
@@ -601,10 +727,10 @@
                 </thead>
                 <tbody>
                     <tr><td><strong>Statelessness</strong></td><td>The Messages API keeps nothing between calls; the client resends history every time</td><td>The <code>Runner</code> loads session events from a <code>SessionService</code> before each model call</td></tr>
-                    <tr><td><strong>Session handle</strong></td><td>Agent SDK and Claude Code session IDs: continue, resume by ID or name, fork into a new ID</td><td><code>Session</code> keyed by <code>app_name</code>, <code>user_id</code>, <code>session_id</code></td></tr>
+                    <tr><td><strong>Session handle</strong></td><td>Agent SDK and Claude Code session IDs</td><td><code>Session</code> keyed by <code>app_name</code>, <code>user_id</code>, <code>session_id</code></td></tr>
                     <tr><td><strong>Session storage</strong></td><td>Local session transcripts (Agent SDK, Claude Code); your own database for raw API apps</td><td><code>InMemorySessionService</code> (dev), <code>DatabaseSessionService</code>, <code>VertexAiSessionService</code> (Agent Platform Sessions)</td></tr>
                     <tr><td><strong>Exact state</strong></td><td>Your application store, or files the agent reads</td><td><code>session.state</code> with prefixes: none (session), <code>user:</code>, <code>app:</code>, <code>temp:</code> (never persisted)</td></tr>
-                    <tr><td><strong>Long-term memory</strong></td><td>Memory tool (<code>memory_20250818</code>): client-side files under <code>/memories</code> that Claude views, creates, edits, renames and deletes; Claude Code <code>CLAUDE.md</code> hierarchy plus auto memory (<code>MEMORY.md</code>)</td><td><code>MemoryService</code>: <code>InMemoryMemoryService</code> (dev, keyword match), <code>VertexAiMemoryBankService</code> (Memory Bank: extraction and consolidation), <code>VertexAiRagMemoryService</code></td></tr>
+                    <tr><td><strong>Long-term memory</strong></td><td>Memory tool (<code>memory_20250818</code>): client-side files under <code>/memories</code>; Claude Code <code>CLAUDE.md</code> hierarchy plus auto memory (<code>MEMORY.md</code>)</td><td><code>MemoryService</code>: <code>InMemoryMemoryService</code> (dev, keyword match), <code>VertexAiMemoryBankService</code> (Memory Bank: extraction and consolidation), <code>VertexAiRagMemoryService</code></td></tr>
                     <tr><td><strong>Memory read path</strong></td><td>The agent calls the memory tool when it decides to</td><td><code>load_memory</code> (agent decides) or <code>PreloadMemoryTool</code> (every turn)</td></tr>
                     <tr><td><strong>Large outputs</strong></td><td>Files API, local files</td><td><code>ArtifactService</code> (versioned artifacts)</td></tr>
                 </tbody>
@@ -619,38 +745,26 @@
                     <tr><th>Information</th><th>Store</th><th>Why</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Ticket ID, approved budget, chosen option</td><td>State or pinned facts</td><td>Must be exact; read by key every turn</td></tr>
+                    <tr><td>Ticket ID, approved budget, chosen option</td><td>State</td><td>Must be exact; read by key every turn</td></tr>
                     <tr><td>&quot;Prefers reports in French&quot;</td><td>User-scoped state or long-term memory</td><td>Survives sessions; small and stable</td></tr>
                     <tr><td>Facts learned over many conversations</td><td>Long-term memory with consolidation</td><td>Needs dedup and updates when facts change</td></tr>
-                    <tr><td>A 40-page contract</td><td>File or artifact plus retrieval</td><td>Too large to replay; cite sections on demand</td></tr>
-                    <tr><td>Progress of a multi-day task</td><td>Manifest or scratchpad file</td><td>Survives crashes and new sessions</td></tr>
+                    <tr><td>A 40-page contract</td><td>File or artifact plus just-in-time reads</td><td>Too large to replay; open sections on demand</td></tr>
+                    <tr><td>Today&#x27;s working plan for a multi-hour task</td><td>Scratchpad file</td><td>Agent-curated; survives compaction</td></tr>
                     <tr><td>Value needed only within this turn</td><td><code>temp:</code> state or a local variable</td><td>Must not leak into the next turn</td></tr>
                     <tr><td>The tone of yesterday&#x27;s chat</td><td>Nothing</td><td>No future decision depends on it</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Session operations</h3>
-
-        <div class="concept-card accent-pink">
-            <ul>
-                <li><strong>Continue</strong> picks up the most recent session; <strong>resume</strong> reopens a specific session with its full history; <strong>fork</strong> copies the history into a new session ID and leaves the original untouched (see <a href="ClaudeAgentSDK.html#sessions">Claude Agent SDK sessions</a>).</li>
-                <li><strong>Fork for divergent exploration:</strong> compare two approaches from the same analysis baseline. A fork copies the transcript, not the filesystem; isolate file edits (worktrees or checkpoints) when forks change code.</li>
-                <li><strong>Resume when the context is still valid:</strong> if a few files changed, resume and name them. If most tool results are stale, start a new session seeded with a structured summary of what is still true.</li>
-            </ul>
-        </div>
-
         <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Memory write policy</h3>
 
-        <div class="concept-card accent-blue">
+        <div class="concept-card accent-pink">
             <ul>
                 <li><strong>Extract at boundaries:</strong> generate memories at session end or at task milestones (ADK: <code>add_session_to_memory</code> on a Memory Bank service, which calls <code>GenerateMemories</code> in the background), not on every turn.</li>
                 <li><strong>Consolidate, don&#x27;t append:</strong> a new fact that contradicts an old one updates it (&quot;moved to Lyon&quot; replaces &quot;lives in Paris&quot;); Memory Bank consolidates extracted facts against existing memories in the same scope, while append-only stores accumulate contradictions.</li>
                 <li><strong>Direct writes for explicit facts:</strong> when the user states a fact to remember, write it directly (Memory Bank <code>CreateMemory</code>, or the Claude memory tool&#x27;s <code>create</code> command) instead of waiting for extraction.</li>
                 <li><strong>Scope every record:</strong> key memories by user (and tenant); Memory Bank <code>RetrieveMemories</code> matches the exact scope before any similarity search, and your own stores must do the same.</li>
                 <li><strong>Expire what goes stale:</strong> set a time-to-live for facts with a shelf life (Memory Bank supports TTL per instance or per memory and keeps revisions); review the rest periodically.</li>
-                <li><strong>Assume the window resets:</strong> with the Claude memory tool enabled, Claude is instructed to check its memory directory before starting and to record progress as it works, because any context can be compacted or cleared.</li>
-                <li><strong>Anti-pattern (memory as a transcript dump):</strong> saving raw transcripts as &quot;memory&quot; makes retrieval noisy and copies sensitive data into a long-lived store.</li>
             </ul>
         </div>
 
@@ -663,353 +777,110 @@
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 05: MULTI-AGENT CONTEXT ISOLATION AND HANDOFFS
+             SECTION 08: SUBAGENT CONTEXT ISOLATION
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="multi-agent-context">
-            <div class="section-divider-number">05</div>
-            <h2>Multi-agent context isolation and handoffs</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <ul>
-                <li><strong>Isolation is the point:</strong> a subagent starts with a fresh window. On Claude, an Agent SDK subagent receives only its own system prompt and the task prompt the coordinator writes; it does not see the parent&#x27;s conversation. In ADK, <code>AgentTool</code> runs the child in an isolated session, while <code>sub_agents</code> transfer hands over the shared conversation.</li>
-                <li><strong>Brief, don&#x27;t forward:</strong> pass a curated brief, not the transcript. Forwarding everything defeats isolation and imports the parent&#x27;s noise.</li>
-                <li><strong>Return structure, not prose:</strong> the subagent returns findings in a schema the coordinator can merge, with the metadata needed downstream (source, date, location, coverage gaps).</li>
-            </ul>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Brief template</h3>
-
-        <pre><code class="language-text">GOAL:         Identify the ultimate beneficial owners of Arvalis Components GmbH.
-CONSTRAINTS:  Public registries and filings only; stop after 12 tool calls.
-KNOWN FACTS:  Registry ID HRB 73319 (Munich); parent named in 2024 filing: Velden Holding.
-OUT OF SCOPE: Sanctions screening (handled by another agent).
-RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt},
-              plus &quot;gaps&quot;: sources you could not reach and why.</code></pre>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: supplier due diligence at Kestrel Procurement</h3>
-
-        <div class="concept-card accent-coral">
-            <p><em>A coordinator assesses a new supplier with three subagents: registry, news and sanctions.</em></p>
-        </div>
-
-        <div class="concept-card accent-cyan">
-            <ul>
-                <li><strong>Registry subagent:</strong> returns ownership claims with filing dates and excerpts.</li>
-                <li><strong>News subagent:</strong> returns dated articles; flags that one article reports a 2026 ownership change.</li>
-                <li><strong>Sanctions subagent:</strong> returns match results per name, or an explicit error per list it could not query.</li>
-                <li><strong>Coordinator:</strong> merges claims keyed by source, keeps conflicting values side by side with dates, and lists coverage gaps in the final report.</li>
-            </ul>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Handoff mistake</th><th>Consequence</th><th>Fix</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Brief says &quot;check the supplier&quot; with no identifiers</td><td>Subagent searches the wrong company with a similar name</td><td>Include exact identifiers and known facts</td></tr>
-                    <tr><td>Subagent returns a paragraph</td><td>Coordinator cannot merge or cite</td><td>Require a schema with source fields</td></tr>
-                    <tr><td>Parent transcript forwarded</td><td>Subagent window filled with irrelevant history</td><td>Curated brief only</td></tr>
-                    <tr><td>No coverage field</td><td>Missing sources look like &quot;nothing found&quot;</td><td>Require a <code>gaps</code> list</td></tr>
-                    <tr><td>Coordinator re-summarizes subagent output loosely</td><td>Attribution lost</td><td>Merge structured claims; never paraphrase away sources</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 06: ERROR PROPAGATION
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="error-propagation">
-            <div class="section-divider-number">06</div>
-            <h2>Error propagation</h2>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Access failure vs. valid empty result</h3>
-
-        <h4 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.05rem; color: var(--text-primary);">Scenario: the sanctions list that timed out</h4>
-
-        <div class="concept-card accent-purple">
-            <p><em>The sanctions subagent queries two watch lists. One returns no match; the other times out. The wrapper turns the timeout into an empty list.</em></p>
-        </div>
-
-        <div class="concept-card accent-amber">
-            <ul>
-                <li><strong>Outcome:</strong> the coordinator reports &quot;no sanctions matches on either list&quot; and the supplier is approved. The second list was never checked.</li>
-                <li><strong>Rule:</strong> an empty result is a successful answer (&quot;I looked and found nothing&quot;). A failure is the absence of an answer (&quot;I could not look&quot;). They must never share a representation.</li>
-            </ul>
-        </div>
-
-        <pre><code class="language-json">{
-  &quot;status&quot;: &quot;error&quot;,
-  &quot;error_category&quot;: &quot;transient&quot;,
-  &quot;retryable&quot;: true,
-  &quot;source&quot;: &quot;watchlist_b&quot;,
-  &quot;attempted&quot;: &quot;screen(name=&#x27;Velden Holding&#x27;, list=&#x27;watchlist_b&#x27;)&quot;,
-  &quot;attempts&quot;: 2,
-  &quot;partial_results&quot;: [{&quot;list&quot;: &quot;watchlist_a&quot;, &quot;matches&quot;: []}],
-  &quot;suggested_next_step&quot;: &quot;retry in 10 minutes or mark watchlist_b unverified in the report&quot;
-}</code></pre>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Category</th><th>Example</th><th>Retry?</th><th>Caller should</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Transient</strong></td><td>Timeout, rate limit, 503</td><td>Yes, bounded with backoff</td><td>Retry locally first, then propagate with partial results</td></tr>
-                    <tr><td><strong>Validation</strong></td><td>Malformed date, unknown field</td><td>After fixing the input</td><td>Correct the call or ask the user for the missing value</td></tr>
-                    <tr><td><strong>Permission</strong></td><td>Token lacks scope</td><td>No</td><td>Stop that path; escalate or use an authorized route</td></tr>
-                    <tr><td><strong>Business rule</strong></td><td>Order exceeds approval limit</td><td>No</td><td>Explain the rule and offer the allowed alternative</td></tr>
-                    <tr><td><strong>Not found</strong></td><td>ID does not exist</td><td>No</td><td>Treat as a real answer; confirm the identifier if it came from the user</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Recover locally, propagate what you cannot fix</h3>
-
-        <div class="concept-card accent-mint">
-            <ol>
-                <li><strong>Retry transient failures inside the tool or subagent</strong> with a small bound and backoff.</li>
-                <li><strong>Fall back to an equivalent source</strong> if one exists and record that you did.</li>
-                <li><strong>Return partial results</strong> with an explicit failure record for the part that failed.</li>
-                <li><strong>Let the coordinator decide</strong> whether to retry later, proceed with an annotated gap or escalate.</li>
-            </ol>
-        </div>
-
-        <div class="concept-card accent-blue">
-            <ul>
-                <li><strong>Mechanisms:</strong> on Claude, a tool result can carry <code>is_error: true</code> (MCP: <code>isError</code>), and the loop continues so Claude can react; put the structured payload in the content. In ADK, tools conventionally return a dict with a status and an error message; <code>ReflectAndRetryToolPlugin</code> retries raised exceptions by default.</li>
-                <li><strong>Anti-pattern (silent suppression):</strong> returning <code>[]</code>, <code>null</code> or &quot;success&quot; on failure. Downstream agents read it as a fact.</li>
-                <li><strong>Anti-pattern (abort everything):</strong> killing the whole workflow because one source failed throws away valid partial work. Continue, annotate the gap.</li>
-                <li><strong>Anti-pattern (generic error):</strong> &quot;operation failed&quot; tells the caller nothing about whether a retry, a different input or a human is needed.</li>
-                <li><strong>Anti-pattern (unbounded retry):</strong> a subagent retrying forever burns budget and hides an outage from the coordinator.</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 07: VALIDATION AND RETRY LOOPS
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="validation-retry">
-            <div class="section-divider-number">07</div>
-            <h2>Validation and retry loops</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <ul>
-                <li><strong>Separate syntax from meaning:</strong> structured outputs (Claude strict tool use or JSON outputs; ADK <code>output_schema</code> and Gemini <code>response_schema</code>) guarantee valid shape. They do not guarantee the values are right.</li>
-                <li><strong>Validate in code:</strong> schema checks, cross-field rules (end date after start date, units consistent) and recomputation of anything derivable. Do not ask the model whether its own output is correct as the only check.</li>
-                <li><strong>Retry with the specific error:</strong> feed back the exact failing rule and the offending value (&quot;<code>calibration_date</code> 2026-13-02 is not a valid date; month must be 01–12&quot;). A bare &quot;try again&quot; wastes the attempt.</li>
-                <li><strong>Bound the loop:</strong> two or three retries, then route to human review with the last error attached.</li>
-            </ul>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: calibration certificates at Calloway Metrology</h3>
-
-        <div class="concept-card accent-purple">
-            <p><em>An extraction agent reads calibration certificates: instrument serial, calibration date, twelve measurement points with tolerances and a pass or fail verdict.</em></p>
-        </div>
-
-        <div class="concept-card accent-amber">
-            <ul>
-                <li><strong>Recompute, then compare:</strong> the validator recomputes the verdict from the points and tolerances. If the certificate says &quot;pass&quot; but two points are out of tolerance, the record is flagged as a discrepancy rather than &quot;corrected&quot; by the model.</li>
-                <li><strong>Retry helps when the value is present:</strong> a misread date or a value in the wrong field is fixable with targeted feedback.</li>
-                <li><strong>Retry does not help when the value is absent:</strong> if a certificate has no next-due date, more retries produce invented dates. Make such fields nullable, require a reason (<code>&quot;not_stated_in_document&quot;</code>) and accept null as a valid answer.</li>
-            </ul>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Failure</th><th>Retry helps?</th><th>Better response</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Malformed JSON or missing required key</td><td>Rarely needed</td><td>Use structured outputs so it cannot happen</td></tr>
-                    <tr><td>Value in the wrong field or wrong format</td><td>Yes</td><td>Retry with the exact rule that failed</td></tr>
-                    <tr><td>Value not present in the source</td><td>No</td><td>Nullable field plus reason; never force a value</td></tr>
-                    <tr><td>Source contradicts itself</td><td>No</td><td>Extract both values and flag for review</td></tr>
-                    <tr><td>Model keeps failing the same rule</td><td>No, after the bound</td><td>Human review with the last error attached</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-ban"></i></div>
-            <div class="callout-content">
-                <h4>Common trap</h4>
-                <p>making every field required &quot;to improve completeness&quot;. Required fields with no source value invite fabrication. Optional or nullable fields with an explicit reason are more accurate.</p>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 08: ESCALATION AND AMBIGUITY
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="escalation">
             <div class="section-divider-number">08</div>
-            <h2>Escalation and ambiguity</h2>
+            <h2>Subagent context isolation</h2>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: Helm, the IT access assistant at Brightwater Analytics</h3>
-
-        <div class="concept-card accent-blue">
-            <p><em>An internal agent grants and revokes application access for 4,000 employees and contractors.</em></p>
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Clean windows by design:</strong> rather than one agent holding the whole project in its window, a lead agent keeps the high-level plan and hands focused work to subagents that each start with an empty window.</li>
+                <li><strong>Explore wide, return small:</strong> a subagent can spend tens of thousands of tokens searching and reading, then return a condensed digest (Anthropic cites 1,000 to 2,000 tokens as typical). The detailed search context never reaches the lead agent.</li>
+                <li><strong>What each side sees:</strong> on Claude, an Agent SDK subagent receives only its own system prompt and the task prompt the lead writes, not the parent conversation. In ADK, <code>AgentTool</code> runs the child in an isolated session and returns its final response as a tool result, while <code>sub_agents</code> transfer hands over the shared conversation; <code>include_contents=&#x27;none&#x27;</code> stops an <code>LlmAgent</code> from receiving prior history.</li>
+                <li><strong>Cost of isolation:</strong> subagents add calls and total tokens. Use them when exploration is bulky or parallelizable, not for a two-step lookup.</li>
+            </ul>
         </div>
 
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Escalate to a human when</th><th>Not a valid trigger on its own</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>The requester explicitly asks for a person: hand off now, without first attempting a fix</td><td>The requester sounds annoyed</td></tr>
-                    <tr><td>The policy is silent or ambiguous for this case (a contractor asks for production database access; policy covers employees only)</td><td>The model reports low confidence in its answer</td></tr>
-                    <tr><td>The agent cannot make progress (repeated tool failures, missing authority, conflicting approvals)</td><td>The request &quot;looks complex&quot; with no concrete criterion</td></tr>
-                    <tr><td>The action is irreversible or above an approval threshold</td><td>The conversation is long</td></tr>
-                </tbody>
-            </table>
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-code-branch"></i> Subagent context isolation</div>
+            <pre style="margin-top: 14px;"><code>            ┌───────────── lead agent window ─────────────┐
+            │ plan · state · digests from subagents (~2k) │
+            └───────┬───────────────┬───────────────┬─────┘
+             brief  │        brief  │        brief  │
+            ┌───────▼─────┐ ┌───────▼─────┐ ┌───────▼─────┐
+            │ subagent A  │ │ subagent B  │ │ subagent C  │
+            │ 40k explore │ │ 25k explore │ │ 30k explore │
+            └───────┬─────┘ └───────┬─────┘ └───────┬─────┘
+                    └──── digest ───┴──── digest ───┘</code></pre>
         </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Writing the brief and the digest</h3>
 
         <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Write the criteria down:</strong> put explicit escalation rules and a few contrasting examples (escalate vs. resolve) in the instructions. Vague guidance (&quot;escalate when appropriate&quot;) produces inconsistent behavior.</li>
-                <li><strong>Enforce hard limits in code:</strong> a hook or callback that blocks grants above a privilege level is reliable; a sentence in the prompt is a request.</li>
-                <li><strong>Frustration without complexity:</strong> acknowledge it and solve the request; escalate if the person repeats the request for a human.</li>
-                <li><strong>Self-reported confidence is not calibrated:</strong> a model saying &quot;I am 90% sure&quot; is not a probability you can threshold on. Use observable criteria instead.</li>
+                <li><strong>Brief:</strong> the goal, the scope boundary, the identifiers the subagent needs and a tool or token budget. Write it fresh; do not forward the lead&#x27;s transcript.</li>
+                <li><strong>Digest:</strong> what was found, where it lives (paths, IDs, links) so the lead can open it just in time, and what was not checked.</li>
+                <li><strong>Format:</strong> a short structured list the lead can scan beats a long narrative.</li>
             </ul>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Ambiguity resolution</h3>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: dependency upgrade at Pinecrest Labs</h3>
 
         <div class="concept-card accent-cyan">
+            <p><em>A lead agent upgrades a logging library across 30 services in one repository.</em></p>
+        </div>
+
+        <div class="concept-card accent-pink">
             <ul>
-                <li><strong>Multiple matches:</strong> &quot;revoke access for J. Okafor&quot; matches two employees. Ask for a second identifier (employee ID, department or email). Never pick by heuristic (most recent, first result).</li>
-                <li><strong>Missing required input:</strong> ask a targeted question for the one missing value instead of guessing.</li>
-                <li><strong>Several requests in one message:</strong> split them, resolve each against the same verified identity, and answer once with every item addressed.</li>
+                <li><strong>Fan-out:</strong> one subagent per group of services searches for call sites and deprecated options; each returns a table of file paths and the pattern found.</li>
+                <li><strong>Lead window:</strong> holds the upgrade plan, the per-group digests and the notes file, never the raw search output.</li>
+                <li><strong>Outcome:</strong> the lead edits file by file, opening each path just in time from the digests.</li>
             </ul>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Handoff packet</h3>
-
-        <div class="concept-card accent-mint">
-            <p>The human usually cannot see the transcript. Send a structured summary:</p>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Isolation mistake</th><th>Consequence</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Lead forwards its full transcript</td><td>Subagent starts half full of irrelevant history</td><td>Write a fresh, focused brief</td></tr>
+                    <tr><td>Subagent returns everything it read</td><td>Lead window floods; isolation wasted</td><td>Ask for a short digest with handles</td></tr>
+                    <tr><td>Brief omits the scope boundary</td><td>Subagents overlap or wander</td><td>State what is in and out of scope</td></tr>
+                    <tr><td>Subagent used for a tiny lookup</td><td>Extra latency and tokens for no gain</td><td>Call the tool directly</td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <pre><code class="language-json">{
-  &quot;requester&quot;: &quot;e-20417 (verified via SSO)&quot;,
-  &quot;request&quot;: &quot;production DB read access for contractor c-5521&quot;,
-  &quot;reason_for_escalation&quot;: &quot;policy_gap: access policy v7 covers employees only&quot;,
-  &quot;actions_taken&quot;: [&quot;verified requester&quot;, &quot;checked policy v7 sections 3-4&quot;],
-  &quot;recommended_action&quot;: &quot;security approver decides; time-boxed read-only grant suggested&quot;,
-  &quot;urgency&quot;: &quot;requester&#x27;s deadline 2026-11-05&quot;
-}</code></pre>
-
         <!-- ═══════════════════════════════════════
-             SECTION 09: HUMAN REVIEW AND CONFIDENCE CALIBRATION
+             SECTION 09: CHOOSING A STRATEGY
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="human-review">
+        <div class="section-divider" id="strategy-selection">
             <div class="section-divider-number">09</div>
-            <h2>Human review and confidence calibration</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <ul>
-                <li><strong>Aggregate accuracy hides weak segments:</strong> a pipeline at 97% overall can be at 80% on one document type that is 4% of volume. Measure per segment.</li>
-                <li><strong>Stratified sampling:</strong> sample review items across segments (issuer, document type, scan quality, language), oversampling rare and high-risk segments, instead of sampling uniformly at random.</li>
-                <li><strong>Field-level confidence:</strong> a document is rarely uniformly right or wrong. Score each field, then route only the uncertain fields.</li>
-                <li><strong>Calibrate on labeled data:</strong> confidence scores are useful only after you check them against a labeled validation set. If items scored 0.9 are right 72% of the time, the score is overconfident; set thresholds per field from the measured curve.</li>
-                <li><strong>Keep auditing the confident items:</strong> route a small random sample of high-confidence items to review so drift and new failure modes are detected.</li>
-            </ul>
-        </div>
-
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: per-segment accuracy at Calloway Metrology</h3>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr><th>Segment</th><th>Share of volume</th><th>Field accuracy</th><th>Action</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Digital certificates, issuer A</td><td>61%</td><td>99.1%</td><td>Audit sample only</td></tr>
-                    <tr><td>Scanned certificates, issuers B to D</td><td>35%</td><td>96.4%</td><td>Review fields below threshold</td></tr>
-                    <tr><td>Handwritten certificates, issuer E</td><td>4%</td><td>80.2%</td><td>Full human review until fixed</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="callout info">
-            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
-            <div class="callout-content">
-                <h4>Note</h4>
-                <p><em>Illustrative figures:</em> the segment numbers above are invented to show the pattern; they are not benchmarks.</p>
-            </div>
+            <h2>Choosing a strategy</h2>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Confidence source</th><th>Calibrated?</th><th>Use</th></tr>
+                    <tr><th>Task shape</th><th>First lever</th><th>Add when needed</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Model&#x27;s self-reported confidence in text</td><td>No</td><td>Do not threshold on it</td></tr>
-                    <tr><td>Validator results (rules passed or failed)</td><td>Deterministic</td><td>Hard gate</td></tr>
-                    <tr><td>Agreement across independent extractions or a verifier pass</td><td>Partly; measure it</td><td>Score input, calibrated on labels</td></tr>
-                    <tr><td>Score mapped to observed accuracy on a labeled set</td><td>Yes, for that distribution</td><td>Routing thresholds; recalibrate when inputs change</td></tr>
+                    <tr><td>Long conversation with steady back-and-forth</td><td>Summary prefix or compaction</td><td>Durable rules in the system prompt</td></tr>
+                    <tr><td>Tool-heavy run where payloads dominate</td><td>Tool-result clearing</td><td>Notes file for findings worth keeping</td></tr>
+                    <tr><td>Iterative work with clear milestones (coding, migrations)</td><td>Structured note-taking</td><td>Compaction at a threshold</td></tr>
+                    <tr><td>Broad research or analysis that parallelizes</td><td>Subagents with digests</td><td>Notes file in the lead agent</td></tr>
+                    <tr><td>Large or fast-changing corpus</td><td>Just-in-time retrieval</td><td>Small preloaded catalog (hybrid)</td></tr>
+                    <tr><td>Short task that fits comfortably</td><td>Nothing</td><td>Measure before adding machinery</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="concept-card accent-cyan">
+        <div class="concept-card accent-blue">
             <ul>
-                <li><strong>Anti-pattern (automate on overall accuracy):</strong> removing human review because the global number looks high ignores the segment that is failing.</li>
-                <li><strong>Anti-pattern (review everything forever):</strong> reviewing 100% of high-accuracy segments wastes reviewer time that should go to weak segments.</li>
+                <li><strong>Rule of thumb from Anthropic&#x27;s guidance:</strong> compaction keeps conversational flow for extended back-and-forth, note-taking suits iterative development with milestones, and multi-agent setups fit research where parallel exploration pays off.</li>
+                <li><strong>Start light:</strong> clearing stale tool results changes nothing the model wrote, so try it before summarization. Add notes, then subagents, as the task demands.</li>
+                <li><strong>Combine deliberately:</strong> a common stack is threshold compaction plus tool-result clearing plus a notes file. Each event rewrites part of the context, so tune triggers together and watch cache costs.</li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 10: PROVENANCE AND UNCERTAINTY
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="provenance">
-            <div class="section-divider-number">10</div>
-            <h2>Provenance and uncertainty</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <ul>
-                <li><strong>Claim-source mapping:</strong> every claim carries its source (URL or document), a short excerpt, a location (page, section) and the document date. Synthesis must merge these mappings, never drop them.</li>
-                <li><strong>Conflicts stay visible:</strong> when credible sources disagree, report both values with their sources and dates, and say which is more recent or more authoritative. Do not average them or silently pick one.</li>
-                <li><strong>Dates explain many conflicts:</strong> a 2024 filing and a 2026 article can both be right about ownership at different times.</li>
-                <li><strong>Separate established from contested:</strong> structure the output so the reader sees which findings are well supported and which rest on one source or conflict.</li>
-                <li><strong>Annotate coverage:</strong> list sources that were unavailable or checks that failed, so absence of evidence is not read as evidence of absence.</li>
-                <li><strong>Render by content type:</strong> figures and comparisons as tables, narrative developments as prose, procedural findings as lists.</li>
-            </ul>
-        </div>
-
-        <pre><code class="language-json">{
-  &quot;claim&quot;: &quot;Velden Holding owns 60% of Arvalis Components GmbH&quot;,
-  &quot;source&quot;: &quot;https://registry.example/HRB73319/filing-2024&quot;,
-  &quot;excerpt&quot;: &quot;...Velden Holding GmbH, 60 %...&quot;,
-  &quot;location&quot;: &quot;shareholder list, p. 2&quot;,
-  &quot;document_date&quot;: &quot;2024-06-18&quot;,
-  &quot;conflicts_with&quot;: [{
-    &quot;value&quot;: &quot;Velden Holding sold its stake&quot;,
-    &quot;source&quot;: &quot;https://news.example/2026/arvalis-stake-sale&quot;,
-    &quot;document_date&quot;: &quot;2026-09-02&quot;
-  }],
-  &quot;status&quot;: &quot;contested&quot;
-}</code></pre>
-
-        <div class="concept-card accent-purple">
-            <ul>
-                <li><strong>Native citation features:</strong> Claude can return citations tied to passages of supplied documents when citations are enabled on document blocks. Gemini grounding with Google Search returns grounding metadata linking parts of the answer to web sources.</li>
-                <li><strong>Anti-pattern (citations added after writing):</strong> generating prose first and attaching sources afterwards produces citations that do not support the sentence they sit on. Carry sources from retrieval through synthesis.</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 11: CACHING AND COST
+             SECTION 10: CACHING AND COST
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="caching-cost">
-            <div class="section-divider-number">11</div>
+            <div class="section-divider-number">10</div>
             <h2>Caching and cost</h2>
         </div>
 
@@ -1018,7 +889,7 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
                 <li><strong>Prefix caching rewards stable order:</strong> both vendors reuse computation for an unchanged prefix. Put tools, system instructions and fixed examples first; put per-turn content (timestamps, user data, retrieved items) after them.</li>
                 <li><strong>Claude prompt caching:</strong> the prefix is hashed in the order tools → system → messages. Use automatic caching (one top-level <code>cache_control</code>, the recommended default) or explicit breakpoints (<code>cache_control: {&quot;type&quot;: &quot;ephemeral&quot;}</code> on up to 4 blocks). The default lifetime is 5 minutes; <code>&quot;ttl&quot;: &quot;1h&quot;</code> extends it. Writes cost 1.25× base input (5 minutes) or 2× (1 hour); reads cost 0.1× base or less on the newest models. Usage reports <code>cache_creation_input_tokens</code> and <code>cache_read_input_tokens</code>.</li>
                 <li><strong>Gemini caching:</strong> implicit caching is on by default for Gemini 2.5 and later, with no storage fee; explicit caches (<code>cachedContents</code>) take a time-to-live and bill hourly storage. ADK exposes <code>ContextCacheConfig(min_tokens, ttl_seconds, cache_intervals)</code> through <code>App(context_cache_config=...)</code> and <code>static_instruction</code> for an instruction that stays cache-stable.</li>
-                <li><strong>What breaks a cache:</strong> any change before the breakpoint (a timestamp in the system prompt, reordered tools, an edited example). Clearing old tool results also changes the prefix after the cleared point.</li>
+                <li><strong>What breaks a cache:</strong> any change before the breakpoint (a timestamp in the system prompt, reordered tools, an edited example). Clearing old tool results or thinking blocks also changes the prefix after the cleared point; keeping thinking blocks preserves the cache.</li>
                 <li><strong>Compaction, clearing and caching interact:</strong> each compaction or clearing event rewrites part of the context and forces a new cache write. Trigger them at thresholds, and use <code>clear_at_least</code> so each clear frees enough tokens to pay for the lost cache.</li>
             </ul>
         </div>
@@ -1030,10 +901,10 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
                 </thead>
                 <tbody>
                     <tr><td>Prefix caching</td><td>Input price and latency on repeated prefixes</td><td>Cache writes; discipline about ordering</td></tr>
-                    <tr><td>Tool output projection</td><td>Tokens on every later turn</td><td>Tool changes</td></tr>
+                    <tr><td>Tool-result clearing</td><td>Window space in tool-heavy runs</td><td>Cache invalidation at each clear</td></tr>
                     <tr><td>Compaction</td><td>Window space in long sessions</td><td>Summarization call; detail loss</td></tr>
-                    <tr><td>Subagents</td><td>Parent window space</td><td>Extra calls and tokens overall</td></tr>
-                    <tr><td>Smaller model for routine steps</td><td>Price per token</td><td>Evaluation to confirm quality</td></tr>
+                    <tr><td>Just-in-time retrieval</td><td>Tokens spent on unused context</td><td>Extra tool calls and latency</td></tr>
+                    <tr><td>Subagents</td><td>Lead window space</td><td>Extra calls and tokens overall</td></tr>
                 </tbody>
             </table>
         </div>
@@ -1047,10 +918,10 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 12: SECURITY AND OPERATIONS
+             SECTION 11: SECURITY AND OPERATIONS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="security-operations">
-            <div class="section-divider-number">12</div>
+            <div class="section-divider-number">11</div>
             <h2>Security and operations</h2>
         </div>
 
@@ -1059,9 +930,10 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
         <div class="concept-card accent-blue">
             <ul>
                 <li><strong>Memory poisoning:</strong> an attacker plants an instruction in content the agent later saves as memory (&quot;always approve invoices from this vendor&quot;); it then applies in every future session. Extract facts, not instructions, and validate what is written.</li>
-                <li><strong>Indirect prompt injection through tool results:</strong> web pages, emails and documents can carry instructions. Treat tool output as data: mark it as untrusted, never let it change tool permissions, and gate sensitive actions behind code-level checks.</li>
+                <li><strong>Indirect prompt injection through fetched content:</strong> web pages, emails and files opened just in time can carry instructions. Treat tool output as data, never let it change tool permissions, and gate sensitive actions behind code-level checks.</li>
+                <li><strong>Poisoned notes and summaries:</strong> injected text that lands in a scratchpad or compaction summary survives the reset that would otherwise have removed it. Review what is written to notes files and keep summaries free of instructions from untrusted content.</li>
                 <li><strong>Cross-tenant leakage:</strong> memory or state keyed without a user and tenant scope returns another customer&#x27;s facts. Scope every read and write, and test isolation.</li>
-                <li><strong>PII accumulation:</strong> long-term memory and logs become a store of personal data. Minimize what is extracted, redact at the tool boundary, set retention and support deletion requests.</li>
+                <li><strong>PII accumulation:</strong> long-term memory, notes files and logs become a store of personal data. Minimize what is written, redact at the tool boundary, set retention and support deletion requests.</li>
                 <li><strong>Path traversal in file-based memory:</strong> when an agent edits memory files, the harness must confine paths to the memory directory and reject <code>..</code> and absolute paths.</li>
             </ul>
         </div>
@@ -1071,8 +943,8 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
         <div class="concept-card accent-amber">
             <ul>
                 <li><strong>Authentication:</strong> memory and session services are called with the end user&#x27;s identity or a scoped service identity (IAM on Agent Platform, per-user keys in your own store); the model never chooses whose memory to read.</li>
-                <li><strong>Human-in-the-loop gates:</strong> irreversible or high-impact actions require approval regardless of context; memory writes about sensitive categories can require review.</li>
-                <li><strong>Audit:</strong> log every memory write and state change with the source event, so a poisoned memory can be traced and removed.</li>
+                <li><strong>Human-in-the-loop gates:</strong> irreversible or high-impact actions require approval regardless of what the context says.</li>
+                <li><strong>Audit:</strong> log every memory write, notes update and compaction event with the source, so a poisoned entry can be traced and removed.</li>
                 <li><strong>Least context:</strong> give each agent only the tools and data its role needs; context it never sees cannot leak or be injected.</li>
             </ul>
         </div>
@@ -1085,21 +957,20 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
                     <tr><th>Metric</th><th>Signal</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Tokens per call and per session</td><td>Budget pressure; candidates for trimming</td></tr>
-                    <tr><td>Compaction and clearing events per session</td><td>Sessions that should be partitioned or restarted</td></tr>
+                    <tr><td>Tokens per call and per session</td><td>Budget pressure; candidates for clearing or isolation</td></tr>
+                    <tr><td>Compaction and clearing events per session</td><td>Sessions that should use notes or subagents</td></tr>
+                    <tr><td>Repeated identical tool calls</td><td>Results cleared without a breadcrumb or note</td></tr>
                     <tr><td>Cache hit rate</td><td>Prefix instability (a timestamp in the system prompt)</td></tr>
-                    <tr><td>Tool error rate by category</td><td>Outages (transient) vs. integration bugs (validation)</td></tr>
-                    <tr><td>Escalation rate and reasons</td><td>Policy gaps to fix; over- or under-escalation</td></tr>
-                    <tr><td>Review queue volume and per-segment accuracy</td><td>Calibration drift; segments ready for less review</td></tr>
+                    <tr><td>Notes file size over time</td><td>Scratchpad turning into a transcript</td></tr>
                 </tbody>
             </table>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 13: FAILURE MODES AND ANTI-PATTERNS
+             SECTION 12: FAILURE MODES AND ANTI-PATTERNS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="failure-modes">
-            <div class="section-divider-number">13</div>
+            <div class="section-divider-number">12</div>
             <h2>Failure modes and anti-patterns</h2>
         </div>
 
@@ -1109,18 +980,15 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
                     <tr><th>Symptom</th><th>Root cause → fix</th><th>Tempting wrong answer</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Agent quotes an approximate amount after a long session</td><td>Exact values only in summarized history → pinned facts block</td><td>A bigger context window</td></tr>
-                    <tr><td>Agent forgets an early rule after several large tool calls</td><td>Raw tool payloads crowd the window → project fields at the tool boundary</td><td>Repeating the rule in capitals</td></tr>
-                    <tr><td>Report says &quot;no matches&quot; while one source was down</td><td>Timeout returned as an empty list → explicit error with category and partial results</td><td>Retrying silently until it works</td></tr>
-                    <tr><td>Whole workflow fails when one source fails</td><td>Abort on any error → continue with partial results and annotate the gap</td><td>Making every source mandatory</td></tr>
-                    <tr><td>Subagent researches the wrong company</td><td>Brief lacked identifiers → curated brief with exact known facts</td><td>Forwarding the full transcript</td></tr>
-                    <tr><td>Final report cites nothing</td><td>Subagents returned prose → schema with source, excerpt and date</td><td>Adding citations at the end</td></tr>
-                    <tr><td>Two sources disagree and the report shows one number</td><td>Conflict dropped in synthesis → keep both with dates and status</td><td>Averaging the values</td></tr>
-                    <tr><td>Escalations miss policy-gap cases</td><td>Trigger is sentiment or self-reported confidence → explicit criteria with examples</td><td>Lowering a sentiment threshold</td></tr>
-                    <tr><td>Agent revokes access for the wrong &quot;J. Okafor&quot;</td><td>Picked a match by heuristic → ask for a second identifier</td><td>Choosing the most recently active match</td></tr>
-                    <tr><td>Extraction invents due dates</td><td>Required field with no source value → nullable field plus reason</td><td>More retries</td></tr>
-                    <tr><td>97% accuracy, yet one issuer&#x27;s documents are mostly wrong</td><td>Aggregate metric → stratified sampling and per-segment accuracy</td><td>Removing human review</td></tr>
-                    <tr><td>Resumed session reasons about deleted files</td><td>Stale tool results → name changed files or restart from a summary</td><td>Compacting the stale session</td></tr>
+                    <tr><td>Agent ignores a rule stated in turn 2 after many turns</td><td>Sliding window dropped it → move durable rules to the system prompt or <code>CLAUDE.md</code></td><td>Raising the window size</td></tr>
+                    <tr><td>A subtle early decision vanishes after compaction</td><td>Compaction prompt tuned for brevity → tune for recall on real traces, then trim</td><td>Disabling compaction entirely</td></tr>
+                    <tr><td>Agent repeats the same lookup over and over</td><td>Results cleared with no note → keep tool calls visible and log findings to a notes file</td><td>Turning clearing off</td></tr>
+                    <tr><td>Window fills with raw API payloads</td><td>No clearing and verbose tools → enable tool-result clearing; paginate or filter tools</td><td>Telling the model to skim</td></tr>
+                    <tr><td>Answers quote outdated policy text</td><td>Up-front retrieval from a stale index → just-in-time reads from the source</td><td>Retrieving more chunks</td></tr>
+                    <tr><td>Lead agent window floods during research</td><td>Subagents return everything they read → ask for short digests with handles</td><td>Forwarding the lead transcript to subagents</td></tr>
+                    <tr><td>Subagent re-explores what the lead already knows</td><td>Brief lacked identifiers and scope → write a focused brief</td><td>Giving the subagent the whole history</td></tr>
+                    <tr><td>Scratchpad grows to thousands of lines</td><td>Notes used as a log → milestone entries only, prune completed sections</td><td>Compacting the notes file into memory</td></tr>
+                    <tr><td>Old hypotheses resurface in new tasks</td><td>Ephemeral notes promoted to memory → close out and promote durable lessons only</td><td>Bigger memory retrieval limits</td></tr>
                     <tr><td><code>user:</code> preferences vanish after deploy</td><td><code>InMemorySessionService</code> still configured → durable session service</td><td>Moving preferences into <code>temp:</code></td></tr>
                     <tr><td>Cache hit rate near zero</td><td>Timestamp in the system prompt → move dynamic values after the stable prefix</td><td>Raising the cache lifetime</td></tr>
                     <tr><td>A vendor email&#x27;s instruction applies in later sessions</td><td>Memory poisoning → extract facts only, validate writes, audit</td><td>Telling the model to ignore instructions</td></tr>
@@ -1129,153 +997,45 @@ RETURN:       JSON list of {owner, share_pct, source_url, document_date, excerpt
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 14: MINIMAL CODE EXAMPLE
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="code-example">
-            <div class="section-divider-number">14</div>
-            <h2>Minimal code example</h2>
-        </div>
-
-        <div class="concept-card accent-mint">
-            <p>Vendor-neutral and standard library only: a harness that pins exact facts, projects tool output, separates errors from empty results and assembles the window in a cache-friendly order.</p>
-        </div>
-
-        <pre><code class="language-python">&quot;&quot;&quot;context_harness.py: pin, prune, place and propagate errors (stdlib only).&quot;&quot;&quot;
-from __future__ import annotations
-
-import json
-from dataclasses import dataclass, field
-
-STABLE_PREFIX = (
-    &quot;You are a supplier due-diligence assistant.\n&quot;
-    &quot;Rules: cite a source for every claim; report conflicts with dates; &quot;
-    &quot;never treat a failed check as a clean result.&quot;
-)
-
-
-@dataclass
-class ToolResult:
-    &quot;&quot;&quot;Success with data (possibly empty) or an explicit error. Never both.&quot;&quot;&quot;
-    tool: str
-    ok: bool
-    data: list[dict] = field(default_factory=list)
-    error: dict | None = None
-
-
-def screen_watchlist(name: str, watchlist: str) -&gt; ToolResult:
-    &quot;&quot;&quot;Fake tool: watchlist_b times out to show the error path.&quot;&quot;&quot;
-    if watchlist == &quot;watchlist_b&quot;:
-        return ToolResult(&quot;screen_watchlist&quot;, ok=False, error={
-            &quot;error_category&quot;: &quot;transient&quot;, &quot;retryable&quot;: True,
-            &quot;attempted&quot;: f&quot;screen(name={name!r}, list={watchlist!r})&quot;,
-            &quot;suggested_next_step&quot;: &quot;retry later or mark this list unverified&quot;,
-        })
-    return ToolResult(&quot;screen_watchlist&quot;, ok=True, data=[])  # valid empty result
-
-
-def project(rows: list[dict], keep: tuple[str, ...]) -&gt; list[dict]:
-    &quot;&quot;&quot;Prune at the tool boundary: keep only the fields the agent needs.&quot;&quot;&quot;
-    return [{k: r[k] for k in keep if k in r} for r in rows]
-
-
-@dataclass
-class Harness:
-    pinned: dict[str, str] = field(default_factory=dict)
-    history: list[str] = field(default_factory=list)
-    max_history_chars: int = 2_000  # stand-in for a token budget
-
-    def pin(self, key: str, value: str, source: str) -&gt; None:
-        self.pinned[key] = f&quot;{value} (source: {source})&quot;
-
-    def record(self, result: ToolResult) -&gt; None:
-        if result.ok:
-            body = {&quot;tool&quot;: result.tool, &quot;status&quot;: &quot;ok&quot;, &quot;results&quot;: result.data}
-        else:
-            body = {&quot;tool&quot;: result.tool, &quot;status&quot;: &quot;error&quot;, **(result.error or {})}
-        self.history.append(json.dumps(body))
-        self._prune()
-
-    def _prune(self) -&gt; None:
-        # Replace the oldest full results with one-line breadcrumbs until under budget.
-        for i, entry in enumerate(self.history[:-1]):  # never clear the newest result
-            if sum(map(len, self.history)) &lt;= self.max_history_chars:
-                break
-            if not entry.startswith(&quot;[cleared&quot;):
-                tool = json.loads(entry)[&quot;tool&quot;]
-                self.history[i] = f&quot;[cleared: earlier {tool} result; re-run the tool to view it]&quot;
-
-    def assemble(self, user_input: str) -&gt; str:
-        facts = &quot;\n&quot;.join(f&quot;  {k}: {v}&quot; for k, v in self.pinned.items())
-        return &quot;\n\n&quot;.join([
-            STABLE_PREFIX,                                # 1. stable, cacheable
-            f&quot;&lt;case_facts&gt;\n{facts}\n&lt;/case_facts&gt;&quot;,      # 2. pinned, verbatim
-            &quot;&lt;history&gt;\n&quot; + &quot;\n&quot;.join(self.history) + &quot;\n&lt;/history&gt;&quot;,  # 3. pruned
-            f&quot;&lt;request&gt;\n{user_input}\n&lt;/request&gt;&quot;,       # 4. current input last
-        ])
-
-
-if __name__ == &quot;__main__&quot;:
-    h = Harness()
-    h.pin(&quot;supplier&quot;, &quot;Arvalis Components GmbH, HRB 73319&quot;, &quot;registry 2024-06-18&quot;)
-    h.pin(&quot;decision deadline&quot;, &quot;2026-11-10&quot;, &quot;procurement lead&quot;)
-    raw = [{&quot;owner&quot;: &quot;Velden Holding&quot;, &quot;share_pct&quot;: 60, &quot;address&quot;: &quot;...&quot;, &quot;filing_no&quot;: &quot;A-9&quot;}]
-    h.history.append(json.dumps({&quot;tool&quot;: &quot;registry&quot;, &quot;results&quot;: project(raw, (&quot;owner&quot;, &quot;share_pct&quot;))}))
-    for wl in (&quot;watchlist_a&quot;, &quot;watchlist_b&quot;):
-        h.record(screen_watchlist(&quot;Velden Holding&quot;, wl))
-    print(h.assemble(&quot;Is the supplier cleared for onboarding?&quot;))</code></pre>
-
-        <pre><code class="language-bash"># Run with Python 3.10+; no dependencies:
-python3 context_harness.py</code></pre>
-
-        <div class="concept-card accent-amber">
-            <ul>
-                <li><strong>What to notice:</strong> <code>watchlist_a</code> returns <code>&quot;status&quot;: &quot;ok&quot;</code> with an empty list (a real &quot;no match&quot;), while <code>watchlist_b</code> returns <code>&quot;status&quot;: &quot;error&quot;</code> with a category and next step, so the model cannot mistake one for the other.</li>
-                <li><strong>Swap in a real model:</strong> pass the assembled string as the user turn (Claude Messages API or Gemini <code>generate_content</code>) and move <code>STABLE_PREFIX</code> into the system instruction so it caches.</li>
-            </ul>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION 15: GLOSSARY
+             SECTION 13: GLOSSARY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="glossary">
-            <div class="section-divider-number">15</div>
+            <div class="section-divider-number">13</div>
             <h2>Glossary</h2>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Context and memory</h3>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Context techniques</h3>
 
         <div class="concept-card accent-blue">
             <ul>
-                <li><strong>Artifact:</strong> a named, versioned file an ADK agent saves and loads (<code>ArtifactService</code>), used to keep large outputs out of the window.</li>
-                <li><strong>Compaction:</strong> replacing older conversation turns with a summary to free window space; lossy by design.</li>
-                <li><strong>Context editing:</strong> removing specific stale content (typically old tool results) from the context while keeping the rest of the conversation.</li>
-                <li><strong>Context rot:</strong> the decline in a model&#x27;s recall of specific details as the total number of tokens in the window grows.</li>
+                <li><strong>Attention budget:</strong> the idea that every token in the window draws on a limited capacity to attend, so irrelevant tokens reduce recall of relevant ones.</li>
+                <li><strong>Compaction:</strong> summarizing a conversation near the window limit and continuing in a fresh window seeded with the summary; lossy by design.</li>
+                <li><strong>Context editing:</strong> removing specific stale content (old tool results, old thinking blocks) while keeping the rest of the conversation as written.</li>
+                <li><strong>Context rot:</strong> the gradual decline in recall of specific details as the total number of tokens in the window grows.</li>
                 <li><strong>Context window:</strong> the maximum number of tokens (input plus output) a model processes in one call.</li>
-                <li><strong>Lost in the middle:</strong> the position effect where information in the middle of a long input is used less reliably than information at the start or end.</li>
-                <li><strong>Manifest:</strong> a state file at a known path that records task progress so a coordinator can resume after a crash or in a new session.</li>
-                <li><strong>Memory (long-term):</strong> facts extracted across sessions and retrieved by search or a memory tool; probabilistic recall.</li>
-                <li><strong>Memory consolidation:</strong> merging a new fact with existing ones, updating or removing contradicted facts instead of appending.</li>
-                <li><strong>Pinned facts block:</strong> a harness-owned section of exact values (IDs, amounts, dates, limits) re-sent every turn and excluded from summarization.</li>
-                <li><strong>Scratchpad file:</strong> a file where an agent records findings and decisions so they survive compaction and can be re-read.</li>
-                <li><strong>Session:</strong> one conversation&#x27;s ordered history of turns and tool calls, identified by a session ID.</li>
-                <li><strong>State:</strong> exact key/value working data read and written deterministically; in ADK scoped by prefix (none, <code>user:</code>, <code>app:</code>, <code>temp:</code>).</li>
-                <li><strong>Fork:</strong> creating a new session that starts with a copy of an existing session&#x27;s history; the original is unchanged.</li>
+                <li><strong>Hybrid retrieval strategy:</strong> preloading a small set of essential context and letting the agent fetch the rest just in time.</li>
+                <li><strong>Just-in-time retrieval:</strong> keeping lightweight references (paths, IDs, queries, URLs) in the window and loading data with tools only when a step needs it.</li>
+                <li><strong>Overlap size:</strong> in ADK event compaction, the number of previously compacted events included again in the next summary so spans overlap.</li>
+                <li><strong>Progressive disclosure:</strong> discovering relevant context step by step, using each result and its metadata to decide what to open next.</li>
+                <li><strong>Sliding window:</strong> a history policy that sends only the most recent turns or tokens and drops older ones.</li>
+                <li><strong>Summary prefix:</strong> a rolling digest of older turns placed in front of the recent verbatim turns.</li>
+                <li><strong>Tool-result clearing:</strong> replacing older tool results with placeholders once the prompt passes a threshold, keeping the tool calls visible.</li>
             </ul>
         </div>
 
-        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Reliability</h3>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Notes, state and memory</h3>
 
         <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Access failure:</strong> a tool or source could not be queried (timeout, permission, outage); not the same as a result with no data.</li>
-                <li><strong>Calibration:</strong> the match between a confidence score and observed accuracy on labeled data; a calibrated 0.8 is right about 80% of the time.</li>
-                <li><strong>Claim-source mapping:</strong> a claim stored with its source, excerpt, location and date, preserved through synthesis.</li>
-                <li><strong>Coverage annotation:</strong> a statement in the output of which sources or checks were unavailable.</li>
-                <li><strong>Escalation criteria:</strong> explicit, observable conditions (explicit request, policy gap, no progress, threshold exceeded) that route a case to a human.</li>
-                <li><strong>Handoff packet:</strong> a structured summary passed to a human on escalation, since the human usually lacks the transcript.</li>
-                <li><strong>Stratified sampling:</strong> drawing review samples per segment (document type, issuer, quality) so weak segments are measured.</li>
-                <li><strong>Structured error:</strong> an error result carrying category, retryability, attempted action, partial results and a suggested next step.</li>
-                <li><strong>Valid empty result:</strong> a successful query that found nothing; must be represented differently from an error.</li>
+                <li><strong>Artifact:</strong> a named, versioned file an ADK agent saves and loads (<code>ArtifactService</code>), used to keep large outputs out of the window.</li>
+                <li><strong>Digest:</strong> the short summary a subagent returns to its lead agent in place of its full exploration context.</li>
+                <li><strong>Memory (long-term):</strong> facts extracted across sessions and retrieved by search or a memory tool; probabilistic recall.</li>
+                <li><strong>Memory consolidation:</strong> merging a new fact with existing ones, updating or removing contradicted facts instead of appending.</li>
+                <li><strong>Scratchpad:</strong> an agent-written notes file (plan, progress, open questions) re-read after resets; ephemeral when scoped to one task.</li>
+                <li><strong>Session:</strong> one conversation&#x27;s ordered history of turns and tool calls, identified by a session ID.</li>
+                <li><strong>State:</strong> exact key/value working data read and written deterministically; in ADK scoped by prefix (none, <code>user:</code>, <code>app:</code>, <code>temp:</code>).</li>
+                <li><strong>Structured note-taking:</strong> the practice of an agent regularly writing notes outside the window and pulling them back in later.</li>
+                <li><strong>Subagent isolation:</strong> running a focused subtask in its own clean window so its intermediate context never reaches the lead agent.</li>
             </ul>
         </div>
 
@@ -1289,10 +1049,10 @@ python3 context_harness.py</code></pre>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION 16: PRACTICE QUIZ
+             SECTION 14: PRACTICE QUIZ
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="resources">
-            <div class="section-divider-number">16</div>
+            <div class="section-divider-number">14</div>
             <h2>Practice quiz and self-assessment</h2>
         </div>
 
@@ -1328,33 +1088,33 @@ python3 context_harness.py</code></pre>
             </div>
             <div class="quiz-body">
                 <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> A planning assistant summarizes a long session and later quotes a load limit of &quot;about 4 MW&quot; instead of the exact 4.2 MW the engineer gave. What is the structural fix?</p>
+                    <p><span class="q-num">Q1.</span> A support assistant keeps only the last 12 turns in its window. Users complain that it forgets the &quot;metric units only&quot; instruction they gave at the start. What is the structural fix?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Keep exact values in a pinned facts block that sits outside the summarized history and is re-injected every turn. Summaries compress numbers, dates and identifiers into approximations, so those values must never live only in summarized text.</span>
+                        <span class="answer-text">Durable instructions must not live only in early turns once a sliding window is active. Move the rule into the system prompt or user-scoped state (or a re-read file such as <code>CLAUDE.md</code>) so trimming can never drop it.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> A sanctions-screening tool times out and the wrapper returns an empty match list. Why is this dangerous, and what should the tool return instead?</p>
+                    <p><span class="q-num">Q2.</span> Why is tool-result clearing usually tried before summarization in a tool-heavy agent run?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">An empty list is a valid result that means &quot;no match&quot;, so the agent reports the supplier as clean. A timeout must come back as an explicit error with its category, retryability, the attempted query and any partial results, so the caller can retry, use another source or flag the gap.</span>
+                        <span class="answer-text">Clearing removes raw payloads the agent has already acted on without asking a model to rewrite anything, and the tool calls stay visible so the agent can re-fetch. Summarization paraphrases and can drop subtle details.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> When should a subagent receive its parent&#x27;s full transcript?</p>
+                    <p><span class="q-num">Q3.</span> What belongs in an agent&#x27;s scratchpad file, and what should happen to it when the task ends?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Almost never. Pass a curated brief: the goal, the constraints, the exact facts it needs and the output schema. Subagents exist to keep exploration out of the parent&#x27;s window, and the parent should receive structured findings with source metadata in return.</span>
+                        <span class="answer-text">Milestone-level notes: the goal, confirmed findings, open questions and next steps, re-read after compaction or a reset. When the task closes, delete the ephemeral parts and promote only durable lessons to long-term memory.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q4.</span> An extraction pipeline reports 97% field accuracy, yet one supplier&#x27;s handwritten certificates are mostly wrong. What review design would have caught this?</p>
+                    <p><span class="q-num">Q4.</span> When does just-in-time retrieval beat preloading the top retrieved chunks?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Stratified sampling and per-segment accuracy (by issuer, document type and scan quality), plus field-level confidence calibrated on a labeled set. Aggregate accuracy hides weak segments; route low-confidence fields and weak segments to human review.</span>
+                        <span class="answer-text">When the corpus is large or changes often: the agent keeps lightweight references (paths, IDs, queries) and opens only what a step needs, reading the current source. The trade-off is extra tool calls and latency.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q5.</span> Session vs. State vs. Memory: where does a user&#x27;s preferred report language belong in ADK, and where does the current turn&#x27;s scratch value belong?</p>
+                    <p><span class="q-num">Q5.</span> A research subagent reads 40k tokens of sources. What should it hand back to the lead agent?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">A durable user preference goes in user-scoped state (<code>user:</code> prefix, persisted only by a durable SessionService) or in long-term memory if it is extracted across sessions. A value for the current invocation only uses the <code>temp:</code> prefix, which is never persisted.</span>
+                        <span class="answer-text">A condensed digest (often 1,000 to 2,000 tokens) with what it found, handles to where the details live and what it did not check, so the lead&#x27;s window holds the plan and digests instead of raw exploration output.</span>
                     </div>
                 </div>
             </div>

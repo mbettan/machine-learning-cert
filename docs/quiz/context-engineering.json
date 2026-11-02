@@ -46,38 +46,38 @@
       "id": "context-engineering-q-02",
       "section": "Prompt vs. Context vs. Memory",
       "guide_anchor": "fundamentals",
-      "question": "A colleague proposes adding a pinned facts block, threshold compaction and a Memory Bank instance to a feature that translates one two-page memo per request, with no follow-up turns. What is the best response?",
+      "question": "A colleague proposes adding threshold compaction, an agent notes file and a Memory Bank instance to a feature that translates one two-page memo per request, with no follow-up turns. What is the best response?",
       "options": [
         {
-          "text": "Add all three, because context engineering techniques improve quality on every task regardless of how much context the task uses.",
+          "text": "Add all three now, because context techniques are cheap and the feature may grow into a multi-turn assistant later.",
           "correct": false,
-          "why_wrong": "These levers solve overflow, drift and cross-session recall; a short single-turn request has none of those problems."
+          "why_wrong": "Each mechanism adds calls, storage or latency; a single-turn task that fits easily gains nothing from them."
         },
         {
-          "text": "Add only Memory Bank so the translator remembers each memo and can reuse past translations across later requests.",
-          "correct": false,
-          "why_wrong": "Storing every memo as long-term memory copies documents into a long-lived store and adds retrieval noise for no decision that needs it."
-        },
-        {
-          "text": "Add only compaction, set to trigger at 1,000 tokens, so the memo is summarized before translation to save input cost.",
-          "correct": false,
-          "why_wrong": "Summarizing the source before translating it destroys the exact content the task must preserve."
-        },
-        {
-          "text": "Skip them: one well-written prompt with the memo attached is enough, and the extra layers only add cost.",
+          "text": "Skip them: a single well-written prompt with the memo fits easily, so the extra machinery adds cost without benefit.",
           "correct": true
+        },
+        {
+          "text": "Keep only Memory Bank, so translations of past memos can be recalled as examples for every new memo.",
+          "correct": false,
+          "why_wrong": "Per-user memory is for durable personal facts; it does not help a stateless one-shot translation."
+        },
+        {
+          "text": "Keep only the notes file, so the model can record its progress through the two pages while it translates.",
+          "correct": false,
+          "why_wrong": "A two-page memo is translated in one call; there is no long run or reset for notes to survive."
         }
       ],
-      "explanation": "Context engineering is a response to measured problems: windows that overflow, facts that blur, subtasks that pollute the parent. A short, single-turn task with all its input in one prompt has none of these, so the extra layers only add latency, cost and failure points.",
-      "key_takeaway": "Measure first; short single-turn tasks need a good prompt, not compaction, pinning or memory.",
+      "explanation": "Context engineering targets long, multi-turn or tool-heavy runs. When the task is single-turn and the input fits comfortably, compaction, notes and memory add cost and complexity with no gain. Measure before adding machinery.",
+      "key_takeaway": "Short single-turn tasks rarely need context machinery; measure first.",
       "doc_links": [
         {
           "label": "Anthropic: Effective context engineering",
           "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         },
         {
-          "label": "Claude: Prompting best practices",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+          "label": "Claude: Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
         }
       ]
     },
@@ -124,73 +124,73 @@
       "id": "context-engineering-q-04",
       "section": "Context budget and placement",
       "guide_anchor": "context-budget",
-      "question": "A lease-review agent receives three 30-page leases. The renewal deadline that drives the decision sits in a short note placed between the first and second lease, and the question comes first. Answers keep missing the deadline. What change addresses this?",
+      "question": "A single operations agent carries 45 tool schemas with long descriptions. Even short requests consume much of the budget before any user text, and the agent often picks between two near-duplicate tools inconsistently. What change addresses both problems?",
       "options": [
         {
-          "text": "Interleave the note between every lease so the deadline appears in the middle of the input three times instead of once.",
+          "text": "Move to a model with a larger window, so the schemas take a smaller share of the available space.",
           "correct": false,
-          "why_wrong": "Repeating a fact in the middle of long input keeps it in the zone where recall is weakest; the edges are more reliable."
+          "why_wrong": "A bigger window lowers the share but keeps the per-call tax and leaves the ambiguous overlapping tools in place."
         },
         {
-          "text": "Keep the question first and append the leases afterwards so the model reads the instructions before any document.",
-          "correct": false,
-          "why_wrong": "For long inputs, documents above and the question at the end produce better answers per Anthropic's long-context guidance."
-        },
-        {
-          "text": "Leases first in labeled tags, the deadline note at the start or end of the input, and the question last.",
+          "text": "Curate a minimal tool set per agent and merge or remove overlapping tools, since every schema is sent on every call.",
           "correct": true
         },
         {
-          "text": "Raise the temperature so the model explores more of the input instead of focusing on the first lease it reads.",
+          "text": "Ask the model in the system prompt to ignore tools that are not relevant to the current request.",
           "correct": false,
-          "why_wrong": "Sampling temperature changes output randomness; it does not change how well the model uses information by position."
-        }
-      ],
-      "explanation": "Models use information at the start and end of a long input more reliably than information in the middle (lost in the middle). Put long documents first in named tags, place decision-critical facts at an edge, and end with the question; a one-line reminder of the hard constraint near the end also counters drift.",
-      "key_takeaway": "Keep decision-critical facts at the edges of long inputs, documents first and the question last.",
-      "doc_links": [
-        {
-          "label": "Liu et al.: Lost in the middle",
-          "url": "https://arxiv.org/abs/2307.03172"
+          "why_wrong": "The schemas are still sent and counted on every call, and the instruction does nothing about the overlap."
         },
         {
-          "label": "Claude: Prompting best practices",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+          "text": "Cache the tool schemas with prompt caching so that they stop counting toward the context window.",
+          "correct": false,
+          "why_wrong": "Caching cuts price and latency for a stable prefix, but cached tokens still occupy the window."
+        }
+      ],
+      "explanation": "Tool definitions are a fixed tax on every call, and a bloated tool set with overlapping functions creates ambiguous decision points. A minimal, non-overlapping set per agent saves budget and makes tool choice clearer.",
+      "key_takeaway": "Keep tool sets minimal and non-overlapping; every schema costs tokens on every call.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        },
+        {
+          "label": "Claude: Context windows",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows"
         }
       ]
     },
     {
       "id": "context-engineering-q-05",
-      "section": "Context budget and placement",
-      "guide_anchor": "context-budget",
-      "question": "A warehouse agent's inventory tool returns 80 fields for each of 500 SKUs. After two calls the agent stops applying the reorder rule stated at the start. A teammate adds 'only look at quantity_on_hand' to the prompt. Why is that insufficient, and what works?",
+      "section": "Long sessions: sliding windows, summary prefixes and compaction",
+      "guide_anchor": "long-sessions",
+      "question": "A travel assistant keeps only the last 12 turns in its window. Travelers say it forgets the 'aisle seats only' preference they gave in their first message. What is the structural fix?",
       "options": [
         {
-          "text": "It is sufficient once written in capitals, because explicit emphasis makes the model skip irrelevant fields during attention.",
+          "text": "Raise the window to the last 40 turns, so early preferences stay visible for longer conversations.",
           "correct": false,
-          "why_wrong": "Emphasis does not remove tokens; the payload still crowds the window and competes with the early rule."
+          "why_wrong": "A larger window only delays the drop; any preference older than N turns still disappears."
         },
         {
-          "text": "It fails only because the prompt is too short; repeat the instruction after each tool call so it stays near the end of the window.",
+          "text": "Ask travelers to repeat their preferences every few messages so they remain in recent turns.",
           "correct": false,
-          "why_wrong": "Repetition treats the symptom while the raw payload keeps growing with each call; removing data in code fixes the cause."
+          "why_wrong": "This shifts an engineering problem onto users and still fails whenever they forget."
         },
         {
-          "text": "The unused fields still consume tokens and dilute attention; project and filter in the tool code or a post-tool hook so only the needed fields reach the window.",
+          "text": "Store the preference in user-scoped state or the system prompt, outside the trimmed history.",
           "correct": true
         },
         {
-          "text": "Move the agent to a model with a larger window so all 40,000 fields fit alongside the reorder rule without trimming.",
+          "text": "Switch from trimming to compaction so the summary of early turns always keeps the preference.",
           "correct": false,
-          "why_wrong": "A larger window raises the ceiling but every irrelevant token still competes for the same attention budget."
+          "why_wrong": "A model-written summary paraphrases and can drop a detail; durable rules should not depend on it."
         }
       ],
-      "explanation": "Asking the model to ignore data still pays for the tokens and still dilutes attention. Field projection, server-side filtering, aggregation, or a `PostToolUse` hook or ADK `after_tool_callback` remove the data before it reaches the window.",
-      "key_takeaway": "Trim tool output in code at the boundary; prompting the model to ignore fields does not reduce the tokens.",
+      "explanation": "A sliding window drops the oldest turns once the limit is reached. Anything that must survive, such as a standing preference, belongs in the system prompt, state or a re-read file, never only in early turns.",
+      "key_takeaway": "With a sliding window, durable rules must live outside the trimmed history.",
       "doc_links": [
         {
-          "label": "Claude Code: Hooks",
-          "url": "https://code.claude.com/docs/en/hooks"
+          "label": "ADK: Session state",
+          "url": "https://adk.dev/sessions/state/"
         },
         {
           "label": "Anthropic: Effective context engineering",
@@ -200,32 +200,32 @@
     },
     {
       "id": "context-engineering-q-06",
-      "section": "Context budget and placement",
-      "guide_anchor": "context-budget",
-      "question": "During a three-hour session, a facilities agent and a manager agree on a chiller replacement budget of 18,400 EUR. After older turns are summarized, the agent drafts a purchase order for 'about 18k'. Which design prevents this class of error?",
+      "section": "Long sessions: sliding windows, summary prefixes and compaction",
+      "guide_anchor": "long-sessions",
+      "question": "A team's compaction prompt produces tight summaries, but agents sometimes lose a subtle early decision whose importance shows up only hours later. How should they tune the compaction prompt?",
       "options": [
         {
-          "text": "A harness-owned pinned facts block with the exact amount and its source, excluded from summarization.",
+          "text": "Shorten the summaries further so the agent has more room left for new tool results after each compaction.",
+          "correct": false,
+          "why_wrong": "Shorter summaries drop even more detail, which makes the lost-decision problem worse."
+        },
+        {
+          "text": "Tune on real long traces, maximizing recall first and then trimming content the agent never reused.",
           "correct": true
         },
         {
-          "text": "Instruct the summarizer to be more careful with numbers and rerun summarization each turn so rounding errors are corrected.",
+          "text": "Disable compaction and rely on a larger context window to keep the full history for every run.",
           "correct": false,
-          "why_wrong": "Summaries are lossy by design; exact values belong outside the summarized region rather than in a more careful summary."
+          "why_wrong": "Large windows still suffer context rot and eventually overflow on long runs; compaction is still needed."
         },
         {
-          "text": "Let the model rewrite a facts paragraph freehand at the end of each turn so the latest figures are always restated.",
+          "text": "Run compaction after every turn so that each summary covers only a small and recent span of history.",
           "correct": false,
-          "why_wrong": "Freehand rewrites by the model can drift too; the harness or a dedicated update tool should own the exact values."
-        },
-        {
-          "text": "Disable summarization and keep the full three-hour transcript in every call so no detail is ever compressed.",
-          "correct": false,
-          "why_wrong": "Unbounded history eventually overflows and degrades recall through context rot; pinning targets the exact values."
+          "why_wrong": "Frequent compaction adds summarization calls and cache writes without fixing what the prompt discards."
         }
       ],
-      "explanation": "Summaries carry narrative well but turn exact amounts, dates and identifiers into approximations. A pinned block owned by the harness (or updated only through a tool like `update_case_fact(key, value, source)`) keeps decision-critical values verbatim, with provenance, on every call.",
-      "key_takeaway": "Keep amounts, dates and IDs in a harness-owned pinned block that summarization never touches.",
+      "explanation": "Anthropic recommends tuning compaction prompts on complex agent traces: first maximize recall so nothing a later step used is lost, then improve precision by removing superfluous content such as raw tool output.",
+      "key_takeaway": "Tune compaction for recall first, then precision, using real traces.",
       "doc_links": [
         {
           "label": "Anthropic: Effective context engineering",
@@ -239,46 +239,42 @@
     },
     {
       "id": "context-engineering-q-07",
-      "section": "Long sessions and compaction",
+      "section": "Long sessions: sliding windows, summary prefixes and compaction",
       "guide_anchor": "long-sessions",
-      "question": "A coding agent spent a day analyzing a service for a refactor. Overnight, teammates merged 60 commits that touched most of the modules it analyzed. The developer plans to run /compact and continue. What is the better approach?",
+      "question": "An ADK app uses EventsCompactionConfig with compaction_interval=5 and overlap_size=0. Reviewers notice summaries treat each five-event span in isolation, losing threads that cross span boundaries. Which change targets this?",
       "options": [
         {
-          "text": "Run /compact with a focus asking it to keep every earlier finding verbatim, then continue in the same session as planned.",
-          "correct": false,
-          "why_wrong": "Keeping stale findings verbatim preserves conclusions about code that no longer exists; most results need re-verification."
-        },
-        {
-          "text": "Resume the session unchanged and trust the agent to notice changed files when its edits fail to apply.",
-          "correct": false,
-          "why_wrong": "Waiting for failed edits wastes calls and risks reasoning from outdated results; the changes are known up front."
-        },
-        {
-          "text": "Fork the session so the original transcript is preserved, then continue the refactor in the fork as if nothing changed.",
-          "correct": false,
-          "why_wrong": "A fork copies the same stale history into a new ID; it does not refresh any tool results."
-        },
-        {
-          "text": "Start a fresh session seeded with a structured summary of the findings that are still valid.",
+          "text": "Set overlap_size above zero so each new summary re-includes some previously compacted events.",
           "correct": true
+        },
+        {
+          "text": "Raise compaction_interval to 50 so fewer summaries are written and boundaries occur less often.",
+          "correct": false,
+          "why_wrong": "Fewer boundaries means larger uncompacted spans and more tokens, and threads still break at each boundary."
+        },
+        {
+          "text": "Store every event as an artifact so the summarizer can read the full history at each compaction.",
+          "correct": false,
+          "why_wrong": "Artifacts hold large outputs by reference; they do not change how compaction spans relate to each other."
+        },
+        {
+          "text": "Replace compaction with temp: state so events from earlier spans are carried forward automatically.",
+          "correct": false,
+          "why_wrong": "temp: state lives only within one invocation and is never persisted; it carries nothing across spans."
         }
       ],
-      "explanation": "Compaction summarizes history; it does not re-verify it. When most prior tool results are stale, start fresh from a summary of what is still true. Resuming is fine when only a few files changed, provided the agent is told which files to re-analyze.",
-      "key_takeaway": "When most earlier results are stale, restart from a summary of valid findings instead of compacting.",
+      "explanation": "In ADK event compaction, `compaction_interval` sets how many completed events trigger a summary and `overlap_size` sets how many previously compacted events are included again, so consecutive summaries overlap and preserve continuity.",
+      "key_takeaway": "ADK overlap_size makes consecutive compaction spans overlap for continuity.",
       "doc_links": [
         {
-          "label": "Claude Code: Sessions",
-          "url": "https://code.claude.com/docs/en/sessions"
-        },
-        {
-          "label": "Agent SDK: Sessions",
-          "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
+          "label": "ADK: Context compaction",
+          "url": "https://adk.dev/context/compaction/"
         }
       ]
     },
     {
       "id": "context-engineering-q-08",
-      "section": "Long sessions and compaction",
+      "section": "Long sessions: sliding windows, summary prefixes and compaction",
       "guide_anchor": "long-sessions",
       "question": "A team uses Claude threshold compaction in a long-running research agent. After each compaction, they want to inspect the summary and re-insert pinned facts before the model continues. Which setting supports this?",
       "options": [
@@ -393,83 +389,83 @@
       "id": "context-engineering-q-11",
       "section": "Session vs. State vs. Memory",
       "guide_anchor": "sessions-memory",
-      "question": "A developer wants to compare two database migration strategies, both starting from the same hour-long analysis session in the Claude Agent SDK, without disturbing the original. One strategy will edit files. What should they do?",
+      "question": "A user tells an ADK assistant backed by Memory Bank, 'Remember that I am vegetarian.' The team currently waits for end-of-session extraction, and occasionally the fact is never stored. What is the better write path?",
       "options": [
         {
-          "text": "Resume the original session twice in parallel, because resuming automatically creates a separate copy of both history and files.",
+          "text": "Keep extraction only, but run it after every single turn so explicit facts are captured sooner.",
           "correct": false,
-          "why_wrong": "Resuming reopens the same session; two parallel resumes would write to one history and one working tree."
+          "why_wrong": "Per-turn extraction adds cost and noise; an explicit request to remember warrants a direct write."
         },
         {
-          "text": "Fork per strategy and isolate file edits with a worktree or checkpoint; forks copy history, not files.",
+          "text": "Write the stated fact directly, for example with Memory Bank CreateMemory, scoped to that user.",
           "correct": true
         },
         {
-          "text": "Fork the session for each strategy and let both edit the same working tree, since forks also snapshot and restore files.",
+          "text": "Store the preference in temp: state so it is available immediately for the rest of the session.",
           "correct": false,
-          "why_wrong": "Forks copy conversation history only; file edits from one fork would be visible to the other without isolation."
+          "why_wrong": "temp: state is discarded after the invocation and never persisted across sessions."
         },
         {
-          "text": "Start two new sessions from scratch so the strategies cannot influence each other, discarding the hour of analysis.",
+          "text": "Append the raw transcript to memory so the vegetarian statement can be searched for later.",
           "correct": false,
-          "why_wrong": "Throwing away valid shared analysis wastes work; forking keeps the common baseline while separating the branches."
+          "why_wrong": "Transcript dumps make retrieval noisy and copy sensitive data into a long-lived store."
         }
       ],
-      "explanation": "Continue picks up the latest session, resume reopens a specific one, and fork copies history into a new session ID leaving the original intact. Forks share no filesystem isolation, so code-changing branches need worktrees or checkpoints.",
-      "key_takeaway": "Fork for divergent exploration from one baseline, and isolate file changes separately.",
+      "explanation": "Extraction at session boundaries suits facts the agent infers. When a user explicitly asks to remember something, write it directly (Memory Bank `CreateMemory`, or the Claude memory tool's `create` command), scoped to that user.",
+      "key_takeaway": "Explicit 'remember this' facts get a direct, user-scoped memory write.",
       "doc_links": [
         {
-          "label": "Agent SDK: Sessions",
-          "url": "https://code.claude.com/docs/en/agent-sdk/sessions"
+          "label": "Agent Platform: Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
         },
         {
-          "label": "Claude Code: Sessions",
-          "url": "https://code.claude.com/docs/en/sessions"
+          "label": "ADK: Memory",
+          "url": "https://adk.dev/sessions/memory/"
         }
       ]
     },
     {
       "id": "context-engineering-q-12",
-      "section": "Multi-agent context isolation and handoffs",
+      "section": "Subagent context isolation",
       "guide_anchor": "multi-agent-context",
-      "question": "A coordinator tells a subagent 'research the vendor Nordlicht'. The subagent returns a detailed report on Nordlicht Energie, but the vendor being onboarded is Nordlicht Logistik AG. What is the most effective fix?",
+      "question": "A lead research agent spawns subagents that each read about 40k tokens of sources. Each subagent returns everything it read, and the lead's window floods after three subagents. What should the subagents return instead?",
       "options": [
         {
-          "text": "Forward the coordinator's full conversation so the subagent can infer which Nordlicht was meant from earlier turns.",
+          "text": "Their complete working transcripts, so the lead agent can audit exactly how each subagent reached every one of its conclusions.",
           "correct": false,
-          "why_wrong": "Forwarding the transcript defeats isolation and imports noise; the missing identifiers can be stated directly."
+          "why_wrong": "Returning full transcripts imports the exploration context and defeats the point of isolation."
         },
         {
-          "text": "Give the subagent every tool the coordinator has so it can cross-check results against more systems on its own.",
+          "text": "Nothing at all; each subagent should write its sources straight into the final report on its own.",
           "correct": false,
-          "why_wrong": "More tools do not tell the subagent which company is meant, and broad tool access violates least privilege."
+          "why_wrong": "The lead coordinates and synthesizes; bypassing it loses the overall plan and consistency."
         },
         {
-          "text": "Increase the subagent's turn limit so it has time to research every company named Nordlicht and return them all.",
-          "correct": false,
-          "why_wrong": "A larger budget spreads effort across wrong targets; the brief should remove the ambiguity up front."
-        },
-        {
-          "text": "A curated brief with exact identifiers, known facts, constraints, scope limits and a return schema.",
+          "text": "A condensed digest of findings with handles to where the details live, often 1,000 to 2,000 tokens.",
           "correct": true
+        },
+        {
+          "text": "The raw source documents only, so that the lead can redo the analysis with its broader context.",
+          "correct": false,
+          "why_wrong": "Sending raw sources back floods the lead's window, which is the problem being solved."
         }
       ],
-      "explanation": "Subagents start with a fresh window and see only their system prompt and the brief. A brief that lacks identifiers produces confident work on the wrong entity, so include exact IDs, known facts, scope limits and the schema to return.",
-      "key_takeaway": "Brief, don't forward: give subagents exact identifiers, constraints and a return schema.",
+      "explanation": "Subagents explore with clean windows and can use tens of thousands of tokens, but return only a distilled summary (Anthropic cites 1,000 to 2,000 tokens as typical). Handles such as paths or links let the lead open details just in time.",
+      "key_takeaway": "Subagents explore wide and return small digests with handles.",
       "doc_links": [
-        {
-          "label": "Claude Code: Subagents",
-          "url": "https://code.claude.com/docs/en/sub-agents"
-        },
         {
           "label": "Anthropic: Effective context engineering",
           "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        },
+        {
+          "label": "Claude Agent SDK: Subagents",
+          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
         }
       ]
     },
     {
       "id": "context-engineering-q-13",
-      "section": "Multi-agent context isolation and handoffs",
+      "section": "Subagent context isolation",
       "guide_anchor": "multi-agent-context",
       "question": "In ADK, a root agent delegates log analysis that produces large intermediate output. The team wants the child to work in its own context and hand back only a result, without its output entering the parent's conversation. Which wiring fits?",
       "options": [
@@ -508,352 +504,336 @@
     },
     {
       "id": "context-engineering-q-14",
-      "section": "Error propagation",
-      "guide_anchor": "error-propagation",
-      "question": "A credit-check tool wrapper catches a 503 from the bureau and returns {\"records\": []}. The agent tells the applicant there is no adverse history. What is the right fix?",
+      "section": "Tool-result clearing and context editing",
+      "guide_anchor": "tool-result-clearing",
+      "question": "A coding agent uses Claude tool-result clearing. Results from a project_config tool, which every later step depends on, keep getting cleared and the agent re-reads the config constantly. Which setting fits?",
       "options": [
         {
-          "text": "Retry the bureau call in a loop until it succeeds, so the wrapper never has to report a failure to the agent.",
+          "text": "Raise keep to 50 so that far more recent tool results survive each clearing event, including the config.",
           "correct": false,
-          "why_wrong": "Unbounded retries burn budget and hide an outage; retry with a small bound, then propagate a structured error."
+          "why_wrong": "A large keep value retains many unrelated payloads too, and the config can still age out."
         },
         {
-          "text": "A structured error with category, retryable flag and partial results, distinct from an empty result.",
+          "text": "Add project_config to exclude_tools so its tool uses and results are never cleared.",
           "correct": true
         },
         {
-          "text": "Abort the whole application workflow on any bureau error and discard the results gathered from other checks.",
+          "text": "Set clear_tool_inputs so the tool calls are removed as well, which stops the agent from re-reading.",
           "correct": false,
-          "why_wrong": "Aborting throws away valid partial work; continue with an annotated gap or let the coordinator decide."
+          "why_wrong": "Removing inputs hides what was called; it does not keep the config result available."
         },
         {
-          "text": "Return the string 'operation failed' so the agent knows something went wrong without exposing internal details.",
+          "text": "Disable tool-result clearing so no results are ever removed from the conversation history.",
           "correct": false,
-          "why_wrong": "A generic message gives no basis to choose between retrying, fixing input or escalating."
+          "why_wrong": "Turning clearing off lets bulky payloads from other tools fill the window again."
         }
       ],
-      "explanation": "An empty result means 'I looked and found nothing'; a failure means 'I could not look'. They must never share a representation. On Claude, a tool result can carry `is_error: true` (MCP `isError`) with the structured payload in its content.",
-      "key_takeaway": "Never represent a failed lookup as an empty result; return a categorized, structured error.",
+      "explanation": "The `exclude_tools` parameter of `clear_tool_uses_20250919` lists tools whose uses and results are never cleared, which protects results the whole task relies on while clearing continues for everything else.",
+      "key_takeaway": "Use exclude_tools to protect results that must stay in context.",
       "doc_links": [
         {
-          "label": "Claude: Handle tool calls",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
-        },
-        {
-          "label": "MCP specification: Tools",
-          "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools"
+          "label": "Claude: Context editing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"
         }
       ]
     },
     {
       "id": "context-engineering-q-15",
-      "section": "Error propagation",
-      "guide_anchor": "error-propagation",
-      "question": "A payments subagent's tool returns: 'token lacks scope payments:write'. How should the subagent and coordinator respond?",
+      "section": "Tool-result clearing and context editing",
+      "guide_anchor": "tool-result-clearing",
+      "question": "A team enables Claude tool-result clearing together with the memory tool. What happens as the conversation approaches the clearing threshold, and why does it help?",
       "options": [
         {
-          "text": "Treat it as transient: retry with exponential backoff, since scope errors usually clear once the identity service catches up.",
-          "correct": false,
-          "why_wrong": "Retrying cannot grant a missing scope; backoff applies to timeouts, rate limits and 503 responses."
-        },
-        {
-          "text": "Treat it as a validation error: reformat the request payload and resend it until the scope check passes.",
-          "correct": false,
-          "why_wrong": "Validation errors concern malformed input; the payload format is not what the authorization check rejected."
-        },
-        {
-          "text": "Treat it as a permission error: no retry, stop that path, and escalate or use an authorized route.",
+          "text": "Claude receives an automatic warning, so it can save important information to memory files before clearing.",
           "correct": true
         },
         {
-          "text": "Treat it as not found: record that the payment does not exist and continue the workflow with that answer.",
+          "text": "Clearing pauses until the agent finishes its task, so no tool result is removed while work is still pending.",
           "correct": false,
-          "why_wrong": "Not found is a real answer about data; a permission failure means the data was never checked."
-        }
-      ],
-      "explanation": "Routing depends on the error category: transient errors get bounded retries, validation errors need corrected input, permission errors stop the path and escalate, business-rule errors explain the rule, and not-found results are real answers.",
-      "key_takeaway": "Classify each error; permission failures are not retryable and must be surfaced or escalated.",
-      "doc_links": [
-        {
-          "label": "Claude: Handle tool calls",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+          "why_wrong": "Clearing is triggered by the configured threshold; it does not wait for the task to finish."
         },
         {
-          "label": "Claude Code: Hooks",
-          "url": "https://code.claude.com/docs/en/hooks"
+          "text": "All tool results are copied into the memory directory automatically, so nothing is ever lost on clearing.",
+          "correct": false,
+          "why_wrong": "Nothing is copied automatically; the agent decides what to save after the warning."
+        },
+        {
+          "text": "The memory tool is cleared first, which frees enough tokens to postpone clearing of other tool results.",
+          "correct": false,
+          "why_wrong": "Memory files live outside the window; the memory tool is not a buffer that clearing consumes first."
+        }
+      ],
+      "explanation": "With context editing and the memory tool combined, Claude gets an automatic warning near the clearing threshold so it can persist key information to memory files, then look it up later instead of keeping it in the active window.",
+      "key_takeaway": "Clearing plus memory: Claude is warned near the threshold and saves what matters.",
+      "doc_links": [
+        {
+          "label": "Claude: Context editing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"
+        },
+        {
+          "label": "Claude: Memory tool",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool"
         }
       ]
     },
     {
       "id": "context-engineering-q-16",
-      "section": "Validation and retry loops",
-      "guide_anchor": "validation-retry",
-      "question": "An invoice extractor uses strict structured outputs. Every response parses, but in some invoices the line items do not sum to the stated total. What does this show, and what should the pipeline add?",
+      "section": "Scratchpads and structured note-taking",
+      "guide_anchor": "scratchpads",
+      "question": "An agent upgrading dependencies across a repository runs for hours with threshold compaction. After each compaction it redoes checks it already finished. Which pattern addresses this most directly?",
       "options": [
         {
-          "text": "Structured outputs guarantee shape, not correct values; add code-level checks that recompute totals and retry with the specific failing rule, within a bound.",
+          "text": "Lower the compaction trigger so summaries happen more often and each one covers fewer steps.",
+          "correct": false,
+          "why_wrong": "More frequent summaries add calls and still rely on the summary to carry exact progress."
+        },
+        {
+          "text": "Copy every raw tool output into a running log file, so the agent can search back through that log after each compaction event.",
+          "correct": false,
+          "why_wrong": "A raw log recreates the bloat outside the window and is slow to use as a progress record."
+        },
+        {
+          "text": "Restart the session from scratch after every compaction so the agent begins each phase cleanly.",
+          "correct": false,
+          "why_wrong": "Restarting discards progress unless it is recorded somewhere the agent can read back."
+        },
+        {
+          "text": "Have the agent keep a progress notes file with done, open and next items, and re-read it after compaction.",
           "correct": true
-        },
-        {
-          "text": "Strict mode should already reject arithmetic errors, so the schema needs a stricter numeric type for each line item.",
-          "correct": false,
-          "why_wrong": "Schema types constrain format; no schema type enforces that one field equals the sum of others."
-        },
-        {
-          "text": "Ask the model to confirm 'are these totals correct?' after each extraction and accept its answer as the final check.",
-          "correct": false,
-          "why_wrong": "Self-checking alone is unreliable; recomputing derivable values in code is deterministic."
-        },
-        {
-          "text": "Retry each failing invoice with the message 'try again' until the totals happen to match, with no retry limit.",
-          "correct": false,
-          "why_wrong": "A bare retry gives no information about what failed, and unbounded loops waste budget."
         }
       ],
-      "explanation": "Strict tool use, JSON outputs, ADK `output_schema` and Gemini `response_schema` guarantee valid shape. Cross-field rules and recomputation belong in code; feed the exact failure back, cap retries at two or three, then route to human review.",
-      "key_takeaway": "Schemas guarantee format; validate meaning in code and retry with the exact error, a bounded number of times.",
+      "explanation": "Structured note-taking persists progress outside the window. A short file listing completed steps, open items and next actions survives compaction, and the agent re-reads it to continue without redoing work.",
+      "key_takeaway": "A milestone-level notes file carries progress across compaction and resets.",
       "doc_links": [
         {
-          "label": "Claude: Structured outputs",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         },
         {
-          "label": "Gemini API: Structured output",
-          "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+          "label": "Claude: Memory tool",
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool"
         }
       ]
     },
     {
       "id": "context-engineering-q-17",
-      "section": "Validation and retry loops",
-      "guide_anchor": "validation-retry",
-      "question": "An agent extracts warranty expiry dates from equipment manuals. Many manuals never state one. After three retries with stronger wording, the agent starts returning plausible but invented dates. What is the right design?",
+      "section": "Scratchpads and structured note-taking",
+      "guide_anchor": "scratchpads",
+      "question": "After a week of tasks, an assistant's long-term memory is full of half-tested hypotheses and step lists from finished jobs, and new tasks keep resurfacing them. What went wrong?",
       "options": [
         {
-          "text": "Keep the field required and add a fourth retry with an example date so the model learns the expected format.",
+          "text": "Memory retrieval returned too few results, so the assistant could not tell old notes from new ones.",
           "correct": false,
-          "why_wrong": "The value is absent from the source; more retries and examples push the model to fabricate one."
+          "why_wrong": "Returning more results would surface even more stale notes; the problem is what was written."
         },
         {
-          "text": "Make the field nullable with a required reason such as not_stated_in_document.",
+          "text": "Ephemeral task notes were promoted wholesale to durable memory instead of being closed out at task end.",
           "correct": true
         },
         {
-          "text": "Default missing values to the purchase date plus one year so every record has a usable expiry date.",
+          "text": "The assistant should have stored the scratchpads in the system prompt, where they are always visible.",
           "correct": false,
-          "why_wrong": "A rule-generated default presented as extracted data misleads downstream users about what the document says."
+          "why_wrong": "Putting working notes in the system prompt makes them permanent context and breaks caching."
         },
         {
-          "text": "Mark every field required to improve completeness, then filter out records whose dates look unusual.",
+          "text": "Memory consolidation was enabled, which merged unrelated task notes into single combined records.",
           "correct": false,
-          "why_wrong": "Required fields with no source value invite fabrication, and plausible invented dates pass a looks-unusual filter."
+          "why_wrong": "Consolidation updates contradicted facts; it does not create task notes from finished jobs."
         }
       ],
-      "explanation": "Retries help when the value is present but misread or misplaced. When the value is absent, retries produce inventions. A nullable field plus an explicit reason keeps the output honest.",
-      "key_takeaway": "Retries fix misread values, not missing ones; make absent fields nullable with a reason.",
+      "explanation": "Scratchpads for one task are ephemeral. When the task closes, delete or archive the working notes and promote only durable lessons to long-term memory; otherwise stale hypotheses pollute future sessions.",
+      "key_takeaway": "Close out ephemeral notes; promote only durable lessons to memory.",
       "doc_links": [
         {
-          "label": "Claude: Reduce hallucinations",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         },
         {
-          "label": "Claude: Structured outputs",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+          "label": "ADK: Memory",
+          "url": "https://adk.dev/sessions/memory/"
         }
       ]
     },
     {
       "id": "context-engineering-q-18",
-      "section": "Escalation and ambiguity",
-      "guide_anchor": "escalation",
-      "question": "An HR benefits assistant receives a question about parental leave for a foster placement. The leave policy covers birth and adoption only. Which response follows sound escalation criteria?",
+      "section": "Just-in-time retrieval",
+      "guide_anchor": "just-in-time-retrieval",
+      "question": "An analytics agent works over a warehouse with thousands of large tables. Loading full query results into the window keeps overflowing it. Which just-in-time approach fits?",
       "options": [
         {
-          "text": "Escalate for the policy gap, with a handoff packet listing the request, sections checked and reason.",
+          "text": "Pre-embed every table and preload the top 50 matching rows into the window for each question.",
+          "correct": false,
+          "why_wrong": "Preloading by similarity fills the window with loosely related rows and goes stale between index runs."
+        },
+        {
+          "text": "Keep table names and stored queries as references, run targeted queries, and inspect slices with tools.",
           "correct": true
         },
         {
-          "text": "Escalate only if the model's self-reported confidence falls below 60%, since that threshold reflects how unclear the policy is.",
+          "text": "Load each table once at session start and rely on compaction to shrink the data afterwards.",
           "correct": false,
-          "why_wrong": "Self-reported confidence is not calibrated; a policy gap is an observable criterion that applies regardless."
+          "why_wrong": "Loading full tables floods the window first; compaction cannot recover the lost budget cleanly."
         },
         {
-          "text": "Answer using the adoption rules, since foster placement is similar enough and the employee expects a quick reply.",
+          "text": "Summarize every table nightly and place all summaries in the system prompt for every question.",
           "correct": false,
-          "why_wrong": "Extending policy by analogy decides a case the policy does not cover; that decision belongs to a human."
-        },
-        {
-          "text": "Wait until the employee sounds frustrated, then escalate, so that human time is reserved for upset employees.",
-          "correct": false,
-          "why_wrong": "Sentiment alone is not a trigger; the policy gap exists whether or not the employee is annoyed."
+          "why_wrong": "Thousands of summaries in the system prompt waste budget on tables the question never touches."
         }
       ],
-      "explanation": "Valid triggers are observable: an explicit request for a person, a silent or ambiguous policy, no progress, or an action that is irreversible or above a threshold. Write criteria with contrasting examples in the instructions and enforce hard limits in code.",
-      "key_takeaway": "Escalate on observable criteria such as policy gaps, not on sentiment or self-reported confidence.",
+      "explanation": "Just-in-time agents keep lightweight identifiers (table names, stored queries, paths) and load data with tools when a step needs it, writing targeted queries and inspecting slices instead of loading whole objects.",
+      "key_takeaway": "Keep references, not payloads; fetch the slice a step needs.",
       "doc_links": [
         {
-          "label": "Claude Code: Hooks",
-          "url": "https://code.claude.com/docs/en/hooks"
-        },
-        {
-          "label": "Anthropic: Demystifying evals for agents",
-          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
     },
     {
       "id": "context-engineering-q-19",
-      "section": "Escalation and ambiguity",
-      "guide_anchor": "escalation",
-      "question": "An IT agent receives 'reset MFA for A. Lindqvist'. The directory returns two active employees with that name in different departments. What should the agent do?",
+      "section": "Just-in-time retrieval",
+      "guide_anchor": "just-in-time-retrieval",
+      "question": "Which description matches the hybrid retrieval strategy that Claude Code uses?",
       "options": [
         {
-          "text": "Reset MFA for the employee who signed in most recently, since that person is most likely to be locked out.",
+          "text": "It indexes the whole repository into embeddings at startup and retrieves the top chunks for each request.",
           "correct": false,
-          "why_wrong": "Picking by heuristic risks acting on the wrong person; sign-in recency says nothing about who was meant."
+          "why_wrong": "Claude Code avoids relying on a precomputed index; it explores files on demand to stay current."
         },
         {
-          "text": "Reset MFA for the first match returned by the directory, then tell the requester which account was changed.",
+          "text": "It loads every file in the repository into the window at start, then compacts once the limit is reached.",
           "correct": false,
-          "why_wrong": "Directory order is arbitrary; acting first and reporting afterwards turns an ambiguity into a security incident."
+          "why_wrong": "Preloading everything wastes budget and overflows on large repositories."
         },
         {
-          "text": "Ask the requester for a second identifier, such as employee ID or email, before acting.",
+          "text": "It loads CLAUDE.md files up front, then uses glob and grep style tools to open files just in time.",
           "correct": true
         },
         {
-          "text": "Reset MFA for both employees and notify each of them, so the right person is covered whichever one was meant.",
+          "text": "It delegates every file read to a subagent, so the main window never contains any repository content.",
           "correct": false,
-          "why_wrong": "Changing an unrelated person's security settings is an unauthorized action, not a safe default."
+          "why_wrong": "Subagents are optional for bulky exploration; the main agent also reads files directly."
         }
       ],
-      "explanation": "When an identifier matches several records, ask a targeted question for one additional identifier. Never resolve identity by heuristics such as recency or result order.",
-      "key_takeaway": "Resolve ambiguous matches by asking for a second identifier, never by heuristic.",
+      "explanation": "Anthropic describes Claude Code as hybrid: `CLAUDE.md` files are placed in context up front, while glob and grep let it navigate and retrieve files just in time, which avoids stale indexing.",
+      "key_takeaway": "Hybrid: preload a few essentials, explore the rest just in time.",
       "doc_links": [
         {
-          "label": "Claude: Reduce hallucinations",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         },
         {
-          "label": "Claude Code: Hooks",
-          "url": "https://code.claude.com/docs/en/hooks"
+          "label": "Claude Code: Memory",
+          "url": "https://code.claude.com/docs/en/memory"
         }
       ]
     },
     {
       "id": "context-engineering-q-20",
-      "section": "Human review and confidence calibration",
-      "guide_anchor": "human-review",
-      "question": "A receipt-extraction pipeline reports 98% field accuracy overall, and management wants to end human review. Faded thermal-paper receipts are 3% of volume at 78% accuracy. What should the team do?",
+      "section": "Just-in-time retrieval",
+      "guide_anchor": "just-in-time-retrieval",
+      "question": "A team switches a document assistant from preloaded retrieval to fully autonomous just-in-time exploration. Answers become fresher, but latency rises and the agent sometimes chases dead ends. Which adjustment addresses this trade-off?",
       "options": [
         {
-          "text": "End human review, because 98% overall already exceeds the accuracy target agreed with the finance team.",
+          "text": "Return to preloading the top 30 chunks, since just-in-time exploration is never worth the latency.",
           "correct": false,
-          "why_wrong": "The aggregate hides a segment that is wrong roughly one time in five; removing review there ships those errors."
+          "why_wrong": "Preloading brings back stale and loosely relevant context; the trade-off can be tuned instead."
         },
         {
-          "text": "Draw a uniform random 2% sample for review, which represents every segment in proportion to its volume.",
+          "text": "Remove the list and search tools so the agent must reason from the system prompt alone.",
           "correct": false,
-          "why_wrong": "Uniform sampling sees very few rare-segment items; stratified sampling oversamples rare and high-risk segments."
+          "why_wrong": "Without navigation tools the agent cannot find the current sources it needs."
         },
         {
-          "text": "Keep reviewing 100% of all receipts indefinitely, so no error in any segment can reach the ledger unseen.",
-          "correct": false,
-          "why_wrong": "Full review of high-accuracy segments wastes reviewer time that should go to the weak segment."
-        },
-        {
-          "text": "Measure accuracy per segment with stratified sampling, keep full review on the weak segment and reduce review to audit samples on strong ones.",
+          "text": "Give the agent a small up-front catalog with good list and search tools, and cap its exploration budget.",
           "correct": true
+        },
+        {
+          "text": "Raise the context window so the agent can keep every document it opens for the whole session.",
+          "correct": false,
+          "why_wrong": "A larger window does not reduce latency or dead ends; it only stores more of them."
         }
       ],
-      "explanation": "Aggregate accuracy can hide weak segments. Stratify by document type, issuer, quality or language, route uncertain fields to review, and keep a small random audit of confident items to catch drift.",
-      "key_takeaway": "Judge automation per segment, not on overall accuracy; stratify review toward weak segments.",
+      "explanation": "Runtime exploration is slower and needs good tools and heuristics. A hybrid catalog, informative list and search tools, and a tool-call budget keep exploration cheap while preserving freshness.",
+      "key_takeaway": "Tune just-in-time retrieval with a catalog, good tools and an exploration cap.",
       "doc_links": [
         {
-          "label": "scikit-learn: Model evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
-        },
-        {
-          "label": "Anthropic: Demystifying evals for agents",
-          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
     },
     {
       "id": "context-engineering-q-21",
-      "section": "Human review and confidence calibration",
-      "guide_anchor": "human-review",
-      "question": "An extraction model attaches a 0.9 confidence score to each field. On a labeled validation set, fields scored 0.9 are correct 70% of the time. How should the team use these scores?",
+      "section": "Choosing a strategy",
+      "guide_anchor": "strategy-selection",
+      "question": "Match the task to its first context lever: (1) iterative feature work with clear milestones, (2) broad market research that parallelizes, (3) a long support conversation with steady back-and-forth.",
       "options": [
         {
-          "text": "Treat them as overconfident and set per-field thresholds from the measured accuracy curve.",
+          "text": "(1) subagents, (2) compaction, (3) note-taking, because each task needs the opposite of its natural fit.",
+          "correct": false,
+          "why_wrong": "This swaps the fits: subagents suit parallel research, and compaction suits long conversations."
+        },
+        {
+          "text": "(1) note-taking, (2) subagents, (3) compaction or a summary prefix.",
           "correct": true
         },
         {
-          "text": "Route on the 0.9 score as is, since it is the model's own estimate and needs no comparison with labeled data.",
+          "text": "Compaction for all three, since summarizing history is the single lever that applies to every task shape.",
           "correct": false,
-          "why_wrong": "An uncalibrated score is not a probability; at 0.9 the fields are right only 70% of the time."
+          "why_wrong": "Compaction is often the first lever, but milestones and parallel exploration benefit from other patterns."
         },
         {
-          "text": "Ask the model in the prompt to report more conservative scores, then keep routing on whatever number it returns.",
+          "text": "(1) just-in-time retrieval, (2) a sliding window, (3) tool-result clearing for every turn of the chat.",
           "correct": false,
-          "why_wrong": "Prompted wording changes the number, not its relationship to accuracy; calibration requires labeled data."
-        },
-        {
-          "text": "Replace numeric scores with the model's text statements such as 'I am confident' and route on those phrases.",
-          "correct": false,
-          "why_wrong": "Self-reported confidence in text is also uncalibrated and harder to threshold."
+          "why_wrong": "A sliding window does not help parallel research, and clearing targets tool payloads, not conversation."
         }
       ],
-      "explanation": "Confidence scores become useful only after comparison with labeled outcomes. Map scores to observed accuracy, pick thresholds per field, and repeat when inputs drift.",
-      "key_takeaway": "Calibrate confidence against labeled data before thresholding on it.",
+      "explanation": "Anthropic's guidance: compaction keeps conversational flow for extended back-and-forth, note-taking suits iterative development with clear milestones, and multi-agent setups fit research where parallel exploration pays off.",
+      "key_takeaway": "Notes for milestones, subagents for parallel research, compaction for long dialogue.",
       "doc_links": [
         {
-          "label": "scikit-learn: Model evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"
-        },
-        {
-          "label": "ADK: Evaluate",
-          "url": "https://adk.dev/evaluate/"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
     },
     {
       "id": "context-engineering-q-22",
-      "section": "Provenance and uncertainty",
-      "guide_anchor": "provenance",
-      "question": "A research agent finds a 2023 annual report stating a company's headquarters is in Rotterdam and a 2026 press release announcing a move to Antwerp. The draft report shows only Antwerp, with no source. What should the output contain?",
+      "section": "Choosing a strategy",
+      "guide_anchor": "strategy-selection",
+      "question": "A tool-heavy agent's window is mostly raw API payloads it has already acted on. The team wants the lightest intervention that changes nothing the model wrote. Where should they start?",
       "options": [
         {
-          "text": "Only Antwerp, since the newer source wins, with a citation attached after the paragraph is written.",
+          "text": "Threshold compaction, which summarizes the whole conversation and restarts the window from the summary.",
           "correct": false,
-          "why_wrong": "Dropping the older claim hides the history, and citations attached after writing often do not support the sentence."
+          "why_wrong": "Compaction rewrites the conversation through a model summary; it is heavier than removing stale payloads."
         },
         {
-          "text": "Only Rotterdam, since an audited annual report is more authoritative than a press release on any topic.",
+          "text": "A subagent per tool call, so every payload is read in an isolated window and never reaches the main one.",
           "correct": false,
-          "why_wrong": "Authority does not override recency here; both sources can be right at different dates."
+          "why_wrong": "Subagents add calls and tokens; they are a larger change than clearing results already acted on."
         },
         {
-          "text": "A neutral statement that the location is 'in the Benelux region', so neither source is contradicted.",
+          "text": "A sliding window over the last few turns, so older payloads and every older message drop out together.",
           "correct": false,
-          "why_wrong": "Blurring the values into a vague statement loses the information both sources provide."
+          "why_wrong": "Trimming also drops older user and assistant turns, not just stale payloads."
         },
         {
-          "text": "Both claims with sources, excerpts and dates, noting the newer 2026 release likely explains the change.",
+          "text": "Tool-result clearing, which replaces old results with placeholders and keeps the tool calls visible.",
           "correct": true
         }
       ],
-      "explanation": "Each claim keeps its source, excerpt, location and date through synthesis. Conflicts stay visible with dates, and the output separates established from contested findings. Dates often explain apparent contradictions.",
-      "key_takeaway": "Keep conflicting claims side by side with sources and dates; never drop or blend them.",
+      "explanation": "Tool-result clearing is one of the lightest-touch forms of compaction: stale payloads are removed, tool calls stay visible for re-fetching, and nothing the model wrote is paraphrased.",
+      "key_takeaway": "Start with tool-result clearing before heavier summarization.",
       "doc_links": [
         {
-          "label": "Claude: Citations",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+          "label": "Claude: Context editing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"
         },
         {
-          "label": "Claude: Reduce hallucinations",
-          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
     },
@@ -1013,73 +993,77 @@
       "id": "context-engineering-q-27",
       "section": "Failure modes and anti-patterns",
       "guide_anchor": "failure-modes",
-      "question": "A multi-agent research system produces a final report with no citations. The subagents return paragraphs of prose. A teammate proposes a final step in which the model attaches sources after writing. What is the root-cause fix?",
+      "question": "With tool-result clearing enabled, an agent keeps calling the same search over and over. Its scratchpad is empty. What is the most likely cause and fix?",
       "options": [
         {
-          "text": "Keep the proposed final step but run it twice, so the second pass catches citations the first pass missed.",
+          "text": "The search tool is unreliable; add retries with backoff so each call is more likely to succeed.",
           "correct": false,
-          "why_wrong": "Citations attached after writing often do not support the sentence they sit on; running it twice repeats the flaw."
+          "why_wrong": "The calls succeed; the agent repeats them because it has no record of earlier results."
         },
         {
-          "text": "Ask the coordinator to paraphrase each subagent report more carefully so the original wording is not lost.",
-          "correct": false,
-          "why_wrong": "Loose paraphrase is how attribution gets lost; structured claims should be merged rather than re-summarized."
-        },
-        {
-          "text": "Forward each subagent's full transcript to the coordinator so it can find sources in the raw tool output.",
-          "correct": false,
-          "why_wrong": "Forwarding transcripts floods the coordinator's window and still leaves the claim-to-source link implicit."
-        },
-        {
-          "text": "Have subagents return claims with source, excerpt and date, merged intact through synthesis.",
+          "text": "Results are cleared with no lasting record; log key findings to a notes file and keep tool calls visible.",
           "correct": true
+        },
+        {
+          "text": "Clearing is incompatible with search tools; disable clearing entirely and move the agent to a model with a larger context window instead.",
+          "correct": false,
+          "why_wrong": "Clearing works with any tool; disabling it brings back the payload bloat it was solving."
+        },
+        {
+          "text": "The model has too little thinking budget; raise it so the agent remembers results it cleared.",
+          "correct": false,
+          "why_wrong": "More thinking cannot recall content that is no longer in the window or in a note."
         }
       ],
-      "explanation": "Provenance must be carried from retrieval through synthesis. Subagents return claims in a schema with source fields; the coordinator merges them and never paraphrases sources away.",
-      "key_takeaway": "Carry sources from retrieval through synthesis; do not bolt citations on at the end.",
+      "explanation": "When a result is cleared and nothing records what was found, the agent concludes the lookup never happened. Keep tool calls visible (the default) and write findings worth keeping to a notes file or memory.",
+      "key_takeaway": "Pair clearing with notes so cleared results leave a trace.",
       "doc_links": [
         {
-          "label": "Claude: Citations",
-          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+          "label": "Claude: Context editing",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing"
         },
         {
-          "label": "Claude Code: Subagents",
-          "url": "https://code.claude.com/docs/en/sub-agents"
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
     },
     {
       "id": "context-engineering-q-28",
-      "section": "Minimal code example",
-      "guide_anchor": "code-example",
-      "question": "In the guide's stdlib context_harness.py, watchlist_a returns no match and watchlist_b times out. Which design choice keeps the model from reading the timeout as a clean result?",
+      "section": "Subagent context isolation",
+      "guide_anchor": "multi-agent-context",
+      "question": "A lead agent forwards its entire 90k-token transcript to every subagent 'so they have full context'. Subagents run slowly and often wander off scope. What should the lead send instead?",
       "options": [
         {
-          "text": "ToolResult carries either ok=True with data, possibly empty, or ok=False with a structured error, and record() serializes them as status ok vs. status error.",
+          "text": "The last 20 turns of its transcript, which is shorter and still includes the most recent decisions.",
+          "correct": false,
+          "why_wrong": "A transcript slice still carries irrelevant history and lacks an explicit scope boundary."
+        },
+        {
+          "text": "No context at all, since subagents perform better when they discover everything on their own.",
+          "correct": false,
+          "why_wrong": "Without goal and identifiers, subagents repeat work the lead already did or search the wrong things."
+        },
+        {
+          "text": "A fresh brief with the goal, scope boundary, needed identifiers and a tool or token budget.",
           "correct": true
         },
         {
-          "text": "The _prune method never clears the newest result, so the timeout always stays visible at the end of the history.",
+          "text": "The full transcript plus a summary on top, so subagents can choose which part to read first.",
           "correct": false,
-          "why_wrong": "Keeping the newest entry is a pruning rule; it does not distinguish an error from an empty success."
-        },
-        {
-          "text": "The assemble method places STABLE_PREFIX first, so the rule about failed checks is cached and read before the results.",
-          "correct": false,
-          "why_wrong": "Prefix order helps caching and framing, but without distinct status values the model could still misread the timeout."
-        },
-        {
-          "text": "The project function keeps only the needed fields, so the error details are trimmed before they reach the window.",
-          "correct": false,
-          "why_wrong": "project trims registry rows; trimming error details would remove exactly the information the model needs."
+          "why_wrong": "Adding a summary on top of the transcript makes the window larger, not more focused."
         }
       ],
-      "explanation": "The harness separates success and failure in the data type itself: an empty `data` list with `ok=True` is a real no-match, while `ok=False` carries category, retryability and a next step, so the two never share a representation.",
-      "key_takeaway": "Encode success and failure as distinct types or statuses so empty results and errors cannot be confused.",
+      "explanation": "Isolation works when each subagent starts with a clean window and a focused brief. On Claude, an Agent SDK subagent sees only its own system prompt and the task prompt the lead writes, so the brief must carry what it needs.",
+      "key_takeaway": "Brief subagents with goal, scope and identifiers; never forward the transcript.",
       "doc_links": [
         {
-          "label": "Claude: Handle tool calls",
-          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+          "label": "Claude Agent SDK: Subagents",
+          "url": "https://code.claude.com/docs/en/agent-sdk/subagents"
+        },
+        {
+          "label": "Anthropic: Effective context engineering",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
     },
