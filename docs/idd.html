@@ -906,14 +906,14 @@
             <div class="concept-card accent-mint">
                 <h3>
                     <span class="icon-badge"><i class="fas fa-sitemap"></i></span>
-                    5 Canonical Skill Patterns
+                    Skill Design Categories
                 </h3>
                 <ul>
-                    <li><strong>Informational:</strong> Curated domain/API rules without mutating files</li>
-                    <li><strong>Tool Wrapper:</strong> Exact CLI or MCP invocation sequences and flag safety</li>
-                    <li><strong>Generator:</strong> Emits standardized scaffolds from <code>assets/</code> templates</li>
-                    <li><strong>Reviewer:</strong> Audits PR diffs or specs against security/architecture rubrics</li>
-                    <li><strong>Workflow:</strong> Coordinates multi-step gated pipelines (<code>plan → build → verify</code>)</li>
+                    <li><strong>Domain Reference:</strong> Standards, schema contracts, and API specs referenced without mutations</li>
+                    <li><strong>CLI &amp; MCP Automation:</strong> Non-interactive command wrappers and parameter presets for tools</li>
+                    <li><strong>Template Scaffolding:</strong> Emits standardized components and test harnesses from project templates</li>
+                    <li><strong>Quality &amp; Policy Auditing:</strong> Audits diffs, configs, or specs against architectural and security rubrics</li>
+                    <li><strong>Multi-Phase Execution:</strong> Coordinates multi-step procedures (e.g. upgrades, migrations, or eval runs)</li>
                 </ul>
             </div>
 
@@ -1045,18 +1045,16 @@
             <pre><span class="comment"># 1. Bootstrap official Google Cloud skills into Antigravity, Claude Code &amp; Gemini CLI</span>
 uvx google-agents-cli setup
 
-<span class="comment"># 2. Headless scaffold from approved IDD spec (--yes prevents non-TTY stdin hangs!)</span>
-agents-cli create billing-dispute-agent --prototype --model gemini-4-argon --yes
+<span class="comment"># 2. Headless scaffold from approved IDD spec (pass --prototype --yes)</span>
+agents-cli create billing-dispute-agent --prototype --yes
 agents-cli install
 
 <span class="comment"># 3. Execute trajectory &amp; rubric acceptance criteria in CI before merge</span>
-agents-cli eval run \
-  --config tests/eval/eval_config.json \
-  --evalset tests/eval/evalsets/dispute_golden.evalset.json
+agents-cli eval run --config tests/eval/eval_config.json
 
 <span class="comment"># 4. Deploy &amp; register in Gemini Enterprise once eval gates pass</span>
-agents-cli deploy --target agent-engine --yes
-agents-cli publish gemini-enterprise --yes</pre>
+agents-cli deploy --deployment-target agent_runtime --no-confirm-project
+agents-cli publish gemini-enterprise --agent-runtime-id &lt;RUNTIME_ID&gt;</pre>
         </div>
 
 

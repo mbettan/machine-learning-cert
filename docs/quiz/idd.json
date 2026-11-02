@@ -1239,13 +1239,13 @@
           "why_wrong": "Interactive wizard prompts hang headless coding agents and CI/CD runners that have no human `stdin`."
         },
         {
-          "text": "Pass `--yes` with explicit flags on `create`/`deploy`/`publish`, and gate merges with `agents-cli eval run`.",
+          "text": "Pass `--prototype --yes` on `create`, configure evalsets in `eval_config.json` for `eval run`, and use `--deployment-target agent_runtime --no-confirm-project` on `deploy`.",
           "correct": true
         },
         {
           "text": "Skip `tests/eval/evalsets/*.evalset.json` in CI and run `agents-cli publish` directly from unreviewed local branches.",
           "correct": false,
-          "why_wrong": "Skipping `agents-cli eval run` against `*.evalset.json` and `eval_config.json` removes trajectory and rubric regression gates."
+          "why_wrong": "Skipping `agents-cli eval run` against `eval_config.json` removes trajectory and rubric regression gates."
         },
         {
           "text": "Reinstall IDE skills via `uvx google-agents-cli setup` on every production user HTTP request at runtime.",
@@ -1253,8 +1253,8 @@
           "why_wrong": "`uvx google-agents-cli setup` is a developer-time step that installs Google Cloud skills into coding IDEs, not a per-request runtime call."
         }
       ],
-      "explanation": "`uvx google-agents-cli setup` equips coding IDEs with official Google Cloud skills; headless agents and CI runners must pass `--yes` plus explicit flags on `agents-cli create`/`deploy`/`publish` to avoid blocking on interactive prompts, and run `agents-cli eval run` against `*.evalset.json` + `eval_config.json` to gate merges.",
-      "key_takeaway": "Always pass `--yes` with explicit flags when running `agents-cli` headlessly, and gate PRs with `agents-cli eval run`.",
+      "explanation": "`uvx google-agents-cli setup` equips coding IDEs with official Google Cloud skills; headless agents and CI runners must pass `--prototype --yes` on `agents-cli create` (which has no `--model` flag), run `agents-cli eval run --config tests/eval/eval_config.json` without an `--evalset` flag, and deploy via `--deployment-target agent_runtime --no-confirm-project`.",
+      "key_takeaway": "Automate `agents-cli` headlessly with `--prototype --yes` on create, `eval_config.json` on eval run, and `--deployment-target agent_runtime --no-confirm-project` on deploy.",
       "doc_links": [
         {
           "label": "ADK Evaluation Criteria & Evalsets",
