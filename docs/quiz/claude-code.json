@@ -163,38 +163,38 @@
       "id": "claude-code-q-05",
       "section": "CLAUDE.md Hierarchy & Path-Scoped Rules",
       "guide_anchor": "claude-md",
-      "question": "A team moves database guidance out of CLAUDE.md into .claude/rules/db/postgres.md to save context. Token usage doesn't drop: the guidance still appears in sessions about frontend CSS. What is wrong?",
+      "question": "In a large monorepo, an engineer on the payments team launches Claude Code from monorepo/payments/. Sessions keep picking up a frontend team's instructions from an ancestor CLAUDE.md, plus the organization's managed CLAUDE.md. The engineer wants to skip only the frontend file, on their machine, without affecting teammates. What works?",
       "options": [
         {
-          "text": "Rules files only load from the user's home directory, so the project copy is being merged with a stale user copy.",
-          "correct": false,
-          "why_wrong": "Project rules in .claude/rules/ are discovered recursively and load from the project; the issue is missing scoping."
-        },
-        {
-          "text": "The file has no paths: frontmatter, so it loads at launch for every task regardless of its folder.",
+          "text": "Add a claudeMdExcludes glob for the ancestor file in .claude/settings.local.json; the managed file cannot be excluded that way.",
           "correct": true
         },
         {
-          "text": "Rules in subfolders are only scoped when CLAUDE.md imports them with @path, which defers loading.",
+          "text": "Add claudeMdExcludes globs for both files, since every CLAUDE.md, including the organization's managed one, can be skipped by path.",
           "correct": false,
-          "why_wrong": "@path imports load together with the importing CLAUDE.md and never reduce context cost."
+          "why_wrong": "claudeMdExcludes can skip project, ancestor and rules files, but a managed CLAUDE.md is explicitly out of its reach."
         },
         {
-          "text": "The file exceeds the 200-line limit, so Claude Code falls back to loading it unconditionally in full.",
+          "text": "Delete the ancestor CLAUDE.md on a local branch, because Claude Code offers no per-user way to skip an inherited instruction file.",
           "correct": false,
-          "why_wrong": "Length affects adherence and warnings, not scoping; scope comes only from paths: frontmatter."
+          "why_wrong": "claudeMdExcludes is exactly that per-user mechanism; deleting a shared file risks an accidental commit that breaks the frontend team."
+        },
+        {
+          "text": "Write \"ignore the frontend CLAUDE.md\" in a CLAUDE.local.md, which overrides ancestor files because local instructions load last.",
+          "correct": false,
+          "why_wrong": "The ancestor file still loads and spends context; instruction files are combined, not replaced, so a counter-instruction is unreliable."
         }
       ],
-      "explanation": "Rules files are discovered recursively, but only a paths: YAML frontmatter field scopes a rule to matching files. Without it, the rule loads at launch with the same priority as .claude/CLAUDE.md.",
-      "key_takeaway": "Folder placement doesn't scope a rule; add paths: globs in frontmatter so it loads only for matching files.",
+      "explanation": "claudeMdExcludes takes glob patterns matched against absolute paths and can be set at the user, project, local or managed layer, with arrays merged across layers. Putting it in .claude/settings.local.json keeps the exclusion personal. A managed CLAUDE.md always loads; organizations enforce hard rules with managed settings rather than memory files.",
+      "key_takeaway": "Skip irrelevant ancestor CLAUDE.md files with claudeMdExcludes in local settings; managed CLAUDE.md always loads.",
       "doc_links": [
         {
-          "label": "CLAUDE.md & Project Memory",
+          "label": "Claude Code Memory & CLAUDE.md",
           "url": "https://code.claude.com/docs/en/memory"
         },
         {
-          "label": "Claude Code in Large Codebases",
-          "url": "https://code.claude.com/docs/en/large-codebases"
+          "label": "Claude Code Settings",
+          "url": "https://code.claude.com/docs/en/settings"
         }
       ]
     },
@@ -631,38 +631,34 @@
       "id": "claude-code-q-17",
       "section": "MCP in Claude Code",
       "guide_anchor": "mcp",
-      "question": "A shared internal code-search MCP service must be available to everyone working in a repository, without anyone committing the service token. Which configuration is correct?",
+      "question": "An MCP server's get_schema tool returns about 120,000 characters of plain-text schema. Users export MAX_MCP_OUTPUT_TOKENS=60000, yet Claude Code still saves each result to a file in the session's tool-results directory and shows Claude only the path. As the server maintainer, what is the right fix?",
       "options": [
         {
-          "text": "A stdio entry in the committed .mcp.json that launches a local proxy with the token passed as an argument.",
-          "correct": false,
-          "why_wrong": "stdio spawns a per-user subprocess and the token would still be committed in the args."
-        },
-        {
-          "text": "A local-scope entry that each developer adds with claude mcp add, storing the token in ~/.claude.json.",
-          "correct": false,
-          "why_wrong": "Local scope is private to one user and one project, so the configuration drifts across the team."
-        },
-        {
-          "text": "An SSE entry in user scope, since user-scoped servers are automatically shared with project collaborators.",
-          "correct": false,
-          "why_wrong": "SSE is deprecated and user scope is private to one person across their projects."
-        },
-        {
-          "text": "An HTTP entry in the committed .mcp.json whose Authorization header references ${SEARCH_TOKEN} from env.",
+          "text": "Set _meta[\"anthropic/maxResultSizeChars\"] on the tool in tools/list, since the 50,000-character file threshold ignores the env var.",
           "correct": true
+        },
+        {
+          "text": "Tell users to raise MAX_MCP_OUTPUT_TOKENS above 120,000, because that variable controls every size limit applied to MCP text results.",
+          "correct": false,
+          "why_wrong": "The variable sets the token limit only; the separate 50,000-character persist-to-disk threshold for text results is unaffected by it."
+        },
+        {
+          "text": "Return the schema with isError: true so that Claude Code passes the whole text inline instead of applying its persistence threshold.",
+          "correct": false,
+          "why_wrong": "Error results longer than about 11,000 characters keep only the first and last 5,000 characters, so most of the schema would be lost."
+        },
+        {
+          "text": "Move the server to a WebSocket transport, which skips per-result size handling, so the full schema is always delivered inline.",
+          "correct": false,
+          "why_wrong": "Result persistence is applied by Claude Code whatever the transport; WebSocket only adds its own 16 MiB per-message cap."
         }
       ],
-      "explanation": "Project scope stores servers in .mcp.json at the repo root so everyone who clones gets them (Claude Code prompts for approval before first use). HTTP is recommended for remote servers, and ${VAR} expansion in headers keeps the secret in each user's environment.",
-      "key_takeaway": "Team-shared remote MCP = HTTP + project scope (.mcp.json) + ${VAR} secrets from the environment.",
+      "explanation": "Claude Code warns above 10,000 tokens of MCP output and limits output to 25,000 tokens by default (MAX_MCP_OUTPUT_TOKENS changes that). Independently, successful text results over 50,000 characters are saved to a file unless the tool declares anthropic/maxResultSizeChars in its _meta, which raises its threshold up to a 500,000-character ceiling.",
+      "key_takeaway": "For large but necessary MCP text results, annotate the tool with anthropic/maxResultSizeChars; the env var won't lift the character threshold.",
       "doc_links": [
         {
-          "label": "MCP in Claude Code",
+          "label": "Claude Code MCP",
           "url": "https://code.claude.com/docs/en/mcp"
-        },
-        {
-          "label": "Enterprise MCP Access in Claude Code",
-          "url": "https://code.claude.com/docs/en/managed-mcp"
         }
       ]
     },
@@ -748,38 +744,38 @@
       "id": "claude-code-q-20",
       "section": "Headless & CI Use",
       "guide_anchor": "headless",
-      "question": "A nightly CI job runs claude -p to apply lint fixes and commit them. Whenever Claude attempts git commit (which nobody pre-approved), default mode rejects the unapproved command (or stalls if a permission-prompt host is attached) and the job fails. What is the best least-privilege fix?",
+      "question": "A CI job on a shared self-hosted runner runs two steps in the same checkout: claude -p \"Review this diff\", then claude -p \"Summarize the issues you found\" --continue. When several pipelines run at once, step 2 sometimes summarizes another pipeline's review. What is the most reliable fix?",
       "options": [
         {
-          "text": "Run with --dangerously-skip-permissions so no command is ever blocked, and review the commits each morning.",
-          "correct": false,
-          "why_wrong": "Skipping all checks removes every guard on a shared runner; reserve it for disposable, isolated sandboxes."
-        },
-        {
-          "text": "Add --allowedTools \"Edit,Bash(git commit *)\" and --permission-mode dontAsk so only approved tools run.",
+          "text": "Capture session_id from step 1 with --output-format json, then run step 2 with --resume \"$session_id\".",
           "correct": true
         },
         {
-          "text": "Switch to --output-format stream-json, because streaming output automatically approves git commands in CI.",
+          "text": "Add --max-turns 1 to both steps so each invocation closes its conversation before another pipeline can start a new one.",
           "correct": false,
-          "why_wrong": "Output format changes how results are printed, not how permissions are evaluated."
+          "why_wrong": "--max-turns caps agentic turns inside one run; it does not change which conversation --continue selects when runs overlap."
         },
         {
-          "text": "Use plan mode in CI so Claude proposes changes and the pipeline auto-approves the plan before execution.",
+          "text": "Keep --continue but add --output-format json to step 2, since JSON mode always continues the conversation from the same job.",
           "correct": false,
-          "why_wrong": "Plan mode blocks edits pending approval; nothing in an unattended job approves it."
+          "why_wrong": "Output format only shapes what is printed; --continue still opens the most recent conversation, whichever pipeline created it."
+        },
+        {
+          "text": "Pipe step 1's printed text into step 2 through stdin so Claude Code reattaches the original session automatically.",
+          "correct": false,
+          "why_wrong": "Piped text starts a new conversation that merely contains the pasted output; it does not resume the original session."
         }
       ],
-      "explanation": "In headless (-p) mode without pre-approval, default mode immediately denies unapproved tool calls (or waits if an SDK canUseTool / --permission-prompt-tool host is attached). Combining --allowedTools \"Edit,Bash(git commit *)\" with --permission-mode dontAsk (and --bare on untrusted repos) pre-approves the exact needed tools and deterministically denies everything else.",
-      "key_takeaway": "Unattended CI runs: claude -p + --allowedTools + --permission-mode dontAsk (plus --bare on untrusted code).",
+      "explanation": "--continue picks the most recent conversation, which is ambiguous when runs overlap on one machine. --output-format json returns a session_id, and --resume with that ID (or with the path to its .jsonl transcript) continues exactly that conversation.",
+      "key_takeaway": "In concurrent automation, resume by explicit session_id, never by 'most recent' with --continue.",
       "doc_links": [
         {
-          "label": "Running Claude Code Programmatically",
+          "label": "Claude Code Non-Interactive Mode",
           "url": "https://code.claude.com/docs/en/headless"
         },
         {
-          "label": "Claude Code GitHub Actions",
-          "url": "https://code.claude.com/docs/en/github-actions"
+          "label": "Claude Code CLI Reference",
+          "url": "https://code.claude.com/docs/en/cli-reference"
         }
       ]
     },
@@ -1138,38 +1134,34 @@
       "id": "claude-code-q-30",
       "section": "CLAUDE.md Hierarchy & Path-Scoped Rules",
       "guide_anchor": "claude-md",
-      "question": "A developer starts Claude Code at the repo root and asks it to draft a migration plan for the billing service. The plan ignores the money-handling rules in services/billing/CLAUDE.md, although later edits inside services/billing follow them. How should the team make the rules apply from the start?",
+      "question": "A repository shared with several coding agents keeps its conventions only in a committed AGENTS.md, and Claude Code has followed them for weeks with no CLAUDE.md present. A developer adds a personal, uncommitted CLAUDE.local.md with editor preferences, and Claude immediately stops following the AGENTS.md conventions. What explains this, and what restores both?",
       "options": [
         {
-          "text": "Move the cross-cutting rules to the root CLAUDE.md or a rule, since subfolder files load only on demand.",
+          "text": "CLAUDE.local.md counts in the CLAUDE.md check, so AGENTS.md is skipped; import @AGENTS.md or pick claude-md-and-agents-md.",
           "correct": true
         },
         {
-          "text": "Add an instruction to the prompt template telling Claude to search for any CLAUDE.md files before planning.",
+          "text": "Claude Code reads AGENTS.md only inside subdirectories, so the conventions must be copied by hand into a brand-new root CLAUDE.md.",
           "correct": false,
-          "why_wrong": "Relying on the model to remember to look is advisory; placing the rules where they load at launch is reliable."
+          "why_wrong": "With no CLAUDE.md files present, Claude reads the root AGENTS.md at session start; copying it creates two drifting sources of truth."
         },
         {
-          "text": "Rename the file to CLAUDE.local.md so it is loaded at launch for every session in the repository.",
+          "text": "The new file broke frontmatter parsing for every instruction file, so Claude Code fell back to loading no project instructions at all.",
           "correct": false,
-          "why_wrong": "CLAUDE.local.md is a personal, gitignored file at the project root; renaming a subfolder file doesn't share it."
+          "why_wrong": "Instruction files need no frontmatter; the behavior is the documented default that prefers CLAUDE.md files over AGENTS.md."
         },
         {
-          "text": "Run /compact before planning so Claude re-reads every CLAUDE.md file in the repository from disk.",
+          "text": "Rename the personal file to AGENTS.local.md so that it loads alongside AGENTS.md without counting in the CLAUDE.md precedence check.",
           "correct": false,
-          "why_wrong": "Compaction re-injects the project-root file only; nested files still load when Claude reads their subtree."
+          "why_wrong": "AGENTS.local.md is never read, so the editor preferences would silently disappear instead of loading next to AGENTS.md."
         }
       ],
-      "explanation": "CLAUDE.md files in the working directory and its parents load at launch; files in subdirectories load only when Claude reads files in that subtree. A planning task that hasn't opened billing files yet won't see them. Put rules needed up front in the root file, or launch Claude from services/billing.",
-      "key_takeaway": "Subdirectory CLAUDE.md files load lazily; rules needed before Claude touches that folder belong higher up.",
+      "explanation": "By default (claude-md-or-agents-md) Claude reads AGENTS.md only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md exists in the working directory or above it. Adding CLAUDE.local.md flips that check. Importing @AGENTS.md from the personal file, or switching Project instructions to claude-md-and-agents-md, loads both.",
+      "key_takeaway": "Any CLAUDE.md or CLAUDE.local.md suppresses AGENTS.md by default; import it or choose claude-md-and-agents-md.",
       "doc_links": [
         {
-          "label": "CLAUDE.md & Project Memory",
+          "label": "Claude Code Memory & CLAUDE.md",
           "url": "https://code.claude.com/docs/en/memory"
-        },
-        {
-          "label": "Claude Code in Large Codebases",
-          "url": "https://code.claude.com/docs/en/large-codebases"
         }
       ]
     },
@@ -1177,37 +1169,33 @@
       "id": "claude-code-q-31",
       "section": "Custom Slash Commands",
       "guide_anchor": "slash-commands",
-      "question": "A team's committed /audit-deps command has allowed-tools: Read, Grep in its frontmatter. The lead assumed this would stop the command from running shell commands, but Claude still proposes Bash calls during it, prompting for approval. What explains this, and what would block Bash?",
+      "question": "A team's /release-notes command file contains the lines \"- Commits: !`git log --oneline v2.3..HEAD`\" and \"BASE=!`git describe --tags --abbrev=0`\". Claude receives the commit list correctly, but the second line arrives as literal text with the backticks intact. Why, and what is the fix?",
       "options": [
         {
-          "text": "The frontmatter key is ignored for project commands; it only takes effect in personal ~/.claude/commands files.",
-          "correct": false,
-          "why_wrong": "Project and personal commands accept the same frontmatter; the key works but only grants approvals."
-        },
-        {
-          "text": "allowed-tools only pre-approves the listed tools; to block Bash, add deny rules in settings.",
+          "text": "! is only recognized at line start or after whitespace; write \"BASE: !`git describe ...`\" or use a ```! fenced block.",
           "correct": true
         },
         {
-          "text": "allowed-tools is a strict allowlist, so Bash prompts mean the file has a YAML error and the key is being skipped.",
+          "text": "Only one !`command` placeholder is expanded per file, so the second command must move into a separate supporting file.",
           "correct": false,
-          "why_wrong": "Even when parsed correctly, allowed-tools never removes tools; every tool stays callable under normal permissions."
+          "why_wrong": "Substitution runs over the whole file and expands every recognized placeholder, not just the first one it finds."
         },
         {
-          "text": "Add context: fork, because forked commands inherit only the tools named in allowed-tools and nothing else.",
+          "text": "Substitution is re-scanned recursively, so the first command's output consumed the second placeholder before it ran.",
           "correct": false,
-          "why_wrong": "Forking isolates the conversation context; it does not turn allowed-tools into a restriction on available tools."
+          "why_wrong": "Substitution runs once over the original file and inserted output is never re-scanned, so one command cannot affect another."
+        },
+        {
+          "text": "disableSkillShellExecution is on by default for project commands, so set it to false in the project's .claude/settings.json.",
+          "correct": false,
+          "why_wrong": "It is off by default, and when on it replaces every command, including the first, with a 'disabled by policy' placeholder."
         }
       ],
-      "explanation": "allowed-tools grants permission for the listed tools while the command's turn runs, so they don't prompt. It does not restrict which tools are available: other tools stay callable and your permission settings still govern them. To forbid Bash, use permissions.deny rules or a PreToolUse hook.",
-      "key_takeaway": "allowed-tools pre-approves; it never restricts. Block tools with deny rules or hooks.",
+      "explanation": "Dynamic context injection runs !`command` before the content reaches Claude and inlines the output. The inline form only triggers when ! starts a line or follows whitespace, so KEY=!`cmd` is left as literal text. Multi-line commands can use a fenced block opened with ```!.",
+      "key_takeaway": "Place !`command` at line start or after a space (or use a ```! block); KEY=!`cmd` is never executed.",
       "doc_links": [
         {
-          "label": "Claude Code Slash Commands",
-          "url": "https://code.claude.com/docs/en/commands"
-        },
-        {
-          "label": "Claude Code Skills Guide",
+          "label": "Claude Code Skills & Commands",
           "url": "https://code.claude.com/docs/en/skills"
         }
       ]
@@ -1216,37 +1204,33 @@
       "id": "claude-code-q-32",
       "section": "Custom Slash Commands",
       "guide_anchor": "slash-commands",
-      "question": "A /dep-report command scans every package manifest and lockfile and prints a long intermediate analysis before its two-line verdict. After a few runs the main session is full of scan output and later answers degrade. Which change keeps the command's result while protecting the main conversation?",
+      "question": "A command file .claude/commands/port-endpoint.md says \"Port the $1 endpoint from API $2 to API $3.\" Running /port-endpoint orders v1 v2 gives Claude \"Port the v1 endpoint from API v2 to API $3.\" What should the author change?",
       "options": [
         {
-          "text": "Add disable-model-invocation: true so the command output is no longer added to the conversation history.",
-          "correct": false,
-          "why_wrong": "That flag only stops Claude from triggering the command automatically; output still lands in the session."
-        },
-        {
-          "text": "Move the file from .claude/commands/ to ~/.claude/commands/ so its output is stored in a personal scope.",
-          "correct": false,
-          "why_wrong": "Scope controls who can invoke the command, not where its output goes; the session would fill up the same way."
-        },
-        {
-          "text": "Set argument-hint to [summary-only] so the command prints only the final verdict instead of the analysis.",
-          "correct": false,
-          "why_wrong": "argument-hint is just autocomplete text in the menu; it doesn't change what the command does or prints."
-        },
-        {
-          "text": "Add context: fork to its frontmatter so it runs in a forked subagent and only the result returns.",
+          "text": "Use $0, $1 and $2, because indexed arguments are 0-based, so $0 is the first value typed after the command.",
           "correct": true
+        },
+        {
+          "text": "Quote the arguments as \"orders v1 v2\" so Claude Code splits them into numbered placeholders that start at $1.",
+          "correct": false,
+          "why_wrong": "Quoting groups words into a single argument, which would become $0; indexing stays 0-based either way."
+        },
+        {
+          "text": "Replace the placeholders with $ARGUMENTS three times, since indexed forms only work in skills, not in command files.",
+          "correct": false,
+          "why_wrong": "Command files support the same substitutions, and $ARGUMENTS expands to the full argument string every time it appears."
+        },
+        {
+          "text": "Add argument-hint: [endpoint] [from] [to], which maps the typed values onto $1, $2 and $3 in that order.",
+          "correct": false,
+          "why_wrong": "argument-hint only changes the autocomplete hint; it has no effect on how values are substituted into the body."
         }
       ],
-      "explanation": "context: fork runs the command in a forked subagent with its own context window. The verbose scan stays in that context and only the final result comes back, so the main conversation keeps its budget for the actual task.",
-      "key_takeaway": "Use context: fork for commands that read a lot or print a lot; only their result returns to the main session.",
+      "explanation": "$ARGUMENTS[N] and its shorthand $N use 0-based positions with shell-style quoting. An indexed placeholder with no argument at its position stays as literal text, which is why $3 appeared unchanged.",
+      "key_takeaway": "Skill and command arguments are 0-based: $0 is the first argument, $1 the second.",
       "doc_links": [
         {
-          "label": "Claude Code Slash Commands",
-          "url": "https://code.claude.com/docs/en/commands"
-        },
-        {
-          "label": "Claude Code Skills Guide",
+          "label": "Claude Code Skills & Commands",
           "url": "https://code.claude.com/docs/en/skills"
         }
       ]
@@ -1255,38 +1239,38 @@
       "id": "claude-code-q-33",
       "section": "Plan Mode & Iterative Refinement",
       "guide_anchor": "workflows",
-      "question": "A product owner asks for a loyalty-points feature in a domain the engineer barely knows; rules on expiry, refunds and fraud are mostly in people's heads. The engineer wants Claude to surface edge cases before any code exists and to keep implementation context clean. Which workflow fits best?",
+      "question": "An engineer runs claude --worktree fix-auth in a second terminal while a feature session continues in the main checkout. In the new worktree the test suite fails at once because the gitignored .env.local with local service URLs is missing. What is the cleanest fix for this and future worktrees?",
       "options": [
         {
-          "text": "Ask Claude to implement a first version directly and refine it through code review until the rules look right.",
-          "correct": false,
-          "why_wrong": "Building before the hidden requirements are known guarantees rework; the edge cases surface late and expensively."
-        },
-        {
-          "text": "Have Claude interview them with AskUserQuestion, write SPEC.md, then implement from it in a fresh session.",
+          "text": "List .env.local in a .worktreeinclude file at the project root so matching gitignored files are copied into new worktrees.",
           "correct": true
         },
         {
-          "text": "Write the full spec alone first and paste it into the same session that will implement it, to save one step.",
+          "text": "Commit .env.local so every worktree checkout contains it, then rely on code review to catch any secrets that slip in.",
           "correct": false,
-          "why_wrong": "This skips Claude's questioning of edge cases, and the spec work still fills the context used to implement."
+          "why_wrong": "This pushes local configuration and possibly secrets into history; .worktreeinclude copies such files without committing them."
         },
         {
-          "text": "Enable plan mode and approve the first plan Claude proposes, since plan mode collects requirements itself.",
+          "text": "Point --worktree at the main checkout path, since worktrees share one working directory and only the branch differs.",
           "correct": false,
-          "why_wrong": "Plan mode explores the code and proposes an approach; it doesn't draw out business rules held only by people."
+          "why_wrong": "Each worktree is a separate checkout on its own branch; reusing the main directory removes the isolation worktrees provide."
+        },
+        {
+          "text": "Add .env.local to .worktreeinclude and remove it from .gitignore, because only tracked files matching the patterns are copied.",
+          "correct": false,
+          "why_wrong": "It is the reverse: only files that match a pattern and are also gitignored are copied, so tracked files are never duplicated."
         }
       ],
-      "explanation": "The interview pattern lets Claude ask about edge cases, failure modes and trade-offs, then write a complete spec. Starting a new session that implements from SPEC.md keeps the long interview out of the implementation context.",
-      "key_takeaway": "Unclear domain: interview first, write the spec to a file, implement in a fresh session.",
+      "explanation": "A worktree is a fresh checkout under .claude/worktrees/<name>/ on its own branch, so untracked files such as .env.local are absent. A .worktreeinclude file uses .gitignore syntax and copies matching gitignored files whenever Claude creates a worktree.",
+      "key_takeaway": "Use .worktreeinclude to carry gitignored local files like .env.local into each new worktree.",
       "doc_links": [
+        {
+          "label": "Claude Code Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        },
         {
           "label": "Claude Code Common Workflows",
           "url": "https://code.claude.com/docs/en/common-workflows"
-        },
-        {
-          "label": "Claude Code Best Practices",
-          "url": "https://code.claude.com/docs/en/best-practices"
         }
       ]
     },
