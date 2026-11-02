@@ -1,0 +1,1193 @@
+{
+  "topic_id": "responsible-ai",
+  "title": "Responsible AI: Guardrails, Safety & Governance",
+  "guide_url": "ResponsibleAI.html",
+  "questions": [
+    {
+      "id": "responsible-ai-q-01",
+      "section": "Trained Alignment vs. App Guardrails",
+      "guide_anchor": "alignment-vs-guardrails",
+      "question": "An enterprise procurement team deploys an invoice triage agent with a system prompt stating: \"Never authorize discounts exceeding  or discuss confidential vendor margins.\" During red-teaming, an attacker submits an inbound vendor note containing hidden instructions that cause the agent to invoke authorize_payment_credit(amount=15000). Why did model alignment and the system prompt fail to prevent this?",
+      "options": [
+        {
+          "text": "Alignment is probabilistic and system prompts share the same attention stream as untrusted data; hard limits must be enforced in Stage 2 code.",
+          "correct": true
+        },
+        {
+          "text": "The foundation model was called without setting temperature to 0.0 and top_p to 0.1, which allows stochastic sampling to ignore top-level system instructions during tool selection.",
+          "correct": false,
+          "why_wrong": "Sampling parameters do not turn soft prompt instructions into cryptographic security boundaries, and non-default sampling parameters return HTTP 400 on newer Claude models."
+        },
+        {
+          "text": "System instructions placed in the top-level system parameter have lower attention priority than the final user message unless repeated inside every assistant prefill turn.",
+          "correct": false,
+          "why_wrong": "Repeating prompt rules or prefilling assistant turns still operates inside the same token stream and cannot deterministically block a hijacked tool argument."
+        },
+        {
+          "text": "Constitutional AI alignment only activates when extended thinking is enabled with a high token budget, leaving standard latency-optimized inference calls unprotected against injection.",
+          "correct": false,
+          "why_wrong": "Trained safety alignment is baked into model weights across all effort levels, but weights do not know organization-specific refund ceilings and remain probabilistic."
+        }
+      ],
+      "explanation": "Model-level safety alignment (RLHF/Constitutional AI) is probabilistic and has zero awareness of internal organization rules like a spending ceiling. Furthermore, because the LLM processes system instructions, user input, and untrusted vendor notes inside the same token attention mechanism, indirect prompt injection can override soft prompt instructions. Organizational policy limits must be enforced deterministically in Stage 2 application code before executing mutating tools.",
+      "key_takeaway": "Trained alignment and system prompts are soft behavioral guidance, never hard security boundaries; enforce financial caps and permissions in deterministic code.",
+      "doc_links": [
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-02",
+      "section": "Trained Alignment vs. App Guardrails",
+      "guide_anchor": "alignment-vs-guardrails",
+      "question": "A multi-tenant B2B analytics assistant queries a shared database on behalf of authenticated corporate users. In the prototype, the user prompt states \"My tenant identifier is acme_corp\", and the model constructs SQL queries filtering by that parameter. What is the critical trust-boundary defect and its correct architectural remediation?",
+      "options": [
+        {
+          "text": "The model may forget the tenant_id over long conversations; move the user's claimed tenant_id into the top-level Tier 1 system prompt on the first turn of every session.",
+          "correct": false,
+          "why_wrong": "Copying an unverified user-supplied claim into the system prompt still trusts the user to state their own identity and allows trivial cross-tenant spoofing."
+        },
+        {
+          "text": "The user turn sits at Tier 3 and can be forged; inject verified tenant_id from the Tier 2 server session into the Stage 2 tool executor directly.",
+          "correct": true
+        },
+        {
+          "text": "The SQL tool accepts raw strings; enable strict: true on the tool schema so the model is guaranteed to format the user-supplied tenant_id as a valid alphanumeric string.",
+          "correct": false,
+          "why_wrong": "Strict schema validation guarantees JSON type conformance, not authorization—an attacker can still supply another customer's valid alphanumeric tenant_id."
+        },
+        {
+          "text": "The agent lacks a post-inference check; add a Stage 3 LLM judge to inspect the final prose answer and verify it only mentions data belonging to the tenant claimed in chat.",
+          "correct": false,
+          "why_wrong": "A post-inference judge still compares the output against the forged chat claim, and the unauthorized database read has already occurred at Stage 2."
+        }
+      ],
+      "explanation": "In the 4-tier Trust Hierarchy, authenticated user input (Tier 3) is untrusted for authorization—a user can simply type 'My tenant_id is competitor_corp' to read another tenant's records. Verified identity and tenant scope belong to Tier 2 (Operator/Server Session Context) and must be injected server-side from the authenticated session token directly into the Stage 2 database query or policy engine, never trusted from conversational text or model-generated tool arguments.",
+      "key_takeaway": "Never let the model determine caller identity or tenant scope from chat claims; bind verified Tier 2 session credentials server-side at tool execution.",
+      "doc_links": [
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-03",
+      "section": "Trained Alignment vs. App Guardrails",
+      "guide_anchor": "alignment-vs-guardrails",
+      "question": "An internal recruiting assistant reads PDF resumes uploaded by external job applicants, summarizes candidate qualifications, and has access to send_slack_message, query_employee_salary_db, and schedule_interview tools. Security flags this architecture as exhibiting the 'Lethal Trifecta.' What is the most effective least-privilege redesign?",
+      "options": [
+        {
+          "text": "Add a system prompt rule forbidding salary queries during resume review, and log all tool calls to an asynchronous SIEM dashboard for weekly review by HR security.",
+          "correct": false,
+          "why_wrong": "Prompt rules are soft guidance easily bypassed by indirect injection inside a resume, and weekly async logs do not prevent real-time data exfiltration."
+        },
+        {
+          "text": "Keep all three tools on the single agent so context stays unified, but require the model to output a reasoning block justifying why each tool call is safe before execution.",
+          "correct": false,
+          "why_wrong": "A prompt-injected model will gladly fabricate a plausible reasoning block justifying why exfiltrating salary data over Slack is helpful to the recruiter."
+        },
+        {
+          "text": "Split the workflow: use a tool-less Reader subagent to extract structured JSON from XML-delimited resumes, and prune query_employee_salary_db from the registry.",
+          "correct": true
+        },
+        {
+          "text": "Run a regex filter over the recruiter's typed chat prompts to block SQL keywords and Slack webhook URLs before forwarding the recruiter's message to the agent.",
+          "correct": false,
+          "why_wrong": "The attacker is the external applicant who crafted the PDF resume (Tier 4 data), not the recruiter typing at the keyboard (Tier 3 input)."
+        }
+      ],
+      "explanation": "The Lethal Trifecta occurs when one agent combines (1) private data access (query_employee_salary_db), (2) untrusted external content ingestion (applicant PDF resumes), and (3) external communication/mutation tools (send_slack_message). Breaking the trifecta requires pruning unneeded tools from the tool registry entirely and isolating untrusted document parsing inside a tool-less Reader subagent that outputs schema-constrained primitives.",
+      "key_takeaway": "Break the Lethal Trifecta by pruning unneeded tools from tools[] and isolating untrusted document ingestion in a tool-less Reader subagent.",
+      "doc_links": [
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-04",
+      "section": "Trained Alignment vs. App Guardrails",
+      "guide_anchor": "alignment-vs-guardrails",
+      "question": "To reduce multi-turn latency across 30 MCP tools, an engineering team adopts programmatic tool calling where the model writes a short TypeScript script to orchestrate multiple tool lookups in a single turn. How must the execution environment be architected to maintain least-privilege security?",
+      "options": [
+        {
+          "text": "Execute the generated script in a local Node.js child process on the application server, passing ANTHROPIC_API_KEY and database URLs via process.env for convenience.",
+          "correct": false,
+          "why_wrong": "Running LLM-generated code on the host with ambient process.env secrets allows a single prompt injection to read and exfiltrate production API keys and database credentials."
+        },
+        {
+          "text": "Ask a secondary LLM judge to review the TypeScript source code for malicious patterns before running it inside the main Python orchestrator container with full network access.",
+          "correct": false,
+          "why_wrong": "Static LLM code review is probabilistic and can miss obfuscated exfiltration; running untrusted code in a container with full network and host access violates least privilege."
+        },
+        {
+          "text": "Restrict the generated script to 50 lines of code and ban the import keyword via a regular expression while running it in the shared web server process.",
+          "correct": false,
+          "why_wrong": "Line-count caps and simple import regexes are trivially bypassed in JavaScript/TypeScript via global objects and dynamic property access if the host process isn't sandboxed."
+        },
+        {
+          "text": "Execute the script inside an ephemeral capability-restricted V8 isolate with zero filesystem, env-var, or raw network access, exposing only typed RPC bindings.",
+          "correct": true
+        }
+      ],
+      "explanation": "When an LLM generates executable code to chain tool calls (CodeMode / programmatic tool calling), that code must never run with ambient host authority. It must run inside an ephemeral, capability-restricted sandbox (such as a V8 isolate or micro-VM) with zero access to the host filesystem, environment variables, or arbitrary network sockets—communicating solely through explicit, pre-authorized RPC tool bindings.",
+      "key_takeaway": "Run LLM-generated orchestration code in a zero-ambient-authority sandbox (e.g., V8 isolate) with only explicit RPC bindings and no env-var or raw network access.",
+      "doc_links": [
+        {
+          "label": "Mitigating Jailbreaks & Prompt Injection",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-05",
+      "section": "Multi-Tier Defense-in-Depth Pipeline",
+      "guide_anchor": "guardrail-matrix",
+      "question": "An insurance claims assistant must never accept raw Social Security Numbers (SSNs) into LLM prompts, must block subtle roleplay jailbreaks, must verify that any cited policy clause ID actually exists in the retrieved context, and must ensure claims summaries contain no ungrounded factual assertions. How should these four controls be mapped across the Defense-in-Depth Guardrail Pipeline?",
+      "options": [
+        {
+          "text": "Stage 1 deterministic regex/tokenization for SSNs; Stage 1 model sentinel for jailbreaks; Stage 3 deterministic lookup for clause IDs; Stage 3 model judge for groundedness.",
+          "correct": true
+        },
+        {
+          "text": "Run all four checks inside a single comprehensive Stage 3 post-inference LLM judge prompt so the architecture only pays for one guardrail model call per turn.",
+          "correct": false,
+          "why_wrong": "By Stage 3, raw SSNs have already been sent to the main LLM API, and using an LLM judge to check exact clause ID existence is slower, costlier, and less reliable than deterministic code."
+        },
+        {
+          "text": "Stage 1 model classifier for SSN redaction and clause ID verification; Stage 2 deterministic SQL filter for jailbreaks; Stage 3 regex scanner for groundedness.",
+          "correct": false,
+          "why_wrong": "This inverts deterministic and semantic strengths: regex/code cannot evaluate semantic groundedness, and LLM classifiers should not replace deterministic SSN regexes or ID lookups."
+        },
+        {
+          "text": "Place all four rules into the Tier 1 system prompt and enable strict JSON output formatting so the main generator self-polices SSNs, jailbreaks, citations, and groundedness.",
+          "correct": false,
+          "why_wrong": "JSON schema formatting only constrains syntax, not truthfulness or injection safety, and system prompt rules cannot redact SSNs that have already entered the context window."
+        }
+      ],
+      "explanation": "The Defense-in-Depth Guardrail Pipeline pairs the right interception stage with the right mechanism: (1) SSN redaction/tokenization is a hard pattern before inference -> Stage 1 Deterministic; (2) subtle roleplay jailbreaks are semantic -> Stage 1 Model-Based Sentinel; (3) verifying that cited doc_ids exist in retrieved chunks is an exact set membership check -> Stage 3 Deterministic; (4) checking whether prose claims are entailed by source passages is semantic -> Stage 3 Model-Based Judge.",
+      "key_takeaway": "Use deterministic code for syntax, PII patterns, permissions, and ID lookups; use model-based classifiers for semantic intent and groundedness at the appropriate stage.",
+      "doc_links": [
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-06",
+      "section": "Multi-Tier Defense-in-Depth Pipeline",
+      "guide_anchor": "guardrail-matrix",
+      "question": "A banking customer-service agent has a Stage 1 prompt-injection sentinel and a Stage 3 output compliance judge. However, during a penetration test, an indirect injection inside a merchant dispute note causes the agent to call update_wire_destination(account='attacker_iban'), and the database is modified before Stage 3 blocks the final response text. What is missing?",
+      "options": [
+        {
+          "text": "A faster Stage 3 output compliance judge running on Haiku so the output text is blocked within 50 milliseconds of tool execution completing.",
+          "correct": false,
+          "why_wrong": "No matter how fast Stage 3 runs after generation, a tool executed during the tool-use loop has already mutated external state before Stage 3 ever begins."
+        },
+        {
+          "text": "A Stage 2 pre-execution tool authorization layer combining deterministic RBAC/allowlist checks, an intent-alignment check, and a high-stakes HITL gate.",
+          "correct": true
+        },
+        {
+          "text": "A retry loop on the Stage 1 input sentinel that scans the user's initial keyboard input three times with different temperatures before calling the main model.",
+          "correct": false,
+          "why_wrong": "The payload entered via a retrieved merchant dispute note (indirect injection), and scanning the user's keyboard prompt repeatedly will not intercept the mid-loop tool call."
+        },
+        {
+          "text": "Setting tool_choice to 'none' globally across the entire application so the banking agent can never invoke any backend tools under any circumstances.",
+          "correct": false,
+          "why_wrong": "Disabling all tools breaks core functional requirements like reading dispute status; the fix is gating side-effecting tool execution at Stage 2."
+        }
+      ],
+      "explanation": "Stage 1 screens initial inputs and Stage 3 validates final responses, but side-effecting tools run inside the agent loop when stop_reason == 'tool_use'. If you execute the tool before intercepting it at Stage 2, the irreversible state mutation has already occurred even if Stage 3 later hides the assistant's text reply. Stage 2 In-Loop Pre-Execution Tool Authorization is mandatory to validate schema, permissions, intent alignment, and HITL requirements before running any mutating tool.",
+      "key_takeaway": "Stage 3 output filters cannot undo a side-effecting tool that already ran; always intercept and authorize tool calls at Stage 2 before execution.",
+      "doc_links": [
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-07",
+      "section": "Multi-Tier Defense-in-Depth Pipeline",
+      "guide_anchor": "guardrail-matrix",
+      "question": "To avoid adding 300 ms to Time-To-First-Token (TTFT), a team runs their Stage 1 model-based injection sentinel asynchronously in parallel with the main streaming LLM call. During a regional spike, the sentinel endpoint throws an HTTP 504 timeout at 1,500 ms. How must the orchestrator handle both the streaming tokens and the timeout?",
+      "options": [
+        {
+          "text": "Stream tokens immediately to the UI for responsiveness, and if the sentinel times out with 504, fail open by letting the turn finish while logging a P2 warning.",
+          "correct": false,
+          "why_wrong": "Streaming unscreened tokens leaks potentially harmful output before the sentinel finishes, and failing open on a timeout lets attackers bypass security during load spikes."
+        },
+        {
+          "text": "Execute read-only and mutating tool calls immediately as content_block_stop events arrive, and only roll back the database transaction if the sentinel explicitly returns is_safe=false.",
+          "correct": false,
+          "why_wrong": "External API calls, emails, and many mutations cannot be rolled back cleanly, and a timeout must also trigger a block rather than only explicit is_safe=false verdicts."
+        },
+        {
+          "text": "Buffer streamed tokens and withhold all tool execution while the sentinel runs; on sentinel timeout or error, fail closed by cancelling generation and discarding buffers.",
+          "correct": true
+        },
+        {
+          "text": "Disable parallel execution permanently and run the sentinel, the main generator, and a second fallback sentinel strictly sequentially with a 30-second timeout on each.",
+          "correct": false,
+          "why_wrong": "Sequential execution with 30-second timeouts destroys interactive latency SLAs; parallel execution with buffered commit and fail-closed timeout preserves both speed and safety."
+        }
+      ],
+      "explanation": "Speculative parallel execution eliminates the TTFT penalty of model-based input guardrails only when paired with strict commit discipline: (1) synchronous deterministic PII redaction runs first (~2 ms), (2) the sentinel and main LLM launch concurrently, (3) streamed tokens are buffered and zero tool calls are executed until the sentinel resolves is_safe == True, and (4) any sentinel timeout, HTTP 5xx, or parse error fails closed by cancelling main generation and discarding buffered output.",
+      "key_takeaway": "Run model guardrails in parallel to save latency, but withhold buffered tokens and tool execution until the sentinel passes—and always fail closed on timeout.",
+      "doc_links": [
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-08",
+      "section": "Multi-Tier Defense-in-Depth Pipeline",
+      "guide_anchor": "guardrail-matrix",
+      "question": "An engineering team is classifying which guardrails in their enterprise knowledge assistant must 'fail closed' versus which may 'fail open' with alerting during a partial dependency outage. Which pairing follows defense-in-depth governance best practices?",
+      "options": [
+        {
+          "text": "Fail open on Stage 1 PII redaction and Stage 2 RBAC policy checks to maintain 99.99% uptime; fail closed on the Stage 3 brand-tone stylistic polisher.",
+          "correct": false,
+          "why_wrong": "This is completely backwards: failing open on PII redaction and RBAC leaks sensitive data and allows unauthorized actions, while blocking answers over an optional style polisher hurts availability."
+        },
+        {
+          "text": "Fail open on all Stage 1, Stage 2, and Stage 3 guardrails whenever p95 latency exceeds 800 ms so user experience is never degraded by security infrastructure.",
+          "correct": false,
+          "why_wrong": "Disabling security gates under high latency allows attackers to launch a trivial denial-of-service burst to force all security controls open."
+        },
+        {
+          "text": "Fail closed on Stage 1 input screening, but fail open on Stage 2 tool authorization since any request that passed Stage 1 is guaranteed to be free of indirect injection.",
+          "correct": false,
+          "why_wrong": "Stage 1 only screens the initial user request; indirect prompt injection frequently enters mid-loop via tool outputs or retrieved RAG chunks, making Stage 2 fail-closed mandatory."
+        },
+        {
+          "text": "Fail closed on Stage 1 PII/injection screening and Stage 2 tool authorization; allow an optional Stage 3 brand-voice phrasing polisher to fail open with a logged alert.",
+          "correct": true
+        }
+      ],
+      "explanation": "Security, privacy (PII redaction), authorization (Stage 2 RBAC/ABAC and spend caps), and regulatory compliance gates must always fail closed: if the verifier crashes or times out, the action is blocked. Conversely, a non-critical cosmetic check—such as an optional internal brand-voice phrasing polisher after groundedness and safety have already cleared—can fail open with telemetry alerting to preserve service availability.",
+      "key_takeaway": "Security, PII, authorization, and compliance gates must always fail closed; only non-critical cosmetic or telemetry steps may fail open.",
+      "doc_links": [
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-09",
+      "section": "Stakes-Based HITL Architecture",
+      "guide_anchor": "stakes-hitl",
+      "question": "An automated procurement agent is configured to execute vendor payments autonomously whenever the LLM outputs a self-assessed confidence score of 0.95 or higher, and to escalate to a human controller only when confidence < 0.95. Why is this HITL routing architecture fundamentally unsafe?",
+      "options": [
+        {
+          "text": "LLMs are poorly calibrated on hallucinations, prompt injection can force confidence: 0.99, and routing ignores the action's irreversibility and financial blast radius.",
+          "correct": true
+        },
+        {
+          "text": "A 0.95 threshold is slightly too low for financial workflows; raising the cutoff to 0.992 in the JSON schema will make confidence-based routing safe for wire transfers.",
+          "correct": false,
+          "why_wrong": "No confidence threshold fixes the flaw: LLMs are poorly calibrated on hallucinations and prompt injections can trivially hardcode confidence: 1.0."
+        },
+        {
+          "text": "Self-assessed confidence scores are only accurate when the model is prompted in a separate turn after the tool has already been executed against the payment gateway.",
+          "correct": false,
+          "why_wrong": "Asking for confidence after the wire transfer has already executed defeats pre-execution governance, and post-hoc self-evaluation remains uncalibrated and injectable."
+        },
+        {
+          "text": "Confidence routing only works when combined with temperature: 0.0, which normalizes the token log-probabilities across different vendor invoice formats.",
+          "correct": false,
+          "why_wrong": "Sampling settings neither calibrate model epistemic uncertainty nor stop an injected invoice from instructing the model to output a high confidence number."
+        }
+      ],
+      "explanation": "Confidence-only HITL routing fails on three fronts: (1) language models frequently express 99%+ confidence when hallucinating or misreading corrupted tables, (2) an indirect prompt injection inside a vendor invoice can explicitly command the model to output {\"confidence\": 0.99}, and (3) confidence completely ignores the Impact and Reversibility Analysis (Two-Way vs. One-Way Doors). High-stakes, irreversible actions like wire transfers require deterministic caps and mandatory pre-execution human approval regardless of model confidence.",
+      "key_takeaway": "Never route high-stakes actions by model confidence alone; route by the Impact and Reversibility Analysis (Two-Way vs. One-Way Doors).",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-10",
+      "section": "Stakes-Based HITL Architecture",
+      "guide_anchor": "stakes-hitl",
+      "question": "An enterprise operations team is designing the Impact and Reversibility Analysis (Two-Way vs. One-Way Doors) for an IT service-desk agent that performs three actions: (1) tagging internal tickets by category, (2) issuing a reversible $20 software credit on a single user account, and (3) decommissioning a production Kubernetes cluster. How should these three actions be routed?",
+      "options": [
+        {
+          "text": "Require synchronous human approval popups for all three actions so the security team can claim 100% human-in-the-loop coverage across every agent tool invocation in production.",
+          "correct": false,
+          "why_wrong": "Forcing humans to approve thousands of benign ticket tags and $20 credits induces severe consent fatigue, causing operators to rubber-stamp the cluster deletion."
+        },
+        {
+          "text": "(1) Low stakes -> autonomous with async log; (2) Medium stakes -> automated policy + judge gates with exception escalation; (3) High stakes -> mandatory pre-exec HITL.",
+          "correct": true
+        },
+        {
+          "text": "Run all three actions autonomously for speed, but send an immediate Slack alert to the on-call engineer after the Kubernetes cluster is decommissioned so they can rebuild it.",
+          "correct": false,
+          "why_wrong": "Decommissioning a production cluster is an irreversible, high-blast-radius (one-way door) action that requires pre-execution prevention, not post-destruction notification."
+        },
+        {
+          "text": "Route (1) and (3) to human review because they touch infrastructure metadata, while allowing (2) to execute with zero deterministic caps since customers like credits.",
+          "correct": false,
+          "why_wrong": "Internal ticket tagging is low-stakes and reversible, whereas uncapped credits can be exploited at scale without Stage 2 deterministic ceilings."
+        }
+      ],
+      "explanation": "Impact and Reversibility Analysis aligns friction with risk: (1) Tagging an internal ticket is fully reversible with tiny blast radius (Low Stakes -> autonomous execution + async audit logging); (2) A bounded $20 credit is reversible with effort and bounded impact (Medium Stakes -> deterministic cap + policy judge, escalating only anomalies); (3) Deleting a production cluster is an irreversible one-way door with massive blast radius (High Stakes -> mandatory pre-execution human approval gate regardless of confidence).",
+      "key_takeaway": "Match governance friction to Reversibility x Blast Radius: autonomous for low stakes, policy+judge gates for medium, mandatory pre-execution HITL for high stakes.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-11",
+      "section": "Stakes-Based HITL Architecture",
+      "guide_anchor": "stakes-hitl",
+      "question": "An audit of a clinical prior-authorization agent reveals that nurse reviewers approve 99.1% of AI-escalated determination drafts in an average of 1.4 seconds per case. Last week, three patients received incorrect denials because two clinical guidelines conflicted, and the nurses clicked 'Approve' without noticing. Which two human-factors failures occurred, and what is the architectural fix?",
+      "options": [
+        {
+          "text": "Model hallucination and token truncation; upgrade the generator to a larger model tier and double max_tokens so the clinical summary is much more detailed and persuasive.",
+          "correct": false,
+          "why_wrong": "A longer, even more persuasive prose summary from a bigger model actually worsens automation bias if the review UI still lacks source snippets and conflict flags."
+        },
+        {
+          "text": "Prompt drift and cache staleness; disable prompt caching on clinical guidelines and require nurses to type a 200-word essay for every routine read-only patient lookup.",
+          "correct": false,
+          "why_wrong": "Prompt caching only hits on byte-identical prefixes and never causes stale data, while adding heavy friction to routine read-only lookups worsens reviewer burnout."
+        },
+        {
+          "text": "Consent fatigue and automation bias; stop escalating low-risk lookups, and redesign the review UI with side-by-side snippets, conflict flags, and active verification.",
+          "correct": true
+        },
+        {
+          "text": "Reviewer negligence and slow network latency; enforce a mandatory 60-second countdown timer on the green 'Approve' button for every single low- and high-stakes ticket.",
+          "correct": false,
+          "why_wrong": "A forced countdown timer without better evidence presentation or volume reduction simply causes reviewers to tab away and click Approve as soon as the timer expires."
+        }
+      ],
+      "explanation": "Approving 99.1% of items in 1.4 seconds is the textbook signature of Consent Fatigue (too many routine, unambiguous cases routed to human queues) combined with Automation Bias (a review UI that presents a polished AI conclusion and a 1-click 'Approve' button without surfacing the underlying evidence or conflicting sources). Fix both by auto-resolving low-risk/read-only steps via Impact and Reversibility Analysis and redesigning the high-stakes UI to display verbatim source snippets, explicit guideline-conflict flags, and active clause selection.",
+      "key_takeaway": "Sub-2-second 99% approval rates signal both consent fatigue and automation bias; cut low-stakes escalations and require active verification over side-by-side evidence.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-12",
+      "section": "Stakes-Based HITL Architecture",
+      "guide_anchor": "stakes-hitl",
+      "question": "A developer uses Claude Code in an enterprise repository and configures permission hooks so that every read-only call (Read, Glob, Grep) triggers an interactive confirmation prompt identical to destructive bash commands (rm -rf, kubectl delete). After an hour of clicking 'Yes' 140 times, the developer accidentally approves a command that drops a staging table. What governance principle was violated?",
+      "options": [
+        {
+          "text": "Prompt altitude was too high; the developer should have written a 20-page if/else state machine inside CLAUDE.md instead of using permission hooks.",
+          "correct": false,
+          "why_wrong": "Prose instructions in CLAUDE.md are soft guidance and cannot replace deterministic permission hooks; the issue is how the hooks were scoped across stakes tiers."
+        },
+        {
+          "text": "Lack of Stage 3 post-inference output validation; an LLM judge should have inspected the terminal stdout after the staging table was dropped to alert the user.",
+          "correct": false,
+          "why_wrong": "Inspecting stdout at Stage 3 after the table has already been dropped is detective, not preventive, and cannot undo an irreversible high-stakes mutation."
+        },
+        {
+          "text": "Insufficient model reasoning effort; setting output_config.effort to 'max' would have prevented the model from ever proposing a database migration command.",
+          "correct": false,
+          "why_wrong": "Higher reasoning effort does not prevent a model from proposing a migration step if it believes the task requires it; pre-execution gating must be stakes-based."
+        },
+        {
+          "text": "Failure to separate read-only low-stakes tools from destructive high-stakes tools, inducing severe consent fatigue that neutralized the human approval gate.",
+          "correct": true
+        }
+      ],
+      "explanation": "Prompting a human operator to approve safe, reversible, read-only operations (Read, Glob, Grep) at the same cadence and visual weight as irreversible destructive commands (rm, DROP TABLE) causes Consent Fatigue (alert fatigue). Operators train their muscle memory to approve every prompt without reading. Low-stakes read-only tools should be auto-allowed within workspace boundaries so human confirmation prompts remain rare, high-signal events reserved for state-mutating or external actions.",
+      "key_takeaway": "Auto-approve bounded read-only tools so human confirmation prompts stay rare and high-signal for destructive or external operations.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-13",
+      "section": "Risk Frameworks & Calibrated Verification",
+      "guide_anchor": "governance-frameworks",
+      "question": "An enterprise security team is cross-walking a multi-agent procurement workflow against NIST AI RMF 1.0 (AI 600-1), OWASP Top 10 for LLM Applications, and Google's Secure AI Framework (SAIF). During review, they find a single orchestrator agent ingests untrusted vendor PDF proposals and holds an unscoped service-account token capable of creating purchase orders up to $500,000 without human approval. How should this flaw be classified and remediated?",
+      "options": [
+        {
+          "text": "Classify as OWASP LLM06 Excessive Agency in NIST MAP; enforce SAIF bounded powers in MANAGE via a tool-less PDF reader, Stage 2 caps, and HITL.",
+          "correct": true
+        },
+        {
+          "text": "Classify as OWASP LLM09 Misinformation during NIST MEASURE, and remediate by lowering sampling temperature while keeping the single unscoped $500,000 service-account token.",
+          "correct": false,
+          "why_wrong": "Granting an untrusted-input agent broad autonomous spending authority is OWASP LLM06 Excessive Agency, and sampling parameters cannot bound permissions."
+        },
+        {
+          "text": "Classify as NIST GOVERN documentation drift, keep the unscoped $500,000 token attached to the PDF reader, and add a bold system prompt warning against unauthorized spend.",
+          "correct": false,
+          "why_wrong": "Soft system-prompt warnings fail against indirect prompt injection inside vendor PDFs; SAIF requires structurally bounded powers and human controllers."
+        },
+        {
+          "text": "Defer all OWASP and SAIF access boundaries until post-incident forensics so autonomous purchase-order creation runs with zero Stage 2 authorization latency overhead.",
+          "correct": false,
+          "why_wrong": "NIST MANAGE and Google SAIF mandate preventive least-privilege boundaries and pre-execution human controller gates before irreversible high-blast-radius actions run."
+        }
+      ],
+      "explanation": "Cross-walking public standards makes the architectural gap unambiguous: during NIST AI RMF MAP (context and threat mapping), giving an untrusted-document reader direct $500,000 mutation rights maps directly to OWASP LLM06 (Excessive Agency) combined with LLM01 (Indirect Prompt Injection). Under NIST MANAGE and Google SAIF's three agent security principles—well-defined human controllers, carefully bounded powers, and observable actions—you split untrusted PDF parsing into a tool-less reader subagent, scope tokens via Principal Access Boundaries/RBAC, enforce Stage 2 spend caps in code, and require Stakes-Matrix HITL approval.",
+      "key_takeaway": "Map OWASP LLM06 Excessive Agency in NIST MAP and remediate in MANAGE using SAIF bounded powers (tool-less readers, Stage 2 caps) and human controllers.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        },
+        {
+          "label": "Google Secure AI Framework (SAIF)",
+          "url": "https://saif.google/"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-14",
+      "section": "Risk Frameworks & Calibrated Verification",
+      "guide_anchor": "governance-frameworks",
+      "question": "An operations team runs an AI pipeline that extracts structured financial terms from commercial leases—ranging from clean digital templates to scanned multi-amendment PDFs—and wants to auto-commit high-confidence extractions. Currently, the prompt asks the LLM to output a float self_confidence (0.0–1.0), and the team plans to skip all human review whenever self_confidence > 0.90. Why is this unsafe, and what verification architecture should replace it?",
+      "options": [
+        {
+          "text": "Verbalized LLM confidence floats are well calibrated across all document layouts, so raising the cutoff from 0.90 to 0.95 eliminates any need for ongoing human audit sampling.",
+          "correct": false,
+          "why_wrong": "Raw verbalized LLM confidence scores are notoriously uncalibrated on unfamiliar layouts and hallucinations; raising an uncalibrated cutoff does not establish true precision."
+        },
+        {
+          "text": "Calibrate thresholds per field and document class on labeled validation sets, and run continuous stratified random sampling of autonomous outputs to catch drift.",
+          "correct": true
+        },
+        {
+          "text": "Sample only the highest-volume standard digital lease template uniformly at random, ignoring low-volume scanned multi-amendment leases to maximize reviewer throughput.",
+          "correct": false,
+          "why_wrong": "Uniform sampling starves low-volume, complex strata (like multi-amendment scans) where extraction errors and distribution drift concentrate."
+        },
+        {
+          "text": "Disable confidence routing completely and instruct the model to silently average conflicting rent figures across lease amendments without recording source timestamps.",
+          "correct": false,
+          "why_wrong": "Silently averaging conflicting legal terms corrupts ground truth; synthesis must record timestamps to distinguish amendments from conflicts and surface genuine discrepancies."
+        }
+      ],
+      "explanation": "Self-reported LLM confidence scores do not equal empirical accuracy—models frequently emit 0.98 confidence on hallucinated clauses in complex scanned PDFs. Under NIST MEASURE and calibrated verification best practices, teams must first calibrate routing thresholds per schema field and per document class against held-out labeled validation sets before reducing human review. Once live, continuous stratified random sampling across every document class and cohort audits high-confidence autonomous traffic to measure real false-accept rates and detect silent template drift.",
+      "key_takeaway": "Never trust raw LLM self-confidence; calibrate thresholds per field/document type on labeled validation sets and audit live autonomous traffic via stratified sampling.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Reducing Hallucinations in Claude",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-15",
+      "section": "Risk Frameworks & Calibrated Verification",
+      "guide_anchor": "governance-frameworks",
+      "question": "Before publishing an AI-synthesized regulatory market report, an automated post-inference pipeline validates its structured claim-to-source mappings. The JSON schema is valid, all tables sum accurately, and every cited doc_id ('Doc-19: 2026 Basel Guidelines') exists in the caller's authorized RAG context with a valid publication timestamp. However, Doc-19 actually discusses liquidity coverage ratios rather than the capital adequacy rules claimed in the prose. Which verification stage catches this defect?",
+      "options": [
+        {
+          "text": "Deterministic JSON schema and document-ID existence validation, because the model failed to format 'Doc-19' as a valid UTF-8 string inside the structured output payload.",
+          "correct": false,
+          "why_wrong": "The JSON schema is valid and Doc-19 genuinely exists in the authorized retrieved context, so deterministic existence checks pass."
+        },
+        {
+          "text": "Cross-field arithmetic invariance testing, because citing an unrelated regulatory passage proves that the numeric columns in the summary table failed to sum to 100%.",
+          "correct": false,
+          "why_wrong": "The scenario states all arithmetic tables sum accurately; the failure is false source attribution, not calculation error."
+        },
+        {
+          "text": "Semantic citation entailment verification, catching citation hallucination where a real authorized doc_id is cited for a claim its span never supports.",
+          "correct": true
+        },
+        {
+          "text": "Stage 1 Pre-Inference PII Vault Tokenization, because the compliance pipeline failed to replace public Basel guideline titles with opaque surrogate vault identifiers.",
+          "correct": false,
+          "why_wrong": "Pre-inference vault tokenization protects sensitive PII before prompting; it does not verify whether retrieved passages semantically support output claims."
+        }
+      ],
+      "explanation": "Dual-stage citation and provenance verification requires two complementary checks on structured claim-to-source mappings (doc_id, verbatim span, publication timestamp): (1) a deterministic check verifying that the doc_id and verbatim excerpt actually exist in the caller's authorized retrieved context, and (2) a semantic entailment check (via groundedness judge or NLI model) verifying that the cited span genuinely supports the synthesized claim. Without Stage 2 semantic entailment, 'citation hallucination'—citing a real document for an unsupported claim—slips past ID-existence checks.",
+      "key_takeaway": "Dual-stage citation verification checks both deterministic source/span existence in authorized context and semantic entailment of the synthesized claim.",
+      "doc_links": [
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        },
+        {
+          "label": "Check Grounding API",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/check-grounding"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-16",
+      "section": "Fairness, Bias Points & Subgroup Audits",
+      "guide_anchor": "fairness-auditing",
+      "question": "A global telecommunications provider deploys an AI ticket-triage system that routes urgent outage reports to senior engineers. On a 10,000-ticket evaluation set, the system achieves 96.4% overall accuracy. After launch, customer churn spikes in non-English-primary regions because tickets written in English-as-a-Second-Language (ESL) phrasing are classified as 'low priority' 31% of the time. What two governance failures allowed this to ship?",
+      "options": [
+        {
+          "text": "Using a bi-encoder embedding model with too few dimensions, combined with setting max_tokens too low on the triage classification call across all regional queues.",
+          "correct": false,
+          "why_wrong": "Neither embedding dimensionality nor output max_tokens explains why a classifier systematically downgrades ESL phrasing while scoring 96.4% overall."
+        },
+        {
+          "text": "Failing to enable Zero Data Retention (ZDR) on the triage endpoint, which caused the model to memorize majority-cohort tickets from previous customer support sessions.",
+          "correct": false,
+          "why_wrong": "ZDR governs server-side log retention for privacy compliance; commercial API calls are stateless and do not train on or memorize prior sessions."
+        },
+        {
+          "text": "Running the Stage 1 prompt-injection sentinel in fail-closed mode, which mistook regional idioms for adversarial SQL injection payloads and dropped the database connection.",
+          "correct": false,
+          "why_wrong": "The tickets were not blocked by a fail-closed security sentinel—they were graded as 'low priority' by the urgency classifier rubric."
+        },
+        {
+          "text": "Relying on aggregate headline accuracy instead of subgroup disaggregation, plus Injection Point 3 (Rubric Framing) penalizing ESL syntax.",
+          "correct": true
+        }
+      ],
+      "explanation": "First, a 96.4% blended accuracy score across a majority-dominated test set masks severe disparate error rates on a 10% linguistic minority cohort (the Aggregate Metric Illusion). Second, the root cause in the pipeline is Bias Injection Point 3 (Prompt & Rubric Framing): few-shot examples and classification rubrics implicitly associated formal corporate English with urgency, penalizing ESL syntax. Fixing it requires disaggregated subgroup evaluation gates and rubric instructions that score substantive technical impact regardless of grammar or dialect.",
+      "key_takeaway": "Never ship on blended headline accuracy alone; disaggregate metrics by linguistic/demographic subgroup and audit rubrics for phrasing bias.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-17",
+      "section": "Fairness, Bias Points & Subgroup Audits",
+      "guide_anchor": "fairness-auditing",
+      "question": "A multinational bank builds an HR policy RAG assistant for employees in 14 countries. Although every country's handbook was indexed, employees in smaller APAC offices report that the assistant repeatedly answers benefits questions using US 401(k) and FMLA rules. Inspection shows US documents make up 88% of the chunk store. Which pipeline bias injection point is this, and what is the primary fix?",
+      "options": [
+        {
+          "text": "Injection Point 2 (Retrieval & Context Selection); apply metadata pre-filtering on employee jurisdiction/country before top-K vector search and audit corpus balance.",
+          "correct": true
+        },
+        {
+          "text": "Injection Point 1 (Pre-Training Priors); fine-tune the foundation model weights for 10 epochs on the APAC handbooks so the model permanently forgets US labor law.",
+          "correct": false,
+          "why_wrong": "Fine-tuning cannot reliably erase pre-training knowledge or fix retrieval starvation, and it fails whenever HR policies update."
+        },
+        {
+          "text": "Injection Point 4 (Downstream Thresholds); lower the Stage 3 groundedness judge threshold from 0.85 to 0.40 for APAC employees so their answers aren't blocked.",
+          "correct": false,
+          "why_wrong": "Lowering the groundedness threshold allows ungrounded hallucinations through; the model is faithfully summarizing the wrong (US) chunks returned by retrieval."
+        },
+        {
+          "text": "Injection Point 3 (Rubric Framing); translate all APAC employee queries into British English before running unconstrained global top-K vector similarity search.",
+          "correct": false,
+          "why_wrong": "Rewriting dialect does not stop an un-filtered global vector index dominated 88% by US chunks from returning US policy passages in top-K."
+        }
+      ],
+      "explanation": "This is Bias Injection Point 2 (Retrieval & Context Selection): when one demographic or regional cohort dominates 88% of the vector index, unconstrained global top-K similarity search crowds out minority-jurisdiction documents. The fix is enforcing deterministic metadata pre-filtering (e.g., filtering chunks by the employee's verified Tier 2 country/jurisdiction attribute before vector ranking) and auditing corpus completeness per region.",
+      "key_takeaway": "When majority documents dominate a RAG corpus (Injection Point 2), apply metadata pre-filtering by cohort/jurisdiction before top-K vector search.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-18",
+      "section": "Fairness, Bias Points & Subgroup Audits",
+      "guide_anchor": "fairness-auditing",
+      "question": "An ML evaluation lead wants to prove experimentally whether an insurance claim-summarization prompt exhibits demographic or dialect bias before production deployment. What evaluation methodology directly isolates and measures this risk?",
+      "options": [
+        {
+          "text": "Run the existing golden dataset three times at default temperature and verify that the global mean BLEU and ROUGE-L scores exceed 0.75 across all evaluation runs.",
+          "correct": false,
+          "why_wrong": "Global n-gram overlap scores (BLEU/ROUGE) neither isolate demographic sensitivity nor detect subgroup disparities in decision recommendations."
+        },
+        {
+          "text": "Run a counterfactual perturbation suite holding claim facts constant while swapping demographic proxies or dialect to verify output invariance.",
+          "correct": true
+        },
+        {
+          "text": "Ask the same foundation model in the same conversation thread: 'Did your previous claim summary exhibit any demographic bias? Answer strictly yes or no.'",
+          "correct": false,
+          "why_wrong": "In-thread self-evaluation suffers from severe self-confirmation bias; a model will almost always declare its own just-generated summary unbiased."
+        },
+        {
+          "text": "Increase the context window size to 200,000 tokens and prepend the company's Equal Opportunity Policy PDF to every single inference request in production.",
+          "correct": false,
+          "why_wrong": "Prepending a policy PDF is an untested prompt change, not an evaluation methodology, and wastes massive input tokens without measuring disparate impact."
+        }
+      ],
+      "explanation": "Counterfactual perturbation testing is the gold-standard experimental method for isolating prompt and model sensitivity to protected attributes. By taking real claim scenarios and generating paired variants where every decision-relevant fact (damage amount, policy coverage, incident timeline) is identical and only demographic proxies (applicant name, honorific, zip code, or AAVE/ESL phrasing) vary, you can directly measure whether recommended payouts, urgency scores, or refusal rates shift.",
+      "key_takeaway": "Use counterfactual perturbation suites—holding task facts constant while varying demographic proxies or dialect—to test output invariance.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-19",
+      "section": "Fairness, Bias Points & Subgroup Audits",
+      "guide_anchor": "fairness-auditing",
+      "question": "A credit-underwriting workflow uses an LLM to extract cash-flow stability signals from applicant bank statements, converts those signals into a numeric score, and automatically declines any applicant with score < 0.65. Audits show the LLM extracts signals accurately across all groups, but self-employed and gig-economy workers have higher monthly income variance, causing a 3x higher automatic rejection rate under the uniform 0.65 cutoff. Where did bias enter?",
+      "options": [
+        {
+          "text": "Injection Point 1 (Pre-Training Priors), because the foundation model weights were trained on biased historical internet text that penalizes gig-economy workers.",
+          "correct": false,
+          "why_wrong": "The audit confirmed the LLM extracted the cash-flow signals accurately across all groups; the disparity arises from the downstream numeric cutoff rule."
+        },
+        {
+          "text": "Injection Point 2 (Retrieval & Context Selection), because bank statement PDFs for self-employed applicants have more pages than standard salaried W-2 statements.",
+          "correct": false,
+          "why_wrong": "Signal extraction succeeded accurately; the failure occurs after extraction when a rigid W-2-calibrated variance threshold is applied uniformly."
+        },
+        {
+          "text": "Injection Point 4 (Downstream Decision Thresholds), where a uniform cutoff is applied across cohorts with different base-rate distributions.",
+          "correct": true
+        },
+        {
+          "text": "Stage 1 Input Screening, because the deterministic PII redactor stripped the applicant's employer name before passing the bank statement to the extractor.",
+          "correct": false,
+          "why_wrong": "Redacting employer names is a fairness control, not the cause of an uncalibrated downstream monthly-variance threshold."
+        }
+      ],
+      "explanation": "Even when upstream extraction (Points 1-3) is accurate and unbiased, Bias Injection Point 4 (Downstream Decision Thresholds & Post-Processing) occurs when an application applies a single uniform numeric cutoff (calibrated on majority salaried W-2 earners) to cohorts with legitimately different base-rate distributions (such as seasonal or self-employed earners). Remediation requires cohort-aware threshold calibration (e.g., evaluating 12-month trailing cash flow) and routing borderline cases to human underwriting rather than automatic adverse action.",
+      "key_takeaway": "Fair extraction can still produce disparate impact at Injection Point 4 if a uniform downstream cutoff ignores structural base-rate differences across cohorts.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-20",
+      "section": "Multi-Audience Transparency",
+      "guide_anchor": "transparency-audiences",
+      "question": "A wealth-management firm is designing the transparency and explainability architecture for a portfolio-rebalancing assistant. They must serve three audiences: (1) retail investors using the mobile app, (2) licensed financial advisors reviewing flagged recommendations, and (3) SEC/internal risk auditors. Which artifact mapping is appropriate?",
+      "options": [
+        {
+          "text": "Show raw JSON tool traces and prompt hashes to retail investors; show a 1-line AI disclaimer to advisors; show raw model thinking blocks as the sole record for SEC auditors.",
+          "correct": false,
+          "why_wrong": "This mismatches every audience: consumers can't read raw JSON hashes, advisors get automation bias from a 1-line disclaimer, and thinking blocks are not deterministic audit logs."
+        },
+        {
+          "text": "Hide AI involvement from retail investors to build trust; give advisors a single green 'Approve' button for speed; give auditors the moving model alias 'claude-sonnet-latest'.",
+          "correct": false,
+          "why_wrong": "Concealing AI use violates upfront customer disclosure rules, a bare 'Approve' button induces automation bias, and moving model aliases destroy audit reproducibility."
+        },
+        {
+          "text": "Stream the model's unedited adaptive thinking tokens live to all three audiences so everyone sees the exact same chain-of-thought reasoning in real time on every device.",
+          "correct": false,
+          "why_wrong": "Streaming raw thinking tokens to end users confuses them and leaks system prompt heuristics, while failing to give auditors pinned versions, tool I/O, and guardrail verdicts."
+        },
+        {
+          "text": "Investors: AI notice, plain factors & escalation; Advisors: inline citations, snippets, conflict flags & diffs; Auditors: immutable trace_id logs & Control Register.",
+          "correct": true
+        }
+      ],
+      "explanation": "Multi-audience transparency tailors explainability to what each stakeholder needs to act safely: (1) End Users/Customers need clear AI disclosure, plain-language capability limits, verifiable source links, and an easy human escalation path; (2) Operators/Reviewers need inline passage citations, side-by-side source snippets, uncertainty/conflict flags, and structured field diffs to defeat automation bias; (3) Auditors/Regulators need immutable execution logs keyed by trace_id (pinned model ID, prompt hash, chunk IDs, tool I/O, guardrail verdicts, approver_id), subgroup eval reports, and the AI Risk and Control Matrix.",
+      "key_takeaway": "Tailor transparency to the 3 audiences: plain disclosure & escalation for users, snippets/diffs/conflict flags for reviewers, and immutable trace logs for auditors.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-21",
+      "section": "Multi-Audience Transparency",
+      "guide_anchor": "transparency-audiences",
+      "question": "To satisfy a regulatory requirement for 'explainable AI decisions,' a developer proposes streaming the model's raw thinking blocks directly into the customer-facing web portal and storing only the thinking text in the compliance database instead of logging retrieved chunk IDs or Stage 2 policy rules. Why should the lead architect reject this design?",
+      "options": [
+        {
+          "text": "Raw thinking tokens are probabilistic intermediate heuristics—not a deterministic record of policy compliance—and exposing them to users can leak system prompt logic.",
+          "correct": true
+        },
+        {
+          "text": "Thinking blocks are encrypted with the customer's browser public key and cannot be decoded by server-side compliance databases without a hardware security module.",
+          "correct": false,
+          "why_wrong": "Thinking blocks contain plaintext reasoning plus a cryptographic signature for API round-trip integrity; they are not browser-encrypted."
+        },
+        {
+          "text": "Enabling adaptive thinking automatically disables all Stage 1 and Stage 2 deterministic guardrails on the Messages API endpoint across all cloud platforms.",
+          "correct": false,
+          "why_wrong": "Application-layer Stage 1 and Stage 2 guardrails run in your own orchestrator code and are completely independent of adaptive thinking."
+        },
+        {
+          "text": "Thinking blocks are only generated when stop_reason equals 'refusal', so approved customer decisions never contain any thinking content in the API response.",
+          "correct": false,
+          "why_wrong": "When adaptive or extended thinking is enabled, thinking blocks are emitted on normal turns (end_turn and tool_use), not just refusals."
+        }
+      ],
+      "explanation": "Chain-of-thought (thinking blocks) represents the model's intermediate exploration, which may include discarded hypotheses, internal system-prompt phrasing, or unverified leaps—it is neither a faithful causal explanation of the final output nor a substitute for deterministic audit evidence. Exposing raw thinking to external users risks leaking system prompt defenses, while auditors require immutable records of the exact pinned model ID, retrieved source chunk IDs, tool inputs/outputs, deterministic guardrail verdicts, and human approver IDs.",
+      "key_takeaway": "Never treat raw thinking blocks as a customer explanation or regulatory audit log; ground explainability in cited sources, rule triggers, and immutable trace logs.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-22",
+      "section": "Multi-Audience Transparency",
+      "guide_anchor": "transparency-audiences",
+      "question": "Six months after an AI underwriting assistant approves a commercial policy, an external insurance regulator asks the company to reconstruct the exact state of the decision. Which set of fields in the immutable execution log is required to satisfy Audience 3 (Auditor/Regulator) traceability?",
+      "options": [
+        {
+          "text": "Only the final assistant prose response, the customer's email address, and the model family alias 'claude-sonnet' recorded in the application's standard stdout log.",
+          "correct": false,
+          "why_wrong": "A moving family alias, mutable stdout logs, and missing prompt/chunk/tool/approver records make it impossible to reconstruct what evidence or model snapshot produced the decision."
+        },
+        {
+          "text": "trace_id, timestamp, pinned model ID, prompt hash, retrieved chunk IDs + versions, tool I/O, Stage 1-3 guardrail verdicts, and human approver_id.",
+          "correct": true
+        },
+        {
+          "text": "A full copy of the foundation model's multi-gigabyte neural network weight matrices saved to cold object storage alongside every single API call in production.",
+          "correct": false,
+          "why_wrong": "Commercial API customers do not download proprietary frontier model weights; recording the immutable pinned model snapshot ID (e.g., claude-sonnet-4-6) identifies the exact model."
+        },
+        {
+          "text": "The average monthly accuracy score of the underwriting assistant across all policies and a link to the vendor's public marketing documentation homepage.",
+          "correct": false,
+          "why_wrong": "Aggregate monthly dashboards and marketing pages cannot reconstruct the specific inputs, context chunks, guardrail checks, or human sign-off of an individual historical decision."
+        }
+      ],
+      "explanation": "To reconstruct a historical AI-assisted decision for internal risk, legal, or regulatory auditors (Audience 3), the system must write an append-only, immutable execution record keyed by a correlation trace_id. That record must capture: timestamp, exact pinned model ID, system prompt version/hash, retrieved document chunk IDs and version timestamps, all tool call inputs and outputs, Stage 1-3 guardrail verdicts, and the authenticated approver_id of any human reviewer.",
+      "key_takeaway": "Audit logs must capture trace_id, pinned model ID, prompt hash, retrieved chunk versions, tool I/O, guardrail verdicts, and human approver_id.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Claude Citations API",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/citations"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-23",
+      "section": "Data Boundaries, ZDR & Compliance",
+      "guide_anchor": "privacy-compliance",
+      "question": "A healthcare startup's CTO states: 'Because standard commercial API terms guarantee the provider never trains models on commercial API traffic, we already have Zero Data Retention (ZDR) and can send Protected Health Information (PHI) without signing a separate ZDR addendum or HIPAA BAA.' Why is this incorrect?",
+      "options": [
+        {
+          "text": "Standard commercial APIs train on all customer prompts every night unless the request header explicitly includes temperature: 0 and stream: false on every call.",
+          "correct": false,
+          "why_wrong": "Commercial API terms genuinely exclude customer data from training by default regardless of request parameters; the distinction is temporary trust-and-safety log retention."
+        },
+        {
+          "text": "Zero Data Retention (ZDR) is a client-side browser setting that clears cookies, whereas HIPAA only applies to on-premises models running inside hospital servers.",
+          "correct": false,
+          "why_wrong": "ZDR is a binding server-side infrastructure and contractual posture eliminating vendor disk persistence, and HIPAA applies to cloud business associates via a BAA."
+        },
+        {
+          "text": "'No training' only excludes data from weight updates; standard commercial APIs still retain safety logs temporarily (7-30 days) unless ZDR is active.",
+          "correct": true
+        },
+        {
+          "text": "Sending PHI over HTTPS automatically activates Zero Data Retention and a binding HIPAA BAA on any public commercial API key without prior contract negotiation.",
+          "correct": false,
+          "why_wrong": "TLS encrypts data in transit, but ZDR and a HIPAA Business Associate Agreement (BAA) require explicit enterprise contractual provisioning and workspace configuration."
+        }
+      ],
+      "explanation": "Conflating 'No Training' with 'Zero Data Retention (ZDR)' is a major compliance trap. Under standard commercial terms, API prompts and completions are never used to train foundation models, but they are retained temporarily on provider servers (typically 7 to 30 days) for automated trust-and-safety classifiers and abuse debugging. Under an active ZDR agreement (a prerequisite for HIPAA BAA workloads), payloads are processed strictly in volatile memory and discarded immediately after the HTTP response completes.",
+      "key_takeaway": "'No training on API data' is NOT Zero Data Retention; standard APIs retain short-term safety logs unless a ZDR agreement is provisioned.",
+      "doc_links": [
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        },
+        {
+          "label": "Agent Platform Data Residency",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/data-residency"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-24",
+      "section": "Data Boundaries, ZDR & Compliance",
+      "guide_anchor": "privacy-compliance",
+      "question": "A hospital system has signed a HIPAA Business Associate Agreement (BAA) and a Zero Data Retention (ZDR) addendum with their model provider. A developer builds a discharge-summary pipeline that uploads patient charts to the persistent Files API (/v1/files) and runs multi-day sessions on hosted Managed Agents server-side stores. What is the compliance flaw?",
+      "options": [
+        {
+          "text": "The Files API only accepts plain-text CSV files, so uploading PDF patient charts corrupts the hospital's HIPAA customer-managed encryption keys in transit.",
+          "correct": false,
+          "why_wrong": "The Files API supports PDFs and images; the issue is that persistent server-side file storage falls outside stateless ZDR/BAA boundaries."
+        },
+        {
+          "text": "HIPAA BAA agreements strictly prohibit the use of JSON structured outputs, streaming events, and tool use on the stateless POST /v1/messages endpoint.",
+          "correct": false,
+          "why_wrong": "Stateless tool use and structured outputs on POST /v1/messages operate in memory and are fully compatible with ZDR/BAA scope."
+        },
+        {
+          "text": "There is no compliance flaw because once an enterprise signs a BAA, every current and future beta header and stateful storage endpoint is automatically covered.",
+          "correct": false,
+          "why_wrong": "BAA and ZDR schedules explicitly enumerate covered stateless endpoints; features designed to persist state on provider disks are excluded unless specifically added."
+        },
+        {
+          "text": "ZDR and HIPAA BAA eligibility are scoped per feature; stateless POST /v1/messages is covered, whereas stateful storage (/v1/files, hosted sessions) is excluded.",
+          "correct": true
+        }
+      ],
+      "explanation": "Compliance coverage (ZDR and HIPAA BAA) is always scoped per API feature and endpoint, never blanket across an entire platform. Stateless inference endpoints (like POST /v1/messages) process data in memory and discard it immediately, qualifying for ZDR/BAA. Conversely, stateful convenience features whose entire purpose is storing data on vendor servers—such as the persistent Files API (/v1/files), hosted Managed Agents session stores, and many beta endpoints—fall outside ZDR scope. Regulated pipelines must block excluded stateful endpoints at the API gateway and keep state in their own HIPAA-compliant cloud storage.",
+      "key_takeaway": "ZDR and HIPAA BAA apply per feature: use stateless POST /v1/messages and block stateful server-side storage (/v1/files, hosted sessions) at your gateway.",
+      "doc_links": [
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        },
+        {
+          "label": "Agent Platform Data Residency",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/data-residency"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-25",
+      "section": "Data Boundaries, ZDR & Compliance",
+      "guide_anchor": "privacy-compliance",
+      "question": "A German public-sector agency has a strict legal mandate that all AI inference processing on citizen records must physically execute inside European Union data centers. An engineer proposes using the first-party Claude API with inference_geo: 'eu' and encrypting the database at rest in Frankfurt. Why will this fail, and what is the correct architecture?",
+      "options": [
+        {
+          "text": "First-party inference_geo only supports 'global' or 'us' (no 'eu' value); deploy on Amazon Bedrock EU or Google Cloud Vertex AI eu regional endpoints.",
+          "correct": true
+        },
+        {
+          "text": "The parameter must be spelled data_residency: 'europe-west' in the top-level system prompt rather than passed as an HTTP request body parameter.",
+          "correct": false,
+          "why_wrong": "Instructions inside a system prompt cannot route HTTP traffic to specific physical data centers, and no such prompt directive exists."
+        },
+        {
+          "text": "First-party inference_geo: 'eu' is only supported when using the asynchronous Message Batches API with a 24-hour completion window and custom_id keys.",
+          "correct": false,
+          "why_wrong": "The first-party API does not offer an 'eu' value on inference_geo for either synchronous or batch requests."
+        },
+        {
+          "text": "Setting inference_geo: 'us' combined with TLS 1.3 and client-side gzip compression satisfies EU physical inference compute residency under GDPR.",
+          "correct": false,
+          "why_wrong": "TLS encrypts data in transit, but inference_geo: 'us' explicitly routes compute to United States data centers, violating an EU-only compute mandate."
+        }
+      ],
+      "explanation": "On the first-party Claude API, the inference_geo parameter (available on Claude 4.6+) only accepts 'global' (default) or 'us' (at a 1.1x multiplier)—there is no EU-only value. Furthermore, encrypting data at rest in Frankfurt does not change where inference compute executes when payloads are sent over the wire. To satisfy a hard EU inference residency requirement, you must deploy on a cloud partner platform that provides EU regional endpoints or EU geographic inference profiles—such as Amazon Bedrock (eu. profiles / Frankfurt / Dublin) or Google Cloud Vertex AI (eu multi-region).",
+      "key_takeaway": "First-party inference_geo has only 'global' and 'us'; use Amazon Bedrock EU or Google Cloud Vertex AI eu regional endpoints for binding EU residency.",
+      "doc_links": [
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        },
+        {
+          "label": "Agent Platform Data Residency",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/data-residency"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-26",
+      "section": "Data Boundaries, ZDR & Compliance",
+      "guide_anchor": "privacy-compliance",
+      "question": "A payment-processing agent needs to look up transaction disputes and trigger chargeback workflows using a customer's 16-digit Primary Account Number (PAN) and Social Security Number. The LLM needs to orchestrate which tools to call, but never needs to perform arithmetic on the raw digits. What is the strongest privacy-preserving pattern?",
+      "options": [
+        {
+          "text": "Send the raw 16-digit PAN and SSN in the prompt, and instruct the model in the system prompt to replace the middle digits with asterisks in its final text response.",
+          "correct": false,
+          "why_wrong": "Masking only in the final output still exposes the raw PAN and SSN to the external LLM context window and any intermediate logs."
+        },
+        {
+          "text": "Tokenize PAN and SSN at Stage 1 into vault tokens ([PAN_TOK_41]) pre-inference, and detokenize inside your VPC at Stage 2 when calling the backend API.",
+          "correct": true
+        },
+        {
+          "text": "Base64-encode the PAN and SSN before inserting them into the user message so the foundation model cannot recognize them as sensitive financial numbers.",
+          "correct": false,
+          "why_wrong": "Base64 is a trivial reversible encoding, not encryption or tokenization—LLMs decode Base64 natively, and the raw sensitive payload still leaves your boundary."
+        },
+        {
+          "text": "Store all customer PANs and SSNs inside a shared cross-tenant semantic cache so the LLM only needs to process each raw card number once per week.",
+          "correct": false,
+          "why_wrong": "Caching raw PANs and SSNs in a shared cross-tenant semantic cache creates a massive PCI/privacy breach vector across customers."
+        }
+      ],
+      "explanation": "Under the Pre-Inference PII Tokenization (Vault) pattern, Stage 1 deterministic middleware intercepts sensitive identifiers (PANs, SSNs, MRNs) before the prompt ever leaves your VPC, stores the mapping in an internal vault, and substitutes opaque tokens like [PAN_TOK_41]. The LLM reasons over the workflow and passes [PAN_TOK_41] into its tool_use arguments; your Stage 2 tool proxy then detokenizes [PAN_TOK_41] back into the real PAN strictly inside your secure network boundary when calling the payment gateway.",
+      "key_takeaway": "Use Stage 1 vault tokenization ([PAN_TOK_41]) so raw sensitive identifiers never enter the LLM context window, detokenizing only inside your Stage 2 VPC proxy.",
+      "doc_links": [
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        },
+        {
+          "label": "Agent Platform Data Residency",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/data-residency"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-27",
+      "section": "Gateways, Reversibility, ADRs & Controls",
+      "guide_anchor": "governance-lifecycle",
+      "question": "Before selecting a cloud platform or model for a European insurance claims agent, an architecture board runs pre-design governance intake. A pilot prototype processed clean 1-page claims in a single turn at $0.004 median cost on a global US-routed endpoint. However, production rules forbid processing EU claimant data outside Frankfurt or Dublin, cap autonomous payouts at €250, and include 40-page disputed claims that trigger multi-turn retries and parallel guardrails. How must the architect apply these pre-design gateways?",
+      "options": [
+        {
+          "text": "Extrapolate the annual production budget directly from the $0.004 single-turn median pilot cost, and postpone EU residency enforcement until after global v1.0 launch.",
+          "correct": false,
+          "why_wrong": "Sizing budgets on median single-turn pilot runs ignores heavy-tail p95 retry and guardrail overhead, and sovereign data residency is a day-one pass/fail blocker."
+        },
+        {
+          "text": "Encrypt claimant payloads with client-side TLS on the global US-routed endpoint to satisfy Frankfurt residency, and enforce the €250 payout ceiling via prompt text.",
+          "correct": false,
+          "why_wrong": "Transport encryption does not change the physical jurisdiction where GPU inference executes, and soft prompt ceilings can be bypassed via indirect injection."
+        },
+        {
+          "text": "Eliminate non-EU endpoints upfront as hard disqualifiers, enforce the €250 cap in Stage 2 code, and size FinOps/SLAs on p95 multi-turn + guardrail load.",
+          "correct": true
+        },
+        {
+          "text": "Route 100% of routine €15 claims and read-only policy lookups through synchronous human approval queues so unit token budgets never exceed single-turn pilot estimates.",
+          "correct": false,
+          "why_wrong": "Prompting humans on every routine low-stakes lookup induces severe operator consent fatigue while multiplying operational labor cost."
+        }
+      ],
+      "explanation": "Pre-design governance gateways prevent costly rewrites after vendor lock-in: (1) Hard Safety & Sovereign Disqualifiers immediately eliminate non-EU endpoints before platform selection and dictate Stage 2 deterministic code caps (€250 ceiling); (2) Tail-Latency & Token FinOps Envelopes must be sized on p95 heavy-tail context lengths, multi-turn retries, and parallel guardrail calls—never on single-turn median pilot runs; and (3) Empirical Launch Acceptance Gates block production cutover until subgroup error floors and red-team suites pass.",
+      "key_takeaway": "Treat sovereign residency and safety caps as hard upfront disqualifiers, and size FinOps and latency envelopes on p95 multi-turn + guardrail load.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-28",
+      "section": "Gateways, Reversibility, ADRs & Controls",
+      "guide_anchor": "governance-lifecycle",
+      "question": "An enterprise platform team is evaluating two ways to deploy a regulated multi-region RAG assistant: Design X routes stateless POST /v1/messages calls through an internal provider-agnostic LLM gateway while keeping documents and session state in the company's own PostgreSQL/pgvector cluster; Design Y embeds application logic directly inside a single vendor's proprietary hosted agent session store and persistent server-side vector file API. In an Architecture Decision Record (ADR), how should the architect classify the reversibility tradeoff?",
+      "options": [
+        {
+          "text": "Both Design X and Design Y are identical zero-cost two-way doors because migrating proprietary server-side agent session stores requires changing only one HTTP header.",
+          "correct": false,
+          "why_wrong": "Proprietary hosted agent session stores and server-side file indexes create deep schema, state, and compliance coupling that requires major re-architecture to migrate."
+        },
+        {
+          "text": "Design Y is a lower-risk two-way door because coupling state to proprietary hosted sessions eliminates the need to verify per-feature HIPAA BAA or ZDR eligibility.",
+          "correct": false,
+          "why_wrong": "Stateful hosted sessions and persistent file APIs are frequently excluded from ZDR and HIPAA BAA scope, increasing compliance risk alongside vendor lock-in."
+        },
+        {
+          "text": "Door reversibility and migration lock-in belong exclusively in vendor procurement spreadsheets and should never be analyzed inside an engineering ADR.",
+          "correct": false,
+          "why_wrong": "Evaluating one-way vs. two-way door reversibility, operational overhead, and residual compliance risk is a core requirement of an audit-ready enterprise AI ADR."
+        },
+        {
+          "text": "Design X is a low-lock-in two-way door enabling config-level endpoint swaps, whereas Design Y is a high-migration-cost one-way door with ZDR/state lock-in.",
+          "correct": true
+        }
+      ],
+      "explanation": "Audit-ready Architecture Decision Records (ADRs) explicitly evaluate capability/compliance benefit, operational overhead, one-way vs. two-way door reversibility, and residual risk. Abstracting stateless inference behind an internal LLM gateway while owning session state and vector storage in your VPC (Design X) preserves a two-way door—allowing config-level routing shifts across regional cloud endpoints or model snapshots. Tightly coupling state to proprietary hosted agent stores and persistent file APIs (Design Y) creates a costly one-way door and often violates strict ZDR/BAA per-feature boundaries.",
+      "key_takeaway": "Abstracting stateless calls behind an internal gateway while owning state is a two-way door; coupling to proprietary hosted state stores is a one-way door.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Claude API & Data Retention (ZDR)",
+          "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-29",
+      "section": "Gateways, Reversibility, ADRs & Controls",
+      "guide_anchor": "governance-lifecycle",
+      "question": "Eight months after launch, a newly hired product manager notices that a Stage 2 intent-alignment classifier adds 90 ms to tool calls and proposes removing it to speed up the app, unaware that removing it caused a 6% indirect-injection exploit rate during pre-launch red-teaming. Which section of the Architecture Decision Record (ADR) was designed specifically to prevent this failure?",
+      "options": [
+        {
+          "text": "The alphabetical glossary of general machine learning acronyms located at the bottom of the repository's public README file.",
+          "correct": false,
+          "why_wrong": "A general acronym glossary does not explain why a specific security control was chosen over faster alternatives in this system."
+        },
+        {
+          "text": "The front-end CSS stylesheet variables defining the dark-mode color palette and font family of the customer chat widget.",
+          "correct": false,
+          "why_wrong": "UI styling files have nothing to do with documenting security architecture decisions."
+        },
+        {
+          "text": "Explicitly Rejected Alternatives & Why They Were Ruled Out (recording the 6% red-team failure rate without Stage 2).",
+          "correct": true
+        },
+        {
+          "text": "Recording only the chosen architecture in the ADR while deleting all notes on rejected options so the document stays under half a page.",
+          "correct": false,
+          "why_wrong": "Omitting rejected alternatives is the exact anti-pattern that caused the new PM to propose re-introducing a previously disproven, unsafe design."
+        }
+      ],
+      "explanation": "An Architecture Decision Record (ADR) that only documents the selected design fails its primary governance purpose over time. Recording 'Explicitly Rejected Alternatives & Why They Were Ruled Out'—backed by empirical evidence like the 6% red-team exploit rate when relying on prompt-only or Stage-1-only defenses—prevents future engineers and PMs from 'optimizing' away load-bearing safety controls.",
+      "key_takeaway": "An ADR is incomplete without Explicitly Rejected Alternatives and the empirical reasons they were ruled out.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-q-30",
+      "section": "Gateways, Reversibility, ADRs & Controls",
+      "guide_anchor": "governance-lifecycle",
+      "question": "During a pre-launch governance review for a regulated financial assistant, the project team presents a slide deck listing ten safety policies (e.g., 'We will block prompt injections and prevent PII leaks'). Internal Audit rejects the slide deck and demands an AI Risk and Control Matrix. What must be added to turn policy statements into an audit-ready AI Risk and Control Matrix?",
+      "options": [
+        {
+          "text": "Convert the slide deck into a 40-page Word document signed by the marketing department with aspirational mission statements about ethical AI.",
+          "correct": false,
+          "why_wrong": "Longer prose mission statements without technical controls, owners, and empirical test evidence still fail a risk and compliance audit."
+        },
+        {
+          "text": "Paste the entire 40-page slide deck text into the LLM's top-level system prompt so the model is aware of all ten corporate governance policies.",
+          "correct": false,
+          "why_wrong": "Stuffing governance slides into a system prompt bloats token costs, degrades attention, and provides zero deterministic enforcement or audit verification."
+        },
+        {
+          "text": "Replace all ten specific policies with a single blanket vendor SLA claiming 99.9% uptime on the cloud inference endpoint across all regions.",
+          "correct": false,
+          "why_wrong": "An infrastructure uptime SLA measures endpoint availability, not prompt-injection prevention, PII redaction, or subgroup fairness."
+        },
+        {
+          "text": "Map each Risk ID & Threat Scenario to a technical control, owner, immutable verification artifact/CI test, and review cadence.",
+          "correct": true
+        }
+      ],
+      "explanation": "Aspirational policy statements in a slide deck do not constitute governance. An audit-ready AI Risk and Control Matrix maps every identified Risk ID and Threat Scenario to: (1) Stage & Control Type (Preventive/Detective), (2) the concrete technical mechanism (e.g., API gateway route block on /v1/files, Stage 2 $50 deterministic cap), (3) an accountable human Owner, (4) an immutable Verification Artifact / Test Evidence (e.g., CI red-team pass log, synthetic canary 403 test), and (5) a recurring Review Cadence.",
+      "key_takeaway": "A Control Register is only audit-ready when every risk and control is paired with an owner, an immutable verification artifact/CI test, and a review cadence.",
+      "doc_links": [
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "Responsible AI & Safety on GCP",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/responsible-ai"
+        }
+      ]
+    }
+  ]
+}
