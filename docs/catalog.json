@@ -183,7 +183,7 @@
         "notes": "foundation/ADK-v2.0.pdf",
         "infographic": "foundation/ADK-v2.0.png",
         "deck": "foundation/ADK-deck-v2.0.pdf",
-        "video": "foundation/ADK-v2.0.mp4",
+        "video": "https://youtu.be/Ebk43dbkEZE",
         "audio": "foundation/ADK-v2.0.mp3"
       },
       "order": 50
@@ -245,7 +245,7 @@
         "notes": "foundation/RAG-v3.0.pdf",
         "infographic": "foundation/RAG-v3.0.png",
         "deck": "foundation/RAG-deck-v3.0.pdf",
-        "video": "foundation/RAG-v3.0.mp4",
+        "video": "https://youtu.be/s9F46NoJZgs",
         "audio": "foundation/RAG-v3.0.mp3"
       },
       "order": 80
@@ -455,7 +455,7 @@
         "notes": "anthropic/Anthropic-v2.0.pdf",
         "infographic": "anthropic/Anthropic-v2.0.png",
         "deck": "anthropic/Anthropic-deck-v2.0.pdf",
-        "video": "anthropic/Anthropic-v2.0.mp4",
+        "video": "https://youtu.be/c9T-DLxyGRY",
         "audio": "anthropic/Anthropic-v2.0.mp3"
       },
       "order": 190
@@ -474,7 +474,7 @@
         "notes": "anthropic/ClaudeAPI-v1.0.pdf",
         "infographic": "anthropic/ClaudeAPI-v1.0.png",
         "deck": "anthropic/ClaudeAPI-deck-v1.0.pdf",
-        "video": "anthropic/ClaudeAPI-v1.0.mp4",
+        "video": "https://youtu.be/juaZ6f4iT_w",
         "audio": "anthropic/ClaudeAPI-v1.0.mp3"
       },
       "order": 200
@@ -494,7 +494,7 @@
         "notes": "anthropic/ClaudeCode-v1.0.pdf",
         "infographic": "anthropic/ClaudeCode-v1.0.png",
         "deck": "anthropic/ClaudeCode-deck-v1.0.pdf",
-        "video": "anthropic/ClaudeCode-v1.0.mp4",
+        "video": "https://youtu.be/DTFQz5p9mak",
         "audio": "anthropic/ClaudeCode-v1.0.mp3"
       },
       "order": 210
@@ -513,7 +513,7 @@
         "notes": "anthropic/ClaudeAgentSDK-v1.0.pdf",
         "infographic": "anthropic/ClaudeAgentSDK-v1.0.png",
         "deck": "anthropic/ClaudeAgentSDK-deck-v1.0.pdf",
-        "video": "anthropic/ClaudeAgentSDK-v1.0.mp4",
+        "video": "https://youtu.be/U0zIl_8iWLk",
         "audio": "anthropic/ClaudeAgentSDK-v1.0.mp3"
       },
       "order": 220
