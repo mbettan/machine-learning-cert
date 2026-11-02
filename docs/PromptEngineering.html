@@ -13,9 +13,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Engineering Techniques: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Master Prompt Engineering for LLMs: zero-shot and few-shot prompting, Chain-of-Thought, ReAct, Tree-of-Thoughts, structured outputs, and injection defense.">
-    <meta name="keywords" content="Prompt Engineering, Chain-of-Thought, CoT, ReAct, Tree-of-Thoughts, Few-Shot Prompting, LLM Workflows, Michael Bettan, Michaël Bettan">
+    <title>Prompt Engineering: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Production prompt engineering and structured output across Claude and Google Gemini: explicit criteria and false-positive control, contrast few-shot pairs, Adaptive Thinking and effort, strict JSON schemas and tool_choice, validation-retry loops, batch SLA design, and multi-pass review.">
+    <meta name="keywords" content="prompt engineering, structured outputs, JSON schema, strict tool use, tool_choice, few-shot prompting, contrast pairs, false positive reduction, validation retry loop, Message Batches API, multi-pass code review, Adaptive Thinking, Gemini response_schema, prompt caching, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -32,25 +32,40 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Prompt Engineering Techniques: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Master Prompt Engineering for LLMs: zero-shot and few-shot prompting, Chain-of-Thought, ReAct, Tree-of-Thoughts, structured outputs, and injection defense.">
+    <meta property="og:title" content="Prompt Engineering: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Production prompt engineering and structured output across Claude and Google Gemini: explicit criteria and false-positive control, contrast few-shot pairs, Adaptive Thinking and effort, strict JSON schemas and tool_choice, validation-retry loops, batch SLA design, and multi-pass review.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/PromptEngineering.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Prompt Engineering — Study Guide by Michaël Bettan">
+    <meta property="og:image:alt" content="Prompt Engineering: Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Prompt Engineering Techniques: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Master Prompt Engineering for LLMs: zero-shot and few-shot prompting, Chain-of-Thought, ReAct, Tree-of-Thoughts, structured outputs, and injection defense.">
+    <meta name="twitter:title" content="Prompt Engineering: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Production prompt engineering and structured output across Claude and Google Gemini: explicit criteria and false-positive control, contrast few-shot pairs, Adaptive Thinking and effort, strict JSON schemas and tool_choice, validation-retry loops, batch SLA design, and multi-pass review.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
-    <meta name="twitter:image:alt" content="Prompt Engineering — Study Guide by Michaël Bettan">
+    <meta name="twitter:image:alt" content="Prompt Engineering: Study Guide by Michaël Bettan">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        .concept-card ol { padding-left: 1.3em; }
+        .concept-card a, .callout a { color: var(--mint); }
+    </style>
 
     <script type="application/ld+json">
 {
@@ -62,16 +77,15 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/PromptEngineering.html#article",
-                  "headline": "Prompt Engineering Techniques: Study Guide | ML Cert Hub",
+                  "headline": "Prompt Engineering: Study Guide | ML Cert Hub",
                   "name": "Prompt Engineering Study Guide",
-                  "description": "Master Prompt Engineering for LLMs: zero-shot and few-shot prompting, Chain-of-Thought, ReAct, Tree-of-Thoughts, structured outputs, and injection defense.",
-                  "keywords": "Prompt Engineering, Chain-of-Thought, CoT, ReAct, Tree-of-Thoughts, Few-Shot Prompting, LLM Workflows, Michael Bettan, Michaël Bettan",
+                  "description": "Production prompt engineering and structured output across Claude and Google Gemini: explicit criteria and false-positive control, contrast few-shot pairs, Adaptive Thinking and effort, strict JSON schemas and tool_choice, validation-retry loops, batch SLA design, and multi-pass review.",
+                  "keywords": "prompt engineering, structured outputs, JSON schema, strict tool use, tool_choice, few-shot prompting, contrast pairs, false positive reduction, validation retry loop, Message Batches API, multi-pass code review, Adaptive Thinking, Gemini response_schema, prompt caching, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/PromptEngineering.html",
                   "inLanguage": "en",
-                  "version": "2.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-11-01",
                   "learningResourceType": "Study Guide",
-                  "educationalLevel": "Intermediate",
+                  "educationalLevel": "Advanced",
                   "author": {
                         "@type": "Person",
                         "@id": "https://github.com/mbettan#person",
@@ -108,49 +122,48 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/PromptEngineering.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
-    <a href="index.html" class="back-button">×</a>
 
     <div class="page-wrapper">
 
         <!-- ═══════════════════════════════════════
-             COVER SECTION
+             COVER / HERO
              ═══════════════════════════════════════ -->
         <section class="cover" id="top">
             <div class="cover-grid"></div>
             <div class="cover-content">
-                <div class="cover-eyebrow">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
                     <i class="fas fa-graduation-cap"></i>
-                    Study Notes — Certification Prep
+                    <span>Certification Study Notes · v3.0</span>
                 </div>
-                <h1>Prompt Engineering<br><em>Study Guide</em></h1>
-                <p class="cover-subtitle">
-                    Comprehensive overview of prompt engineering frameworks, tactics, taxonomy, and operationalization.
-                </p>
-                                                <div class="cover-meta">
+                <h1>Prompt <em>Engineering</em></h1>
+                <p class="cover-subtitle">Cross-vendor production study guide (Claude and Google Gemini) covering prompt anatomy, explicit criteria and false-positive control, contrast few-shot design, Adaptive Thinking and effort controls, strict JSON schemas and <code>tool_choice</code>, validation-retry and dismissal feedback loops, batch SLA arithmetic, and multi-pass review architectures.</p>
+                <div class="cover-meta">
                     <div class="cover-meta-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Updated: <strong>April 2026</strong></span>
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.0</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-tag"></i>
-                        <span>Category: <strong>Prompting</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-clock"></i>
-                        <span>Reading Time: <strong>~8 min</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-user-edit"></i>
-                        <span>Author: <strong>Michaël Bettan</strong></span>
+                        <span>Track: <strong>AI Fundamentals / Foundation</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=prompt-engineering" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Prompt Engineering Practice Quiz →</span>
+                </a>
             </div>
         </section>
 
@@ -163,510 +176,747 @@
                 <h2>Table of Contents</h2>
             </div>
             <div class="toc-columns">
-                <a href="#definitions" class="toc-item">
-                    <span class="toc-number">01</span>
-                    <span>Definitions & Scope</span>
-                </a>
-                <a href="#tcrei" class="toc-item">
-                    <span class="toc-number">02</span>
-                    <span>TCREI Framework</span>
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
                 </a>
                 <a href="#anatomy" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Prompt Anatomy &amp; Placement</span>
+                </a>
+                <a href="#explicit-criteria" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Explicit Criteria &amp; Precision</span>
+                </a>
+                <a href="#few-shot" class="toc-item">
                     <span class="toc-number">03</span>
-                    <span>Anatomy & Structure</span>
+                    <span>Few-Shot &amp; Contrast Pairs</span>
                 </a>
-                <a href="#optimization" class="toc-item">
+                <a href="#reasoning-effort" class="toc-item">
                     <span class="toc-number">04</span>
-                    <span>Optimization Tactics</span>
+                    <span>Reasoning, Effort &amp; Sampling</span>
                 </a>
-                <a href="#chaining" class="toc-item">
+                <a href="#decomposition" class="toc-item">
                     <span class="toc-number">05</span>
-                    <span>Prompt Chaining</span>
+                    <span>Decomposition &amp; Refinement</span>
                 </a>
-                <a href="#advanced-tactics" class="toc-item">
+                <a href="#structured-outputs" class="toc-item">
                     <span class="toc-number">06</span>
-                    <span>Advanced Tactics</span>
+                    <span>Structured Outputs &amp; Schemas</span>
                 </a>
-                <a href="#agentic" class="toc-item">
+                <a href="#validation-loops" class="toc-item">
                     <span class="toc-number">07</span>
-                    <span>Agentic Frameworks</span>
+                    <span>Validation &amp; Feedback Loops</span>
                 </a>
-                <a href="#parameters" class="toc-item">
+                <a href="#batch-processing" class="toc-item">
                     <span class="toc-number">08</span>
-                    <span>Parameter Tuning</span>
+                    <span>Batch vs. Synchronous SLAs</span>
                 </a>
-                <a href="#taxonomy" class="toc-item">
+                <a href="#multi-pass-review" class="toc-item">
                     <span class="toc-number">09</span>
-                    <span>Prompting Taxonomy</span>
+                    <span>Multi-Instance &amp; Multi-Pass Review</span>
                 </a>
-                <a href="#advanced-thought" class="toc-item">
+                <a href="#caching-security-ops" class="toc-item">
                     <span class="toc-number">10</span>
-                    <span>Advanced Thought Gen</span>
+                    <span>Caching, Security &amp; LLMOps</span>
                 </a>
-                <a href="#blueprints" class="toc-item">
+                <a href="#failure-modes" class="toc-item">
                     <span class="toc-number">11</span>
-                    <span>Task Blueprints</span>
+                    <span>Failure Modes &amp; Diagnostic Traps</span>
                 </a>
-                <a href="#llmops" class="toc-item">
+                <a href="#extraction-blueprint" class="toc-item">
                     <span class="toc-number">12</span>
-                    <span>Roles & LLMOps</span>
+                    <span>Extraction &amp; Validation Blueprint</span>
+                </a>
+                <a href="#glossary" class="toc-item">
+                    <span class="toc-number">13</span>
+                    <span>Glossary</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">14</span>
+                    <span>Practice Quiz &amp; Self-Assessment</span>
                 </a>
             </div>
         </nav>
 
         <!-- ═══════════════════════════════════════
-             SECTION: DEFINITIONS
+             SECTION 00: OVERVIEW
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="definitions">
-            <div class="section-divider-number">01</div>
-            <h2>Definitions & Scope</h2>
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview</h2>
         </div>
 
-        <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-terminal"></i></div>Prompt Engineering</h3>
-            <p>
-                A rigorous engineering discipline focused on strategic design and iterative optimization, shifting AI from a static text predictor into a dynamic, agentic reasoning engine.
-            </p>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Definition</h3>
+
+        <div class="concept-card accent-blue">
+            <p>Prompt engineering is the discipline of specifying task contracts, evaluation rubrics, input boundaries, demonstration examples, and output schemas so a language model produces reliable, verifiable results across varied production inputs—paired with programmatic validation, batch orchestration, and independent review where prose instructions alone are insufficient.</p>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Large Language Models (LLMs)</dt>
-                <dd>Text generation models that utilize advanced algorithms and transformer architectures to predict the next token based on probabilistic likelihood.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Tokens</dt>
-                <dd>The fundamental linguistic unit in NLP (subwords, characters, words). Roughly 100 tokens equate to 75 words.</dd>
-            </div>
-        </div>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Why production prompting looks different from chat prompting</h3>
 
-        <!-- ═══════════════════════════════════════
-             SECTION: TCREI
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="tcrei">
-            <div class="section-divider-number">02</div>
-            <h2>TCREI Framework</h2>
-        </div>
-        
-        <div class="prose">
-            <p>Industry standard for transforming vague requests into high-performance, production-ready prompts. The first 3 steps focus on <strong>Giving Direction</strong> and providing examples. The final 2 focus on <strong>Evaluating Quality</strong> and dividing labor.</p>
-        </div>
-
-        <div class="process-flow">
-            <div class="process-step">
-                <div class="process-step-number">01</div>
-                <h4>Task</h4>
-                <p>Be explicit. Defines the Action, Role, and Format. (e.g., Use explicit verbs like "Refactor" rather than "Write").</p>
-            </div>
-            <div class="process-step">
-                <div class="process-step-number">02</div>
-                <h4>Context</h4>
-                <p>Provide background details and explain situational awareness to prevent generic "hallucinations."</p>
-            </div>
-            <div class="process-step">
-                <div class="process-step-number">03</div>
-                <h4>References</h4>
-                <p>Provide 3–5 diverse examples (Few-shot learning) to steer style and logic reliably.</p>
-            </div>
-            <div class="process-step">
-                <div class="process-step-number">04</div>
-                <h4>Evaluate</h4>
-                <p>Review output against success criteria. Use "Chain-of-Thought" to reduce logic errors, track against gold standards.</p>
-            </div>
-            <div class="process-step">
-                <div class="process-step-number">05</div>
-                <h4>Iterate</h4>
-                <p>Tweak the prompt using Evaluation results. Apply <em>Positive Framing</em> (tell the model what it should do).</p>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION: ANATOMY
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="anatomy">
-            <div class="section-divider-number">03</div>
-            <h2>Prompt Anatomy & Structure</h2>
-        </div>
-
-        <div class="two-columns">
-            <div class="concept-card accent-blue">
-                <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Type of Prompts</h3>
-                <ul>
-                    <li><strong>System Prompt:</strong> Defines fundamental capabilities and overarching rules (e.g., "You strictly output JSON").</li>
-                    <li><strong>Role Prompt:</strong> Frames output style, voice, and personality (e.g., "Act as a senior DevOps engineer").</li>
-                    <li><strong>Contextual Prompt:</strong> Provides immediate, task-specific background data needed to process the query.</li>
-                </ul>
-            </div>
-            <div class="concept-card accent-coral">
-                <h3><div class="icon-badge"><i class="fas fa-compress-alt"></i></div>"Lost in the Middle"</h3>
-                <p>LLMs pay strict attention to the very beginning and very end of a massive prompt, but skim the middle.</p>
-                <ul>
-                    <li><strong>Top of Prompt:</strong> Place large context documents and reference data here.</li>
-                    <li><strong>Bottom of Prompt:</strong> Place critical constraints, task descriptions, and output formatting rules at the very end.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Delimiters</dt>
-                <dd>Use clear markers (<code>###</code>, <code>"""</code>, or <code>&lt;xml&gt;</code>) to separate instructions from data.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Leading Words</dt>
-                <dd>End your prompt with the exact first character of the expected response (e.g., "The valid JSON response is: <code>{</code>").</dd>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════
-             SECTION: OPTIMIZATION
-             ═══════════════════════════════════════ -->
-        <div class="section-divider" id="optimization">
-            <div class="section-divider-number">04</div>
-            <h2>Optimization & Technical Tactics</h2>
+        <div class="concept-card accent-amber">
+            <p>In an interactive chat, a human spots a vague answer and clarifies on the next turn. In an automated code reviewer, document extractor, or customer-operations pipeline, nobody sits in the loop unless your system routes the item there. Production prompt engineering therefore combines <strong>authoring levers</strong> (explicit categorical criteria, contrast examples, input delimiters, normalization rules) with <strong>API enforcement levers</strong> (constrained JSON schemas, strict tool definitions, <code>tool_choice</code>, adaptive reasoning effort, bounded validation retries, and multi-instance review).</p>
         </div>
 
         <div class="callout tip">
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
-                <h4>Basic Optimization Tactics</h4>
-                <p><strong>Positive Framing:</strong> Tell the model what it <em>should</em> do rather than what it shouldn't. LLMs respond better to "Include X" than "Avoid Y."<br>
-                <strong>Prompt Versioning:</strong> Prompt engineering is highly iterative. Treat prompts like code. Document your attempts tracking Prompt text, model ID, sampling or effort settings, and Output.</p>
+                <h4>Mental model</h4>
+                <p>Prose steers <em>judgment</em>; schemas and code enforce <em>invariants</em>. Use prompt instructions and few-shot examples to define ambiguous boundaries and domain semantics, and use API schemas, validators, and fresh reviewer contexts to guarantee syntax, catch cross-field math errors, and eliminate self-review blind spots.</p>
             </div>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Prompt Caching</dt>
-                <dd>Put stable content first (tools, system instructions, large documents, few-shot examples) and variable content last. The cache matches an exact prefix, so any change above a breakpoint forces a new cache write. On Claude, writes cost 1.25× base input (5-minute TTL, the default) or 2× (1-hour TTL). Reads cost about 0.1× (lower on some newer models). The 5-minute cache pays off after 1 read and the 1-hour cache after 2. Use automatic caching (one top-level <code>cache_control</code>) or explicit breakpoints on content blocks.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Prompt Security (Guardrails)</dt>
-                <dd>Defend against Prompt Injection and System Leakage by utilizing input/output moderation models to intercept toxic or out-of-scope requests before reaching the main LLM.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Variables in Prompts (Templating)</dt>
-                <dd>For reusable enterprise prompts, use bracketed variables (e.g., <code>{city}</code>, <code>{document}</code>) to programmatically inject data into the exact same structure.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Automatic Prompt Eng. (APE)</dt>
-                <dd>Using an LLM to generate 10 variations of an instruction, test them all, and select the one yielding best factual accuracy.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Class Mixing (Few-Shot)</dt>
-                <dd>When providing examples for classification tasks, you must randomize the order. Listing all "Positive" examples first causes overfitting and hallucination.</dd>
-            </div>
+        <figure class="diagram-block" style="padding: 16px; margin: 22px 0;">
+            <img src="diagrams/prompt-output-pipeline.jpg" alt="Production prompt and structured output pipeline across five stages: task contract, contrast examples, strict schema, code validation, and review routing" width="1314" height="703" loading="lazy" decoding="async" style="width: 100%; height: auto; display: block; border-radius: 8px; background: #ffffff;">
+        </figure>
+
+        <div class="concept-card accent-pink">
+            <ul>
+                <li><strong>Scope of this guide:</strong> prompt anatomy and attention placement, explicit criteria and false-positive control, multishot design, reasoning effort vs. sampling parameters, task decomposition and iterative refinement, schema-enforced structured outputs, validation-retry and dismissal feedback loops, batch vs. synchronous SLA design, multi-instance and multi-pass review architectures, caching, injection defense, and LLMOps.</li>
+                <li><strong>Vendors covered:</strong> Anthropic Claude (Messages API, <code>tool_use</code>, <code>output_config</code>, Adaptive Thinking, Message Batches) and Google (Gemini API, Vertex AI <code>response_schema</code>, <code>FunctionCallingConfig</code>, Thinking levels, Batch Prediction, Vertex AI Prompt Optimizer).</li>
+                <li><strong>Related guides:</strong> <a href="ClaudeAPI.html#structured-outputs">Claude Platform &amp; API</a> for Claude-specific endpoint rules, <a href="ContextEngineering.html#context-budget">Context Engineering &amp; Reliability</a> for long-horizon context assembly and provenance, <a href="ADP.html#workflow-patterns">Agentic Design Patterns</a> for workflow topologies, <a href="ClaudeCode.html#ci-review">Claude Code</a> for headless CI review, and <a href="AgentOps.html#grading-hierarchy">AgentOps</a> for evaluation pipelines.</li>
+                <li><strong>Official documentation:</strong> Claude <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener noreferrer">prompt engineering overview</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener noreferrer">prompting best practices</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank" rel="noopener noreferrer">structured outputs</a>, <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use" target="_blank" rel="noopener noreferrer">strict tool use</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/effort" target="_blank" rel="noopener noreferrer">effort</a>, and <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener noreferrer">batch processing</a>; Gemini API <a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener noreferrer">prompt design strategies</a>, <a href="https://ai.google.dev/gemini-api/docs/structured-output" target="_blank" rel="noopener noreferrer">structured output</a>, <a href="https://ai.google.dev/gemini-api/docs/function-calling" target="_blank" rel="noopener noreferrer">function calling</a>, and <a href="https://ai.google.dev/gemini-api/docs/thinking" target="_blank" rel="noopener noreferrer">thinking</a>.</li>
+                <li><strong>Further reading:</strong> Positional recall curves in long inputs are analyzed in Liu et al., <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener noreferrer">Lost in the Middle: How Language Models Use Long Contexts</a> (TACL 2024). Reasoning-and-acting loops originate in Yao et al., <em>ReAct</em> (ICLR 2023), and verbal self-critique loops in Shinn et al., <em>Reflexion</em> (NeurIPS 2023).</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: CHAINING
+             SECTION 01: PROMPT ANATOMY, ROLES &amp; ATTENTION PLACEMENT
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="chaining">
-            <div class="section-divider-number">05</div>
-            <h2>Prompt Chaining (Pipeline Generation)</h2>
+        <div class="section-divider" id="anatomy">
+            <div class="section-divider-number">01</div>
+            <h2>Prompt Anatomy, Roles &amp; Attention Placement</h2>
         </div>
 
-        <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Avoid the "Mega-Prompt"</h3>
-            <p>Asking the model to perform five complex tasks simultaneously overloads attention and drastically increases hallucinations. Instead, break multifaceted problems into sequential, isolated prompts.</p>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Message roles and trust hierarchy</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Channel</th><th>Claude Messages API</th><th>Gemini / Vertex AI</th><th>What belongs here</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>System instruction</strong></td><td>Top-level <code>system</code> parameter</td><td><code>system_instruction</code> in config</td><td>Role identity, non-negotiable behavioral rules, categorical criteria, global output conventions</td></tr>
+                    <tr><td><strong>Reference &amp; examples</strong></td><td>Early <code>user</code> content blocks or <code>system</code> blocks (with <code>cache_control</code>)</td><td>Cached prefix contents or early <code>user</code> parts</td><td>Domain glossary, schema normalization rules, <code>&lt;examples&gt;</code>, large source documents</td></tr>
+                    <tr><td><strong>Untrusted payload</strong></td><td>Delimited block inside <code>user</code> (<code>&lt;document&gt;…&lt;/document&gt;</code>)</td><td>Delimited part inside <code>user</code></td><td>Raw customer messages, pull-request diffs, OCR text, web pages</td></tr>
+                    <tr><td><strong>Task trigger</strong></td><td>Final lines of the <code>user</code> turn</td><td>Final part of the <code>user</code> turn</td><td>The specific question, target action, and reminder of edge-case rules</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Structural delimiters and edge placement</h3>
+
+        <div class="concept-card accent-amber">
             <ul>
-                <li><strong>Prompt 1 (Extraction):</strong> "Extract all financial figures and metrics from this text."</li>
-                <li><strong>Prompt 2 (Drafting):</strong> "Using only the facts extracted above, draft an executive summary."</li>
-                <li><strong>Prompt 3 (Formatting):</strong> "Rewrite this summary in the tone of an internal company email."</li>
+                <li><strong>Separate instructions from data:</strong> wrap variable inputs in unambiguous tags such as <code>&lt;document&gt;</code>, <code>&lt;diff&gt;</code>, or <code>&lt;customer_ticket&gt;</code> rather than loose quotation marks. Clear boundaries stop multi-paragraph inputs from bleeding into your rules and make indirect prompt-injection instructions easier for the model to recognize as data.</li>
+                <li><strong>Respect the U-shaped attention curve (&quot;Lost in the Middle&quot;):</strong> across long prompts, recall is highest at the opening and closing edges of the window and weakest in the middle interior. Place large reference documents near the top (where they also form a stable cacheable prefix), put key findings summaries ahead of raw appendices, label sections with explicit headers, and state the exact task instructions and critical constraints at the very end.</li>
+                <li><strong>Positive framing vs. hard negative boundaries:</strong> frame style and workflow instructions positively (<em>&quot;Write a 3-bullet summary citing section numbers&quot;</em> outperforms <em>&quot;Don&#x27;t write long paragraphs or omit citations&quot;</em>). Reserve strict negative directives (<code>NEVER</code>, <code>DO NOT</code>, <code>ONLY</code>) for safety gates, scope exclusions, and anti-fabrication rules (*&quot;Return <code>null</code> when a date is absent; never estimate or infer missing dates&quot;*).</li>
+                <li><strong>Authoring checklist (Task · Context · Examples · Evaluate · Iterate):</strong> define a concrete verb, role, and target audience (<strong>Task</strong>); supply the minimum situational facts and source boundaries needed (<strong>Context</strong>); attach 2–5 representative demonstrations (<strong>Examples</strong>); grade outputs on a labeled test set (<strong>Evaluate</strong>); and refine one variable per run (<strong>Iterate</strong>).</li>
             </ul>
         </div>
 
         <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
-                <h4>Positive Instructions vs. Strict Constraints</h4>
-                <p>LLMs perform better with positive framing (what <em>to</em> do). Reserve strict negative constraints (ONLY, NEVER, DO NOT) exclusively for output formatting (e.g., strictly JSON), safety guardrails, or preventing specific hallucinations.</p>
+                <h4>Retired pattern — assistant prefilling</h4>
+                <p>Older guides recommended ending a request with a partial <code>assistant</code> turn such as <code>{&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;{&quot;}</code> to force JSON output. Modern frontier models (Claude 4.6 and later) <strong>reject assistant prefilling with HTTP 400</strong>. Enforce structure with native JSON Schema decoding (<code>output_config.format</code> / <code>response_schema</code>) or strict tool calls instead.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: ADVANCED TACTICS
+             SECTION 02: EXPLICIT CRITERIA, RUBRICS &amp; FALSE-POSITIVE CONTROL
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="advanced-tactics">
+        <div class="section-divider" id="explicit-criteria">
+            <div class="section-divider-number">02</div>
+            <h2>Explicit Criteria, Rubrics &amp; False-Positive Control</h2>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Why vague instructions and confidence prompts fail</h3>
+
+        <div class="concept-card accent-blue">
+            <p>In automated code review, compliance triage, and defect detection, <strong>precision</strong> (the share of flagged items that are genuinely actionable) governs whether engineers read or mute your system. Telling a model to <em>&quot;be conservative&quot;</em>, <em>&quot;only flag high-confidence issues&quot;</em>, or <em>&quot;check that comments are accurate&quot;</em> fails because it never defines the decision boundary—the model&#x27;s internal threshold stays uncalibrated while noisy edge cases still slip through.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Weak / vague phrasing</th><th>Failure mode in production</th><th>Explicit categorical specification</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><em>&quot;Check whether code comments are accurate&quot;</em></td><td>Flags minor wording preferences, TODOs, and abbreviated docstrings</td><td><em>&quot;Report a comment defect <strong>only</strong> when a comment&#x27;s stated behavior directly contradicts the executable code path&quot;</em></td></tr>
+                    <tr><td><em>&quot;Only report high-confidence bugs; be conservative&quot;</em></td><td>Model still emits stylistic nitpicks labeled <code>&quot;high confidence&quot;</code></td><td><strong>Report:</strong> null dereferences, auth bypasses, resource leaks, SQL/command injection. <strong>Skip:</strong> naming conventions, formatting, and idioms already established in the repository</td></tr>
+                    <tr><td><em>&quot;Assign a severity of low, medium, or high&quot;</em></td><td>Severity labels drift across runs and files</td><td>Define each tier with explicit impact rules <strong>plus one concrete code example per severity level</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Protecting developer trust in automated pipelines</h3>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>One noisy category poisons every category:</strong> if your PR reviewer is 92% accurate on security bugs but 35% accurate on &quot;maintainability&quot; warnings, developers stop reading <em>all</em> comments from the bot within days.</li>
+                <li><strong>Measure precision per category, not only in aggregate:</strong> track acceptance and dismissal rates separately for each rule family (<code>security</code>, <code>concurrency</code>, <code>null-safety</code>, <code>comment-drift</code>).</li>
+                <li><strong>Disable noisy categories immediately while fixing them:</strong> when a category produces excessive false positives, <strong>turn that category off</strong> in production right away to restore trust in the high-precision categories, then rewrite its criteria and few-shot contrast examples offline against an evaluation set before re-enabling it.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Policy component</th><th>Role in the prompt contract</th><th>Concrete specification</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Report categories</strong></td><td>Enumerates the only defect classes eligible for comments</td><td>**<code>defect</code><strong> (runtime exceptions, off-by-one bounds, lost updates, unhandled promises); </strong><code>security</code><strong> (broken access checks, unsanitized shell/SQL/HTML sinks, secret exposure); </strong><code>comment_contradiction</code>** (a guarantee such as <em>&quot;thread-safe&quot;</em> or <em>&quot;returns UTC&quot;</em> violated by the code)</td></tr>
+                    <tr><td><strong>Skip categories</strong></td><td>Explicitly suppresses high-noise style feedback</td><td>Formatting, variable naming, import ordering, missing docstrings, and established local repository idioms</td></tr>
+                    <tr><td><strong>Severity rubric</strong></td><td>Anchors each severity tier to concrete runtime impact</td><td>**<code>critical</code>:** exploitable security flaw or guaranteed crash/data loss on valid input (e.g., <code>if is_admin or True:</code>); **<code>major</code>:** wrong business result or unhandled edge case on reachable inputs (e.g., dividing by <code>len(items)</code> before checking emptiness)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>When a scenario shows developers ignoring an automated PR reviewer due to false positives, avoid answers that <em>&quot;lower temperature to 0&quot;</em>, <em>&quot;tell the model to only report findings above 90% confidence&quot;</em>, or <em>&quot;keep all categories live while adding a disclaimer&quot;</em>. Temporarily disable the noisy category and replace vague prompts with explicit report/skip criteria and severity examples.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: FEW-SHOT &amp; MULTISHOT DESIGN
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="few-shot">
+            <div class="section-divider-number">03</div>
+            <h2>Few-Shot &amp; Multishot Design</h2>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">When few-shot examples beat longer instructions</h3>
+
+        <div class="concept-card accent-blue">
+            <p>When prose rules are already clear yet outputs still vary in structure, tone, or boundary judgment, <strong>2–5 targeted few-shot examples</strong> (wrapped in <code>&lt;examples&gt;&lt;example&gt;…&lt;/example&gt;&lt;/examples&gt;</code>) are the highest-leverage intervention. Demonstrations teach <strong>generalizable judgment</strong> on novel patterns rather than brittle keyword matching on enumerated cases.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Engineering goal</th><th>How to construct the <code>&lt;example&gt;</code> set</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Consistent finding format</strong></td><td>Show the exact target fields (<code>file</code>, <code>line</code>, <code>severity</code>, <code>detected_pattern</code>, <code>issue</code>, <code>suggested_fix</code>) populated realistically</td></tr>
+                    <tr><td><strong>False-positive suppression</strong></td><td>Use <strong>contrast pairs</strong>: one example showing a real defect that <em>is</em> reported alongside a plausible look-alike or valid repo idiom that produces <code>[]</code> (no finding)</td></tr>
+                    <tr><td><strong>Ambiguous routing / tool choice</strong></td><td>Include a brief <code>&lt;reasoning&gt;</code> trace inside the example explaining <em>why</em> action A beats plausible alternative B</td></tr>
+                    <tr><td><strong>Varied document extraction</strong></td><td>Demonstrate extraction across structural layouts (a prose paragraph with inline citations, a formal bibliography table, informal units like <code>&quot;half a dozen&quot;</code>, and a document missing an optional field returning <code>null</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Preventing few-shot overfitting and bias</h3>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Randomize class order (class mixing):</strong> listing four <code>&quot;escalate&quot;</code> examples followed by one <code>&quot;resolve&quot;</code> example biases the model toward escalating borderline inputs. Interleave outcomes and categories across examples.</li>
+                <li><strong>Vary surface structure:</strong> if every example invoice uses <code>USD</code> and three line items, the model may copy <code>USD</code> on a <code>EUR</code> document or drop a fourth line item. Vary lengths, field presence, and phrasings while keeping the schema invariant.</li>
+                <li>**Demonstrate <code>null</code> explicitly:** to cure hallucination on missing required-looking fields, include at least one example where the source omits a field and the target output sets <code>&quot;renewal_date&quot;: null</code> rather than guessing.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Sample <code>&lt;input_doc&gt;</code> snippet</th><th>Target structured extraction</th><th>Boundary taught by the example</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><em>&quot;Memo (14 May 2026): Pilot renewal approved for 18 months; PO number pending finance sign-off.&quot;</em></td><td><code>effective_date</code>: <code>&quot;2026-05-14&quot;</code>, <code>term_months</code>: <code>18</code>, <code>po_number</code>: <code>null</code>, <code>status</code>: <code>&quot;approved&quot;</code></td><td>Normalizes informal prose dates to ISO-8601 while setting an explicitly pending field (<code>po_number</code>) to <code>null</code></td></tr>
+                    <tr><td><em>&quot;Verbal discussion notes — terms still under negotiation between legal teams; no dates agreed.&quot;</em></td><td><code>effective_date</code>: <code>null</code>, <code>term_months</code>: <code>null</code>, <code>po_number</code>: <code>null</code>, <code>status</code>: <code>&quot;unclear&quot;</code></td><td>Demonstrates full <code>null</code> extraction plus the <code>&quot;unclear&quot;</code> escape hatch when no binding agreement exists</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: REASONING, EFFORT &amp; SAMPLING CONTROLS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="reasoning-effort">
+            <div class="section-divider-number">04</div>
+            <h2>Reasoning, Effort &amp; Sampling Controls</h2>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Adaptive thinking and reasoning depth</h3>
+
+        <div class="concept-card accent-blue">
+            <p>Modern frontier models allocate variable test-time compute (&quot;System 2&quot; reasoning) before emitting visible output or between tool calls.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Capability</th><th>Claude 4.6 / 4.7+ (<code>Messages API</code>)</th><th>Google Gemini (<code>Gemini API</code> / <code>Vertex AI</code>)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Enable reasoning</strong></td><td><code>thinking={&quot;type&quot;: &quot;adaptive&quot;}</code> (interleaves automatically across tool turns)</td><td><code>thinking_config={&quot;thinking_level&quot;: &quot;HIGH&quot;}</code> (model-dependent levels: <code>MINIMAL</code>, <code>LOW</code>, <code>MEDIUM</code>, <code>HIGH</code>)</td></tr>
+                    <tr><td><strong>Control compute budget</strong></td><td>`output_config={&quot;effort&quot;: &quot;low&quot; \</td><td>&quot;medium&quot; \</td><td>&quot;high&quot; \</td><td>&quot;xhigh&quot; \</td><td>&quot;max&quot;}`</td><td><code>thinking_level</code> (or <code>thinking_budget</code> on earlier Gemini 2.5 models)</td></tr>
+                    <tr><td><strong>Legacy trap</strong></td><td>Manual <code>{&quot;type&quot;: &quot;enabled&quot;, &quot;budget_tokens&quot;: N}</code> is deprecated on 4.6 and <strong>returns HTTP 400 on Claude 4.7+</strong></td><td>Mixing legacy budget fields with level-based models fails validation</td></tr>
+                    <tr><td><strong>Cost &amp; latency rule</strong></td><td>Full internal thinking tokens are billed as output tokens even when <code>display: &quot;omitted&quot;</code>; use <code>low</code> effort for simple routers/classifiers</td><td>Thinking tokens count toward output billing and latency; dial down <code>thinking_level</code> on high-throughput classification</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Sampling parameters and modern API constraints</h3>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Claude 4.7+ rejects non-default sampling parameters:</strong> passing non-default <code>temperature</code>, <code>top_p</code>, or <code>top_k</code> on Claude 4.7+ returns an <strong>HTTP 400</strong> (and on earlier Claude 4.x models, <code>temperature</code> and <code>top_k</code> are incompatible with thinking). Frequency and presence penalties do not exist on the Claude API. Steer determinism and creativity through explicit criteria, few-shot examples, structured schemas, and <code>effort</code>.</li>
+                <li>**Models that expose sampling (<code>Gemini</code>, open weights, older endpoints):** lower <code>temperature</code> (<code>0.0–0.2</code>) narrows token selection toward higher-probability paths for extraction and classification, while higher values (<code>0.7–1.0</code>) broaden diversity for brainstorming. Adjust <code>temperature</code> <em>or</em> <code>top_p</code>, rarely both simultaneously.</li>
+                <li><strong>Low temperature is never a determinism guarantee:</strong> floating-point batching, MoE routing, and hardware concurrency still produce run-to-run variation at <code>temperature=0</code>. Grade outputs on parsed schema properties and invariants, never exact raw string equality.</li>
+                <li>**<code>max_tokens</code> / <code>max_output_tokens</code> is a hard cutoff, not a length instruction:** hitting the ceiling stops generation mid-token (<code>stop_reason == &quot;max_tokens&quot;</code> on Claude, <code>FinishReason.MAX_TOKENS</code> on Gemini), producing truncated, unparseable JSON. Ask for conciseness in the prompt/schema while sizing <code>max_tokens</code> with generous headroom.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Reasoning prompt patterns (when explicit scaffolding helps)</h3>
+
+        <div class="concept-card accent-pink">
+            <ul>
+                <li><strong>Chain-of-Thought (CoT) in structured tasks:</strong> when thinking mode is unavailable or disabled for latency, add a concise <code>&quot;reasoning&quot;</code> or <code>&quot;evidence_quote&quot;</code> string field <em>ahead</em> of classification fields in your schema so the model grounds its decision before committing to a label.</li>
+                <li><strong>Contrastive examples:</strong> show both a valid deduction and a common miscalculation (such as confusing fiscal-year dates with calendar-year dates) so the boundary is explicit.</li>
+                <li><strong>Step-Back prompting:</strong> ask the model to identify the governing policy principle or physical law first, then apply it to the specific case—useful when dense surface details obscure the rule.</li>
+                <li><strong>Self-Consistency (majority voting):</strong> sample multiple independent reasoning paths on hard, verifiable problems and aggregate the final structured answer—effective offline, too costly for low-latency chat.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: DECOMPOSITION &amp; PROMPT CHAINING VS. MEGA-PROMPTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="decomposition">
+            <div class="section-divider-number">05</div>
+            <h2>Decomposition &amp; Prompt Chaining vs. Mega-Prompts</h2>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Choosing the right decomposition strategy</h3>
+
+        <div class="concept-card accent-blue">
+            <p>Packing extraction, cross-reference verification, policy evaluation, and executive formatting into one giant &quot;mega-prompt&quot; dilutes attention across competing instructions and makes failures impossible to localize.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>When to pick it</th><th>Concrete workflow example</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Fixed sequential pipeline (prompt chaining)</strong></td><td>Stages and dependencies are known upfront; predictable multi-step transformation</td><td><strong>Step 1:</strong> Extract normalized claims + dates per file → <strong>Step 2:</strong> Cross-check claims across files → <strong>Step 3:</strong> Render final compliance table</td></tr>
+                    <tr><td><strong>Dynamic / adaptive decomposition</strong></td><td>Open-ended investigation where step <code>k+1</code> depends on what step <code>k</code> uncovers</td><td>Legacy test-suite expansion: map module graph → rank high-risk untested modules → inspect dependencies → adapt test plan as hidden couplings emerge</td></tr>
+                    <tr><td><strong>Parallel fan-out + synthesis</strong></td><td>Independent inputs that need uniform local depth without cross-contaminating context</td><td>Run 25 per-file code review calls concurrently, then run 1 integration call over their structured outputs</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Iterative refinement patterns for engineering workflows</h3>
+
+        <div class="concept-card accent-coral">
+            <ol>
+                <li><strong>Concrete input/output pairs over prose rewrites:</strong> when prose instructions for a data transformation or formatting rule are interpreted inconsistently across edge cases, stop rephrasing adjectives—provide <strong>2–3 concrete before/after input-output pairs</strong> covering the tricky edge cases (such as <code>null</code> timestamps or nested arrays).</li>
+                <li><strong>Test-driven iteration:</strong> write executable unit and edge-case tests first, run the model&#x27;s implementation, and feed the exact failing test assertions back so each turn closes a verified gap.</li>
+                <li><strong>The interview pattern (clarify before building):</strong> when designing in an unfamiliar domain or underspecified problem space, instruct the model to <strong>ask targeted architectural questions first</strong> (covering failure modes, cache invalidation, concurrency, state boundaries) before writing code or specs.</li>
+                <li><strong>Bundled vs. sequential bug feedback:</strong> send <strong>interacting</strong> defects together in a single message so the fix accounts for shared state; fix <strong>independent</strong> defects sequentially so instructions stay focused.</li>
+            </ol>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: STRUCTURED OUTPUTS &amp; SCHEMA DESIGN
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="structured-outputs">
             <div class="section-divider-number">06</div>
-            <h2>Advanced Prompting Tactics</h2>
+            <h2>Structured Outputs &amp; Schema Design</h2>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Inner Monologue</dt>
-                <dd>Hiding reasoning steps from the final user output using specific formats (e.g., wrapping thought loops in <code>"""</code>).</dd>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Three ways to get structured data from a model</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mechanism</th><th>Claude implementation</th><th>Gemini / Vertex AI implementation</th><th>Syntax guaranteed?</th><th>Best fit</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Prompt-only formatting</strong></td><td>System/user prose or output style</td><td>System/user prose instructions</td><td><span class="table-cross">❌</span> No</td><td>Streaming human-readable Markdown, YAML plans, UI prose</td></tr>
+                    <tr><td><strong>2. Native JSON Schema output</strong></td><td><code>output_config={&quot;format&quot;: {&quot;type&quot;: &quot;json_schema&quot;, &quot;schema&quot;: …}}</code> (or <code>claude -p --output-format json --json-schema</code>)</td><td><code>GenerateContentConfig(response_mime_type=&quot;application/json&quot;, response_schema=…)</code></td><td><span class="table-check">✅</span> Yes (on normal completion)</td><td>Single-step document extraction, classification, CI JSON gates</td></tr>
+                    <tr><td><strong>3. Tool-use / function-call extraction</strong></td><td><code>tools=[{…, &quot;strict&quot;: True, &quot;input_schema&quot;: …}]</code> + <code>tool_choice</code></td><td><code>tools=[FunctionDeclaration(…)]</code> + <code>FunctionCallingConfig</code></td><td><span class="table-check">✅</span> Yes (with strict mode)</td><td>Multi-schema routing (<code>tool_choice: &quot;any&quot;</code>), agent pipelines, mandatory first-step extraction</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Controlling tool selection with <code>tool_choice</code> / <code>FunctionCallingConfig</code></h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mode</th><th>Claude <code>tool_choice</code></th><th>Gemini <code>tool_config</code> mode</th><th>Behavior &amp; production use case</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Auto</strong></td><td><code>{&quot;type&quot;: &quot;auto&quot;}</code></td><td><code>mode=&quot;AUTO&quot;</code></td><td>Model may return conversational text <em>or</em> call a tool. Default for multi-turn agents so the loop can end with <code>end_turn</code>.</td></tr>
+                    <tr><td><strong>Any (must call a tool)</strong></td><td><code>{&quot;type&quot;: &quot;any&quot;}</code></td><td><code>mode=&quot;ANY&quot;</code> (<code>allowed_function_names</code> optional)</td><td>Model <strong>must</strong> invoke one of the provided tools, choosing which schema fits. Ideal when routing an unknown document across <code>extract_invoice</code>, <code>extract_receipt</code>, and <code>extract_w9</code>.</td></tr>
+                    <tr><td><strong>Forced named tool</strong></td><td><code>{&quot;type&quot;: &quot;tool&quot;, &quot;name&quot;: &quot;extract_metadata&quot;}</code></td><td><code>mode=&quot;ANY&quot;</code>, <code>allowed_function_names=[&quot;extract_metadata&quot;]</code></td><td>Model <strong>must</strong> call that exact tool. Use to guarantee a required first extraction step (<code>extract_metadata</code>) before downstream enrichment turns.</td></tr>
+                    <tr><td><strong>None</strong></td><td><code>{&quot;type&quot;: &quot;none&quot;}</code></td><td><code>mode=&quot;NONE&quot;</code></td><td>Forbids tool calls while keeping tool definitions visible in context.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Compatibility trap</h4>
+                <p>Forced tool selection (<code>&quot;any&quot;</code> or <code>&quot;tool&quot;</code>) is incompatible with manual extended thinking and is rejected on certain newer reasoning configurations; when forced mode is unavailable, pair <code>output_config.format</code> (for single schemas) or <code>tool_choice: &quot;auto&quot;</code> + <code>strict: true</code> + explicit prompt routing. Also remember to inspect <code>stop_reason</code> (<code>&quot;end_turn&quot;</code> / <code>&quot;tool_use&quot;</code> vs. <code>&quot;refusal&quot;</code> or <code>&quot;max_tokens&quot;</code>) before assuming a response satisfies your schema.</p>
             </div>
-            <div class="definition-item">
-                <dt>Meta Prompting</dt>
-                <dd>Using one AI model to generate, analyze, or refine a prompt for another AI model.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Least to Most</dt>
-                <dd>Sequentially generating increasingly detailed knowledge on a topic, feeding previous outputs into the next prompt.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Ask for Context</dt>
-                <dd>Allowing the LLM to ask clarifying questions before answering a user query.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Text Style Unbundling</dt>
-                <dd>Extracting features (tone, length, vocabulary) from a document to replicate its exact writing style.</dd>
-            </div>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Schema design rules that prevent hallucination</h3>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Schema design decision</th><th>Anti-pattern</th><th>Production pattern</th><th>Why it matters</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Optional / missing source data</strong></td><td>Marking every property non-null <code>required</code> &quot;for completeness&quot;</td><td>Make potentially absent fields <strong>nullable</strong> (<code>&quot;type&quot;: [&quot;string&quot;, &quot;null&quot;]</code>) or optional, and state *&quot;use <code>null</code> when not explicitly stated in the source&quot;*</td><td>A non-null required field forces constrained decoding to <strong>fabricate</strong> a plausible date, PO number, or name when the document omits it</td></tr>
+                    <tr><td><strong>Open-world categories</strong></td><td>Fixed enum <code>[&quot;billing&quot;, &quot;technical&quot;, &quot;shipping&quot;]</code></td><td>Fixed enum **plus <code>&quot;other&quot;</code>** paired with a nullable <code>&quot;category_detail&quot;</code> string</td><td>Preserves clean downstream aggregation without forcing novel cases into wrong buckets</td></tr>
+                    <tr><td><strong>Genuine source ambiguity</strong></td><td>Binary enum <code>[&quot;approved&quot;, &quot;rejected&quot;]</code></td><td>Add **<code>&quot;unclear&quot;</code>** (plus <code>&quot;ambiguity_note&quot;</code>)</td><td>Gives the model a truthful escape hatch when a contract draft is unsigned or contradictory</td></tr>
+                    <tr><td><strong>Messy surface formats</strong></td><td>Relying on <code>&quot;type&quot;: &quot;string&quot;</code> alone for dates/units</td><td>Keep <code>&quot;type&quot;: [&quot;string&quot;, &quot;null&quot;]</code> <strong>and</strong> put explicit normalization rules in the prompt (*&quot;Convert all dates to ISO-8601 <code>YYYY-MM-DD</code>; convert weights to integer grams; strip currency symbols&quot;*)</td><td>JSON Schema validates types (<code>string</code>, <code>number</code>), not how <code>&quot;14/05/26&quot;</code> vs. <code>&quot;May 14&quot;</code> was interpreted</td></tr>
+                    <tr><td><strong>Strict-schema constraints</strong></td><td>Putting <code>minimum</code> / <code>maximum</code> or unbounded dicts into strict schemas</td><td>Set <code>&quot;additionalProperties&quot;: false</code> on every object; enforce numeric ranges, cross-field sums, and regexes in application validator code</td><td>Strict constrained-decoding compilers support a subset of JSON Schema keywords and cap optional/union parameter counts; unsupported keywords return HTTP 400</td></tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: AGENTIC
+             SECTION 07: VALIDATION, RETRY &amp; DISMISSAL FEEDBACK LOOPS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="agentic">
+        <div class="section-divider" id="validation-loops">
             <div class="section-divider-number">07</div>
-            <h2>Agentic Frameworks (Autonomous)</h2>
+            <h2>Validation, Retry &amp; Dismissal Feedback Loops</h2>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>ReAct (Reason + Act)</dt>
-                <dd>A prompting paradigm interleaving "Thoughts" with "Actions." The model generates a reasoning trace, executes an action (like an API call or web search), and observes the result before continuing.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Reflexion (Self-Correction Loop)</dt>
-                <dd>Forcing the model to act as its own QA engineer. 1) Actor (generates draft), 2) Evaluator (scores draft against rules), 3) Self-Reflection (analyzes failures and writes corrected final output).</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Role Prompting</dt>
-                <dd>Assigning a specific persona to narrow the model's probabilistic output space to domain-specific vocabulary.</dd>
-            </div>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Syntax errors vs. semantic errors vs. absent information</h3>
+
+        <div class="concept-card accent-blue">
+            <p>Constrained JSON decoding (<code>output_config.format</code>, <code>strict: true</code>, <code>response_schema</code>) <strong>eliminates syntax and type errors</strong>—you will not get trailing commas, unquoted keys, or a string where a number was declared. It <strong>never eliminates semantic errors</strong>: line items that fail to sum to the invoice total, a shipping date copied into <code>invoice_date</code>, or two conflicting figures silently resolved by guessing.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Failure class</th><th>Concrete example</th><th>Caught by strict schema?</th><th>Will retry-with-feedback fix it?</th><th>Correct system action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Syntax / structural</strong></td><td>Truncated JSON, missing required key, string in float slot</td><td><span class="table-check">✅</span> Prevented upfront (unless <code>max_tokens</code> / <code>refusal</code>)</td><td>Yes (if not using strict mode)</td><td>Use strict schemas + check <code>stop_reason</code></td></tr>
+                    <tr><td><strong>Semantic / format mismatch</strong></td><td><code>sum(line_items) == 940.00</code> while <code>stated_total == 1040.00</code>; date written <code>05/14/2026</code> instead of <code>2026-05-14</code></td><td><span class="table-cross">❌</span> No</td><td><span class="table-check">✅</span> <strong>Yes</strong> (1–2 bounded retries)</td><td>Re-prompt with original source + failed JSON + exact validator message</td></tr>
+                    <tr><td><strong>Information absent from source</strong></td><td>Contract references <em>&quot;Exhibit B pricing schedule&quot;</em>, which was never uploaded</td><td><span class="table-cross">❌</span> No</td><td><span class="table-cross">❌</span> <strong>No — retrying causes fabrication!</strong></td><td>Stop retrying; return <code>null</code>, fetch the missing exhibit, or route to human review</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Designing self-verifying schemas and retry loops</h3>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Self-check fields in the extraction schema:</strong><ul><li>**<code>stated_total</code> + <code>calculated_total</code>:** ask the model to extract the printed invoice total <em>and</em> compute/list individual line items so deterministic Python code checks <code>abs(sum(items) - stated_total) &lt; 0.01</code> and flags discrepancies.</li><li>**<code>conflict_detected</code> (boolean) + <code>conflict_notes</code>:** when a multi-page packet states two different effective dates or revenue numbers, require the model to set <code>conflict_detected: true</code> and record both values rather than picking one silently.</li></ul></li>
+                <li><strong>Anatomy of a retry-with-error-feedback turn:</strong> include (1) the <strong>original source document</strong>, (2) the <strong>failed JSON extraction</strong>, (3) the <strong>exact programmatic validation error</strong> (*&quot;<code>line_items</code> sum to 410.00, which does not match <code>stated_total</code> 460.00; check whether a shipping or tax line was omitted&quot;*), and (4) an explicit reminder to return <code>null</code> rather than guessing if the source genuinely lacks the figure. Cap retries at <strong>1–2 attempts</strong>.</li>
+                <li>**Closing the false-positive loop with <code>detected_pattern</code>:** in code-review or compliance schemas, include a standardized <code>detected_pattern</code> slug on every finding (for example, <code>raw-sql-concat</code>, <code>unawaited-async-call</code>, <code>comment-return-mismatch</code>). When engineers click &quot;Dismiss / Not useful&quot; on PR comments, aggregate dismissals by <code>detected_pattern</code> to pinpoint which prompt rules generate noise and refine those rules with new contrast examples.</li>
+                <li><strong>Calibrating human review routing:</strong> never disable human review based on a single aggregate metric (<em>&quot;97% overall accuracy&quot;</em> can hide 62% accuracy on handwritten amendments or <code>tax_id</code> fields). Slice accuracy by <strong>document type × field</strong>, have the model emit <strong>field-level confidence</strong> alongside <code>conflict_detected</code>, calibrate thresholds against a labeled validation set, route low-confidence or conflicting records to reviewers, and maintain <strong>stratified random sampling</strong> of high-confidence auto-approved extractions across every document type to catch drift and novel error modes.</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: PARAMETERS
+             SECTION 08: BATCH PROCESSING VS. SYNCHRONOUS EXECUTION
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="parameters">
+        <div class="section-divider" id="batch-processing">
             <div class="section-divider-number">08</div>
-            <h2>Advanced Parameter Tuning</h2>
-        </div>
-        
-        <div class="prose">
-            <p>Beyond the text, engineers must control the mathematical parameters governing token selection.</p>
+            <h2>Batch Processing vs. Synchronous Execution</h2>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Temperature</dt>
-                <dd>Controls randomness. On models that expose it, use low temperature (0.1 - 0.3) for Logic, Math, and strict Formatting and high (0.7+) for Creativity. Model-dependent: see the Claude note below.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Top-P (Nucleus Sampling)</dt>
-                <dd>Controls vocabulary diversity. Rule of thumb: Alter Temperature OR Top-P, but rarely both.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Frequency Penalty</dt>
-                <dd>Penalizes words based on how often they have already appeared in the text. Prevents repetitive loops.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Presence Penalty</dt>
-                <dd>Penalizes words based on whether they have appeared at all. Forces the model to introduce new topics.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Top-K</dt>
-                <dd>Restricts next token prediction to the top 'K' most likely tokens. Lower Top-K keeps the model factual.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Max Token Length</dt>
-                <dd>Restricts output length. Warning: Hitting the limit abruptly stops generation (causing broken JSON); it does not force the model to write more concisely.</dd>
-            </div>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Matching API transport to workflow latency and interactivity</h3>
+
+        <div class="concept-card accent-blue">
+            <p>Both Anthropic (<strong>Message Batches API</strong>) and Google Cloud (<strong>Gemini / Vertex AI Batch Prediction</strong>) offer asynchronous batch endpoints priced at <strong>50% of synchronous token rates</strong> with high throughput quotas and up to a <strong>24-hour completion window</strong>, with <strong>no guaranteed per-request latency SLA</strong>.</p>
         </div>
 
-        <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
-            <div class="callout-content">
-                <h4>Claude Note: Sampling Parameters Are Not Your Lever</h4>
-                <p>On Claude 4.7 and later models, setting <code>temperature</code>, <code>top_p</code>, or <code>top_k</code> to a non-default value returns an <strong>HTTP 400</strong>. Omit them and steer with the prompt (instructions, examples, output format) and the <code>effort</code> setting instead. On older Claude models, <code>temperature</code> and <code>top_k</code> are incompatible with thinking. Frequency and presence penalties are not Claude API parameters.<br>
-                <strong>Common trap:</strong> Low temperature does not make output deterministic. Test on structure and content, not exact strings.</p>
-            </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Synchronous API (<code>messages.create</code> / <code>generate_content</code>)</th><th>Asynchronous Batch API (<code>messages.batches</code> / Batch Prediction)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Pricing</strong></td><td>Standard input/output rates</td><td><strong>50% cost reduction</strong> on input and output tokens</td></tr>
+                    <tr><td><strong>Completion SLA</strong></td><td>Interactive (seconds); streaming supported</td><td>Up to <strong>24 hours</strong> (often faster, never guaranteed; unprocessed items expire at 24h)</td></tr>
+                    <tr><td><strong>Multi-turn tool execution</strong></td><td><span class="table-check">✅</span> Supported: your loop executes tools between turns</td><td><span class="table-cross">❌</span> <strong>Single model turn per request:</strong> cannot execute tools mid-request and feed <code>tool_result</code> back inside the same batch run</td></tr>
+                    <tr><td>**Single-shot extraction via forced <code>tool_use</code>**</td><td><span class="table-check">✅</span> Supported</td><td><span class="table-check">✅</span> <strong>Supported:</strong> because the <code>tool_use</code> input block <em>is</em> the final structured record, no second turn is needed</td></tr>
+                    <tr><td><strong>Result ordering &amp; correlation</strong></td><td>Immediate 1:1 HTTP response</td><td>Out-of-order results; correlate every item via required **<code>custom_id</code>**</td></tr>
+                    <tr><td><strong>Ideal workloads</strong></td><td>Pre-merge PR checks, live customer chat, interactive IDE helpers, multi-step DB agents</td><td>Nightly test generation, weekly repository security audits, backfilling 200k archive PDFs, offline eval runs</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">SLA window arithmetic and batch failure recovery</h3>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Calculating submission cadence from a business SLA:</strong> because any batch can take up to <strong>24 hours</strong> in the worst case, a document arriving just after batch <em>N</em> closes waits one full submission interval <em>plus</em> up to 24 hours of batch processing (plus pre/post-processing buffer) — <code>max_end_to_end_hours = submission_interval_hours + 24 + pipeline_overhead_hours</code>. To guarantee a <strong>30-hour SLA</strong>, your submission interval must stay strictly below <code>30 - 24 = 6 hours</code>: submitting a batch <strong>every 4 hours</strong> yields a <code>4 + 24 = 28-hour</code> worst case with 2 hours of buffer for ingestion and retry handling.</li>
+                <li><strong>Sample-set refinement before bulk submission:</strong> never tune a prompt by running 100,000 documents and inspecting failures afterward. Iterate on a stratified sample of 50–200 documents synchronously until schema compliance and semantic accuracy stabilize, <em>then</em> submit the full corpus to the Batch API to maximize first-pass yield.</li>
+                <li>**Targeted failure resubmission via <code>custom_id</code>:** inspect terminal batch results by <code>custom_id</code>. Failed, canceled, or expired requests are not billed; resubmit <strong>only</strong> the failed <code>custom_id</code> records—applying root-cause adjustments first (for example, splitting or chunking specific documents that failed with context-length overflow, while retrying expired items unchanged).</li>
+            </ul>
         </div>
 
         <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-bug"></i></div>
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
-                <h4>The Repetition Loop Bug</h4>
-                <p>Extreme or clashing sampling settings (like high temperature with low Top-P) can cause the model to get "stuck" generating the same filler word, phrase, or sentence structure repeatedly until the context window fills.</p>
+                <h4>Exam trap</h4>
+                <p>Never move a <strong>blocking pre-merge CI gate</strong> to the Message Batches API &quot;to save 50%&quot;—developers cannot wait up to 24 hours to merge a hotfix. Keep blocking PR checks synchronous, and move non-blocking nightly audits, test-gap sweeps, and corpus extractions to Batches.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: TAXONOMY
+             SECTION 09: MULTI-INSTANCE &amp; MULTI-PASS REVIEW ARCHITECTURES
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="taxonomy">
+        <div class="section-divider" id="multi-pass-review">
             <div class="section-divider-number">09</div>
-            <h2>Prompting Taxonomy</h2>
+            <h2>Multi-Instance &amp; Multi-Pass Review Architectures</h2>
         </div>
 
-        <div class="two-columns">
-            <div class="concept-card accent-purple">
-                <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Zero & Few-Shot</h3>
-                <ul>
-                    <li><strong>Zero-Shot Prompting:</strong> Relying purely on precise semantic phrasing without prior examples.</li>
-                    <li><strong>Few-Shot Prompting (In-Context):</strong> Providing a limited set of demonstration pairs (input-output) to leverage pattern-matching.</li>
-                </ul>
-            </div>
-            <div class="concept-card accent-amber">
-                <h3><div class="icon-badge"><i class="fas fa-brain"></i></div>Thought Generation</h3>
-                <ul>
-                    <li><strong>Thought Generation:</strong> Prompting the model to explicitly articulate internal reasoning (e.g., Chain-of-Thought).</li>
-                    <li><strong>Decomposition:</strong> Breaking highly complex, multi-faceted problems into smaller, manageable sub-problems to prevent context loss.</li>
-                </ul>
-            </div>
-            <div class="concept-card accent-cyan">
-                <h3><div class="icon-badge"><i class="fas fa-users"></i></div>Evaluation</h3>
-                <ul>
-                    <li><strong>Ensembling:</strong> Generating multiple parallel outputs from identical/varied prompts and aggregating them for a robust consensus.</li>
-                    <li><strong>Self-Criticism:</strong> Requiring the model to independently evaluate, critique, and refine its own initial outputs.</li>
-                </ul>
-            </div>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Why same-session self-review misses subtle defects</h3>
+
+        <div class="concept-card accent-blue">
+            <p>When the same conversation session writes a 400-line module and is then told <em>&quot;Now carefully review the code you just wrote for bugs&quot;</em>, the model retains its own chain of assumptions and design rationalizations in context. Even with high reasoning effort, <strong>anchoring bias</strong> makes a generator far less likely to falsify premises it just constructed.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Review architecture</th><th>Context given to the reviewer</th><th>What it catches best</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Same-session self-critique</strong> <em>(weak)</em></td><td>Full generation history + <em>&quot;check your work&quot;</em></td><td>Obvious typos; misses flawed assumptions baked into the generator&#x27;s reasoning</td></tr>
+                    <tr><td><strong>Independent reviewer instance</strong> <em>(strong)</em></td><td><strong>Clean session</strong> containing only the target diff/artifact, the spec, and explicit review criteria</td><td>Logic flaws, edge-case regressions, security bypasses, spec deviations</td></tr>
+                    <tr><td><strong>Per-file local pass</strong></td><td>One file (or diff hunk) + local defect rubric per call (run in parallel)</td><td>Null handling, off-by-one bugs, injection sinks, local invariants without <strong>attention dilution</strong></td></tr>
+                    <tr><td><strong>Cross-file integration pass</strong></td><td>Aggregated structured findings from local passes + module interfaces/signatures</td><td>Broken API contracts between callers and callees, mismatched types/units across services, contradictory local warnings</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">End-to-end review and CI re-run workflow</h3>
+
+        <div class="concept-card accent-coral">
+            <ol>
+                <li><strong>Generate</strong> code or structured drafts in the builder session.</li>
+                <li><strong>Fan out per-file local passes</strong> across independent, clean-context calls (avoiding the attention dilution that happens when 30+ changed files are stuffed into a single prompt).</li>
+                <li><strong>Run one cross-file integration pass</strong> that inspects interface boundaries and reconciles cross-module data flows.</li>
+                <li><strong>Deduplicate across commits on PR updates:</strong> when a developer pushes a follow-up commit, pass the <strong>prior structured review findings</strong> alongside the updated diff and instruct the reviewer to emit <strong>only newly introduced or still-unaddressed issues</strong> so the pipeline never spams duplicate inline PR comments.</li>
+                <li><strong>Prevent duplicate generated tests:</strong> when generating unit tests in CI, include existing test files (or test-case summaries) plus <code>CLAUDE.md</code> fixture conventions in context so the generator targets uncovered branches rather than re-creating existing assertions.</li>
+            </ol>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: ADVANCED THOUGHT
+             SECTION 10: PROMPT CACHING, SECURITY &amp; ENTERPRISE LLMOPS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="advanced-thought">
+        <div class="section-divider" id="caching-security-ops">
             <div class="section-divider-number">10</div>
-            <h2>Advanced Thought & Structural Patterns</h2>
+            <h2>Prompt Caching, Security &amp; Enterprise LLMOps</h2>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Contrastive Chain-of-Thought (CCoT)</dt>
-                <dd>Embedding both valid and invalid reasoning pathways within the prompt. Showing miscalculations explicitly maps the boundaries of correct reasoning.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Step-Back Prompting</dt>
-                <dd>Forcing the LLM to pause and abstract a granular problem into a high-level conceptual inquiry before calculating the final answer. Highly synergistic with RAG.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Self-Consistency (Ensembling)</dt>
-                <dd>Running the exact same prompt multiple times (using temperature-based decoding) to generate diverse reasoning paths and feed answers back into the LLM for consensus.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Tree of Thoughts (ToT)</dt>
-                <dd>Generalizing CoT into a dynamic tree structure. The model generates multiple candidate thoughts, self-evaluates them, and uses search algorithms (BFS/DFS) to look ahead or backtrack.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Recursive Self-Improvement (RSIP)</dt>
-                <dd>Treating the LLM as a continuous reasoning loop. The model critiques itself through shifting "evaluation lenses" (e.g., logic, structural flow, tone), revising specific flaws each pass.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Context-Aware Decomposition (CAD)</dt>
-                <dd>Breaking a massive task into 3-5 macro-components, but forcing the model to explicitly define how the localized sub-task interacts with global system dependencies.</dd>
-            </div>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Prefix ordering for prompt caching</h3>
+
+        <div class="concept-card accent-blue">
+            <p>Both Claude (<code>cache_control</code>) and Gemini (implicit and explicit context caching) match caches on <strong>exact byte-for-byte prefixes</strong>. Changing a timestamp, user name, or tool schema near the top of a prompt invalidates everything beneath it.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Position in request</th><th>Content</th><th>Mutability</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Top (Prefix)</strong></td><td>Tool definitions → system instructions → normalization rubrics → <code>&lt;examples&gt;</code> → shared reference corpus</td><td>Static across calls (<strong>cached</strong>)</td></tr>
+                    <tr><td><strong>2. Middle</strong></td><td>Session history / prior turns (with incremental cache breakpoints)</td><td>Append-only across turns</td></tr>
+                    <tr><td><strong>3. Bottom (Suffix)</strong></td><td>Current document, PR diff, per-request variables, and final task query</td><td>Changes every call (<strong>uncached</strong>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <ul>
+                <li><strong>Claude cache economics:</strong> 5-minute TTL writes cost <strong>1.25×</strong> base input tokens (break-even after <strong>1</strong> cache read at ~<strong>0.1×</strong>); 1-hour TTL writes cost <strong>2×</strong> base input tokens (break-even after <strong>2</strong> reads). Keep <code>thinking</code> / <code>effort</code> settings stable within a workload so message-history caches stay warm.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Defending prompts against untrusted inputs</h3>
+
+        <div class="concept-card accent-cyan">
+            <ul>
+                <li><strong>Prompts are not security boundaries:</strong> a clever indirect prompt injection inside a parsed PDF or PR description can urge the model to ignore instructions or call a destructive tool.</li>
+                <li><strong>Defense-in-depth stack:</strong> (1) isolate untrusted text inside explicit XML tags (<code>&lt;untrusted_pr_body&gt;…&lt;/untrusted_pr_body&gt;</code>) and instruct the model to treat tag contents strictly as data; (2) restrict agent tool sets to least privilege (<code>Read</code>, <code>Grep</code>, <code>Glob</code> only on untrusted review runs); and (3) enforce deterministic policy checks (refund thresholds, allowed file paths, schema validation) in **application code or <code>PreToolUse</code> hooks**, never solely in prose.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Prompt versioning, automated optimization, and when to fine-tune</h3>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Treat prompts and schemas as versioned code:</strong> store prompt templates, JSON schemas, model IDs (pinned snapshots such as <code>claude-sonnet-4-6</code>), and <code>effort</code> / <code>thinking_level</code> configs in version control gated by regression evals (<a href="AgentOps.html#grading-hierarchy">AgentOps</a>).</li>
+                <li><strong>Automated prompt optimization (APE / Vertex AI Prompt Optimizer):</strong> once you have a labeled golden dataset and programmatic metric (schema F1, per-category precision), optimizer loops can systematically mutate instructions and select few-shot examples to lift accuracy—especially when migrating between model families.</li>
+                <li><strong>Prompting vs. Fine-Tuning (SFT / LoRA):</strong></li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Lever</th><th>Changes weights?</th><th>Reach for it when…</th><th>Avoid it when…</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Prompting + Few-Shot + Schema</strong></td><td><span class="table-cross">❌</span> No</td><td>Iterating rapidly, enforcing JSON structure, reasoning over fresh context/RAG, low-to-medium volume</td><td>Prompt prefix exceeds latency/cost budgets on millions of identical narrow calls</td></tr>
+                    <tr><td><strong>Retrieval (RAG) / Context</strong></td><td><span class="table-cross">❌</span> No</td><td>Facts change daily or require source citations and per-user ACLs</td><td>You only need consistent output formatting or tone</td></tr>
+                    <tr><td><strong>Supervised Fine-Tuning / LoRA</strong></td><td><span class="table-check">✅</span> Yes</td><td>Distilling a large teacher model&#x27;s specialized style/classification into a small fast SLM at massive scale</td><td>Trying to teach rapidly changing facts or compensate for missing schema validation</td></tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: BLUEPRINTS
+             SECTION 11: FAILURE MODES &amp; DIAGNOSTIC TRAPS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="blueprints">
+        <div class="section-divider" id="failure-modes">
             <div class="section-divider-number">11</div>
-            <h2>Task-Specific Prompt Blueprints</h2>
+            <h2>Failure Modes &amp; Diagnostic Traps</h2>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Information Extraction (NER)</dt>
-                <dd><strong>Concept:</strong> Forcing the model to pull exact data points without adding conversational filler.<br>
-                <strong>Formula:</strong> Extract the following entities from the text below: [Entity 1, Entity 2]. Output strictly as a JSON array.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Classification & Sentiment</dt>
-                <dd><strong>Concept:</strong> Restricting the model's output to predefined categories.<br>
-                <strong>Formula:</strong> Classify the following text into exactly one of these categories: [Cat A, Cat B, Cat C]. Do not provide explanations.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Anti-Hallucination Summarization</dt>
-                <dd><strong>Concept:</strong> Grounding the model to only use provided context.<br>
-                <strong>Formula:</strong> Summarize the following text. You must ONLY use the facts provided in the text. If a fact is not in the text, do not include it. Cite your claims using [Paragraph Number].</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Structured Input Schemas</dt>
-                <dd><strong>Concept:</strong> Using JSON schemas to format your input data (not just outputs) acts as a strict blueprint for attention.<br>
-                <strong>Formula:</strong> Evaluate the following product data to answer the user's query: <code>{ "name": "Headphones", "price": 99.99 }</code></dd>
-            </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Observed production symptom</th><th>Root cause</th><th>Correct engineering fix</th><th>Tempting wrong answer</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Automated PR reviewer has 40% dismissal rate; devs ignore all bot comments</td><td>One vague category (<em>&quot;code quality&quot;</em>) floods PRs with style nitpicks</td><td>Disable the noisy category immediately; rewrite as explicit report/skip rules with contrast examples and <code>detected_pattern</code> tracking</td><td>Adding <em>&quot;Only report findings you are 95% confident about&quot;</em></td></tr>
+                    <tr><td>Extractor invents <code>&quot;1970-01-01&quot;</code> or plausible dates when contracts omit <code>renewal_date</code></td><td><code>renewal_date</code> is non-null <code>required</code> in the JSON schema</td><td>Make <code>renewal_date</code> nullable (<code>[&quot;string&quot;, &quot;null&quot;]</code>), document <code>&quot;null if absent&quot;</code>, and add a <code>null</code> few-shot example</td><td>Raising retry count or lecturing <em>&quot;Never hallucinate&quot;</em> while keeping <code>required</code> non-null</td></tr>
+                    <tr><td>Retry loop runs 5 times and eventually fabricates a <code>tax_id</code> that passes regex check</td><td><code>tax_id</code> only exists in an unattached schedule (absent from input)</td><td>Cap retries at 1–2 for semantic/format errors; treat missing-source fields as <code>null</code> and route to human review</td><td>Retrying until validation succeeds</td></tr>
+                    <tr><td>Line items extract cleanly as floats, yet <code>sum(items) != stated_total</code> on 6% of invoices</td><td>Constrained JSON schema guarantees types, not arithmetic semantics</td><td>Extract both <code>line_items</code> and <code>stated_total</code> (<code>+ calculated_total</code>), verify sums in Python, and run 1 error-feedback retry</td><td>Adding more prose rules without code validation</td></tr>
+                    <tr><td>Claude 4.7 upgrade fails in production with <code>HTTP 400 invalid_request_error</code></td><td>Legacy code sends <code>temperature=0.1</code>, <code>budget_tokens</code>, or an assistant <code>{</code> prefill</td><td>Remove <code>temperature</code>/<code>top_p</code>/<code>top_k</code> and prefill; use <code>thinking: {&quot;type&quot;: &quot;adaptive&quot;}</code>, <code>output_config.effort</code>, and <code>output_config.format</code></td><td>Retrying the 400 with exponential backoff</td></tr>
+                    <tr><td>Moving PR security checks to Message Batches cuts cost 50% but stalls merges for hours</td><td>Batches have up to a 24h window and no latency SLA</td><td>Keep blocking pre-merge checks on synchronous API; reserve Batches for nightly/weekly non-blocking sweeps</td><td>Polling the batch endpoint every second</td></tr>
+                    <tr><td>30-hour document SLA breached on Monday mornings despite using 12-hour batch cron</td><td>Worst case is <code>12h wait + 24h batch = 36h &gt; 30h</code></td><td>Shorten batch submission cadence to <strong>4 hours</strong> (<code>4h + 24h = 28h &lt;= 30h</code>)</td><td>Switching the entire archive pipeline back to synchronous calls</td></tr>
+                    <tr><td>Generator session asked to <em>&quot;review your own PR&quot;</em> misses an auth bug it introduced</td><td>Same session retains generation reasoning and anchors on its own assumptions</td><td>Spawn an <strong>independent reviewer call</strong> receiving only the diff, target files, and review rubric</td><td>Increasing <code>max_tokens</code> in the generator thread</td></tr>
+                    <tr><td>Single-prompt review of a 42-file PR misses middle files and contradicts itself</td><td>Attention dilution + &quot;Lost in the Middle&quot; across a huge multi-file input</td><td>Split into parallel <strong>per-file local passes</strong> followed by one <strong>cross-file integration pass</strong></td><td>Asking the single prompt to <em>&quot;read every file carefully&quot;</em></td></tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: LLMOPS
+             SECTION 12: WORKED EXTRACTION &amp; VALIDATION BLUEPRINT
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="llmops">
+        <div class="section-divider" id="extraction-blueprint">
             <div class="section-divider-number">12</div>
-            <h2>Emergent Roles & Enterprise LLMOps</h2>
+            <h2>Worked Extraction &amp; Validation Blueprint</h2>
         </div>
 
-        <div class="two-columns">
-            <div class="concept-card accent-mint">
-                <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>5-Stage Maturity Model</h3>
-                <ul class="checklist">
-                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Ad-hoc Experimentation</li>
-                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Template Standardization</li>
-                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Systematic Evaluation</li>
-                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Production Observability</li>
-                    <li><div class="check-icon"><i class="fas fa-check"></i></div> Continuous Optimization</li>
-                </ul>
-            </div>
-            
-            <div class="concept-card accent-blue">
-                <h3><div class="icon-badge"><i class="fas fa-sliders-h"></i></div>Prompt vs. Tuning</h3>
-                <ul>
-                    <li><strong>Prompt Design:</strong> Relies entirely on base model weights. Fast to build, but lengthy prompts increase per-call token costs.</li>
-                    <li><strong>Supervised Fine-Tuning (SFT):</strong> Physically alters underlying weights. Allows for much shorter prompts, significantly lowering latency and cost.</li>
-                    <li><strong>LoRA:</strong> Updates only a minute fraction of the model's parameters via small adapter layers. Highly cost-effective customization.</li>
-                </ul>
+        <div class="concept-card accent-mint">
+            <p>This end-to-end vendor-invoice blueprint combines normalization contracts, nullable/extensible strict schemas, deterministic cross-field validation, and bounded error-feedback retries (for SDK syntax, see <a href="ClaudeAPI.html#structured-outputs">Claude Platform &amp; API</a>).</p>
+        </div>
+
+        <figure class="diagram-block" style="padding: 16px; margin: 22px 0;">
+            <img src="diagrams/validation-retry-flow.jpg" alt="Self-verifying extraction, bounded error-feedback retry, and human review routing flowchart" width="1302" height="676" loading="lazy" decoding="async" style="width: 100%; height: auto; display: block; border-radius: 8px; background: #ffffff;">
+        </figure>
+
+        <div class="concept-card accent-purple">
+            <ol>
+                <li><strong>Input isolation &amp; normalization contract:</strong> wrap raw OCR or email text inside <code>&lt;invoice&gt;…&lt;/invoice&gt;</code> delimiters; mandate ISO-8601 <code>YYYY-MM-DD</code> dates, stripped currency symbols, explicit <code>null</code> for absent values, and <code>conflict_detected: true</code> whenever two sections state different figures.</li>
+                <li><strong>Extensible strict schema:</strong> enforce constrained decoding (<code>strict: true</code> / <code>output_config.format</code> / <code>response_schema</code>) with <code>additionalProperties: false</code>, nullable optional fields (<code>issue_date</code>, <code>po_number</code>, <code>stated_total</code>), open-world <code>spend_category</code> (<code>&quot;other&quot;</code> paired with nullable <code>category_detail</code>), and calibrated <code>field_confidence</code> (<code>high</code>, <code>medium</code>, <code>low</code>, <code>unclear</code>).</li>
+                <li><strong>Deterministic semantic validation:</strong> verify cross-field invariants in application code after schema parsing—require non-empty <code>category_detail</code> whenever <code>spend_category == &quot;other&quot;</code>, and verify <code>abs(sum(line_amounts) - stated_total) &lt;= 0.01</code> whenever both values are present and <code>conflict_detected</code> is <code>false</code>.</li>
+                <li><strong>Bounded error-feedback retry (max 1–2 attempts):</strong> when semantic validation fails on an extractable slip, append the failed record and exact validator error (<code>is_error: true</code>, e.g., <em>&quot;line_amounts sum to 410.00 vs. stated_total 460.00; re-check omitted tax/shipping lines or set conflict_detected=true&quot;</em>) while reminding the model to keep <code>null</code> rather than guessing missing facts.</li>
+                <li><strong>Calibrated human routing &amp; stratified audit:</strong> bypass retries and route directly to a human review queue whenever <code>stop_reason</code> is unexpected (<code>max_tokens</code>, <code>refusal</code>), <code>conflict_detected</code> is <code>true</code>, calibrated <code>field_confidence</code> is <code>low</code>/<code>unclear</code>, or the retry cap expires—and continuously audit a stratified random sample of verified records across every document type.</li>
+            </ol>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 13: GLOSSARY
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="glossary">
+            <div class="section-divider-number">13</div>
+            <h2>Glossary</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Term</th><th>Definition</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Adaptive Thinking</strong></td><td>Dynamic test-time reasoning mode (<code>thinking: {&quot;type&quot;: &quot;adaptive&quot;}</code>) scaled via <code>output_config.effort</code>, replacing fixed <code>budget_tokens</code>.</td></tr>
+                    <tr><td><strong>Attention dilution</strong></td><td>Recall drop caused by packing too many files, rules, or tasks into one prompt; cured by per-file passes + an integration pass.</td></tr>
+                    <tr><td><strong>Class mixing</strong></td><td>Interleaving target labels across few-shot examples so the model does not over-predict whichever class appeared first or last.</td></tr>
+                    <tr><td><strong>Constrained decoding</strong></td><td>Token-level grammar masking (<code>output_config.format</code>, <code>strict: true</code>, <code>response_schema</code>) that guarantees schema-valid JSON syntax.</td></tr>
+                    <tr><td><strong>Contrast pair</strong></td><td>Two few-shot examples pairing a genuine positive case with a near-miss acceptable case that should <em>not</em> be flagged.</td></tr>
+                    <tr><td>**<code>custom_id</code>**</td><td>Per-request correlation string in Batch APIs used to match out-of-order results and resubmit only failed items.</td></tr>
+                    <tr><td>**<code>detected_pattern</code>**</td><td>Structured slug on review findings naming the rule/construct triggered, used to group developer dismissals and fix noisy criteria.</td></tr>
+                    <tr><td><strong>Independent review instance</strong></td><td>Separate model call with clean context (artifact + rubric only) that avoids anchoring on the generator&#x27;s reasoning trace.</td></tr>
+                    <tr><td><strong>Interview pattern</strong></td><td>Prompting the model to ask clarifying architectural and edge-case questions before generating an implementation.</td></tr>
+                    <tr><td><strong>Lost in the Middle</strong></td><td>U-shaped positional recall effect where models attend strongly to prompt start and end while missing details buried mid-window.</td></tr>
+                    <tr><td><strong>Nullable schema field</strong></td><td>Property typed <code>[&quot;string&quot;, &quot;null&quot;]</code> (or optional) so the model outputs <code>null</code> rather than fabricating data absent from the source.</td></tr>
+                    <tr><td><strong>Retry with error feedback</strong></td><td>Bounded follow-up turn supplying the source, failed extraction, and exact validator error so the model repairs semantic/format slips.</td></tr>
+                    <tr><td><strong>Semantic validation error</strong></td><td>Output that parses against the JSON schema yet violates domain invariants (e.g., line items not summing to <code>stated_total</code>).</td></tr>
+                    <tr><td><strong>Stratified random sampling</strong></td><td>Ongoing human audit sampling across every document type and field stratum—including high-confidence auto-approved outputs—to measure true error rates.</td></tr>
+                    <tr><td>**<code>tool_choice</code>**</td><td>Parameter (<code>auto</code>, <code>any</code>, forced <code>tool</code>, <code>none</code>) controlling whether the model may or must invoke a tool on the current turn.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 14: PRACTICE QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">14</div>
+            <h2>Practice quiz and self-assessment</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Interactive prompt engineering quiz</h3>
+            <p>Scenario-based multiple-choice questions across every section, with feedback on each wrong option and deep links back into this guide.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="quiz.html?topic=prompt-engineering" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Launch the practice quiz →</span>
+                </a>
             </div>
         </div>
 
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Prompt Engineer</dt>
-                <dd>Tasked exclusively with pattern design, template governance, and assessing prompt sensitivity across updating models.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Knowledge Engineer</dt>
-                <dd>Responsible for curating, structuring, and maintaining vast RAG sources and vector schemas.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AI QA/Evaluation Engineer</dt>
-                <dd>Focused on building automated testing suites, managing red-team operations, and continuously probing prompts for jailbreaks, hallucinations, and bias.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>AIOps Specialist</dt>
-                <dd>Manages overarching infrastructure, oversees complex cost tuning (token length vs. inference speed), and ensures seamless observability/rollback capabilities.</dd>
-            </div>
-        </div>
-
-        
         <!-- ═══════════════════════════════════════
              SELF ASSESSMENT QUESTIONS
              ═══════════════════════════════════════ -->
         <div class="quiz-block">
             <div class="quiz-header">
                 <i class="fas fa-question-circle"></i>
-                <h3>Self-Assessment Questions</h3>
+                <h3>Self-assessment questions (click to reveal)</h3>
             </div>
             <div class="quiz-body">
                 <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> What does the "Lost in the Middle" phenomenon refer to in LLMs?</p>
+                    <p><span class="q-num">Q1.</span> Developers have stopped reading your CI review bot because its &#x27;code maintainability&#x27; warnings are mostly stylistic false positives, even though its security findings are accurate. What should you do immediately and next?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">LLMs pay strict attention to the very beginning and very end of a massive prompt, but skim the middle. So critical constraints should be placed at the end.</span>
+                        <span class="answer-text">Disable the noisy &#x27;maintainability&#x27; category immediately to restore trust in the accurate categories, then replace vague prose with explicit report/skip categorical criteria, concrete severity examples, contrast few-shot pairs, and <code>detected_pattern</code> dismissal tracking before re-enabling it.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> Why is "Prompt Chaining" preferred over creating a single "Mega-Prompt"?</p>
+                    <p><span class="q-num">Q2.</span> Why does marking every property in an extraction JSON schema as non-null <code>required</code> increase hallucination, and how do you fix it?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Asking the model to perform multiple complex tasks simultaneously overloads attention and increases hallucinations. Breaking it into sequential prompts improves accuracy.</span>
+                        <span class="answer-text">When a source document omits a field (such as an optional PO number or renewal date), constrained decoding still forces the model to emit a string or number, so it invents one. Make optional source fields nullable (<code>[&quot;string&quot;, &quot;null&quot;]</code>), instruct the model to emit <code>null</code> when absent, and include a <code>null</code> few-shot example.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> What is the difference between Zero-Shot and Few-Shot prompting?</p>
+                    <p><span class="q-num">Q3.</span> A validation check catches <code>sum(line_items) != stated_total</code> on an uploaded invoice, vs. a missing schedule whose fee appears only in an unattached exhibit. Which case benefits from retry-with-error-feedback?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Zero-Shot relies purely on precise phrasing without examples. Few-Shot provides a limited set of demonstration pairs (input-output) to leverage pattern-matching.</span>
+                        <span class="answer-text">The sum mismatch is a semantic/extraction slip resolvable from the uploaded page, so 1–2 retries carrying the original document, failed JSON, and exact sum error usually fix it. The missing exhibit is absent from the input—retrying cannot recover it and pushes the model to fabricate a number that passes your check.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> Your document pipeline has a 30-hour end-to-end SLA and uses a Batch API whose processing window is up to 24 hours. Why does a 12-hour cron job breach the SLA, and what cadence works?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">An item arriving right after a 12-hour batch closes waits 12h + up to 24h = 36h worst case. Submitting batches every 4 hours caps worst-case wait + batch processing at 4h + 24h = 28h, leaving 2h buffer for ingestion and targeted <code>custom_id</code> failure resubmission.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> Why should a 35-file pull request never be reviewed inside the same Claude session that wrote the code or inside a single all-files prompt?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">The generating session retains its own reasoning trace and anchors on its assumptions, while a 35-file single prompt suffers attention dilution and middle-section omissions. Run parallel per-file local passes in fresh, independent reviewer contexts followed by one cross-file integration pass.</span>
                     </div>
                 </div>
             </div>
@@ -678,12 +928,15 @@
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>
 
-    <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
-
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
     <script>
         const backToTopBtn = document.getElementById('backToTop');
@@ -695,7 +948,7 @@
             answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
         });
 
-        document.querySelectorAll('.toc-item').forEach(link => {
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
