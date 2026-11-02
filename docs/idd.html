@@ -13,9 +13,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instruction-Driven Development (IDD & SDD): Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Master Instruction-Driven Development (IDD) and Specification-Driven Development (SDD): reproducible AI coding workflows using living markdown specifications.">
-    <meta name="keywords" content="IDD, Instruction-Driven Development, SDD, Specification-Driven Development, AI Software Engineering, Michael Bettan, Michaël Bettan">
+    <title>Instruction-Driven Development (IDD &amp; SDD): Skills, Rules &amp; Spec-to-Eval Guide | ML Cert Hub</title>
+    <meta name="description" content="Master IDD &amp; SDD v3.0: living specs, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude rules &amp; hooks, and agents-cli eval gates.">
+    <meta name="keywords" content="IDD, Instruction-Driven Development, SDD, Specification-Driven Development, SKILL.md, Progressive Disclosure, GCPSkillRegistry, agents-cli, Google Antigravity, Claude Code, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -32,8 +32,8 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Instruction-Driven Development (IDD & SDD): Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Master Instruction-Driven Development (IDD) and Specification-Driven Development (SDD): reproducible AI coding workflows using living markdown specifications.">
+    <meta property="og:title" content="Instruction-Driven Development (IDD &amp; SDD): Skills, Rules &amp; Spec-to-Eval Guide | ML Cert Hub">
+    <meta property="og:description" content="Master IDD &amp; SDD v3.0: living specs, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude rules &amp; hooks, and agents-cli eval gates.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/idd.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -41,8 +41,8 @@
     <meta property="og:image:alt" content="Instruction-Driven Development (IDD) — Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Instruction-Driven Development (IDD & SDD): Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Master Instruction-Driven Development (IDD) and Specification-Driven Development (SDD): reproducible AI coding workflows using living markdown specifications.">
+    <meta name="twitter:title" content="Instruction-Driven Development (IDD &amp; SDD): Skills, Rules &amp; Spec-to-Eval Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Master IDD &amp; SDD v3.0: living specs, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude rules &amp; hooks, and agents-cli eval gates.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Instruction-Driven Development (IDD) — Study Guide by Michaël Bettan">
 
@@ -62,14 +62,13 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/idd.html#article",
-                  "headline": "Instruction-Driven Development (IDD & SDD): Study Guide | ML Cert Hub",
+                  "headline": "Instruction-Driven Development (IDD & SDD): Skills, Rules & Spec-to-Eval Guide | ML Cert Hub",
                   "name": "Instruction-Driven Development (IDD) Study Guide",
-                  "description": "Master Instruction-Driven Development (IDD) and Specification-Driven Development (SDD): reproducible AI coding workflows using living markdown specifications.",
-                  "keywords": "IDD, Instruction-Driven Development, SDD, Specification-Driven Development, AI Software Engineering, Michael Bettan, Michaël Bettan",
+                  "description": "Master IDD & SDD v3.0: living specs, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude rules & hooks, and agents-cli eval gates.",
+                  "keywords": "IDD, Instruction-Driven Development, SDD, Specification-Driven Development, SKILL.md, Progressive Disclosure, GCPSkillRegistry, agents-cli, Google Antigravity, Claude Code, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/idd.html",
                   "inLanguage": "en",
-                  "version": "2.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-11-01",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Intermediate",
                   "author": {
@@ -108,6 +107,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/idd.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -122,36 +125,37 @@
             <div class="cover-content">
                 <div class="cover-eyebrow">
                     <i class="fas fa-scroll"></i>
-                    Study Notes — Development Methodology
+                    Study Notes v3.0 — PAA Sec 2 &amp; CCAR-F D3
                 </div>
                 <h1>Instruction-Driven<br><em>Development (IDD)</em></h1>
                 <p class="cover-subtitle">
-                    A structured methodology for AI-assisted software development — also known as
-                    Specification-Driven Development (SDD). Move beyond ad-hoc prompting to a disciplined,
-                    reproducible workflow where <strong>instructions are the blueprint</strong> and AI is the builder.
+                    Specification-Driven Development (SDD) for production agentic engineering: living Markdown
+                    blueprints, <strong><code>SKILL.md</code> 3-level progressive disclosure</strong>,
+                    <code>GCPSkillRegistry</code>, deterministic hooks, and <strong><code>agents-cli</code></strong>
+                    spec-to-eval CI pipelines.
                 </p>
                 <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>Updated: <strong>April 2026</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.0</strong></span>
+                        <span>Updated: <strong>April 2026 (v3.0)</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-tag"></i>
-                        <span>Category: <strong>Foundation</strong></span>
+                        <span>Category: <strong>Foundation · Agentic SE</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-clock"></i>
-                        <span>Reading Time: <strong>~18 min</strong></span>
+                        <span>Reading Time: <strong>~25 min</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-user-edit"></i>
                         <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=idd" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Spec-Driven Development (IDD) Practice Quiz (33 Questions) →</span>
+                </a>
             </div>
         </section>
 
@@ -201,6 +205,16 @@
                 </a>
                 <a href="#s8" class="toc-item">
                     <span class="toc-number">08</span>
+                    Agent Skills (SKILL.md) &amp; Progressive Disclosure
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s9" class="toc-item">
+                    <span class="toc-number">09</span>
+                    Enterprise Rules, Hooks &amp; agents-cli Pipelines
+                    <span class="toc-dots"></span>
+                </a>
+                <a href="#s10" class="toc-item">
+                    <span class="toc-number">10</span>
                     Key Takeaways &amp; Self-Assessment
                     <span class="toc-dots"></span>
                 </a>
@@ -768,12 +782,14 @@
                 Tools That Support IDD Workflows
             </h3>
             <ul>
-                <li><strong>Cursor Rules (.cursorrules):</strong> Project-level instruction files that persist context across sessions — the closest thing to native IDD support</li>
+                <li><strong>Google Antigravity (<code>AGENTS.md</code>, <code>GEMINI.md</code>, <code>.agents/rules/</code>, <code>/plan</code>, <code>/grill-me</code>):</strong> Agent-first IDE &amp; CLI with executable Plan Artifacts, interactive design interviews, scoped rules, and native <code>SKILL.md</code> discovery</li>
+                <li><strong>Claude Code (<code>CLAUDE.md</code>, <code>.claude/rules/</code>, Plan Mode):</strong> Project documentation files read automatically, path-scoped rules, deterministic lifecycle hooks, and <code>Shift+Tab</code> Plan Mode</li>
+                <li><strong><code>google-agents-cli</code> (<code>agents-cli</code>):</strong> Unified Google Cloud CLI for installing official agent skills, scaffolding ADK agents, running CI eval gates, and publishing to Gemini Enterprise</li>
+                <li><strong>Cursor Rules (.cursorrules):</strong> Project-level instruction files that persist context across sessions — native IDD support in Cursor</li>
                 <li><strong>Claude Projects (System Prompts):</strong> Persistent project instructions that guide every interaction within a project workspace</li>
                 <li><strong>GitHub Copilot Instructions:</strong> Repository-level <code>.github/copilot-instructions.md</code> files that constrain Copilot's behavior</li>
                 <li><strong>Aider Conventions:</strong> <code>.aider.conf.yml</code> and convention files that encode project standards</li>
                 <li><strong>Windsurf Memories:</strong> Persistent project context that carries architecture decisions across sessions</li>
-                <li><strong>CLAUDE.md files:</strong> Project documentation files that Claude Code reads automatically for context</li>
             </ul>
         </div>
 
@@ -821,10 +837,234 @@
 
 
         <!-- ═══════════════════════════════════════
-             SECTION 8: KEY TAKEAWAYS & QUIZ
+             SECTION 8: AGENT SKILLS & PROGRESSIVE DISCLOSURE
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="s8">
             <span class="section-divider-number">08</span>
+            <h2>Agent Skills (<code>SKILL.md</code>), Progressive Disclosure &amp; <code>GCPSkillRegistry</code></h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                Cramming 40 procedural runbooks or dozens of verbose MCP tool schemas directly into
+                <code>AGENTS.md</code> or <code>CLAUDE.md</code> triggers <strong>context &amp; tool bloat</strong>:
+                attention degrades, latency spikes, and every trivial prompt pays for thousands of irrelevant tokens.
+                The open <strong>Agent Skills standard (<code>agentskills.io</code>)</strong> packages domain expertise
+                into modular folders (<code>.agents/skills/&lt;name&gt;/SKILL.md</code> or <code>.claude/skills/</code>)
+                loaded through <strong>3-Level Progressive Disclosure</strong>.
+            </p>
+        </div>
+
+        <!-- 3-Level Progressive Disclosure SVG -->
+        <div class="diagram-container" style="margin: 24px 0; padding: 20px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--card-border); border-radius: 14px;">
+            <svg viewBox="0 0 920 255" width="100%" role="img" aria-label="SKILL.md 3-Level Progressive Disclosure from ~100 token YAML frontmatter to under 5,000 token SKILL.md to zero-token on-demand scripts and references" style="display: block; max-width: 920px; margin: 0 auto; font-family: 'Inter', sans-serif;">
+                <defs>
+                    <marker id="pd-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 9 5 L 0 9 z" fill="#2DD4BF"/>
+                    </marker>
+                </defs>
+                <text x="460" y="22" text-anchor="middle" fill="#F8FAFC" font-size="13.5" font-weight="700" letter-spacing="0.04em">SKILL.MD 3-LEVEL PROGRESSIVE DISCLOSURE &amp; GCPSKILLREGISTRY</text>
+
+                <!-- Level 1 -->
+                <rect x="20" y="42" width="270" height="150" rx="11" fill="rgba(45, 212, 191, 0.09)" stroke="#2DD4BF" stroke-width="1.6"/>
+                <text x="36" y="66" fill="#2DD4BF" font-size="11" font-weight="700">LEVEL 1 · DISCOVERY (~100 TOKENS)</text>
+                <text x="36" y="87" fill="#F8FAFC" font-size="12.5" font-weight="600">YAML Frontmatter at Startup</text>
+                <text x="36" y="109" fill="#CBD5E1" font-size="11">• name (optional) + description (REQUIRED)</text>
+                <text x="36" y="128" fill="#CBD5E1" font-size="11">• Sole semantic trigger signal for activation</text>
+                <text x="36" y="147" fill="#CBD5E1" font-size="11">• Or explicit /skill-name slash command</text>
+                <text x="36" y="172" fill="#94A3B8" font-size="10">50 installed skills = ~5k tokens total</text>
+
+                <line x1="290" y1="117" x2="320" y2="117" stroke="#2DD4BF" stroke-width="1.8" marker-end="url(#pd-arrow)"/>
+
+                <!-- Level 2 -->
+                <rect x="324" y="42" width="272" height="150" rx="11" fill="rgba(96, 165, 250, 0.09)" stroke="#60A5FA" stroke-width="1.6"/>
+                <text x="340" y="66" fill="#60A5FA" font-size="11" font-weight="700">LEVEL 2 · ACTIVATION (&lt;5,000 TOKENS)</text>
+                <text x="340" y="87" fill="#F8FAFC" font-size="12.5" font-weight="600">SKILL.md Body on Task Match</text>
+                <text x="340" y="109" fill="#CBD5E1" font-size="11">• Loaded ONLY when intent matches description</text>
+                <text x="340" y="128" fill="#CBD5E1" font-size="11">• Step-by-step SOP, flags &amp; guardrails</text>
+                <text x="340" y="147" fill="#CBD5E1" font-size="11">• Keep concise (&lt;5k tokens recommended)</text>
+                <text x="340" y="172" fill="#94A3B8" font-size="10">5 Patterns: Info · Wrapper · Gen · Review · Flow</text>
+
+                <line x1="596" y1="117" x2="626" y2="117" stroke="#2DD4BF" stroke-width="1.8" marker-end="url(#pd-arrow)"/>
+
+                <!-- Level 3 -->
+                <rect x="630" y="42" width="270" height="150" rx="11" fill="rgba(167, 139, 250, 0.09)" stroke="#A78BFA" stroke-width="1.6"/>
+                <text x="646" y="66" fill="#A78BFA" font-size="11" font-weight="700">LEVEL 3 · EXECUTION (0 BASE TOKENS)</text>
+                <text x="646" y="87" fill="#F8FAFC" font-size="12.5" font-weight="600">scripts/, references/, assets/</text>
+                <text x="646" y="109" fill="#CBD5E1" font-size="11">• Read or executed strictly on demand</text>
+                <text x="646" y="128" fill="#CBD5E1" font-size="11">• Non-interactive CLI (--help, NO TTY input)</text>
+                <text x="646" y="147" fill="#CBD5E1" font-size="11">• Deep schemas stay out of prompt cache</text>
+                <text x="646" y="172" fill="#94A3B8" font-size="10">Deterministic code runs outside LLM weights</text>
+
+                <!-- GCPSkillRegistry Bottom Banner -->
+                <rect x="20" y="206" width="880" height="36" rx="8" fill="rgba(251, 191, 36, 0.1)" stroke="rgba(251, 191, 36, 0.45)"/>
+                <text x="460" y="229" text-anchor="middle" fill="#FDE68A" font-size="11" font-weight="600">Enterprise Distribution: GCPSkillRegistry governs org-wide Skill, SkillRevision &amp; Publisher resources with IAM &amp; pinned versions</text>
+            </svg>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-sitemap"></i></span>
+                    5 Canonical Skill Patterns
+                </h3>
+                <ul>
+                    <li><strong>Informational:</strong> Curated domain/API rules without mutating files</li>
+                    <li><strong>Tool Wrapper:</strong> Exact CLI or MCP invocation sequences and flag safety</li>
+                    <li><strong>Generator:</strong> Emits standardized scaffolds from <code>assets/</code> templates</li>
+                    <li><strong>Reviewer:</strong> Audits PR diffs or specs against security/architecture rubrics</li>
+                    <li><strong>Workflow:</strong> Coordinates multi-step gated pipelines (<code>plan → build → verify</code>)</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-coral">
+                <h3>
+                    <span class="icon-badge"><i class="fas fa-bolt"></i></span>
+                    Authoring Rules &amp; Exam Gotchas
+                </h3>
+                <ul>
+                    <li><strong><code>description</code> is mandatory:</strong> At startup the model sees <em>only</em> YAML frontmatter — vague descriptions prevent Level 2 activation.</li>
+                    <li><strong>Keep <code>SKILL.md</code> &lt; 5,000 tokens:</strong> Offload large API tables to <code>references/</code> so Level 2 stays sharp.</li>
+                    <li><strong>Black-box, non-interactive <code>scripts/</code>:</strong> Expose <code>--help</code> flags and exit codes; never block on interactive TTY prompts.</li>
+                    <li><strong><code>GCPSkillRegistry</code>:</strong> Centralizes versioned enterprise skills (<code>Skill</code>, <code>SkillRevision</code>, <code>Publisher</code>) across teams instead of copy-pasting folders.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 9: ENTERPRISE CUSTOMIZATIONS & AGENTS-CLI
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s9">
+            <span class="section-divider-number">09</span>
+            <h2>Enterprise Customizations &amp; <code>agents-cli</code> Spec-to-Eval Workflows</h2>
+        </div>
+
+        <div class="prose">
+            <p>
+                Mature IDD teams separate <strong>persistent workspace conventions (Rules)</strong>,
+                <strong>on-demand procedural playbooks (Skills)</strong>, <strong>100% deterministic lifecycle
+                guardrails (Hooks)</strong>, and <strong>automated CI evaluation gates (<code>agents-cli</code>)</strong>.
+            </p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>Google Antigravity</th>
+                        <th>Claude Code</th>
+                        <th>Enforcement &amp; Exam Rule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Persistent / Scoped Rules</strong></td>
+                        <td><code>AGENTS.md</code> / <code>GEMINI.md</code> + <code>.agents/rules/*.md</code> with <strong>snake_case <code>trigger:</code></strong> (<code>always_on</code>, <code>model_decision</code>, <code>glob</code>, <code>manual</code>; ~24 KB/file, ~20k-token cap)</td>
+                        <td><code>CLAUDE.md</code>, <code>.claude/CLAUDE.md</code>, <code>~/.claude/CLAUDE.md</code> (<code>@path</code> imports) + <code>.claude/rules/*.md</code> YAML <code>paths:</code> globs</td>
+                        <td><strong>Advisory LLM guidance</strong> for style &amp; architecture. <em>Gotcha:</em> camelCase <code>alwaysOn</code> in Antigravity YAML is silently discarded!</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Modular Skills</strong></td>
+                        <td><code>.agents/skills/&lt;name&gt;/SKILL.md</code> + <code>GCPSkillRegistry</code></td>
+                        <td><code>.claude/skills/&lt;name&gt;/SKILL.md</code> + <code>~/.claude/skills/</code></td>
+                        <td><strong>Progressive disclosure</strong> (~100t → &lt;5kt → 0t scripts) for repeatable multi-step tasks without context bloat.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deterministic Hooks</strong></td>
+                        <td><code>hooks.json</code> lifecycle command hooks</td>
+                        <td><code>settings.json</code> (<code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>)</td>
+                        <td><strong>Zero-exception OS enforcement:</strong> <code>PreToolUse</code> exit code <code>2</code> blocks forbidden commands/<code>.env</code> edits; <code>PostToolUse</code> runs formatters/linters.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spec Alignment</strong></td>
+                        <td><code>/plan</code> (Plan Artifact) &amp; <code>/grill-me</code> (design interview)</td>
+                        <td>Plan Mode (<code>Shift+Tab</code> read-only planning)</td>
+                        <td><strong>Pre-code alignment</strong> during IDD Phases 1–2 (<code>Define → Review</code>) before touching source files.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- agents-cli Pipeline SVG -->
+        <div class="diagram-container" style="margin: 24px 0; padding: 20px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--card-border); border-radius: 14px;">
+            <svg viewBox="0 0 920 155" width="100%" role="img" aria-label="agents-cli five-stage spec-to-eval workflow from setup to create --yes to eval run CI gate to deploy and publish" style="display: block; max-width: 920px; margin: 0 auto; font-family: 'Inter', sans-serif;">
+                <defs>
+                    <marker id="ac-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 9 5 L 0 9 z" fill="#38BDF8"/>
+                    </marker>
+                </defs>
+                <text x="460" y="22" text-anchor="middle" fill="#F8FAFC" font-size="13" font-weight="700" letter-spacing="0.04em">GOOGLE AGENTS-CLI END-TO-END SPEC-TO-EVAL PIPELINE (PAA SEC 2.1 &amp; 4.1)</text>
+
+                <rect x="16" y="42" width="164" height="92" rx="9" fill="rgba(56, 189, 248, 0.09)" stroke="#38BDF8"/>
+                <text x="28" y="64" fill="#38BDF8" font-size="10.5" font-weight="700">1. IDE SKILL SETUP</text>
+                <text x="28" y="84" fill="#F8FAFC" font-size="10.5">uvx google-agents-cli</text>
+                <text x="28" y="99" fill="#F8FAFC" font-size="10.5">setup</text>
+                <text x="28" y="119" fill="#94A3B8" font-size="9.5">Installs GCP skills in IDE</text>
+
+                <line x1="180" y1="88" x2="198" y2="88" stroke="#38BDF8" stroke-width="1.6" marker-end="url(#ac-arrow)"/>
+
+                <rect x="200" y="42" width="168" height="92" rx="9" fill="rgba(45, 212, 191, 0.09)" stroke="#2DD4BF"/>
+                <text x="212" y="64" fill="#2DD4BF" font-size="10.5" font-weight="700">2. HEADLESS SCAFFOLD</text>
+                <text x="212" y="84" fill="#F8FAFC" font-size="10.5">agents-cli create --yes</text>
+                <text x="212" y="99" fill="#F8FAFC" font-size="10.5">&amp;&amp; agents-cli install</text>
+                <text x="212" y="119" fill="#FDA4AF" font-size="9.5" font-weight="600">Always pass --yes in CI/agent</text>
+
+                <line x1="368" y1="88" x2="386" y2="88" stroke="#38BDF8" stroke-width="1.6" marker-end="url(#ac-arrow)"/>
+
+                <rect x="388" y="42" width="176" height="92" rx="9" fill="rgba(251, 191, 36, 0.12)" stroke="#FBBF24" stroke-width="1.6"/>
+                <text x="400" y="64" fill="#FBBF24" font-size="10.5" font-weight="700">3. SPEC-TO-EVAL GATE</text>
+                <text x="400" y="84" fill="#F8FAFC" font-size="10.5">agents-cli eval run</text>
+                <text x="400" y="99" fill="#CBD5E1" font-size="10">*.evalset.json +</text>
+                <text x="400" y="119" fill="#94A3B8" font-size="9.5">eval_config.json rubrics</text>
+
+                <line x1="564" y1="88" x2="582" y2="88" stroke="#38BDF8" stroke-width="1.6" marker-end="url(#ac-arrow)"/>
+
+                <rect x="584" y="42" width="152" height="92" rx="9" fill="rgba(96, 165, 250, 0.09)" stroke="#60A5FA"/>
+                <text x="596" y="64" fill="#60A5FA" font-size="10.5" font-weight="700">4. DEPLOY RUNTIME</text>
+                <text x="596" y="84" fill="#F8FAFC" font-size="10.5">agents-cli deploy</text>
+                <text x="596" y="101" fill="#CBD5E1" font-size="9.5">Agent Runtime · Cloud Run</text>
+                <text x="596" y="119" fill="#94A3B8" font-size="9.5">or GKE container</text>
+
+                <line x1="736" y1="88" x2="754" y2="88" stroke="#38BDF8" stroke-width="1.6" marker-end="url(#ac-arrow)"/>
+
+                <rect x="756" y="42" width="148" height="92" rx="9" fill="rgba(167, 139, 250, 0.09)" stroke="#A78BFA"/>
+                <text x="768" y="64" fill="#A78BFA" font-size="10.5" font-weight="700">5. PUBLISH</text>
+                <text x="768" y="84" fill="#F8FAFC" font-size="10.5">agents-cli publish</text>
+                <text x="768" y="99" fill="#F8FAFC" font-size="10.5">gemini-enterprise</text>
+                <text x="768" y="119" fill="#94A3B8" font-size="9.5">Org catalog &amp; IAM</text>
+            </svg>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash — Headless Spec-to-Eval CI Pipeline with agents-cli</span>
+            </div>
+            <pre><span class="comment"># 1. Bootstrap official Google Cloud skills into Antigravity, Claude Code &amp; Gemini CLI</span>
+uvx google-agents-cli setup
+
+<span class="comment"># 2. Headless scaffold from approved IDD spec (--yes prevents non-TTY stdin hangs!)</span>
+agents-cli create billing-dispute-agent --prototype --model gemini-4-argon --yes
+agents-cli install
+
+<span class="comment"># 3. Execute trajectory &amp; rubric acceptance criteria in CI before merge</span>
+agents-cli eval run \
+  --config tests/eval/eval_config.json \
+  --evalset tests/eval/evalsets/dispute_golden.evalset.json
+
+<span class="comment"># 4. Deploy &amp; register in Gemini Enterprise once eval gates pass</span>
+agents-cli deploy --target agent-engine --yes
+agents-cli publish gemini-enterprise --yes</pre>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════
+             SECTION 10: KEY TAKEAWAYS & QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="s10">
+            <span class="section-divider-number">10</span>
             <h2>Key Takeaways &amp; Self-Assessment</h2>
         </div>
 
@@ -842,7 +1082,7 @@
                     <span>The workflow follows 6 phases: <span class="tag purple">Define</span> →
                         <span class="tag purple">Review</span> → <span class="tag purple">Execute</span> →
                         <span class="tag purple">Validate</span> → <span class="tag purple">Refine</span> →
-                        <span class="tag purple">Archive</span>.</span>
+                        <span class="tag purple">Archive</span> (assisted pre-code by <code>/plan</code> and <code>/grill-me</code>).</span>
                 </li>
                 <li>
                     <i class="fas fa-check-circle"></i>
@@ -863,15 +1103,40 @@
                 </li>
                 <li>
                     <i class="fas fa-check-circle"></i>
-                    <span>The <strong>golden rule</strong>: the quality of your specification directly determines
-                        the quality of the generated code. Invest in the spec, save in debugging.</span>
+                    <span><strong>Agent Skills (<code>SKILL.md</code>)</strong> cure context/tool bloat via <strong>3-Level Progressive Disclosure</strong> (~100-token YAML <code>description</code> → &lt;5,000-token <code>SKILL.md</code> body → on-demand non-interactive <code>scripts/</code> &amp; <code>references/</code>), distributed centrally via <strong><code>GCPSkillRegistry</code></strong>.</span>
                 </li>
                 <li>
                     <i class="fas fa-check-circle"></i>
-                    <span>Tools like <strong>Cursor Rules, Claude Projects, and CLAUDE.md files</strong> provide
-                        native support for persistent, project-level instructions — the infrastructure for IDD.</span>
+                    <span>Enforce hard guardrails with <strong><code>PreToolUse</code> / <code>PostToolUse</code> hooks</strong> (exit code <code>2</code> blocks deterministically) rather than advisory rules (remember snake_case <code>trigger:</code> in Antigravity <code>.agents/rules/*.md</code>), and gate releases headlessly via <strong><code>agents-cli</code> (<code>--yes</code> + <code>eval run</code>)</strong>.</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>The <strong>golden rule</strong>: the quality of your specification directly determines
+                        the quality of the generated code. Invest in the spec, save in debugging.</span>
                 </li>
             </ul>
+        </div>
+
+        <div class="concept-card accent-pink" style="margin-top: 22px; margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+            <p>Listen to the 56-minute Spec-Driven Development (IDD) audio deep dive, open the study guide PDF and sketchnote infographic in the Hub Viewer, or drill scenario-based questions on the 6-phase IDD lifecycle, <code>SKILL.md</code> 3-level progressive disclosure, <code>GCPSkillRegistry</code>, deterministic <code>PreToolUse</code> / <code>PostToolUse</code> hooks, and headless <code>agents-cli</code> evaluation gates.</p>
+            <div class="audio-label" style="margin-top: 15px;">Spec-Driven Development (IDD): Skills, Hooks &amp; CI Eval Gates (Podcast)</div>
+            <div class="audio-wrapper">
+                <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                    <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/IDD-v3.0.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Open Study Notes &amp; Infographic in Hub Viewer</span>
+                </a>
+                <a href="quiz.html?topic=idd" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Launch Interactive IDD Practice Quiz →</span>
+                </a>
+            </div>
         </div>
 
         <!-- Quiz -->
@@ -918,23 +1183,15 @@
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q5.</span> What is the "golden rule" of IDD, and what does it mean
-                        practically?</p>
+                    <p><span class="q-num">Q5.</span> How does <code>SKILL.md</code> 3-Level Progressive Disclosure prevent context bloat?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">The golden rule: "The quality of your specification directly determines
-                            the quality of the generated code." Practically, this means ambiguous specs produce
-                            unpredictable code. Investing time in writing clear, complete, testable instructions saves
-                            significantly more time than debugging poorly-specified AI output.</span>
+                        <span class="answer-text"><strong>Level 1</strong> loads only YAML frontmatter (~100 tokens/skill, with required <code>description</code>) at startup; <strong>Level 2</strong> loads the &lt;5,000-token <code>SKILL.md</code> body only when the task matches <code>description</code>; <strong>Level 3</strong> executes non-interactive <code>scripts/</code> or reads <code>references/</code> strictly on demand.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q6.</span> Name three tools that provide native support for IDD-style
-                        persistent instructions.</p>
+                    <p><span class="q-num">Q6.</span> Why use <code>PreToolUse</code> hooks instead of <code>AGENTS.md</code> / <code>CLAUDE.md</code> rules for blocking destructive commands, and why pass <code>--yes</code> to <code>agents-cli</code>?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">1) <strong>Cursor</strong> — .cursorrules files for project-level
-                            instructions. 2) <strong>Claude Projects</strong> — persistent system prompts per workspace.
-                            3) <strong>GitHub Copilot</strong> — .github/copilot-instructions.md for repository-level
-                            constraints. Also: Aider conventions, Windsurf Memories, CLAUDE.md files.</span>
+                        <span class="answer-text">Rules are advisory prompt tokens that an LLM can ignore, whereas a <strong><code>PreToolUse</code> hook returning exit code <code>2</code></strong> deterministically blocks tool execution at the harness level. Passing <strong><code>--yes</code></strong> with explicit flags prevents headless coding agents and CI runners from hanging on interactive TTY prompts.</span>
                     </div>
                 </div>
             </div>
@@ -942,11 +1199,47 @@
 
         <div class="progress-bar-wrapper">
             <div class="progress-bar-label">
-                <span>Study Progress — IDD / SDD Methodology</span>
+                <span>Study Progress — IDD, SKILL.md Progressive Disclosure &amp; agents-cli</span>
                 <span>100%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-bar-fill" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             RELATED GUIDES & PRACTICE QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="concept-card accent-blue" style="margin-bottom: 18px;">
+            <h3><div class="icon-badge"><i class="fas fa-compass"></i></div>Related Study Guides</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-top: 14px;">
+                <a href="vibecoding.html" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">
+                    <strong>Vibe Coding &amp; Swarms →</strong><br><span style="font-size: 0.8rem; opacity: 0.75;">Sandboxes, worktrees &amp; CodeMender</span>
+                </a>
+                <a href="Antigravity.html" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">
+                    <strong>Google Antigravity →</strong><br><span style="font-size: 0.8rem; opacity: 0.75;">Plan Artifacts, rules &amp; SKILL.md</span>
+                </a>
+                <a href="ClaudeCode.html" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">
+                    <strong>Claude Code &amp; SDK →</strong><br><span style="font-size: 0.8rem; opacity: 0.75;">CLAUDE.md hierarchy, skills &amp; hooks</span>
+                </a>
+                <a href="ADK.html" style="padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">
+                    <strong>Google ADK v2.0 →</strong><br><span style="font-size: 0.8rem; opacity: 0.75;">Evalsets, rubrics &amp; workflow agents</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Practice (33 Scenario Questions)</h3>
+            <p>Drill scenario-based questions on ad-hoc prompting failures, the six IDD phases, spec anatomy, SKILL.md 3-level progressive disclosure, GCPSkillRegistry, Antigravity/Claude rules &amp; hooks, and agents-cli CI gates.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Back to the Hub</span>
+                </a>
+                <a href="quiz.html?topic=idd" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Take the 33-question quiz: IDD →</span>
+                </a>
             </div>
         </div>
 
@@ -959,11 +1252,15 @@
                 tooling evolve rapidly in the AI-assisted development space. Always verify with primary sources.
             </p>
             <p>
-                Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank">Michaël Bettan</a> ·
-                <a href="https://mbettan.github.io/machine-learning-cert/" target="_blank">ML Certification Hub</a> ·
+                Created by <a href="https://www.linkedin.com/in/mbettan/" target="_blank" rel="noopener noreferrer">Michaël Bettan</a> ·
+                <a href="https://mbettan.github.io/machine-learning-cert/" target="_blank" rel="noopener noreferrer">ML Certification Hub</a> ·
                 Licensed under <a href="https://github.com/mbettan/machine-learning-cert/blob/main/LICENSE"
-                    target="_blank">Apache 2.0</a>
+                    target="_blank" rel="noopener noreferrer">Apache 2.0</a>
             </p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>

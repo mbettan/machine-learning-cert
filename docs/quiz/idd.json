@@ -1,0 +1,1267 @@
+{
+  "topic_id": "idd",
+  "title": "Spec-Driven Development (IDD)",
+  "guide_url": "idd.html",
+  "questions": [
+    {
+      "id": "idd-q-01",
+      "section": "The Problem with Ad-Hoc Prompting",
+      "guide_anchor": "s1",
+      "question": "Six months into building with an AI assistant, a team finds that each generated component passes its own tests, yet the codebase as a whole is inconsistent: different error formats, naming styles and data-access patterns. What does the guide call this outcome?",
+      "options": [
+        {
+          "text": "The 'death by a thousand prompts' anti-pattern: individually correct but collectively incoherent components from ad-hoc prompting.",
+          "correct": true
+        },
+        {
+          "text": "Over-specification, caused by writing spec documents that are far too long for each component the team builds.",
+          "correct": false,
+          "why_wrong": "Over-specification means too much spec. This team had too little structure, so inconsistencies piled up prompt by prompt."
+        },
+        {
+          "text": "The Spec-Test-Code Loop, which deliberately produces varied implementations that the team then compares against each other.",
+          "correct": false,
+          "why_wrong": "The Spec-Test-Code Loop is a recommended IDD pattern that improves consistency. It is not a failure mode."
+        },
+        {
+          "text": "Normal model drift, which has nothing to do with how prompts are written and goes away with a newer model.",
+          "correct": false,
+          "why_wrong": "The guide puts the cause on unstructured, ad-hoc prompting, not on the model version."
+        }
+      ],
+      "explanation": "The guide's 'Ad-Hoc Spiral' callout: without structure, each AI interaction adds subtle inconsistencies until the codebase is a patchwork of individually correct but collectively incoherent components, which is the 'death by a thousand prompts' anti-pattern. IDD fixes this by treating AI interaction as a structured engineering process.",
+      "key_takeaway": "Unstructured prompting leads to 'death by a thousand prompts': parts that are each correct but incoherent as a whole.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Context Engineering for Agents",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        },
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-02",
+      "section": "The Problem with Ad-Hoc Prompting",
+      "guide_anchor": "s1",
+      "question": "The developer who generated most of a payments module with AI leaves the company. Nobody else can reproduce or review how the module was produced, because the prompts existed only in that person's head. Which ad-hoc prompting problem is this?",
+      "options": [
+        {
+          "text": "Inconsistency: the same prompt would have given different results on a different model.",
+          "correct": false,
+          "why_wrong": "Inconsistency is about varying outputs for the same prompt. The issue here is that the prompts were never shared at all."
+        },
+        {
+          "text": "No collaboration: prompts lived in one developer's head, with no shared understanding, review or handoff.",
+          "correct": true
+        },
+        {
+          "text": "Context loss, because the AI model itself quietly deleted the departing developer's chat history when the account was closed.",
+          "correct": false,
+          "why_wrong": "Context loss in the guide means the AI forgetting earlier decisions between sessions. This scenario is a team knowledge-sharing failure."
+        },
+        {
+          "text": "Over-specification, because the developer wrote far more detail than the module ever needed.",
+          "correct": false,
+          "why_wrong": "The problem is a missing spec, not an overly detailed one."
+        }
+      ],
+      "explanation": "The guide names three problems with ad-hoc prompting. Inconsistency: the same prompt gives different results. Context loss: the AI forgets previous decisions and each session starts from zero. No collaboration: prompts live in one developer's head, with no shared understanding, review process or handoff protocol.",
+      "key_takeaway": "Prompts that live only in one developer's head mean no collaboration: nothing to review, share or hand off.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Context Engineering for Agents",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        },
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-03",
+      "section": "The Problem with Ad-Hoc Prompting",
+      "guide_anchor": "s1",
+      "question": "Every morning a developer opens a fresh AI chat and re-explains the project, yet the assistant keeps proposing patterns the team rejected last week, and the architecture slowly drifts. Which problem from the guide is this?",
+      "options": [
+        {
+          "text": "Inconsistency between team members, which is solved by making every developer use the same prompt wording.",
+          "correct": false,
+          "why_wrong": "This scenario involves a single developer and an AI that forgets earlier decisions, which is context loss."
+        },
+        {
+          "text": "Swarm sprawl, caused by running too many agents in parallel.",
+          "correct": false,
+          "why_wrong": "No multi-agent swarm is involved. This is one assistant losing context between sessions."
+        },
+        {
+          "text": "Context loss: the AI forgets earlier decisions, each session starts from zero, and coherence degrades over time.",
+          "correct": true
+        },
+        {
+          "text": "No collaboration, because the developer is the only one using AI and so there is nobody to review any of the prompts.",
+          "correct": false,
+          "why_wrong": "The defining symptom is the AI forgetting earlier decisions between sessions, which the guide calls context loss."
+        }
+      ],
+      "explanation": "The guide describes context loss as follows: the AI forgets previous decisions, each session starts from zero, and architectural coherence degrades over time. Persistent instruction documents, kept in IDD-supporting tools, address this.",
+      "key_takeaway": "If each AI session starts from zero and forgets earlier decisions, that is context loss, and persistent specs address it.",
+      "doc_links": [
+        {
+          "label": "Anthropic: Context Engineering for Agents",
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        },
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-04",
+      "section": "What is IDD / SDD?",
+      "guide_anchor": "s2",
+      "question": "A tech lead introduces IDD to a team that already practises TDD and wants a one-sentence analogy for it. Which analogy does the guide use?",
+      "options": [
+        {
+          "text": "IDD is TDD for prompts: write the specification first, then let the AI generate the code.",
+          "correct": true
+        },
+        {
+          "text": "IDD is pair programming without a human partner, where the AI decides the requirements as it goes along.",
+          "correct": false,
+          "why_wrong": "In IDD the human writes the requirements upfront. The AI handles the 'how', not the 'what'."
+        },
+        {
+          "text": "IDD is TDD in reverse: generate the code first, then write a spec that describes whatever the AI produced.",
+          "correct": false,
+          "why_wrong": "IDD is 'spec first, code second'. Writing the spec afterwards defeats its role as a contract."
+        },
+        {
+          "text": "IDD is waterfall: a single spec is frozen at the start and never revised during development.",
+          "correct": false,
+          "why_wrong": "IDD includes iterative refinement. Specs evolve through feedback loops."
+        }
+      ],
+      "explanation": "The guide calls IDD 'TDD (Test-Driven Development) but for prompts': instead of writing tests first and then code, you write specifications first and then let the AI generate the implementation. The spec is the single source of truth, versioned, reviewed and shared across the team.",
+      "key_takeaway": "IDD = TDD for prompts: the spec comes first and is the versioned, reviewed single source of truth.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-05",
+      "section": "What is IDD / SDD?",
+      "guide_anchor": "s2",
+      "question": "In an IDD kickoff, the product owner asks the AI to 'choose whatever data model makes sense' and also to 'decide which customer segments we should support'. Under IDD's separation of concerns, what is wrong with this?",
+      "options": [
+        {
+          "text": "Nothing is wrong, since IDD hands the AI the what, the why and the how so that the human team can focus purely on reviewing.",
+          "correct": false,
+          "why_wrong": "IDD keeps the what and why with the human. Only the how goes to the AI."
+        },
+        {
+          "text": "Choosing segments is the 'what/why', which humans own. The AI should only handle the 'how', within the human's spec.",
+          "correct": true
+        },
+        {
+          "text": "The AI should pick the segments, but humans must hand-write every data model.",
+          "correct": false,
+          "why_wrong": "This reverses the split. Business intent belongs to humans, and implementation details can go to the AI."
+        },
+        {
+          "text": "IDD forbids the AI from making any implementation decisions at all, so both requests to the AI are invalid.",
+          "correct": false,
+          "why_wrong": "The AI does handle the 'how' in IDD, within the constraints set by the spec."
+        }
+      ],
+      "explanation": "Among IDD's core philosophy items is Separation of Concerns: the human handles what and why, and the AI handles how. Deciding which customer segments to support is business intent, so it belongs to humans.",
+      "key_takeaway": "IDD separation of concerns: humans own the what and why, and the AI owns the how.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-06",
+      "section": "What is IDD / SDD?",
+      "guide_anchor": "s2",
+      "question": "Two architects argue: one says the team does 'Instruction-Driven Development', the other insists it is 'Specification-Driven Development' and a different method. How does the guide settle this?",
+      "options": [
+        {
+          "text": "They are different: IDD is for solo developers, while SDD is reserved for regulated industries.",
+          "correct": false,
+          "why_wrong": "The guide draws no such split. Both names refer to the same methodology."
+        },
+        {
+          "text": "SDD replaced IDD in 2025, so the IDD term is deprecated and should no longer be used.",
+          "correct": false,
+          "why_wrong": "The guide says the community uses both terms interchangeably. Neither is deprecated."
+        },
+        {
+          "text": "Same workflow, different emphasis: IDD stresses the instructional nature of prompts, SDD the formal specification.",
+          "correct": true
+        },
+        {
+          "text": "They are different: IDD writes its specs after the code exists, whereas SDD writes them before any code is generated.",
+          "correct": false,
+          "why_wrong": "Both are 'spec first'. The guide says they describe the identical workflow."
+        }
+      ],
+      "explanation": "In its callout 'IDD vs SDD: Same Thing, Different Names', the guide says the community uses both terms interchangeably. IDD emphasizes the instructional nature of prompts, SDD emphasizes the formal specification, and in practice they describe the identical workflow.",
+      "key_takeaway": "IDD and SDD are the same workflow. IDD stresses instructions, SDD stresses the formal specification.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-07",
+      "section": "What is IDD / SDD?",
+      "guide_anchor": "s2",
+      "question": "Developers in London and Singapore run the same instruction document through their AI tools a week apart, and they get functionally equivalent services. Which IDD principle is this result an example of?",
+      "options": [
+        {
+          "text": "Deterministic intent: the same instruction gives functionally equivalent results whenever, wherever and by whoever it is run.",
+          "correct": true
+        },
+        {
+          "text": "Iterative refinement, which guarantees that two runs of a spec always produce byte-identical source code files.",
+          "correct": false,
+          "why_wrong": "Iterative refinement means evolving the spec through feedback. The guide asks for functionally equivalent results, not byte-identical files."
+        },
+        {
+          "text": "Separation of concerns, which means only one region is allowed to execute any given spec.",
+          "correct": false,
+          "why_wrong": "Separation of concerns splits the what/why (human) from the how (AI). It does not concern regions."
+        },
+        {
+          "text": "Swarm prototyping, because two agents produced output in parallel for the same task.",
+          "correct": false,
+          "why_wrong": "This is reproducibility from a shared spec, not a swarm exploring different variants."
+        }
+      ],
+      "explanation": "Under Deterministic Intent, the same instruction should produce functionally equivalent results regardless of when, where or by whom it is executed. The other core principles are Spec First, Instructions as Artifacts, Separation of Concerns and Iterative Refinement.",
+      "key_takeaway": "Deterministic intent: one spec should give functionally equivalent results no matter who runs it, or when or where.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-08",
+      "section": "The IDD Workflow (Step-by-Step)",
+      "guide_anchor": "s3",
+      "question": "A developer has just finished writing an instruction document for a new billing feature and is about to paste it into the AI. What should happen before execution, according to the IDD workflow?",
+      "options": [
+        {
+          "text": "Archive the spec in the template library first, so the team can reuse it before anyone has executed it even once.",
+          "correct": false,
+          "why_wrong": "Archive is the final phase, after validation and refinement. The phase right after Define is Review."
+        },
+        {
+          "text": "Nothing more is needed, because the guide puts validation only after the AI has generated code.",
+          "correct": false,
+          "why_wrong": "The workflow has an explicit spec Review phase before Execute, in addition to validating the output later."
+        },
+        {
+          "text": "Review: a teammate or second AI checks the spec for ambiguity, missing edge cases, contradictions and gaps.",
+          "correct": true
+        },
+        {
+          "text": "Generate the code first, then review the spec only if the output looks wrong in a quick visual inspection.",
+          "correct": false,
+          "why_wrong": "This skips the spec review that IDD puts before execution to catch ambiguity early."
+        }
+      ],
+      "explanation": "The IDD workflow runs Define → Review → Execute → Validate → Refine → Archive. In Phase 2 (Review), a teammate or a second AI checks the instruction for ambiguity, missing edge cases, contradictions and completeness, and problems are fixed before execution.",
+      "key_takeaway": "Review the spec before executing it: a teammate or second AI hunts for ambiguity, gaps and contradictions.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-09",
+      "section": "The IDD Workflow (Step-by-Step)",
+      "guide_anchor": "s3",
+      "question": "During validation, the generated code meets every acceptance criterion except one, and on reflection the team realizes the criterion itself was poorly worded. What does the guide say to do when output diverges from the spec?",
+      "options": [
+        {
+          "text": "Always assume the AI is wrong and regenerate the code until it matches the spec word for word.",
+          "correct": false,
+          "why_wrong": "The guide says divergence can mean either the spec or the output needs adjusting. The AI is not automatically at fault."
+        },
+        {
+          "text": "Work out whether the spec or the output needs adjusting, then update the spec to be more precise.",
+          "correct": true
+        },
+        {
+          "text": "Delete the failing criterion quietly and ship, because the spec is only advisory documentation.",
+          "correct": false,
+          "why_wrong": "Acceptance criteria are quality gates. The spec is the contract, not advisory text."
+        },
+        {
+          "text": "Skip ahead to the Archive phase, since one failing criterion out of many is within normal tolerance.",
+          "correct": false,
+          "why_wrong": "If any acceptance criterion is unmet, the output needs refinement before archiving."
+        }
+      ],
+      "explanation": "In Phase 4 (Validate Output Against Spec), you check every acceptance criterion, run the tests, verify the file structure and check for security issues. If the output diverges, you determine whether the spec or the output needs adjusting. Phase 5 (Refine) then updates the spec to remove ambiguity, creating a feedback loop.",
+      "key_takeaway": "When output diverges, decide whether the spec or the output is wrong, then refine the spec to close the gap.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-10",
+      "section": "The IDD Workflow (Step-by-Step)",
+      "guide_anchor": "s3",
+      "question": "On three consecutive features, the AI picked an outdated HTTP client library, and each time a developer fixed it by hand afterwards. What does the IDD Refine phase recommend instead?",
+      "options": [
+        {
+          "text": "Keep patching the code by hand, because spec changes should never be driven by the AI's behaviour.",
+          "correct": false,
+          "why_wrong": "Refine explicitly updates the spec based on what the AI got wrong, so later runs improve."
+        },
+        {
+          "text": "Switch to ad-hoc prompting for library choices, so the developer can steer each session freely.",
+          "correct": false,
+          "why_wrong": "Ad-hoc prompting brings back the inconsistency that IDD exists to remove."
+        },
+        {
+          "text": "Add a constraint to the spec naming the approved library, creating a feedback loop for future results.",
+          "correct": true
+        },
+        {
+          "text": "Lower the AI's temperature setting, which the guide says is the main fix for any repeated poor choices the model makes.",
+          "correct": false,
+          "why_wrong": "The guide's remedy is to refine the instruction with explicit constraints, not to tune sampling settings."
+        }
+      ],
+      "explanation": "In Phase 5 (Refine the Instruction), you update the spec based on what the AI got right and wrong: make it more precise, remove ambiguity, and add constraints where the AI made poor choices. This creates a feedback loop that improves future results.",
+      "key_takeaway": "Repeated poor AI choices → add explicit constraints to the spec, so each refinement improves future runs.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-11",
+      "section": "The IDD Workflow (Step-by-Step)",
+      "guide_anchor": "s3",
+      "question": "A team has validated and refined the spec for a new authentication service, and the code is ready to merge. What should happen to the instruction document now, according to the Archive phase?",
+      "options": [
+        {
+          "text": "Delete it, because the code is now the only source of truth.",
+          "correct": false,
+          "why_wrong": "IDD treats specs as artifacts as important as the code. They are versioned and kept, not deleted."
+        },
+        {
+          "text": "Store it in a private wiki away from the repo, so reviewers don't confuse it with the code.",
+          "correct": false,
+          "why_wrong": "The guide says to commit the instruction alongside the code, in the same branch and the same PR."
+        },
+        {
+          "text": "Commit it alongside the code with a version tag, and add proven specs to a reusable template library.",
+          "correct": true
+        },
+        {
+          "text": "Paste it into a code comment at the top of every file, then throw the original instruction document away.",
+          "correct": false,
+          "why_wrong": "Scattering the spec across comments loses its role as a single versioned artifact and stops it from being reused."
+        }
+      ],
+      "explanation": "In Phase 6 (Archive & Reuse), you commit the instruction alongside the code, tag it with a version, and build a template library of proven instructions for common patterns.",
+      "key_takeaway": "Archive specs with the code (same branch, versioned) and grow a library of reusable instruction templates.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-12",
+      "section": "Instruction Documents (Spec Anatomy)",
+      "guide_anchor": "s4",
+      "question": "A team standardized on FastAPI and PostgreSQL, but the AI keeps generating Flask apps backed by SQLite. Which section of the IDD instruction document is missing or too weak?",
+      "options": [
+        {
+          "text": "The Acceptance Criteria section, because it lists the tests that must pass.",
+          "correct": false,
+          "why_wrong": "Acceptance criteria define when the work is done. Locking in framework and database choices is the job of Technical Constraints."
+        },
+        {
+          "text": "Technical Constraints: the locked-in choices of language version, framework, database and testing framework.",
+          "correct": true
+        },
+        {
+          "text": "Functional Requirements, because the choice of framework is something end users can see and therefore counts as a feature.",
+          "correct": false,
+          "why_wrong": "Functional requirements state what the system must do, such as 'user can register'. They do not name the technology stack."
+        },
+        {
+          "text": "The Context block, which should repeat the project name a few more times so the AI notices it.",
+          "correct": false,
+          "why_wrong": "Context gives project awareness. Specific technology choices belong in Technical Constraints."
+        }
+      ],
+      "explanation": "The guide describes Technical Constraints as locked-in technology choices: language version, framework, database and testing framework. They eliminate the AI's tendency to suggest whatever it 'prefers'.",
+      "key_takeaway": "If the AI keeps picking its own stack, lock it down in the Technical Constraints section.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-13",
+      "section": "Instruction Documents (Spec Anatomy)",
+      "guide_anchor": "s4",
+      "question": "Each AI run of a module spec scatters files into a different folder layout, so the output never fits cleanly into the existing repository. Which spec section prevents this?",
+      "options": [
+        {
+          "text": "Non-Functional Requirements, by adding a latency target for the build step.",
+          "correct": false,
+          "why_wrong": "NFRs cover performance, security and quality. They do not control the directory layout."
+        },
+        {
+          "text": "The version header, because bumping the version number resets the AI's folder choices.",
+          "correct": false,
+          "why_wrong": "The version header tracks the spec's revision history. It does not constrain where files go."
+        },
+        {
+          "text": "File Structure: an explicit directory and file layout, so the output fits the existing codebase.",
+          "correct": true
+        },
+        {
+          "text": "Functional Requirements, by adding an FR such as 'user can find files easily' to the instruction document.",
+          "correct": false,
+          "why_wrong": "This is untestable wording and the wrong section. An explicit File Structure section fixes the layout."
+        }
+      ],
+      "explanation": "According to the guide, the File Structure section is an explicit directory and file layout. It stops the AI from inventing its own, often inconsistent, project structure and ensures the output fits into the existing codebase.",
+      "key_takeaway": "Spell out the directory layout in File Structure, so AI output always fits the existing repo.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-14",
+      "section": "Instruction Documents (Spec Anatomy)",
+      "guide_anchor": "s4",
+      "question": "A login endpoint generated by AI works functionally, but it stores passwords with a fast hash and has no rate limiting. Which spec section exists precisely to stop these shortcuts?",
+      "options": [
+        {
+          "text": "Non-Functional Requirements, the performance, security and quality guardrails such as hashing cost and rate limits.",
+          "correct": true
+        },
+        {
+          "text": "The Context block, which describes the project's current state and its overall goal.",
+          "correct": false,
+          "why_wrong": "Context gives the AI project awareness. Security and performance guardrails belong in the NFRs."
+        },
+        {
+          "text": "The File Structure section, since putting security code in the right folders is enough to make it secure.",
+          "correct": false,
+          "why_wrong": "Folder layout says nothing about hashing strength or rate limiting. The NFRs do."
+        },
+        {
+          "text": "The version header, because bumping the version number signals to the AI that security now matters.",
+          "correct": false,
+          "why_wrong": "The version header only tracks spec revisions. It does not state security requirements."
+        }
+      ],
+      "explanation": "Non-Functional Requirements state performance, security, scalability and quality constraints. The guide calls them the guardrails that keep the AI from taking shortcuts. Its template example includes bcrypt with cost factor 12 and a limit of 5 login attempts per minute per IP.",
+      "key_takeaway": "NFRs (security, performance, quality) are the guardrails that stop the AI from cutting corners.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-15",
+      "section": "Instruction Documents (Spec Anatomy)",
+      "guide_anchor": "s4",
+      "question": "Two reviewers disagree on whether an AI-generated feature is 'done'. One says it looks good, the other is unsure. Which part of the IDD spec should settle this objectively?",
+      "options": [
+        {
+          "text": "The Goal line in the Context block, which describes what the instruction should produce in general terms.",
+          "correct": false,
+          "why_wrong": "The goal sets direction. Deciding objectively whether the work is done needs a checklist of verifiable conditions."
+        },
+        {
+          "text": "Acceptance Criteria: a checklist of verifiable 'done' conditions. If any are unmet, the output needs work.",
+          "correct": true
+        },
+        {
+          "text": "Whichever reviewer has more seniority, since the spec does not cover completion.",
+          "correct": false,
+          "why_wrong": "IDD makes 'done' objective through acceptance criteria, not through who has more authority."
+        },
+        {
+          "text": "The Technical Constraints section, because a feature counts as done once it compiles on the agreed language version.",
+          "correct": false,
+          "why_wrong": "Compiling on the right stack is necessary but not sufficient. Acceptance criteria define the full quality gate."
+        }
+      ],
+      "explanation": "The guide describes Acceptance Criteria as a checklist of verifiable conditions for 'done'. They are the quality gates: if any is unmet, the output needs refinement. The template's examples include all FRs implemented and tested, NFRs verified, no hardcoded secrets, zero lint warnings and an updated README.",
+      "key_takeaway": "Acceptance Criteria are the objective quality gate: any unmet item means the output needs refinement.",
+      "doc_links": [
+        {
+          "label": "CLAUDE.md & Project Memory",
+          "url": "https://code.claude.com/docs/en/memory"
+        },
+        {
+          "label": "Claude Prompting Best Practices",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-16",
+      "section": "IDD vs Vibe Coding vs Traditional",
+      "guide_anchor": "s5",
+      "question": "An auditor asks a fintech team to show that its AI-assisted development produces reproducible results. According to the guide's three-way comparison, how does each approach rate on reproducibility?",
+      "options": [
+        {
+          "text": "Traditional is low, vibe coding is high and IDD is medium, because AI makes code more deterministic.",
+          "correct": false,
+          "why_wrong": "The guide rates vibe coding low (prompt-dependent) and traditional development high (deterministic)."
+        },
+        {
+          "text": "All three are rated equally, since reproducibility depends only on the CI pipeline the team uses.",
+          "correct": false,
+          "why_wrong": "The guide's table rates the approaches differently on reproducibility."
+        },
+        {
+          "text": "Traditional is high, vibe coding is low because it depends on prompts, and IDD is high because the spec is the contract.",
+          "correct": true
+        },
+        {
+          "text": "Traditional is high, IDD is low because AI is involved, and vibe coding is high whenever the developer is experienced enough.",
+          "correct": false,
+          "why_wrong": "IDD scores high on reproducibility because the spec acts as the contract. Vibe coding is the prompt-dependent, low-scoring one."
+        }
+      ],
+      "explanation": "On reproducibility, the guide's comparison table rates traditional development high (deterministic), vibe coding low (prompt-dependent) and IDD/SDD high (the spec is the contract). IDD also uses spec review, output validation and CI for quality control.",
+      "key_takeaway": "Reproducibility: traditional high, vibe coding low (prompt-dependent), IDD high (the spec is the contract).",
+      "doc_links": [
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-17",
+      "section": "IDD vs Vibe Coding vs Traditional",
+      "guide_anchor": "s5",
+      "question": "A team vibe-coded a promising prototype over two weeks and now plans to take it to production. One engineer proposes banning vibe coding entirely from now on. How does the guide describe the relationship between vibe coding and IDD?",
+      "options": [
+        {
+          "text": "They are opposites: adopting IDD means discarding vibe coding and the prototype that came out of it.",
+          "correct": false,
+          "why_wrong": "The guide says IDD does not replace vibe coding. It matures it."
+        },
+        {
+          "text": "IDD matures vibe coding: explore with vibe coding, then formalize the prompts into IDD specs for production.",
+          "correct": true
+        },
+        {
+          "text": "Vibe coding is the more advanced method, and IDD is only a stepping stone that beginners use before graduating to it.",
+          "correct": false,
+          "why_wrong": "This reverses the guide, which calls IDD 'Vibe Coding's Adult Form'."
+        },
+        {
+          "text": "They are unrelated methods that solve different problems and should never be used on the same project.",
+          "correct": false,
+          "why_wrong": "The guide describes a natural progression from vibe coding (prototyping) to IDD (engineering) within the same project."
+        }
+      ],
+      "explanation": "In its callout 'IDD is Vibe Coding's Adult Form', the guide explains that IDD does not replace vibe coding but matures it. Many teams start with vibe coding to explore ideas, then formalize their prompts into IDD specs once they decide to build for production: Vibe Coding = Prototyping → IDD = Engineering.",
+      "key_takeaway": "Vibe Coding = prototyping → IDD = engineering. Formalize your prompts into specs when you move to production.",
+      "doc_links": [
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "label": "Anthropic: Building Effective Agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-18",
+      "section": "Real-World IDD Patterns",
+      "guide_anchor": "s6",
+      "question": "A SaaS company has auth, billing and notifications modules, each with many features. A new billing feature spec quietly specifies a different database from the one the project uses. Under the Layered Specs pattern, which spec takes precedence?",
+      "options": [
+        {
+          "text": "The feature spec, because the lowest-level spec is always the most specific and therefore overrides everything defined above it.",
+          "correct": false,
+          "why_wrong": "In Layered Specs, each level inherits constraints from the level above. A feature spec cannot override the project stack."
+        },
+        {
+          "text": "The L0 Project Spec's stack, because each level (project → module → feature → task) inherits the constraints above it.",
+          "correct": true
+        },
+        {
+          "text": "Neither of them. The AI should choose whichever database best suits that feature.",
+          "correct": false,
+          "why_wrong": "Leaving the stack to the AI goes against IDD's locked-in technical constraints and the inheritance between layers."
+        },
+        {
+          "text": "The L3 Task Spec, since task specs are the only layer that actually reaches the AI.",
+          "correct": false,
+          "why_wrong": "Every layer guides generation, and lower layers inherit from higher ones rather than replacing them."
+        }
+      ],
+      "explanation": "Layered Specs breaks complex projects into L0 Project Spec (architecture, tech stack, conventions), L1 Module Specs, L2 Feature Specs and L3 Task Specs. Each level inherits constraints from the level above, so a feature spec cannot override the project-level database choice.",
+      "key_takeaway": "Layered Specs: project → module → feature → task. Each layer inherits the constraints of the layer above it.",
+      "doc_links": [
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        },
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-19",
+      "section": "Real-World IDD Patterns",
+      "guide_anchor": "s6",
+      "question": "A team wants maximum confidence that AI-generated code meets its spec, so it decides to combine IDD with TDD. In the guide's Spec-Test-Code Loop, what is the correct order?",
+      "options": [
+        {
+          "text": "Generate the implementation first, then write a spec that matches it, then add tests for whatever the code happens to do.",
+          "correct": false,
+          "why_wrong": "This inverts the loop. Code-first means the tests check behaviour rather than the spec."
+        },
+        {
+          "text": "Write the spec, generate tests from it, generate code that passes them, and refine the spec or code if tests fail.",
+          "correct": true
+        },
+        {
+          "text": "Write tests by hand with no spec, then let the AI write both the code and the spec at the same time.",
+          "correct": false,
+          "why_wrong": "The loop starts from the instruction spec with acceptance criteria. Tests are generated from that spec."
+        },
+        {
+          "text": "Write the spec and code together, and skip tests because the spec itself proves correctness.",
+          "correct": false,
+          "why_wrong": "In this pattern, tests are the executable validation of the spec. Skipping them removes the validation."
+        }
+      ],
+      "explanation": "The Spec-Test-Code Loop: (1) write the instruction spec with acceptance criteria; (2) have the AI generate tests first from the spec; (3) generate an implementation that passes those tests; (4) if tests fail, refine the spec or the implementation. The tests become the executable validation of your spec.",
+      "key_takeaway": "Spec → tests generated from the spec → code that passes them. The tests are the spec in executable form.",
+      "doc_links": [
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        },
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-20",
+      "section": "Real-World IDD Patterns",
+      "guide_anchor": "s6",
+      "question": "Reviewers keep approving AI-generated pull requests on style alone, and a year later nobody remembers why certain design choices were made. Which IDD pattern addresses both problems?",
+      "options": [
+        {
+          "text": "Instruction Library, which stores generic templates such as crud-service.md for new hires to reuse.",
+          "correct": false,
+          "why_wrong": "A template library speeds up onboarding, but it does not tie each PR to the spec that produced it."
+        },
+        {
+          "text": "Swarm Tournament, which has several agents generate each PR and lets an evaluator pick the cleanest one.",
+          "correct": false,
+          "why_wrong": "That is a swarm pattern, not an IDD pattern, and it does not record why the code was written."
+        },
+        {
+          "text": "Spec as PR Template: the spec is the PR description, reviewers check code against it, and git history traces the why.",
+          "correct": true
+        },
+        {
+          "text": "Layered Specs, which split every project into L0 to L3 levels that each inherit constraints from the levels sitting above them.",
+          "correct": false,
+          "why_wrong": "Layered Specs organizes specs by scope. It does not make reviews check code against the spec."
+        }
+      ],
+      "explanation": "In the Spec as PR Template pattern, every PR starts with the IDD spec that generated the code. Reviewers check the code against the spec, not just its quality. The spec becomes part of git history, giving full traceability, so future developers understand why the code was written that way.",
+      "key_takeaway": "Spec as PR Template: review code against its spec and keep the reasoning (the why) traceable in git history.",
+      "doc_links": [
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        },
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-21",
+      "section": "Real-World IDD Patterns",
+      "guide_anchor": "s6",
+      "question": "A fast-growing team wants new hires to produce production-grade auth endpoints, CRUD services and form components from their first day. Which IDD pattern does the guide recommend for this?",
+      "options": [
+        {
+          "text": "An Instruction Library of proven templates such as auth-api.md, crud-service.md and react-form.md.",
+          "correct": true
+        },
+        {
+          "text": "Letting each new hire vibe-code freely for a month, so they build intuition before they ever see a spec.",
+          "correct": false,
+          "why_wrong": "This brings back ad-hoc prompting. The guide's pattern gives new hires proven templates from day one."
+        },
+        {
+          "text": "The Spec-Test-Code Loop on its own, which needs no templates because the AI generates every new spec itself.",
+          "correct": false,
+          "why_wrong": "The Spec-Test-Code Loop adds validation through tests. Reusable onboarding templates are the Instruction Library pattern."
+        },
+        {
+          "text": "Over-specification, where new hires write 10-page specs for every small function to build discipline.",
+          "correct": false,
+          "why_wrong": "The guide warns against over-specification. Specs should be proportional to complexity."
+        }
+      ],
+      "explanation": "The Instruction Library pattern builds a reusable library of proven instruction templates, for example auth-api.md, crud-service.md, react-form.md and data-pipeline.md, so new team members can generate production-grade code from day one.",
+      "key_takeaway": "A library of proven instruction templates lets new hires generate production-grade code from day one.",
+      "doc_links": [
+        {
+          "label": "Claude Code in Large Codebases",
+          "url": "https://code.claude.com/docs/en/large-codebases"
+        },
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-22",
+      "section": "Tools, Templates & Ecosystem",
+      "guide_anchor": "s7",
+      "question": "A team that uses GitHub Copilot across its repositories wants repository-level instructions that constrain Copilot's behaviour for everyone. Per the guide, where should these live?",
+      "options": [
+        {
+          "text": "In a .cursorrules file at the repository root, which Copilot reads automatically.",
+          "correct": false,
+          "why_wrong": "The guide associates .cursorrules with Cursor, not Copilot."
+        },
+        {
+          "text": "In a .github/copilot-instructions.md file in the repository.",
+          "correct": true
+        },
+        {
+          "text": "In a CLAUDE.md file, which every AI coding assistant reads by default.",
+          "correct": false,
+          "why_wrong": "The guide describes CLAUDE.md as the file Claude Code reads automatically, not Copilot."
+        },
+        {
+          "text": "In a .aider.conf.yml file, which the guide lists as Copilot's configuration format.",
+          "correct": false,
+          "why_wrong": "The guide associates .aider.conf.yml with Aider conventions."
+        }
+      ],
+      "explanation": "Tools that support IDD workflows: Cursor Rules (.cursorrules), Claude Projects (persistent system prompts), GitHub Copilot Instructions (.github/copilot-instructions.md), Aider conventions (.aider.conf.yml), Windsurf Memories and CLAUDE.md files (read automatically by Claude Code).",
+      "key_takeaway": "Persistent instruction files are IDD's infrastructure. For GitHub Copilot, that file is .github/copilot-instructions.md.",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Antigravity Artifact Review",
+          "url": "https://antigravity.google/docs/artifact-review"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-23",
+      "section": "Tools, Templates & Ecosystem",
+      "guide_anchor": "s7",
+      "question": "An enthusiastic engineer writes a 10-page instruction document for a 50-line string-formatting helper. What does the guide advise?",
+      "options": [
+        {
+          "text": "Good practice: longer specs always produce better AI output, whatever the size of the task.",
+          "correct": false,
+          "why_wrong": "The guide warns explicitly against over-specification. A 10-page spec for a 50-line function has gone too far."
+        },
+        {
+          "text": "Scale the spec to the complexity: a few bullet points will do here, and detailed specs are for complex or critical work.",
+          "correct": true
+        },
+        {
+          "text": "Skip specs entirely for small helpers and vibe-code them with no requirements at all, since IDD is only for large systems.",
+          "correct": false,
+          "why_wrong": "The guide still recommends a light spec, a few bullet points, for simple tasks rather than none."
+        },
+        {
+          "text": "Split the 10 pages into five 2-page specs, so that each one stays below a page limit.",
+          "correct": false,
+          "why_wrong": "Splitting keeps the same amount of excess. The fix is to make the spec proportional to the task."
+        }
+      ],
+      "explanation": "The guide's 'Avoid Over-Specification' callout: if your spec is 10 pages for a 50-line function, you have gone too far. Specs should be proportional to complexity: a few bullet points for simple tasks, detailed specs for complex, team-critical or security-sensitive features.",
+      "key_takeaway": "Keep specs proportional to complexity: bullets for simple tasks, detail for complex or security-sensitive features.",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Antigravity Artifact Review",
+          "url": "https://antigravity.google/docs/artifact-review"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-24",
+      "section": "Tools, Templates & Ecosystem",
+      "guide_anchor": "s7",
+      "question": "A draft spec says: 'The API should be fast, return appropriate errors, and the code should be nice.' Against the guide's spec quality checklist, what is the main problem?",
+      "options": [
+        {
+          "text": "Nothing is wrong. Short, friendly wording gives the AI more creative freedom, which the checklist encourages.",
+          "correct": false,
+          "why_wrong": "The checklist forbids ambiguous words such as 'appropriate', 'nice' and 'fast', and requires every requirement to be testable."
+        },
+        {
+          "text": "It is not stored as SPEC_INDEX.md, the filename the checklist says every individual spec must use.",
+          "correct": false,
+          "why_wrong": "SPEC_INDEX.md is an index of all active specs, not the required name for each one, and wording quality is the real issue."
+        },
+        {
+          "text": "It uses ambiguous words with no testable criteria; requirements must be verifiable and edge cases listed.",
+          "correct": true
+        },
+        {
+          "text": "It is too long, and the checklist limits every spec to a single sentence so the AI can read it.",
+          "correct": false,
+          "why_wrong": "The checklist has no length limit. It asks for testable, specific and explicit requirements."
+        }
+      ],
+      "explanation": "The guide's spec quality checklist: every requirement is testable (pass/fail can be verified), there is no ambiguous language ('appropriate', 'nice', 'fast'), technical constraints are specific, file structure is explicit, edge cases and error handling are enumerated, and a new team member could execute the spec without additional context.",
+      "key_takeaway": "Replace vague words ('fast', 'nice', 'appropriate') with testable, specific requirements and enumerated edge cases.",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Antigravity Artifact Review",
+          "url": "https://antigravity.google/docs/artifact-review"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-25",
+      "section": "Key Takeaways & Self-Assessment",
+      "guide_anchor": "s10",
+      "question": "A team lead is preparing a one-slide onboarding summary of the full IDD workflow. Which sequence of phases is correct?",
+      "options": [
+        {
+          "text": "Execute → Validate → Define → Review → Archive → Refine",
+          "correct": false,
+          "why_wrong": "IDD is 'spec first': Define and Review come before Execute, and Archive is the final phase."
+        },
+        {
+          "text": "Define → Execute → Archive → Review → Validate → Refine",
+          "correct": false,
+          "why_wrong": "Review of the spec happens before execution, and archiving happens only after validation and refinement."
+        },
+        {
+          "text": "Define → Review → Execute → Validate → Refine → Archive",
+          "correct": true
+        },
+        {
+          "text": "Review → Define → Validate → Execute → Refine → Archive",
+          "correct": false,
+          "why_wrong": "You cannot review a spec before defining it, or validate output before executing."
+        }
+      ],
+      "explanation": "The guide's key takeaways list the six IDD phases in order: Define → Review → Execute → Validate → Refine → Archive. The instruction document has six sections: Context, Functional Requirements, Non-Functional Requirements, Technical Constraints, File Structure and Acceptance Criteria.",
+      "key_takeaway": "IDD's six phases: Define → Review → Execute → Validate → Refine → Archive.",
+      "doc_links": [
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-26",
+      "section": "Agent Skills (SKILL.md) & Progressive Disclosure",
+      "guide_anchor": "s8",
+      "question": "A platform team pasted 35 operational runbooks (~90,000 tokens) directly into `AGENTS.md` and `CLAUDE.md`, causing slower responses, higher token bills, and degraded instruction following on unrelated tasks. How does the `SKILL.md` standard eliminate this context bloat?",
+      "options": [
+        {
+          "text": "3-level disclosure: ~100t YAML frontmatter at start, `<5kt` `SKILL.md` on match, and `0t` scripts/references on demand.",
+          "correct": true
+        },
+        {
+          "text": "Compressing all 35 runbooks into a single base64-encoded environment variable injected into every system prompt turn.",
+          "correct": false,
+          "why_wrong": "Base64 encoding inflates token counts even further and still injects irrelevant procedures into every single turn."
+        },
+        {
+          "text": "Converting every runbook paragraph into a separate always-loaded MCP tool schema so all 35 schemas stay in context.",
+          "correct": false,
+          "why_wrong": "Loading dozens of verbose MCP schemas at startup recreates tool/context bloat on every turn."
+        },
+        {
+          "text": "Deleting YAML frontmatter from `SKILL.md` so the agent reads every Markdown body file in full at session startup.",
+          "correct": false,
+          "why_wrong": "Without YAML frontmatter, the agent cannot perform lightweight Level 1 discovery and would bloat startup context."
+        }
+      ],
+      "explanation": "Agent Skills (`agentskills.io`) solve context and tool bloat via 3-Level Progressive Disclosure: Level 1 loads only YAML frontmatter (~100 tokens/skill) at session start; Level 2 loads the concise `<5,000`-token `SKILL.md` body only when the task matches `description`; Level 3 reads `references/` or executes `scripts/` strictly on demand.",
+      "key_takeaway": "3-Level Progressive Disclosure keeps startup cost near ~100 tokens/skill and defers `<5kt` instructions and `0t` scripts until needed.",
+      "doc_links": [
+        {
+          "label": "Agent Skills Open Standard",
+          "url": "https://agentskills.io"
+        },
+        {
+          "label": "Claude Code Skills",
+          "url": "https://code.claude.com/docs/en/skills"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-27",
+      "section": "Agent Skills (SKILL.md) & Progressive Disclosure",
+      "guide_anchor": "s8",
+      "question": "An engineer creates `.agents/skills/vpc-sc-debug/SKILL.md` with detailed troubleshooting steps in the Markdown body, but sets the YAML frontmatter `description` to `\"Helper utilities\"`. Why does the agent almost never activate this skill automatically?",
+      "options": [
+        {
+          "text": "Skill folders are ignored unless every file inside `references/` is also listed in `.gitignore`.",
+          "correct": false,
+          "why_wrong": "Gitignore entries do not trigger skill activation; in fact, workspace skills are normally version-controlled."
+        },
+        {
+          "text": "At Level 1 startup the agent sees only YAML frontmatter, making `description` the sole semantic trigger signal.",
+          "correct": true
+        },
+        {
+          "text": "The `SKILL.md` body must exceed 15,000 tokens before the semantic router considers it authoritative enough to load.",
+          "correct": false,
+          "why_wrong": "`SKILL.md` bodies should stay under 5,000 tokens, and the body is not read at all during Level 1 discovery."
+        },
+        {
+          "text": "Skills only activate when invoked over HTTP from a remote A2A server rather than local workspace files.",
+          "correct": false,
+          "why_wrong": "Local `.agents/skills/` and `.claude/skills/` activate natively whenever user intent matches YAML `description` or via `/skill-name`."
+        }
+      ],
+      "explanation": "During Level 1 discovery at session startup, only YAML frontmatter (`name` optional, `description` required) enters context. Because the Markdown body is hidden until Level 2 activation, `description` is the sole semantic signal telling the model *what* the skill does and *when* to trigger it.",
+      "key_takeaway": "Write specific, keyword-rich YAML `description` fields—at Level 1, `description` is the agent's only automatic trigger signal.",
+      "doc_links": [
+        {
+          "label": "Agent Skills Specification",
+          "url": "https://agentskills.io"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-28",
+      "section": "Agent Skills (SKILL.md) & Progressive Disclosure",
+      "guide_anchor": "s8",
+      "question": "A developer bundles a Python helper under `.agents/skills/schema-migrator/scripts/check_diff.py` that calls `input(\"Proceed with check? [y/N]: \")` before validating SQL migrations. When autonomous coding agents invoke the skill, runs hang indefinitely. What authoring rule was violated?",
+      "options": [
+        {
+          "text": "Level 3 `scripts/` must be non-interactive black-box CLIs (`--help` + flags/exit codes) with zero TTY `stdin` prompts.",
+          "correct": true
+        },
+        {
+          "text": "Skill scripts may only be written in Bash because Python files inside `scripts/` are compiled into model weights.",
+          "correct": false,
+          "why_wrong": "Python scripts work well in `scripts/` and execute outside model weights; the hang is caused by blocking interactive `input()`."
+        },
+        {
+          "text": "Every line of `check_diff.py` should have been pasted into `AGENTS.md` so the LLM simulates Python mentally instead.",
+          "correct": false,
+          "why_wrong": "Executing deterministic validation in `scripts/` is preferred over LLM simulation, provided the CLI is non-interactive."
+        },
+        {
+          "text": "The script lacked an infinite `while True` retry loop to keep polling the terminal until a human attaches via SSH.",
+          "correct": false,
+          "why_wrong": "Polling loops still block headless execution; skill scripts must accept explicit CLI flags and exit deterministically."
+        }
+      ],
+      "explanation": "Autonomous coding agents and CI subagents run tool subprocesses without an interactive human TTY. Bundled Level 3 `scripts/` must behave as non-interactive black-box CLIs documented via `--help`, accepting explicit arguments and returning structured output plus standard exit codes.",
+      "key_takeaway": "Never use interactive `input()` prompts in `SKILL.md` `scripts/`—expose `--help`, explicit flags, and deterministic exit codes.",
+      "doc_links": [
+        {
+          "label": "Agent Skills Best Practices",
+          "url": "https://agentskills.io"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-29",
+      "section": "Agent Skills (SKILL.md) & Progressive Disclosure",
+      "guide_anchor": "s8",
+      "question": "A large enterprise wants 60 engineering teams on Google Cloud to consume approved, version-pinned `SKILL.md` compliance and deployment packages with IAM governance rather than manually copying `.agents/skills/` folders across 400 repositories. Which service model fits?",
+      "options": [
+        {
+          "text": "Emailing zip archives of `.cursorrules` files weekly and asking developers to unpack them onto their Desktop folders.",
+          "correct": false,
+          "why_wrong": "Manual zip distribution lacks IAM access control, auditability, publisher provenance, and pinned revision rollouts."
+        },
+        {
+          "text": "Publish versioned skills in `GCPSkillRegistry` using governed `Skill`, `SkillRevision`, and `Publisher` resources.",
+          "correct": true
+        },
+        {
+          "text": "Fine-tuning separate Gemini 4 Carbon checkpoints every afternoon whenever a CLI deployment flag changes.",
+          "correct": false,
+          "why_wrong": "Fine-tuning frontier models for routine CLI runbook updates is prohibitively slow, costly, and unnecessary."
+        },
+        {
+          "text": "Hardcoding all 60 team playbooks into a single unversioned global `~/.bashrc` alias on developer laptops.",
+          "correct": false,
+          "why_wrong": "Shell aliases do not provide progressive LLM skill discovery, revision pinning, or Google Cloud IAM governance."
+        }
+      ],
+      "explanation": "`GCPSkillRegistry` enables centralized enterprise distribution of Agent Skills on Google Cloud through `Skill`, `SkillRevision`, and `Publisher` resources—giving organizations IAM access controls, publisher provenance, and version-pinned skill consumption across IDEs and ADK agents.",
+      "key_takeaway": "Use `GCPSkillRegistry` (`Skill`, `SkillRevision`, `Publisher`) for IAM-governed, version-pinned org-wide skill distribution.",
+      "doc_links": [
+        {
+          "label": "Vertex AI Agent Builder Overview",
+          "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder/overview"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-30",
+      "section": "Enterprise Rules, Hooks & agents-cli Pipelines",
+      "guide_anchor": "s9",
+      "question": "An engineer adds `.agents/rules/terraform.md` in Google Antigravity with YAML frontmatter `trigger: alwaysOn` so infrastructure rules apply to every session, yet Antigravity silently ignores the file. What caused the failure?",
+      "options": [
+        {
+          "text": "Antigravity `.agents/rules/*.md` requires strict snake_case `trigger: always_on` (`alwaysOn` camelCase is discarded).",
+          "correct": true
+        },
+        {
+          "text": "Antigravity rules only load if the filename ends in `.ipynb` and exceeds the 24 KB per-file size limit.",
+          "correct": false,
+          "why_wrong": "Rules use `.md` files capped around 24 KB per file (~20k-token combined budget), not `.ipynb` notebooks."
+        },
+        {
+          "text": "YAML frontmatter is forbidden in `.agents/rules/`, which only parses binary Protocol Buffer headers.",
+          "correct": false,
+          "why_wrong": "Antigravity `.agents/rules/*.md` uses YAML frontmatter with snake_case `trigger:` values (`always_on`, `model_decision`, `glob`, `manual`)."
+        },
+        {
+          "text": "Antigravity requires Claude Code's `paths:` key and deletes any file containing the word `trigger`.",
+          "correct": false,
+          "why_wrong": "`paths:` is Claude Code's `.claude/rules/*.md` frontmatter key, whereas Antigravity uses snake_case `trigger:`."
+        }
+      ],
+      "explanation": "Google Antigravity's `.agents/rules/*.md` parser enforces strict snake_case `trigger:` values (`always_on`, `model_decision`, `glob`, `manual`). Writing camelCase `alwaysOn` causes the rule metadata to be silently discarded; by contrast, Claude Code scopes `.claude/rules/*.md` with YAML `paths:` globs.",
+      "key_takeaway": "Use snake_case `trigger: always_on | glob | model_decision | manual` in Antigravity `.agents/rules/*.md`—camelCase `alwaysOn` is ignored.",
+      "doc_links": [
+        {
+          "label": "Google Antigravity Rules & Customizations",
+          "url": "https://antigravity.google/docs/overview"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-31",
+      "section": "Enterprise Rules, Hooks & agents-cli Pipelines",
+      "guide_anchor": "s9",
+      "question": "Despite a bold rule in `CLAUDE.md` and `AGENTS.md` stating \"NEVER commit `.env` or run `terraform destroy`\", an agent occasionally attempts the command during long debugging sessions. How should the team guarantee zero-exception enforcement?",
+      "options": [
+        {
+          "text": "Repeat the warning five times in all-caps inside `CLAUDE.md` and increase sampling temperature to `1.0`.",
+          "correct": false,
+          "why_wrong": "Prompt rules remain probabilistic LLM context regardless of capitalization, and higher temperature increases variance."
+        },
+        {
+          "text": "Configure a deterministic `PreToolUse` lifecycle hook that inspects tool inputs and exits with code `2` to block.",
+          "correct": true
+        },
+        {
+          "text": "Move the warning into a `references/notes.md` file inside an unreferenced skill so it stays at 0 tokens.",
+          "correct": false,
+          "why_wrong": "Unloaded reference files provide neither advisory context nor deterministic runtime blocking."
+        },
+        {
+          "text": "Rely solely on `PostToolUse` formatting hooks after `terraform destroy` has already finished deleting resources.",
+          "correct": false,
+          "why_wrong": "`PostToolUse` runs *after* tool execution—destructive commands must be intercepted beforehand by `PreToolUse`."
+        }
+      ],
+      "explanation": "Markdown rules (`AGENTS.md`, `CLAUDE.md`) provide advisory guidance for style and architecture, not hard security boundaries. Deterministic `PreToolUse` hooks (`hooks.json` / `settings.json`) execute outside the LLM before the tool runs and return exit code `2` to block forbidden actions 100% of the time.",
+      "key_takeaway": "Use `PreToolUse` hooks (exit code `2`) for zero-exception safety blocks; keep `AGENTS.md`/`CLAUDE.md` rules for advisory conventions.",
+      "doc_links": [
+        {
+          "label": "Claude Code Hooks Reference",
+          "url": "https://code.claude.com/docs/en/hooks"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-32",
+      "section": "Enterprise Rules, Hooks & agents-cli Pipelines",
+      "guide_anchor": "s9",
+      "question": "Before writing code for an ambiguous multi-service billing specification in Google Antigravity, an architect wants the agent to interview them on unresolved edge cases and produce an executable blueprint for sign-off. Which built-in workflow fits IDD Phases 1–2 (`Define → Review`)?",
+      "options": [
+        {
+          "text": "Use `/grill-me` to resolve design trade-offs interactively and `/plan` to generate a reviewable Plan Artifact.",
+          "correct": true
+        },
+        {
+          "text": "Launch CLI `auto` mode with no spec so the agent immediately rewrites production billing tables first.",
+          "correct": false,
+          "why_wrong": "Skipping Define and Review on an ambiguous billing spec violates IDD's spec-first contract."
+        },
+        {
+          "text": "Run `agents-cli publish gemini-enterprise` before scaffolding or writing any specification document.",
+          "correct": false,
+          "why_wrong": "`publish` is the final release step after scaffolding, testing, evaluation gating, and deployment."
+        },
+        {
+          "text": "Disable Artifact Review and instruct the agent to hide architectural assumptions until post-deployment.",
+          "correct": false,
+          "why_wrong": "IDD surfaces assumptions up front during Define and Review rather than hiding them until production."
+        }
+      ],
+      "explanation": "In Google Antigravity, `/grill-me` conducts an interactive interview to resolve open architectural decisions, and `/plan` produces an executable Plan Artifact that engineers review and approve before code generation (paralleling Claude Code's `Shift+Tab` Plan Mode).",
+      "key_takeaway": "Pair `/grill-me` (design interview) and `/plan` (Plan Artifact) to lock IDD specifications before generating code.",
+      "doc_links": [
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "idd-q-33",
+      "section": "Enterprise Rules, Hooks & agents-cli Pipelines",
+      "guide_anchor": "s9",
+      "question": "A CI pipeline and an autonomous coding agent use `google-agents-cli` (`agents-cli`) to scaffold an ADK prototype from an IDD spec, verify golden scenarios before merge, deploy, and register in Gemini Enterprise. Which command practice is essential so automation never stalls?",
+      "options": [
+        {
+          "text": "Omit all flags on `agents-cli create` so the non-TTY CI runner waits indefinitely for interactive wizard input.",
+          "correct": false,
+          "why_wrong": "Interactive wizard prompts hang headless coding agents and CI/CD runners that have no human `stdin`."
+        },
+        {
+          "text": "Pass `--yes` with explicit flags on `create`/`deploy`/`publish`, and gate merges with `agents-cli eval run`.",
+          "correct": true
+        },
+        {
+          "text": "Skip `tests/eval/evalsets/*.evalset.json` in CI and run `agents-cli publish` directly from unreviewed local branches.",
+          "correct": false,
+          "why_wrong": "Skipping `agents-cli eval run` against `*.evalset.json` and `eval_config.json` removes trajectory and rubric regression gates."
+        },
+        {
+          "text": "Reinstall IDE skills via `uvx google-agents-cli setup` on every production user HTTP request at runtime.",
+          "correct": false,
+          "why_wrong": "`uvx google-agents-cli setup` is a developer-time step that installs Google Cloud skills into coding IDEs, not a per-request runtime call."
+        }
+      ],
+      "explanation": "`uvx google-agents-cli setup` equips coding IDEs with official Google Cloud skills; headless agents and CI runners must pass `--yes` plus explicit flags on `agents-cli create`/`deploy`/`publish` to avoid blocking on interactive prompts, and run `agents-cli eval run` against `*.evalset.json` + `eval_config.json` to gate merges.",
+      "key_takeaway": "Always pass `--yes` with explicit flags when running `agents-cli` headlessly, and gate PRs with `agents-cli eval run`.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation Criteria & Evalsets",
+          "url": "https://google.github.io/adk-docs/evaluate/"
+        }
+      ]
+    }
+  ]
+}
+
