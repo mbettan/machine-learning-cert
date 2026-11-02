@@ -78,10 +78,10 @@
       "source_md": "foundation/ML101-v2.0.md",
       "assets": {
         "notes": "foundation/ML101-v2.0.pdf",
-        "infographic": "foundation/ML101-v1.1.png",
-        "deck": "foundation/ML101-deck-v1.1.pdf",
+        "infographic": "foundation/ML101-v2.0.png",
+        "deck": "foundation/ML101-deck-v2.0.pdf",
         "video": "https://youtu.be/siV0RMdK_DA",
-        "audio": "foundation/ML101-v1.1.mp3"
+        "audio": "foundation/ML101-v2.0.mp3"
       },
       "order": 10
     },
@@ -98,11 +98,11 @@
       "quiz": "genai101",
       "source_md": "foundation/GenAI101-v3.0.md",
       "assets": {
-        "notes": "foundation/GenAI101-v2.0.pdf",
-        "infographic": "foundation/GenAI101-v1.2.png",
-        "deck": "foundation/GenAI101-deck-v1.2.pdf",
+        "notes": "foundation/GenAI101-v3.0.pdf",
+        "infographic": "foundation/GenAI101-v3.0.png",
+        "deck": "foundation/GenAI101-deck-v3.0.pdf",
         "video": "https://youtu.be/pQvnEq6ESok",
-        "audio": "foundation/GenAI-v1.2.mp3"
+        "audio": "foundation/GenAI101-v3.0.mp3"
       },
       "order": 20
     },
@@ -120,10 +120,10 @@
       "source_md": "foundation/PromptEngineering-v3.0.md",
       "assets": {
         "notes": "foundation/PromptEngineering-v3.0.pdf",
-        "infographic": "foundation/PromptEngineering-v1.2.png",
-        "deck": "foundation/PromptEngineering-deck-v1.2.pdf",
+        "infographic": "foundation/PromptEngineering-v3.0.png",
+        "deck": "foundation/PromptEngineering-deck-v3.0.pdf",
         "video": "https://youtu.be/knHPmfV-YOw",
-        "audio": "foundation/PromptEngineering-v1.2.mp3"
+        "audio": "foundation/PromptEngineering-v3.0.mp3"
       },
       "order": 30
     },
@@ -140,14 +140,17 @@
       "quiz": "adp",
       "source_md": "foundation/ADP-v1.0.md",
       "assets": {
-        "notes": "foundation/ADP-v1.0.pdf"
+        "notes": "foundation/ADP-v1.0.pdf",
+        "infographic": "foundation/ADP-v1.0.png",
+        "deck": "foundation/ADP-deck-v1.0.pdf",
+        "audio": "foundation/ADP-v1.0.mp3"
       },
       "order": 40
     },
     {
       "page": "ContextEngineering.html",
       "title": "Context Engineering & Reliability",
-      "description": "Context budgets, pinned facts, compaction, sessions vs. state vs. memory, subagent briefs, structured errors, validation loops, escalation, calibrated review and provenance.",
+      "description": "Context budgets, sliding-window trimming, compaction, tool-result clearing, scratchpads, just-in-time retrieval, sessions vs. memory and subagent context isolation.",
       "owner": "foundation",
       "track": "agent-architecture",
       "certs": {
@@ -157,7 +160,10 @@
       "quiz": "context-engineering",
       "source_md": "foundation/ContextEngineering-v1.0.md",
       "assets": {
-        "notes": "foundation/ContextEngineering-v1.0.pdf"
+        "notes": "foundation/ContextEngineering-v1.0.pdf",
+        "infographic": "foundation/ContextEngineering-v1.0.png",
+        "deck": "foundation/ContextEngineering-deck-v1.0.pdf",
+        "audio": "foundation/ContextEngineering-v1.0.mp3"
       },
       "order": 45
     },
@@ -174,11 +180,11 @@
       "quiz": "adk",
       "source_md": "foundation/ADK-v2.0.md",
       "assets": {
-        "notes": "foundation/ADK-v1.0.pdf",
-        "infographic": "foundation/ADK-v1.0.png",
-        "deck": "foundation/ADK-deck-v1.0.pdf",
-        "video": "foundation/ADK-v1.0.mp4",
-        "audio": "foundation/ADK-v1.0.mp3"
+        "notes": "foundation/ADK-v2.0.pdf",
+        "infographic": "foundation/ADK-v2.0.png",
+        "deck": "foundation/ADK-deck-v2.0.pdf",
+        "video": "foundation/ADK-v2.0.mp4",
+        "audio": "foundation/ADK-v2.0.mp3"
       },
       "order": 50
     },
@@ -196,10 +202,10 @@
       "source_md": "foundation/MCP-v2.0.md",
       "assets": {
         "notes": "foundation/MCP-v2.0.pdf",
-        "infographic": "foundation/MCP-v1.1.png",
-        "deck": "foundation/MCP-deck-v1.1.pdf",
+        "infographic": "foundation/MCP-v2.0.png",
+        "deck": "foundation/MCP-deck-v2.0.pdf",
         "video": "https://youtu.be/xTFwnaoX1U0",
-        "audio": "foundation/MCP-v1.1.mp3"
+        "audio": "foundation/MCP-v2.0.mp3"
       },
       "order": 60
     },
@@ -215,11 +221,11 @@
       "quiz": "a2a",
       "source_md": "foundation/A2A-v2.0.md",
       "assets": {
-        "notes": "foundation/A2A-v1.0.pdf",
-        "infographic": "foundation/A2A-v1.1.png",
-        "deck": "foundation/A2A-deck-v1.1.pdf",
+        "notes": "foundation/A2A-v2.0.pdf",
+        "infographic": "foundation/A2A-v2.0.png",
+        "deck": "foundation/A2A-deck-v2.0.pdf",
         "video": "https://youtu.be/CKI288L-EPg",
-        "audio": "foundation/A2A-v1.1.mp3"
+        "audio": "foundation/A2A-v2.0.mp3"
       },
       "order": 70
     },
@@ -256,7 +262,12 @@
       },
       "quiz": "knowledge-engineering",
       "source_md": "foundation/KnowledgeEngineering-v1.0.md",
-      "assets": {},
+      "assets": {
+        "notes": "foundation/KnowledgeEngineering-v1.0.pdf",
+        "infographic": "foundation/KnowledgeEngineering-v1.0.png",
+        "deck": "foundation/KnowledgeEngineering-deck-v1.0.pdf",
+        "audio": "foundation/KnowledgeEngineering-v1.0.mp3"
+      },
       "order": 90
     },
     {
@@ -272,7 +283,10 @@
       "quiz": "agent-ops",
       "source_md": "foundation/AgentOps-v2.0.md",
       "assets": {
-        "notes": "foundation/AgentOps-v1.0.pdf"
+        "notes": "foundation/AgentOps-v2.0.pdf",
+        "infographic": "foundation/AgentOps-v2.0.png",
+        "deck": "foundation/AgentOps-deck-v2.0.pdf",
+        "audio": "foundation/AgentOps-v2.0.mp3"
       },
       "order": 100
     },
@@ -289,7 +303,10 @@
       "quiz": "responsible-ai",
       "source_md": "foundation/ResponsibleAI-v1.0.md",
       "assets": {
-        "notes": "foundation/ResponsibleAI-v1.0.pdf"
+        "notes": "foundation/ResponsibleAI-v1.0.pdf",
+        "infographic": "foundation/ResponsibleAI-v1.0.png",
+        "deck": "foundation/ResponsibleAI-deck-v1.0.pdf",
+        "audio": "foundation/ResponsibleAI-v1.0.mp3"
       },
       "order": 110
     },
@@ -306,7 +323,10 @@
       "quiz": "vibe-coding",
       "source_md": "foundation/VibeCoding-v3.0.md",
       "assets": {
-        "notes": "foundation/VibeCoding-v2.0.pdf"
+        "notes": "foundation/VibeCoding-v3.0.pdf",
+        "infographic": "foundation/VibeCoding-v3.0.png",
+        "deck": "foundation/VibeCoding-deck-v3.0.pdf",
+        "audio": "foundation/VibeCoding-v3.0.mp3"
       },
       "order": 120
     },
@@ -323,7 +343,9 @@
       "quiz": "idd",
       "source_md": "foundation/IDD-v3.0.md",
       "assets": {
-        "notes": "foundation/IDD-v2.0.pdf"
+        "notes": "foundation/IDD-v3.0.pdf",
+        "infographic": "foundation/IDD-v3.0.png",
+        "audio": "foundation/IDD-v3.0.mp3"
       },
       "order": 130
     },
@@ -338,11 +360,11 @@
       "quiz": "google",
       "source_md": "google/Google-v3.0.md",
       "assets": {
-        "notes": "google/Google-v2.0.pdf",
-        "infographic": "google/Google-Foundational-models-v1.1.png",
-        "deck": "google/Google-Foundational-models-deck-v1.1.pdf",
+        "notes": "google/Google-v3.0.pdf",
+        "infographic": "google/Google-v3.0.png",
+        "deck": "google/Google-deck-v3.0.pdf",
         "video": "https://youtu.be/xqAqfWlWf70",
-        "audio": "google/Google-Foundational-models-v1.0.mp3"
+        "audio": "google/Google-v3.0.mp3"
       },
       "order": 140
     },
@@ -356,7 +378,12 @@
       },
       "quiz": "gemini-enterprise",
       "source_md": "google/GeminiEnterprise-v1.0.md",
-      "assets": {},
+      "assets": {
+        "notes": "google/GeminiEnterprise-v1.0.pdf",
+        "infographic": "google/GeminiEnterprise-v1.0.png",
+        "deck": "google/GeminiEnterprise-deck-v1.0.pdf",
+        "audio": "google/GeminiEnterprise-v1.0.mp3"
+      },
       "order": 150
     },
     {
@@ -369,7 +396,12 @@
       },
       "quiz": "antigravity",
       "source_md": "google/Antigravity-v1.0.md",
-      "assets": {},
+      "assets": {
+        "notes": "google/Antigravity-v1.0.pdf",
+        "infographic": "google/Antigravity-v1.0.png",
+        "deck": "google/Antigravity-deck-v1.0.pdf",
+        "audio": "google/Antigravity-v1.0.mp3"
+      },
       "order": 160
     },
     {
@@ -382,7 +414,12 @@
       },
       "quiz": "agent-platform",
       "source_md": "google/AgentPlatform-v2.0.md",
-      "assets": {},
+      "assets": {
+        "notes": "google/AgentPlatform-v2.0.pdf",
+        "infographic": "google/AgentPlatform-v2.0.png",
+        "deck": "google/AgentPlatform-deck-v2.0.pdf",
+        "audio": "google/AgentPlatform-v2.0.mp3"
+      },
       "order": 170
     },
     {
@@ -395,7 +432,12 @@
       },
       "quiz": "agent-platform-security",
       "source_md": "google/AgentPlatformSecurity-v1.0.md",
-      "assets": {},
+      "assets": {
+        "notes": "google/AgentPlatformSecurity-v1.0.pdf",
+        "infographic": "google/AgentPlatformSecurity-v1.0.png",
+        "deck": "google/AgentPlatformSecurity-deck-v1.0.pdf",
+        "audio": "google/AgentPlatformSecurity-v1.0.mp3"
+      },
       "order": 180
     },
     {
@@ -411,10 +453,10 @@
       "source_md": "anthropic/Anthropic-v2.0.md",
       "assets": {
         "notes": "anthropic/Anthropic-v2.0.pdf",
-        "infographic": "anthropic/Anthropic-foundational-models-v1.1.png",
-        "deck": "anthropic/Anthropic-foundational-models-deck-v1.1.pdf",
-        "video": "https://youtu.be/5JYaDEUmeOY",
-        "audio": "anthropic/Anthropic-foundational-models-v1.0.mp3"
+        "infographic": "anthropic/Anthropic-v2.0.png",
+        "deck": "anthropic/Anthropic-deck-v2.0.pdf",
+        "video": "anthropic/Anthropic-v2.0.mp4",
+        "audio": "anthropic/Anthropic-v2.0.mp3"
       },
       "order": 190
     },
@@ -468,7 +510,11 @@
       "quiz": "claude-agent-sdk",
       "source_md": "anthropic/ClaudeAgentSDK-v1.0.md",
       "assets": {
-        "notes": "anthropic/ClaudeAgentSDK-v1.0.pdf"
+        "notes": "anthropic/ClaudeAgentSDK-v1.0.pdf",
+        "infographic": "anthropic/ClaudeAgentSDK-v1.0.png",
+        "deck": "anthropic/ClaudeAgentSDK-deck-v1.0.pdf",
+        "video": "anthropic/ClaudeAgentSDK-v1.0.mp4",
+        "audio": "anthropic/ClaudeAgentSDK-v1.0.mp3"
       },
       "order": 220
     }
