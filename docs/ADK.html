@@ -598,7 +598,8 @@ fast_responder = LlmAgent(
 )
 
 root_agent = Workflow(name=&quot;support_graph&quot;, edges=[
-    (START, classify_severity, (&quot;deep_architect&quot;, &quot;fast_responder&quot;)),
+    (START, classify_severity),
+    (classify_severity, {&quot;deep_architect&quot;: &quot;deep_architect&quot;, &quot;fast_responder&quot;: &quot;fast_responder&quot;}),
     ((&quot;deep_architect&quot;, &quot;fast_responder&quot;), END),
 ])</code></pre>
 
@@ -608,10 +609,10 @@ root_agent = Workflow(name=&quot;support_graph&quot;, edges=[
                     <tr><th>Graph capability</th><th>LangGraph equivalent</th><th>ADK 2.0 <code>Workflow</code> (Python / TS / Go)</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Conditional branching</td><td><code>StateGraph</code> + <code>add_conditional_edges</code></td><td><code>Workflow(edges=[...])</code> + node returning <code>Event(output=..., route=&quot;target&quot;)</code></td></tr>
-                    <tr><td>Parallel fan-out &amp; synchronization</td><td>Parallel edges + <code>Annotated[..., operator.add]</code> reducers</td><td>Edge tuple <code>(src, (&quot;branch_a&quot;, &quot;branch_b&quot;))</code> + **<code>JoinNode</code>** (<code>dict[node_id, output]</code>); no state reducers—use distinct state keys</td></tr>
+                    <tr><td>Conditional branching</td><td><code>StateGraph</code> + <code>add_conditional_edges</code></td><td><code>Workflow(edges=[(router_fn, {&quot;route&quot;: node})])</code> + node returning <code>Event(output=..., route=&quot;target&quot;)</code></td></tr>
+                    <tr><td>Parallel fan-out &amp; synchronization</td><td>Parallel edges + <code>Annotated[..., operator.add]</code> reducers</td><td>Edge tuple <code>(START, (&quot;branch_a&quot;, &quot;branch_b&quot;), join_node)</code> + **<code>JoinNode</code>** (<code>dict[node_id, output]</code>); no state reducers—use distinct state keys</td></tr>
                     <tr><td>Durable checkpointing</td><td>Checkpointer keyed by <code>thread_id</code></td><td><code>SessionService</code> keyed by <code>app_name</code> / <code>user_id</code> / <code>session_id</code></td></tr>
-                    <tr><td>Mid-graph human pause</td><td><code>interrupt()</code></td><td>Generator node yielding <code>RequestInput(message=..., schema=...)</code> or <code>LongRunningFunctionTool</code></td></tr>
+                    <tr><td>Mid-graph human pause</td><td><code>interrupt()</code></td><td>Generator node yielding <code>RequestInput(message=..., response_schema=...)</code> or <code>LongRunningFunctionTool</code></td></tr>
                 </tbody>
             </table>
         </div>
@@ -888,7 +889,7 @@ customs_agent = RemoteA2aAgent(
                 </thead>
                 <tbody>
                     <tr><td>Conditional approval on sensitive tools</td><td><code>FunctionTool(fn, require_confirmation=lambda amount, **_: amount &gt; 500)</code> (note: built-in <code>require_confirmation</code> is **<code>InMemorySessionService</code>-only**)</td></tr>
-                    <tr><td>Production durable HITL across DB / Agent Runtime sessions</td><td>**<code>LongRunningFunctionTool</code>** (returns pending ticket/status immediately; external approval webhook resumes with matching <code>function_call.id</code>) or ADK 2.0 <code>Workflow</code> generator yielding <code>RequestInput(message=..., schema=...)</code></td></tr>
+                    <tr><td>Production durable HITL across DB / Agent Runtime sessions</td><td>**<code>LongRunningFunctionTool</code>** (returns pending ticket/status immediately; external approval webhook resumes with matching <code>function_call.id</code>) or ADK 2.0 <code>Workflow</code> generator yielding <code>RequestInput(message=..., response_schema=...)</code></td></tr>
                     <tr><td>Crash-resilient invocation replay</td><td><code>App(..., resumability_config=ResumabilityConfig(is_resumable=True))</code> resumed with <code>invocation_id</code> (<strong>at-least-once</strong> execution—tools must be idempotent!)</td></tr>
                     <tr><td>Runaway reasoning loop protection (<code>PAA 4.2</code>)</td><td><code>RunConfig(max_llm_calls=...)</code> (default <strong>500</strong>), <code>LoopAgent(max_iterations=...)</code>, plus per-session failure counters in <code>state</code></td></tr>
                 </tbody>

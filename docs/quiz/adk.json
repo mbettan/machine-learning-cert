@@ -1203,8 +1203,8 @@
           "why_wrong": "ADK requires `SKILL.md` names to use lowercase kebab-case matching the directory name; CamelCase fails validation immediately rather than hanging on stdin."
         }
       ],
-      "explanation": "`agents-cli` and Level 3 `scripts/` helpers must distinguish **human mode** (interactive TTY wizards and confirmation prompts) from **agent / CI mode** (strictly non-interactive CLI flags, deterministic exit codes, and structured JSON output—never blocking on `input()` or `read`). For centralized enterprise governance across teams and projects, publish versioned skill packages through **`GCPSkillRegistry`** rather than duplicating `skills/` folders across repositories.",
-      "key_takeaway": "Run `agents-cli` and L3 skill scripts in non-interactive agent mode (flags + JSON stdout, never stdin prompts) and govern shared enterprise skills via `GCPSkillRegistry`.",
+      "explanation": "`agents-cli` and Level 3 `scripts/` helpers must distinguish **interactive execution** (interactive TTY wizards and confirmation prompts) from **non-interactive / agent execution** (strictly non-interactive CLI flags, deterministic exit codes, and structured JSON output—never blocking on `input()` or `read`). For centralized enterprise governance across teams and projects, publish versioned skill packages through **`GCPSkillRegistry`** rather than duplicating `skills/` folders across repositories.",
+      "key_takeaway": "Run `agents-cli` and L3 skill scripts in non-interactive mode (flags + JSON stdout, never stdin prompts) and govern shared enterprise skills via `GCPSkillRegistry`.",
       "doc_links": [
         {
           "label": "ADK AgentPlatform Overview",
