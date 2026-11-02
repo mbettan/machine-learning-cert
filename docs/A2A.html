@@ -13,9 +13,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent2Agent (A2A) Protocol: Study Guide | ML Cert Hub</title>
-    <meta name="description" content="Explore the Agent2Agent (A2A) protocol for multi-agent interoperability: Agent Cards, capability discovery, task lifecycles, artifacts, and streaming.">
-    <meta name="keywords" content="Agent2Agent, A2A, Multi-Agent Systems, AI Agents Collaboration, Agent Card, Linux Foundation, Google Cloud, Michael Bettan, Michaël Bettan">
+    <title>Agent2Agent (A2A) &amp; Interoperability: Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Explore Agent2Agent (A2A v1.0) and the 5-layer agentic interoperability stack: Agent Cards, task lifecycles, AgentTool vs A2A boundaries, A2UI/AG-UI/MCP UI, and AP2/x402 commerce.">
+    <meta name="keywords" content="Agent2Agent, A2A, A2A v1.0, Agent Card, SubscribeToTask, AgentTool vs A2A, A2UI, AG-UI, MCP UI, AP2, Agent Payments Protocol, x402, Intent Mandate, Cart Mandate, Gemini Enterprise, Linux Foundation, Google Cloud, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -32,25 +32,38 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Agent2Agent (A2A) Protocol: Study Guide | ML Cert Hub">
-    <meta property="og:description" content="Explore the Agent2Agent (A2A) protocol for multi-agent interoperability: Agent Cards, capability discovery, task lifecycles, artifacts, and streaming.">
+    <meta property="og:title" content="Agent2Agent (A2A) &amp; Interoperability: Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Explore Agent2Agent (A2A v1.0) and the 5-layer agentic interoperability stack: Agent Cards, task lifecycles, AgentTool vs A2A boundaries, A2UI/AG-UI/MCP UI, and AP2/x402 commerce.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/A2A.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Agent2Agent (A2A) Protocol — Study Guide by Michaël Bettan">
+    <meta property="og:image:alt" content="Agent2Agent (A2A) &amp; Interoperability — Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Agent2Agent (A2A) Protocol: Study Guide | ML Cert Hub">
-    <meta name="twitter:description" content="Explore the Agent2Agent (A2A) protocol for multi-agent interoperability: Agent Cards, capability discovery, task lifecycles, artifacts, and streaming.">
+    <meta name="twitter:title" content="Agent2Agent (A2A) &amp; Interoperability: Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Explore Agent2Agent (A2A v1.0) and the 5-layer agentic interoperability stack: Agent Cards, task lifecycles, AgentTool vs A2A boundaries, A2UI/AG-UI/MCP UI, and AP2/x402 commerce.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
-    <meta name="twitter:image:alt" content="Agent2Agent (A2A) Protocol — Study Guide by Michaël Bettan">
+    <meta name="twitter:image:alt" content="Agent2Agent (A2A) &amp; Interoperability — Study Guide by Michaël Bettan">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 
     <script type="application/ld+json">
 {
@@ -62,16 +75,15 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/A2A.html#article",
-                  "headline": "Agent2Agent (A2A) Protocol: Study Guide | ML Cert Hub",
-                  "name": "Agent2Agent (A2A) Protocol Study Guide",
-                  "description": "Explore the Agent2Agent (A2A) protocol for multi-agent interoperability: Agent Cards, capability discovery, task lifecycles, artifacts, and streaming.",
-                  "keywords": "Agent2Agent, A2A, Multi-Agent Systems, AI Agents Collaboration, Agent Card, Linux Foundation, Google Cloud, Michael Bettan, Michaël Bettan",
+                  "headline": "Agent2Agent (A2A) & Interoperability: Study Guide | ML Cert Hub",
+                  "name": "Agent2Agent (A2A) & Interoperability Study Guide",
+                  "description": "Explore Agent2Agent (A2A v1.0) and the 5-layer agentic interoperability stack: Agent Cards, task lifecycles, AgentTool vs A2A boundaries, A2UI/AG-UI/MCP UI, and AP2/x402 commerce.",
+                  "keywords": "Agent2Agent, A2A, A2A v1.0, Agent Card, SubscribeToTask, AgentTool vs A2A, A2UI, AG-UI, MCP UI, AP2, Agent Payments Protocol, x402, Intent Mandate, Cart Mandate, Gemini Enterprise, Linux Foundation, Google Cloud, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/A2A.html",
                   "inLanguage": "en",
-                  "version": "2.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-30",
                   "learningResourceType": "Study Guide",
-                  "educationalLevel": "Intermediate",
+                  "educationalLevel": "Advanced",
                   "author": {
                         "@type": "Person",
                         "@id": "https://github.com/mbettan#person",
@@ -108,6 +120,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/A2A.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -123,34 +139,34 @@
             <div class="cover-content">
                 <div class="cover-eyebrow">
                     <i class="fas fa-graduation-cap"></i>
-                    Emerging Open Standard
+                    Open Multi-Agent Standard · v2.0
                 </div>
-                <h1>Agent2Agent (A2A)<br><em>Study Guide</em></h1>
+                <h1>Agent2Agent (A2A) &amp; <em>Interoperability</em></h1>
                 <p class="cover-subtitle">
-                    An emerging open standard for multi-agent systems, covering discovery, task lifecycle management, and structured workflows.
+                    Complete architectural guide to the Linux Foundation Agent2Agent (A2A v0.3 → v1.0) protocol, deciding between intra-app <code>AgentTool</code> / sub-agents and inter-app A2A delegation, and composing the 5-layer agentic ecosystem: <strong>MCP</strong> (tools), <strong>A2A</strong> (peer agents), <strong>A2UI / AG-UI / MCP UI</strong> (declarative generative UI), <strong>Live Streaming</strong>, and <strong>AP2 + x402</strong> (agentic commerce).
                 </p>
-                                                <div class="cover-meta">
+                <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>Updated: <strong>April 2026</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.0</strong></span>
+                        <span>Updated: <strong>October 2026 (v2.0)</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-tag"></i>
-                        <span>Category: <strong>Multi-Agent</strong></span>
+                        <span>Category: <strong>Multi-Agent &amp; Interoperability</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-clock"></i>
-                        <span>Reading Time: <strong>~10 min</strong></span>
+                        <span>Reading Time: <strong>~15 min</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-user-edit"></i>
                         <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=a2a" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Agent2Agent (A2A) Practice Quiz →</span>
+                </a>
             </div>
         </section>
 
@@ -165,90 +181,85 @@
             <div class="toc-columns">
                 <a href="#definition" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>Definition & Scope</span>
+                    <span>Definition &amp; MCP vs. A2A</span>
                 </a>
                 <a href="#architecture" class="toc-item">
                     <span class="toc-number">02</span>
-                    <span>Core & Protocol Architecture</span>
+                    <span>Core &amp; Wire Protocol Architecture</span>
                 </a>
                 <a href="#workflow" class="toc-item">
                     <span class="toc-number">03</span>
-                    <span>Standard Workflow</span>
+                    <span>Task Lifecycle &amp; State Machine</span>
                 </a>
                 <a href="#capabilities" class="toc-item">
                     <span class="toc-number">04</span>
-                    <span>Capabilities & Transports</span>
+                    <span>Transports, Discovery &amp; Agent Cards</span>
+                </a>
+                <a href="#delegation-boundaries" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Intra-App AgentTool vs. Inter-App A2A</span>
+                </a>
+                <a href="#ecosystem-protocols" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>5-Layer Stack: A2UI, AG-UI, AP2 &amp; x402</span>
                 </a>
                 <a href="#workflows" class="toc-item">
-                    <span class="toc-number">05</span>
-                    <span>Advanced Collaborative Workflows</span>
+                    <span class="toc-number">07</span>
+                    <span>Collaborative Multi-Agent Topologies</span>
                 </a>
                 <a href="#implementation" class="toc-item">
-                    <span class="toc-number">06</span>
-                    <span>Implementation & Security</span>
+                    <span class="toc-number">08</span>
+                    <span>Google Cloud Implementation &amp; Security</span>
                 </a>
                 <a href="#glossary" class="toc-item">
-                    <span class="toc-number">07</span>
-                    <span>Glossary</span>
+                    <span class="toc-number">09</span>
+                    <span>Glossary &amp; Self-Assessment</span>
                 </a>
             </div>
         </nav>
 
         <!-- ═══════════════════════════════════════
-             SECTION: DEFINITION & SCOPE
+             SECTION 01: DEFINITION & SCOPE
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="definition">
             <div class="section-divider-number">01</div>
-            <h2>Definition & Scope</h2>
+            <h2>Definition &amp; Scope</h2>
         </div>
 
         <div class="concept-card accent-blue">
             <h3><div class="icon-badge"><i class="fas fa-project-diagram"></i></div>What is A2A?</h3>
             <p>
-                The <strong>Agent2Agent (A2A)</strong> protocol is an emerging open standard for multi-agent systems. Initiated by Google, developed with industry partners, and now governed by the Linux Foundation, it defines how agents discover each other, manage task lifecycles, and coordinate structured workflows.
+                The <strong>Agent2Agent (A2A)</strong> protocol is an open, vendor-neutral standard initiated by Google with 50+ enterprise partners and governed by the <strong>Linux Foundation</strong>. It defines how autonomous agents discover capabilities, negotiate modalities, delegate stateful tasks, stream incremental artifacts, and enforce enterprise security across organizational and framework boundaries.
             </p>
             <p>
-                A2A is the <strong>"universal language for multi-agent systems"</strong>; any compliant agent, regardless of its underlying framework (e.g., LangGraph, CrewAI, Google ADK), can communicate, delegate tasks, and share information.
+                A2A solves the <strong>Multi-Agent Silo problem</strong>: compliant agents built on Google ADK, LangGraph, CrewAI, or SaaS platforms (Workday, Salesforce, ServiceNow, SAP) collaborate as <strong>opaque peers</strong> without exposing internal prompts, session databases, tool credentials, or model weights.
             </p>
-        </div>
-        
-        <div class="callout tip">
-            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
-            <div class="callout-content">
-                <h4>A2A Solves For</h4>
-                <p>Individual AI agents built on different frameworks operate in isolation → <strong>Multi-Agent Silo problem</strong> (lack of a common language hinders cohesive problem-solving). A2A provides a standardized framework telling an AI agent exactly how to dynamically discover other agents, what capabilities they offer, and how to negotiate UX and state.</p>
-            </div>
-        </div>
-
-        <div class="prose">
-            <p><strong>MCP vs. A2A</strong></p>
-            <p>These two technologies are not competing — they are composable layers for production agentic systems:</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
                     <tr>
-                        <th>Feature</th>
-                        <th>MCP</th>
-                        <th>A2A</th>
+                        <th>Dimension</th>
+                        <th>Model Context Protocol (MCP)</th>
+                        <th>Agent2Agent Protocol (A2A)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Integration Focus</td>
-                        <td>Vertical integration (Agent ↔ System).</td>
-                        <td>Horizontal orchestration (Agent ↔ Agent).</td>
+                        <td><strong>Topology</strong></td>
+                        <td>Vertical integration (<code>Agent ↔ Tool / Database / Resource</code>).</td>
+                        <td>Horizontal peer orchestration (<code>Client Agent ↔ Remote Specialist Agent</code>).</td>
                     </tr>
                     <tr>
-                        <td>Execution Model</td>
-                        <td>Stateless, synchronous request/response for querying DBs, calling APIs, or reading files.</td>
-                        <td>Deeply stateful cognitive reasoning, multi-step planning, and delegation between specialized agents.</td>
+                        <td><strong>Execution Model</strong></td>
+                        <td>Primarily stateless, schema-bound RPCs (<code>tools/call</code>) for deterministic actions and lookups.</td>
+                        <td>Stateful cognitive reasoning, multi-turn clarification (<code>input-required</code>), and asynchronous workflows spanning seconds to days.</td>
                     </tr>
                     <tr>
-                        <td>Semantic Structures</td>
-                        <td><i class="fas fa-times table-cross"></i> Lacks semantic structures for peer negotiation, capability discovery, or long-running task management.</td>
-                        <td><i class="fas fa-check table-check"></i> Built specifically for capability discovery, state management, and long-running workflows.</td>
+                        <td><strong>Discovery Artifact</strong></td>
+                        <td><code>tools/list</code> JSON Schema over stdio or Streamable HTTP.</td>
+                        <td><strong><code>AgentCard</code></strong> at <code>/.well-known/agent-card.json</code> (plus authenticated extended cards &amp; <strong>Agent Registry</strong>).</td>
                     </tr>
                 </tbody>
             </table>
@@ -257,323 +268,314 @@
         <div class="callout info">
             <div class="callout-icon"><i class="fas fa-industry"></i></div>
             <div class="callout-content">
-                <h4>Production Pattern</h4>
-                <p>An A2A meta-agent distributes tasks to specialized sub-agents, which then use MCP to execute deterministic actions.</p>
+                <h4>Canonical Production Pattern</h4>
+                <p>A front-door orchestrator in <strong>Gemini Enterprise</strong> distributes domain sub-goals over <strong>A2A</strong> to specialized departmental agents, and each specialist agent invokes its own private databases and APIs over <strong>MCP</strong>.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: ARCHITECTURE
+             SECTION 02: ARCHITECTURE
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="architecture">
             <div class="section-divider-number">02</div>
-            <h2>Core & Protocol Architecture</h2>
-        </div>
-
-        <div class="prose">
-            <p><strong>Core Architecture</strong></p>
+            <h2>Core &amp; Wire Protocol Architecture (v0.3 → v1.0)</h2>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>User</dt>
-                <dd>Initiates the high-level request for agent assistance.</dd>
+                <dd>Initiates the high-level goal and supplies primary identity/consent context.</dd>
             </div>
             <div class="definition-item">
-                <dt>A2A Client (Client Agent)</dt>
-                <dd>Formulates and communicates tasks. Acts on the user's behalf to discover capabilities and orchestrate the workflow.</dd>
+                <dt>A2A Client (Host / Client Agent)</dt>
+                <dd>Discovers remote <code>AgentCard</code> skills, decomposes goals, dispatches tasks, handles interruptions, and synthesizes returned artifacts.</dd>
             </div>
             <div class="definition-item">
-                <dt>A2A Server (Remote Agent)</dt>
-                <dd>An AI agent or system providing an HTTP endpoint to process client requests. Operates as an "opaque" system — the client agent does not need to understand its internal operational details, framework choice (e.g., LangGraph vs. CrewAI vs. ADK), or model provider. This opacity makes true cross-vendor interoperability possible.</dd>
+                <dt>A2A Server (Opaque Remote Agent)</dt>
+                <dd>Exposes an A2A endpoint and executes tasks autonomously — keeping internal prompts, memory, framework, and downstream MCP credentials completely opaque.</dd>
             </div>
         </div>
 
-        <div class="prose">
-            <p><strong>Protocol Architecture</strong></p>
-        </div>
-
-        <div class="definition-grid">
-            <div class="definition-item">
-                <dt>Canonical Data Model</dt>
-                <dd>All frameworks serialize internal state into the Canonical Data Model (<code>a2a.proto</code>) before transmission — this is what neutralizes framework incompatibility.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Abstract Operations</dt>
-                <dd>Defines the logic of task management and peer negotiation.</dd>
-            </div>
-            <div class="definition-item">
-                <dt>Protocol Bindings</dt>
-                <dd>Concrete implementation over HTTP/JSON-RPC.</dd>
-            </div>
+        <div class="concept-card accent-cyan" style="margin-top: 20px;">
+            <h3><div class="icon-badge"><i class="fas fa-code"></i></div>Three-Layer Wire Stack (<code>a2a.proto</code>)</h3>
+            <ul>
+                <li><strong>1. Canonical Data Model:</strong> Protobuf-defined structures (<code>AgentCard</code>, <code>Task</code>, <code>Message</code>, <code>Part</code> [<code>TextPart</code>, <code>DataPart</code>, <code>FilePart</code>], <code>Artifact</code>, <code>TaskStatusUpdateEvent</code>, <code>TaskArtifactUpdateEvent</code>).</li>
+                <li><strong>2. Abstract Operations (v1.0 PascalCase vs. v0.3 names):</strong> <code>SendMessage</code> (v0.3: <code>message/send</code>), <code>SendStreamingMessage</code> (<code>message/stream</code>), <code>GetTask</code> (<code>tasks/get</code>), <code>CancelTask</code> (<code>tasks/cancel</code>), <strong><code>SubscribeToTask</code></strong> (v0.3: <code>tasks/resubscribe</code> — reconnects SSE to an active in-flight task after network drop), and <code>GetExtendedAgentCard</code> (REST: <code>GET /extendedAgentCard</code>).</li>
+                <li><strong>3. Protocol Bindings (<code>supportedInterfaces</code>):</strong> Each interface declares a <code>url</code> and <code>protocolBinding</code> supporting <strong><code>JSONRPC</code></strong> (JSON-RPC 2.0 over HTTPS), <strong><code>HTTP+JSON</code></strong> (REST), or <strong><code>GRPC</code></strong>.</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: WORKFLOW
+             SECTION 03: WORKFLOW
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="workflow">
             <div class="section-divider-number">03</div>
-            <h2>Standard Workflow</h2>
+            <h2>Task Lifecycle &amp; State Machine</h2>
         </div>
 
-        <div class="prose">
-            <p>A2A structures communication around asynchronous tasks (fundamental units of work for long-running processes) using JSON-RPC 2.0 over HTTP(S).</p>
+        <p class="prose" style="margin-bottom: 20px; color: var(--text-secondary);">A2A tracks work via <strong><code>taskId</code></strong> (one stateful execution unit) grouped across multi-turn threads by <strong><code>contextId</code></strong>. Know the exact difference between active, interrupted, and terminal states:</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Category</th><th>States</th><th>Stream &amp; Client Behavior</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Active</strong></td><td><code>submitted</code>, <code>working</code></td><td>Queued or actively running; SSE streams stay open and emit status/artifact events</td></tr>
+                    <tr><td><strong>Interrupted</strong></td><td><code>input-required</code>, <code>auth-required</code></td><td><strong>SSE stream closes cleanly</strong>; client gathers missing user input (<code>input-required</code>, natural HITL pause) or completes OAuth step-up (<code>auth-required</code>) and resumes using the same <code>taskId</code> + <code>contextId</code></td></tr>
+                    <tr><td><strong>Terminal</strong></td><td><code>completed</code>, <code>failed</code>, <code>canceled</code>, <code>rejected</code></td><td>Execution permanently finished (<code>rejected</code> means the remote agent declined the request); follow-ups create a new <code>taskId</code> under the shared <code>contextId</code></td></tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="process-flow">
             <div class="process-step">
                 <div class="process-step-number">01</div>
                 <h4>Capability Discovery</h4>
-                <p>Client locates the remote agent's "Agent Card".</p>
+                <p>Fetch <code>/.well-known/agent-card.json</code> or query <strong>Agent Registry</strong>.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">02</div>
                 <h4>Task Formulation</h4>
-                <p>Client agent evaluates the remote agent's skills and formulates a task request.</p>
+                <p>Match goal against <code>skills[]</code>, MIME modes, and security schemes.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">03</div>
-                <h4>Execution Request</h4>
-                <p>Client agent sends the payload via <code>message/send</code> or <code>message/stream</code>.</p>
+                <h4>Execution Dispatch</h4>
+                <p>Call <code>SendMessage</code> or <code>SendStreamingMessage</code> with header auth.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">04</div>
-                <h4>Collaboration & State</h4>
-                <p>Agents send messages preserving conversational threading and lineage.</p>
+                <h4>Collaboration &amp; State</h4>
+                <p>Handle incremental updates or <code>input-required</code> / <code>auth-required</code> pauses.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">05</div>
-                <h4>Artifact Generation</h4>
-                <p>Tangible outputs of the task are streamed incrementally to the client.</p>
+                <h4>Artifact Delivery</h4>
+                <p>Consume typed <code>Artifact</code> chunks for chaining or UI rendering.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: CAPABILITIES & TRANSPORTS
+             SECTION 04: CAPABILITIES & TRANSPORTS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="capabilities">
             <div class="section-divider-number">04</div>
-            <h2>Capabilities & Transports</h2>
+            <h2>Transports, Discovery &amp; Agent Cards</h2>
         </div>
 
         <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Interaction Mechanisms (Transports)</h3>
-            <p>A2A provides four interaction methods suited to different task durations and resource profiles:</p>
+            <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Four Interaction Transports</h3>
             <ul>
-                <li><strong>Synchronous Request/Response:</strong> Client uses <code>message/send</code> and actively waits for a complete response in a single exchange. Best for quick, immediate operations where latency is low and result is instantaneous.</li>
-                <li><strong>Asynchronous Polling:</strong> The client first calls <code>message/send</code>, receives a Task object with a <code>taskId</code> in a SUBMITTED or WORKING state, and then uses <code>tasks/get</code> to poll. Server acknowledges immediately with a working status and a <code>task_id</code>. Suitable for medium-duration tasks where a persistent connection is impractical.</li>
-                <li><strong>Streaming Updates (SSE):</strong> Client uses <code>message/stream</code>. Establishes a persistent, one-way Server-Sent Events connection. Remote agent pushes incremental updates with chunking parameters: <code>append: false</code> (new artifact), <code>append: true</code> (continuation), and <code>lastChunk: true</code> (termination). Best for tasks with observable progress.</li>
-                <li><strong>Push Notifications (Webhooks):</strong> For resource-intensive, long-running tasks spanning hours or days. Client registers a webhook URL upfront; the server sends async push notifications upon significant state changes — eliminating the need for any persistent connection.</li>
+                <li><strong>1. Synchronous Request/Response (<code>SendMessage</code>):</strong> Single blocking HTTP exchange for fast sub-second to ~10s lookups.</li>
+                <li><strong>2. Streaming Updates (<code>SendStreamingMessage</code> + SSE):</strong> Server pushes real-time <code>TaskStatusUpdateEvent</code> and chunked <code>TaskArtifactUpdateEvent</code> payloads (<code>append: false/true</code>, <code>lastChunk: true</code>); reconnect dropped streams with <code>SubscribeToTask</code>.</li>
+                <li><strong>3. Asynchronous Polling (<code>SendMessage</code> → <code>GetTask</code>):</strong> Server returns <code>submitted</code>/<code>working</code> + <code>taskId</code> immediately; client polls <code>GetTask</code> when persistent SSE or inbound webhooks are blocked by firewalls.</li>
+                <li><strong>4. Push Notifications (Webhooks):</strong> Client supplies a <code>pushNotificationConfig</code> callback URL; server posts signed async state notifications across multi-hour or multi-day workflows without holding open connections (verify HMAC/JWT webhook signatures + replay nonces!).</li>
             </ul>
         </div>
 
         <div class="callout warning">
             <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="callout-content">
-                <h4>Selection Rule</h4>
-                <p>Match the transport to the task duration. Using synchronous <code>message/send</code> for a 4-hour research task will timeout and lose state.</p>
+                <h4>Transport Selection Rule</h4>
+                <p>Match transport to duration: using synchronous <code>SendMessage</code> or even long-lived SSE for a 4-hour research job hits proxy/Cloud Run (60-minute max) timeouts. Switch to <strong>Push Notifications (Webhooks)</strong> or <strong>Polling</strong> for multi-hour tasks.</p>
             </div>
         </div>
 
         <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-cubes"></i></div>Core Capabilities</h3>
-            <p>A2A standardizes agent interactions through fundamental building blocks:</p>
+            <h3><div class="icon-badge"><i class="fas fa-id-card"></i></div>Agent Cards &amp; Four Discovery Mechanisms</h3>
             <ul>
-                <li><strong>Agent Cards:</strong> The digital identity of an agent (JSON format). It defines identity, skills (e.g., <code>get_current_weather</code>), and capabilities (streaming, pushNotifications, stateTransitionHistory). Includes Content Negotiation (defaultInputModes/defaultOutputModes for MIME types).</li>
-                <li><strong>Agent Discovery:</strong> Clients find Agent Cards dynamically to understand available capabilities. Methods include:
-                    <ul>
-                        <li><strong>Well-Known URI:</strong> Standardized path (<code>/.well-known/agent-card.json</code>, per RFC 8615) enabling broad, automated discovery. Similar to how browsers discover SSL certificates. <em>Trap: older tutorials show <code>agent.json</code> and <code>tasks/send</code>; the current spec uses <code>agent-card.json</code>, <code>message/send</code> and <code>message/stream</code>.</em></li>
-                        <li><strong>Curated Registries:</strong> Centralized enterprise catalogs listing approved agents with access control. Enables governance.</li>
-                        <li><strong>Direct Configuration:</strong> Hardcoded or privately shared Agent Card URLs for closely coupled, trusted internal systems.</li>
-                        <li><strong>Authenticated Extended Card Pattern:</strong> Public card may signal <code>supportsAuthenticatedExtendedCard: true</code>. Clients authenticate via OAuth to retrieve sensitive skills via <code>GET /a2a/agent/authenticatedExtendedCard</code>.</li>
-                    </ul>
-                </li>
+                <li><strong>Well-Known URI (RFC 8615):</strong> <code>/.well-known/agent-card.json</code> for open discovery. <em>Version trap: early drafts showed <code>agent.json</code> / <code>tasks/send</code>; v0.3 used <code>agent-card.json</code> + <code>message/send</code>; v1.0 keeps <code>agent-card.json</code> with PascalCase <code>SendMessage</code>.</em></li>
+                <li><strong>Curated Enterprise Registry (Google Cloud Agent Registry):</strong> Governed enterprise catalog with IAM access controls — prevents shadow/rogue agent sprawl.</li>
+                <li><strong>Authenticated Extended Agent Card:</strong> Public card sets <code>capabilities.extendedAgentCard: true</code> (v0.3: <code>supportsAuthenticatedExtendedCard</code>); authenticated callers invoke <code>GetExtendedAgentCard</code> to retrieve sensitive internal skills.</li>
+                <li><strong>Direct Configuration:</strong> Static pinned card URLs injected via Terraform/config for tightly coupled private services.</li>
             </ul>
         </div>
 
-        <div class="callout info">
-            <div class="callout-icon"><i class="fas fa-photo-video"></i></div>
-            <div class="callout-content">
-                <h4>Modality Agnostic UX Negotiation</h4>
-                <p>A2A embraces natural, unstructured modalities. Message "parts" can contain text, generated images, or even negotiate UI capabilities (iframes, video, audio streaming, web forms) directly between agents.</p>
+        <!-- ═══════════════════════════════════════
+             SECTION 05: DELEGATION BOUNDARIES (NEW)
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="delegation-boundaries">
+            <div class="section-divider-number">05</div>
+            <h2>Intra-App <code>AgentTool</code> vs. Inter-App <code>A2A</code></h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 20px; color: var(--text-secondary);">A core <strong>Professional Agentic Architect</strong> design decision is choosing between in-process composition (ADK <code>sub_agents</code> transfer or <code>AgentTool</code>) and network-isolated <strong>A2A delegation</strong>:</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Intra-App (<code>sub_agents</code> / <code>AgentTool</code>)</th><th>Inter-App (<code>A2A Protocol</code>)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Team &amp; Repo Boundary</strong></td><td>Single repo, unified CI/CD release, homogeneous runtime stack (e.g., all Python ADK)</td><td>Independent teams/repos, separate release cycles, <strong>polyglot frameworks</strong> (ADK ↔ LangGraph ↔ SaaS vendor)</td></tr>
+                    <tr><td><strong>Session &amp; Memory Scope</strong></td><td><strong>Shared in-process <code>InvocationContext</code> &amp; <code>session.state</code></strong></td><td><strong>Strict opacity:</strong> remote agent maintains its own private store; sees only explicit <code>Part</code> payloads sent per <code>contextId</code></td></tr>
+                    <tr><td><strong>IAM &amp; Blast Radius</strong></td><td>Shares one container &amp; service identity — wide blast radius if compromised</td><td><strong>Hard security boundary:</strong> separate SPIFFE Agent Identity, VPC-SC perimeter, least-privilege IAM, and scoped OAuth token exchange</td></tr>
+                    <tr><td><strong>Latency &amp; Overhead</strong></td><td>Zero network serialization (in-memory call); lowest TTFT</td><td>HTTPS/gRPC hop + auth validation + independent remote reasoning loop</td></tr>
+                    <tr><td><strong>Live Voice / Modality Boundary</strong></td><td>Native in-memory context sharing</td><td><strong>Modality normalization:</strong> live voice front-doors (<strong>CX Agent Studio</strong> / <strong>Gemini 3.8 Live</strong>) terminate audio streams locally and delegate normalized <code>TextPart</code> / <code>DataPart</code> / <code>FilePart</code> tasks over A2A</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: 5-LAYER ECOSYSTEM PROTOCOLS (NEW)
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="ecosystem-protocols">
+            <div class="section-divider-number">06</div>
+            <h2>The 5-Layer Agentic Interoperability Stack</h2>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Layer</th><th>Open Protocol(s)</th><th>What It Standardizes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Agent ↔ Tool / Data</strong></td><td><strong>MCP</strong> &amp; <strong>OpenAPI</strong></td><td>Vertical, deterministic tool calls, DB queries, and resource reads</td></tr>
+                    <tr><td><strong>2. Agent ↔ Agent</strong></td><td><strong>A2A</strong></td><td>Horizontal stateful task delegation &amp; discovery across opaque peer agents</td></tr>
+                    <tr><td><strong>3. Agent ↔ User Generative UI</strong></td><td><strong>A2UI (v0.8 / v0.9)</strong>, <strong>AG-UI</strong>, <strong>MCP UI</strong></td><td>Safe, interactive rich UI components without arbitrary remote JS execution</td></tr>
+                    <tr><td><strong>4. Real-Time Multimodal Stream</strong></td><td><strong>Gemini Live API</strong> (WebRTC / WSS)</td><td>Sub-second bidirectional PCM audio &amp; video streaming with VAD barge-in</td></tr>
+                    <tr><td><strong>5. Agent ↔ Commerce / Money</strong></td><td><strong>AP2 (Agent Payments Protocol)</strong> &amp; <strong>x402</strong></td><td>Cryptographic human purchase mandates (<strong>AP2</strong>) &amp; HTTP <code>402</code> M2M micropayments (<strong>x402</strong>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-window-restore"></i></div>Generative UI: <code>A2UI</code> vs. <code>AG-UI</code> vs. <code>MCP UI</code></h3>
+                <ul>
+                    <li><strong>A2UI (Agent-to-UI, v0.8/v0.9 — Native in Gemini Enterprise):</strong> Remote A2A agents stream flat, declarative JSON widget trees + data bindings inside A2A <code>DataPart</code> payloads against a <strong>client-approved Component Catalog</strong> (basic, Material, or custom widgets). The host client renders native, brand-consistent UI with <strong>zero arbitrary JS/iframe XSS risk</strong>.</li>
+                    <li><strong>AG-UI:</strong> Bidirectional frontend-to-agent event stream synchronizing live text tokens, tool indicators, shared state diffs, and HITL interrupts.</li>
+                    <li><strong>MCP UI:</strong> Tool-level embedded UI views returned directly by an individual MCP tool call.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-credit-card"></i></div>Agentic Commerce: <code>AP2</code> &amp; <code>x402</code></h3>
+                <ul>
+                    <li><strong>AP2 (Agent Payments Protocol):</strong> Extends A2A &amp; MCP with verifiable cryptographic credentials (<strong>Mandates</strong>) for non-repudiable delegated commerce: (1) <strong>Intent Mandate</strong> (signed upfront rules/caps for <em>human-not-present</em> buying, e.g., <em>"tickets &lt; $300"</em>) and (2) <strong>Cart Mandate</strong> (cryptographically signs exact final items &amp; price).</li>
+                    <li><strong>x402 Protocol:</strong> Uses HTTP <strong><code>402 Payment Required</code></strong> headers so agents can autonomously pay per API call, dataset query, or compute unit via programmatic M2M micropayments without pre-provisioned subscriptions.</li>
+                </ul>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: ADVANCED WORKFLOWS
+             SECTION 07: ADVANCED WORKFLOWS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="workflows">
-            <div class="section-divider-number">05</div>
-            <h2>Advanced Collaborative Workflows</h2>
+            <div class="section-divider-number">07</div>
+            <h2>Collaborative Multi-Agent Topologies</h2>
         </div>
 
         <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-users-cog"></i></div>Workflow Patterns</h3>
+            <h3><div class="icon-badge"><i class="fas fa-users-cog"></i></div>Production Workflow Patterns</h3>
             <ul>
-                <li><strong>Hierarchical Structures:</strong> A supervisor agent dynamically delegates tasks to specialized worker agents based on their Agent Card capabilities, synthesizing their outputs into a unified result. The classic A2A production topology — mirrors how human organizations delegate work.</li>
-                <li><strong>Debate and Consensus:</strong> Multiple agents with varied perspectives, data sources, or model biases engage in structured discussion to evaluate options and converge on an informed decision. Eliminates single-model blind spots. Critical for high-stakes decisions (e.g., medical triage, financial risk assessment).</li>
-                <li><strong>Critic-Reviewer (Self-Correction):</strong> A producer agent generates a draft artifact; a separate, independent reviewer agent critically assesses it for safety, compliance, factual accuracy, and quality before the artifact is finalized. Architectural safeguard against hallucination propagating downstream in a pipeline.</li>
+                <li><strong>Hierarchical Supervisor / Router:</strong> Front-door orchestrator dynamically matches sub-goals to specialist <code>AgentCard</code> skills and synthesizes their artifacts.</li>
+                <li><strong>Debate &amp; Consensus:</strong> Multiple peers with distinct models or domain corpora critique high-stakes proposals (e.g., medical triage, financial risk, architecture review) to eliminate single-model blind spots.</li>
+                <li><strong>Critic-Reviewer (Generator-Verifier):</strong> Producer agent drafts an artifact; an independent A2A reviewer agent validates policy, security, and factual grounding before external release.</li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: IMPLEMENTATION & SECURITY
+             SECTION 08: IMPLEMENTATION & SECURITY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="implementation">
-            <div class="section-divider-number">06</div>
-            <h2>Implementation & Security</h2>
+            <div class="section-divider-number">08</div>
+            <h2>Google Cloud Implementation &amp; Security</h2>
         </div>
 
         <div class="two-columns">
             <div class="concept-card accent-cyan">
-                <h3><div class="icon-badge"><i class="fas fa-laptop-code"></i></div>Architecture & Implementation</h3>
+                <h3><div class="icon-badge"><i class="fas fa-laptop-code"></i></div>ADK, Agent Runtime &amp; Gemini Enterprise</h3>
                 <ul>
-                    <li><strong>Ecosystem Support:</strong> Natively supported by major platforms including Google Cloud, LangChain, CrewAI, Atlassian, Salesforce, SAP, and MongoDB.</li>
-                    <li><strong>Google ADK Implementation:</strong> Developers implement A2A servers by:
-                        <ul>
-                            <li>Defining an AgentCard (JSON identity + capabilities declaration).</li>
-                            <li>Defining AgentSkills (specific callable capabilities with input/output schemas).</li>
-                            <li>Attaching an ADKAgentExecutor (bridges A2A Task lifecycle to the ADK agent's run loop).</li>
-                            <li>Exposing it via A2AStarletteApplication — an ASGI-compatible HTTP handler running on Uvicorn.</li>
-                        </ul>
-                    </li>
+                    <li><strong>ADK Server (<code>to_a2a()</code> &amp; <code>A2aAgentExecutor</code>):</strong> Define <code>AgentCard</code> + <code>AgentSkills</code>, bridge the task loop with <code>A2aAgentExecutor</code> (automated by <code>to_a2a(root_agent)</code>), and deploy to Cloud Run, GKE, or <strong>Agent Runtime</strong> (<code>A2aAgent</code>).</li>
+                    <li><strong>ADK Client (<code>RemoteA2aAgent</code>):</strong> Consume any remote A2A peer inside an ADK orchestrator by pointing at its <code>AgentCard</code> or <strong>Agent Registry</strong> URI.</li>
+                    <li><strong>Gemini Enterprise &amp; CX Agent Studio:</strong> Register third-party or ADK A2A agents directly into Gemini Enterprise (with OAuth brokering + <strong>A2UI</strong> rendering) or delegate backend workflows from CX Agent Studio over A2A.</li>
                 </ul>
             </div>
-            
             <div class="concept-card accent-coral">
-                <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Security & Operations</h3>
+                <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Zero-Trust A2A Security &amp; A2AOps</h3>
                 <ul>
-                    <li><strong>Authentication & Authorization:</strong> Requirements are explicitly declared in the Agent Card.</li>
-                    <li><strong>Mutual TLS (mTLS):</strong> Required for enterprise-grade deployment to encrypt and authenticate connections, preventing unauthorized access and interception.</li>
-                    <li><strong>Comprehensive Audit Logs:</strong> All inter-agent communications must be meticulously recorded, detailing information flow and actions for accountability, troubleshooting, and security analysis.</li>
-                    <li><strong>Agent Card Access Control:</strong> Secure Agent Card endpoints through network restrictions and authentication if the card contains sensitive system topology data. Public-facing agents may expose cards openly; internal enterprise agents should require authenticated access.</li>
+                    <li><strong>Header-Only Credentials:</strong> Pass OAuth 2.0 / OIDC tokens and API keys <strong>exclusively via HTTP headers</strong> — never in URLs (proxy logs) or message/task bodies (persisted in task history &amp; forwarded to LLMs).</li>
+                    <li><strong>mTLS &amp; Scoped Token Exchange:</strong> Enforce <strong>Mutual TLS (mTLS)</strong>, cryptographic <strong>SPIFFE Agent Identity</strong>, and OAuth Token Exchange (RFC 8693) via <strong>Agent Gateway</strong> so downstream peers receive audience-scoped tokens rather than broad user uber-tokens.</li>
+                    <li><strong>Cross-Agent Guardrails &amp; Tracing:</strong> Screen inbound/outbound A2A payloads with <strong>Model Armor</strong> against task injection, enforce <strong>Task Depth Limits</strong>, and propagate W3C <code>traceparent</code> headers into Cloud Trace.</li>
                 </ul>
             </div>
-        </div>
-
-        <div class="callout important">
-            <div class="callout-icon"><i class="fas fa-brain"></i></div>
-            <div class="callout-content">
-                <h4>Design Principle</h4>
-                <p>Embrace agentic capabilities. An agent is not just a "tool" — A2A allows collaboration in natural, unstructured modalities without forcing shared memory.</p>
-            </div>
-        </div>
-
-        <div class="callout warning">
-            <div class="callout-icon"><i class="fas fa-ban"></i></div>
-            <div class="callout-content">
-                <h4>Security Anti-Pattern</h4>
-                <p>Secure credentials (OAuth 2.0 tokens, API keys) must always be passed via HTTP headers — never embedded in URLs (logged by proxies and web servers) or message bodies (persisted in Task history logs and potentially forwarded to downstream agents).</p>
-            </div>
-        </div>
-
-        <div class="concept-card accent-pink">
-            <h3><div class="icon-badge"><i class="fas fa-gem"></i></div>Value Proposition</h3>
-            <ul>
-                <li><strong>For Developers:</strong> Eliminates custom integration glue code and vendor lock-in. Build an agent once and allow it to connect with any other A2A protocol-compliant agent.</li>
-                <li><strong>For Enterprises:</strong> Multiplies productivity gains by breaking down silos, enabling specialized agents to securely work together across diverse enterprise platforms (e.g., Workday, Salesforce, SAP).</li>
-                <li><strong>For End-Users:</strong> Yields highly autonomous, unified experiences where complex goals (e.g., candidate sourcing, complex research) are orchestrated invisibly by a team of specialized AI experts.</li>
-            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: GLOSSARY
+             SECTION 09: GLOSSARY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="glossary">
-            <div class="section-divider-number">07</div>
-            <h2>Glossary</h2>
+            <div class="section-divider-number">09</div>
+            <h2>Glossary &amp; Self-Assessment</h2>
         </div>
 
-        <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Core Concepts</h3>
-            <ul>
-                <li><strong>Client Agent:</strong> The orchestrating agent responsible for goal decomposition and Task delegation to remote specialists.</li>
-                <li><strong>Remote Agent (Specialist):</strong> Domain-specific agent that receives and executes Tasks autonomously within its area of expertise.</li>
-                <li><strong>Agent Card:</strong> JSON capability advertisement published by each agent — the A2A equivalent of MCP's <code>tools/list</code>; hosted at <code>/.well-known/agent-card.json</code>.</li>
-                <li><strong>Task:</strong> The fundamental unit of A2A work — stateful, asynchronous, and designed for long-running workflows.</li>
-                <li><strong>contextId:</strong> A persistent correlation identifier that preserves conversational threading and lineage across multiple asynchronous exchanges within a Task.</li>
-                <li><strong>Artifact:</strong> The structured output produced by a completed Task — passed to the next agent or returned to the user.</li>
-                <li><strong>A2A Endpoint:</strong> The HTTPS URL where an agent receives incoming Tasks; declared in its Agent Card.</li>
-                <li><strong>Agentspace:</strong> Google's unified enterprise interface for interacting with A2A-coordinated agent teams.</li>
-                <li><strong>AgentSkills:</strong> Structured capability declarations within an Agent Card defining specific callable functions with their input/output schemas — the A2A equivalent of MCP's Tool JSON Schema definitions. Example: <code>get_current_weather</code> with defined input/output modes.</li>
-            </ul>
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>AgentCard &amp; AgentSkills</dt>
+                <dd>JSON capability, binding (<code>supportedInterfaces</code>), security, and skill manifest at <code>/.well-known/agent-card.json</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Task (<code>taskId</code>) &amp; <code>contextId</code></dt>
+                <dd>Stateful delegated execution unit (<code>taskId</code>) correlated across multi-turn threads by <code>contextId</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>TextPart</code> / <code>DataPart</code> / <code>FilePart</code></dt>
+                <dd>Typed content blocks carrying Markdown/text, structured JSON (including <code>A2UI</code>), and MIME-typed files.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>SubscribeToTask</code></dt>
+                <dd>A2A v1.0 operation re-attaching an SSE stream to an active task after network disconnection.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>A2UI / AG-UI / MCP UI</dt>
+                <dd>Declarative JSON catalog UI over A2A (<code>A2UI</code>), frontend-agent event sync (<code>AG-UI</code>), and tool-embedded UI (<code>MCP UI</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>AP2 &amp; x402</dt>
+                <dd>Cryptographic <strong>Intent / Cart Mandates</strong> for delegated purchases (<code>AP2</code>) and HTTP <code>402</code> M2M micropayments (<code>x402</code>).</dd>
+            </div>
         </div>
 
-        <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-comments"></i></div>Communication Layer</h3>
-            <ul>
-                <li><strong>TextPart:</strong> Plain text or markdown content within a Task message.</li>
-                <li><strong>DataPart:</strong> Structured JSON payload within a Task message.</li>
-                <li><strong>FilePart:</strong> Binary content (image, PDF, audio, video) with explicit MIME type within a Task message.</li>
-                <li><strong>UX Negotiation:</strong> A2A mechanism where client agents declare UI capabilities so remote agents can tailor response format (iframes, video, web forms, plain text).</li>
-                <li><strong>TaskStatusUpdateEvent:</strong> SSE event reporting a Task's status transition.</li>
-                <li><strong>TaskArtifactUpdateEvent:</strong> SSE event delivering an intermediate or final artifact during Task execution.</li>
-                <li><strong>message/send:</strong> A2A method for synchronous task dispatch — client sends and actively waits for a complete response in a single exchange. Use for quick, low-latency operations.</li>
-                <li><strong>message/stream:</strong> A2A method for streaming task dispatch — establishes a persistent SSE connection for real-time incremental artifact and status delivery. Use for tasks with observable intermediate progress.</li>
-            </ul>
-        </div>
-
-        <div class="concept-card accent-purple">
-            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Transport Layer & Task Lifecycle</h3>
-            <ul>
-                <li><strong>Synchronous Request/Response (message/send):</strong> Single-exchange transport — client sends and waits for complete result. Best for immediate, low-latency operations.</li>
-                <li><strong>Asynchronous Polling (tasks/get):</strong> Server acknowledges with working status + <code>task_id</code>; client polls periodically using <code>tasks/get</code>. Best for medium-duration tasks where a persistent connection is impractical.</li>
-                <li><strong>Streaming Updates (message/stream):</strong> Persistent SSE connection; server pushes incremental updates in real time. Best for tasks with observable intermediate progress.</li>
-                <li><strong>Push Notifications (Webhooks):</strong> Client registers a callback URL; server fires async notifications on state changes. Best for long-running tasks spanning hours or days where maintaining any persistent connection is impractical.</li>
-                <li><strong><code>submitted</code>:</strong> Task received and queued by remote agent.</li>
-                <li><strong><code>working</code>:</strong> Remote agent actively executing the Task.</li>
-                <li><strong><code>input-required</code>:</strong> <em>Interrupted.</em> Remote agent paused, awaiting additional information (natural HITL pause point).</li>
-                <li><strong><code>auth-required</code>:</strong> <em>Interrupted.</em> Authentication is required before the agent can proceed.</li>
-                <li><strong><code>completed</code>:</strong> <em>Terminal.</em> Task successfully finished; Artifact available for consumption.</li>
-                <li><strong><code>failed</code>:</strong> <em>Terminal.</em> Task finished with an unrecoverable error.</li>
-                <li><strong><code>canceled</code>:</strong> <em>Terminal.</em> Task canceled before completion (e.g., by client request).</li>
-                <li><strong><code>rejected</code>:</strong> <em>Terminal.</em> The agent decided not to perform the Task, at creation or later.</li>
-            </ul>
-        </div>
-
-        <div class="concept-card accent-coral">
-            <h3><div class="icon-badge"><i class="fas fa-lock"></i></div>Security & Operations Concepts</h3>
-            <ul>
-                <li><strong>Agent Impersonation:</strong> Threat where an attacker hosts a malicious agent at a spoofed URL with a convincing Agent Card.</li>
-                <li><strong>Task Injection:</strong> Embedding malicious instructions inside Task message content to manipulate remote agent behavior.</li>
-                <li><strong>Privilege Escalation:</strong> Compromised agent attempting to expand OAuth scopes beyond original user grant in a chained pipeline.</li>
-                <li><strong>Agent Card TTL:</strong> Time-to-live enforcing periodic re-validation of cached Agent Card capability declarations.</li>
-                <li><strong>A2AOps:</strong> Operational discipline for A2A deployments — audit logging, latency tracking, Task SLA monitoring, distributed tracing.</li>
-                <li><strong>Task Depth Limit:</strong> Maximum allowed nesting level for agent delegation chains — prevents infinite orchestration loops.</li>
-                <li><strong>Artifact Chaining:</strong> Pattern where one agent's Task output becomes the next agent's Task input — enables pipeline architectures.</li>
-                <li><strong>Mutual TLS:</strong> Certificate-based mutual authentication between client and remote agents for high-security environments.</li>
-                <li><strong>HITL (Human-in-the-Loop):</strong> Explicit human approval mechanism triggered via <code>input-required</code> Task status before proceeding with sensitive or irreversible actions.</li>
-            </ul>
-        </div>
-
-        
-        <!-- ═══════════════════════════════════════
-             SELF ASSESSMENT QUESTIONS
-             ═══════════════════════════════════════ -->
-        <div class="quiz-block">
+        <div class="quiz-block" style="margin-top: 24px;">
             <div class="quiz-header">
                 <i class="fas fa-question-circle"></i>
                 <h3>Self-Assessment Questions</h3>
             </div>
             <div class="quiz-body">
                 <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> What is the core philosophy of the A2A model?</p>
+                    <p><span class="q-num">Q1.</span> When should you choose A2A over ADK's in-process <code>AgentTool</code>?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Using specialized micro-agents working in a swarm rather than relying on one monolithic model.</span>
+                        <span class="answer-text">When crossing team, repository, framework, vendor, or IAM/VPC security boundaries where opaque state and independent scaling/blast-radius isolation outweigh a network hop.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> What are "Agent Cards" in the A2A framework?</p>
+                    <p><span class="q-num">Q2.</span> How does A2UI prevent Cross-Site Scripting (XSS) when rendering UI from a remote third-party A2A agent?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">JSON resumes advertising an agent's capabilities and skills to other agents.</span>
+                        <span class="answer-text">Instead of executing remote HTML/JS iframes, the agent sends declarative JSON referencing widgets from a client-approved Component Catalog rendered natively by the host app.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> What is the difference between sequential and parallel swarm execution?</p>
+                    <p><span class="q-num">Q3.</span> How do AP2 Intent Mandates and x402 solve different commerce problems?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Sequential execution passes tasks from one agent to the next in a pipeline, while parallel execution has multiple agents working on tasks simultaneously.</span>
+                        <span class="answer-text">AP2 uses user-signed cryptographic Intent and Cart Mandates for verifiable, non-repudiable delegated purchases, whereas x402 uses HTTP 402 headers for autonomous machine-to-machine API micropayments.</span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Practice</h3>
+            <p>Drill scenario-based questions on A2A v1.0 wire operations, Agent Cards, Intra-App <code>AgentTool</code> vs. Inter-App A2A boundaries, A2UI/AG-UI/MCP UI, AP2 &amp; x402 commerce, and zero-trust A2A security.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Back to the Hub</span>
+                </a>
+                <a href="quiz.html?topic=a2a" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Take the practice quiz: A2A &amp; Interoperability →</span>
+                </a>
             </div>
         </div>
 
@@ -583,12 +585,15 @@
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>
 
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0);"><i class="fas fa-arrow-up"></i></button>
-
 
     <script>
         const backToTopBtn = document.getElementById('backToTop');

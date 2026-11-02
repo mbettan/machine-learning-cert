@@ -1,0 +1,1259 @@
+{
+  "topic_id": "a2a",
+  "title": "Agent2Agent (A2A)",
+  "guide_url": "A2A.html",
+  "questions": [
+    {
+      "id": "a2a-q-01",
+      "section": "Definition & Scope",
+      "guide_anchor": "definition",
+      "question": "A retailer runs a LangGraph pricing agent, a CrewAI inventory agent and an ADK support agent. Each works well alone, but they cannot delegate work to one another. Which problem is this, and what does A2A contribute?",
+      "options": [
+        {
+          "text": "The Multi-Agent Silo problem; A2A gives them a common language to discover each other, delegate tasks and negotiate UX and state.",
+          "correct": true
+        },
+        {
+          "text": "Context rot in each agent; A2A fixes it by merging the three agents into one larger agent that reads from a single shared memory store.",
+          "correct": false,
+          "why_wrong": "A2A keeps agents independent and explicitly allows collaboration without forcing shared memory; merging them is the opposite of the protocol's purpose."
+        },
+        {
+          "text": "Tool sprawl; A2A replaces the agents' tools with stateless MCP calls so that each agent becomes a simple function.",
+          "correct": false,
+          "why_wrong": "MCP is the vertical agent-to-system layer. The guide stresses that an agent is not just a tool, and A2A handles horizontal agent-to-agent collaboration."
+        },
+        {
+          "text": "Model drift; A2A requires all three agents to be retrained on one shared foundation model before they can talk to each other.",
+          "correct": false,
+          "why_wrong": "A2A is framework- and model-agnostic. Any compliant agent can take part whatever framework or model provider it uses."
+        }
+      ],
+      "explanation": "The guide describes the Multi-Agent Silo problem: agents built on different frameworks work in isolation because they share no common language. A2A standardizes how agents discover each other, what capabilities they advertise, and how they negotiate UX and state, so LangGraph, CrewAI and ADK agents can cooperate.",
+      "key_takeaway": "A2A solves the Multi-Agent Silo problem: a framework-agnostic common language for agent discovery, delegation and state negotiation.",
+      "doc_links": [
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-02",
+      "section": "Definition & Scope",
+      "guide_anchor": "definition",
+      "question": "An assistant must (1) read customer rows from a PostgreSQL database and (2) hand a multi-day due-diligence investigation to a partner company's specialist agent. How should the architect map these needs to protocols?",
+      "options": [
+        {
+          "text": "Use A2A for both needs, because Agent Cards remove the need for any separate tool protocol in a production system.",
+          "correct": false,
+          "why_wrong": "The guide calls MCP and A2A composable layers, not substitutes. Database access is vertical agent-to-system work, which is MCP's job."
+        },
+        {
+          "text": "MCP for the database read (vertical, stateless) and A2A for the partner investigation (horizontal, stateful delegation).",
+          "correct": true
+        },
+        {
+          "text": "Use MCP for both needs, since MCP's synchronous request/response model also covers long-running peer negotiation between agents.",
+          "correct": false,
+          "why_wrong": "The guide says MCP lacks semantic structures for peer negotiation, capability discovery and long-running task management."
+        },
+        {
+          "text": "Use A2A for the database read and MCP for the partner hand-off, since databases are the stateful component in this design.",
+          "correct": false,
+          "why_wrong": "This reverses the layers: MCP covers stateless agent-to-system calls, and A2A covers stateful agent-to-agent delegation."
+        }
+      ],
+      "explanation": "MCP handles vertical integration (agent to system) with stateless, synchronous request/response calls such as database queries. A2A handles horizontal orchestration (agent to agent) with stateful, multi-step delegation and long-running workflows. The two are composable, not competing.",
+      "key_takeaway": "MCP = vertical, stateless agent-to-system calls; A2A = horizontal, stateful agent-to-agent delegation. Use both together.",
+      "doc_links": [
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-03",
+      "section": "Definition & Scope",
+      "guide_anchor": "definition",
+      "question": "A design review asks how A2A and MCP should fit together in one production system. Which topology matches the production pattern described in the guide?",
+      "options": [
+        {
+          "text": "An MCP server orchestrates the workflow and exposes each A2A agent to the model as a stateless tool behind tools/list.",
+          "correct": false,
+          "why_wrong": "This flips the layers and turns agents into plain tools, which the guide's design principle warns against."
+        },
+        {
+          "text": "Every sub-agent calls the other sub-agents' databases directly over A2A, so no MCP layer is needed anywhere in the system.",
+          "correct": false,
+          "why_wrong": "A2A is for agent-to-agent collaboration. Deterministic system actions such as database calls belong to the MCP layer."
+        },
+        {
+          "text": "An A2A meta-agent distributes tasks to specialized sub-agents, which then use MCP to run deterministic actions.",
+          "correct": true
+        },
+        {
+          "text": "A single monolithic agent alternates between A2A and MCP calls on every turn, so that it never needs to delegate any work at all.",
+          "correct": false,
+          "why_wrong": "The pattern depends on delegation to specialized sub-agents. A monolith that never delegates gains nothing from A2A."
+        }
+      ],
+      "explanation": "The guide's production pattern is layered: an A2A meta-agent delegates tasks horizontally to specialized sub-agents, and those sub-agents use MCP vertically to execute deterministic actions against systems.",
+      "key_takeaway": "Production pattern: A2A meta-agent delegates to specialist sub-agents, and those sub-agents use MCP for deterministic actions.",
+      "doc_links": [
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-04",
+      "section": "Definition & Scope",
+      "guide_anchor": "definition",
+      "question": "A procurement committee worries that adopting A2A will lock them into a single vendor's proprietary protocol. Which fact from the guide best addresses this concern?",
+      "options": [
+        {
+          "text": "A2A is a closed Google Cloud feature, so lock-in is real but acceptable for any team that is already a Google Cloud customer.",
+          "correct": false,
+          "why_wrong": "The guide calls A2A an emerging open standard governed by the Linux Foundation, not a closed product feature."
+        },
+        {
+          "text": "Google initiated A2A with industry partners, and it is now governed by the Linux Foundation as an open standard.",
+          "correct": true
+        },
+        {
+          "text": "A2A is owned by the MCP maintainers and is published only as an optional extension module of the MCP specification.",
+          "correct": false,
+          "why_wrong": "The guide presents A2A as a separate protocol that complements MCP. It is not an MCP extension."
+        },
+        {
+          "text": "A2A only works between agents that are built with the same framework, so it gives no protection against lock-in anyway.",
+          "correct": false,
+          "why_wrong": "The guide stresses that any compliant agent, whether built with LangGraph, CrewAI or ADK, can take part. Cross-framework interoperability is the point of A2A."
+        }
+      ],
+      "explanation": "A2A was initiated by Google, developed with industry partners, and is now governed by the Linux Foundation. It is an open standard, and any compliant agent can take part regardless of its framework, which also lets developers avoid vendor lock-in.",
+      "key_takeaway": "A2A is an open standard under Linux Foundation governance. Any compliant agent can take part, whatever its framework.",
+      "doc_links": [
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-05",
+      "section": "Core & Protocol Architecture",
+      "guide_anchor": "architecture",
+      "question": "A client agent must delegate work to a vendor's remote agent. The vendor will not disclose which framework or model provider the agent uses. What does the client agent need to know about the remote agent's internals?",
+      "options": [
+        {
+          "text": "Its framework, so the client can import the remote agent's graph definition and call its internal nodes directly.",
+          "correct": false,
+          "why_wrong": "The remote agent is opaque by design. The client never touches internal nodes or framework objects."
+        },
+        {
+          "text": "Its model provider, so the client can match tokenizers and prompt formats before it sends any task request.",
+          "correct": false,
+          "why_wrong": "The guide says the client does not need to know the model provider. Interoperability comes from the protocol, not from matching models."
+        },
+        {
+          "text": "Nothing about its internals. The A2A Server is opaque, and that opacity is what makes cross-vendor interoperability possible.",
+          "correct": true
+        },
+        {
+          "text": "The location of its memory store, because A2A requires both agents to read and write a shared conversation database.",
+          "correct": false,
+          "why_wrong": "A2A allows collaboration without forcing shared memory. Agents exchange tasks, messages and artifacts instead."
+        }
+      ],
+      "explanation": "In the core architecture, the A2A Server (remote agent) is an opaque system behind an HTTP endpoint. The client agent does not need to know its internal operational details, framework choice or model provider, and the guide says this opacity is what makes true cross-vendor interoperability possible.",
+      "key_takeaway": "Remote agents are opaque. Clients rely only on the protocol and the Agent Card, never on internal framework or model details.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-06",
+      "section": "Core & Protocol Architecture",
+      "guide_anchor": "architecture",
+      "question": "A CrewAI agent sends task state to an ADK agent, and the ADK agent interprets it correctly even though the two frameworks represent state differently. According to the protocol architecture, what makes this work?",
+      "options": [
+        {
+          "text": "The ADK agent ships a CrewAI compatibility adapter that unpickles CrewAI's native Python objects on arrival.",
+          "correct": false,
+          "why_wrong": "A2A avoids framework-specific adapters. Framework-native objects never travel over the wire."
+        },
+        {
+          "text": "Both frameworks serialize their internal state into the Canonical Data Model (a2a.proto) before transmission.",
+          "correct": true
+        },
+        {
+          "text": "The two agents use an LLM at runtime to guess each other's JSON layout and then translate the fields by trial and error.",
+          "correct": false,
+          "why_wrong": "Interoperability comes from a fixed canonical data model, not from ad hoc runtime guessing."
+        },
+        {
+          "text": "The Protocol Bindings layer converts each framework's in-memory Python classes directly into the other framework's classes.",
+          "correct": false,
+          "why_wrong": "Protocol Bindings are the concrete HTTP/JSON-RPC implementation. The guide credits the Canonical Data Model with neutralizing framework incompatibility."
+        }
+      ],
+      "explanation": "In the A2A protocol architecture, every framework serializes its internal state into the Canonical Data Model (a2a.proto) before transmission. The guide says this is what neutralizes framework incompatibility.",
+      "key_takeaway": "The Canonical Data Model (a2a.proto) neutralizes framework incompatibility, because every agent serializes into it before sending.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-07",
+      "section": "Core & Protocol Architecture",
+      "guide_anchor": "architecture",
+      "question": "An engineer documenting the A2A protocol stack must separate the layer that defines task-management and peer-negotiation logic from the layer that implements it on the wire. Which mapping is correct?",
+      "options": [
+        {
+          "text": "Protocol Bindings define the negotiation logic, and Abstract Operations are the concrete HTTP/JSON-RPC implementation.",
+          "correct": false,
+          "why_wrong": "This swaps the two layers. Abstract Operations hold the logic, and Protocol Bindings are the concrete implementation."
+        },
+        {
+          "text": "The Canonical Data Model defines the negotiation logic, and the User role supplies the HTTP transport implementation.",
+          "correct": false,
+          "why_wrong": "The Canonical Data Model is the serialization format, and the User only starts the high-level request."
+        },
+        {
+          "text": "Abstract Operations define the logic, and Protocol Bindings implement it concretely over HTTP/JSON-RPC.",
+          "correct": true
+        },
+        {
+          "text": "Agent Cards define the negotiation logic, and the A2A Client implements the HTTP transport for every remote agent it calls.",
+          "correct": false,
+          "why_wrong": "Agent Cards advertise identity and capabilities. They are not the layer that defines the protocol's operations."
+        }
+      ],
+      "explanation": "The protocol architecture has three layers. The Canonical Data Model (a2a.proto) is the shared serialization format. Abstract Operations define the logic of task management and peer negotiation. Protocol Bindings are the concrete implementation over HTTP/JSON-RPC.",
+      "key_takeaway": "Data model (a2a.proto) → Abstract Operations (logic) → Protocol Bindings (concrete HTTP/JSON-RPC).",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-08",
+      "section": "Standard Workflow",
+      "guide_anchor": "workflow",
+      "question": "A client agent receives a user request that needs a remote specialist it has never used before. In the standard A2A workflow, what should the client agent do first?",
+      "options": [
+        {
+          "text": "Send the full payload with message/send right away and read the remote agent's skills from whatever error comes back.",
+          "correct": false,
+          "why_wrong": "The execution request is step 3. Sending a task before discovering capabilities skips discovery and task formulation."
+        },
+        {
+          "text": "Locate the remote agent's Agent Card (capability discovery), then evaluate its skills to formulate the task.",
+          "correct": true
+        },
+        {
+          "text": "Open a message/stream connection and wait for the remote agent to start streaming artifacts back without any request.",
+          "correct": false,
+          "why_wrong": "Artifacts are produced at the end of the workflow, in response to a task the client has already formulated and sent."
+        },
+        {
+          "text": "Call tasks/get with a guessed task ID so that the remote agent creates a new conversation thread for this client.",
+          "correct": false,
+          "why_wrong": "tasks/get polls an existing task. It does not discover capabilities or create tasks."
+        }
+      ],
+      "explanation": "The standard workflow is: (1) Capability Discovery: locate the Agent Card; (2) Task Formulation: evaluate the remote agent's skills and build the request; (3) Execution Request: send via message/send or message/stream; (4) Collaboration & State: exchange messages while preserving threading and lineage; (5) Artifact Generation: stream outputs incrementally to the client.",
+      "key_takeaway": "Workflow order: discover the Agent Card → formulate the task → send → collaborate with preserved lineage → receive artifacts.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "A2A Official SDKs",
+          "url": "https://a2a-protocol.org/latest/sdk/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-09",
+      "section": "Standard Workflow",
+      "guide_anchor": "workflow",
+      "question": "During a multi-hour task, a client sends several follow-up messages over separate asynchronous exchanges and needs them all kept in the same conversational thread. Which A2A concept preserves this threading and lineage?",
+      "options": [
+        {
+          "text": "The Agent Card TTL, which re-validates the cached capability declarations every time a new message is sent in the thread.",
+          "correct": false,
+          "why_wrong": "Agent Card TTL controls how long cached card data stays valid. It does not correlate messages within a task."
+        },
+        {
+          "text": "Artifact Chaining, which feeds one agent's task output into the next agent's task as its input.",
+          "correct": false,
+          "why_wrong": "Artifact Chaining builds pipelines between agents. It does not thread follow-up messages within one task."
+        },
+        {
+          "text": "contextId, a persistent identifier that correlates exchanges and keeps threading and lineage intact.",
+          "correct": true
+        },
+        {
+          "text": "A new task created for every follow-up, so that the remote agent rebuilds the thread from the client's own local logs.",
+          "correct": false,
+          "why_wrong": "Splitting follow-ups into unrelated tasks breaks lineage, which is exactly what contextId exists to preserve."
+        }
+      ],
+      "explanation": "Step 4 of the workflow (Collaboration & State) preserves conversational threading and lineage. The glossary names the mechanism: contextId is a persistent correlation identifier that preserves threading and lineage across multiple asynchronous exchanges within a Task.",
+      "key_takeaway": "contextId keeps asynchronous follow-up exchanges threaded to the same conversation lineage.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "A2A Official SDKs",
+          "url": "https://a2a-protocol.org/latest/sdk/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-10",
+      "section": "Standard Workflow",
+      "guide_anchor": "workflow",
+      "question": "A platform team building an A2A gateway asks which messaging model and transport A2A uses for its asynchronous tasks. What does the guide specify?",
+      "options": [
+        {
+          "text": "GraphQL subscriptions over WebSockets, with one subscription for each agent skill.",
+          "correct": false,
+          "why_wrong": "The guide does not describe GraphQL or WebSockets. It specifies JSON-RPC 2.0 over HTTP(S)."
+        },
+        {
+          "text": "JSON-RPC 2.0 over HTTP(S), structured around asynchronous tasks as the units of work.",
+          "correct": true
+        },
+        {
+          "text": "SOAP envelopes exchanged over SMTP, so that long-running tasks can survive network outages.",
+          "correct": false,
+          "why_wrong": "A2A uses JSON-RPC 2.0 over HTTP(S). Durability for long tasks comes from polling or push notifications, not from email transport."
+        },
+        {
+          "text": "Raw TCP sockets with a custom binary framing that each vendor defines for its own agents.",
+          "correct": false,
+          "why_wrong": "Vendor-defined framing would recreate the silo problem. A2A standardizes on JSON-RPC 2.0 over HTTP(S)."
+        }
+      ],
+      "explanation": "A2A structures communication around asynchronous tasks, the fundamental units of work for long-running processes, using JSON-RPC 2.0 over HTTP(S).",
+      "key_takeaway": "A2A = asynchronous Tasks exchanged as JSON-RPC 2.0 over HTTP(S).",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "A2A Official SDKs",
+          "url": "https://a2a-protocol.org/latest/sdk/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-11",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A compliance-audit agent takes 6 to 30 hours per task. The calling client is a serverless backend that cannot hold connections open. Which A2A interaction mechanism fits best?",
+      "options": [
+        {
+          "text": "Synchronous message/send with the HTTP client timeout raised to 30 hours.",
+          "correct": false,
+          "why_wrong": "The guide's selection rule warns that synchronous message/send on multi-hour tasks will time out and lose state."
+        },
+        {
+          "text": "Push notifications: register a webhook URL upfront and receive async updates on state changes.",
+          "correct": true
+        },
+        {
+          "text": "A message/stream SSE connection that the serverless function keeps open for the entire 30-hour run so it can watch progress.",
+          "correct": false,
+          "why_wrong": "SSE needs a persistent connection, which this client cannot hold. It suits tasks with observable progress over shorter durations."
+        },
+        {
+          "text": "Tight polling of tasks/get every second until the task finishes, which guarantees that no state change is ever missed.",
+          "correct": false,
+          "why_wrong": "Polling suits medium-duration tasks. For tasks lasting hours or days, the guide recommends push notifications with no persistent connection."
+        }
+      ],
+      "explanation": "The guide maps transports to task duration. Push notifications (webhooks) are for resource-intensive tasks that run for hours or days: the client registers a webhook URL upfront, and the server sends async notifications on significant state changes, so no persistent connection is needed.",
+      "key_takeaway": "Tasks that run for hours or days, with no persistent connection possible → push notifications (webhooks).",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-12",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A report-generation task takes about five minutes. A corporate proxy kills long-lived connections, and the client cannot expose a public webhook. Which pattern should the client use?",
+      "options": [
+        {
+          "text": "Call message/send, receive a Task with a taskId in SUBMITTED or WORKING state, then poll with tasks/get.",
+          "correct": true
+        },
+        {
+          "text": "Use message/stream and reconnect every time the proxy drops the SSE connection, then rebuild partial artifacts by hand.",
+          "correct": false,
+          "why_wrong": "SSE needs a persistent connection, which the proxy prevents. Asynchronous polling is designed for this constraint."
+        },
+        {
+          "text": "Register a webhook on a laptop behind the proxy and hope the notifications get through the firewall.",
+          "correct": false,
+          "why_wrong": "The scenario rules out a reachable webhook, so push notifications cannot work here."
+        },
+        {
+          "text": "Use synchronous message/send and retry the whole task from the start whenever the proxy drops the request.",
+          "correct": false,
+          "why_wrong": "Retrying from the start wastes work and still risks timeouts. Polling keeps the task alive on the server."
+        }
+      ],
+      "explanation": "In asynchronous polling, the client calls message/send and gets back a Task object with a taskId in a SUBMITTED or WORKING state, then uses tasks/get to check progress (A2A v1.0 names these methods SendMessage and GetTask). The guide recommends it for medium-duration tasks where a persistent connection is impractical.",
+      "key_takeaway": "Medium duration, no persistent connection, no webhook → asynchronous polling with message/send then tasks/get.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-13",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A client is consuming a message/stream response and receives an artifact update chunk with append: false. How should it interpret this chunk?",
+      "options": [
+        {
+          "text": "Append it to the previous artifact, because append: false only means that compression is disabled for this chunk.",
+          "correct": false,
+          "why_wrong": "append: false marks a new artifact. Continuations use append: true."
+        },
+        {
+          "text": "As the start of a new artifact rather than a continuation of the artifact that was being streamed before.",
+          "correct": true
+        },
+        {
+          "text": "Close the stream immediately, because append: false is the termination signal for the task.",
+          "correct": false,
+          "why_wrong": "append: false is not a termination signal. lastChunk: true marks the final chunk of an artifact, and the stream itself closes when the task reaches a terminal or interrupted state."
+        },
+        {
+          "text": "Discard it as a duplicate, because chunks marked append: false are only retransmissions of earlier data.",
+          "correct": false,
+          "why_wrong": "The guide defines append: false as a new artifact, not a retransmission."
+        }
+      ],
+      "explanation": "With Streaming Updates (SSE), the remote agent pushes artifact chunks in TaskArtifactUpdateEvents: append: false starts a new artifact, append: true continues the current one, and lastChunk: true marks the final chunk of that artifact. The stream itself ends when the task reaches a terminal or interrupted state (for example completed or input-required).",
+      "key_takeaway": "SSE chunking: append:false = new artifact, append:true = continuation, lastChunk:true = final chunk of that artifact.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-14",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A developer following an older tutorial fetches /.well-known/agent.json and calls tasks/send, but both requests fail against a current A2A server. What is the most likely fix?",
+      "options": [
+        {
+          "text": "Nothing needs to change in the client. The server is misconfigured, because agent.json and tasks/send are still the current names.",
+          "correct": false,
+          "why_wrong": "The guide flags these as outdated names from older tutorials. The current spec uses different ones."
+        },
+        {
+          "text": "Call GetExtendedAgentCard (GET /extendedAgentCard) without credentials, since that is the public discovery endpoint.",
+          "correct": false,
+          "why_wrong": "That endpoint is for the authenticated extended card. It needs OAuth and is not the public well-known path."
+        },
+        {
+          "text": "Fetch /.well-known/agent-card.json and send tasks with message/send or message/stream.",
+          "correct": true
+        },
+        {
+          "text": "Publish the Agent Card in a DNS TXT record and call tasks/get instead, because the well-known URI is no longer supported.",
+          "correct": false,
+          "why_wrong": "The guide gives the well-known URI (RFC 8615) as a standard discovery method. tasks/get polls an existing task and cannot dispatch a new one."
+        }
+      ],
+      "explanation": "The guide's exam trap: older tutorials show agent.json and tasks/send. Newer spec versions use /.well-known/agent-card.json (per RFC 8615) for discovery, and message/send or message/stream for dispatching tasks. A2A v1.0 keeps the well-known path but renames the JSON-RPC methods to PascalCase (SendMessage, SendStreamingMessage, GetTask).",
+      "key_takeaway": "Use /.well-known/agent-card.json and message/send or message/stream (SendMessage/SendStreamingMessage in v1.0). agent.json and tasks/send are outdated.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-15",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A bank wants internal teams to discover only security-approved agents, with access control over who can see which agent. Which A2A discovery method fits this governance requirement?",
+      "options": [
+        {
+          "text": "Well-Known URI on every agent, so any client on the internet can discover all of the bank's agents automatically.",
+          "correct": false,
+          "why_wrong": "Well-known URIs enable broad automated discovery. They provide no approval workflow or catalog-level access control."
+        },
+        {
+          "text": "A curated registry: a centralized enterprise catalog of approved agents with access control.",
+          "correct": true
+        },
+        {
+          "text": "Direct configuration, with every Agent Card URL hard-coded into every client application across the whole bank.",
+          "correct": false,
+          "why_wrong": "Direct configuration suits closely coupled, trusted internal systems. It does not scale as a governed catalog."
+        },
+        {
+          "text": "Each agent's public card sets the extendedAgentCard capability flag, which turns the card itself into an approval registry.",
+          "correct": false,
+          "why_wrong": "The extended card pattern hides sensitive skills of a single agent. It is not a catalog of approved agents."
+        }
+      ],
+      "explanation": "The guide lists the discovery methods. Well-Known URI is for broad, automated discovery. Curated Registries are centralized enterprise catalogs of approved agents with access control, which enables governance. Direct Configuration is for closely coupled, trusted systems. The Authenticated Extended Card exposes sensitive skills to authenticated clients.",
+      "key_takeaway": "Enterprise governance over which agents can be discovered → curated registry with access control.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-16",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A public-facing agent should advertise its basic skills to anyone but reveal its sensitive administrative skills only to authenticated partners. How should this be implemented?",
+      "options": [
+        {
+          "text": "Publish two well-known cards and ask partners to keep the second URL secret.",
+          "correct": false,
+          "why_wrong": "A secret URL is not authentication. The guide's pattern uses OAuth to retrieve the extended card."
+        },
+        {
+          "text": "Put the admin skills in the public card, but mark them as hidden in the card's description field.",
+          "correct": false,
+          "why_wrong": "Anything in the public card can be read by anyone. Labelling skills as hidden protects nothing."
+        },
+        {
+          "text": "Signal extendedAgentCard: true in the public card's capabilities; partners authenticate (e.g. OAuth) to fetch the extended card.",
+          "correct": true
+        },
+        {
+          "text": "Leave the admin skills out of every card and send partners a PDF that lists the JSON-RPC methods they are allowed to call.",
+          "correct": false,
+          "why_wrong": "Out-of-band documents bypass the standard discovery mechanism that the extended card pattern provides."
+        }
+      ],
+      "explanation": "In the Authenticated Extended Card pattern, the public card signals capabilities.extendedAgentCard: true (v0.3 called it supportsAuthenticatedExtendedCard). Clients authenticate (the guide uses OAuth) and retrieve the sensitive skills from the extended-card endpoint. In A2A v1.0 the flag moves to capabilities.extendedAgentCard and the card is fetched with the GetExtendedAgentCard method.",
+      "key_takeaway": "Sensitive skills → advertise capabilities.extendedAgentCard publicly, then serve the extended card only to authenticated clients.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-17",
+      "section": "Capabilities & Transports",
+      "guide_anchor": "capabilities",
+      "question": "A remote document-analysis agent only accepts PDF input and returns PNG charts. Before sending a task, how does a client agent find out which media types the remote agent supports?",
+      "options": [
+        {
+          "text": "By sending sample files of every type and checking which ones fail.",
+          "correct": false,
+          "why_wrong": "Trial and error is unnecessary. The Agent Card declares supported MIME types upfront."
+        },
+        {
+          "text": "By reading defaultInputModes and defaultOutputModes (MIME types) in the Agent Card.",
+          "correct": true
+        },
+        {
+          "text": "By calling tasks/get before any task exists, since its response lists every file format the server is able to parse.",
+          "correct": false,
+          "why_wrong": "tasks/get polls the status of an existing task. It is not a capability-discovery call."
+        },
+        {
+          "text": "By assuming plain text only, because A2A message parts cannot carry images, files or any other non-text content.",
+          "correct": false,
+          "why_wrong": "A2A is modality-agnostic: parts can carry text, images and files (FilePart with a MIME type), and agents can even negotiate UI capabilities."
+        }
+      ],
+      "explanation": "Agent Cards include content negotiation: defaultInputModes and defaultOutputModes declare the MIME types the agent accepts and produces. A2A is modality-agnostic, so message parts can carry text, images, files and negotiated UI elements.",
+      "key_takeaway": "Supported media types are declared in the Agent Card's defaultInputModes/defaultOutputModes.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-18",
+      "section": "Advanced Collaborative Workflows",
+      "guide_anchor": "workflows",
+      "question": "A hospital is designing an emergency-triage assistant. Leadership worries that a single model's blind spots could lead to unsafe recommendations. Which A2A collaboration pattern best addresses this risk?",
+      "options": [
+        {
+          "text": "Hierarchical structure, where one supervisor agent delegates subtasks and accepts whatever each worker returns.",
+          "correct": false,
+          "why_wrong": "A hierarchy decomposes work. On its own, it does not bring in competing perspectives to cancel out one model's blind spots."
+        },
+        {
+          "text": "Debate and consensus, where agents with different data sources or model biases discuss options and converge on a decision.",
+          "correct": true
+        },
+        {
+          "text": "A single, larger model with a longer system prompt that lists every triage rule the hospital follows.",
+          "correct": false,
+          "why_wrong": "A single model keeps the single-model blind spots that the scenario is trying to remove."
+        },
+        {
+          "text": "Artifact chaining, where each agent's output is passed on unchanged to the next agent in a fixed sequence.",
+          "correct": false,
+          "why_wrong": "Chaining passes outputs along a pipeline. It does not bring opposing views together into a consensus."
+        }
+      ],
+      "explanation": "In Debate and Consensus, multiple agents with varied perspectives, data sources or model biases discuss options in a structured way and converge on an informed decision. The guide says this eliminates single-model blind spots and is critical for high-stakes decisions such as medical triage.",
+      "key_takeaway": "High-stakes decisions where single-model blind spots are dangerous → debate and consensus among diverse agents.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "ADK Multi-Agent Workflow Patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-19",
+      "section": "Advanced Collaborative Workflows",
+      "guide_anchor": "workflows",
+      "question": "A legal-drafting pipeline produces contract clauses that are sent straight to downstream agents, and one hallucinated clause recently spread through three later steps. Which pattern should be inserted?",
+      "options": [
+        {
+          "text": "Critic-reviewer: an independent agent checks each draft for safety, compliance and accuracy before it is finalized.",
+          "correct": true
+        },
+        {
+          "text": "A longer streaming window, so the downstream agents receive the drafting agent's output token by token.",
+          "correct": false,
+          "why_wrong": "Streaming only changes how output is delivered. Nothing checks the content before it moves downstream."
+        },
+        {
+          "text": "Hierarchical delegation, where the drafting agent becomes the supervisor and approves all of its own clauses.",
+          "correct": false,
+          "why_wrong": "The guide stresses that the reviewer must be separate and independent. An agent approving its own clauses is not a review."
+        },
+        {
+          "text": "Raising the Task Depth Limit, so that the pipeline has more steps in which the hallucinated clause can be corrected.",
+          "correct": false,
+          "why_wrong": "Task Depth Limit caps delegation nesting to prevent loops. It is not a quality-control mechanism."
+        }
+      ],
+      "explanation": "In the Critic-Reviewer (Self-Correction) pattern, a producer agent generates a draft artifact and a separate, independent reviewer agent assesses it for safety, compliance, factual accuracy and quality before it is finalized. The guide calls it an architectural safeguard against hallucinations propagating downstream.",
+      "key_takeaway": "Stop hallucinations spreading downstream with an independent critic-reviewer agent that checks drafts before they are finalized.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "ADK Multi-Agent Workflow Patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-20",
+      "section": "Advanced Collaborative Workflows",
+      "guide_anchor": "workflows",
+      "question": "A travel concierge must book flights, hotels and visas through three specialist agents and return one combined itinerary. Which A2A collaboration pattern does this describe?",
+      "options": [
+        {
+          "text": "Debate and consensus, where the three specialists argue about each booking until all of them agree on one choice.",
+          "correct": false,
+          "why_wrong": "The specialists cover different domains, so there is nothing for them to debate. The need is to delegate and then combine the results."
+        },
+        {
+          "text": "Critic-reviewer, where the flight agent reviews the hotel agent's output before it is finalized.",
+          "correct": false,
+          "why_wrong": "Critic-reviewer validates a draft. It does not decompose a goal across specialists and combine their outputs."
+        },
+        {
+          "text": "A hierarchical structure: a supervisor delegates by Agent Card capability and merges the outputs.",
+          "correct": true
+        },
+        {
+          "text": "Direct configuration, which hard-codes the itinerary format into each specialist agent's card.",
+          "correct": false,
+          "why_wrong": "Direct configuration is a discovery method. It is not a collaboration pattern."
+        }
+      ],
+      "explanation": "In Hierarchical Structures, a supervisor agent delegates tasks to specialized worker agents based on their Agent Card capabilities and combines their outputs into one result. The guide calls it the classic A2A production topology.",
+      "key_takeaway": "Supervisor + specialist workers + combined output = hierarchical structure, the classic A2A topology.",
+      "doc_links": [
+        {
+          "label": "A2A Streaming & Async Tasks",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "ADK Multi-Agent Workflow Patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-21",
+      "section": "Implementation & Security",
+      "guide_anchor": "implementation",
+      "question": "During code review, a security engineer finds a client agent that adds its OAuth 2.0 bearer token to the task URL as a query parameter, and also copies it into the message body. What should be changed?",
+      "options": [
+        {
+          "text": "Keep the token in the URL, because TLS encrypts query strings and nothing ever logs them.",
+          "correct": false,
+          "why_wrong": "The guide warns that URLs are logged by proxies and web servers, so tokens in URLs leak."
+        },
+        {
+          "text": "Move the token into the message body only, so that it is stored with the task for later auditing.",
+          "correct": false,
+          "why_wrong": "Message bodies are persisted in task history and may be forwarded to downstream agents, which exposes the credential."
+        },
+        {
+          "text": "Send the token only in HTTP headers on every request, and never in URLs or in message bodies.",
+          "correct": true
+        },
+        {
+          "text": "Base64-encode the token in both places, so that proxies and downstream agents can no longer read or reuse it.",
+          "correct": false,
+          "why_wrong": "Base64 is an encoding, not encryption. The token is still exposed in logs and task history."
+        }
+      ],
+      "explanation": "The guide's security anti-pattern: credentials such as OAuth 2.0 tokens and API keys must always be passed in HTTP headers. Never put them in URLs, which proxies and web servers log, or in message bodies, which are persisted in task history and may be forwarded to downstream agents.",
+      "key_takeaway": "A2A credentials go in HTTP headers only: never in URLs (logged) or message bodies (persisted and forwarded).",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-22",
+      "section": "Implementation & Security",
+      "guide_anchor": "implementation",
+      "question": "A team is exposing an existing Google ADK agent as an A2A server. Which component bridges the A2A Task lifecycle to the ADK agent's run loop?",
+      "options": [
+        {
+          "text": "The ASGI (Starlette) HTTP app that runs on Uvicorn and exposes the server.",
+          "correct": false,
+          "why_wrong": "The ASGI app exposes the server over HTTP. It does not map the task lifecycle onto the ADK run loop."
+        },
+        {
+          "text": "The agent executor (ADK ships it as A2aAgentExecutor), which bridges the A2A task lifecycle to the agent's run loop.",
+          "correct": true
+        },
+        {
+          "text": "AgentSkills, which declare specific callable capabilities with input/output schemas.",
+          "correct": false,
+          "why_wrong": "AgentSkills describe capabilities in the card. They do not execute tasks."
+        },
+        {
+          "text": "The AgentCard, the JSON document that declares the agent's identity and capabilities.",
+          "correct": false,
+          "why_wrong": "The AgentCard is the agent's identity and capability declaration, not the execution bridge."
+        }
+      ],
+      "explanation": "According to the guide, ADK developers implement an A2A server in four steps: define an AgentCard, define AgentSkills, attach an agent executor that bridges the A2A Task lifecycle to the ADK agent's run loop (the ADK class is A2aAgentExecutor, which the to_a2a() helper wires up for you), and expose it over HTTP via a Starlette/ASGI app running on Uvicorn.",
+      "key_takeaway": "ADK A2A server: AgentCard + AgentSkills + agent executor (A2aAgentExecutor, the lifecycle bridge) + Starlette app on Uvicorn.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-23",
+      "section": "Implementation & Security",
+      "guide_anchor": "implementation",
+      "question": "An internal procurement agent's Agent Card reveals the names and endpoints of several back-office systems, and it is currently reachable by anyone. What does the guide recommend?",
+      "options": [
+        {
+          "text": "Leave it public, because Agent Cards must always be openly readable for A2A discovery to work.",
+          "correct": false,
+          "why_wrong": "The guide says only public-facing agents may expose their cards openly. Internal enterprise agents should require authenticated access."
+        },
+        {
+          "text": "Protect the card endpoint with network restrictions and authentication, since it exposes sensitive topology.",
+          "correct": true
+        },
+        {
+          "text": "Delete the Agent Card completely and share the agent's capabilities with other teams over email.",
+          "correct": false,
+          "why_wrong": "Removing the card breaks standard discovery. The fix is to control access to it, not to abandon it."
+        },
+        {
+          "text": "Rename the back-office systems in the card with random aliases, but keep the endpoint unauthenticated.",
+          "correct": false,
+          "why_wrong": "Obfuscation is not access control. The endpoint still needs network restrictions and authentication."
+        }
+      ],
+      "explanation": "Under Agent Card access control, the guide says to secure card endpoints with network restrictions and authentication if the card contains sensitive system topology. Public-facing agents may expose their cards openly; internal enterprise agents should require authenticated access. Enterprise deployments also need mTLS and comprehensive audit logs.",
+      "key_takeaway": "Internal Agent Cards that reveal system topology need network restrictions and authentication. Only public agents expose cards openly.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-24",
+      "section": "Glossary",
+      "guide_anchor": "glossary",
+      "question": "A remote finance agent is about to execute an irreversible €50,000 transfer and must pause until a human approves the action. Which task state should it enter?",
+      "options": [
+        {
+          "text": "auth-required, the state an agent uses whenever any form of human involvement is needed.",
+          "correct": false,
+          "why_wrong": "auth-required means authentication is needed before the agent can proceed. It is not a request for human approval."
+        },
+        {
+          "text": "rejected, so the client can resubmit the task later after a human approves it.",
+          "correct": false,
+          "why_wrong": "rejected is terminal and means the agent decided not to perform the task. It does not pause for approval."
+        },
+        {
+          "text": "input-required, an interrupted state that serves as the natural human-in-the-loop pause point.",
+          "correct": true
+        },
+        {
+          "text": "submitted, because the task stays queued until a person manually moves it into the working state.",
+          "correct": false,
+          "why_wrong": "submitted only means the task was received and queued. It is not the guide's mechanism for human approval."
+        }
+      ],
+      "explanation": "In the task lifecycle, input-required is an interrupted state: the remote agent pauses and waits for more information. The guide calls it the natural human-in-the-loop (HITL) pause point for sensitive or irreversible actions. auth-required is about authentication, and completed, failed, canceled and rejected are terminal states.",
+      "key_takeaway": "Human approval before sensitive or irreversible actions → input-required, the HITL pause state.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-25",
+      "section": "Glossary",
+      "guide_anchor": "glossary",
+      "question": "In a chained pipeline, a planning agent delegates to a research agent, which delegates back to a new planning agent, and so on until costs spiral. Which A2A operational control is designed to stop this?",
+      "options": [
+        {
+          "text": "Agent Card TTL, which forces cached capability declarations to be re-validated periodically.",
+          "correct": false,
+          "why_wrong": "TTL keeps cached cards fresh. It does not limit how deeply delegations can nest."
+        },
+        {
+          "text": "A Task Depth Limit, capping how deeply delegation chains can nest so they cannot loop forever.",
+          "correct": true
+        },
+        {
+          "text": "Mutual TLS between every pair of agents, so that each delegation hop has to be certificate-authenticated first.",
+          "correct": false,
+          "why_wrong": "mTLS authenticates connections. A loop between authenticated agents would still run forever."
+        },
+        {
+          "text": "Artifact chaining, which makes sure each agent's output becomes the next agent's input.",
+          "correct": false,
+          "why_wrong": "Artifact chaining describes how pipelines pass data along. It does not prevent runaway loops."
+        }
+      ],
+      "explanation": "The glossary defines Task Depth Limit as the maximum nesting level allowed for agent delegation chains, which prevents infinite orchestration loops. Related A2AOps controls include audit logging, latency tracking, task SLA monitoring and distributed tracing.",
+      "key_takeaway": "Runaway recursive delegation → enforce a Task Depth Limit on delegation chains.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-26",
+      "section": "Core & Wire Protocol Architecture",
+      "guide_anchor": "architecture",
+      "question": "A mobile orchestrator starts a streaming task against an A2A v1.0 remote agent via `SendStreamingMessage`, but the user's cellular connection drops mid-execution while the remote task is still `working`. How should the client resume receiving real-time SSE updates without restarting the task from scratch, and where does it check supported wire bindings?",
+      "options": [
+        {
+          "text": "Call `CancelTask` immediately and re-send the original prompt via `SendMessage`, checking MCP `tools/list` for gRPC bindings.",
+          "correct": false,
+          "why_wrong": "Canceling and re-sending discards all completed work and risks duplicate side effects, and MCP `tools/list` is not an A2A AgentCard field."
+        },
+        {
+          "text": "Call `SubscribeToTask` (v0.3: `tasks/resubscribe`) with the `taskId`, using an endpoint from `AgentCard.supportedInterfaces` (`JSONRPC`, `HTTP+JSON`, or `GRPC`).",
+          "correct": true
+        },
+        {
+          "text": "Open an unauthenticated raw TCP socket to `/.well-known/agent.json` so the remote agent dumps its internal Python memory pickle.",
+          "correct": false,
+          "why_wrong": "`agent.json` is an obsolete pre-v0.3 path, and opaque A2A servers never expose internal Python memory pickles."
+        },
+        {
+          "text": "Send HTTP `402 Payment Required` headers to `GetExtendedAgentCard` to force the server to replay previous WebSocket audio frames.",
+          "correct": false,
+          "why_wrong": "HTTP 402 belongs to the x402 payment protocol and `GetExtendedAgentCard` retrieves authenticated skill metadata, not task event streams."
+        }
+      ],
+      "explanation": "In A2A v1.0, `SubscribeToTask` (called `tasks/resubscribe` in v0.3) lets a client re-attach an SSE stream to an active in-flight `taskId` after a network drop without restarting work. Available wire transports (`JSONRPC`, `HTTP+JSON`, `GRPC`) and URLs are advertised in `AgentCard.supportedInterfaces[]`.",
+      "key_takeaway": "Use `SubscribeToTask` to reconnect dropped SSE streams to an active `taskId`, and inspect `supportedInterfaces` for JSON-RPC, REST, or gRPC bindings.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-27",
+      "section": "Intra-App AgentTool vs. Inter-App A2A",
+      "guide_anchor": "delegation-boundaries",
+      "question": "A retail bank's customer-facing chat agent (owned by Digital Channels in Python ADK) must occasionally trigger a dispute investigation agent (owned by Fraud Ops in Java LangGraph inside a separate PCI-DSS VPC Service Controls perimeter). Why should the architect connect them via A2A rather than wrapping Fraud Ops as an in-process ADK `AgentTool`?",
+      "options": [
+        {
+          "text": "Because ADK `AgentTool` automatically encrypts cross-VPC traffic with mTLS and isolates Java and Python processes into separate IAM identities.",
+          "correct": false,
+          "why_wrong": "`AgentTool` runs in-process inside the same runtime container and shares the parent agent's language runtime, memory space, and IAM identity."
+        },
+        {
+          "text": "A2A enforces a hard network, polyglot, state-opacity, and SPIFFE/IAM security boundary so the front-door agent never holds PCI credentials.",
+          "correct": true
+        },
+        {
+          "text": "Because A2A eliminates all HTTP serialization and network hops, guaranteeing zero-microsecond shared-memory pointer access to `session.state`.",
+          "correct": false,
+          "why_wrong": "In-memory zero-hop access is the advantage of intra-app `sub_agents` / `AgentTool`; A2A intentionally trades a network hop for opacity and isolation."
+        },
+        {
+          "text": "Because in-process `sub_agents` require Linux Foundation governance approval before two Python classes in the same repo can call each other.",
+          "correct": false,
+          "why_wrong": "Tightly coupled same-team, same-repo Python agents sharing permissions should use in-process `sub_agents` or `AgentTool` without network overhead."
+        }
+      ],
+      "explanation": "Intra-app `sub_agents` and `AgentTool` share one container, runtime language, `InvocationContext`, and service identity — ideal when one team owns tightly coupled steps. Crossing team, repository, language/framework (Python ADK <-> Java LangGraph), or compliance boundaries (PCI VPC-SC + distinct SPIFFE Agent Identity) calls for inter-app A2A delegation with strict state opacity.",
+      "key_takeaway": "Use intra-app `AgentTool`/`sub_agents` within one trust & repo boundary; use A2A across polyglot stacks, separate teams, or isolated IAM/VPC perimeters.",
+      "doc_links": [
+        {
+          "label": "What is the A2A Protocol?",
+          "url": "https://a2a-protocol.org/latest/topics/what-is-a2a/"
+        },
+        {
+          "label": "ADK A2A Integration Guide",
+          "url": "https://google.github.io/adk-docs/a2a/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-28",
+      "section": "Intra-App AgentTool vs. Inter-App A2A",
+      "guide_anchor": "delegation-boundaries",
+      "question": "An airline builds a live voice concierge using CX Agent Studio and `gemini-3.8-live` over bidirectional audio streams. When a caller asks to reprice a complex multi-city itinerary, the concierge delegates to a backend Pricing A2A specialist. How should modalities be handled across this boundary?",
+      "options": [
+        {
+          "text": "Terminate real-time voice/VAD at the front-door agent and delegate normalized `TextPart` / `DataPart` payloads over A2A to the Pricing specialist.",
+          "correct": true
+        },
+        {
+          "text": "Forward raw continuous 16-bit PCM WebSocket audio frames through every downstream A2A microservice and database MCP server.",
+          "correct": false,
+          "why_wrong": "Streaming raw live audio across backend pricing and database hops adds latency, couples backend agents to voice VAD, and wastes multimodal tokens."
+        },
+        {
+          "text": "Force the caller to hang up the voice session and manually type JSON-RPC 2.0 `SendMessage` envelopes into an SMS keypad.",
+          "correct": false,
+          "why_wrong": "The voice front-door keeps the natural spoken conversation alive (including barge-in) while translating backend delegations transparently."
+        },
+        {
+          "text": "Deploy `gemini-4-argon` directly as the WebSocket Live API audio recognizer inside the Pricing database container.",
+          "correct": false,
+          "why_wrong": "`gemini-4-argon` does not support the Live API; `gemini-3.8-live` handles live speech at the front door while backend agents reason over structured parts."
+        }
+      ],
+      "explanation": "A2A acts as a clean modality normalization boundary: interactive voice front-doors (`CX Agent Studio` or `gemini-3.8-live`) manage sub-second WebRTC/WebSocket audio, VAD barge-in, and prosody locally, while delegating structured, deterministic `TextPart`, `DataPart`, or `FilePart` tasks over A2A to backend domain specialists.",
+      "key_takeaway": "Terminate live full-duplex audio (`gemini-3.8-live` / CX Agent Studio) at the front door and pass normalized `TextPart`/`DataPart` tasks across A2A.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "Gemini Live API Overview",
+          "url": "https://ai.google.dev/gemini-api/docs/live"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-29",
+      "section": "5-Layer Stack: A2UI, AG-UI, AP2 & x402",
+      "guide_anchor": "ecosystem-protocols",
+      "question": "A third-party travel A2A agent registered in Gemini Enterprise wants to display an interactive date-picker and flight-comparison form inside the corporate chat UI. Security forbids rendering untrusted remote HTML/JavaScript `<iframe>` tags due to Cross-Site Scripting (XSS) risk. Which protocol solves this natively?",
+      "options": [
+        {
+          "text": "Passing raw `<script>` tags inside an A2A `TextPart` and asking the browser to `eval()` them after disabling Content Security Policy.",
+          "correct": false,
+          "why_wrong": "Executing untrusted remote JavaScript in the host origin is a textbook XSS vulnerability that exposes enterprise session tokens."
+        },
+        {
+          "text": "A2UI (v0.8 / v0.9), streaming declarative JSON widget descriptions + data bindings in A2A `DataPart` payloads mapped to a client-approved Component Catalog.",
+          "correct": true
+        },
+        {
+          "text": "x402, which compiles remote Solidity smart contracts into WebAssembly graphics shaders inside the Gemini Enterprise sidebar.",
+          "correct": false,
+          "why_wrong": "x402 is an HTTP `402 Payment Required` machine-to-machine micropayment protocol, not a generative UI rendering standard."
+        },
+        {
+          "text": "Replacing A2A completely with stdio MCP local pipes so the remote vendor's server mounts root filesystem access on every employee laptop.",
+          "correct": false,
+          "why_wrong": "Granting a third-party vendor local stdio execution on employee laptops creates a severe remote-code-execution risk and does not solve declarative UI."
+        }
+      ],
+      "explanation": "A2UI (Agent-to-UI, v0.8/v0.9 — natively supported in Gemini Enterprise) lets remote A2A agents send flat, declarative JSON widget trees and state bindings inside A2A `DataPart` payloads referencing only components from the host client's approved Component Catalog (such as Material or custom corporate widgets). The host renders native, accessible, XSS-safe UI with zero arbitrary script execution.",
+      "key_takeaway": "A2UI streams declarative JSON against a client-approved Component Catalog over A2A, enabling rich native UI in Gemini Enterprise without XSS risk.",
+      "doc_links": [
+        {
+          "label": "A2UI Declarative UI Protocol",
+          "url": "https://a2ui.org/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-30",
+      "section": "5-Layer Stack: A2UI, AG-UI, AP2 & x402",
+      "guide_anchor": "ecosystem-protocols",
+      "question": "An architecture review board asks how `MCP UI`, `AG-UI`, and `A2UI` differ so teams stop confusing them. Which mapping accurately distinguishes the three UI protocols?",
+      "options": [
+        {
+          "text": "`MCP UI` returns tool-level embedded views; `AG-UI` streams frontend-to-agent events & shared state diffs; `A2UI` sends declarative catalog JSON over A2A.",
+          "correct": true
+        },
+        {
+          "text": "`MCP UI` is for voice synthesis, `AG-UI` is for SQL connection pooling in AlloyDB, and `A2UI` is for GPU kernel scheduling on GKE.",
+          "correct": false,
+          "why_wrong": "All three are user-interface protocols in the agentic presentation layer, not audio synthesis, database pooling, or Kubernetes scheduling tools."
+        },
+        {
+          "text": "They are three sequential version numbers of the exact same Linux Foundation specification (`v0.1`, `v0.2`, and `v0.3`) with identical payloads.",
+          "correct": false,
+          "why_wrong": "They are distinct protocols addressing tool-returned UI (`MCP UI`), client-agent bidirectional event transport (`AG-UI`), and declarative catalog UI (`A2UI`)."
+        },
+        {
+          "text": "`A2UI` requires raw iframe HTML from MCP servers, while `MCP UI` signs cryptographic Cart Mandates for card networks.",
+          "correct": false,
+          "why_wrong": "`A2UI` uses XSS-safe declarative JSON rather than raw HTML iframes, and Cart Mandates belong to the AP2 payments protocol."
+        }
+      ],
+      "explanation": "Each UI standard operates at a distinct boundary: `MCP UI` lets an individual MCP tool return an embedded UI view alongside tool output; `AG-UI` (Agent-User Interaction Protocol) standardizes the bidirectional event stream and shared state synchronization between a frontend client and its backend agent; and `A2UI` transmits declarative JSON widget trees from A2A agents mapped to a client-trusted Component Catalog.",
+      "key_takeaway": "`MCP UI` = tool-returned embedded UI; `AG-UI` = client-agent bidirectional event/state stream; `A2UI` = declarative catalog JSON UI over A2A.",
+      "doc_links": [
+        {
+          "label": "A2UI Open Standard",
+          "url": "https://a2ui.org/"
+        },
+        {
+          "label": "Model Context Protocol Docs",
+          "url": "https://modelcontextprotocol.io/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-31",
+      "section": "5-Layer Stack: A2UI, AG-UI, AP2 & x402",
+      "guide_anchor": "ecosystem-protocols",
+      "question": "A procurement agent must support two payment flows: (1) buying flights up to $600 while the employee is offline with cryptographic proof of the user's pre-authorization and final cart items, and (2) paying $0.002 autonomously per metered weather-API call when an endpoint returns HTTP `402`. Which protocols match (1) and (2)?",
+      "options": [
+        {
+          "text": "(1) Storing raw credit-card CVV numbers inside Memory Bank prompts, and (2) opening an unauthenticated `SubscribeToTask` SSE stream.",
+          "correct": false,
+          "why_wrong": "Storing raw CVVs in prompts violates PCI-DSS and provides no cryptographic mandate proof, and `SubscribeToTask` reconnects A2A streams rather than paying APIs."
+        },
+        {
+          "text": "(1) AP2 (Agent Payments Protocol) using cryptographically signed Intent Mandates and Cart Mandates, and (2) x402 using HTTP `402 Payment Required` headers.",
+          "correct": true
+        },
+        {
+          "text": "(1) SynthID tournament token watermarking for card settlement, and (2) `AgentEngineSandboxCodeExecutor` for bank wire clearing.",
+          "correct": false,
+          "why_wrong": "SynthID watermarks AI media provenance and the Code Execution sandbox runs untrusted Python — neither is a payment authorization protocol."
+        },
+        {
+          "text": "(1) x402 for human-present dispute chargebacks, and (2) A2UI `FilePart` attachments for anonymous cash transfers without user signatures.",
+          "correct": false,
+          "why_wrong": "This reverses the protocols: AP2 handles verifiable user Intent/Cart Mandates for delegated commerce, while x402 handles HTTP 402 M2M micropayments."
+        }
+      ],
+      "explanation": "AP2 (Agent Payments Protocol) extends A2A and MCP with verifiable cryptographic credentials: an `Intent Mandate` captures bounded user authority upfront for human-not-present tasks (e.g., flights under $600), and a `Cart Mandate` signs the exact final items and price for non-repudiable settlement. Complementing AP2, `x402` uses HTTP `402 Payment Required` headers so agents can execute frictionless machine-to-machine API/data micropayments.",
+      "key_takeaway": "AP2 uses signed Intent & Cart Mandates for verifiable human-delegated purchases; x402 uses HTTP 402 headers for autonomous M2M API micropayments.",
+      "doc_links": [
+        {
+          "label": "A2A Protocol & Extensions",
+          "url": "https://a2a-protocol.org/latest/"
+        },
+        {
+          "label": "x402 Payment Protocol",
+          "url": "https://www.x402.org/"
+        }
+      ]
+    },
+    {
+      "id": "a2a-q-32",
+      "section": "Google Cloud Implementation & Security",
+      "guide_anchor": "implementation",
+      "question": "An orchestrator agent delegates sub-tasks to three remote A2A agents and registers push-notification webhooks for multi-hour jobs. Which defense-in-depth set prevents (1) confused-deputy token over-reach, (2) spoofed webhook completions, and (3) cross-agent prompt injection?",
+      "options": [
+        {
+          "text": "Forward the user's global admin OAuth token in URL query strings, accept unsigned HTTP POST webhooks, and trust all remote `Artifact` text verbatim.",
+          "correct": false,
+          "why_wrong": "Every piece of this option is a critical vulnerability: URL tokens leak in proxy logs, broad tokens enable privilege escalation, and unsigned webhooks allow spoofing."
+        },
+        {
+          "text": "Exchange audience-scoped header tokens via Agent Gateway + mTLS/SPIFFE, verify HMAC/JWT webhook signatures + nonces, and screen payloads with Model Armor.",
+          "correct": true
+        },
+        {
+          "text": "Embed API keys inside `Message` `DataPart` bodies so every downstream agent logs them, and set `Task Depth Limit` to infinity.",
+          "correct": false,
+          "why_wrong": "Putting credentials in message bodies leaks secrets into task logs and downstream prompts, and removing depth limits invites infinite delegation loops."
+        },
+        {
+          "text": "Disable HTTPS between internal VPC agents and rely on `capabilities.extendedAgentCard: false` to sanitize incoming remote artifacts.",
+          "correct": false,
+          "why_wrong": "Plaintext HTTP exposes bearer tokens on the wire, and `extendedAgentCard` controls skill metadata discovery rather than runtime prompt-injection screening."
+        }
+      ],
+      "explanation": "Zero-trust A2A security requires: (1) passing credentials strictly in HTTP headers and using OAuth 2.0 Token Exchange / Agent Gateway + mTLS + SPIFFE Agent Identity so each peer receives a narrowly scoped token; (2) validating webhook callback ownership and verifying cryptographic HMAC/JWT signatures plus replay nonces; and (3) treating remote `Message`/`Artifact` payloads as untrusted inputs screened by Vertex AI Model Armor alongside finite Task Depth Limits.",
+      "key_takeaway": "Harden A2A with header-only scoped token exchange + mTLS/SPIFFE, signed/nonce-checked push webhooks, and Model Armor cross-agent payload screening.",
+      "doc_links": [
+        {
+          "label": "A2A Enterprise Security Guide",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        },
+        {
+          "label": "Vertex AI Model Armor Overview",
+          "url": "https://cloud.google.com/security-command-center/docs/model-armor-overview"
+        }
+      ]
+    }
+  ]
+}
