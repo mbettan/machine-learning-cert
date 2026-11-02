@@ -1,0 +1,1228 @@
+{
+  "topic_id": "vibe-coding",
+  "title": "Vibe Coding",
+  "guide_url": "vibecoding.html",
+  "questions": [
+    {
+      "id": "vibe-coding-q-01",
+      "section": "What is Vibe Coding?",
+      "guide_anchor": "section-1",
+      "question": "A startup founder plans to staff a new product team entirely with people who have never programmed, arguing that 'with vibe coding, coding knowledge is no longer needed.' How does the guide respond to this claim?",
+      "options": [
+        {
+          "text": "It agrees: natural-language prompting fully replaces programming knowledge, so reviewing the generated code becomes optional.",
+          "correct": false,
+          "why_wrong": "The guide's Key Insight states explicitly that vibe coding does not mean 'no coding knowledge needed'."
+        },
+        {
+          "text": "It disagrees: the best vibe coders are experienced developers who know what to ask, how to evaluate output and when to step in.",
+          "correct": true
+        },
+        {
+          "text": "It agrees, as long as the team uses Full Autopilot mode for every project, including production systems.",
+          "correct": false,
+          "why_wrong": "The guide calls Full Autopilot very high risk and suitable only for throwaway work, not production."
+        },
+        {
+          "text": "It disagrees, but only because current AI models cannot yet generate code in mainstream languages.",
+          "correct": false,
+          "why_wrong": "The guide never says models cannot write code. Its point is that human expertise amplifies AI-generated output."
+        }
+      ],
+      "explanation": "The guide's Key Insight: vibe coding does not mean 'no coding knowledge needed'. The best vibe coders are experienced developers who use AI to amplify their expertise: they know what to ask for, how to evaluate the output and when to intervene manually.",
+      "key_takeaway": "Vibe coding amplifies expertise rather than replacing it: you still need to know what to ask, how to evaluate and when to intervene.",
+      "doc_links": [
+        {
+          "label": "Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/overview"
+        },
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-02",
+      "section": "What is Vibe Coding?",
+      "guide_anchor": "section-1",
+      "question": "An engineering manager is rewriting the job description for developers who now work mainly through an AI coding assistant. According to the guide, how does the developer's day-to-day role shift?",
+      "options": [
+        {
+          "text": "From typing code to describing intent, reviewing output and iterating through dialogue with the AI.",
+          "correct": true
+        },
+        {
+          "text": "From writing code to fine-tuning the underlying language model on the company's codebase every sprint.",
+          "correct": false,
+          "why_wrong": "The guide frames the shift around conversation and review. It says nothing about training models."
+        },
+        {
+          "text": "From design work to pure typing, because the AI now makes every architectural decision and the human only transcribes the result.",
+          "correct": false,
+          "why_wrong": "This is backwards. Under 'Human as Architect', the human makes the design decisions and the AI handles implementation details."
+        },
+        {
+          "text": "From developing software to QA only, since the AI ships code straight to production without any human dialogue.",
+          "correct": false,
+          "why_wrong": "Vibe coding is a conversational loop (prompt → generate → review → refine), not unsupervised shipping."
+        }
+      ],
+      "explanation": "The guide says the developer's role shifts from typing code to describing intent, reviewing output and iterating through dialogue. The core principles include Natural Language First, Conversational Iteration (prompt → generate → review → refine), Intent Over Syntax, AI as Pair Programmer and Human as Architect.",
+      "key_takeaway": "In vibe coding the developer describes intent, reviews output and iterates through dialogue instead of typing every line.",
+      "doc_links": [
+        {
+          "label": "Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/overview"
+        },
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-03",
+      "section": "What is Vibe Coding?",
+      "guide_anchor": "section-1",
+      "question": "Midway through a session, the AI assistant proposes replacing the team's relational database with a document store 'for flexibility'. Under the core principles of vibe coding, who owns this decision?",
+      "options": [
+        {
+          "text": "The AI, because as the pair programmer it has broader knowledge than the human and should own every architecture call.",
+          "correct": false,
+          "why_wrong": "'AI as Pair Programmer' means an always-available partner, not the decision-maker on design."
+        },
+        {
+          "text": "The human, acting as architect, while the AI takes care of the implementation details.",
+          "correct": true
+        },
+        {
+          "text": "Neither of them. The choice should be settled by whichever option produces the shortest generated code.",
+          "correct": false,
+          "why_wrong": "Code length is not a design criterion in the guide. Design decisions belong to the human."
+        },
+        {
+          "text": "The AI, provided the prompt said 'intent over syntax' when the session started.",
+          "correct": false,
+          "why_wrong": "'Intent over syntax' shifts focus to what and why. It does not hand architecture decisions to the AI."
+        }
+      ],
+      "explanation": "Under the 'Human as Architect' principle, you make the design decisions and the AI handles implementation details. Replacing the database is an architectural decision, so it stays with the human.",
+      "key_takeaway": "Human as Architect: humans own design decisions, and the AI handles implementation details.",
+      "doc_links": [
+        {
+          "label": "Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/overview"
+        },
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-04",
+      "section": "The Vibe Coding Spectrum",
+      "guide_anchor": "section-2",
+      "question": "A developer has 24 hours to build a hackathon demo that will be thrown away after the judging. Where on the vibe coding spectrum is it acceptable to operate?",
+      "options": [
+        {
+          "text": "Human-Led + AI Assist only, writing all the core logic by hand, because every project must meet production standards.",
+          "correct": false,
+          "why_wrong": "Human-Led + AI Assist is aimed at production, security-critical and regulated code. It is overkill for a throwaway demo."
+        },
+        {
+          "text": "Full Autopilot: the AI generates almost everything for maximum speed, with very high risk that is acceptable here.",
+          "correct": true
+        },
+        {
+          "text": "No AI at all, because the guide forbids AI assistance in hackathons in order to protect skill development.",
+          "correct": false,
+          "why_wrong": "The guide lists hackathon demos as a typical Full Autopilot use case. It forbids nothing."
+        },
+        {
+          "text": "Collaborative Mode, since it is the only mode the guide considers suitable for any kind of demo.",
+          "correct": false,
+          "why_wrong": "Collaborative Mode targets features, internal tools and MVPs. Throwaway hackathon demos are explicitly listed under Full Autopilot."
+        }
+      ],
+      "explanation": "The spectrum runs from Full Autopilot (throwaway prototypes, hackathon demos, personal scripts; very high risk) through Collaborative Mode (features, internal tools, MVPs; moderate risk) to Human-Led + AI Assist (production, security-critical, regulated; low risk). Choose your position based on context.",
+      "key_takeaway": "Throwaway prototypes, hackathon demos and personal scripts can run on Full Autopilot. The risk is very high, which is acceptable only because the code is disposable.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-05",
+      "section": "The Vibe Coding Spectrum",
+      "guide_anchor": "section-2",
+      "question": "A regulated bank wants to use AI on its payment-settlement service. Which position on the vibe coding spectrum fits, and why?",
+      "options": [
+        {
+          "text": "Full Autopilot, because Karpathy recommended pure vibe coding specifically for production financial systems.",
+          "correct": false,
+          "why_wrong": "Karpathy cautioned that pure vibe coding 'is not for production systems'. The guide records the opposite of this claim."
+        },
+        {
+          "text": "Human-Led + AI Assist: developers write the core logic and the AI handles boilerplate, tests and docs, for low risk.",
+          "correct": true
+        },
+        {
+          "text": "Collaborative Mode with no review, because a regulated environment already has auditors who will catch any defects later.",
+          "correct": false,
+          "why_wrong": "Collaborative Mode itself requires the human to review every block. Regulated systems belong in Human-Led + AI Assist."
+        },
+        {
+          "text": "Any position works equally well, since risk is the same at every point on the spectrum.",
+          "correct": false,
+          "why_wrong": "The guide gives each mode a different risk level: very high, moderate and low."
+        }
+      ],
+      "explanation": "The guide maps production systems, security-critical code and regulated industries to Human-Led + AI Assist (low risk). Karpathy's own warning: pure vibe coding is not for production, and the closer you move to autopilot, the more technical debt and hidden bugs you accumulate.",
+      "key_takeaway": "Production, security-critical or regulated code → Human-Led + AI Assist. The closer to autopilot, the more hidden debt and bugs.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-06",
+      "section": "The Vibe Coding Spectrum",
+      "guide_anchor": "section-2",
+      "question": "A seed-stage startup is building its first MVP and some internal admin tools with an AI assistant. The founders want speed, but they also want someone to steer the architecture. Which mode matches?",
+      "options": [
+        {
+          "text": "Full Autopilot, where the developer barely reads the code, because MVPs never become real products anyway.",
+          "correct": false,
+          "why_wrong": "The scenario wants someone steering the architecture. Full Autopilot means barely reading the code."
+        },
+        {
+          "text": "Human-Led + AI Assist, restricting the AI to generating documentation only.",
+          "correct": false,
+          "why_wrong": "In Human-Led mode the AI also handles boilerplate and tests. More importantly, the guide maps MVPs to Collaborative Mode."
+        },
+        {
+          "text": "Collaborative Mode: developer and AI co-create, and the human reviews every block and steers the architecture.",
+          "correct": true
+        },
+        {
+          "text": "Swarm Prototyping only, because the guide says no single-agent mode is suitable for any startup product work at all.",
+          "correct": false,
+          "why_wrong": "The guide lists MVPs for startups under Collaborative Mode, which is a single-assistant vibe coding mode."
+        }
+      ],
+      "explanation": "In Collaborative Mode, developer and AI co-create, and the human reviews every block and steers the architecture. The guide lists feature development, internal tools and MVPs for startups as its use cases, with moderate risk.",
+      "key_takeaway": "MVPs, internal tools and feature work → Collaborative Mode: co-create with AI, review every block, steer the architecture.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-07",
+      "section": "The Vibe Coding Spectrum",
+      "guide_anchor": "section-2",
+      "question": "A developer prompts the AI, copies the generated component straight into the main branch and deploys it within minutes. Which steps of the guide's five-step vibe coding session were skipped?",
+      "options": [
+        {
+          "text": "Only the Describe step; once the prompt is written, everything else in the session is optional.",
+          "correct": false,
+          "why_wrong": "Describe was done, since the developer prompted the AI. The steps that were skipped are the ones after Generate."
+        },
+        {
+          "text": "Review and Refine, plus the testing and documentation that Ship itself requires.",
+          "correct": true
+        },
+        {
+          "text": "None of them. Generate and Ship are the only two required steps, and the guide treats the other three as optional extras.",
+          "correct": false,
+          "why_wrong": "The guide's flow is Describe → Generate → Review → Refine → Ship, and Ship explicitly includes adding tests and documentation."
+        },
+        {
+          "text": "Only Generate, because the developer should have hand-written the code instead of using the AI.",
+          "correct": false,
+          "why_wrong": "Generation by the AI is a legitimate step. The failure is skipping the review, refinement and proper shipping."
+        }
+      ],
+      "explanation": "The guide's session flow is: Describe (natural-language prompt) → Generate (AI produces code) → Review (developer reads, tests and evaluates) → Refine (follow-up prompts to fix, extend or refactor) → Ship (integrate, add tests, document, deploy).",
+      "key_takeaway": "Vibe coding loop: Describe → Generate → Review → Refine → Ship. Shipping includes tests and documentation.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-08",
+      "section": "What is Swarm Prototyping?",
+      "guide_anchor": "section-3",
+      "question": "A team has two days to choose between event-sourcing, CRUD and CQRS designs for a new service and cannot agree. How would swarm prototyping help?",
+      "options": [
+        {
+          "text": "Run several agents in parallel to build each variant, evaluate them, and pick or merge the best result.",
+          "correct": true
+        },
+        {
+          "text": "Have one developer and one AI build the three designs one after another, so the team keeps full context on each.",
+          "correct": false,
+          "why_wrong": "This is single-agent, sequential vibe coding. Swarm prototyping explores the variants concurrently."
+        },
+        {
+          "text": "Skip prototyping and choose the design that the AI assistant mentions first, since the AI has seen the most systems.",
+          "correct": false,
+          "why_wrong": "Swarm prototyping is about generating and evaluating options, not accepting the first suggestion."
+        },
+        {
+          "text": "Hire more developers for the sprint, because the guide says scaling comes from adding human hours, not agents.",
+          "correct": false,
+          "why_wrong": "The guide's 'Scale-by-Agents' principle says the opposite: add more agents to raise throughput, not more human hours."
+        }
+      ],
+      "explanation": "Swarm prototyping deploys multiple AI agents at the same time to build different variants in parallel, which the guide compares to A/B testing during development. It follows a Diverge-then-Converge approach and is recommended for exploring multiple architectural approaches under time pressure.",
+      "key_takeaway": "Exploring several architectures under time pressure → swarm prototyping: diverge in parallel, evaluate, then converge.",
+      "doc_links": [
+        {
+          "label": "Claude Code Agent Teams",
+          "url": "https://code.claude.com/docs/en/agent-teams"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-09",
+      "section": "What is Swarm Prototyping?",
+      "guide_anchor": "section-3",
+      "question": "An avionics supplier proposes swarm prototyping for tightly coupled flight-control firmware that must pass strict certification. What does the guide suggest?",
+      "options": [
+        {
+          "text": "Use it, because tightly coupled systems benefit most from many agents working in parallel on separate parts.",
+          "correct": false,
+          "why_wrong": "The guide lists tightly coupled systems that require sequential design under 'When NOT to Use It'."
+        },
+        {
+          "text": "Use it, but drop human code review so the parallel agents stay fast enough to meet the certification deadline.",
+          "correct": false,
+          "why_wrong": "Production systems without human code review are another item on the 'When NOT to Use It' list."
+        },
+        {
+          "text": "Avoid it: tightly coupled designs and compliance-critical software are both poor fits for swarm work.",
+          "correct": true
+        },
+        {
+          "text": "Use it only for the final production build, keeping the exploratory work strictly single-agent instead.",
+          "correct": false,
+          "why_wrong": "This inverts the guide. Swarm prototyping is for exploration, and its outputs are mostly disposable."
+        }
+      ],
+      "explanation": "The guide's 'When NOT to Use It' list includes tightly coupled systems requiring sequential design, regulated or compliance-critical software, cases where integration costs exceed generation savings, projects needing deep domain expertise the AI lacks, cases where you cannot evaluate output quality, and production systems without human code review.",
+      "key_takeaway": "Skip swarm prototyping for tightly coupled, compliance-critical or unreviewable production work.",
+      "doc_links": [
+        {
+          "label": "Claude Code Agent Teams",
+          "url": "https://code.claude.com/docs/en/agent-teams"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-10",
+      "section": "What is Swarm Prototyping?",
+      "guide_anchor": "section-3",
+      "question": "After a swarm sprint, a manager complains that four of the five agent-built implementations were thrown away and calls it 'wasted work'. How does the guide frame this outcome?",
+      "options": [
+        {
+          "text": "As a failure. Every swarm output should be merged into production, or the orchestration was badly designed.",
+          "correct": false,
+          "why_wrong": "The guide expects most swarm output to be thrown away. Merging everything is not the goal."
+        },
+        {
+          "text": "As expected. Disposable outputs are a key trait, because the value lies in finding the best approach quickly.",
+          "correct": true
+        },
+        {
+          "text": "As a sign that more human developers were needed to make better use of each agent's output.",
+          "correct": false,
+          "why_wrong": "Scale-by-Agents says throughput grows by adding agents, not human hours, and discarding variants is normal."
+        },
+        {
+          "text": "As proof that the Tournament pattern never works and that the team should only ever run one agent at a time from now on.",
+          "correct": false,
+          "why_wrong": "Picking one winner and discarding the rest is exactly how the Tournament pattern is meant to work."
+        }
+      ],
+      "explanation": "Among the key characteristics of swarm prototyping, the guide lists Disposable Outputs: most generated code is throwaway, and the value is in finding the best approach quickly. It also lists Diverge-then-Converge and Scale-by-Agents.",
+      "key_takeaway": "In swarm prototyping most outputs are disposable by design. The value is finding the best approach fast.",
+      "doc_links": [
+        {
+          "label": "Claude Code Agent Teams",
+          "url": "https://code.claude.com/docs/en/agent-teams"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-11",
+      "section": "Multi-Agent Architecture",
+      "guide_anchor": "section-4",
+      "question": "In a swarm, the frontend agent and the backend agent each produced working code, but their API contracts conflict and the pieces do not fit together. Which agent role is responsible for resolving this?",
+      "options": [
+        {
+          "text": "Another worker agent, because worker agents are the ones that merge each other's outputs.",
+          "correct": false,
+          "why_wrong": "Worker agents carry out specific tasks such as frontend, backend or tests. Combining outputs is the Merger's job."
+        },
+        {
+          "text": "The Critic / Evaluator agent, which rewrites both codebases until the contracts compile together cleanly.",
+          "correct": false,
+          "why_wrong": "The Critic scores quality, detects bugs and recommends a variant. It does not integrate code."
+        },
+        {
+          "text": "The Merger agent, which combines outputs into one cohesive codebase and resolves the conflicts.",
+          "correct": true
+        },
+        {
+          "text": "Nobody. In swarm prototyping, conflicting outputs are always thrown away and the whole task is regenerated from scratch.",
+          "correct": false,
+          "why_wrong": "The guide defines a Merger Agent precisely to resolve conflicts and ensure integration."
+        }
+      ],
+      "explanation": "The guide defines four roles: the Orchestrator (decomposes, assigns and merges results; human or AI), Workers (execute specific tasks), the Critic / Evaluator (reviews, scores, detects bugs, recommends the best variant) and the Merger (combines outputs into a cohesive codebase, resolving conflicts and ensuring integration).",
+      "key_takeaway": "Conflicting outputs from worker agents → the Merger agent integrates them into one cohesive codebase.",
+      "doc_links": [
+        {
+          "label": "Claude Code Custom Subagents",
+          "url": "https://code.claude.com/docs/en/sub-agents"
+        },
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-12",
+      "section": "Multi-Agent Architecture",
+      "guide_anchor": "section-4",
+      "question": "A team wants four agents to each implement the same rate-limiting algorithm independently, then keep only the implementation that scores best on security and performance. Which swarm pattern is this?",
+      "options": [
+        {
+          "text": "Pipeline: one agent designs, the next implements and the last one tests.",
+          "correct": false,
+          "why_wrong": "Pipeline is sequential and staged. Here the agents compete in parallel on the same task."
+        },
+        {
+          "text": "Tournament: N agents compete on the same task and an evaluator picks the winner.",
+          "correct": true
+        },
+        {
+          "text": "Specialization Grid, where every agent owns a different domain such as UI, API, DB or Auth and works in parallel.",
+          "correct": false,
+          "why_wrong": "In a Specialization Grid each agent works on a different domain. Here all four solve the same problem."
+        },
+        {
+          "text": "Ensemble, where all four outputs are averaged together into one blended implementation.",
+          "correct": false,
+          "why_wrong": "Ensemble merges or averages outputs for robustness. This team keeps a single winner, which is the Tournament pattern."
+        }
+      ],
+      "explanation": "Swarm patterns: Fan-Out / Fan-In (split one task across N agents and merge, like map-reduce), Tournament (N agents compete on the same task, an evaluator picks the winner), Pipeline (design → implement → test, sequentially), Specialization Grid (each agent owns a domain, working in parallel) and Ensemble (outputs merged or averaged for robustness).",
+      "key_takeaway": "Same task, competing agents, one winner chosen by an evaluator = the Tournament pattern.",
+      "doc_links": [
+        {
+          "label": "Claude Code Custom Subagents",
+          "url": "https://code.claude.com/docs/en/sub-agents"
+        },
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-13",
+      "section": "Multi-Agent Architecture",
+      "guide_anchor": "section-4",
+      "question": "For a new SaaS backend, one agent owns the UI, another the API, a third the database layer and a fourth authentication, and all four work at the same time. Which swarm pattern is this?",
+      "options": [
+        {
+          "text": "Tournament, because the four agents are competing to produce the best overall backend.",
+          "correct": false,
+          "why_wrong": "In a Tournament the agents solve the same task. Here each one owns a different domain."
+        },
+        {
+          "text": "Pipeline, because the UI agent has to finish before the API agent can begin its work.",
+          "correct": false,
+          "why_wrong": "The scenario says the agents work at the same time, so it is not a sequential pipeline."
+        },
+        {
+          "text": "Ensemble, where the four domain outputs are averaged together to make the system more robust.",
+          "correct": false,
+          "why_wrong": "Ensemble agents solve the same problem. Domain ownership calls for a Specialization Grid."
+        },
+        {
+          "text": "Specialization Grid: each agent owns one domain and all of them work in parallel.",
+          "correct": true
+        }
+      ],
+      "explanation": "In the Specialization Grid pattern, each agent owns a domain (UI, API, DB, Auth) and all of them work in parallel. The guide's self-assessment ties this pattern to microservice architectures.",
+      "key_takeaway": "One agent per domain (UI, API, DB, Auth) working in parallel = Specialization Grid.",
+      "doc_links": [
+        {
+          "label": "Claude Code Custom Subagents",
+          "url": "https://code.claude.com/docs/en/sub-agents"
+        },
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-14",
+      "section": "Multi-Agent Architecture",
+      "guide_anchor": "section-4",
+      "question": "A workflow is set up so that Agent 1 writes a design document, Agent 2 implements it, and Agent 3 writes and runs the tests, each starting only after the previous agent finishes. Which pattern is this?",
+      "options": [
+        {
+          "text": "Pipeline: agents work in sequence (design → implement → test).",
+          "correct": true
+        },
+        {
+          "text": "Fan-Out / Fan-In, because a single task is divided among three agents and then merged back together.",
+          "correct": false,
+          "why_wrong": "Fan-Out / Fan-In splits work across agents in parallel and merges it, like map-reduce. Here the stages run one after another."
+        },
+        {
+          "text": "Tournament, because the test agent picks a winner among competing designs.",
+          "correct": false,
+          "why_wrong": "No designs compete here. Each agent produces a different kind of artifact in sequence."
+        },
+        {
+          "text": "Specialization Grid, because each of the three agents owns a different domain of the project.",
+          "correct": false,
+          "why_wrong": "Grid agents work in parallel. The defining feature here is that each agent waits for the previous one."
+        }
+      ],
+      "explanation": "The guide describes Pipeline as agents working sequentially: Agent 1 designs → Agent 2 implements → Agent 3 tests. It is the only sequential swarm pattern listed. The others (Fan-Out/Fan-In, Tournament, Specialization Grid, Ensemble) run in parallel.",
+      "key_takeaway": "Staged hand-offs (design → implement → test) = the Pipeline pattern, the one sequential swarm pattern.",
+      "doc_links": [
+        {
+          "label": "Claude Code Custom Subagents",
+          "url": "https://code.claude.com/docs/en/sub-agents"
+        },
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-15",
+      "section": "Vibe Coding vs Swarm Prototyping",
+      "guide_anchor": "section-5",
+      "question": "A CFO asks why the swarm prototyping budget is higher than the vibe coding budget, and why swarm projects add an extra integration phase. Which explanation matches the guide's comparison?",
+      "options": [
+        {
+          "text": "Swarm prototyping runs N concurrent agents, so it costs more, and its outputs need a merge/integration step.",
+          "correct": true
+        },
+        {
+          "text": "Vibe coding is actually the more expensive approach, and swarm projects only add integration work because of licensing audits.",
+          "correct": false,
+          "why_wrong": "The guide rates vibe coding as low cost (one LLM session) and swarm as higher cost (N concurrent agents)."
+        },
+        {
+          "text": "Both cost the same. Swarm only looks pricier because its agents use larger models.",
+          "correct": false,
+          "why_wrong": "The cost difference in the guide comes from running N agents concurrently, not from model size."
+        },
+        {
+          "text": "Swarm agents share one context window, which makes their output coherent but slower and more expensive to run.",
+          "correct": false,
+          "why_wrong": "The guide says context is split across swarm agents, which is why a merge step is needed. Coherent output is vibe coding's strength."
+        }
+      ],
+      "explanation": "The comparison table: vibe coding uses a single assistant, low cost (one LLM session) and naturally coherent code. Swarm prototyping uses multiple coordinated agents, higher cost (N concurrent agents), requires orchestration infrastructure and needs a merge/integration step.",
+      "key_takeaway": "Swarm costs more (N concurrent agents) and needs a merge step. Vibe coding is cheap and naturally coherent.",
+      "doc_links": [
+        {
+          "label": "Parallel Sessions with Git Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-16",
+      "section": "Vibe Coding vs Swarm Prototyping",
+      "guide_anchor": "section-5",
+      "question": "An engineering org is arguing over whether to standardize on vibe coding or on swarm prototyping for all of its work. What does the guide recommend?",
+      "options": [
+        {
+          "text": "Standardize on swarm prototyping, because it is strictly faster on every kind of task, including single bug fixes.",
+          "correct": false,
+          "why_wrong": "The guide says vibe coding is fast for single tasks. Swarm is faster only for complex, multi-part projects."
+        },
+        {
+          "text": "Use both: vibe coding for day-to-day development, swarm prototyping for exploration and ambiguous requirements.",
+          "correct": true
+        },
+        {
+          "text": "Standardize on vibe coding, because swarm prototyping is only an academic concept with no real tooling.",
+          "correct": false,
+          "why_wrong": "The guide lists real multi-agent frameworks such as CrewAI, AutoGen, LangGraph and MetaGPT."
+        },
+        {
+          "text": "Alternate between them each sprint so that every developer gets equal exposure to both approaches over the year.",
+          "correct": false,
+          "why_wrong": "The guide chooses the approach based on the task, not on a rotation schedule."
+        }
+      ],
+      "explanation": "The guide's callout 'They're Complementary, Not Competing': most teams use vibe coding for day-to-day development and swarm prototyping for exploration phases, design sprints, or ambiguous requirements where several approaches need to be evaluated quickly.",
+      "key_takeaway": "Complementary, not competing: vibe coding for daily work, swarm for exploration and ambiguous requirements.",
+      "doc_links": [
+        {
+          "label": "Parallel Sessions with Git Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-17",
+      "section": "Vibe Coding vs Swarm Prototyping",
+      "guide_anchor": "section-5",
+      "question": "A developer needs to fix a single, well-understood bug in one module before lunch and wants minimal setup. Based on the side-by-side comparison, which approach fits better?",
+      "options": [
+        {
+          "text": "Swarm prototyping, because concurrent development is always the faster option for any task.",
+          "correct": false,
+          "why_wrong": "Swarm has higher overhead and needs setup. It is best for exploration and scale, not for focused fixes."
+        },
+        {
+          "text": "Swarm prototyping with the Tournament pattern, so that several agents compete on the one-line fix.",
+          "correct": false,
+          "why_wrong": "Orchestrating a tournament for a well-understood bug costs more than the problem is worth."
+        },
+        {
+          "text": "Vibe coding: one human and one AI, low overhead, fast start, full human context, best for focused tasks.",
+          "correct": true
+        },
+        {
+          "text": "Neither approach, because the guide says bug fixes must always be written entirely by hand.",
+          "correct": false,
+          "why_wrong": "The guide lists features, bug fixes and scripts as vibe coding's best fit."
+        }
+      ],
+      "explanation": "Vibe coding is one human plus one AI, conversational, sequential, with the human keeping full context, low overhead and a fast start. It is best for focused tasks such as features, bug fixes and scripts. Swarm prototyping has higher overhead and is best for exploration and scale.",
+      "key_takeaway": "Focused, well-understood tasks such as bug fixes → vibe coding (low overhead, full context).",
+      "doc_links": [
+        {
+          "label": "Parallel Sessions with Git Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-18",
+      "section": "Tools & Ecosystem",
+      "guide_anchor": "section-6",
+      "question": "A developer who lives in the terminal wants an open-source AI pair programmer that works directly on git-tracked projects. Which tool from the guide's list fits best?",
+      "options": [
+        {
+          "text": "Replit Agent, the full-stack agent that builds and deploys apps from prompts.",
+          "correct": false,
+          "why_wrong": "The guide describes Replit Agent as a full-stack build-and-deploy agent, not an open-source CLI pair programmer."
+        },
+        {
+          "text": "Aider, an open-source CLI pair programmer for git-tracked projects.",
+          "correct": true
+        },
+        {
+          "text": "Cursor, the AI-native IDE with inline chat, auto-complete and multi-file context.",
+          "correct": false,
+          "why_wrong": "Cursor is an IDE, and the guide does not describe it as an open-source CLI tool."
+        },
+        {
+          "text": "Windsurf, the AI IDE that runs 'Cascade' flows for multi-step coding tasks.",
+          "correct": false,
+          "why_wrong": "Windsurf is an AI IDE. The guide gives the open-source CLI role for git-tracked projects to Aider."
+        }
+      ],
+      "explanation": "Among the guide's vibe coding tools, Aider is the open-source CLI pair programmer for git-tracked projects. Cursor and Windsurf are AI IDEs, GitHub Copilot provides inline suggestions in editors, Claude Code is an agentic command-line assistant, Gemini Code Assist is Google's assistant, and Replit Agent builds and deploys full-stack apps.",
+      "key_takeaway": "Open-source, terminal-based pair programming on git repos → Aider (per the guide's tool list).",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Antigravity Surfaces & Features",
+          "url": "https://antigravity.google/docs/features"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-19",
+      "section": "Tools & Ecosystem",
+      "guide_anchor": "section-6",
+      "question": "A research team wants a multi-agent framework in which agents play software-company roles such as product manager, architect and engineer. Which framework from the guide matches?",
+      "options": [
+        {
+          "text": "LangGraph, the graph-based agent orchestration framework with state management.",
+          "correct": false,
+          "why_wrong": "The guide describes LangGraph as graph-based orchestration with state management, not as a simulated software company."
+        },
+        {
+          "text": "OpenAI Swarm, the lightweight framework for multi-agent orchestration and handoffs.",
+          "correct": false,
+          "why_wrong": "The guide characterizes OpenAI Swarm as lightweight orchestration and handoffs, without company roles."
+        },
+        {
+          "text": "MetaGPT, which simulates a software company with PM, architect and engineer agents.",
+          "correct": true
+        },
+        {
+          "text": "Amazon Bedrock Agents, AWS's managed service for multi-step agent orchestration.",
+          "correct": false,
+          "why_wrong": "The guide lists Bedrock Agents as a managed orchestration service, not as a role-simulation framework."
+        }
+      ],
+      "explanation": "The guide's multi-agent frameworks: OpenAI Swarm (lightweight orchestration and handoffs), CrewAI (role-based agents with structured workflows), AutoGen (multi-agent conversations), LangGraph (graph-based, stateful), MetaGPT (simulates a software company: PM, architect, engineer), Vertex AI Agent Builder and Amazon Bedrock Agents (managed platforms).",
+      "key_takeaway": "Simulated software-company roles (PM, architect, engineer) → MetaGPT in the guide's framework list.",
+      "doc_links": [
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "Antigravity Surfaces & Features",
+          "url": "https://antigravity.google/docs/features"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-20",
+      "section": "Risks, Limitations & Best Practices",
+      "guide_anchor": "section-7",
+      "question": "AI-generated code passes local review, but the CI build fails because it calls a library method that does not exist in any released version. Which risk is this, and which checklist item would have caught it?",
+      "options": [
+        {
+          "text": "Skill atrophy, which the checklist addresses by having developers rewrite the module by hand.",
+          "correct": false,
+          "why_wrong": "Skill atrophy is the long-term erosion of skills. Calling a method that doesn't exist is the 'hallucinated APIs' risk."
+        },
+        {
+          "text": "Context window overflow, caught by asking the AI to shorten its answers so that everything fits within the model's limits.",
+          "correct": false,
+          "why_wrong": "Context overflow causes incoherent output on large projects. Inventing a method is a hallucinated API, and dependency verification catches it."
+        },
+        {
+          "text": "Hallucinated APIs, caught by verifying that every imported library and API exists at the correct version.",
+          "correct": true
+        },
+        {
+          "text": "Licensing risk, caught by checking whether the snippet came from a copyleft-licensed source.",
+          "correct": false,
+          "why_wrong": "A licensing check deals with copyleft code. It does not confirm that the APIs exist."
+        }
+      ],
+      "explanation": "The guide lists 'Hallucinated APIs' (the AI invents function calls or library methods that don't exist) as a risk. Its production-readiness checklist includes 'Dependencies verified: all imported libraries/APIs actually exist and are correct versions'.",
+      "key_takeaway": "Invented methods are hallucinated APIs. Verify that every dependency and API exists at the correct version.",
+      "doc_links": [
+        {
+          "label": "Claude Code Sandboxed Bash",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-21",
+      "section": "Risks, Limitations & Best Practices",
+      "guide_anchor": "section-7",
+      "question": "A junior developer has shipped several AI-generated modules that work, but cannot explain, debug or extend any of them when a change request arrives. Which anti-pattern is this, and which best practice counters it?",
+      "options": [
+        {
+          "text": "Cargo cult coding; counter it by reading every line of generated code before committing and treating output as a draft.",
+          "correct": true
+        },
+        {
+          "text": "Hidden technical debt; counter it by switching to Full Autopilot so the AI can maintain its own code.",
+          "correct": false,
+          "why_wrong": "Moving further toward autopilot makes the debt and the lack of understanding worse, not better."
+        },
+        {
+          "text": "Security blind spots; counter it by running DAST once a year on the production environment.",
+          "correct": false,
+          "why_wrong": "The problem is a lack of understanding, not a particular vulnerability, and the guide recommends scanning all AI-generated code, not an annual pass."
+        },
+        {
+          "text": "Context window overflow; counter it by splitting each module into smaller prompts.",
+          "correct": false,
+          "why_wrong": "Context overflow concerns AI context limits. The developer's inability to debug the code is cargo cult coding."
+        }
+      ],
+      "explanation": "In the guide, 'Cargo Cult Coding' means accepting AI output without understanding it: the code works, but you cannot debug or extend it. The matching best practice is 'Always Review': read every line of generated code before committing and treat AI output as a draft.",
+      "key_takeaway": "Working code you can't debug is cargo cult coding. Always review every line and treat AI output as a draft.",
+      "doc_links": [
+        {
+          "label": "Claude Code Sandboxed Bash",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-22",
+      "section": "Risks, Limitations & Best Practices",
+      "guide_anchor": "section-7",
+      "question": "An AI-built checkout flow passes every demo, but in production it double-charges customers whose cards cross a currency boundary. Which danger does the guide name, and what question should reviewers always ask?",
+      "options": [
+        {
+          "text": "Skill atrophy; reviewers should ask, 'Could we have written this code without AI help?'",
+          "correct": false,
+          "why_wrong": "Skill atrophy is about eroding skills, not about code that looks correct but hides edge-case failures."
+        },
+        {
+          "text": "The 'It Works' trap; reviewers should ask, 'Does it work, or does it only seem to work?'",
+          "correct": true
+        },
+        {
+          "text": "Context window overflow; reviewers should ask, 'Did the prompt fit in the model's context, or was some of it cut off?'",
+          "correct": false,
+          "why_wrong": "The failure here is a hidden edge case in code that appeared to work, which is the 'It Works' trap."
+        },
+        {
+          "text": "Hallucinated APIs; reviewers should ask, 'Does each library this code imports actually exist?'",
+          "correct": false,
+          "why_wrong": "Nothing in the scenario points to an invented API. The issue is a subtle logic error at an edge case."
+        }
+      ],
+      "explanation": "The guide calls the 'It Works' trap the most dangerous outcome of vibe coding: code that appears to work perfectly but contains subtle logic errors, edge-case failures or security vulnerabilities that only show up in production. Always ask: 'Does it work, or does it seem to work?'",
+      "key_takeaway": "Beware the 'It Works' trap. Always ask whether AI code really works or only seems to, especially at edge cases.",
+      "doc_links": [
+        {
+          "label": "Claude Code Sandboxed Bash",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-23",
+      "section": "Risks, Limitations & Best Practices",
+      "guide_anchor": "section-7",
+      "question": "An AI-generated reporting service returns correct results in unit tests but becomes unusably slow under peak traffic. Which production-readiness checklist item addresses this?",
+      "options": [
+        {
+          "text": "Licensing verified, because slow code usually comes from copied copyleft snippets.",
+          "correct": false,
+          "why_wrong": "Licensing checks deal with copyleft provenance, not runtime performance."
+        },
+        {
+          "text": "Architecture documented, since slowness is always caused by missing documentation.",
+          "correct": false,
+          "why_wrong": "Documentation keeps the code maintainable. It does not measure behaviour under load."
+        },
+        {
+          "text": "Performance tested under expected load, because AI often optimizes for correctness rather than performance.",
+          "correct": true
+        },
+        {
+          "text": "Security scan (SAST) run on all generated code, since slow responses are usually a sign of injection vectors.",
+          "correct": false,
+          "why_wrong": "SAST finds security flaws such as hardcoded secrets or injection. It does not test throughput under load."
+        }
+      ],
+      "explanation": "The checklist includes: every line read and understood, unit tests on critical paths, SAST run, dependencies verified, architecture documented, performance tested under expected load (because AI often optimizes for correctness, not performance), and licensing verified.",
+      "key_takeaway": "AI code tends to optimize for correctness, so load-test it before calling it production-ready.",
+      "doc_links": [
+        {
+          "label": "Claude Code Sandboxed Bash",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-24",
+      "section": "Key Takeaways & Self-Assessment",
+      "guide_anchor": "section-10",
+      "question": "A CTO is writing a one-line principle on how human engineers relate to AI-generated code across both vibe coding and swarm prototyping. Which statement matches the guide's closing takeaway?",
+      "options": [
+        {
+          "text": "Humans should stop reviewing AI code once the tests pass, because the tests become the only quality gate.",
+          "correct": false,
+          "why_wrong": "The guide says to always review, test and secure. Tests alone do not replace human review."
+        },
+        {
+          "text": "The human shifts from writer to architect, reviewer and quality gate, and always reviews, tests and secures AI code.",
+          "correct": true
+        },
+        {
+          "text": "Humans should leave architecture to the orchestrator agent and only check the code style of the final output.",
+          "correct": false,
+          "why_wrong": "The guide keeps the human as architect. It does not hand that role to an agent."
+        },
+        {
+          "text": "The human's role stays unchanged, because AI tools are only autocomplete aids.",
+          "correct": false,
+          "why_wrong": "The guide describes a clear role shift from writer to architect, reviewer and quality gate."
+        }
+      ],
+      "explanation": "The guide's final takeaway: always review, test and secure AI-generated code. The human role shifts from writer to architect, reviewer and quality gate, whether you are vibe coding with one assistant or orchestrating a swarm.",
+      "key_takeaway": "Always review, test and secure AI code. The human moves from writer to architect, reviewer and quality gate.",
+      "doc_links": [
+        {
+          "label": "Claude Code Best Practices",
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-25",
+      "section": "Secure Coding Sandboxes: Antigravity, Cloud Workstations & GKE",
+      "guide_anchor": "section-8",
+      "question": "A security architect notices developers selecting the \"Full machine\" preset in the Google Antigravity desktop app and assuming shell commands are automatically blocked from reading `.env` secrets or making arbitrary outbound HTTP calls. How should the architect correct their configuration?",
+      "options": [
+        {
+          "text": "Enable `enableTerminalSandbox` explicitly and add `.env` / egress `Deny` rules (`Deny > Ask > Allow`).",
+          "correct": true
+        },
+        {
+          "text": "Keep defaults unchanged because every Antigravity desktop preset enables OS Seatbelt sandboxing automatically without configuration.",
+          "correct": false,
+          "why_wrong": "In Antigravity App Secure-Mode presets (including \"Full machine\"), Terminal Sandbox is off by default until explicitly enabled, whereas CLI `auto` mode enables `--sandbox` automatically."
+        },
+        {
+          "text": "Add an `Allow` rule for the project folder only, because `Allow` rules override `Deny` rules whenever paths overlap.",
+          "correct": false,
+          "why_wrong": "Permission evaluation strictly follows `Deny > Ask > Allow`, so `Allow` never overrides `Deny` and does not enable OS process sandboxing by itself."
+        },
+        {
+          "text": "Move all local terminal commands onto Agent Substrate on GKE, which acts as a laptop Seatbelt replacement for desktop IDEs.",
+          "correct": false,
+          "why_wrong": "Agent Substrate on GKE is a distributed stateful actor framework on Kubernetes, not a local desktop terminal sandbox."
+        }
+      ],
+      "explanation": "In Google Antigravity, Terminal Sandbox (`enableTerminalSandbox`) is off by default in desktop App presets (whereas CLI `auto` mode auto-enables `--sandbox`). Enabling it activates OS-level Seatbelt/`bubblewrap` confinement blocking `.env` reads and unauthorized network egress, with permission precedence strictly following `Deny > Ask > Allow`.",
+      "key_takeaway": "Antigravity App presets leave Terminal Sandbox off by default; enable it explicitly and rely on `Deny > Ask > Allow` precedence.",
+      "doc_links": [
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-26",
+      "section": "Secure Coding Sandboxes: Antigravity, Cloud Workstations & GKE",
+      "guide_anchor": "section-8",
+      "question": "During a Tournament swarm run, four coding subagents execute concurrently inside the same local repository directory and repeatedly fail with `.git/index.lock` errors and overwritten uncommitted edits. What is the cleanest fix?",
+      "options": [
+        {
+          "text": "Force the four agents to share one working tree and add random `sleep` delays between file writes in their system prompts.",
+          "correct": false,
+          "why_wrong": "Random sleeps neither prevent Git index race conditions nor isolate conflicting edits across competing implementations."
+        },
+        {
+          "text": "Spawn each agent in an isolated Git worktree using `Workspace=\"branch\"` (Antigravity) or `claude --worktree` (`-w`).",
+          "correct": true
+        },
+        {
+          "text": "Delete the `.git` directory before launching the swarm and manually copy files back into version control afterward.",
+          "correct": false,
+          "why_wrong": "Deleting `.git` destroys branch history, diffing, and safe rollback while still allowing concurrent agents to overwrite the same files."
+        },
+        {
+          "text": "Switch from Tournament to Full Autopilot mode so a single unreviewed prompt writes every variant into one file.",
+          "correct": false,
+          "why_wrong": "Collapsing competing implementations into one unreviewed file abandons isolated multi-agent evaluation and increases regression risk."
+        }
+      ],
+      "explanation": "Parallel coding subagents must never mutate the same working directory concurrently. Using `Workspace=\"branch\"` in Antigravity or `claude --worktree` (`-w`) in Claude Code gives every subagent an isolated Git worktree and branch while sharing the underlying object store.",
+      "key_takeaway": "Isolate parallel coding agents with Git worktrees (`Workspace=\"branch\"` or `claude -w`) to eliminate `.git/index.lock` collisions.",
+      "doc_links": [
+        {
+          "label": "Claude Code Common Workflows — Worktrees",
+          "url": "https://code.claude.com/docs/en/common-workflows"
+        },
+        {
+          "label": "Google Antigravity Subagents",
+          "url": "https://antigravity.google/docs/overview"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-27",
+      "section": "Secure Coding Sandboxes: Antigravity, Cloud Workstations & GKE",
+      "guide_anchor": "section-8",
+      "question": "A regulated bank mandates zero source code on laptops, zero internet data exfiltration, and cost-efficient VMs that still allow 90-minute autonomous agent test runs to finish after a developer closes their browser tab. Which Cloud Workstations design meets all three requirements?",
+      "options": [
+        {
+          "text": "Assign public IPs with firewall tags and disable workstation idle timeouts globally so VMs run 24/7 without interruption.",
+          "correct": false,
+          "why_wrong": "Public IPs violate strict exfiltration posture, and disabling idle timeouts wastes 24/7 compute spend when no agent task is active."
+        },
+        {
+          "text": "Use a Private PSC cluster inside VPC-SC with no public IPs, `idleAction=SUSPEND`, and `/google/scripts/keep_alive.sh` during active runs.",
+          "correct": true
+        },
+        {
+          "text": "Clone repositories onto developer laptops with disk encryption and sync build logs to Cloud Storage over the public internet.",
+          "correct": false,
+          "why_wrong": "Cloning onto laptops violates the zero-local-source mandate and bypasses VPC Service Controls."
+        },
+        {
+          "text": "Set a 5-minute `STOP` timeout with no keep-alive script so long-running agent builds restart from scratch each morning.",
+          "correct": false,
+          "why_wrong": "A 5-minute stop timeout without `keep_alive.sh` terminates 90-minute autonomous test runs mid-execution."
+        }
+      ],
+      "explanation": "Deploying Cloud Workstations on a private PSC cluster with public IPs disabled inside a VPC Service Controls perimeter blocks data exfiltration and keeps code off laptops. Pairing `idleAction=SUSPEND` with `/google/scripts/keep_alive.sh` invoked only during active agent jobs keeps 90-minute runs alive while suspending idle VMs.",
+      "key_takeaway": "Combine private Cloud Workstations + VPC-SC with `idleAction=SUSPEND` and `/google/scripts/keep_alive.sh` for secure, cost-aware agent builds.",
+      "doc_links": [
+        {
+          "label": "Cloud Workstations Architecture",
+          "url": "https://cloud.google.com/workstations/docs/architecture"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-28",
+      "section": "Secure Coding Sandboxes: Antigravity, Cloud Workstations & GKE",
+      "guide_anchor": "section-8",
+      "question": "An enterprise platform team wants developers on Cloud Workstations to use Claude Code under Google Cloud IAM, Cloud Audit Logs, CMEK, and VPC Service Controls without issuing static Anthropic API keys. Which configuration should they enforce?",
+      "options": [
+        {
+          "text": "Set `CLAUDE_CODE_USE_VERTEX=1` with Sandboxed Bash enabled so requests authenticate via Vertex AI IAM inside VPC-SC.",
+          "correct": true
+        },
+        {
+          "text": "Store a shared static `ANTHROPIC_API_KEY` inside each repository's `.env` file and commit it for team convenience.",
+          "correct": false,
+          "why_wrong": "Committing static third-party API keys violates secret-hygiene rules and bypasses Vertex AI IAM, CMEK, and VPC-SC."
+        },
+        {
+          "text": "Open an outbound NAT proxy to `api.anthropic.com` and disable Cloud Audit Logs to avoid logging prompt metadata.",
+          "correct": false,
+          "why_wrong": "Direct external egress bypasses VPC-SC and Google Cloud IAM/CMEK governance."
+        },
+        {
+          "text": "Run Claude Code with `--dangerously-skip-permissions` on developer laptops authenticated with personal consumer accounts.",
+          "correct": false,
+          "why_wrong": "Skipping permission checks on consumer accounts removes both sandbox safety and enterprise cloud governance."
+        }
+      ],
+      "explanation": "Setting `CLAUDE_CODE_USE_VERTEX=1` routes Claude Code traffic through Vertex AI endpoints governed by Google Cloud IAM, VPC Service Controls, CMEK, and Cloud Audit Logs—eliminating static Anthropic API keys while preserving local Sandboxed Bash protection.",
+      "key_takeaway": "Use `CLAUDE_CODE_USE_VERTEX=1` on Cloud Workstations to govern Claude Code with Vertex AI IAM, CMEK, and VPC-SC.",
+      "doc_links": [
+        {
+          "label": "Claude Code on Google Vertex AI",
+          "url": "https://code.claude.com/docs/en/google-vertex-ai"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-29",
+      "section": "Secure Coding Sandboxes: Antigravity, Cloud Workstations & GKE",
+      "guide_anchor": "section-8",
+      "question": "A SaaS platform's production agent compiles and executes untrusted customer-prompted code requiring custom C++ system libraries, private VPC database mocks, kernel-level multi-tenant isolation, and `<1s` startup latency. Which Google Cloud runtime is purpose-built for this workload?",
+      "options": [
+        {
+          "text": "Agent Platform Managed Code Execution, because it supports arbitrary custom C++ Docker images and private VPC peering.",
+          "correct": false,
+          "why_wrong": "Managed Code Execution is a zero-ops Python sandbox (14-day state) that does not run arbitrary custom C++ containers inside your private VPC."
+        },
+        {
+          "text": "Agent Substrate on GKE alone without sandboxing, because distributed actor runtimes automatically provide kernel isolation.",
+          "correct": false,
+          "why_wrong": "Agent Substrate on GKE orchestrates stateful distributed actors; it is not a kernel sandbox for untrusted generated code."
+        },
+        {
+          "text": "Agent Sandbox on GKE with gVisor `SandboxTemplate`, `SandboxWarmPool`, and admission policies blocking `hostNetwork`/`hostPath`.",
+          "correct": true
+        },
+        {
+          "text": "Standard GKE privileged pods mounting the node's Docker socket (`hostPath`) so containers build as fast as possible.",
+          "correct": false,
+          "why_wrong": "Privileged pods or `hostPath` mounts allow trivial container escape from untrusted LLM-generated code."
+        }
+      ],
+      "explanation": "Agent Sandbox on GKE isolates each untrusted execution inside a gVisor user-space kernel pod (`Sandbox`/`SandboxClaim`/`SandboxTemplate`), achieves sub-second claim latency via `SandboxWarmPool`, supports custom container images inside your VPC, and blocks `hostNetwork`/`hostPath` via Validating Admission Policy.",
+      "key_takeaway": "Choose Agent Sandbox on GKE (`gVisor` + `SandboxWarmPool`) for sub-second, multi-tenant execution of untrusted code with custom images.",
+      "doc_links": [
+        {
+          "label": "GKE gVisor & Agent Sandbox Overview",
+          "url": "https://cloud.google.com/kubernetes-engine/docs/how-to/sandbox-pods"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-30",
+      "section": "Autonomous Vulnerability Remediation: CodeMender & AI Threat Defense",
+      "guide_anchor": "section-9",
+      "question": "In Google AI Threat Defense (`Prepare -> Scan & Prioritize -> Remediate -> Monitor`), how do Wiz Security Graph and CodeMender collaborate across Stages 2 and 3?",
+      "options": [
+        {
+          "text": "Wiz ranks findings by real cloud exposure in Stage 2, and CodeMender verifies and patches top risks in Stage 3.",
+          "correct": true
+        },
+        {
+          "text": "CodeMender configures VPC firewalls in Stage 1, while Wiz auto-merges unreviewed code patches directly into `main` in Stage 4.",
+          "correct": false,
+          "why_wrong": "Wiz provides cloud-to-code exposure prioritization in Stage 2, and CodeMender opens verified PRs for human review in Stage 3—never unreviewed auto-merges."
+        },
+        {
+          "text": "Wiz replaces Cloud Audit Logs in Stage 4, while CodeMender only scans prompt-injection logs at inference time.",
+          "correct": false,
+          "why_wrong": "Stage 4 runtime monitoring uses Cloud Audit Logs (`is_agentic=true`), SCC Threat Detection, and Model Armor, whereas CodeMender patches source vulnerabilities."
+        },
+        {
+          "text": "CodeMender rejects all external scanner findings, forcing teams to discard Wiz and SAST reports before remediation.",
+          "correct": false,
+          "why_wrong": "CodeMender natively imports external SAST and Wiz findings via `cm report import`."
+        }
+      ],
+      "explanation": "Google AI Threat Defense follows four stages: 1) Prepare, 2) Scan & Prioritize (combining SAST with Wiz Security Graph and Security Command Center to prioritize vulnerabilities reachable from the internet or privileged IAM paths), 3) Remediate (CodeMender PoC verification and root-cause PR generation), and 4) Monitor.",
+      "key_takeaway": "AI Threat Defense pairs Stage 2 Wiz cloud-exposure prioritization with Stage 3 CodeMender PoC-verified remediation.",
+      "doc_links": [
+        {
+          "label": "Security Command Center Overview",
+          "url": "https://cloud.google.com/security-command-center/docs/concepts-security-command-center-overview"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-31",
+      "section": "Autonomous Vulnerability Remediation: CodeMender & AI Threat Defense",
+      "guide_anchor": "section-9",
+      "question": "An AppSec team's third-party SAST tool flags 400 potential vulnerabilities per release, ~65% of which are false positives that stall developers. Which CodeMender workflow filters out false positives without throwing away existing SAST investments?",
+      "options": [
+        {
+          "text": "Disable the SAST tool completely because CodeMender can only remediate vulnerabilities discovered by `cm find`.",
+          "correct": false,
+          "why_wrong": "CodeMender is not restricted to `cm find`; `cm report import` ingests external SAST SARIF findings directly."
+        },
+        {
+          "text": "Run `cm report import` on the SAST output, then run `cm verify --sandbox` to confirm exploitability with a real PoC.",
+          "correct": true
+        },
+        {
+          "text": "Pipe all 400 unverified SAST alerts straight into `git commit --amend` on `main` without compiling or running tests.",
+          "correct": false,
+          "why_wrong": "Blindly patching unverified alerts introduces regressions and violates CodeMender's verification and human-PR safeguards."
+        },
+        {
+          "text": "Ask a zero-temperature LLM to guess whether each SAST alert looks plausible from the filename alone.",
+          "correct": false,
+          "why_wrong": "Filename heuristics cannot prove exploitability; `cm verify` compiles and executes an actual PoC exploit inside a sandbox."
+        }
+      ],
+      "explanation": "CodeMender's `cm report import` ingests third-party SAST/Wiz findings, and `cm verify --sandbox` synthesizes, compiles, and executes a concrete Proof-of-Concept (PoC) exploit locally inside a process sandbox—escalating only confirmed exploitable vulnerabilities to `cm fix`.",
+      "key_takeaway": "Use `cm report import` + `cm verify --sandbox` to turn noisy external SAST alerts into PoC-confirmed vulnerabilities.",
+      "doc_links": [
+        {
+          "label": "Google DeepMind CodeMender Research",
+          "url": "https://deepmind.google/discover/blog/"
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding-q-32",
+      "section": "Autonomous Vulnerability Remediation: CodeMender & AI Threat Defense",
+      "guide_anchor": "section-9",
+      "question": "Before CodeMender opens a pull request via `cm fix`, which multi-gate validation sequence ensures the patch resolves the underlying flaw safely?",
+      "options": [
+        {
+          "text": "Root-cause patch neutralizes the PoC exploit, passes the test suite, clears an LLM critic, and awaits human PR review.",
+          "correct": true
+        },
+        {
+          "text": "A single-line try/catch suppresses the crash and CodeMender merges directly to production without running unit tests.",
+          "correct": false,
+          "why_wrong": "CodeMender targets root causes rather than superficial crash suppression, runs the full test suite, and never bypasses human PR review."
+        },
+        {
+          "text": "The entire private repository is uploaded permanently to a public GitHub gist so external crowdsourced reviewers can test it.",
+          "correct": false,
+          "why_wrong": "CodeMender uses a hybrid architecture where builds, tests, and PoCs run locally via the `cm` client, keeping repository execution inside your environment."
+        },
+        {
+          "text": "Only syntax linting (`ruff`/`eslint`) runs on the modified line, skipping PoC re-execution to save compute time.",
+          "correct": false,
+          "why_wrong": "Linting alone cannot confirm the vulnerability is neutralized; `cm fix` re-runs the PoC exploit, regression tests, and an LLM-as-judge critic."
+        }
+      ],
+      "explanation": "When `cm fix` generates a multi-file root-cause fix inside its local sandbox, it re-executes the PoC exploit to verify neutralization, runs existing unit/regression tests, evaluates patch quality with an LLM-as-judge critic, and submits a pull request for mandatory human sign-off.",
+      "key_takeaway": "`cm fix` enforces four gates—PoC neutralization, test suite pass, LLM critic, and mandatory human PR review.",
+      "doc_links": [
+        {
+          "label": "Google DeepMind CodeMender Research",
+          "url": "https://deepmind.google/discover/blog/"
+        }
+      ]
+    }
+  ]
+}
+
