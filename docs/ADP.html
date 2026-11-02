@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HHVBBMHMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1HHVBBMHMS');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Design Patterns (ADP): Study Guide | ML Cert Hub</title>
+    <meta name="description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
+    <meta name="keywords" content="Agentic Design Patterns, ADP, AI Agents, Workflows vs Agents, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, ReAct, Plan-and-Execute, ReWOO, LLMCompiler, Context Rot, HandoffContract, Poka-Yoke, ACI, Michael Bettan, Michaël Bettan">
+    <meta name="author" content="Michaël Bettan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#080B12">
+
+    <link rel="canonical" href="https://mbettan.github.io/machine-learning-cert/ADP.html">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms.txt" title="LLM Summary">
+    <link rel="alternate" type="text/plain" href="https://mbettan.github.io/machine-learning-cert/llms-full.txt" title="LLM Full Reference">
+    <link rel="sitemap" type="application/xml" href="https://mbettan.github.io/machine-learning-cert/sitemap.xml">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Machine Learning Certification Hub">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Agentic Design Patterns (ADP): Study Guide | ML Cert Hub">
+    <meta property="og:description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
+    <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/ADP.html">
+    <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Agentic Design Patterns (ADP) — Study Guide by Michaël Bettan">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Agentic Design Patterns (ADP): Study Guide | ML Cert Hub">
+    <meta name="twitter:description" content="Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory &amp; context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.">
+    <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
+    <meta name="twitter:image:alt" content="Agentic Design Patterns (ADP) — Study Guide by Michaël Bettan">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .diagram-figure {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 24px;
+        }
+        .diagram-figure svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@graph": [
+            {
+                  "@type": [
+                        "TechArticle",
+                        "LearningResource"
+                  ],
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ADP.html#article",
+                  "headline": "Agentic Design Patterns (ADP): Study Guide | ML Cert Hub",
+                  "name": "Agentic Design Patterns (ADP) Study Guide",
+                  "description": "Vendor-neutral Agentic Design Patterns (ADP) study guide: the 4-Decision Sequence, 3-Bucket Work Decomposition, 5-Factor Pattern Matrix, 5 canonical workflow patterns, ReAct vs. Plan-and-Execute, 4-tier memory & context engineering, multi-agent topologies, HandoffContract schemas, and production failure modes.",
+                  "keywords": "Agentic Design Patterns, ADP, AI Agents, Workflows vs Agents, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, ReAct, Plan-and-Execute, ReWOO, LLMCompiler, Context Rot, HandoffContract, Poka-Yoke, ACI, Michael Bettan, Michaël Bettan",
+                  "url": "https://mbettan.github.io/machine-learning-cert/ADP.html",
+                  "inLanguage": "en",
+                  "dateModified": "2026-11-01",
+                  "learningResourceType": "Study Guide",
+                  "educationalLevel": "Advanced",
+                  "author": {
+                        "@type": "Person",
+                        "@id": "https://github.com/mbettan#person",
+                        "name": "Michaël Bettan",
+                        "url": "https://github.com/mbettan"
+                  },
+                  "isPartOf": {
+                        "@type": "WebSite",
+                        "@id": "https://mbettan.github.io/machine-learning-cert/#website",
+                        "name": "Machine Learning Certification Hub",
+                        "url": "https://mbettan.github.io/machine-learning-cert/"
+                  },
+                  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                  "image": "https://mbettan.github.io/machine-learning-cert/og-image.jpg"
+            },
+            {
+                  "@type": "BreadcrumbList",
+                  "@id": "https://mbettan.github.io/machine-learning-cert/ADP.html#breadcrumb",
+                  "itemListElement": [
+                        {
+                              "@type": "ListItem",
+                              "position": 1,
+                              "name": "ML Certification Hub",
+                              "item": "https://mbettan.github.io/machine-learning-cert/"
+                        },
+                        {
+                              "@type": "ListItem",
+                              "position": 2,
+                              "name": "Agentic Design Patterns (ADP)",
+                              "item": "https://mbettan.github.io/machine-learning-cert/ADP.html"
+                        }
+                  ]
+            }
+      ]
+}
+    </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/ADP.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════════
+             COVER / HERO
+             ═══════════════════════════════════════ -->
+        <section class="cover" id="top">
+            <div class="cover-grid"></div>
+            <div class="cover-content">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                    <div class="cover-eyebrow" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Hub</span>
+                    </div>
+                </a>
+                <div class="cover-eyebrow" style="margin-left: 8px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Certification Study Notes</span>
+                </div>
+                <h1>Agentic Design <em>Patterns (ADP)</em></h1>
+                <p class="cover-subtitle">Vendor-neutral architectural guide for designing reliable AI systems: the 4-Decision Sequence, 3-Bucket Work Decomposition (Deterministic Code vs. Probabilistic LLM vs. HITL), the 5-Factor Pattern Selection Matrix, the 5 canonical workflow patterns, autonomous reasoning loops (ReAct, Plan-and-Execute, Reflection), 4-tier memory &amp; context compaction, multi-agent topologies &amp; typed <code>HandoffContract</code> schemas, and production failure modes.</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Author: <strong>Michaël Bettan</strong></span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Track: <strong>Google Cloud &amp; Anthropic / Applied AI Architect</strong></span>
+                    </div>
+                </div>
+                <a href="quiz.html?topic=adp" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Agentic Design Patterns Practice Quiz →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             TABLE OF CONTENTS
+             ═══════════════════════════════════════ -->
+        <nav class="toc">
+            <div class="toc-header">
+                <i class="fas fa-list-ol"></i>
+                <h2>Table of Contents</h2>
+            </div>
+            <div class="toc-columns">
+                <a href="#overview" class="toc-item">
+                    <span class="toc-number">00</span>
+                    <span>Overview &amp; Mental Model</span>
+                </a>
+                <a href="#triage-decomposition" class="toc-item">
+                    <span class="toc-number">01</span>
+                    <span>Architectural Triage &amp; 4-Decision Sequence</span>
+                </a>
+                <a href="#work-shape-matrix" class="toc-item">
+                    <span class="toc-number">02</span>
+                    <span>Work-Shape Spectrum &amp; 5-Factor Matrix</span>
+                </a>
+                <a href="#workflow-patterns" class="toc-item">
+                    <span class="toc-number">03</span>
+                    <span>The 5 Canonical Workflow Patterns</span>
+                </a>
+                <a href="#agent-primitives" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Autonomous Agent Primitives &amp; Loops</span>
+                </a>
+                <a href="#memory-context" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>Memory Architecture &amp; Context Budget</span>
+                </a>
+                <a href="#multi-agent-topologies" class="toc-item">
+                    <span class="toc-number">06</span>
+                    <span>Multi-Agent Topologies &amp; Handoffs</span>
+                </a>
+                <a href="#anti-patterns-checklist" class="toc-item">
+                    <span class="toc-number">07</span>
+                    <span>Anti-Patterns, Failure Modes &amp; Checklist</span>
+                </a>
+                <a href="#resources" class="toc-item">
+                    <span class="toc-number">08</span>
+                    <span>Glossary, Self-Assessment &amp; Practice Quiz</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 00: OVERVIEW
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="overview">
+            <div class="section-divider-number">00</div>
+            <h2>Overview &amp; Mental Model</h2>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-compass-drafting"></i></div>Definition</h3>
+                <p><strong>Agentic design patterns</strong> are reusable, framework-agnostic architectural blueprints that govern how an LLM-based system decomposes work, selects control flow, invokes tools, manages context memory, coordinates across specialized workers, and defers high-stakes decisions to deterministic code or human reviewers. They apply identically across Google ADK, the Claude Agent SDK, LangGraph, or direct model API loops.</p>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>What patterns solve for</h3>
+                <p>A raw language model is a stateless, probabilistic token predictor—it can <em>propose</em> an action, but it cannot <em>execute</em> tools, enforce hard business invariants, persist session state, or halt a runaway loop. Architectural patterns define <strong>who owns the control flow</strong> (deterministic code vs. dynamic model reasoning), <strong>where authority sits</strong> (code gates vs. model judgment vs. human sign-off), and <strong>how context stays clean</strong> as tasks scale.</p>
+            </div>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Rule 0 — The Simplicity Ladder</h4>
+                <p>The model is the <strong>probabilistic reasoning engine</strong>; the architecture is the <strong>deterministic harness</strong> (nervous system, brakes, and safety interlocks). <strong>Start with the simplest architecture that passes your evaluation suite:</strong> climb from deterministic code → a single augmented LLM call → a predefined workflow → an autonomous agent <strong>only when empirical evaluations prove the simpler tier fails.</strong></p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Layer</th><th>Control Owner</th><th>Role &amp; Runtime Behavior</th><th>Memory Hook</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Raw LLM</strong></td><td>Caller (1 turn)</td><td>Stateless token predictor; reasons over prompt context and emits text or structured tool requests, but never executes code.</td><td><em>"Brain in a jar"</em></td></tr>
+                    <tr><td><strong>Augmented LLM</strong></td><td>Caller (1 turn + tools)</td><td>Single model call equipped with <strong>Retrieval</strong> (RAG), <strong>Tools</strong> (MCP/functions), and <strong>Memory</strong> (read/write state). Handles most production features.</td><td><em>"LLM with a backpack"</em></td></tr>
+                    <tr><td><strong>Composable Workflow</strong></td><td><strong>Application code</strong></td><td>Multi-step pipeline where LLMs and tools execute along <strong>predefined code paths</strong> with deterministic gates between steps.</td><td><em>"Railway tracks"</em> — train cannot leave the rails</td></tr>
+                    <tr><td><strong>Autonomous Agent</strong></td><td><strong>The model</strong></td><td>LLM dynamically directs its own multi-turn process, choosing which tools to call and when to stop based on environmental ground truth.</td><td><em>"Taxi"</em> — driver picks the route dynamically</td></tr>
+                    <tr><td><strong>Agent Harness / Framework</strong></td><td>Infrastructure</td><td>Runtime layer (ADK, Claude Agent SDK, LangGraph) supplying the event loop, state persistence, sandboxing, callbacks, and observability.</td><td><em>"Chassis, brakes &amp; dashboard"</em></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Classic architectural trap: Workflow vs. Autonomous Agent</h4>
+                <p>Calling an LLM five times in a Python script does <strong>not</strong> make the system an "autonomous agent." If application code dictates the sequence, branching, and retry count, it is a <strong>workflow</strong>. It becomes an <strong>agent</strong> only when the model itself decides the next step and action trajectory at runtime.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 01: ARCHITECTURAL TRIAGE
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="triage-decomposition">
+            <div class="section-divider-number">01</div>
+            <h2>1. Architectural Triage &amp; The 4-Decision Sequence</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Before writing a single system prompt or selecting an agent framework, resolve four sequential architectural decisions. Skipping Decision 1 or 2 is the primary cause of over-engineered, brittle, or unsafe deployments.</p>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Should an LLM be in the loop?</h4>
+                <p>Decompose the business process into the <strong>3-Bucket Matrix</strong> (Deterministic Code vs. Probabilistic LLM vs. Human-in-the-Loop).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>What work shape fits?</h4>
+                <p>Select Single Augmented Call, Composable Workflow, or Autonomous Agent using the <strong>5-Factor Selection Matrix</strong>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Where &amp; how is it routed/hosted?</h4>
+                <p>Assign per-step model tiers and reasoning effort, transport mode (sync, stream, batch), and regional data boundaries.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>What guardrails wrap it?</h4>
+                <p>Enforce pre-LLM epistemic gates, tool-boundary callbacks, schema validators, cold-context critics, and HITL checkpoints.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Bucket</th><th>Execution Engine</th><th>What Belongs Here</th><th>Canonical Examples</th><th>Why Other Buckets Fail</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Bucket 1: Deterministic Code</strong></td><td>Plain application code, SQL, regex, type schemas, policy hooks</td><td>Exact arithmetic, schema validation, RBAC &amp; permission enforcement, idempotency keys, database writes, PII redaction, hard policy gates</td><td>Fee &amp; tax math, date arithmetic, checking <code>amount &lt;= 500</code>, enforcing <code>user_id</code> tenant scoping, verifying cited section headers exist in source text</td><td>LLMs introduce <strong>deterministic drift</strong> (silent tail-risk math or rule violations); humans are too slow and inconsistent at scale</td></tr>
+                    <tr><td><strong>Bucket 2: Probabilistic Model (LLM)</strong></td><td>Augmented LLM, Workflow node, or Agent loop</td><td>Unstructured synthesis, semantic classification, ambiguous entity extraction, fuzzy matching, multi-step planning over open-ended inputs</td><td>Summarizing conflicting legal clauses, triaging free-text support tickets, diagnosing novel stack traces across a codebase, drafting code diffs</td><td>Rigid code/regex shatters on phrasing variations; humans cannot manually read 50,000 documents per hour</td></tr>
+                    <tr><td><strong>Bucket 3: Human-in-the-Loop (HITL)</strong></td><td>Human reviewer via durable approval queue / UI checkpoint</td><td>High-blast-radius irreversible actions, novel policy exceptions, regulated sign-offs, subjective value trade-offs</td><td>Approving a <code>$25,000</code> wire refund, executing a production database drop, granting an exception to legal policy, merging security-critical PRs</td><td>Code lacks contextual judgment for novel exceptions; models cannot bear legal, financial, or ethical accountability</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Preventing Deterministic Drift</h3>
+                <p><strong>Deterministic drift</strong> occurs when a team delegates exact, rule-bound logic—such as calculating pro-rated subscription refunds, enforcing role-based access control (RBAC), checking date eligibility windows, or redacting Social Security Numbers—to a system prompt instead of application code.</p>
+                <ul>
+                    <li><strong>Why it is dangerous:</strong> Even when a frontier model follows a prompt rule on most test cases, probabilistic token sampling guarantees a non-zero tail-risk failure rate—especially under <strong>instruction crowding</strong> (long prompts with 20+ competing rules) or adversarial prompt injection.</li>
+                    <li><strong>The "Deterministic Handcuffs" rule:</strong> Let the LLM extract structured parameters or propose an action, but execute all math, eligibility comparisons, permission checks, and compliance gates in <strong>plain code</strong> (<code>PreToolUse</code> / <code>before_tool_callback</code> hooks, Pydantic validators, or SQL constraints).</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-user-check"></i></div>HITL Checkpoints vs. Programmatic Guardrails</h3>
+                <ul>
+                    <li><strong>Guardrail callbacks (Bucket 1 — milliseconds):</strong> Deterministic pre/post hooks enforcing PII redaction, budget caps, allowlisted paths, and JSON schemas on every turn without human latency.</li>
+                    <li><strong>HITL approval (Bucket 3 — seconds to hours):</strong> Planned pause before an irreversible or regulated action commits. Persist session state so the workflow can pause indefinitely and resume cleanly.</li>
+                    <li><strong>Concrete argument inspection:</strong> Reviewers must inspect and approve concrete tool arguments (<code>issue_refund(order_id="ORD-891", amount_usd=490.00)</code>), never vague model prose.</li>
+                    <li><strong>Avoid approval fatigue:</strong> Gate by risk tier (e.g., auto-approve refunds <code>&lt;= $50</code> in code; require HITL for <code>&gt; $50</code>) so human reviewers do not rubber-stamp alerts.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 02: WORK-SHAPE SPECTRUM & 5-FACTOR MATRIX
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="work-shape-matrix">
+            <div class="section-divider-number">02</div>
+            <h2>2. The Work-Shape Spectrum &amp; 5-Factor Pattern Matrix</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">Once Bucket 2 (the probabilistic slice) is isolated, evaluate five architectural factors to choose between a <strong>Single Augmented LLM Call</strong>, a <strong>Composable Workflow</strong>, and an <strong>Autonomous Agent</strong>.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Selection Factor</th><th>Single Augmented LLM Call</th><th>Composable Workflow (DAG / Chain)</th><th>Autonomous Agent (Open Loop)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Task Path Predictability</strong></td><td><strong>Fully known (1 step):</strong> Input maps directly to output with retrieved context or a single tool lookup.</td><td><strong>Known decomposition (<em>K</em> steps):</strong> Multi-step process where the sequence, branches, or fan-out categories are fixed in advance.</td><td><strong>Unknown / emergent (<em>N</em> steps):</strong> Step <em>N+1</em> depends entirely on what tool observation <em>N</em> revealed (e.g., debugging an unknown bug).</td></tr>
+                    <tr><td><strong>2. Latency Budget</strong></td><td><strong>Sub-second to ~3 s:</strong> Single model roundtrip; ideal for synchronous inline UI responses.</td><td><strong>~3 s to ~15 s:</strong> Predictable bounded latency (<em>K</em> sequential stages or 1 parallel fan-out + join).</td><td><strong>Seconds to minutes+:</strong> Open-ended <em>O(N)</em> sequential turns; requires streaming progress UI or background execution.</td></tr>
+                    <tr><td><strong>3. Error Blast Radius &amp; Reversibility</strong></td><td><strong>Low / read-only:</strong> Output is displayed to a user or validated by caller code before any state mutation.</td><td><strong>Medium / gated:</strong> Intermediate code gates catch bad outputs between stages before downstream side-effects run.</td><td><strong>High if ungated:</strong> Multi-turn tool mutations can compound; requires sandboxing, file checkpoints, and HITL gates on writes.</td></tr>
+                    <tr><td><strong>4. Token Cost Ceiling</strong></td><td><strong>~1× baseline:</strong> Minimal prompt overhead; highest prompt-cache hit ratio.</td><td><strong>~3–5× baseline:</strong> Bounded multiplier across <em>K</em> focused prompts; easy to route cheap tiers to simple nodes.</td><td><strong>~10–15×+ baseline:</strong> Context accumulates across turns and tool outputs; requires strict token/turn caps and compaction.</td></tr>
+                    <tr><td><strong>5. Auditability &amp; Compliance</strong></td><td><strong>High:</strong> Single input/output pair; trivial to log and reproduce.</td><td><strong>Highest for multi-step:</strong> Deterministic transitions and explicit code gate pass/fail logs satisfy strict regulatory audits.</td><td><strong>Complex:</strong> Non-deterministic trajectories require full event-ledger tracing (<code>tool_trajectory</code>) and replay harnesses.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-dice"></i></div>Four Behavioral Properties of Probabilistic Systems</h3>
+            <div class="definition-grid">
+                <div class="definition-item">
+                    <dt>1. Non-determinism</dt>
+                    <dd>Identical prompts can yield different phrasings or tool trajectories across runs (and modern APIs reject non-default sampling knobs or still exhibit floating-point variance). <strong>Mitigation:</strong> Test structured properties and behavioral rubrics, never exact string equality; enforce JSON schemas at the token level.</dd>
+                </div>
+                <div class="definition-item">
+                    <dt>2. Plausible-sounding errors (Hallucinations)</dt>
+                    <dd>Models are trained to complete patterns helpfully. When fed garbled OCR text, an empty string <code>""</code> from a timed-out tool, or a missing policy clause, an unguarded model invents confident facts or fabricated citations. <strong>Mitigation:</strong> Pre-LLM epistemic gates, explicit <code>is_error: true</code> tool results, and grounded citation verification.</dd>
+                </div>
+                <div class="definition-item">
+                    <dt>3. Context sensitivity &amp; instruction crowding</dt>
+                    <dd>Packing 30 rules, 15 irrelevant documents, and 40 tool schemas into one call degrades mid-window recall and causes the model to silently skip late audit rules. <strong>Mitigation:</strong> Split generation from verification, keep tool catalogs <code>&lt;= 16</code> per agent, and isolate noisy exploration in subagents.</dd>
+                </div>
+                <div class="definition-item">
+                    <dt>4. Compounding multi-step error rates</dt>
+                    <dd>If a single autonomous step is 95% reliable, a 10-step unverified chain succeeds only <code>0.95^10 ≈ 60%</code> of the time because an early misread file poisons every subsequent turn. <strong>Mitigation:</strong> Insert <strong>ground-truth environmental feedback</strong> (compilers, unit tests, schema validators, code gates) after every step to reset the error curve.</dd>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 03: THE 5 CANONICAL WORKFLOW PATTERNS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="workflow-patterns">
+            <div class="section-divider-number">03</div>
+            <h2>3. The 5 Canonical Workflow Patterns</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">When a single call falls short due to instruction crowding, multi-stage dependencies, or latency/cost trade-offs—but the control structure can be designed upfront—compose the <strong>five canonical workflow patterns</strong>. In all five, application code owns or bounds the control flow.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>Control Flow Shape</th><th>Primary Optimization</th><th>Canonical Use Case</th><th>Memory Hook</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Prompt Chaining</strong></td><td><code>LLM 1 → [Code Gate] → LLM 2 → LLM 3</code></td><td>Accuracy via focused sub-steps + early fail-fast</td><td>Drafting an outline → verifying structure in code → generating localized report</td><td><em>"Assembly line with quality inspectors"</em></td></tr>
+                    <tr><td><strong>2. Routing</strong></td><td><code>Classifier → Specialist Handler A | B | C</code></td><td>Separation of concerns &amp; per-tier cost optimization</td><td>Directing billing, refund, and tech-support tickets to distinct prompts, tools, and model tiers</td><td><em>"Hospital triage desk"</em></td></tr>
+                    <tr><td><strong>3. Parallelization</strong></td><td><code>Fan-Out (N calls) → Programmatic Aggregator</code></td><td>Wall-clock speed (<em>Sectioning</em>) or high confidence (<em>Voting</em>)</td><td>Running safety screening in parallel with answer generation (<em>Sectioning</em>); multi-prompt code security audit (<em>Voting</em>)</td><td><em>"Sectioning = slice the pizza; Voting = poll 5 judges"</em></td></tr>
+                    <tr><td><strong>4. Orchestrator–Workers</strong></td><td><code>Orchestrator LLM → Dynamic Workers (1..K) → Synthesizer</code></td><td>Runtime task decomposition when sub-tasks depend on input</td><td>Multi-file refactoring or multi-source research where target files/sources aren't known upfront</td><td><em>"Tech lead assigning tickets after reading the spec"</em></td></tr>
+                    <tr><td><strong>5. Evaluator–Optimizer</strong></td><td><code>Generator → Critic/Auditor → (Pass | Feedback Loop [max M])</code></td><td>Iterative quality &amp; compliance against a strict rubric</td><td>Legal clause extraction + adversarial citation auditor; literary translation refinement</td><td><em>"Writer + strict editor"</em></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Pattern 1: Prompt Chaining &amp; Code Gates</h3>
+                <ul>
+                    <li><strong>Mechanism:</strong> Decomposes a predictable multi-stage task into sequential LLM calls where each call handles one focused transformation.</li>
+                    <li><strong>The Deterministic Gate (<code>gate_check</code>):</strong> Plain application code between steps that checks schema validity, required fields, length bounds, or citation existence before spending tokens on Step 2.</li>
+                    <li><strong>When NOT to use:</strong> Do not chain independent subtasks sequentially (use <em>Parallelization — Sectioning</em> to avoid serial latency), and do not chain tasks that a single structured prompt already passes on evals.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>Pattern 2: Routing &amp; Tier Dispatch</h3>
+                <ul>
+                    <li><strong>Mechanism:</strong> Classifies intent or difficulty (via a fast small model, embeddings, or rules) and dispatches to a specialized downstream prompt, scoped toolset, or model tier.</li>
+                    <li><strong>Model-tier cost optimization:</strong> Route high-volume routine queries to a fast tier (Haiku / Gemini Flash-Lite) at low effort, reserving frontier models (Sonnet / Opus / Gemini Pro) for complex reasoning.</li>
+                    <li><strong>Preventing misrouting cascades:</strong> Define an explicit <code>ambiguous / fallback</code> route that asks a clarifying question, log classifier confidence, and allow specialist handlers to reject misrouted inputs back to triage.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-bolt"></i></div>Pattern 3: Parallelization (Sectioning vs. Voting)</h3>
+                <ul>
+                    <li><strong>Sectioning (Speed &amp; Focus):</strong> Splits a task into <em>independent subtasks</em> executed concurrently via <code>asyncio.gather</code> / <code>ParallelAgent</code> (e.g., extracting financial metrics, legal risks, and timeline milestones in parallel, or running input/output guardrail screening concurrently with the main response). Each branch must write to a <strong>distinct <code>output_key</code></strong> to avoid state overwrites.</li>
+                    <li><strong>Voting (Confidence &amp; Consensus):</strong> Runs the <em>same task multiple times</em>—either sampling identical prompts at <code>T &gt; 0</code> (<em>Self-Consistency CoT</em> for math/logic) or running diverse critique prompts—and aggregates programmatically. Tune vote thresholds to risk: use <strong>1-of-N (any flag)</strong> for high-recall vulnerability detection, or <strong>majority vote</strong> for high-precision labeling.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Pattern 4: Orchestrator–Workers</h3>
+                <ul>
+                    <li><strong>Mechanism:</strong> A central <strong>Orchestrator LLM</strong> analyzes the request, dynamically invents a structured list of subtasks at runtime, dispatches scoped <strong>Worker LLMs</strong> in parallel waves, and synthesizes their compact outputs.</li>
+                    <li><strong>Key distinction vs. Parallelization:</strong> Topological shape is similar (fan-out → fan-in), but in <em>Parallelization</em> the subtasks are <strong>hardcoded in advance</strong>, whereas in <em>Orchestrator–Workers</em> the subtasks are <strong>decided dynamically at runtime by the model</strong> based on the specific input (e.g., choosing which 5 files in a repository need edits).</li>
+                    <li><strong>Spec-Driven Planner → Executor split:</strong> Use a high-capability model for the read-only orchestrator planning pass, then dispatch balanced/fast-tier workers in fresh context windows for execution.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-magnifying-glass-chart"></i></div>Pattern 5: Evaluator–Optimizer &amp; Separation of Authority</h3>
+            <p>Pairs a <strong>Generator</strong> LLM with an independent <strong>Evaluator / Critic</strong> LLM that grades the draft against an explicit rubric and returns actionable feedback in a loop.</p>
+            <ul>
+                <li><strong>When it fits:</strong> (1) Responses measurably improve when a human articulates feedback, and (2) an LLM + deterministic checks can reliably produce that feedback.</li>
+                <li><strong>Separation of Authority:</strong> Never ask a generator prompt to grade its own output in the same context window (confirmation bias). Run the critic in a <strong>clean context window (<code>include_contents='none'</code>)</strong> with an adversarial rubric and pair it with deterministic code verification (e.g., verifying cited sections exist in source text).</li>
+                <li><strong>Bounded convergence:</strong> Cap loops with <code>max_iterations</code> (typically 2–3) and an explicit approval signal. If <code>max_iterations</code> trips without approval, fail closed to <strong>HITL escalation</strong> rather than shipping an unapproved draft.</li>
+            </ul>
+        </div>
+
+        <pre><code class="language-python">def run_evaluator_optimizer(source_doc: str, max_iterations: int = 3) -&gt; dict:
+    feedback = None
+    for attempt in range(1, max_iterations + 1):
+        draft = call_generator_llm(source_doc, prior_feedback=feedback)
+
+        # Deterministic gate first: verify every cited section heading exists in source_doc
+        missing_refs = [c.section_heading for c in draft.citations if c.section_heading not in source_doc]
+        if missing_refs:
+            feedback = f"Cited sections missing from source text: {missing_refs}"
+            continue
+
+        # Cold-context adversarial critic (sees only source_doc, draft, and rubric)
+        verdict = call_critic_llm(source_doc=source_doc, draft=draft)
+        if verdict.approved:
+            return {"status": "approved", "output": draft, "iterations": attempt}
+        feedback = verdict.actionable_critique
+
+    # Max iterations reached without passing rubric -> fail closed to HITL escalation
+    return {"status": "escalation_required", "draft": draft, "reason": feedback}</code></pre>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Architectural Pattern</th><th>General / Anthropic Framing</th><th>Google Cloud / ADK Primitive</th><th>Graph / State Machine Framing</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Single Building Block</strong></td><td>Augmented LLM (Retrieval + Tools + Memory)</td><td><code>LlmAgent</code> with <code>tools</code> + <code>MemoryService</code></td><td>Single node with tool bindings</td></tr>
+                    <tr><td><strong>Pattern 1: Sequential</strong></td><td>Prompt Chaining + Programmatic Gate</td><td><code>SequentialAgent</code> / <code>Workflow</code> + <code>before_agent_callback</code></td><td>Linear edges + conditional gate node</td></tr>
+                    <tr><td><strong>Pattern 2: Dispatch</strong></td><td>Routing (Intent / Tier Classifier)</td><td>Coordinator (<code>sub_agents</code>) or custom router node</td><td>Conditional edge router from <code>START</code></td></tr>
+                    <tr><td><strong>Pattern 3a: Split Work</strong></td><td>Parallelization — Sectioning</td><td><code>ParallelAgent</code> (distinct <code>output_key</code>s) + synthesizer</td><td>Fan-out branches → <code>JoinNode</code></td></tr>
+                    <tr><td><strong>Pattern 3b: Consensus</strong></td><td>Parallelization — Voting / Self-Consistency</td><td><code>ParallelAgent</code> (<em>N</em>× runs) + vote aggregator</td><td>Parallel ensemble → majority/threshold reducer</td></tr>
+                    <tr><td><strong>Pattern 4: Dynamic</strong></td><td>Orchestrator–Workers</td><td><code>LlmAgent</code> invoking specialist <code>AgentTool</code>s</td><td>Dynamic map-reduce / send API</td></tr>
+                    <tr><td><strong>Pattern 5: Refinement</strong></td><td>Evaluator–Optimizer</td><td><code>LoopAgent(max_iterations=N)</code> + generator &amp; critic</td><td>Cyclic edge bounded by iteration counter</td></tr>
+                    <tr><td><strong>Open-Ended Autonomy</strong></td><td>Autonomous Agent (Tools in a Loop)</td><td><code>LlmAgent</code> native ReAct loop (<code>Runner</code>)</td><td>Cyclic <code>agent ⇄ tools</code> graph</td></tr>
+                    <tr><td><strong>Human Checkpoint</strong></td><td>Planned Checkpoint / HITL Approval</td><td><code>FunctionTool(..., require_confirmation=True)</code></td><td><code>interrupt()</code> / <code>RequestInput</code> with checkpointer</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 04: AUTONOMOUS AGENT PRIMITIVES & LOOPS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="agent-primitives">
+            <div class="section-divider-number">04</div>
+            <h2>4. Autonomous Agent Primitives &amp; Reasoning Loops</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">When the number and sequence of steps cannot be predicted in advance—because step <em>N+1</em> depends on what observation <em>N</em> uncovered—an <strong>Autonomous Agent</strong> drives its own execution loop using environmental ground truth.</p>
+
+        <div class="diagram-figure">
+            <svg viewBox="0 0 840 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reasoning Loop Paradigms: ReAct vs. Plan-and-Execute vs. Reflection">
+              <defs>
+                <marker id="loop-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569"/>
+                </marker>
+                <marker id="loop-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb"/>
+                </marker>
+                <marker id="loop-arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#d97706"/>
+                </marker>
+              </defs>
+              <rect x="0" y="0" width="840" height="232" rx="8" fill="#f8fafc"/>
+              <!-- LANE 1: ReAct -->
+              <rect x="6" y="6" width="828" height="72" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+              <rect x="6" y="6" width="5" height="72" rx="2" fill="#2563eb"/>
+              <text x="20" y="30" font-family="DM Sans, Inter, sans-serif" font-size="10" font-weight="700" fill="#0f172a">1. ReAct (Interleaved)</text>
+              <text x="20" y="45" font-family="DM Sans, Inter, sans-serif" font-size="8.2" fill="#475569">Turn-by-turn adaptive loop</text>
+              <text x="20" y="58" font-family="JetBrains Mono, monospace" font-size="7.8" fill="#2563eb">O(N) sequential turns</text>
+              <rect x="195" y="13" width="165" height="34" rx="5" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.3"/>
+              <text x="277" y="28" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#1e3a8a">Think (Reason)</text>
+              <text x="277" y="40" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Choose next action from state</text>
+              <line x1="360" y1="30" x2="398" y2="30" stroke="#475569" stroke-width="1.5" marker-end="url(#loop-arrow)"/>
+              <rect x="402" y="13" width="165" height="34" rx="5" fill="#ecfdf5" stroke="#34d399" stroke-width="1.3"/>
+              <text x="484" y="28" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#065f46">Act (Tool Call)</text>
+              <text x="484" y="40" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Invoke Poka-Yoke ACI tool</text>
+              <line x1="567" y1="30" x2="605" y2="30" stroke="#475569" stroke-width="1.5" marker-end="url(#loop-arrow)"/>
+              <rect x="609" y="13" width="208" height="34" rx="5" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.3"/>
+              <text x="713" y="28" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#92400e">Observe (Ground Truth)</text>
+              <text x="713" y="40" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Append tool_result / is_error</text>
+              <path d="M 713 47 L 713 66 L 277 66 L 277 49" fill="none" stroke="#2563eb" stroke-width="1.3" stroke-dasharray="3,2" marker-end="url(#loop-arrow-blue)"/>
+              <rect x="378" y="56" width="234" height="15" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="0.8"/>
+              <text x="495" y="66.5" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" font-weight="600" fill="#1d4ed8">↻ Repeat until exit criteria or max_turns cap</text>
+              <!-- LANE 2: Plan-and-Execute -->
+              <rect x="6" y="86" width="828" height="62" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+              <rect x="6" y="86" width="5" height="62" rx="2" fill="#7c3aed"/>
+              <text x="20" y="109" font-family="DM Sans, Inter, sans-serif" font-size="10" font-weight="700" fill="#0f172a">2. Plan-and-Execute</text>
+              <text x="20" y="124" font-family="DM Sans, Inter, sans-serif" font-size="8.2" fill="#475569">ReWOO / LLMCompiler</text>
+              <text x="20" y="137" font-family="JetBrains Mono, monospace" font-size="7.8" fill="#6d28d9">Upfront DAG + parallel I/O</text>
+              <rect x="195" y="96" width="192" height="42" rx="5" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1.3"/>
+              <text x="291" y="113" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#5b21b6">Planner LLM</text>
+              <text x="291" y="127" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.7" fill="#475569">Emit DAG &amp; vars (#E1, $1)</text>
+              <line x1="387" y1="117" x2="419" y2="117" stroke="#475569" stroke-width="1.5" marker-end="url(#loop-arrow)"/>
+              <rect x="423" y="96" width="196" height="42" rx="5" fill="#ecfdf5" stroke="#34d399" stroke-width="1.3"/>
+              <text x="521" y="113" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#065f46">Parallel Dispatcher / Workers</text>
+              <text x="521" y="127" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Execute ready tools concurrently</text>
+              <line x1="619" y1="117" x2="651" y2="117" stroke="#475569" stroke-width="1.5" marker-end="url(#loop-arrow)"/>
+              <rect x="655" y="96" width="162" height="42" rx="5" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.3"/>
+              <text x="736" y="113" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#1e3a8a">Solver / Replanner</text>
+              <text x="736" y="127" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Synthesize or replan on error</text>
+              <!-- LANE 3: Reflection -->
+              <rect x="6" y="156" width="828" height="70" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+              <rect x="6" y="156" width="5" height="70" rx="2" fill="#d97706"/>
+              <text x="20" y="179" font-family="DM Sans, Inter, sans-serif" font-size="10" font-weight="700" fill="#0f172a">3. Grounded Reflection</text>
+              <text x="20" y="194" font-family="DM Sans, Inter, sans-serif" font-size="8.2" fill="#475569">External verifier / critic</text>
+              <text x="20" y="207" font-family="JetBrains Mono, monospace" font-size="7.8" fill="#b45309">Bounded max_iterations</text>
+              <rect x="195" y="163" width="165" height="34" rx="5" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.3"/>
+              <text x="277" y="178" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#1e3a8a">Generator LLM</text>
+              <text x="277" y="190" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Produce candidate draft / diff</text>
+              <line x1="360" y1="180" x2="398" y2="180" stroke="#475569" stroke-width="1.5" marker-end="url(#loop-arrow)"/>
+              <rect x="402" y="163" width="218" height="34" rx="5" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.3"/>
+              <text x="511" y="178" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#92400e">Code Gate + Cold-Context Critic</text>
+              <text x="511" y="190" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">pytest / schema + clean-window rubric</text>
+              <line x1="620" y1="180" x2="658" y2="180" stroke="#475569" stroke-width="1.5" marker-end="url(#loop-arrow)"/>
+              <rect x="662" y="163" width="155" height="34" rx="5" fill="#ecfdf5" stroke="#34d399" stroke-width="1.3"/>
+              <text x="739" y="178" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9.2" font-weight="700" fill="#065f46">Approved Output</text>
+              <text x="739" y="190" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" fill="#334155">Or fail-closed HITL escalate</text>
+              <path d="M 511 197 L 511 215 L 277 215 L 277 199" fill="none" stroke="#d97706" stroke-width="1.3" stroke-dasharray="3,2" marker-end="url(#loop-arrow-amber)"/>
+              <rect x="310" y="205" width="175" height="15" rx="3" fill="#fffbeb" stroke="#fde68a" stroke-width="0.8"/>
+              <text x="397" y="215.5" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" font-weight="600" fill="#b45309">↻ Actionable critique (max M)</text>
+            </svg>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Reasoning Paradigm</th><th>Execution Mechanics</th><th>Strengths</th><th>Failure Mode &amp; When to Avoid</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>ReAct (Reason + Act)</strong></td><td>Interleaves <strong>Thought</strong> → <strong>Action</strong> (tool call) → <strong>Observation</strong> (ground-truth tool result) turn-by-turn.</td><td>Maximum adaptability; each action is chosen from the immediate observation of the prior step.</td><td>High sequential latency (<em>O(N)</em> LLM turns); context grows every turn; can drift into local rabbit holes without an externalized checklist.</td></tr>
+                    <tr><td><strong>Plan-and-Execute (ReWOO / LLMCompiler)</strong></td><td><strong>Planner</strong> emits an upfront multi-step plan or dependency DAG of symbolic variables (<code>#E1</code>, <code>$1</code>); <strong>Executor/Dispatcher</strong> runs ready steps concurrently; <strong>Solver/Replanner</strong> synthesizes or replans on failure.</td><td>Cuts sequential latency and token re-ingestion dramatically by executing independent tool calls in parallel without intermediate LLM turns.</td><td>Brittle if early observations invalidate the upfront plan; requires a dynamic replanning trigger when unexpected environment state appears.</td></tr>
+                    <tr><td><strong>Reflection / Self-Correction</strong></td><td>Agent inspects deterministic feedback (compiler error, failing pytest trace, schema violation) and revises its action or draft before finishing.</td><td>Automatically resolves syntax, schema, and localized logic bugs when grounded in objective test/validator output.</td><td><strong>Ungrounded reflection drift:</strong> Asking a model to "reflect and improve" without external ground truth (tests, linters, search) often degrades accuracy or amplifies hallucinations.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-Octagon-exclamation"></i></div>Stopping Conditions &amp; Loop Hygiene</h3>
+                <ul>
+                    <li><strong>1. Objective exit criteria:</strong> Define concrete completion conditions (tests pass, schema validates, or explicit <code>finish_task</code> / <code>end_turn</code>).</li>
+                    <li><strong>2. Hard iteration caps (<code>max_turns</code> / <code>max_llm_calls</code>):</strong> Always bound total turns per invocation so a stuck agent halts deterministically (<code>error_max_turns</code>).</li>
+                    <li><strong>3. Token &amp; spend budgets (<code>max_budget_usd</code>):</strong> Track cumulative token cost per session and abort or escalate before runaway spend occurs.</li>
+                    <li><strong>4. Duplicate tool-call detection:</strong> Hash <code>(tool_name, canonical_json_args)</code> across turns. If an agent repeats the exact same failing or no-op call 2–3 times, block execution in the harness and inject a loop-breaker error telling the model to change strategy or escalate.</li>
+                    <li><strong>5. Structured error feedback (<code>is_error: true</code>):</strong> Never swallow exceptions as <code>""</code> (which looks like "0 records found"). Return structured error details (error type, retryability, corrective hint) inside the tool result so the model can adapt.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-screwdriver-wrench"></i></div>ACI Design &amp; Poka-Yoke (Mistake-Proofing)</h3>
+                <p>Invest as much engineering rigor in your <strong>Agent-Computer Interface (ACI)</strong> as in human UX:</p>
+                <ul>
+                    <li><strong>Junior-developer docstrings:</strong> State clearly what the tool does, when to use it, when <em>not</em> to use it (pointing to the right sibling tool), parameter formats, and output limits.</li>
+                    <li><strong>Poka-Yoke arguments:</strong> Shape tool schemas so invalid calls are impossible—e.g., require <strong>absolute file paths</strong> (<code>/workspace/src/main.py</code>) instead of relative paths that break after directory changes, and use strict <code>Literal</code> / enum types instead of free-text strings.</li>
+                    <li><strong>Keep tool catalogs small (<code>&lt;= 16</code> tools):</strong> Tool selection accuracy drops sharply when an agent must choose among dozens of overlapping tools; split by domain across subagents or use on-demand tool search.</li>
+                </ul>
+            </div>
+        </div>
+
+        <pre><code class="language-python">def run_bounded_agent_loop(messages: list, max_turns: int = 12, max_usd: float = 0.50) -&gt; dict:
+    seen_calls: dict[tuple[str, str], int] = {}
+    spent_usd = 0.0
+
+    for turn in range(1, max_turns + 1):
+        if spent_usd &gt;= max_usd:
+            return {"status": "stopped", "reason": "budget_ceiling_exceeded", "turns": turn - 1}
+
+        resp = call_model(messages=messages, tools=TOOL_SCHEMAS)
+        spent_usd += estimate_cost(resp.usage)
+        messages.append({"role": "assistant", "content": resp.content})
+
+        if resp.stop_reason == "end_turn":
+            return {"status": "completed", "answer": extract_text(resp.content), "turns": turn}
+
+        if resp.stop_reason == "tool_use":
+            tool_results = []
+            for block in [b for b in resp.content if b.type == "tool_use"]:
+                sig = (block.name, json.dumps(block.input, sort_keys=True))
+                seen_calls[sig] = seen_calls.get(sig, 0) + 1
+                if seen_calls[sig] &gt;= 3:
+                    tool_results.append({
+                        "type": "tool_result", "tool_use_id": block.id, "is_error": True,
+                        "content": f"Loop breaker: {block.name} called 3x with identical args. Try another approach or escalate."
+                    })
+                    continue
+                try:
+                    out = execute_tool_safely(block.name, block.input)
+                    tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": out})
+                except Exception as exc:
+                    tool_results.append({
+                        "type": "tool_result", "tool_use_id": block.id, "is_error": True,
+                        "content": f"{type(exc).__name__}: {exc}. Check parameter constraints or escalate."
+                    })
+            messages.append({"role": "user", "content": tool_results})
+
+    return {"status": "stopped", "reason": "max_turns_exceeded", "turns": max_turns}</code></pre>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: MEMORY ARCHITECTURE & CONTEXT BUDGET
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="memory-context">
+            <div class="section-divider-number">05</div>
+            <h2>5. Memory Architecture &amp; Context Budget Engineering</h2>
+        </div>
+
+        <p class="prose" style="margin-bottom: 24px; color: var(--text-secondary);">A large context window is not a substitute for memory architecture. Stuffing raw transcripts, 50 KB tool responses, and 80 tool schemas into every turn inflates cost and latency while causing <strong>Context Rot</strong>.</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Memory Tier</th><th>Cognitive Role</th><th>Storage &amp; Lifetime</th><th>Production Engineering Rules</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Working Memory</strong></td><td>Active scratchpad for the current task (system prompt, recent turns, live tool observations, <code>temp:</code> state)</td><td>In-window <code>messages[]</code> + ephemeral invocation state (<code>temp:*</code>); cleared after turn/session</td><td>Keep lean; place byte-identical static instructions and tool schemas <strong>first</strong> for prompt-cache hits; externalize live checklists (<code>TodoWrite</code> / state keys) so goals survive long runs.</td></tr>
+                    <tr><td><strong>2. Episodic Memory</strong></td><td>Record of specific past sessions, interaction trajectories, and checkpoints (<code>session.events</code>)</td><td>Persistent session store (<code>DatabaseSessionService</code>, JSONL transcripts, checkpointer) or session summaries</td><td>Powers session resume (<code>--resume</code>), audit trails, trajectory evaluation, and few-shot recall of how similar past tasks succeeded.</td></tr>
+                    <tr><td><strong>3. Semantic Memory</strong></td><td>Verified domain knowledge, entity facts, and consolidated user preferences (<code>user:*</code>)</td><td>Vector/hybrid RAG index or managed Memory Bank (<code>VertexAiMemoryBankService</code>) across sessions</td><td><strong>Consolidate, don't just append:</strong> Use background LLM extraction to update superseded user facts rather than retrieving contradictory raw chat logs. Keep policy stores <strong>read-only</strong> during inference.</td></tr>
+                    <tr><td><strong>4. Procedural Memory</strong></td><td>How the agent operates: system prompt heuristics, tool definitions, and reusable playbooks (<strong>Skills</strong>)</td><td>Code repository (<code>CLAUDE.md</code>, <code>.claude/rules/</code>, <code>SKILL.md</code> bundles, MCP prompt templates)</td><td>Use <strong>3-level progressive disclosure</strong>: load only compact YAML <code>name</code> + <code>description</code> (~60–100 tokens) at startup, load the full <code>SKILL.md</code> body only when triggered, and run bundled <code>scripts/</code> outside context.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-biohazard"></i></div>Context Rot Taxonomy: Poisoning vs. Confusion vs. Clash</h3>
+                <ul>
+                    <li><strong>Context Poisoning:</strong> An early hallucination, wrong file path, or refused turn enters <code>messages[]</code> and gets repeatedly referenced on later turns. <strong>Critical trap:</strong> Running summarization/compaction on a poisoned session <strong>preserves the poisoned assumption inside the summary block</strong>! Fix by <strong>rewinding</strong> prior to the bad turn or <strong>clearing/resetting</strong> into a fresh context window with only verified facts.</li>
+                    <li><strong>Context Confusion:</strong> Unrelated file dumps, bulky 50 KB JSON tool payloads, and dozens of unused tool schemas dilute model attention. Fix by paginating/pruning tool outputs, deferring tool schemas behind search, and delegating noisy exploration to subagents.</li>
+                    <li><strong>Context Clash:</strong> Contradictory rules across global prompts, path rules, and multi-turn instructions cause unpredictable behavior. Fix by scoping rules via path globs and resolving conflicts in an upfront spec.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-compress"></i></div>The 4 Context Strategies &amp; Compaction Mechanics</h3>
+                <ul>
+                    <li><strong>1. Write (Externalize):</strong> Save plans, checklists, and large generated artifacts to typed state keys, disk files, or an <code>ArtifactService</code> outside <code>messages[]</code>.</li>
+                    <li><strong>2. Select (Just-in-Time):</strong> Retrieve narrow file line ranges (<code>Grep</code> → paginated <code>Read</code>), path-scoped rules, and on-demand skills only when needed.</li>
+                    <li><strong>3. Compress (Compaction &amp; Pruning):</strong> Strip verbose historical tool payloads once key fields are extracted, and trigger <strong>summarization checkpoints (Compaction)</strong> at 70–80% window capacity while retaining the last <em>K</em> turns verbatim (sliding window overlap). Keep the static prompt prefix byte-identical (no per-call timestamps at the top!) so prompt caching cuts input token cost by 75–90%.</li>
+                    <li><strong>4. Isolate (Subagents):</strong> Offload high-volume exploration or independent verification to subagents with fresh <code>messages[]</code> arrays.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: MULTI-AGENT TOPOLOGIES & HANDOFF CONTRACTS
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="multi-agent-topologies">
+            <div class="section-divider-number">06</div>
+            <h2>6. Multi-Agent Topologies &amp; Handoff Contracts</h2>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-scale-balanced"></i></div>
+            <div class="callout-content">
+                <h4>The "Agent Theater" Litmus Test</h4>
+                <p>Multi-agent orchestration is justified <strong>if and only if</strong> subagents have <strong>distinct tools or permissions, private data scopes, isolated context windows to contain noisy exploration, parallel I/O, or an independent verification role</strong>. Chaining three "persona" prompts that share the exact same tools and context is <strong>Agent Theater</strong>—multiplying token cost (~4×) and latency (1.5–2.5×) for zero architectural gain.</p>
+            </div>
+        </div>
+
+        <div class="diagram-figure">
+            <svg viewBox="0 0 840 244" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four Canonical Multi-Agent Topologies">
+              <defs>
+                <marker id="topo-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569"/>
+                </marker>
+                <marker id="topo-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb"/>
+                </marker>
+              </defs>
+              <rect x="0" y="0" width="840" height="244" rx="8" fill="#f8fafc"/>
+              <!-- PANEL 1: Hub-and-Spoke -->
+              <rect x="6" y="6" width="406" height="112" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="18" y="23" font-family="DM Sans, Inter, sans-serif" font-size="9.5" font-weight="700" fill="#0f172a">1. Hub-and-Spoke (Coordinator / Subagents)</text>
+              <rect x="20" y="46" width="122" height="48" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.4"/>
+              <text x="81" y="67" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="9" font-weight="700" fill="#1e3a8a">Coordinator LLM</text>
+              <text x="81" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#2563eb">AgentTool / Task</text>
+              <line x1="142" y1="58" x2="226" y2="42" stroke="#2563eb" stroke-width="1.3" marker-end="url(#topo-arrow-blue)"/>
+              <line x1="142" y1="70" x2="226" y2="70" stroke="#2563eb" stroke-width="1.3" marker-end="url(#topo-arrow-blue)"/>
+              <line x1="142" y1="82" x2="226" y2="98" stroke="#2563eb" stroke-width="1.3" marker-end="url(#topo-arrow-blue)"/>
+              <text x="184" y="36" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#475569">HandoffContract</text>
+              <rect x="230" y="30" width="168" height="22" rx="4" fill="#ecfdf5" stroke="#34d399" stroke-width="1.2"/>
+              <text x="314" y="44" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.2" font-weight="600" fill="#065f46">Subagent A (Fresh Context)</text>
+              <rect x="230" y="59" width="168" height="22" rx="4" fill="#ecfdf5" stroke="#34d399" stroke-width="1.2"/>
+              <text x="314" y="73" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.2" font-weight="600" fill="#065f46">Subagent B (Scoped Tools)</text>
+              <rect x="230" y="88" width="168" height="22" rx="4" fill="#ecfdf5" stroke="#34d399" stroke-width="1.2"/>
+              <text x="314" y="102" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.2" font-weight="600" fill="#065f46">Subagent C (Cold Auditor)</text>
+              <!-- PANEL 2: Sequential Pipeline -->
+              <rect x="426" y="6" width="408" height="112" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="438" y="23" font-family="DM Sans, Inter, sans-serif" font-size="9.5" font-weight="700" fill="#0f172a">2. Sequential Pipeline (Deterministic Relay)</text>
+              <rect x="438" y="44" width="84" height="42" rx="5" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.3"/>
+              <text x="480" y="62" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.5" font-weight="700" fill="#1e3a8a">Agent 1</text>
+              <text x="480" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#334155">Extract</text>
+              <line x1="522" y1="65" x2="538" y2="65" stroke="#475569" stroke-width="1.4" marker-end="url(#topo-arrow)"/>
+              <rect x="542" y="49" width="54" height="32" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.3"/>
+              <text x="569" y="63" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" font-weight="700" fill="#92400e">Code</text>
+              <text x="569" y="74" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="7.8" font-weight="700" fill="#92400e">Gate</text>
+              <line x1="596" y1="65" x2="612" y2="65" stroke="#475569" stroke-width="1.4" marker-end="url(#topo-arrow)"/>
+              <rect x="616" y="44" width="84" height="42" rx="5" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1.3"/>
+              <text x="658" y="62" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.5" font-weight="700" fill="#5b21b6">Agent 2</text>
+              <text x="658" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#334155">Analyze</text>
+              <line x1="700" y1="65" x2="716" y2="65" stroke="#475569" stroke-width="1.4" marker-end="url(#topo-arrow)"/>
+              <rect x="720" y="44" width="100" height="42" rx="5" fill="#ecfdf5" stroke="#34d399" stroke-width="1.3"/>
+              <text x="770" y="62" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.5" font-weight="700" fill="#065f46">Agent 3</text>
+              <text x="770" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#334155">Format Output</text>
+              <text x="630" y="104" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.6" fill="#475569">State passed via explicit output_key + output_schema</text>
+              <!-- PANEL 3: Mesh / Swarm -->
+              <rect x="6" y="126" width="406" height="112" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="18" y="143" font-family="DM Sans, Inter, sans-serif" font-size="9.5" font-weight="700" fill="#0f172a">3. Mesh / Debate / Swarm (Peer Handoff)</text>
+              <rect x="24" y="156" width="132" height="36" rx="5" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.3"/>
+              <text x="90" y="172" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.5" font-weight="700" fill="#1e3a8a">Agent A (Proposer)</text>
+              <text x="90" y="184" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#334155">transfer_to_agent</text>
+              <line x1="156" y1="170" x2="254" y2="170" stroke="#475569" stroke-width="1.3" marker-end="url(#topo-arrow)"/>
+              <line x1="258" y1="179" x2="160" y2="179" stroke="#475569" stroke-width="1.3" marker-end="url(#topo-arrow)"/>
+              <rect x="258" y="156" width="136" height="36" rx="5" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.3"/>
+              <text x="326" y="172" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.5" font-weight="700" fill="#92400e">Agent B (Red-Team)</text>
+              <text x="326" y="184" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.2" fill="#334155">Critique / Handoff</text>
+              <line x1="115" y1="192" x2="165" y2="212" stroke="#475569" stroke-width="1.2" marker-end="url(#topo-arrow)"/>
+              <line x1="300" y1="192" x2="250" y2="212" stroke="#475569" stroke-width="1.2" marker-end="url(#topo-arrow)"/>
+              <rect x="122" y="206" width="174" height="24" rx="4" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1.2"/>
+              <text x="209" y="221" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8" font-weight="700" fill="#5b21b6">Agent C / Judge (max_turns cap)</text>
+              <!-- PANEL 4: Hierarchical Teams -->
+              <rect x="426" y="126" width="408" height="112" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="438" y="143" font-family="DM Sans, Inter, sans-serif" font-size="9.5" font-weight="700" fill="#0f172a">4. Hierarchical Teams (Scoped Tool Trees ≤ 16)</text>
+              <rect x="556" y="150" width="148" height="23" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+              <text x="630" y="165" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8.4" font-weight="700" fill="#1e3a8a">Root Coordinator</text>
+              <line x1="590" y1="173" x2="532" y2="182" stroke="#475569" stroke-width="1.2" marker-end="url(#topo-arrow)"/>
+              <line x1="670" y1="173" x2="728" y2="182" stroke="#475569" stroke-width="1.2" marker-end="url(#topo-arrow)"/>
+              <rect x="466" y="182" width="124" height="22" rx="4" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1.2"/>
+              <text x="528" y="196" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8" font-weight="700" fill="#5b21b6">Team Lead 1 (Data)</text>
+              <rect x="668" y="182" width="124" height="22" rx="4" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1.2"/>
+              <text x="730" y="196" text-anchor="middle" font-family="DM Sans, Inter, sans-serif" font-size="8" font-weight="700" fill="#5b21b6">Team Lead 2 (Code)</text>
+              <line x1="502" y1="204" x2="480" y2="212" stroke="#475569" stroke-width="1.1"/>
+              <line x1="554" y1="204" x2="574" y2="212" stroke="#475569" stroke-width="1.1"/>
+              <line x1="704" y1="204" x2="684" y2="212" stroke="#475569" stroke-width="1.1"/>
+              <line x1="756" y1="204" x2="776" y2="212" stroke="#475569" stroke-width="1.1"/>
+              <rect x="440" y="212" width="82" height="19" rx="3" fill="#ecfdf5" stroke="#34d399" stroke-width="1.1"/>
+              <text x="481" y="224.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.4" font-weight="600" fill="#065f46">Worker W1</text>
+              <rect x="532" y="212" width="82" height="19" rx="3" fill="#ecfdf5" stroke="#34d399" stroke-width="1.1"/>
+              <text x="573" y="224.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.4" font-weight="600" fill="#065f46">Worker W2</text>
+              <rect x="644" y="212" width="82" height="19" rx="3" fill="#ecfdf5" stroke="#34d399" stroke-width="1.1"/>
+              <text x="685" y="224.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.4" font-weight="600" fill="#065f46">Worker W3</text>
+              <rect x="736" y="212" width="82" height="19" rx="3" fill="#ecfdf5" stroke="#34d399" stroke-width="1.1"/>
+              <text x="777" y="224.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7.4" font-weight="600" fill="#065f46">Worker W4</text>
+            </svg>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Topology</th><th>Control &amp; Routing Mechanics</th><th>Strengths</th><th>Key Risks &amp; Required Safeguards</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Hub-and-Spoke (Coordinator / Subagents)</strong></td><td>Central coordinator decomposes the request, invokes specialist subagents as tools (<code>AgentTool</code> / <code>Task</code>), collects compact results, and synthesizes the final response.</td><td>Central visibility, strict context isolation per spoke, easy to enforce hub-level guardrails and wave limits (3–5 concurrent workers).</td><td>Coordinator context overflows if spokes return raw 50 KB dumps instead of structured summaries. Block subagents from spawning recursive subagents unless explicitly needed.</td></tr>
+                    <tr><td><strong>2. Sequential Pipeline</strong></td><td>Fixed relay (<code>Agent 1 → Gate → Agent 2 → Agent 3</code>) passing state via explicit keys (<code>output_key</code> + <code>output_schema</code>).</td><td>Zero routing overhead; deterministic transitions; ideal for Staged Extract → Redact → Analyze → Format pipelines.</td><td>Rigid; if Step 1 misclassifies an input and no deterministic gate catches it, Steps 2 and 3 compound the error.</td></tr>
+                    <tr><td><strong>3. Mesh / Debate / Swarm</strong></td><td>Peer specialists transfer control directly to one another (<code>transfer_to_agent</code>) or critique each other's proposals without a central hub.</td><td>Useful for adversarial red-teaming, multi-perspective design critique, or seamless specialist conversation handoffs.</td><td>Highest risk of infinite ping-pong loops, state corruption, and diffusion of responsibility. Requires strict <code>max_turns</code>, explicit exit tools, and a deterministic tie-breaker/judge.</td></tr>
+                    <tr><td><strong>4. Hierarchical Teams</strong></td><td>Multi-tier tree where a root orchestrator delegates to domain leads, which in turn manage narrow execution workers.</td><td>Scales to large enterprise systems with dozens of tools by keeping each node's tool catalog <code>&lt;= 16</code>.</td><td>High cumulative latency and token spend; trace debugging requires correlation IDs across every parent-child boundary.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-user-shield"></i></div>The Context Isolation Rule</h3>
+                <ul>
+                    <li><strong>Fresh, task-scoped context by default:</strong> When a coordinator delegates a task (codebase search, diff audit, SQL analysis) to a subagent, the subagent must execute in a <strong>fresh context window</strong> containing only its specialist system prompt and explicit task input—<strong>never</strong> inheriting the coordinator's noisy 80-turn history. (Use full-history context forking only when the child explicitly requires the exact prior transcript and shared prompt cache.)</li>
+                    <li><strong>No shared mutable scratchpads in parallel waves:</strong> When running 3–5 parallel workers, assign each worker a distinct <code>output_key</code> or isolated file/worktree path so concurrent writes never race or overwrite one another.</li>
+                    <li><strong>Artifact pointer pattern:</strong> Because only a subagent's final message returns to the parent, workers generating large diffs or tables must write the full payload to disk or an <code>ArtifactService</code> (<code>artifact_uri</code>) and return only a compact <code>HandoffContract</code> summary to the coordinator.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Vertical (MCP) vs. Horizontal (Subagents / A2A)</h3>
+                <ul>
+                    <li><strong>Vertical execution (<code>Agent → Tool/Data</code> via MCP):</strong> Equips an agent with deterministic tools, database queries, and resources. Enforce least privilege with <code>tool_filter</code> allowlists and scrub PII/injections in <code>after_tool_callback</code>.</li>
+                    <li><strong>Horizontal in-process (<code>Coordinator → Subagent</code>):</strong> Cognitive delegation inside the same runtime via <code>AgentTool</code> / <code>Task</code> with fresh context and typed output schemas.</li>
+                    <li><strong>Horizontal cross-boundary (<code>Agent → Remote Agent</code> via A2A):</strong> Delegates stateful tasks across organizational boundaries via an <code>AgentCard</code> (<code>/.well-known/agent-card.json</code>). Remote A2A agents are <strong>opaque black boxes</strong> (they never expose internal tools, prompts, or memory)—authenticate via card <code>securitySchemes</code> and validate all returned artifacts as untrusted input.</li>
+                </ul>
+            </div>
+        </div>
+
+        <pre><code class="language-python">from typing import Literal
+from pydantic import BaseModel, ConfigDict, Field
+
+class Citation(BaseModel):
+    source_id: str
+    section_heading: str
+    verbatim_quote: str
+
+class HandoffContract(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str
+    status: Literal["completed", "partial", "blocked", "escalation_required"]
+    confidence_band: Literal["high", "medium", "low"]
+    summary: str = Field(max_length=1200, description="Compact synthesis returned to the coordinator")
+    artifact_uri: str | None = Field(default=None, description="Path/URI to full diff or dataset on disk/storage")
+    verified_citations: list[Citation] = Field(default_factory=list)
+    blocking_reason: str | None = None</code></pre>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 07: ANTI-PATTERNS, FAILURE MODES & CHECKLIST
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="anti-patterns-checklist">
+            <div class="section-divider-number">07</div>
+            <h2>7. Anti-Patterns, Failure Modes &amp; Architectural Checklist</h2>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-Industry"></i></div>Production Trust Architecture: Why Single-Prompt "Happy-Path" Prototypes Fail</h3>
+            <p>While a single multimodal LLM call with a JSON schema can summarize a clean 1-page demo PDF in 2 seconds, unguarded single-prompt pipelines break on real enterprise workloads for five structural reasons:</p>
+            <ul>
+                <li><strong>1. Token burn &amp; hallucinations on corrupted inputs (Missing Epistemic Gate):</strong> Sending a 120-page blurry scan or wrong document type directly to a frontier model wastes tokens and invites hallucination. <em>Fix:</em> Run a <strong>$0 deterministic Pre-LLM Epistemic Gate</strong> checking file metadata and a <strong>composite extraction quality score</strong> (OCR token confidence, lexical dictionary ratio, character entropy, structural page completeness); if below threshold, escalate immediately without calling the LLM.</li>
+                <li><strong>2. Instruction crowding &amp; self-grading bias:</strong> Packing 30 extraction rules and compliance checks into one prompt causes the model to focus on fluent generation and silently skip late verification rules. Even well-tuned prompts remain probabilistic, whereas a deterministic Python post-check paired with a cold-context critic enforces hard invariants reliably.</li>
+                <li><strong>3. Unverified citations:</strong> Format checks only verify that <code>(Source: Section X)</code> syntax appears, missing fabricated section numbers. <em>Fix:</em> <strong>Grounded citation verification</strong> deterministically checks that every cited heading/quote exists in the extracted source text.</li>
+                <li><strong>4. Cloud PII exposure:</strong> Sending raw unredacted documents directly to external APIs leaks sensitive PII before prompt rules run. <em>Fix:</em> Parse locally and scrub PII deterministically at the pre-LLM and <code>after_tool_callback</code> boundaries.</li>
+                <li><strong>5. Rule drift across repos:</strong> Copy-pasting compliance prompts across services guarantees drift. <em>Fix:</em> Centralize domain validators, prompts, and policy thresholds in a shared <strong>MCP server</strong> (<em>Rules as Infrastructure</em>).</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Production Symptom</th><th>Root Architectural Cause</th><th>Deterministic Architectural Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Agent miscalculates fees, discounts, or date windows on edge cases</strong></td><td><strong>Deterministic drift:</strong> Delegating Bucket 1 arithmetic or policy thresholds to probabilistic prose instructions.</td><td>Move calculations and threshold checks into deterministic Python/SQL tools or <code>PreToolUse</code> / <code>before_tool_callback</code> hooks.</td></tr>
+                    <tr><td><strong>Simple 3-step pipeline takes 45 seconds and costs $0.80 per run</strong></td><td><strong>Over-agentification:</strong> Using an open-ended autonomous ReAct agent (or Agent Theater) where the task path is known in advance.</td><td>Replace the autonomous loop with a <strong>Prompt Chain</strong> or <strong>Parallel Sectioning Workflow</strong> using fast-tier models for routine steps.</td></tr>
+                    <tr><td><strong>Coordinator hits <code>model_context_window_exceeded</code> after calling 4 research workers</strong></td><td><strong>Missing context isolation:</strong> Workers return raw 40 KB tool dumps into the parent window, or inherit full parent history.</td><td>Enforce the <strong>Context Isolation Rule</strong>: spawn workers in fresh windows, write bulky artifacts to disk/storage, and return a bounded <code>HandoffContract</code> summary.</td></tr>
+                    <tr><td><strong>Parallel workers intermittently lose data or overwrite each other's findings</strong></td><td><strong>Shared mutable state race:</strong> Concurrent branches write to the same session state key (<code>state["result"]</code>) or edit the same file simultaneously.</td><td>Give each parallel branch a unique <code>output_key</code> (<code>result_a</code>, <code>result_b</code>) merged by a downstream <code>JoinNode</code>/synthesizer, or isolate file edits in separate worktrees.</td></tr>
+                    <tr><td><strong>Generator–Critic loop burns 15 turns and still ships a hallucinated citation</strong></td><td><strong>Unbounded loop + ungrounded reflection:</strong> No <code>max_iterations</code> cap, and the critic grades prose by "vibes" without checking source text in code.</td><td>Cap the loop at <code>max_iterations=3</code>, verify citations deterministically against source text (regex/substring match), and escalate to HITL if the cap trips without approval.</td></tr>
+                    <tr><td><strong>Agent tells the user "You have no active orders" during a database timeout</strong></td><td><strong>Swallowed tool error:</strong> Tool wrapper caught the timeout exception and returned <code>""</code> or <code>{}</code> with HTTP 200 success semantics.</td><td>Return a structured error block (<code>is_error: true</code> or <code>{"status": "error", "retryable": true, "message": "DB timeout"}</code>) so the model knows the lookup failed.</td></tr>
+                    <tr><td><strong>After compacting a confused session, the agent keeps repeating the same wrong file path</strong></td><td><strong>Compacting poisoned context:</strong> Summarization compressed the earlier hallucinated file path into the compacted summary block.</td><td>Use <strong>rewind / hard context reset (<code>/clear</code>)</strong> to discard poisoned turns entirely instead of summarizing them.</td></tr>
+                    <tr><td><strong>Agent selects the wrong tool when given 45 enterprise MCP endpoints</strong></td><td><strong>Tool catalog saturation:</strong> Model attention degrades when forced to discriminate among <code>&gt; 16</code> overlapping tool schemas in one prompt.</td><td>Group tools by domain across specialist subagents (<code>&lt;= 16</code> tools each) or enable on-demand <strong>progressive tool disclosure / Tool Search</strong> plus <code>tool_filter</code> allowlists.</td></tr>
+                    <tr><td><strong>Summarizer agent reading an external email is tricked into calling <code>send_email</code></strong></td><td><strong>Indirect prompt injection + excessive agency:</strong> Untrusted data entered the same context that held high-privilege mutation tools.</td><td>Enforce <strong>least privilege</strong> (strip <code>send_email</code> from the reader agent), screen tool outputs in <code>after_tool_callback</code>, and gate external sends with a <strong>HITL checkpoint</strong>.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-clipboard-check"></i></div>8-Point Pre-Production Architectural Checklist</h3>
+            <ul>
+                <li><strong>1. 3-Bucket Triage Verified:</strong> Are all math, schema validation, RBAC, and hard compliance rules executed in deterministic code (Bucket 1), and all high-blast-radius irreversible actions gated by HITL (Bucket 3)?</li>
+                <li><strong>2. Complexity Ladder Justified:</strong> Have you proven with an evaluation baseline that a single Augmented LLM call or deterministic Workflow cannot meet the bar before deploying an Autonomous Agent?</li>
+                <li><strong>3. Pre-LLM Epistemic Gating Active:</strong> Does deterministic code validate file types, input completeness, and composite extraction quality <em>before</em> spending model tokens, with <code>escalation_required = True</code> as the safe default?</li>
+                <li><strong>4. Loop Hygiene Enforced:</strong> Does every agent and evaluator-optimizer loop enforce <code>max_turns</code> / <code>max_iterations</code>, token budget ceilings, duplicate tool-call detection, and explicit escalation when the cap trips?</li>
+                <li><strong>5. ACI &amp; Poka-Yoke Hardened:</strong> Are tool catalogs <code>&lt;= 16</code> per agent, arguments constrained via strict schemas/enums/absolute paths, and failures returned as structured <code>is_error: true</code> signals?</li>
+                <li><strong>6. Context Budget &amp; Cache Optimized:</strong> Are static instructions and tool definitions placed before dynamic per-request data for cache stability, and is noisy exploration isolated in subagents?</li>
+                <li><strong>7. Handoff Contracts Typed:</strong> Do subagents run in fresh, task-scoped context windows and return compact, schema-validated <code>HandoffContract</code> objects (with URIs for large artifacts)?</li>
+                <li><strong>8. Separation of Authority &amp; Trajectory Evals:</strong> Are high-stakes outputs verified by an independent cold-context critic + deterministic code checks, and does CI evaluate both final answers and tool trajectories?</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 08: GLOSSARY, SELF-ASSESSMENT & QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="resources">
+            <div class="section-divider-number">08</div>
+            <h2>8. Glossary, Self-Assessment &amp; Practice Quiz</h2>
+        </div>
+
+        <div class="definition-grid">
+            <div class="definition-item">
+                <dt>3-Bucket Work Decomposition</dt>
+                <dd>Triage framework dividing logic into <strong>Bucket 1 (Deterministic Code)</strong> for math/validation/RBAC, <strong>Bucket 2 (Probabilistic LLM)</strong> for unstructured synthesis/planning, and <strong>Bucket 3 (HITL)</strong> for irreversible or accountability-bearing decisions.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>4-Decision Sequence</dt>
+                <dd>Ordered architectural triage run before prompt writing: (1) Should an LLM be used at all? → (2) What work shape fits? → (3) How is it routed/hosted? → (4) What guardrails and verification wrap it?</dd>
+            </div>
+            <div class="definition-item">
+                <dt>5-Factor Pattern Matrix</dt>
+                <dd>Rubric comparing Single Call, Composable Workflow, and Autonomous Agent across path predictability, latency budget, error blast radius, token cost ceiling (~1× vs. 3–5× vs. ~15×), and auditability.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Deterministic Drift</dt>
+                <dd>Silent reliability failure caused by delegating exact arithmetic, schema validation, or policy enforcement to probabilistic prompt instructions instead of deterministic code.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Augmented LLM</dt>
+                <dd>The foundational building block of agentic systems: a single LLM call equipped with retrieval, tools (often via MCP), and memory.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Prompt Chaining &amp; Gate</dt>
+                <dd>Sequential workflow decomposing a predictable task into fixed LLM steps separated by deterministic plain-code checks (<code>gate_check</code>) that fail fast on invalid intermediate outputs.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Routing</dt>
+                <dd>Workflow pattern that classifies an input's intent or complexity and dispatches it to a specialized prompt, scoped toolset, or cost-appropriate model tier.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Parallelization (Sectioning vs. Voting)</dt>
+                <dd>Running concurrent LLM calls either on independent subtasks for speed/focus (<em>Sectioning</em>) or repeating the same task for consensus/high-recall verification (<em>Voting</em>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Orchestrator–Workers</dt>
+                <dd>Workflow pattern where a central LLM dynamically decomposes an unpredictable task at runtime, dispatches scoped workers, and synthesizes their results.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Evaluator–Optimizer</dt>
+                <dd>Workflow pattern pairing a generator LLM with an independent critic/auditor LLM (plus deterministic checks) in a rubric-driven loop bounded by <code>max_iterations</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>ReAct vs. Plan-and-Execute</dt>
+                <dd><strong>ReAct</strong> interleaves Thought → Action → Observation sequentially for exploratory tasks; <strong>Plan-and-Execute (ReWOO / LLMCompiler)</strong> plans a step list or symbolic DAG upfront and runs independent tools concurrently.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>ACI &amp; Poka-Yoke</dt>
+                <dd><strong>Agent-Computer Interface</strong> design and mistake-proofing: crafting junior-dev docstrings, strict enums, and unambiguous parameters (e.g., absolute file paths) so invalid tool calls cannot occur.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>4-Tier Memory Model</dt>
+                <dd><strong>Working</strong> (in-window scratchpad), <strong>Episodic</strong> (session transcripts/checkpoints), <strong>Semantic</strong> (consolidated RAG/Memory Bank facts), and <strong>Procedural</strong> (system instructions, rules, progressive-disclosure Skills).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context Rot (Poisoning / Confusion / Clash)</dt>
+                <dd><strong>Poisoning</strong> (hallucinated premise survives in history; requires rewind/clear, not compaction), <strong>Confusion</strong> (bulky tool dumps dilute attention), and <strong>Clash</strong> (contradictory instructions).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context Isolation Rule &amp; HandoffContract</dt>
+                <dd>Subagents execute in fresh, task-scoped context windows rather than inheriting the coordinator's noisy history, returning a compact schema-validated <code>HandoffContract</code> (with <code>artifact_uri</code> pointers for large outputs).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Epistemic Gating &amp; Separation of Authority</dt>
+                <dd><strong>Epistemic gating</strong> blocks corrupted/unreadable inputs in code before calling the LLM; <strong>Separation of Authority</strong> pairs generation with an independent cold-context critic and deterministic citation checks.</dd>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-link"></i></div>Related guides</h3>
+                <ul>
+                    <li><a href="ADK.html">Agent Development Kit (ADK)</a>: Google's runtime architecture, <code>LlmAgent</code>, graph <code>Workflow</code>, callbacks, and Memory Bank.</li>
+                    <li><a href="ClaudeCode.html">Claude Code &amp; Agent SDK</a>: permission rules, hooks, subagents, progressive-disclosure skills, and Managed Agents.</li>
+                    <li><a href="ClaudeAPI.html">Claude Platform &amp; API</a>: Messages API, tool-use loop, <code>stop_reason</code>, adaptive thinking, prompt caching, and batches.</li>
+                    <li><a href="MCP.html">MCP</a>, <a href="A2A.html">A2A</a>, and <a href="RAG.html">RAG</a>: vertical tool protocols, horizontal agent federation, and retrieval pipelines.</li>
+                </ul>
+            </div>
+
+            <div class="concept-card accent-pink">
+                <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
+                <p>Listen to the 55-minute Agentic Design Patterns audio deep dive, open the 2-column study guide PDF, 21-slide deck, and sketchnote infographic in the Hub Viewer, or drill scenario-based questions on workflow vs. agent selection, canonical workflows, and multi-agent isolation.</p>
+                <div class="audio-label" style="margin-top: 15px;">Agentic Design Patterns: Workflows vs. Autonomous Agents (Podcast)</div>
+                <div class="audio-wrapper">
+                    <audio controls controlsList="nodownload" oncontextmenu="return false;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ADP-v1.0.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                        <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                        <span>Open Study Notes, Slide Deck &amp; Infographic in Hub Viewer</span>
+                    </a>
+                    <a href="quiz.html?topic=adp" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                        <i class="fas fa-tasks"></i>
+                        <span>Launch Interactive ADP Practice Quiz →</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SELF ASSESSMENT QUESTIONS
+             ═══════════════════════════════════════ -->
+        <div class="quiz-block">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Self-Assessment Questions (Click to Reveal)</h3>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question">
+                    <p><span class="q-num">Q1.</span> What is the 4-Decision Sequence, and why must it run before prompt engineering?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text"><strong>(1)</strong> Should an LLM be in the loop at all? (3-Bucket decomposition: Deterministic Code vs. Probabilistic LLM vs. HITL), <strong>(2)</strong> What work shape fits? (Single Call vs. Workflow vs. Autonomous Agent), <strong>(3)</strong> Where and how is it routed/hosted? (model tiers, effort, batch/stream, residency), and <strong>(4)</strong> What deterministic guardrails and verification wrap it? Running this sequence first prevents delegating exact math/RBAC to prompts (<em>deterministic drift</em>) or building a 15× token autonomous agent where a 2-step workflow suffices.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q2.</span> How do Parallelization (Sectioning), Parallelization (Voting), and Orchestrator–Workers differ?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">In <strong>Parallelization (Sectioning)</strong>, the task is split into <em>predefined, independent subtasks</em> (e.g., running a safety screen alongside answer generation) to cut wall-clock latency. In <strong>Parallelization (Voting)</strong>, the <em>same task</em> runs multiple times (diverse prompts or multi-sample self-consistency) and aggregates via vote thresholds to boost confidence/recall. In <strong>Orchestrator–Workers</strong>, the subtasks are <em>not known in advance</em>—a central orchestrator LLM inspects the input at runtime, dynamically invents the worker task list, dispatches scoped workers, and synthesizes their outputs.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q3.</span> Why does asking a single prompt to both generate a 30-page contract summary and verify every citation fail at scale, and what pattern fixes it?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Packing generation and strict auditing into one prompt causes <strong>instruction crowding</strong> (attention dilution) and <strong>self-grading confirmation bias</strong>—the model prioritizes fluent generation and rationalizes or skips late audit rules. Fix it with <strong>Evaluator–Optimizer + Separation of Authority</strong>: pair the generator with a separate critic in a clean context window (<code>include_contents='none'</code>) backed by a <strong>deterministic code gate</strong> that verifies every cited section header exists in the source text, bounded by <code>max_iterations</code> and HITL escalation on failure.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> When should you choose Plan-and-Execute (or ReWOO / LLMCompiler) over a standard ReAct loop?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Use <strong>ReAct</strong> when the task is exploratory and step <em>N+1</em> cannot be predicted until step <em>N</em>'s observation returns (e.g., debugging an unknown production outage). Choose <strong>Plan-and-Execute / ReWOO / LLMCompiler</strong> when the required subtasks or dependency DAG can be planned upfront and executed concurrently—avoiding <em>O(N)</em> sequential LLM turns and repetitive prompt re-ingestion.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> A coding session hallucinates a non-existent helper module in turn 3 and spends the next 6 turns failing to import it. Why is context compaction (<code>/compact</code>) the wrong fix, and what should you do instead?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">This is <strong>context poisoning</strong>. Compaction summarizes the existing conversation history, which preserves the hallucinated premise inside the summary block so the agent continues acting on it. Instead, <strong>rewind</strong> to the checkpoint prior to turn 3 or <strong>clear/reset</strong> into a fresh context window carrying over only verified facts.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q6.</span> What is the Context Isolation Rule in multi-agent systems, and how should a worker return a 40 KB generated report to its coordinator?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">A subagent must receive a <strong>fresh, task-scoped context window</strong> containing only its specialist instructions and explicit task inputs—never the coordinator's full noisy conversation transcript. Because only the subagent's final message returns to the parent, it should write the 40 KB report to disk or an <code>ArtifactService</code> and return a compact, schema-validated <code>HandoffContract</code> containing a short summary, status, verified citations, and the <code>artifact_uri</code> pointer.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q7.</span> During an evaluator–optimizer loop with <code>max_iterations=3</code>, the critic rejects the draft on all 3 attempts. What must happen next?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Many frameworks exit a loop silently when <code>max_iterations</code> trips. The exit tool must explicitly set an approval flag (<code>approved = True</code>) when the critic passes; a downstream deterministic gate checks that flag and, if <code>False</code> after iteration 3, halts automatic delivery and routes the draft + critic diagnostics to <strong>Human-in-the-Loop (HITL) escalation</strong> or a safe fallback.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q8.</span> What is the "Agent Theater" litmus test?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Multi-agent orchestration is justified <strong>if and only if</strong> subagents have distinct tools/permissions, private data scopes, isolated context windows to contain noisy exploration, parallel I/O, or an independent verification role. Wrapping multiple persona prompts in a sequential relay with identical tools and shared context is Agent Theater—multiplying token cost and latency without improving reliability.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════ -->
+        <footer class="page-footer">
+            <p>Study Notes by Michaël Bettan</p>
+            <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
+        </footer>
+
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        document.querySelectorAll('.quiz-answer').forEach(answer => {
+            answer.addEventListener('click', function () { this.classList.toggle('revealed'); });
+        });
+
+        document.querySelectorAll('.toc-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
