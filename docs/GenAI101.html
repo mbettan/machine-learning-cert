@@ -13,9 +13,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generative AI 101: Fundamentals & Study Notes | ML Cert Hub</title>
-    <meta name="description" content="Foundational study guide to Generative AI: transformer architecture, tokenization, decoding parameters, LoRA/PEFT fine-tuning, RLHF/DPO, and AI safety.">
-    <meta name="keywords" content="Generative AI 101, GenAI101, LLM, Foundation Models, Transformers, LoRA, PEFT, RLHF, AI Certification, Michael Bettan, Michaël Bettan">
+    <title>Generative AI 101: Fundamentals &amp; Architecture Study Notes | ML Cert Hub</title>
+    <meta name="description" content="GenAI 101 v3.0: Sparse MoE, LLM vs. SLM &amp; MaaS vs. VPC selection (PAA 3.1), System 2 reasoning (thinking_level &amp; Adaptive Thinking), L0–L4 agents &amp; 5-Layer Protocol Stack.">
+    <meta name="keywords" content="Generative AI 101, GenAI101, LLM vs SLM, MaaS, System 2 Reasoning, thinking_level, Adaptive Thinking, MCP, A2A, AP2, x402, L0-L4 Agents, Michael Bettan, Michaël Bettan">
     <meta name="author" content="Michaël Bettan">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#080B12">
@@ -32,8 +32,8 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Machine Learning Certification Hub">
     <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="Generative AI 101: Fundamentals & Study Notes | ML Cert Hub">
-    <meta property="og:description" content="Foundational study guide to Generative AI: transformer architecture, tokenization, decoding parameters, LoRA/PEFT fine-tuning, RLHF/DPO, and AI safety.">
+    <meta property="og:title" content="Generative AI 101: Fundamentals &amp; Architecture Study Notes | ML Cert Hub">
+    <meta property="og:description" content="GenAI 101 v3.0: Sparse MoE, LLM vs. SLM &amp; MaaS vs. VPC selection (PAA 3.1), System 2 reasoning (thinking_level &amp; Adaptive Thinking), L0–L4 agents &amp; 5-Layer Protocol Stack.">
     <meta property="og:url" content="https://mbettan.github.io/machine-learning-cert/GenAI101.html">
     <meta property="og:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta property="og:image:width" content="1200">
@@ -41,8 +41,8 @@
     <meta property="og:image:alt" content="Generative AI 101 — Study Guide by Michaël Bettan">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Generative AI 101: Fundamentals & Study Notes | ML Cert Hub">
-    <meta name="twitter:description" content="Foundational study guide to Generative AI: transformer architecture, tokenization, decoding parameters, LoRA/PEFT fine-tuning, RLHF/DPO, and AI safety.">
+    <meta name="twitter:title" content="Generative AI 101: Fundamentals &amp; Architecture Study Notes | ML Cert Hub">
+    <meta name="twitter:description" content="GenAI 101 v3.0: Sparse MoE, LLM vs. SLM &amp; MaaS vs. VPC selection (PAA 3.1), System 2 reasoning (thinking_level &amp; Adaptive Thinking), L0–L4 agents &amp; 5-Layer Protocol Stack.">
     <meta name="twitter:image" content="https://mbettan.github.io/machine-learning-cert/og-image.jpg">
     <meta name="twitter:image:alt" content="Generative AI 101 — Study Guide by Michaël Bettan">
 
@@ -62,16 +62,15 @@
                         "LearningResource"
                   ],
                   "@id": "https://mbettan.github.io/machine-learning-cert/GenAI101.html#article",
-                  "headline": "Generative AI 101: Fundamentals & Study Notes | ML Cert Hub",
-                  "name": "Generative AI 101 Study Guide",
-                  "description": "Foundational study guide to Generative AI: transformer architecture, tokenization, decoding parameters, LoRA/PEFT fine-tuning, RLHF/DPO, and AI safety.",
-                  "keywords": "Generative AI 101, GenAI101, LLM, Foundation Models, Transformers, LoRA, PEFT, RLHF, AI Certification, Michael Bettan, Michaël Bettan",
+                  "headline": "Generative AI 101: Fundamentals & Architecture Study Notes | ML Cert Hub",
+                  "name": "Generative AI 101 Study Guide (v3.0)",
+                  "description": "GenAI 101 v3.0: Sparse MoE, LLM vs. SLM & MaaS vs. VPC selection (PAA 3.1), System 2 reasoning (thinking_level & Adaptive Thinking), L0–L4 agents & 5-Layer Protocol Stack.",
+                  "keywords": "Generative AI 101, GenAI101, LLM vs SLM, MaaS, System 2 Reasoning, thinking_level, Adaptive Thinking, MCP, A2A, AP2, x402, L0-L4 Agents, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/GenAI101.html",
                   "inLanguage": "en",
-                  "version": "2.0",
-                  "dateModified": "2026-10-25",
+                  "dateModified": "2026-10-31",
                   "learningResourceType": "Study Guide",
-                  "educationalLevel": "Beginner",
+                  "educationalLevel": "Beginner to Intermediate",
                   "author": {
                         "@type": "Person",
                         "@id": "https://github.com/mbettan#person",
@@ -108,6 +107,10 @@
       ]
 }
     </script>
+    <!-- site-head:start -->
+    <link rel="alternate" type="text/markdown" href="md/GenAI101.md" title="Markdown version">
+    <script src="guide-tools.js" defer></script>
+    <!-- site-head:end -->
 </head>
 
 <body>
@@ -124,20 +127,16 @@
             <div class="cover-content">
                 <div class="cover-eyebrow">
                     <i class="fas fa-graduation-cap"></i>
-                    Study Notes — Certification Prep
+                    Study Notes — v3.0 · PAA Sec 3.1 &amp; CCAR-F Foundation
                 </div>
                 <h1>Generative AI 101<br><em>Study Guide</em></h1>
                 <p class="cover-subtitle">
-                    Comprehensive overview of Generative AI definitions, workflows, prompt engineering, risks, and glossary.
+                    Sparse MoE &amp; native multimodality, PAA 3.1 model selection (LLM vs. SLM, OSS vs. SaaS/MaaS), System 2 reasoning (<code>thinking_level</code> &amp; Adaptive Thinking), training, L0–L4 agents, the 5-Layer Protocol Stack, RAG, and AI safety.
                 </p>
-                                                <div class="cover-meta">
+                <div class="cover-meta">
                     <div class="cover-meta-item">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>Updated: <strong>April 2026</strong></span>
-                    </div>
-                    <div class="cover-meta-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Version: <strong>1.0</strong></span>
+                        <span>Updated: <strong>October 2026 (v3.0)</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-tag"></i>
@@ -145,13 +144,17 @@
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-clock"></i>
-                        <span>Reading Time: <strong>~9 min</strong></span>
+                        <span>Reading Time: <strong>~20 min</strong></span>
                     </div>
                     <div class="cover-meta-item">
                         <i class="fas fa-user-edit"></i>
                         <span>Author: <strong>Michaël Bettan</strong></span>
                     </div>
                 </div>
+                <a href="quiz.html?topic=genai101" class="cover-eyebrow" style="margin-top: 18px; text-decoration: none; color: var(--mint); border-color: rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>Test Yourself: Generative AI 101 Practice Quiz (36 Questions) →</span>
+                </a>
             </div>
         </section>
 
@@ -166,75 +169,95 @@
             <div class="toc-columns">
                 <a href="#definitions" class="toc-item">
                     <span class="toc-number">01</span>
-                    <span>Definitions & Scope</span>
+                    <span>Definitions, MoE &amp; Multimodality</span>
                 </a>
                 <a href="#workflow" class="toc-item">
                     <span class="toc-number">02</span>
-                    <span>Standard Workflow</span>
+                    <span>Standard 9-Step Workflow</span>
                 </a>
                 <a href="#ecosystem" class="toc-item">
                     <span class="toc-number">03</span>
-                    <span>Ecosystem & Key Players</span>
+                    <span>Ecosystem &amp; Key Players</span>
+                </a>
+                <a href="#model-selection" class="toc-item">
+                    <span class="toc-number">04</span>
+                    <span>Model Selection: LLM/SLM &amp; MaaS/VPC</span>
+                </a>
+                <a href="#system2-reasoning" class="toc-item">
+                    <span class="toc-number">05</span>
+                    <span>System 2 Reasoning &amp; Effort</span>
                 </a>
                 <a href="#prompting" class="toc-item">
-                    <span class="toc-number">04</span>
-                    <span>Prompt Engineering</span>
+                    <span class="toc-number">06</span>
+                    <span>Prompt Engineering &amp; Frameworks</span>
                 </a>
                 <a href="#training" class="toc-item">
-                    <span class="toc-number">05</span>
-                    <span>How Models are Trained</span>
+                    <span class="toc-number">07</span>
+                    <span>How Models Are Trained</span>
                 </a>
                 <a href="#advanced-troubleshooting" class="toc-item">
-                    <span class="toc-number">06</span>
-                    <span>Advanced Tactics & Troubleshooting</span>
+                    <span class="toc-number">08</span>
+                    <span>Advanced Tactics &amp; Troubleshooting</span>
                 </a>
-                <a href="#agents-rag" class="toc-item">
-                    <span class="toc-number">07</span>
-                    <span>Agents & RAG</span>
+                <a href="#agents" class="toc-item">
+                    <span class="toc-number">09</span>
+                    <span>Agents &amp; Capability Levels (L0–L4)</span>
+                </a>
+                <a href="#protocol-stack" class="toc-item">
+                    <span class="toc-number">10</span>
+                    <span>5-Layer Agentic Protocol Stack</span>
+                </a>
+                <a href="#rag" class="toc-item">
+                    <span class="toc-number">11</span>
+                    <span>RAG &amp; Context Augmentation</span>
                 </a>
                 <a href="#risks-ethics" class="toc-item">
-                    <span class="toc-number">08</span>
-                    <span>Risks, Ethics & Vulnerabilities</span>
+                    <span class="toc-number">12</span>
+                    <span>Risks, Ethics &amp; Vulnerabilities</span>
                 </a>
                 <a href="#glossary" class="toc-item">
-                    <span class="toc-number">09</span>
-                    <span>Glossary</span>
+                    <span class="toc-number">13</span>
+                    <span>Glossary &amp; Self-Assessment</span>
                 </a>
             </div>
         </nav>
 
         <!-- ═══════════════════════════════════════
-             SECTION: DEFINITIONS
+             SECTION 01: DEFINITIONS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="definitions">
             <div class="section-divider-number">01</div>
-            <h2>Definitions & Scope</h2>
+            <h2>Definitions, Sparse MoE &amp; Native Multimodality</h2>
         </div>
 
         <div class="concept-card accent-mint">
             <h3><div class="icon-badge"><i class="fas fa-info-circle"></i></div>What is GenAI?</h3>
             <p>
-                <strong>Generative AI (GenAI)</strong> encompasses machine learning models designed to generate novel content (text, images, audio, video, code) by predicting patterns from vast training datasets.
+                <strong>Generative AI (GenAI)</strong> encompasses machine learning models designed to generate novel content (text, images, audio, video, structured data, and executable code) by predicting patterns learned from vast training datasets.
             </p>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
-                <dt>LLMs (Large Language Models)</dt>
-                <dd>The foundation of text-based GenAI. They use the <strong>Transformer architecture</strong> and <strong>Attention mechanisms</strong> to weigh the relevance of words across long contexts.</dd>
+                <dt>LLMs &amp; Sparse MoE Transformers</dt>
+                <dd>The foundation of text- and code-based GenAI. Built on the <strong>Transformer architecture</strong> and <strong>self-attention mechanisms</strong> to weigh token relevance across long contexts (1M–2M+ tokens). Frontier models predominantly use <strong>Sparse Mixture-of-Experts (MoE)</strong> routing—activating only a small subset of expert sub-networks per token so total capacity scales without multiplying per-token latency.</dd>
             </div>
             <div class="definition-item">
                 <dt>Multimodal models</dt>
-                <dd>Built from the ground up to process, analyze, and generate across multiple modalities (text, images, audio) simultaneously. <em>Example: Google’s Gemini, OpenAI's GPT-4o.</em></dd>
+                <dd>Built from the ground up (<em>native early-fusion</em>) to process, analyze, and generate across multiple modalities (text, images, audio, video, PDFs) simultaneously inside one representation space. <em>Examples: Google’s Gemini 4 Argon / 3.8 Flash, Anthropic’s Claude Opus 4.7 / Sonnet 4.6, OpenAI’s GPT-5 / GPT-4o.</em></dd>
+            </div>
+            <div class="definition-item">
+                <dt>Native Multimodal vs. Modular Pipelines</dt>
+                <dd>Native ingestion preserves visual layout and audio prosody end-to-end. However, <strong>modular pipelines</strong> (dedicated Speech-to-Text or Document AI Layout Parser before an LLM) still win when compliance mandates deterministic <strong>PII redaction on intermediate transcripts</strong> before foundation-model ingestion or exact bounding-box coordinate auditability.</dd>
             </div>
             <div class="definition-item">
                 <dt>Synthetic media</dt>
-                <dd>The umbrella term for AI-generated text, images, video, and data (replacing the narrower term "deepfake").</dd>
+                <dd>The umbrella industry term for AI-generated text, images, audio, video, and synthetic tabular/training data—replacing the narrower legacy term "deepfake."</dd>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: WORKFLOW
+             SECTION 02: WORKFLOW
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="workflow">
             <div class="section-divider-number">02</div>
@@ -245,334 +268,822 @@
             <div class="process-step">
                 <div class="process-step-number">1</div>
                 <h4>Define Objective</h4>
-                <p>What is the goal, audience, tone, and format of your output?</p>
+                <p>Specify business goal, audience, latency/cost envelope, tone, and output schema.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">2</div>
                 <h4>Model Selection</h4>
-                <p>Choose the right tool for the task (e.g., text vs. multimodal vs. specialized SLM).</p>
+                <p>Match task complexity and compliance to frontier LLM vs. SLM and SaaS/MaaS vs. VPC.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">3</div>
                 <h4>Prompt Engineering</h4>
-                <p>Craft clear, specific, contextual instructions.</p>
+                <p>Craft clear system instructions, schemas, and curated context windows.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">4</div>
-                <h4>Generation & Iteration</h4>
-                <p>Run the prompt, use feedback loops (thumbs up/down), and refine.</p>
+                <h4>Generation &amp; Iteration</h4>
+                <p>Run baseline evals, inspect traces, use feedback loops (thumbs up/down), and refine.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">5</div>
                 <h4>Troubleshooting</h4>
-                <p>Address lazy models, freezes, and confusing outputs by tweaking parameters.</p>
+                <p>Address lazy models, truncation, or refusals via reasoning effort, schemas, or parameters.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">6</div>
-                <h4>Evaluation & Fact-checking</h4>
-                <p>Cross-reference outputs. GenAI is not infallible; human oversight is required.</p>
+                <h4>Evaluation &amp; Fact-checking</h4>
+                <p>Cross-reference with deterministic checks, autoraters, and human oversight.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">7</div>
                 <h4>Advanced Customization</h4>
-                <p>Use RAG, AI chaining, or fine-tuning for specialized topics.</p>
+                <p>Climb deliberately: Prompting &rarr; RAG / Grounding &rarr; SFT &rarr; DPO/RLHF.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">8</div>
-                <h4>Finalizing & Editing</h4>
-                <p>Harmonize tone, inject the human element, and verify originality.</p>
+                <h4>Finalizing &amp; Editing</h4>
+                <p>Harmonize tone, inject human editorial judgment, and verify code/citations.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">9</div>
-                <h4>Deployment & Ethics</h4>
-                <p>Add digital watermarks, cite sources, and monitor for model drift.</p>
+                <h4>Deployment &amp; Ethics</h4>
+                <p>Attach watermarks/provenance (<code>SynthID</code>, <code>C2PA</code>), cite sources, and monitor drift.</p>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: ECOSYSTEM
+             SECTION 03: ECOSYSTEM
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="ecosystem">
             <div class="section-divider-number">03</div>
-            <h2>Ecosystem & Key Players</h2>
+            <h2>Ecosystem &amp; Key Players</h2>
         </div>
 
         <div class="prose">
-            <p>The GenAI landscape goes far beyond a single chatbot. Selecting the right model depends on the task, budget, and privacy needs:</p>
+            <p>The 2026 GenAI landscape spans multimodal frontier reasoning models, ultra-fast routing SLMs, and open-weight checkpoints. Selecting the right family depends on reasoning depth, latency, licensing, and data-residency rules:</p>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
-                <dt>Google (Gemini)</dt>
-                <dd>Highly capable multimodal foundation models seamlessly integrated into ecosystems (Workspace, Search). DeepMind pioneers AI research (e.g., AlphaGo, Project Astra).</dd>
+                <dt>Google (Gemini &amp; Gemma)</dt>
+                <dd>Native multimodal Sparse MoE models—<strong>Gemini 4 Argon</strong> (frontier reasoning &amp; agentic coding), <strong>Gemini 3.8 Flash</strong> (workhorse), <strong>Gemini 3.8 Live</strong> (real-time voice/video), and <strong>Gemini 3.5 Flash-Lite</strong>—integrated across Agent Platform, Search grounding, and Workspace, paired with <strong>Gemma 4</strong> open weights and DeepMind research (<code>SynthID</code>, <code>AlphaEvolve</code>).</dd>
             </div>
             <div class="definition-item">
                 <dt>Anthropic (Claude)</dt>
-                <dd>Focuses on safety, large context windows, and "Constitutional AI" (aligning outputs to human rights/rules rather than just human feedback).</dd>
+                <dd>Safety-engineered frontier models (<strong>Claude Opus 4.7</strong>, <strong>Sonnet 4.6</strong>, <strong>Haiku 4.5</strong>) pioneering <strong>Constitutional AI (RLAIF)</strong>—aligning outputs to explicit written principles rather than ad-hoc human ratings alone—alongside native <strong>Adaptive Thinking</strong>, 1M-token context windows, and mechanistic interpretability.</dd>
             </div>
             <div class="definition-item">
                 <dt>Meta (Llama)</dt>
-                <dd>The champion of open-weight models, making powerful LLMs accessible to developers worldwide for local deployment and fine-tuning.</dd>
+                <dd>Champion of the open-weight ecosystem, enabling developers to fine-tune, quantize, and deploy capable checkpoints via cloud MaaS catalogs, private VPCs, or on-prem hardware.</dd>
             </div>
             <div class="definition-item">
                 <dt>DeepSeek</dt>
-                <dd>Chinese startup proving that smaller, highly efficient architectures (using MoE) can rival massive proprietary models in reasoning and coding.</dd>
+                <dd>Demonstrated that highly efficient <strong>Sparse Mixture-of-Experts (MoE)</strong> architectures, multi-head latent attention, and RL reasoning distillation can rival massive proprietary models in coding and math at lower active FLOPs.</dd>
             </div>
             <div class="definition-item">
-                <dt>OpenAI (ChatGPT/GPT-4)</dt>
-                <dd>Early pioneer of the commercial LLM chatbot and reasoning models (o1).</dd>
+                <dt>OpenAI (ChatGPT / GPT-5 / o-series)</dt>
+                <dd>Early pioneer of the commercial conversational LLM chatbot (<code>GPT-4</code>, <code>GPT-4o</code>) and test-time reasoning model series (<code>o1</code> through <code>o3</code> / <code>GPT-5</code>).</dd>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: PROMPTING
+             SECTION 04: MODEL SELECTION (PAA 3.1)
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="model-selection">
+            <div class="section-divider-number">04</div>
+            <h2>Model Selection: LLM vs. SLM, OSS vs. Proprietary &amp; SaaS vs. VPC</h2>
+        </div>
+
+        <div class="prose">
+            <p>Certification blueprints (notably <strong>Google PAA Section 3.1</strong> and <strong>CCAR-F</strong>) evaluate model selection across <strong>three independent axes</strong>: <em>capacity tier</em>, <em>weight licensing</em>, and <em>hosting consumption model</em>. Confusing open-weight licensing with mandatory Kubernetes GPU ops is one of the most common exam traps.</p>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-sitemap"></i> Multi-Model Routing Cascade &amp; Hosting Boundary (PAA Sec 3.1)</div>
+            <svg viewBox="0 0 920 270" width="100%" style="max-width: 920px; display: block; margin: 12px auto 4px; font-family: 'Inter', sans-serif;" role="img" aria-label="Multi-model routing cascade from SLM router to mid-tier workhorse and frontier LLM, contrasted with serverless MaaS versus dedicated VPC node-hour hosting">
+                <defs>
+                    <marker id="arrowMint" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#2DD4BF"/>
+                    </marker>
+                    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24"/>
+                    </marker>
+                </defs>
+                <!-- Cascade Row -->
+                <rect x="16" y="18" width="185" height="96" rx="10" fill="rgba(45,212,191,0.09)" stroke="#2DD4BF" stroke-width="1.5"/>
+                <text x="108" y="42" fill="#2DD4BF" font-size="12" font-weight="700" text-anchor="middle">TIER 1 · SLM / LITE ROUTER</text>
+                <text x="108" y="61" fill="#E2E8F0" font-size="11.5" font-weight="600" text-anchor="middle">Flash-Lite · Gemma 4 · Haiku 4.5</text>
+                <text x="108" y="80" fill="#94A3B8" font-size="10.5" text-anchor="middle">Intent routing, JSON extraction,</text>
+                <text x="108" y="96" fill="#94A3B8" font-size="10.5" text-anchor="middle">PII/safety gate (&lt;150ms, 10–30× cheaper)</text>
+
+                <line x1="201" y1="66" x2="255" y2="66" stroke="#2DD4BF" stroke-width="1.8" marker-end="url(#arrowMint)"/>
+                <text x="228" y="57" fill="#94A3B8" font-size="9.5" text-anchor="middle">80–85%</text>
+
+                <rect x="260" y="18" width="215" height="96" rx="10" fill="rgba(56,189,248,0.09)" stroke="#38BDF8" stroke-width="1.5"/>
+                <text x="367" y="42" fill="#38BDF8" font-size="12" font-weight="700" text-anchor="middle">TIER 2 · WORKHORSE LLM</text>
+                <text x="367" y="61" fill="#E2E8F0" font-size="11.5" font-weight="600" text-anchor="middle">Gemini 3.8 Flash · Sonnet 4.6</text>
+                <text x="367" y="80" fill="#94A3B8" font-size="10.5" text-anchor="middle">Standard multi-step tool calling,</text>
+                <text x="367" y="96" fill="#94A3B8" font-size="10.5" text-anchor="middle">RAG synthesis &amp; routine code edits</text>
+
+                <line x1="475" y1="66" x2="535" y2="66" stroke="#FBBF24" stroke-width="1.8" marker-end="url(#arrowAmber)"/>
+                <text x="505" y="57" fill="#FBBF24" font-size="9.5" text-anchor="middle">Escalate 10–15%</text>
+
+                <rect x="540" y="18" width="215" height="96" rx="10" fill="rgba(167,139,250,0.10)" stroke="#A78BFA" stroke-width="1.5"/>
+                <text x="647" y="42" fill="#A78BFA" font-size="12" font-weight="700" text-anchor="middle">TIER 3 · FRONTIER REASONER</text>
+                <text x="647" y="61" fill="#E2E8F0" font-size="11.5" font-weight="600" text-anchor="middle">Gemini 4 Argon · Claude Opus 4.7</text>
+                <text x="647" y="80" fill="#94A3B8" font-size="10.5" text-anchor="middle">Ambiguous planning, 1M+ synthesis,</text>
+                <text x="647" y="96" fill="#94A3B8" font-size="10.5" text-anchor="middle">System 2 root-cause verification</text>
+
+                <rect x="772" y="18" width="132" height="96" rx="10" fill="rgba(251,113,133,0.09)" stroke="#FB7185" stroke-width="1.4"/>
+                <text x="838" y="42" fill="#FB7185" font-size="11.5" font-weight="700" text-anchor="middle">EDGE / NPU</text>
+                <text x="838" y="61" fill="#E2E8F0" font-size="11" font-weight="600" text-anchor="middle">Gemini Nano · E2B</text>
+                <text x="838" y="80" fill="#94A3B8" font-size="10" text-anchor="middle">Offline, zero-egress</text>
+                <text x="838" y="95" fill="#94A3B8" font-size="10" text-anchor="middle">device inference</text>
+
+                <!-- Hosting Comparison Strip -->
+                <rect x="16" y="138" width="436" height="114" rx="10" fill="rgba(15,23,42,0.85)" stroke="rgba(45,212,191,0.4)" stroke-width="1.3"/>
+                <text x="34" y="162" fill="#2DD4BF" font-size="12" font-weight="700">DEFAULT: Serverless SaaS / Model-as-a-Service (MaaS)</text>
+                <text x="34" y="183" fill="#CBD5E1" font-size="11">• Covers 1P (Gemini, Claude API) AND Open-Weight MaaS (Llama, DeepSeek)</text>
+                <text x="34" y="202" fill="#CBD5E1" font-size="11">• Billed per token (PayGo) or reserved GSUs (Provisioned Throughput SLA)</text>
+                <text x="34" y="221" fill="#94A3B8" font-size="11">• Scales to zero on spiky traffic; zero GPU/driver ops</text>
+                <text x="34" y="240" fill="#2DD4BF" font-size="10.5" font-weight="600">✓ Pick first unless compliance forbids multi-tenant SaaS or weights are custom-tuned</text>
+
+                <rect x="468" y="138" width="436" height="114" rx="10" fill="rgba(15,23,42,0.85)" stroke="rgba(251,191,36,0.45)" stroke-width="1.3"/>
+                <text x="486" y="162" fill="#FBBF24" font-size="12" font-weight="700">EXCEPTION: Dedicated VPC Endpoint / Self-Hosted GKE</text>
+                <text x="486" y="183" fill="#CBD5E1" font-size="11">• Dedicated GPU/TPU replicas inside single-tenant VPC or air-gapped cluster</text>
+                <text x="486" y="202" fill="#FB7185" font-size="11" font-weight="600">• Billing trap: accrues node-hour charges 24/7 even at 0 QPS until undeployed!</text>
+                <text x="486" y="221" fill="#CBD5E1" font-size="11">• Open weights lack platform filters &rarr; attach Model Armor / ShieldGemma 2</text>
+                <text x="486" y="240" fill="#FBBF24" font-size="10.5" font-weight="600">✓ Pick for strict in-VPC compute mandates, custom LoRA weights, or air-gap</text>
+            </svg>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Selection Axis</th>
+                        <th>Option A</th>
+                        <th>Option B</th>
+                        <th>Architectural Decision Rule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Capacity Tier</strong><br>(LLM vs. SLM)</td>
+                        <td><strong>Frontier / Workhorse LLM</strong><br>(<code>Gemini 4 Argon</code>, <code>3.8 Flash</code>, <code>Claude Opus 4.7</code>, <code>Sonnet 4.6</code>)</td>
+                        <td><strong>Small Language Model (SLM)</strong><br>(<code>Gemini 3.5 Flash-Lite</code>, <code>Gemma 4</code>, <code>Haiku 4.5</code>, <code>Gemini Nano</code>)</td>
+                        <td>Use <strong>SLMs</strong> for high-QPS routing, narrow schema extraction, guardrails, and on-device privacy; reserve <strong>frontier LLMs</strong> for ambiguous multi-step planning, 1M+ synthesis, and novel edge cases.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Weight Licensing</strong><br>(Proprietary vs. OSS)</td>
+                        <td><strong>Proprietary Frontier</strong><br>(Managed safety, peak reasoning, scheduled retirement lifecycle)</td>
+                        <td><strong>Open-Weight / OSS</strong><br>(<code>Gemma 4</code>, <code>Llama</code>, <code>Mistral</code>, <code>DeepSeek</code> — frozen checkpoint permanence)</td>
+                        <td>Pick <strong>open weights</strong> when you require checkpoint permanence (no vendor deprecation), deep LoRA/full fine-tuning, or cross-cloud/on-prem portability—and add external guardrails (<strong>Model Armor</strong> / <strong>ShieldGemma 2</strong>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Hosting Topology</strong><br>(SaaS/MaaS vs. Self-Hosted)</td>
+                        <td><strong>Serverless SaaS / MaaS</strong><br>(Per-token PayGo or reserved GSUs; instant scale-to-zero)</td>
+                        <td><strong>Dedicated VPC Endpoint / GKE</strong><br>(<code>vLLM</code> / Model Garden Endpoint billed per GPU/TPU node-hour)</td>
+                        <td>Consume even open-weight models via <strong>MaaS</strong> first for spiky/variable workloads. Deploy dedicated VPC/GKE nodes <strong>only</strong> for strict single-tenant compute residency, custom adapter weights, or high steady-state GPU utilization.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Customization Ladder: RAG vs. SFT / Distillation</h4>
+                <p>Need <strong>fresh, mutable, or ACL-scoped enterprise facts</strong> with citations? Use <strong>RAG / Grounding</strong>—fine-tuning bakes static facts into weights and cannot enforce per-user document permissions. Use <strong>Supervised Fine-Tuning (SFT)</strong> or <strong>Teacher &rarr; Student SLM Distillation</strong> when you need consistent output schemas, domain tone, or frontier-grade classification accuracy at SLM latency and cost.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 05: SYSTEM 2 REASONING
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="system2-reasoning">
+            <div class="section-divider-number">05</div>
+            <h2>System 1 vs. System 2 Reasoning: Inference-Time Compute</h2>
+        </div>
+
+        <div class="prose">
+            <p>Pre-reasoning LLMs operated purely in <strong>System 1</strong> mode—predicting visible output tokens immediately with uniform compute per token. Modern frontier models unlock <strong>System 2 reasoning</strong> (<em>inference-time compute scaling</em>): generating hidden or summarized <strong>thinking tokens</strong> to decompose constraints, backtrack on dead ends, and interleave reasoning <em>between</em> tool calls before answering.</p>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-brain"></i> System 1 Fast Decoding vs. System 2 Interleaved Reasoning Loop</div>
+            <svg viewBox="0 0 920 205" width="100%" style="max-width: 920px; display: block; margin: 12px auto 4px; font-family: 'Inter', sans-serif;" role="img" aria-label="Comparison between System 1 immediate decoding and System 2 interleaved thinking across tool calls with Gemini thinking_level and Claude Adaptive Thinking">
+                <!-- System 1 -->
+                <rect x="16" y="16" width="888" height="64" rx="10" fill="rgba(45,212,191,0.07)" stroke="rgba(45,212,191,0.4)" stroke-width="1.3"/>
+                <text x="34" y="42" fill="#2DD4BF" font-size="12" font-weight="700">SYSTEM 1 (MINIMAL / LOW EFFORT)</text>
+                <text x="34" y="62" fill="#94A3B8" font-size="10.5">Classification · Routing · Voice Turn-Taking</text>
+                <rect x="330" y="28" width="140" height="40" rx="7" fill="#0F172A" stroke="#334155"/>
+                <text x="400" y="52" fill="#E2E8F0" font-size="11" text-anchor="middle">Prompt + Context</text>
+                <text x="492" y="53" fill="#2DD4BF" font-size="14" text-anchor="middle">&rarr;</text>
+                <rect x="514" y="28" width="175" height="40" rx="7" fill="#0F172A" stroke="#2DD4BF"/>
+                <text x="601" y="52" fill="#2DD4BF" font-size="11" font-weight="600" text-anchor="middle">Single Pass Decode</text>
+                <text x="711" y="53" fill="#2DD4BF" font-size="14" text-anchor="middle">&rarr;</text>
+                <rect x="732" y="28" width="154" height="40" rx="7" fill="rgba(45,212,191,0.14)" stroke="#2DD4BF"/>
+                <text x="809" y="52" fill="#E2E8F0" font-size="11" font-weight="600" text-anchor="middle">Fast TTFT Output</text>
+
+                <!-- System 2 -->
+                <rect x="16" y="96" width="888" height="94" rx="10" fill="rgba(167,139,250,0.08)" stroke="rgba(167,139,250,0.45)" stroke-width="1.3"/>
+                <text x="34" y="122" fill="#A78BFA" font-size="12" font-weight="700">SYSTEM 2 (DELIBERATIVE / INTERLEAVED)</text>
+                <text x="34" y="142" fill="#94A3B8" font-size="10.5">Gemini: thinking_level + thought_signatures</text>
+                <text x="34" y="160" fill="#94A3B8" font-size="10.5">Claude: Adaptive Thinking + effort (low..max)</text>
+
+                <rect x="305" y="114" width="128" height="56" rx="7" fill="#0F172A" stroke="#A78BFA"/>
+                <text x="369" y="138" fill="#A78BFA" font-size="11" font-weight="600" text-anchor="middle">Think &amp; Plan</text>
+                <text x="369" y="155" fill="#94A3B8" font-size="9.5" text-anchor="middle">(billed as output)</text>
+                <text x="447" y="146" fill="#A78BFA" font-size="14" text-anchor="middle">&rarr;</text>
+
+                <rect x="462" y="114" width="125" height="56" rx="7" fill="#0F172A" stroke="#38BDF8"/>
+                <text x="524" y="138" fill="#38BDF8" font-size="11" font-weight="600" text-anchor="middle">Tool Call</text>
+                <text x="524" y="155" fill="#94A3B8" font-size="9.5" text-anchor="middle">+ signature state</text>
+                <text x="601" y="146" fill="#38BDF8" font-size="14" text-anchor="middle">&rarr;</text>
+
+                <rect x="615" y="114" width="135" height="56" rx="7" fill="#0F172A" stroke="#A78BFA"/>
+                <text x="682" y="138" fill="#A78BFA" font-size="11" font-weight="600" text-anchor="middle">Re-Think on Obs</text>
+                <text x="682" y="155" fill="#94A3B8" font-size="9.5" text-anchor="middle">verify / pivot</text>
+                <text x="764" y="146" fill="#2DD4BF" font-size="14" text-anchor="middle">&rarr;</text>
+
+                <rect x="778" y="114" width="110" height="56" rx="7" fill="rgba(45,212,191,0.14)" stroke="#2DD4BF"/>
+                <text x="833" y="138" fill="#E2E8F0" font-size="11" font-weight="600" text-anchor="middle">Verified</text>
+                <text x="833" y="155" fill="#2DD4BF" font-size="10" text-anchor="middle">Response</text>
+            </svg>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Google Gemini (<code>Gemini 4 Argon</code> &amp; <code>3.8</code>)</th>
+                        <th>Anthropic Claude (<code>Claude Opus 4.7</code> &amp; <code>Sonnet 4.6</code>)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Primary Reasoning Parameter</strong></td>
+                        <td><code>thinking_level</code>: <code>MINIMAL</code>, <code>LOW</code>, <code>MEDIUM</code>, <code>HIGH</code> (replaces legacy manual token-count <code>thinking_budget</code> on Gemini 4).</td>
+                        <td>Native <strong>Adaptive Thinking</strong> (<code>thinking: {type: "adaptive"}</code>) paired with 5-tier <code>output_config.effort</code>: <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> (30+ min coding/agentic loops), <code>max</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-Turn Tool Continuity</strong></td>
+                        <td>Returns encrypted <strong><code>thought_signatures</code></strong> alongside tool calls; the agent harness <strong>must echo them back unmodified</strong> on the next turn so reasoning state is not lost.</td>
+                        <td>Automatically <strong>interleaves thinking between tool calls</strong> to evaluate tool errors and adjust plans (legacy manual <code>budget_tokens</code> is deprecated in 4.6 and removed in Opus 4.7).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Voice / Sampling Caveats</strong></td>
+                        <td>Use <code>gemini-3.8-live-extended-thinking</code> when live voice needs background System 2 reasoning; keep default sampling parameters when thinking is active.</td>
+                        <td>Custom <code>temperature</code> / <code>top_p</code> / <code>top_k</code> (4.7+) and assistant message prefilling (4.6+) are removed; steer determinism via <code>effort</code> and <code>output_config.format</code> JSON schemas.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-tachometer-alt"></i></div>When NOT to Enable High System 2 Effort</h3>
+            <ul>
+                <li><strong>Billed as Output Tokens:</strong> Hidden thinking tokens count against your context window and are metered at <strong>output-token rates</strong> while increasing Time-to-First-Token (TTFT).</li>
+                <li><strong>Keep Effort <code>MINIMAL</code> / <code>low</code> (or route to an SLM):</strong> Simple intent classification, deterministic slot extraction, boilerplate formatting, and sub-second conversational acknowledgements gain near-zero accuracy from deep deliberation while multiplying tail latency and cost.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 06: PROMPTING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="prompting">
-            <div class="section-divider-number">04</div>
-            <h2>Prompt Engineering & Frameworks</h2>
+            <div class="section-divider-number">06</div>
+            <h2>Prompt Engineering &amp; Frameworks</h2>
         </div>
 
         <div class="concept-card accent-purple">
             <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Prompting Frameworks</h3>
             <p>Reusable, structured templates designed to build consistent, high-quality prompts instead of starting from scratch. Common frameworks include:</p>
             <ul>
-                <li><strong>ReAct (Reasoning + Acting):</strong> Forces the model to alternate between internal reasoning steps and external tool calls (e.g., <em>Thought: I need flight data &rarr; Action: Call Expedia API</em>). Essential for building AI agents.</li>
+                <li><strong>ReAct (Reasoning + Acting):</strong> Alternates between internal reasoning steps and external tool calls (e.g., <em>Thought: I need flight data &rarr; Action: Call Expedia API &rarr; Observation: 3 seats left</em>). Essential loop for AI agents.</li>
                 <li><strong>PACT:</strong> Defines the <strong>P</strong>ersona, <strong>A</strong>ction, <strong>C</strong>ontext, and <strong>T</strong>one. Best for marketing, copywriting, and maintaining brand consistency.</li>
-                <li><strong>WISER:</strong> Defines <strong>W</strong>ho (Persona), <strong>I</strong>nstruction (Main task), <strong>S</strong>ubtasks (Breaking it down), <strong>E</strong>xamples (Few-shot), and <strong>R</strong>eview (Self-correction). Best for highly complex, multi-step problem solving.</li>
+                <li><strong>WISER:</strong> Defines <strong>W</strong>ho (Persona), <strong>I</strong>nstruction (Main task), <strong>S</strong>ubtasks (Breaking it down), <strong>E</strong>xamples (Few-shot), and <strong>R</strong>eview (Self-correction). Best for complex, structured multi-step problem solving.</li>
             </ul>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>Prompt</dt>
-                <dd>A query or command entered into the UI. Prompts guide the output, but results are probabilistic. Natural human language is now a computer language, but you must still "think like a machine" to problem-solve.</dd>
+                <dd>A query, instruction, and context payload sent to the model. Outputs remain probabilistic—natural language is a programming interface, so you must specify explicit constraints and edge-case rules.</dd>
             </div>
             <div class="definition-item">
                 <dt>Iterative Prompting</dt>
-                <dd>A flexible cycle of prompting, evaluating, and re-prompting until output is satisfactory.</dd>
+                <dd>A flexible cycle of prompting, evaluating against test cases, and re-prompting until output meets quality bars.</dd>
             </div>
             <div class="definition-item">
                 <dt>Prompt Chaining</dt>
-                <dd>A fixed sequence of connected prompts where each step builds on the previous one to avoid confusing the model.</dd>
+                <dd>A fixed sequence of connected prompts where each validated step builds on the previous one to avoid overloading a single call.</dd>
             </div>
             <div class="definition-item">
                 <dt>Meta-Prompts</dt>
-                <dd>Prompts about prompts (e.g., "Review my prompt and suggest improvements").</dd>
+                <dd>Prompts about prompts (e.g., "Review these failure traces and suggest tightened instructions for my system prompt").</dd>
             </div>
             <div class="definition-item">
                 <dt>Few-Shot Learning</dt>
-                <dd>Providing examples within the prompt to illustrate the desired format or style.</dd>
+                <dd>Providing 2–5 representative input-output examples within the prompt to anchor desired schema formatting, edge cases, or tone.</dd>
             </div>
             <div class="definition-item">
                 <dt>System Prompt</dt>
-                <dd>Meta-instructions that define the model's persona, rules, and boundaries (e.g., "You are an expert editor. Never use passive voice.").</dd>
+                <dd>High-priority meta-instructions defining the model's persona, invariants, tool rules, and refusal boundaries.</dd>
             </div>
             <div class="definition-item">
                 <dt>Chain-of-Thought (CoT)</dt>
-                <dd>Asking the model to "think step-by-step" before answering, which drastically improves its logic and math capabilities.</dd>
+                <dd>Asking a non-reasoning model to "think step-by-step" in visible tokens to improve logic and math. <em>(On native System 2 models, let <code>thinking_level</code> / Adaptive Thinking deliberate internally instead of forcing rigid CoT scripts.)</em></dd>
             </div>
             <div class="definition-item">
                 <dt>Subtractive method</dt>
-                <dd>Best for content creators. Start with a simple, general prompt and issue follow-up prompts to subtract or refine elements (whittling away).</dd>
+                <dd>Best for content creators. Start with a simple, general prompt and issue follow-up prompts to subtract or whittle away unwanted elements.</dd>
             </div>
             <div class="definition-item">
                 <dt>Additive method</dt>
-                <dd>Best for artists. Break the creative process into steps. Start with a background or base prompt, and iteratively add details, layers, and textures.</dd>
+                <dd>Best for visual artists. Break the creative process into steps—start with a base composition/background prompt and iteratively add lighting, layers, and textures.</dd>
             </div>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: TRAINING
+             SECTION 07: TRAINING
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="training">
-            <div class="section-divider-number">05</div>
-            <h2>How Models are Trained</h2>
+            <div class="section-divider-number">07</div>
+            <h2>How Models Are Trained</h2>
         </div>
 
         <div class="concept-card accent-cyan">
             <h3><div class="icon-badge"><i class="fas fa-dumbbell"></i></div>Training Phases</h3>
             <ul>
-                <li><strong>1. Pretraining:</strong> The model ingests massive, uncurated web data to learn language representation through self-supervised next-token prediction.</li>
-                <li><strong>2. Post-Training (alignment):</strong> Adapting the base model for specific tasks or safety:
+                <li><strong>1. Pretraining:</strong> The base model ingests trillions of tokens of web, code, and multimodal data to learn representations via self-supervised next-token prediction.</li>
+                <li><strong>2. Post-Training (Alignment &amp; Reasoning):</strong> Adapting the base checkpoint for instruction adherence, safety, and System 2 deliberation:
                     <ul>
-                        <li><strong>SFT (Supervised Fine-Tuning):</strong> Training the model on high-quality input-output pairs to teach it how to follow instructions.</li>
-                        <li><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> Humans rate model responses; the model learns a reward function to favor high-quality, safe outputs.</li>
-                        <li><strong>DPO (Direct Preference Optimization):</strong> A simpler, highly popular method that trains models directly on human preference pairs without needing a separate reward model.</li>
-                        <li><strong>RLAIF (AI Feedback):</strong> Using a highly capable AI (like Claude or Gemini) to evaluate and align another model, enabling massive scalability.</li>
+                        <li><strong>SFT (Supervised Fine-Tuning):</strong> Training on curated input-output demonstrations to teach instruction following and formatting.</li>
+                        <li><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> Humans rank candidate responses to train a separate reward model that guides policy optimization toward helpful, safe outputs.</li>
+                        <li><strong>DPO (Direct Preference Optimization):</strong> Directly optimizes model weights on human preference pairs <code>(chosen, rejected)</code> without needing a separate reward model.</li>
+                        <li><strong>RLAIF (Reinforcement Learning from AI Feedback / Constitutional AI):</strong> Uses a capable critique AI guided by explicit constitutional principles to score and align responses at scale.</li>
+                        <li><strong>RLVR (Reinforcement Learning with Verifiable Rewards):</strong> Trains System 2 reasoning models against deterministic verifiers (unit tests, compilers, math proof checkers), rewarding reasoning chains that produce objectively verified answers.</li>
                     </ul>
                 </li>
-                <li><strong>3. Model distillation:</strong> Transferring the capabilities of a massive "Teacher" LLM to a smaller, more efficient "Student" model.</li>
+                <li><strong>3. Model Distillation:</strong> Transferring domain skills or reasoning traces from a massive frontier "Teacher" LLM into a compact, low-latency "Student" SLM.</li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: ADVANCED TACTICS
+             SECTION 08: ADVANCED TACTICS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="advanced-troubleshooting">
-            <div class="section-divider-number">06</div>
-            <h2>Advanced Tactics & Troubleshooting</h2>
+            <div class="section-divider-number">08</div>
+            <h2>Advanced Tactics &amp; Troubleshooting</h2>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>AI Aggregation</dt>
-                <dd>Combining outputs of multiple independent GenAI models into a unified final product (e.g., using Claude for text, Chatgpt for images, Gemini for video).</dd>
+                <dd>Combining outputs of multiple specialized GenAI models into a unified final product (e.g., Claude for prose, Nano Banana / Imagen for images, Veo for video).</dd>
             </div>
             <div class="definition-item">
                 <dt>Output stitching</dt>
-                <dd>Running multiple AI models in parallel on the same prompt, then manually "stitching" the best segments of each output together.</dd>
+                <dd>Running multiple AI models in parallel on the <em>same</em> prompt, then selecting and stitching the strongest segments of each output together.</dd>
             </div>
             <div class="definition-item">
                 <dt>AI chaining</dt>
-                <dd>Using the output of one GenAI tool as part or all of the input/prompt for another GenAI tool.</dd>
+                <dd>Using the output of one GenAI tool as part or all of the input/prompt for a downstream GenAI tool.</dd>
             </div>
             <div class="definition-item">
                 <dt>Multi-persona prompting</dt>
-                <dd>Instructing a single model to respond from multiple distinct perspectives (e.g., "Respond as a CEO, a designer, and a consumer").</dd>
+                <dd>Instructing a single model call to critique or respond from multiple distinct perspectives (e.g., "Respond as a CEO, a product designer, and a skeptical consumer").</dd>
             </div>
         </div>
 
         <div class="concept-card accent-coral">
             <h3><div class="icon-badge"><i class="fas fa-tools"></i></div>Troubleshooting</h3>
             <ul>
-                <li><strong>The "Finger Problem":</strong> Visual anomalies (like 6 fingers) caused by unclear data patterns in the training set (overlapping hands/fingers in photos). Shows a lack of actual comprehension.</li>
-                <li><strong>Model/Data Drift:</strong> When a model’s training data ages out, making predictions less reliable or outdated. <em>Combat via: Retraining, fine-tuning, or utilizing search-augmented AI (like Perplexity).</em></li>
-                <li><strong>Overfitting (Memorization):</strong> When a model trains too closely on specific data and regurgitates training text word-for-word instead of generating novel ideas. <em>Combat via: adjusting temperature or using anti-plagiarism guardrails.</em></li>
-                <li><strong>Lazy Models:</strong> AI mimicking human behavior (e.g., refusals or degradation). When models inexplicably shorten their code or refuse complex tasks. <em>Combat via: Tipping, urgent timeframes, or threatening a "penalty".</em></li>
+                <li><strong>The "Finger Problem":</strong> Visual/structural anomalies (like 6 fingers) caused by ambiguous statistical co-occurrence in training photos rather than physical-world comprehension.</li>
+                <li><strong>Model/Data Drift:</strong> When a model’s static training cutoff ages out or live domain distributions shift. <em>Combat via: RAG/search grounding, dynamic context, or periodic re-tuning.</em></li>
+                <li><strong>Overfitting (Memorization):</strong> When a model trains too closely on narrow records and regurgitates training text word-for-word instead of generalizing. <em>Combat via: dataset deduplication, adjusting temperature/sampling, and recitation/plagiarism guardrails.</em></li>
+                <li><strong>Lazy Models:</strong> Models prematurely truncating code, emitting placeholders, or refusing complex tasks. <em>Combat via: explicit completeness schemas, chunked output chaining, calibrated <code>effort</code> / <code>thinking_level</code>, or urgency/incentive framing in legacy models.</em></li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: AGENTS & RAG
+             SECTION 09: AGENTS & CAPABILITY LEVELS
              ═══════════════════════════════════════ -->
-        <div class="section-divider" id="agents-rag">
-            <div class="section-divider-number">07</div>
-            <h2>Agents & RAG</h2>
+        <div class="section-divider" id="agents">
+            <div class="section-divider-number">09</div>
+            <h2>Agents &amp; Capability Levels (L0 to L4)</h2>
         </div>
 
-        <div class="prose">
-            <p>Models are moving from passive text-generators to <strong>Autonomous Agents</strong> capable of pursuing goals flexibly.</p>
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">What makes an agent</h3>
+
+        <div class="concept-card accent-blue">
+            <p>An <strong>AI agent</strong> is a system in which a model decides, step by step, which actions to take toward a goal, observes the results and keeps going until the goal is met or a stop condition fires. A chatbot answers; an agent acts.</p>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
-                <dt>AI Agents</dt>
-                <dd>Systems that perceive their environment, create plans, and execute actions (e.g., booking a calendar event, writing/running code in an IDE like Cursor).</dd>
+                <dt>Model</dt>
+                <dd>The reasoning engine that interprets the goal, plans and chooses the next action.</dd>
             </div>
             <div class="definition-item">
-                <dt>MCP (Model Context Protocol)</dt>
-                <dd>An open standard allowing secure, two-way connections between AI tools and external data sources (e.g., securely connecting Claude or Gemini to your company's internal Slack or Google Drive).</dd>
+                <dt>Tools</dt>
+                <dd>Functions, APIs, retrieval and sandboxed code execution that let the model read live data and change things in the world.</dd>
             </div>
             <div class="definition-item">
-                <dt>A2A (Agent-to-Agent) / Multi-Agent Systems</dt>
-                <dd>Modern approach to complex orchestration. Instead of relying on one monolithic model, workflows are divided among a "swarm" of specialized micro-agents (e.g., a Research Agent, a Coding Agent, and a QA Agent). <em>How it works: Agents communicate autonomously, share memory/state, delegate sub-tasks, and review each other's work to execute highly complex, multi-step enterprise workflows.</em></dd>
+                <dt>Orchestration loop</dt>
+                <dd>The harness code that runs the cycle (gather context, decide, act, observe), preserves <code>thought_signatures</code>/state, enforces stop conditions and routes errors.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Context and memory</dt>
+                <dd>What the harness places in the window on each step, plus session state and long-term memory kept outside it (see the <a href="ContextEngineering.html#fundamentals">Context engineering guide</a>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Guardrails</dt>
+                <dd>Deterministic permissions, approval gates, schema validation and audit logging that keep actions within policy.</dd>
             </div>
         </div>
 
-        <div class="concept-card accent-mint">
-            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>RAG & Context Augmentation</h3>
-            <p><strong>RAG (Retrieval-Augmented Generation):</strong> Bypasses the model's knowledge cutoff and drastically reduces hallucinations by grounding the AI in external, verified data.</p>
-            
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-rotate"></i> The agent loop</div>
             <div class="architecture-flow">
-                <div class="arch-node input">User Query</div>
+                <div class="arch-node input">Goal</div>
                 <i class="fas fa-arrow-right arch-arrow"></i>
-                <div class="arch-node process">Vector Search</div>
+                <div class="arch-node storage">Gather context</div>
                 <i class="fas fa-arrow-right arch-arrow"></i>
-                <div class="arch-node storage">Retrieve Facts</div>
+                <div class="arch-node process">Model decides</div>
                 <i class="fas fa-arrow-right arch-arrow"></i>
-                <div class="arch-node output">LLM Synthesizes</div>
+                <div class="arch-node process">Call tool</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node output">Observe result<br><small>repeat until done or stopped</small></div>
             </div>
+        </div>
 
+        <div class="concept-card accent-amber">
             <ul>
-                <li><strong>How it works:</strong> User asks a question &rarr; System converts the query into a numerical vector &rarr; Searches a Vector Database (or the web) for semantic matches &rarr; Relevant facts are retrieved and injected into the prompt &rarr; The LLM synthesizes an accurate answer based <em>only</em> on that retrieved data.</li>
-                <li><strong>Vector Database:</strong> A specialized database that stores text/data as high-dimensional vectors, allowing the AI to search by "semantic similarity" (meaning) rather than exact keyword matches.</li>
+                <li><strong>Workflow vs. agent:</strong> in a workflow, your code fixes the sequence of model calls and tools; in an agent, the model chooses the sequence at run time. Workflows are cheaper and more predictable; agents handle tasks whose steps cannot be known in advance.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Agent capability levels (L0 to L4)</h3>
+
+        <div class="prose">
+            <p>Agentic systems can be scoped by how much they are allowed to do. Each level adds a capability, and each step up adds cost, latency, failure modes, evaluation work and security exposure.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Level</th><th>Adds</th><th>Use when</th><th>Example</th><th>Go deeper</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>L0: model only</strong></td><td>Nothing beyond one model call with the input you supply</td><td>The answer depends only on the input and general knowledge</td><td>Rewrite a notice in plain language; classify a ticket</td><td><a href="PromptEngineering.html">Prompt engineering</a></td></tr>
+                    <tr><td><strong>L1: model with tools</strong></td><td>Tool calls and retrieval for live data or a single action</td><td>The task needs fresh, private or exact data, or one action</td><td>Look up an order status; answer from the policy library</td><td><a href="ADP.html#agent-primitives">ADP agent primitives</a>, <a href="MCP.html">MCP</a>, <a href="RAG.html">RAG</a></td></tr>
+                    <tr><td><strong>L2: multi-step agent</strong></td><td>Planning across dependent steps, with state and managed context</td><td>Several steps depend on each other&#x27;s results</td><td>Build a weekly report from five sources and flag anomalies</td><td><a href="ADP.html#workflow-patterns">ADP workflow patterns</a>, <a href="ContextEngineering.html#long-sessions">Context engineering</a></td></tr>
+                    <tr><td><strong>L3: multi-agent system</strong></td><td>Specialist agents with their own tools, permissions and context, under a coordinator</td><td>Parts of the task need different permissions, isolated context, parallel work or an independent verifier</td><td>Diagnostics agent with read-only telemetry plus a purchasing agent with spend authority</td><td><a href="ADP.html#multi-agent-topologies">ADP multi-agent topologies</a>, <a href="A2A.html">A2A</a></td></tr>
+                    <tr><td><strong>L4: self-extending system</strong></td><td>Creates or modifies its own tools, prompts or agents at run time</td><td>Research settings or tightly sandboxed platforms with human review of every new capability</td><td>A system that writes and registers a new data connector when none exists</td><td><a href="AgentOps.html">AgentOps</a>, <a href="ResponsibleAI.html">Responsible AI</a></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Key rule</h4>
+                <p>Pick the lowest level that solves the task. Climb one level only when an evaluation shows the lower level fails, and name the capability that justifies the climb.</p>
+            </div>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Choosing a level</h3>
+
+        <div class="concept-card accent-purple">
+            <ul>
+                <li><strong>Before L0:</strong> if the rule is deterministic (a tax rate, a date check, a lookup by ID), write code and keep the model out of it.</li>
+            </ul>
+            <ol>
+                <li><strong>Can one call with the right input do it?</strong> Stay at L0. Paste the document or data instead of building retrieval.</li>
+                <li><strong>Does it need live, private or exact data, or one action?</strong> Move to L1 and give the model only the tools it needs.</li>
+                <li><strong>Do several steps depend on each other?</strong> Move to L2. If the steps are known in advance, build a workflow (prompt chaining, routing, parallelization); use an open agent loop only when they are not.</li>
+                <li><strong>Do parts need different permissions, isolated context, parallel work or independent checking?</strong> Move to L3. Splitting into personas that share the same tools and context is not a reason.</li>
+                <li><strong>Must the system build new capabilities at run time?</strong> L4 is rarely the right answer in production. Prefer human-built tools added to an L3 system, and require sandboxing, review and evaluation for anything self-generated.</li>
+            </ol>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Scenario: scoping four requests at Spokewise bike share</h3>
+
+        <div class="prose">
+            <p><em>A regional bike-share operator asks for &quot;an AI agent&quot; and lists four requests.</em></p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Request</th><th>Level</th><th>Why not lower</th><th>Why not higher</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Draft a rider notice about a station closure</td><td><strong>L0</strong></td><td>(lowest level)</td><td>No live data or action needed</td></tr>
+                    <tr><td>Tell a rider the nearest dock with an e-bike available</td><td><strong>L1</strong></td><td>Dock availability changes every minute</td><td>One lookup, no planning</td></tr>
+                    <tr><td>Produce the overnight rebalancing plan from demand forecasts, weather and truck availability</td><td><strong>L2</strong> (workflow)</td><td>Three dependent inputs must be fetched, combined and checked</td><td>Steps are fixed; one set of permissions suffices</td></tr>
+                    <tr><td>Run fleet maintenance: diagnose faults, order parts, verify repairs</td><td><strong>L3</strong></td><td>Diagnosis needs read-only telemetry, ordering needs spend authority, verification must be independent</td><td>New tools are built and reviewed by engineers, not generated at run time</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Outcome:</strong> one &quot;agent&quot; request became three small builds and one multi-agent system, each tested at its own level.</li>
+                <li><strong>What the team rejected:</strong> a single L3 &quot;assistant&quot; for all four requests, which would have given the notice writer purchasing permissions and made every answer slower and costlier.</li>
+            </ul>
+        </div>
+
+        <h3 class="subsection-title" style="margin: 30px 0 14px; font-size: 1.25rem; color: var(--text-primary);">Common mistakes &amp; architecture bridge</h3>
+
+        <div class="concept-card accent-coral">
+            <ul>
+                <li><strong>Starting at L3 for an L1 problem:</strong> several persona agents sharing the same tools and context multiply cost and latency without adding capability (the &quot;agent theater&quot; test in <a href="ADP.html#multi-agent-topologies">ADP</a>).</li>
+                <li><strong>Staying at L0 when facts must be current:</strong> the model answers from training data and invents what it does not know; add retrieval or a tool.</li>
+                <li><strong>Open loops without stop conditions:</strong> an agent with no step limit, budget or completion check can loop indefinitely; see <a href="ADP.html#agent-primitives">ADP agent primitives</a>.</li>
+                <li><strong>Prompt-only guardrails:</strong> a sentence in the instructions is a request; irreversible actions need code-level permission checks and approvals.</li>
+                <li><strong>Self-modification in production:</strong> letting a system write and deploy its own tools without sandboxing and review turns every injection into a new capability.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>If you chose</th><th>Continue in ADP with</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>L0 or L1</td><td><a href="ADP.html#agent-primitives">Agent primitives</a>: tool design and stop conditions</td></tr>
+                    <tr><td>L2 (workflow)</td><td><a href="ADP.html#workflow-patterns">Workflow patterns</a>: chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer</td></tr>
+                    <tr><td>L2 (agent loop)</td><td><a href="ADP.html#agent-primitives">Agent primitives</a> and <a href="ADP.html#memory-context">Memory and context</a></td></tr>
+                    <tr><td>L3</td><td><a href="ADP.html#multi-agent-topologies">Multi-agent topologies</a>: the agent theater test and handoff contracts</td></tr>
+                    <tr><td>Any level, before production</td><td><a href="ADP.html#anti-patterns-checklist">Anti-patterns and checklist</a></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <ul>
+                <li><strong>Further reading:</strong> the five-level capability framing is credited to <em>Introduction to Agents</em> (Blount, Gulli, Saboo, Zimmermann and Vuskovic; Google, 2026); the level names, decision steps and scenario here are original. The workflow vs. agent distinction and the &quot;start simple&quot; principle follow Anthropic&#x27;s engineering post <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Building effective agents</a>.</li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: RISKS & ETHICS
+             SECTION 10: 5-LAYER PROTOCOL STACK
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="protocol-stack">
+            <div class="section-divider-number">10</div>
+            <h2>The 5-Layer Agentic Interoperability Protocol Stack</h2>
+        </div>
+
+        <div class="prose">
+            <p>Production agent ecosystems decouple <strong>vertical tool access</strong>, <strong>horizontal peer-agent delegation</strong>, <strong>declarative generative UI</strong>, <strong>real-time audio/video streaming</strong>, and <strong>cryptographic value transfer</strong> into five distinct standards. Knowing which protocol governs each boundary is essential for architectural design.</p>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-network-wired"></i> The 5-Layer Agentic Protocol Stack</div>
+            <svg viewBox="0 0 920 300" width="100%" style="max-width: 920px; display: block; margin: 12px auto 4px; font-family: 'Inter', sans-serif;" role="img" aria-label="Five-layer agentic interoperability stack: Layer 5 AP2 and x402 commerce, Layer 4 Live API WebRTC real-time streams, Layer 3 MCP UI AG-UI A2UI generative UI, Layer 2 A2A horizontal peer agents, and Layer 1 MCP vertical tools and data">
+                <!-- L5 -->
+                <rect x="24" y="14" width="872" height="48" rx="8" fill="rgba(251,191,36,0.10)" stroke="#FBBF24" stroke-width="1.4"/>
+                <text x="44" y="36" fill="#FBBF24" font-size="11.5" font-weight="700">LAYER 5 · COMMERCE &amp; VALUE</text>
+                <text x="44" y="51" fill="#94A3B8" font-size="10">Agent &harr; Payments &amp; Metered APIs</text>
+                <text x="315" y="42" fill="#E2E8F0" font-size="11.5" font-weight="600">AP2 (Intent &amp; Cart Mandates) · x402 (HTTP 402 M2M Micropayments)</text>
+
+                <!-- L4 -->
+                <rect x="24" y="71" width="872" height="48" rx="8" fill="rgba(251,113,133,0.10)" stroke="#FB7185" stroke-width="1.4"/>
+                <text x="44" y="93" fill="#FB7185" font-size="11.5" font-weight="700">LAYER 4 · REAL-TIME STREAMS</text>
+                <text x="44" y="108" fill="#94A3B8" font-size="10">Agent &harr; Live Voice / Video Edge</text>
+                <text x="315" y="99" fill="#E2E8F0" font-size="11.5" font-weight="600">Gemini Live API over WebRTC / WebSockets (Full-Duplex VAD &amp; Barge-In)</text>
+
+                <!-- L3 -->
+                <rect x="24" y="128" width="872" height="48" rx="8" fill="rgba(167,139,250,0.10)" stroke="#A78BFA" stroke-width="1.4"/>
+                <text x="44" y="150" fill="#A78BFA" font-size="11.5" font-weight="700">LAYER 3 · GENERATIVE HUMAN UI</text>
+                <text x="44" y="165" fill="#94A3B8" font-size="10">Agent &harr; Frontend Glass &amp; HITL</text>
+                <text x="315" y="156" fill="#E2E8F0" font-size="11.5" font-weight="600">AG-UI (Event Stream) · A2UI (Declarative Widget JSON) · MCP UI (Sandboxed Views)</text>
+
+                <!-- L2 -->
+                <rect x="24" y="185" width="872" height="48" rx="8" fill="rgba(56,189,248,0.10)" stroke="#38BDF8" stroke-width="1.4"/>
+                <text x="44" y="207" fill="#38BDF8" font-size="11.5" font-weight="700">LAYER 2 · PEER AGENTS (HORIZONTAL)</text>
+                <text x="44" y="222" fill="#94A3B8" font-size="10">Agent &harr; Opaque Cross-Team Agents</text>
+                <text x="315" y="213" fill="#E2E8F0" font-size="11.5" font-weight="600">A2A Protocol (AgentCard Discovery, Stateful Tasks, Artifacts, SSE)</text>
+
+                <!-- L1 -->
+                <rect x="24" y="242" width="872" height="48" rx="8" fill="rgba(45,212,191,0.10)" stroke="#2DD4BF" stroke-width="1.4"/>
+                <text x="44" y="264" fill="#2DD4BF" font-size="11.5" font-weight="700">LAYER 1 · TOOLS &amp; DATA (VERTICAL)</text>
+                <text x="44" y="279" fill="#94A3B8" font-size="10">Agent &harr; Deterministic APIs &amp; DBs</text>
+                <text x="315" y="270" fill="#E2E8F0" font-size="11.5" font-weight="600">MCP (Tools, Resources, Prompts via stdio / Streamable HTTP) &amp; OpenAPI</text>
+            </svg>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Layer &amp; Direction</th>
+                        <th>Protocols</th>
+                        <th>Core Primitives</th>
+                        <th>Use When</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>L1: Agent &harr; Tools &amp; Data</strong><br>(<em>Vertical</em>)</td>
+                        <td><strong>MCP</strong>, OpenAPI</td>
+                        <td><code>Tools</code>, <code>Resources</code>, <code>Prompts</code>, structured <code>isError</code> over <code>stdio</code> or <strong>Streamable HTTP</strong></td>
+                        <td>Connecting an L1+ agent to deterministic databases, SaaS CRUD APIs, or IDE context (<a href="MCP.html">MCP guide</a>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L2: Agent &harr; Peer Agents</strong><br>(<em>Horizontal</em>)</td>
+                        <td><strong>A2A Protocol</strong></td>
+                        <td><code>/.well-known/agent-card.json</code> (or Agent Registry), stateful <code>Task</code> lifecycle, <code>Artifacts</code></td>
+                        <td>Delegating goals across teams, clouds, or vendors without sharing internal prompts, memory, or tool credentials (<a href="A2A.html">A2A guide</a>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L3: Agent &harr; Human UI</strong><br>(<em>Generative UI</em>)</td>
+                        <td><strong>AG-UI</strong>, <strong>A2UI</strong>, <strong>MCP UI</strong></td>
+                        <td>Bidirectional state/event streams (<code>AG-UI</code>), declarative JSON widget catalogs (<code>A2UI</code>), sandboxed tool iframes (<code>MCP UI</code>)</td>
+                        <td>Rendering interactive forms, approval cards, and charts safely from a host component catalog instead of raw Markdown or unsanitized HTML.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L4: Agent &harr; Live Media</strong><br>(<em>Streaming Edge</em>)</td>
+                        <td><strong>Gemini Live API</strong> (WebRTC / WebSockets)</td>
+                        <td>Full-duplex audio/video frames, Voice Activity Detection (VAD), native <em>barge-in</em> interruption</td>
+                        <td>Sub-second voice/camera concierges—terminate heavy audio/video streams at the edge and pass structured intents to backend tools/agents.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L5: Agent &harr; Commerce</strong><br>(<em>Value &amp; Consent</em>)</td>
+                        <td><strong>AP2</strong> &amp; <strong>x402</strong></td>
+                        <td>Cryptographic <strong>Intent Mandates</strong> &amp; <strong>Cart Mandates</strong> (<code>AP2</code>); <code>HTTP 402 Payment Required</code> headers (<code>x402</code>)</td>
+                        <td>Proving non-repudiable human spend authorization for purchases (<code>AP2</code>) or settling autonomous machine-to-machine API micropayments (<code>x402</code>).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 11: RAG & CONTEXT AUGMENTATION
+             ═══════════════════════════════════════ -->
+        <div class="section-divider" id="rag">
+            <div class="section-divider-number">11</div>
+            <h2>RAG &amp; Context Augmentation</h2>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <p><strong>RAG (Retrieval-Augmented Generation):</strong> Bypasses the model's static knowledge cutoff and drastically reduces extrinsic hallucinations by grounding synthesis in external, ACL-filtered enterprise data at query time.</p>
+
+            <div class="architecture-flow">
+                <div class="arch-node input">User Query</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node process">Hybrid Vector + Lexical Search</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node storage">Rerank &amp; Filter ACLs</div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node output">LLM Synthesizes Cited Answer</div>
+            </div>
+
+            <ul>
+                <li><strong>How it works:</strong> User asks a question &rarr; System converts the query into dense embeddings (plus sparse lexical keywords for exact IDs/SKUs) &rarr; Searches an ACL-filtered Vector Database (or live web index) &rarr; Top reranked passages are injected into the prompt &rarr; The LLM synthesizes a cited answer grounded <em>strictly</em> in retrieved evidence (see the <a href="RAG.html">RAG guide</a>).</li>
+                <li><strong>Vector Database:</strong> A specialized index storing text/multimodal chunks as high-dimensional embedding vectors, enabling retrieval by <strong>semantic similarity</strong> (meaning) rather than exact keyword overlap alone.</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             SECTION 12: RISKS & ETHICS
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="risks-ethics">
-            <div class="section-divider-number">08</div>
-            <h2>Risks, Ethics & Vulnerabilities</h2>
+            <div class="section-divider-number">12</div>
+            <h2>Risks, Ethics &amp; Vulnerabilities</h2>
         </div>
 
         <div class="concept-card accent-amber">
-            <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Risks & Vulnerabilities</h3>
+            <h3><div class="icon-badge"><i class="fas fa-shield-alt"></i></div>Risks &amp; Vulnerabilities</h3>
             <ul>
-                <li><strong>Hallucinations:</strong> When a model generates factually incorrect, nonsensical, or made-up responses. <em>Combat via: strict fact-checking, human-in-the-loop, and RAG.</em>
+                <li><strong>Hallucinations:</strong> When a model generates factually incorrect, nonsensical, or fabricated responses. <em>Combat via: grounded RAG, citation checks, autoraters, and human-in-the-loop review.</em>
                     <ul>
-                        <li><em>Extrinsic:</em> model invents facts not in source.</li>
-                        <li><em>Intrinsic:</em> model contradicts the provided source.</li>
+                        <li><em>Extrinsic:</em> model invents facts nowhere present in the source.</li>
+                        <li><em>Intrinsic:</em> model directly contradicts facts stated in the provided source.</li>
                     </ul>
                 </li>
-                <li><strong>Prompt Injection:</strong> An attacker embeds hidden instructions in a webpage or document. When an AI (like a summarizer bot) reads it, the AI is hijacked to execute the malicious instructions (a <em>zero-click exploit</em>).</li>
-                <li><strong>Jailbreaking:</strong> Intentionally tricking the AI into bypassing its safety guardrails (e.g., asking Gemini to adopt a "villain persona" to write malware).</li>
-                <li><strong>Data Poisoning & Slopsquatting:</strong> Attackers inject malicious data into public training sets, or register fake code packages matching names the AI frequently hallucinates.</li>
-                <li><strong>Memorization & Privacy:</strong> LLMs can accidentally memorize and regurgitate Personally Identifiable Information (PII) seen in training data.</li>
-                <li><strong>Detection & Provenance:</strong>
+                <li><strong>Prompt Injection:</strong> An attacker embeds hidden adversarial instructions in user input (<em>direct</em>) or untrusted webpages, emails, or documents (<em>indirect</em>). When an AI reads the poisoned content, it can be hijacked to execute unauthorized tool calls or leak data (a <em>zero-click exploit</em>).</li>
+                <li><strong>Jailbreaking:</strong> Intentionally tricking the AI into bypassing its safety guardrails (e.g., adversarial role-play personas or multi-turn framing to elicit restricted content).</li>
+                <li><strong>Data Poisoning &amp; Slopsquatting:</strong> Attackers inject malicious samples into public training/RAG sets, or register trojan code packages on PyPI/npm matching package names that coding LLMs frequently hallucinate.</li>
+                <li><strong>Memorization &amp; Privacy:</strong> LLMs can accidentally memorize and regurgitate Personally Identifiable Information (PII) or secrets over-represented in training data.</li>
+                <li><strong>Detection &amp; Provenance:</strong>
                     <ul>
-                        <li><em>Watermarking:</em> Subtly biasing word choices (text) or tweaking pixels (images) to embed invisible AI signatures (e.g., Google DeepMind’s SynthID).</li>
-                        <li><em>C2PA (Content Provenance):</em> Attaching cryptographic metadata to files to show an audit trail of how the media was created/edited.</li>
+                        <li><em>Watermarking:</em> Subtly biasing token choices (text) or tweaking frequency-domain pixels/audio to embed imperceptible statistical AI signatures (e.g., Google DeepMind’s <strong>SynthID</strong>).</li>
+                        <li><em>C2PA (Content Provenance):</em> Attaching tamper-evident cryptographic metadata manifests to files to prove an audit trail of how media was captured and edited.</li>
                     </ul>
                 </li>
-                <li><strong>Automation Bias:</strong> The dangerous human tendency to over-trust AI outputs without verifying them, especially critical in legal, medical, and coding environments. <em>Rule of thumb: AI is a collaborator, the human is the final reviewer.</em></li>
+                <li><strong>Automation Bias:</strong> The dangerous human tendency to over-trust fluent AI outputs without independent verification—especially critical in legal, medical, financial, and coding workflows. <em>Rule of thumb: AI is a collaborator; accountable humans and policy gates are the final reviewers.</em></li>
             </ul>
         </div>
 
         <div class="concept-card accent-blue">
-            <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Ethics, Quality & Human Oversight</h3>
+            <h3><div class="icon-badge"><i class="fas fa-balance-scale"></i></div>Ethics, Quality &amp; Human Oversight</h3>
             <ul>
-                <li><strong>Human-in-the-loop:</strong> GenAI is a tool, not an autonomous creator. Human critical thinking, emotional intelligence, and editorial judgment are irreplaceable.</li>
-                <li><strong>Bias & fairness:</strong> Models can perpetuate societal prejudices found in training data. <em>Combat via: diverse input data and stringent review protocols.</em></li>
-                <li><strong>Copyright & plagiarism:</strong> GenAI can unintentionally copy existing works. <em>Combat via: Cross-referencing, avoiding "mimic this exact author" prompts, and independent verification.</em></li>
+                <li><strong>Human-in-the-loop:</strong> Match oversight to action blast radius and reversibility—require explicit human approval before irreversible external mutations.</li>
+                <li><strong>Bias &amp; fairness:</strong> Models can perpetuate societal prejudices present in pretraining data. <em>Combat via: representative evaluation slices and counterfactual fairness audits.</em></li>
+                <li><strong>Copyright &amp; plagiarism:</strong> GenAI can unintentionally reproduce training works. <em>Combat via: recitation filters, grounded citations, avoiding "mimic this exact living author" prompts, and independent verification.</em></li>
             </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
-             SECTION: GLOSSARY
+             SECTION 13: GLOSSARY
              ═══════════════════════════════════════ -->
         <div class="section-divider" id="glossary">
-            <div class="section-divider-number">09</div>
-            <h2>Glossary (misc)</h2>
+            <div class="section-divider-number">13</div>
+            <h2>Glossary</h2>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>Tokens</dt>
-                <dd>Bits of words, spaces, or characters that models process. (~4 characters = 1 token).</dd>
+                <dd>Sub-word units of words, spaces, or characters processed by models (~4 English characters &approx; 1 token). Context limits and API billing—including internal System 2 thinking tokens—are metered in tokens.</dd>
             </div>
             <div class="definition-item">
                 <dt>Context window</dt>
-                <dd>The maximum memory limit of a model per interaction (Input prompt + generated response). If a model has a 128k context window, it will "forget" information pushed past that token limit.</dd>
+                <dd>The maximum token budget of a model per interaction (input prompt + retrieved context + tool schemas + thinking + visible response). Content pushed past that token limit is effectively "forgotten" unless saved to external state/memory.</dd>
             </div>
             <div class="definition-item">
                 <dt>Parameters</dt>
-                <dd>Numerical values used to assign weight and define connections in the neural network. Adjusting parameters changes how a model interprets data.</dd>
+                <dd>Learned numerical weights defining neural connections across dense or Sparse MoE layers. Training and fine-tuning update parameters to shape model behavior.</dd>
             </div>
             <div class="definition-item">
                 <dt>Temperature</dt>
-                <dd>A setting that controls output randomness. Low temperature (e.g., 0-0.3) = deterministic/focused. High temperature (e.g., 0.8-1.5) = highly creative/random.</dd>
+                <dd>Sampling setting controlling output randomness. Low temperature (<code>0–0.3</code>) is focused and consistent (even <code>0</code> is not strictly deterministic); high temperature (<code>0.8–1.5</code>) is creative/random. Some newer reasoning APIs remove custom temperature in favor of <code>effort</code> / <code>thinking_level</code>.</dd>
             </div>
             <div class="definition-item">
-                <dt>Fine-Tuning</dt>
-                <dd>Upgrading a pre-trained model with domain-specific training data to master niche topics (e.g., medical or legal terminology).</dd>
+                <dt>Fine-Tuning (SFT / LoRA)</dt>
+                <dd>Adapting a pre-trained model (or lightweight LoRA adapter matrices) on curated domain examples to master specialized schemas, tone, or compact task execution.</dd>
             </div>
             <div class="definition-item">
                 <dt>SLMs (Small Language Models)</dt>
-                <dd>Scaled-down, efficient models trained on highly focused datasets. Run on less powerful hardware.</dd>
+                <dd>Scaled-down, parameter-efficient models (e.g., <code>Gemma 4</code>, <code>Gemini 3.5 Flash-Lite</code>, <code>Gemini Nano</code>) engineered for sub-200ms latency, low high-QPS cost, or edge/on-device hardware.</dd>
             </div>
             <div class="definition-item">
-                <dt>Custom GPTs / GEMs / AI Assistants</dt>
-                <dd>Specialized apps built on top of an LLM tailored for distinct use cases with custom instructions and specific knowledge bases.</dd>
+                <dt>MaaS (Model-as-a-Service)</dt>
+                <dd>Consuming partner or open-weight models via managed, per-token serverless cloud APIs (scaling to zero) rather than operating dedicated GPU VMs.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>thinking_level &amp; Adaptive Thinking</dt>
+                <dd>System 2 inference-time reasoning controls: <code>thinking_level</code> (<code>MINIMAL..HIGH</code>) + encrypted <code>thought_signatures</code> on Gemini, and <code>thinking: {type: "adaptive"}</code> + <code>output_config.effort</code> (<code>low..max</code>) on Claude.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Custom GPTs / Gems / Projects</dt>
+                <dd>Specialized workspace assistants built on top of an LLM with persistent instructions, curated reference files, and bound tools.</dd>
             </div>
             <div class="definition-item">
                 <dt>Digital Twins</dt>
-                <dd>Virtual, dynamic computer models of real-world objects or systems used for simulation and testing.</dd>
+                <dd>Virtual, dynamic computer models of real-world physical assets or operational systems used for simulation and scenario testing.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent capability level (L0 to L4)</dt>
+                <dd>Scoping scale from a single model call (L0) through tool use (L1), multi-step workflows/agents (L2), and multi-agent systems (L3) to self-extending systems (L4); choose the lowest level that solves the task.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Orchestration loop &amp; Workflow vs. Agent</dt>
+                <dd>The runtime loop executing gather context &rarr; decide &rarr; act &rarr; observe with stop conditions. In a <strong>workflow</strong>, code fixes the step order; in an <strong>agent</strong>, the model chooses the next step at run time.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>5-Layer Agentic Protocol Stack</dt>
+                <dd><code>MCP</code> (L1 vertical tools/data), <code>A2A</code> (L2 horizontal peer agents), <code>AG-UI / A2UI / MCP UI</code> (L3 generative UI), <code>Live API / WebRTC</code> (L4 real-time audio/video), and <code>AP2 + x402</code> (L5 cryptographic spend mandates &amp; HTTP 402 micropayments).</dd>
             </div>
         </div>
 
-        
+        <!-- ═══════════════════════════════════════
+             RELATED GUIDES & PRACTICE QUIZ
+             ═══════════════════════════════════════ -->
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-compass"></i></div>Where to Go Next</h3>
+            <p>Once these foundations are solid, dive into the specialized model, architecture, and protocol guides:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
+                <a href="Google.html" style="padding: 8px 13px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">Gemini &amp; Google Models &rarr;</a>
+                <a href="Anthropic.html" style="padding: 8px 13px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">Anthropic &amp; Claude Models &rarr;</a>
+                <a href="ADP.html" style="padding: 8px 13px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">Agentic Design Patterns &rarr;</a>
+                <a href="MCP.html" style="padding: 8px 13px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">MCP Protocol &rarr;</a>
+                <a href="A2A.html" style="padding: 8px 13px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);">A2A &amp; Interoperability &rarr;</a>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-tasks"></i></div>Practice</h3>
+            <p>Drill 36 scenario questions covering PAA 3.1 model selection (LLM vs. SLM, MaaS vs. VPC), System 2 reasoning (<code>thinking_level</code> &amp; Adaptive Thinking), prompting, training, L0–L4 scoping, the 5-Layer Protocol Stack, RAG, and AI safety.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-primary); background: rgba(255,255,255,0.03); flex: 1; min-width: 220px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-book-reader" style="color: var(--mint);"></i>
+                    <span>Back to the Hub</span>
+                </a>
+                <a href="quiz.html?topic=genai101" style="display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--mint); background: rgba(45,212,191,0.08); flex: 1; min-width: 220px; border: 1px solid rgba(45,212,191,0.35); font-weight: 600;">
+                    <i class="fas fa-tasks"></i>
+                    <span>Take the practice quiz: Generative AI 101 (36q) &rarr;</span>
+                </a>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
              SELF ASSESSMENT QUESTIONS
              ═══════════════════════════════════════ -->
@@ -583,21 +1094,33 @@
             </div>
             <div class="quiz-body">
                 <div class="quiz-question">
-                    <p><span class="q-num">Q1.</span> What is the core difference between pre-training and fine-tuning?</p>
+                    <p><span class="q-num">Q1.</span> What is the core difference between pretraining, RAG, and Supervised Fine-Tuning (SFT)?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">Pre-training happens on massive uncurated data to learn general language patterns, while fine-tuning uses smaller, domain-specific data to master niche tasks.</span>
+                        <span class="answer-text">Pretraining learns general language representations on massive uncurated data; RAG injects fresh, ACL-filtered external facts at query time without changing weights; SFT adapts weights on curated examples to master domain formatting, tone, or compact SLM tasks.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q2.</span> What is "Prompt Injection"?</p>
+                    <p><span class="q-num">Q2.</span> Why doesn't choosing an open-weight model (such as Llama or Gemma 4) automatically require deploying dedicated GPU VMs?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">An attack where hidden instructions in content hijack the AI to execute malicious commands.</span>
+                        <span class="answer-text">Open-weight checkpoints can be consumed via serverless Model-as-a-Service (MaaS) APIs billed per token with instant scale-to-zero. Dedicated VPC endpoints accrue GPU node-hour costs 24/7 even at 0 QPS and are needed only for strict single-tenant compute mandates, custom LoRA weights, or sustained high utilization.</span>
                     </div>
                 </div>
                 <div class="quiz-question">
-                    <p><span class="q-num">Q3.</span> What does "Temperature" control in an LLM?</p>
+                    <p><span class="q-num">Q3.</span> How do System 2 reasoning controls differ between Gemini 4 Argon and Claude Opus 4.7?</p>
                     <div class="quiz-answer">
-                        <span class="answer-text">The randomness of the output. Low temperature is focused and deterministic; high temperature is creative and random.</span>
+                        <span class="answer-text">Gemini 4 uses thinking_level (MINIMAL to HIGH) and emits encrypted thought_signatures that harnesses must echo across tool turns; Claude 4.7 uses Adaptive Thinking (thinking: {type: "adaptive"}) with 5 output_config.effort tiers (low to max) and automatic interleaved thinking between tool calls.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q4.</span> Why should a team pick the lowest agent capability level (L0–L4) that solves a task?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">Each level up adds token cost, latency, failure modes, evaluation burden, and security exposure. Climb one level only when evaluation shows the lower level fails and a named capability (live data, dependent steps, isolated permissions) requires it.</span>
+                    </div>
+                </div>
+                <div class="quiz-question">
+                    <p><span class="q-num">Q5.</span> How do MCP, A2A, A2UI/AG-UI, Live API, and AP2 + x402 divide responsibilities in the 5-Layer Protocol Stack?</p>
+                    <div class="quiz-answer">
+                        <span class="answer-text">MCP connects an agent vertically to tools and resources; A2A delegates tasks horizontally across opaque peer agents; AG-UI/A2UI/MCP UI render interactive human UIs safely; Live API/WebRTC handles full-duplex audio/video streams with barge-in; AP2 provides cryptographic spend Mandates while x402 handles HTTP 402 API micropayments.</span>
                     </div>
                 </div>
             </div>
@@ -609,6 +1132,10 @@
         <footer class="page-footer">
             <p>Study Notes by Michaël Bettan</p>
             <p><a href="#top">Back to Top</a></p>
+            <!-- site-footer:start -->
+            <p class="site-footer-agents">🤖 For AI agents: <a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a> · <a href="sitemap.xml">sitemap.xml</a></p>
+            <p class="site-footer-disclaimer">Independent study notes. Not affiliated with or endorsed by Google or Anthropic. Product and certification names are trademarks of their owners. Quiz questions are original practice material, not exam questions.</p>
+            <!-- site-footer:end -->
         </footer>
 
     </div>
