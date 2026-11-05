@@ -1480,6 +1480,322 @@
           "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
         }
       ]
+    },
+    {
+      "id": "agent-ops-q-39",
+      "section": "Managed Gen AI Evaluation, Autoraters & Agent Simulation",
+      "guide_anchor": "managed-eval-autoraters",
+      "question": "A platform group runs support agents written in ADK and in LangGraph on different runtimes. It wants one place to keep scoring a sample of live production traces with task success and hallucination metrics, and to group the failing traces into loss patterns each week. Which evaluation tool fits this job?",
+      "options": [
+        {
+          "text": "Add `adk eval` with a `test_config.json` threshold to every repository's CI runner and read the pass rates from the build logs.",
+          "correct": false,
+          "why_wrong": "ADK eval tooling grades evalsets on a developer machine or CI runner inside an ADK repo; it neither samples live traces nor covers the LangGraph agents."
+        },
+        {
+          "text": "The Gen AI evaluation service, using online monitors on sampled Cloud Trace data and Automatic Loss Analysis.",
+          "correct": true
+        },
+        {
+          "text": "Run `agents-cli eval run` from a scheduled job against `tests/eval/datasets/`, since agent inference already runs locally and grading goes through the evaluation SDK anyway.",
+          "correct": false,
+          "why_wrong": "`agents-cli eval` serves the inner eval-fix loop and PR gates for scaffolded agents; it grades a frozen dataset, not a continuous sample of cross-framework production traffic."
+        },
+        {
+          "text": "Write a custom code metric with `execution: remote` in `eval_config.yaml` and attach it to each agent as the production monitor.",
+          "correct": false,
+          "why_wrong": "Custom autoraters encode domain rules that built-ins miss; task success and hallucination are already built-in, and a code metric is not a trace-sampling monitor."
+        }
+      ],
+      "explanation": "The Gen AI evaluation service is the managed, framework-agnostic option: it builds datasets from sampled Cloud Trace data, runs online monitors on live traces and offers Automatic Loss Analysis to cluster rubric failures. ADK eval and agents-cli eval are repo-scoped CI tools, and custom autoraters are for rules the built-in metrics do not encode.",
+      "key_takeaway": "Cross-framework, continuous scoring of live traces plus failure clustering points to the Gen AI evaluation service, not repo-level CI eval tools.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Evaluation overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/evaluation-overview"
+        },
+        {
+          "label": "Agent Platform: Agent evaluation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/agent-evaluation"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-40",
+      "section": "Managed Gen AI Evaluation, Autoraters & Agent Simulation",
+      "guide_anchor": "managed-eval-autoraters",
+      "question": "A team is designing release gates for an agent that issues account credits. CI minutes are tight, judge tokens are expensive, and last quarter a candidate improved its average score while one compliance slice collapsed. Which gate ordering matches the recommended pipeline?",
+      "options": [
+        {
+          "text": "Run simulated multi-turn scenarios with rubric judges on every pull request, then ship straight to a canary once the average clears its floor.",
+          "correct": false,
+          "why_wrong": "Simulation and judge-heavy grading belong to the release-candidate gate; running them on every PR is slow and costly, and an average-only floor is the failure the team already hit."
+        },
+        {
+          "text": "Canary the merged build first, then compare it against production offline, since live traffic gives the most realistic signal before any slice-level analysis is worth doing.",
+          "correct": false,
+          "why_wrong": "The production comparison must happen before the canary; shipping first exposes users to the regression the compare step exists to catch."
+        },
+        {
+          "text": "Gate pull requests on the average `multi_turn_task_success` score against live tools, then promote the candidate after a single regression compare.",
+          "correct": false,
+          "why_wrong": "PR gates should use recorded or mocked tool outputs, never live mutating tools, and gating only on an average score hides per-slice collapses."
+        },
+        {
+          "text": "PR gate with trajectory and code metrics on mocked tools, then staging simulation with rubric floors, then a per-slice compare against production, then a monitored canary.",
+          "correct": true
+        }
+      ],
+      "explanation": "Each gate is cheaper than the next: fast deterministic trajectory and code checks block merges, the release candidate pays for simulation and rubric grading with absolute floors, `agents-cli eval compare` fails the build on per-slice regressions against production, and only then does a canary run under online monitors and quality alerts.",
+      "key_takeaway": "Order gates cheap to expensive (PR trajectory, RC simulation, per-slice prod compare, canary) and never gate on averages alone.",
+      "doc_links": [
+        {
+          "label": "ADK: agents-cli quickstart",
+          "url": "https://adk.dev/get-started/agents-cli/"
+        },
+        {
+          "label": "ADK: Why evaluate agents",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Agent Runtime: Manage revisions and traffic",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-revisions-and-traffic"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-41",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "After a privacy review, an engineer set `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true` on an ADK agent using the latest `gen_ai` conventions. Now the Traces tab is empty and the online monitor shows no results. Security still wants prompt text kept out of span attributes. What configuration fixes both?",
+      "options": [
+        {
+          "text": "Set the capture variable to `EVENT_ONLY` and `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`, keeping `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`.",
+          "correct": true
+        },
+        {
+          "text": "Turn message content capture off completely and keep only latency and token metadata, because online monitors score the spans themselves rather than the inference messages.",
+          "correct": false,
+          "why_wrong": "Online monitors read the input and output messages, system instructions and tool definitions from the inference event, so disabling capture also disables online evaluation."
+        },
+        {
+          "text": "Keep the capture variable at `true` and grant reviewers `roles/cloudtrace.user` so they can see the content without log access.",
+          "correct": false,
+          "why_wrong": "With the latest conventions `true` is an invalid value and no log or trace data is collected at all, so no IAM grant can bring the data back."
+        },
+        {
+          "text": "Remove `GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY` and rely on container stdout logs, which already include every agent span by default.",
+          "correct": false,
+          "why_wrong": "Container logs are a default platform signal, but agent-level `gen_ai.*` spans appear only after the built-in instrumentation is explicitly enabled."
+        }
+      ],
+      "explanation": "The ADK instrumentation guidance for content-safe tracing is `EVENT_ONLY` for message capture (messages recorded as events, which online monitors need) plus `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false` so prompt text stays out of span attributes. The value `true` is invalid under the latest conventions and silently collects nothing; PII is handled by upstream redaction and bucket IAM, not by switching capture off.",
+      "key_takeaway": "Use `EVENT_ONLY`, never `true`, and keep content out of spans with `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Observability overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        },
+        {
+          "label": "OpenTelemetry: GenAI semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-42",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "A user reports a confident but wrong answer about an internal part number. You open that turn's trace: the root `invoke_agent` span starts its first child immediately, two `call_llm` spans show steady input tokens, a search `execute_tool` span returns zero results, and the final answer follows. There is no guardrail span. What is the most likely diagnosis?",
+      "options": [
+        {
+          "text": "A cold start: no warm instance was available, so the agent skipped retrieval to answer within the latency budget.",
+          "correct": false,
+          "why_wrong": "A cold start shows up as a gap before the first child span; here the first child starts immediately and retrieval did run."
+        },
+        {
+          "text": "History bloat: unbounded conversation history pushed the retrieved passage out of the context window before generation.",
+          "correct": false,
+          "why_wrong": "History bloat shows input tokens climbing turn over turn, but the LLM spans show steady input tokens and retrieval returned nothing to push out."
+        },
+        {
+          "text": "A retrieval miss followed by an unabstained answer; add hybrid keyword retrieval and instruct the agent to abstain on empty results.",
+          "correct": true
+        },
+        {
+          "text": "A Model Armor interception that stripped the retrieved content, so the agent answered from parametric memory instead of the filtered passage it never received.",
+          "correct": false,
+          "why_wrong": "Model Armor would appear as a guardrail span and typically explains an empty or refused answer; this trace has no guardrail span and the search itself returned zero rows."
+        }
+      ],
+      "explanation": "Walking the trace top-down rules out cold start (no gap) and history bloat (steady tokens). A retrieval span with zero results followed by a confident answer is the hallucination-risk pattern. Exact codes are a classic dense-only miss, so hybrid dense plus keyword retrieval and an explicit abstain instruction address it.",
+      "key_takeaway": "Zero retrieval results followed by a confident answer in one trace means a retrieval miss plus missing abstention, not a latency or guardrail issue.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Observability overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        },
+        {
+          "label": "OpenTelemetry: GenAI semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-43",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "A document-refinement `LoopAgent` with a critic and a refiner runs until the request timeout on almost every call. The trace shows the same two child agent spans repeating in order. A teammate proposes doubling `max_llm_calls` so the agent has room to finish. What should you do instead?",
+      "options": [
+        {
+          "text": "Accept the proposal and also raise `max_iterations`, since a larger budget lets the critic eventually approve the draft.",
+          "correct": false,
+          "why_wrong": "Raising caps leaves the missing exit signal in place and only makes each runaway cost more; the loop still ends on a timeout."
+        },
+        {
+          "text": "Map `DEFAULT_ROUTE` back to the refiner so any unexpected critic verdict re-enters the loop instead of erroring out.",
+          "correct": false,
+          "why_wrong": "Pointing the default route at a back-edge is an anti-pattern: any unexpected value, including a typo, re-enters the cycle; it should target a terminal or fallback node."
+        },
+        {
+          "text": "Enable Agent Anomaly Detection so infinite loops are reported to Security Command Center and stopped before they consume the token budget.",
+          "correct": false,
+          "why_wrong": "Anomaly Detection analyzes traces out of band and reports after tokens are spent; detection is not prevention, so caps and exit signals stay mandatory."
+        },
+        {
+          "text": "Set `max_iterations` on the loop and give the critic an exit tool that sets `tool_context.actions.escalate = True` when the draft passes.",
+          "correct": true
+        }
+      ],
+      "explanation": "A `LoopAgent` never decides to stop by itself. It needs a hard cap (`max_iterations`) and an exit signal (`escalate` via `tool_context.actions` or `EventActions`). Raising budgets, routing defaults into the cycle or relying on after-the-fact detection all leave the loop able to run away.",
+      "key_takeaway": "Every `LoopAgent` needs both `max_iterations` and an `escalate` exit; never fix a runaway loop by raising its cap.",
+      "doc_links": [
+        {
+          "label": "ADK: Workflow agents",
+          "url": "https://adk.dev/agents/workflow-agents/"
+        },
+        {
+          "label": "Agent Platform: Observability overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-44",
+      "section": "Observability, Tracing & Drift Detection",
+      "guide_anchor": "observability-drift",
+      "question": "A booking agent passed every offline gate and is now at full traffic. The product owner wants on-call paged if production task success drifts downward over the coming weeks, with the incident pointing at the traces that caused it. What setup meets this?",
+      "options": [
+        {
+          "text": "Create an online monitor with the task success metric and a sampling cap, then use Create alerting policy on its scores routed to Slack or Pub/Sub.",
+          "correct": true
+        },
+        {
+          "text": "Schedule a nightly `agents-cli eval run` over the frozen golden set and email the team whenever the score dips.",
+          "correct": false,
+          "why_wrong": "A frozen golden set proves the release was good on the day it shipped; it never scores live production traffic, so input drift goes unseen."
+        },
+        {
+          "text": "Alert on the Overview error rate and turn latency `p95`, because a decline in answer quality always shows up first as rising HTTP errors and slower turns.",
+          "correct": false,
+          "why_wrong": "Quality can degrade while latency and error rates stay green; only evaluation scores on live traces catch semantic drift."
+        },
+        {
+          "text": "Grant every engineer permission to create an `OnlineEvaluator` so each one can attach a personal monitor and watch the scores manually.",
+          "correct": false,
+          "why_wrong": "Monitor creation should be restricted to administrators because evaluation runs under the project service agent, and manual watching is not a page."
+        }
+      ],
+      "explanation": "Online monitors sample production traces roughly every 10 minutes, score them with the evaluation service and export scores to Cloud Monitoring (`aiplatform.googleapis.com/online_evaluator/scores`). Create alerting policy or Recommended Alerts builds a per-metric policy, and each incident carries the monitor's labels so responders land on the low-scoring traces.",
+      "key_takeaway": "Catch production quality drift with an online monitor plus a quality alert on its scores, not with offline evals or infrastructure SLIs.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Agent evaluation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/agent-evaluation"
+        },
+        {
+          "label": "Agent Platform: Observability overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-45",
+      "section": "Deployment Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "runtime-selection",
+      "question": "An architect must host two components: a custom Streamable HTTP MCP server that wraps an inventory API and sits idle most of the day, and a stateful ADK orchestrator that needs sessions, Memory Bank and a per-agent identity with little glue code. Which placement fits the selection rules?",
+      "options": [
+        {
+          "text": "Put both on Agent Runtime so the MCP server inherits sessions and Agent Identity and scales to zero between calls.",
+          "correct": false,
+          "why_wrong": "Agent Runtime keeps `min_instances` at 1 by default, so it does not scale to zero, and it consumes MCP servers rather than hosting standalone ones."
+        },
+        {
+          "text": "Put both on one GKE cluster for flexibility, adding StatefulSets for orchestrator state and an HPA for the MCP server.",
+          "correct": false,
+          "why_wrong": "Choosing GKE for flexibility alone adds cluster upgrades and on-call load with no capability these two components need."
+        },
+        {
+          "text": "Host the MCP server on Cloud Run behind IAP and deploy the orchestrator to Agent Runtime.",
+          "correct": true
+        },
+        {
+          "text": "Run the orchestrator on Cloud Run with session state held in instance memory, and move the MCP server to GKE so it stays warm around the clock for low latency.",
+          "correct": false,
+          "why_wrong": "Cloud Run instance memory vanishes on scale-in, so state must live in a managed store; keeping an idle MCP server warm on GKE wastes the scale-to-zero benefit."
+        }
+      ],
+      "explanation": "An idle custom MCP server or webhook tool belongs on Cloud Run for scale to zero with IAP in front. A stateful ADK orchestrator needing sessions, memory and per-agent identity with minimal glue code belongs on Agent Runtime, which exposes those primitives to the deployed agent.",
+      "key_takeaway": "Idle MCP server: Cloud Run with IAP. Stateful ADK orchestrator needing sessions, memory and identity: Agent Runtime.",
+      "doc_links": [
+        {
+          "label": "Choose agentic AI architecture components",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Platform: Agent Runtime overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        }
+      ]
+    },
+    {
+      "id": "agent-ops-q-46",
+      "section": "Deployment Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "runtime-selection",
+      "question": "On Agent Runtime, an async ADK agent queues requests during traffic spikes even though CPU and memory sit well below limits. A second, synchronous agent shows the same symptom, and a teammate wants to raise concurrency on both. How should you tune `container_concurrency`?",
+      "options": [
+        {
+          "text": "Set both agents to 80, matching the Cloud Run console default, so the two runtimes behave the same way.",
+          "correct": false,
+          "why_wrong": "80 is the Cloud Run console default; Agent Runtime defaults to 9 because it runs one request per agent process, and sync agents do not benefit from more."
+        },
+        {
+          "text": "Raise the async agent from 9 to a multiple of 9 such as 36 and watch memory; keep the sync agent at 9 and add `min_instances`.",
+          "correct": true
+        },
+        {
+          "text": "Raise both agents to 1,000, since a higher setting always absorbs bursts without extra instances.",
+          "correct": false,
+          "why_wrong": "An overly high value risks out-of-memory failures, and the synchronous agent cannot use extra concurrency because its code blocks."
+        },
+        {
+          "text": "Lower both agents to 1 so each instance serves a single request at a time and lets the autoscaler add more instances during every spike.",
+          "correct": false,
+          "why_wrong": "Dropping to 1 multiplies instance count and cold starts; the async agent is underused at 9, not overloaded."
+        }
+      ],
+      "explanation": "Agent Runtime's `container_concurrency` defaults to 9, one per agent process, which suits blocking code. Async agents can start at a multiple of 9 (for example 36) while memory is watched. For a synchronous agent, raising concurrency is an anti-pattern; absorb baseline load with `min_instances` instead.",
+      "key_takeaway": "Raise `container_concurrency` in multiples of 9 only for async agents; keep sync agents at 9 and scale them with `min_instances`.",
+      "doc_links": [
+        {
+          "label": "Agent Platform: Agent Runtime overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Cloud Run: About instance concurrency",
+          "url": "https://docs.cloud.google.com/run/docs/about-concurrency"
+        }
+      ]
     }
   ]
 }

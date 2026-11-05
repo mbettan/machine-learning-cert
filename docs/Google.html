@@ -88,7 +88,7 @@
                   "keywords": "Gemini 4 Argon, gemini-4-argon, Gemini 4 Argon Cyber Permissive, Gemini 3.8 Flash, Gemini 3.8 Live, Gemini 3.8 Flash TTS, Gemini 3.5 Flash-Lite, Interactions API, Model Garden, Provisioned Throughput, Nano Banana 2.1, Gemini Omni 1.1 Flash, Veo 3.1, Lyria 3.5, Chirp 3, Gemini Embedding 2, Gemma 4, ShieldGemma 2, MedGemma, SynthID, Frontier Safety Framework, CodeMender, AI Co-Scientist, AlphaEvolve, AlphaFold 3, AlphaGeometry 2, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/Google.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-01",
+                  "dateModified": "2026-11-03",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -345,6 +345,77 @@
             </table>
         </div>
 
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-table-cells"></i></div>Model and serving decision matrix</h3>
+            <p>Model choice solves for: matching each agent node to the cheapest option that still clears its quality, latency and compliance gates. Three axes move independently: <strong>scale</strong> (frontier LLM vs. efficient SLM tier), <strong>serving</strong> (managed API vs. self-hosted capacity) and <strong>weights</strong> (proprietary vs. open).</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Option</th><th>Data residency</th><th>Single-tenant compute in your network</th><th>Latency</th><th>Cost model</th><th>Customization</th><th>Best agent role</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Frontier managed LLM</strong> (<code>gemini-4-argon</code>)</td><td>Regional, <code>us</code>/<code>eu</code> multi-region, or <code>global</code> (no residency guarantee)</td><td>No: multi-tenant Google API, reached privately through VPC-SC and Private Google Access / PSC for Google APIs</td><td>Highest (thinking tokens add time before output)</td><td>Per token (PayGo tiers) or Provisioned Throughput GSUs</td><td>Prompting, grounding, implicit caching; no managed tuning on Argon</td><td>Coordinator, planner, ambiguous tool selection, escalation path</td></tr>
+                    <tr><td><strong>Efficient managed tier</strong> (<code>gemini-3.8-flash</code>, <code>gemini-3.5-flash-lite</code>)</td><td>Same endpoint choices as above</td><td>No: same managed API path</td><td>Low; Flash-Lite lowest TTFT in the Gemini lineup</td><td>Lowest per-token rate; PT, Flex and Batch available</td><td>Prompting, caching, SFT/LoRA on eligible versions</td><td>Tool-loop worker, router, classifier, extractor, inline guardrail</td></tr>
+                    <tr><td><strong>Partner MaaS</strong> (Claude on Agent Platform)</td><td>Regional, multi-region or <code>global</code> depending on the model card</td><td>No: serverless partner endpoint governed by Google Cloud IAM, VPC-SC and audit logs</td><td>Medium to high (extended thinking adds time)</td><td>Per token; PT ordered through a Google Cloud account team</td><td>Prompts and prompt caching; no weight access</td><td>Long-horizon coding or synthesis worker where the model is already standardized</td></tr>
+                    <tr><td><strong>Self-hosted open weights, Model Garden endpoint</strong> (Gemma 4 on a dedicated private endpoint)</td><td>Single region you pick for the endpoint</td><td>Yes: dedicated endpoint exposed only through a PSC endpoint in your VPC</td><td>Low to medium (set by accelerator shape and replica count)</td><td>Node-hours while deployed, even at zero traffic</td><td>Full weights, LoRA or full fine-tunes, custom vLLM containers</td><td>Specialist model with tuned open weights, served privately by a team that does not want to run Kubernetes</td></tr>
+                    <tr><td><strong>Self-hosted open weights, GKE + vLLM</strong> (Gemma 4 on GPUs or TPUs)</td><td>Region or zone of your node pools</td><td>Yes: pods in your private cluster; weights can load from your own storage instead of a public hub</td><td>Lowest achievable when tuned (continuous batching, prefix caching)</td><td>Node-pool or reservation cost; cheapest per token only at sustained high utilization</td><td>Full control of weights, quantization, serving flags, multi-LoRA</td><td>High-QPS fleet of fine-tuned specialists, strict isolation, existing GKE platform team</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Reading the matrix</h4>
+                <p>Latency and cost columns are directional rankings, not benchmarks. Validate with your own load test and golden evaluation set before committing to capacity.</p>
+                <p><strong>Isolation note:</strong> VPC-SC and PSC keep managed-API traffic private and block exfiltration; inference still runs on Google's shared serving stack. Only self-hosted endpoints run on capacity dedicated to you.</p>
+                <p><strong>Tuned Gemini caveat:</strong> tuned Gemini models deploy only to shared public endpoints, not to PSC endpoints, so a "fine-tuned and PSC-only" requirement points to an open model on a private endpoint or GKE.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Endpoint</th><th>Where ML processing runs</th><th>Gains</th><th>Gives up</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Regional</strong> (<code>us-central1</code>, <code>europe-west4</code>, ...)</td><td>The named region</td><td>Strict residency; none of the <code>global</code> feature gaps; CMEK-protected regional resources</td><td>Lower burst headroom than <code>global</code>; more <code>429</code> risk under regional spikes</td></tr>
+                    <tr><td><strong>Multi-region</strong> (<code>us</code>, <code>eu</code>)</td><td>Anywhere inside that jurisdiction</td><td>Jurisdiction-level residency with better availability than one region</td><td>Not single-region; CMEK unavailable for Agent Runtime on multi-region; Private Google Access not supported (use PSC endpoints or backends)</td></tr>
+                    <tr><td><strong>Global</strong> (<code>global</code>)</td><td>Any supported Google Cloud location</td><td>Highest availability, fewer <code>429</code> errors</td><td>No residency guarantee; no tuning, no RAG corpus, no batch for Anthropic and open MaaS models; CMEK unavailable for Sessions and Memory Bank</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-earth-europe"></i></div>Regional, multi-region and global endpoints</h3>
+            <ul>
+                <li><strong>Setting the location:</strong> the Gen AI SDK client takes it directly, for example <code>genai.Client(vertexai=True, project="my-proj", location="eu")</code>; <code>"eu"</code> keeps ML processing in the EU, while <code>"global"</code> offers no residency guarantee.</li>
+                <li><strong>Rule of thumb:</strong> if a requirement says "processing must stay in country X", rule out <code>global</code> first, then pick regional (single region) or multi-region (jurisdiction only).</li>
+                <li><strong>CMEK:</strong> Cloud KMS keys live in a geographic boundary, so the <code>global</code> location cannot hold CMEK-protected resources. Pair CMEK mandates with regional endpoints.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Network isolation: VPC-SC, PSC and air-gapped mandates</h3>
+            <ul>
+                <li><strong>VPC Service Controls:</strong> a perimeter around the Agent Platform API keeps prompts, online inference requests, batch results and tuned models from leaving the protected projects. Inside a perimeter, URL context live fetching is disabled to block exfiltration.</li>
+                <li><strong>Private Service Connect:</strong> dedicated Model Garden and custom endpoints can be published only through a PSC endpoint in your VPC (no public IP); PSC automation lets a network admin pre-authorize endpoint creation with a service connection policy.</li>
+                <li><strong>Org policy allowlist:</strong> <code>constraints/vertexai.allowedPartnerModels</code> limits which partner models a project can call.</li>
+                <li><strong>When self-hosting is forced:</strong> choose self-hosted open weights when policy forbids any multi-tenant inference service, requires auditable weights you control, or needs custom fine-tunes served only on private networking.</li>
+                <li><strong>Fully disconnected mandates:</strong> if the site cannot reach any Google Cloud region at all, managed APIs and cloud GKE are both out. <strong>Google Distributed Cloud air-gapped</strong> is the disconnected sovereign option; it runs Gemini through the Gemini for GDC API as well as open models such as Gemma on vLLM.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern: open weights as a security control</h4>
+                <p>Open weights inside a public endpoint are no more isolated than a managed API; the isolation comes from the private endpoint, perimeter and egress controls around them.</p>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
              SECTION 04: MODEL SELECTION FRAMEWORK
              ═══════════════════════════════════════ -->
@@ -368,7 +439,7 @@
                 <h3><div class="icon-badge"><i class="fas fa-cloud"></i></div>LLM vs. SLM &amp; Managed vs. Self-Hosted</h3>
                 <ul>
                     <li><strong>LLM (4 Argon / 3.8 Flash) vs. SLM (Gemma 4 / Nano / 3.5 Flash-Lite):</strong> LLMs excel at zero-shot long-horizon planning and 1M context; SLMs win high-QPS narrow schemas, edge latency, and fully offline client privacy.</li>
-                    <li><strong>Managed API vs. Self-Hosted:</strong> Default to managed APIs for fastest time-to-market and bursty traffic; self-host only for custom weights, air-gapped/strict private data paths, or proven lower TCO at steady saturated GPU utilization.</li>
+                    <li><strong>Managed API vs. Self-Hosted:</strong> Default to managed APIs for fastest time-to-market and bursty traffic; self-host only for custom weights, strict private data paths, or proven lower TCO at steady saturated GPU utilization. Fully disconnected sites use <strong>Google Distributed Cloud air-gapped</strong>, which runs Gemini (Gemini for GDC API) as well as open models such as Gemma.</li>
                 </ul>
             </div>
             <div class="concept-card accent-amber">
@@ -406,6 +477,70 @@
                     <tr><td><strong>Provisioned Throughput (PT)</strong></td><td>Production workloads needing guaranteed QPS/TPM &amp; p95 SLA</td><td>Reserve non-cancelable <strong>GSUs</strong> (1 wk–1 yr, same publisher). Spills over to PayGo by default; set <code>X-Vertex-AI-LLM-Request-Type: dedicated</code> to cap spend strictly or <code>shared</code> to bypass PT</td></tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Coordinator plus specialist workers (mixing LLMs and SLMs)</h3>
+            <p>A multi-agent design solves for: paying frontier prices only on the turns that need frontier reasoning. The coordinator owns ambiguity; workers own narrow, typed subtasks. A typical tree puts <code>gemini-4-argon</code> at the top (plans, delegates, merges) over a 3.5 Flash-Lite router or guard, a 3.8 Flash tool-loop worker, and a Gemma 4 + LoRA domain specialist on a private endpoint.</p>
+            <ul>
+                <li><strong>ADK per-agent models:</strong> each <code>LlmAgent</code> sets its own <code>model</code>, so a coordinator and its sub-agents can run different tiers in one agent tree.</li>
+                <li><strong>ADK model routing (experimental):</strong> <code>RoutedLlm</code> wraps several models behind one agent and calls a router function per request (fallback on error, A/B tests, routing by input complexity); <code>RoutedAgent</code> does the same when instructions and tools also change. If the chosen model fails before emitting output, the router is called again with error context.</li>
+                <li><strong>Managed gateway routing:</strong> API Gateway model routing accepts OpenAI-compatible requests and forwards them to Agent Platform models, replacing a self-run proxy layer.</li>
+                <li><strong>Anti-pattern:</strong> a frontier model at every node. It multiplies latency across sequential hops and spends planner-grade tokens on classification.</li>
+                <li><strong>Anti-pattern:</strong> an SLM as coordinator for open-ended goals. Weak planning causes wrong delegation, and every downstream worker inherits the error.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Role</th><th>Typical model tier</th><th>Why</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Coordinator / planner</strong></td><td>Frontier (<code>gemini-4-argon</code>)</td><td>Decomposes vague goals, picks among many tools and sub-agents, resolves conflicts</td></tr>
+                    <tr><td><strong>Router and inline guardrail</strong></td><td>Flash-Lite or ShieldGemma 2</td><td>Runs on every request, so TTFT and per-call cost dominate</td></tr>
+                    <tr><td><strong>Tool-loop worker</strong></td><td>Flash (<code>gemini-3.8-flash</code>)</td><td>Many short MCP or function-call turns at high token velocity</td></tr>
+                    <tr><td><strong>Fine-tuned specialist</strong></td><td>Gemma 4 with LoRA, self-hosted</td><td>Fixed schema or domain syntax; weights and data stay on private capacity</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Managed API, PayGo</th><th>Managed API, Provisioned Throughput</th><th>Self-hosted (Model Garden endpoint or GKE)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Unit of spend</strong></td><td>Tokens consumed</td><td>GSUs reserved for a term</td><td>Accelerator node-hours</td></tr>
+                    <tr><td><strong>Idle cost</strong></td><td>None</td><td>Full commitment, used or not</td><td>Full while replicas run</td></tr>
+                    <tr><td><strong>Burst behavior</strong></td><td>Shared pool, <code>429</code> risk under spikes</td><td>Reserved throughput; overage spills to PayGo unless <code>dedicated</code></td><td>Limited by your replicas and autoscaling speed</td></tr>
+                    <tr><td><strong>Ops owner</strong></td><td>Google</td><td>Google</td><td>You (containers, scaling, patching, guardrails)</td></tr>
+                    <tr><td><strong>Model scope</strong></td><td>Gemini, partner and open MaaS catalog</td><td>Supported Gemini and partner models (partner PT ordered through Google Cloud sales)</td><td>Any open or custom weights you can serve</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-server"></i></div>
+            <div class="callout-content">
+                <h4>SaaS vs. self-hosted: who owns the capacity</h4>
+                <p><strong>PT vs. self-hosting:</strong> both buy predictability. PT keeps the managed model and its update path; self-hosting buys weight control and private-only execution at the price of running the serving stack.</p>
+                <p><strong>Anti-pattern:</strong> self-hosting a large open model for spiky, low-volume traffic. Idle node-hours usually cost more than PayGo tokens; start on MaaS and move once utilization is sustained.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-list-check"></i></div>Choose this when</h3>
+            <ul>
+                <li><strong>Frontier coordinator with Flash or Flash-Lite workers:</strong> an enterprise orchestrator fans out to many parallel extraction or tool calls and only the planning step needs deep reasoning.</li>
+                <li><strong>Regional endpoint with Provisioned Throughput:</strong> a regulated, steady, high-QPS chat workload needs in-region processing, CMEK on stored resources and predictable throughput.</li>
+                <li><strong>Multi-region <code>us</code> or <code>eu</code> endpoint:</strong> residency is defined at jurisdiction level and availability matters more than single-region pinning.</li>
+                <li><strong>Global endpoint on PayGo:</strong> prototypes or non-regulated workloads with bursty traffic and no residency clause.</li>
+                <li><strong>Claude on Agent Platform:</strong> a team standardized on Claude for coding agents but must keep billing, IAM, audit logs and the VPC-SC perimeter in Google Cloud.</li>
+                <li><strong>Gemma on a Model Garden private endpoint:</strong> fine-tuned open weights must be reachable only over PSC and nobody wants to operate Kubernetes.</li>
+                <li><strong>Gemma on private GKE with vLLM:</strong> many LoRA specialists share accelerator pools, utilization is sustained, and a platform team already runs GKE.</li>
+                <li><strong>Google Distributed Cloud air-gapped:</strong> the mandate forbids any connection to a public cloud region.</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -613,6 +748,18 @@
             <div class="definition-item">
                 <dt>AlphaChip, AlphaQubit &amp; Aeneas</dt>
                 <dd>RL TPU floorplan placement, recurrent transformer surface-code quantum error correction, and ancient epigraphic text restoration.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Multi-region endpoint (<code>us</code> / <code>eu</code>)</dt>
+                <dd>Agent Platform location that keeps ML processing inside a jurisdiction rather than one region; better availability than a single region, but no Private Google Access and no CMEK for Agent Runtime.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Google Distributed Cloud air-gapped</dt>
+                <dd>Disconnected sovereign deployment option for sites that cannot reach any Google Cloud region; runs Gemini through the Gemini for GDC API and open models such as Gemma on vLLM.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>RoutedLlm</code> / <code>RoutedAgent</code></dt>
+                <dd>Experimental ADK wrappers that call a router function per request to pick among several models (or whole agent configurations) for fallback, A/B tests or complexity-based routing.</dd>
             </div>
         </div>
 

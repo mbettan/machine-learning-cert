@@ -84,7 +84,7 @@
                   "keywords": "Gemini Enterprise, Agentspace, Workflow Builder, Agent Designer, Agent Gallery, connectors, data stores, federated search, ADK agent registration, A2A agent, Model Armor, CX Agent Studio, Dialogflow CX, end_session, human handoff, Agent Runtime, Agent Search, Professional Agentic Architect, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/GeminiEnterprise.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-01",
+                  "dateModified": "2026-11-03",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -378,13 +378,123 @@
             </ul>
         </div>
 
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-file-lines"></i></div>Parser choice</h3>
+            <p>The parser is set when the data store is created, as a default plus optional per-file-type overrides (<code>pdf</code>, <code>html</code>, <code>docx</code>, <code>pptx</code>, <code>xlsx</code>, <code>xlsm</code>).</p>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Parser</th><th>What it detects</th><th>File types</th><th>Choose it when</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Layout parser</strong> (default, recommended)</td><td>Paragraphs, tables, lists, titles, headings and images; adds generated descriptions for images and tables</td><td>PDF, HTML, DOCX, PPTX, XLSX, XLSM</td><td>Documents carry structure (sections, tables, figures) and you want layout-aware chunks</td></tr>
+                        <tr><td><strong>OCR parser</strong></td><td>Paragraph text recognized from page images; only the first 500 pages of a PDF are processed</td><td>PDF only; other types fall back to the digital parser</td><td>PDFs are not searchable (scans, text inside images); set <code>useNativeText</code> to merge embedded text for mixed PDFs</td></tr>
+                        <tr><td><strong>Digital parser</strong></td><td>Machine-readable text blocks only; no tables, lists or headings</td><td>All supported types, including TXT</td><td>Content is plain machine-readable text with no structure worth keeping</td></tr>
+                        <tr><td><strong>Bring your own parsed document</strong> (preview)</td><td>Whatever your own pipeline emits, as JSON text, table and list blocks</td><td>Pre-parsed JSON</td><td>You already parse elsewhere, for example with a Document AI layout parser processor</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Fallback rule:</strong> when the chosen parser does not support a file type, the digital parser handles it (TXT files under a layout-parser store, non-PDF files under an OCR-parser store).</li>
+                <li><strong>API default:</strong> a data store created through the API without <code>documentProcessingConfig.defaultParsingConfig</code> uses the digital parser, so request the layout parser explicitly (<code>layoutParsingConfig</code>).</li>
+                <li><strong>Gemini-based parsing:</strong> Document AI offers layout parser processor versions powered by Gemini 2.5 Flash and Gemini 2.5 Pro (preview) for better layout analysis of PDFs. Running them outside the data store and importing the result as a parsed document is a design option, not a built-in Gemini Enterprise parser setting.</li>
+                <li><strong>Federated connectors:</strong> connectors in federated mode (such as SharePoint and OneDrive) also use the layout parser, but real-time queries leave less room to analyze complex PDFs; use data ingestion mode when deep parsing matters.</li>
+                <li><strong>HTML cleanup:</strong> <code>excludeHtmlElements</code>, <code>excludeHtmlClasses</code> and <code>excludeHtmlIds</code> drop navigation menus, headers, footers and sidebars before indexing.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Chunking options</h3>
+            <p>By default a search data store is tuned for document retrieval (whole documents as results). For RAG, turn on chunking at data store creation, together with the layout parser.</p>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Setting</th><th>Values</th><th>Effect</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Layout-aware chunking</strong> (<code>layoutBasedChunkingConfig</code>)</td><td>On or off at creation</td><td>Text in each chunk comes from a single layout entity (a heading section, a list), which keeps chunks coherent</td></tr>
+                        <tr><td><code>chunkSize</code></td><td>100 to 500 tokens; default 500</td><td>Smaller chunks give tighter matches on specific facts; larger chunks keep more surrounding context</td></tr>
+                        <tr><td><code>includeAncestorHeadings</code></td><td><code>true</code> or <code>false</code>; default <code>false</code></td><td>Prepends the title and headings at all levels, so a chunk from mid-document keeps its context during retrieval and ranking</td></tr>
+                        <tr><td><strong>Search result mode</strong></td><td><code>chunks</code> in <code>ContentSearchSpec.SearchResultMode</code></td><td>Returns chunks instead of documents in search responses</td></tr>
+                        <tr><td><strong>Bring your own chunks</strong> (preview)</td><td>Pre-segmented JSON per document</td><td>Replaces built-in chunking when you control segmentation</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-key"></i></div>
+            <div class="callout-content">
+                <h4>Note: chunk size is a trade-off, not a benchmark</h4>
+                <p>The smaller-versus-larger chunk trade-off is general retrieval guidance, not a documented Gemini Enterprise benchmark. Inspect real chunks (<code>Chunks.list</code>, <code>getProcessedDocument</code>) before settling on a size.</p>
+            </div>
+        </div>
+
         <div class="concept-card accent-amber">
             <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Multimodal content</h3>
             <ul>
                 <li>The layout parser <strong>annotates images</strong> (BMP, GIF, JPEG, PNG, TIFF embedded in documents) and <strong>tables</strong> with generated descriptions, so a chunk can be retrieved by what an image or table shows.</li>
-                <li>Standalone audio and video files are not native unstructured-store document formats. A common design pattern is to pre-process them — for example, use Gemini to transcribe or describe them and ingest the text with metadata — or use Agent Platform Vision / Vision Warehouse for dedicated media search (design guidance; verify against current docs).</li>
+                <li>Standalone audio and video files (MP3, WAV, MP4, MOV and similar) are not on the unstructured data store format list, so the data store never parses or chunks a raw recording. Turn the recording into text first or use one of the other patterns in the standalone audio and video card below.</li>
                 <li>The assistant itself can analyze uploaded PDFs and images inside a conversation.</li>
             </ul>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Need</th><th>Approach</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>One-off question about a single file</strong></td><td>Upload it to the assistant; Gemini reads it in the conversation and nothing is indexed</td></tr>
+                        <tr><td><strong>Charts, diagrams or tables inside documents must be findable</strong></td><td>Layout parser, whose image and table descriptions become retrievable text</td></tr>
+                        <tr><td><strong>Searchable archive of recordings or videos</strong></td><td>Transcribe or describe first, then ingest the text with metadata (source, timestamps) so it is parsed, chunked and searchable like any document</td></tr>
+                        <tr><td><strong>Scanned paper records</strong></td><td>OCR parser, with <code>useNativeText</code> when some pages already contain digital text</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Standalone audio and video</h3>
+            <p>Unstructured data stores accept TXT, PDF, HTML, DOCX, PPTX, XLSX and XLSM (Agent Search also lists JSON and Markdown), with files under 200 MB and up to 100,000 files per import. Audio and video need one of four patterns, chosen by corpus size, how much visual detail matters and who may see what.</p>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Pattern</th><th>What gets indexed</th><th>Timestamps</th><th>Access control</th><th>Limits to remember</th><th>Weak spot</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Transcribe or caption first</strong>, then an unstructured data store</td><td>Text segments (transcripts, scene descriptions) as HTML or TXT, with a JSONL metadata row per segment pointing back to the recording</td><td>Your own <code>structData</code> fields per segment (start, end, source URI)</td><td><code>acl_info</code> readers in each metadata row, on a store created with access control enabled</td><td>Normal document limits</td><td>Visual and non-speech cues vanish unless the captioning step writes them down; you own the conversion pipeline</td></tr>
+                        <tr><td><strong>Agent Retrieval</strong> (formerly Vector Search 2.0) with <code>gemini-embedding-2</code></td><td>One Data Object per short clip in a Collection, with embeddings autogenerated from the clip</td><td>Clip-level: store each clip's offsets as data fields</td><td>Enforced by your app, for example with filters on Data Object fields</td><td>Per embedding call: 8,192 input tokens, one video of up to 120 s (about 80 s with audio track extraction; MP4 or MPEG only, so convert MOV first), audio up to 180 s</td><td>Retrieves clips but does not answer; long recordings must be split first</td></tr>
+                        <tr><td><strong>Direct Gemini prompt</strong> with a Cloud Storage URI</td><td>Nothing; the file is read at request time</td><td>Audio: turn on <code>audio_timestamp</code> in the generation config; video: ask for <code>MM:SS</code> references in the prompt</td><td>Whoever can call the app and whatever objects it can read; no per-document ACLs</td><td>One audio file of about 8.4 hours (1M tokens) per prompt; up to 10 videos of about 45 min with audio or 1 hour without, on 1M-context models</td><td>Cost and latency on every question; does not scale to an archive</td></tr>
+                        <tr><td><strong>Agent Search media data store</strong></td><td>Catalog records (required <code>title</code>, <code>uri</code>, <code>categories</code>, <code>available_time</code>; <code>duration</code> when optimizing watch time) plus user events such as <code>media-play</code> and <code>media-complete</code></td><td>Item-level only</td><td>Catalog filters</td><td>User events are required for media apps</td><td>Never looks at frames or waveforms; it ranks on the record text you supply (including an optional <code>transcript</code> field) and on behavior</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Transcribe or caption first:</strong> choose it when employees search thousands of meetings, calls or trainings inside Gemini Enterprise and each answer must respect source permissions; return the segment start time so users jump to the right moment.</li>
+                <li><strong>Agent Retrieval with <code>gemini-embedding-2</code>:</strong> choose it when a custom agent must match a text query to what a clip shows ("forklift near the loading dock") across a large clip library; pass the top clips to Gemini in a second step when the user needs an explanation.</li>
+                <li><strong>Direct Gemini prompt:</strong> choose it when a handful of known recordings (an outage bridge call, a screen-share bug report) need detailed questions answered now, with timestamps, and no index is worth building.</li>
+                <li><strong>Media data store:</strong> choose it when a streaming or learning portal needs search and personalized "watch next" ranking driven by catalog metadata and viewing events.</li>
+                <li><strong>Model support:</strong> the autogeneration table in Agent Retrieval lists text, image, video and PDF for <code>gemini-embedding-2</code>; the model also accepts audio when called directly, so audio-only clips can be embedded yourself and loaded as your own embeddings.</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSONL: transcript segment metadata (wrapped here; one line per record in the file)</span>
+            </div>
+            <pre>{"id": "townhall-q3-seg-014",
+ "structData": {"title": "Q3 town hall", "recording": "gs://media/townhall-q3.mp4",
+   "start": "00:14:20", "end": "00:16:05"},
+ "acl_info": {"readers": [{"principals": [{"group_id": "all-staff@example.com"}]}]},
+ "content": {"mimeType": "text/html", "uri": "gs://media-text/townhall-q3/seg-014.html"}}</pre>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Anti-patterns: media store as a video brain, whole recordings as embeddings</h4>
+                <p>A media data store only knows the catalog fields and user events you send it, so loading recordings into one and expecting answers about what a speaker said or showed fails. Sending an hour-long video to <code>gemini-embedding-2</code> in one call also fails quietly: input past the token window is silently truncated, so split into clips that fit the per-call limits. The duration limits above come from the model capability tables (Gemini 2.5 and 3.x Flash and Pro families) and vary by model; check the specific model page before sizing a design on them.</p>
+            </div>
         </div>
 
         <div class="concept-card accent-cyan">
@@ -758,9 +868,113 @@
                     <tr><td><strong>Page</strong></td><td>A conversational state; can collect form parameters</td></tr>
                     <tr><td><strong>State handler</strong></td><td>Has requirements, an optional fulfillment (response, parameter preset, webhook) and an optional transition target</td></tr>
                     <tr><td><strong>Route</strong></td><td>Intent route or condition route that moves to another page or flow</td></tr>
-                    <tr><td><strong>Event handler</strong></td><td>Reacts to events such as <code>sys.no-match-default</code>, <code>sys.no-input-default</code>, or a flow failure escalating to a human (<code>END_FLOW_WITH_HUMAN_ESCALATION</code>)</td></tr>
+                    <tr><td><strong>Event handler</strong></td><td>Reacts to events such as <code>sys.no-match-default</code>, <code>sys.no-input-default</code>, or a sub-flow ending with a request for a human (<code>flow-failed-human-escalation</code>, raised by the <code>END_FLOW_WITH_HUMAN_ESCALATION</code> target)</td></tr>
                     <tr><td><strong>Handler scope</strong></td><td>Flow-level, page-level, or form-parameter-level</td></tr>
                     <tr><td><strong>Form parameters</strong></td><td>Slots a page must fill before it completes</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-file-lines"></i></div>Page anatomy and form filling</h3>
+            <ul>
+                <li><strong>One active page per active flow.</strong> A page bundles an <strong>entry fulfillment</strong> (messages or a webhook that run when the page becomes active), an optional <strong>form</strong>, and its routes and event handlers.</li>
+                <li><strong>Form filling</strong> runs turn by turn: values already in session state pre-fill the form, the agent prompts only for missing parameters, and each parameter can carry its own reprompt handlers (<code>sys.no-match-1</code>, <code>sys.no-input-1</code> and so on).</li>
+                <li><strong>Leaving the page</strong> is usually a condition route on <code>$page.params.status = "FINAL"</code>, true once every required parameter is filled.</li>
+                <li><strong>Typed extraction:</strong> bind parameters to system entities (<code>@sys.date</code>, <code>@sys.number</code>) or custom entities so values are validated, not guessed.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-list-ol"></i></div>Handler evaluation order</h3>
+            <ol>
+                <li><strong>Scope filter:</strong> only handlers on the active flow, the active page, or the parameter being filled are considered.</li>
+                <li><strong>Intent routes:</strong> page routes, then page route groups, then flow routes, then flow route groups, each in listed order.</li>
+                <li><strong>Condition routes:</strong> page routes, then page route groups; flow routes and flow route groups only when the current page is the flow's start page.</li>
+                <li><strong>Event handlers:</strong> parameter-level (reprompt) handlers, then page, then flow, when an event fires (no match, no input, webhook failure, flow outcome).</li>
+            </ol>
+            <ul>
+                <li><strong>Stop rule:</strong> a called handler with a transition target ends evaluation; one without a target lets evaluation continue, so several fulfillments can queue messages in one turn.</li>
+                <li><strong>Consumption:</strong> a matched intent or event is consumed by the first handler that uses it; a satisfied condition is not, so several condition routes can fire in the same turn.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Built-in event</th><th>Fires when</th><th>Design use</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>sys.no-match-default</code>, <code>sys.no-match-1</code> to <code>-6</code></td><td>Input matches no in-scope intent or does not satisfy the form parameter</td><td>Numbered handlers replace the default and run in order: rephrase, give an example, then escalate</td></tr>
+                    <tr><td><code>sys.no-input-default</code>, <code>sys.no-input-1</code> to <code>-6</code></td><td>Empty text, no recognized speech, or a no-speech timeout</td><td>Voice reprompts and a graceful exit after repeated silence</td></tr>
+                    <tr><td><code>sys.invalid-parameter</code></td><td>A webhook marks a form parameter <code>INVALID</code></td><td>Server-side validation (for example an unknown account number)</td></tr>
+                    <tr><td><code>sys.long-utterance</code></td><td>Input over 256 characters for non-generative intents or parameters</td><td>Ask for a shorter answer instead of treating it as no-match</td></tr>
+                    <tr><td><code>webhook.error</code> and variants (<code>webhook.error.timeout</code>, <code>webhook.error.bad-request</code>, <code>webhook.error.rejected</code>)</td><td>Timeout, error status, invalid response, or unavailable service</td><td>Fallback message or alternate path; fires only if the calling route has no transition target of its own</td></tr>
+                    <tr><td><code>flow-cancelled</code>, <code>flow-failed</code>, <code>flow-failed-human-escalation</code></td><td>A sub-flow ended with cancellation, failure, or a request for a human</td><td>Handle the outcome on the calling page</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Symbolic transition target</th><th>Effect</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>START_PAGE</code></td><td>Go to the start page of the active flow</td></tr>
+                    <tr><td><code>CURRENT_PAGE</code></td><td>Re-enter the current page (useful to repeat a prompt)</td></tr>
+                    <tr><td><code>PREVIOUS_PAGE</code></td><td>Return to the page that led here and restore its page state</td></tr>
+                    <tr><td><code>END_FLOW</code></td><td>Pop the active flow and resume the calling page; handlers already evaluated there are skipped</td></tr>
+                    <tr><td><code>END_FLOW_WITH_CANCELLATION</code> / <code>END_FLOW_WITH_FAILURE</code> / <code>END_FLOW_WITH_HUMAN_ESCALATION</code></td><td>Pop the flow and raise the matching <code>flow-*</code> event on the calling page</td></tr>
+                    <tr><td><code>END_SESSION</code></td><td>Clear the session; the next input restarts at the start page of the Default Start Flow</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-layer-group"></i></div>
+            <div class="callout-content">
+                <h4>Flow stack limit: 25</h4>
+                <p>Each flow-to-flow transition pushes onto a stack capped at 25. Going deeper can cause flows to be popped from the stack, so <code>END_FLOW</code> returns somewhere unexpected; keep sub-flow chains shallow. With an empty stack, <code>END_FLOW</code> ends the session.</p>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Sample flow: order capture</span>
+            </div>
+            <pre>[Start page] ──intent: order.new──► [Order details page]  form: product, quantity
+                                      │ sys.no-match-1 → rephrase prompt
+                                      │ sys.no-match-2 → offer examples
+                                      │ webhook.error  → "stock check unavailable" → [Fallback page]
+                                      └─ condition: $page.params.status = "FINAL"
+                                            ▼
+                                     [Confirm page] ──intent: confirm.yes──► END_SESSION
+                                            └─ intent: confirm.no ──► PREVIOUS_PAGE</pre>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-shuffle"></i></div>Combining playbooks, generators and flows</h3>
+            <ul>
+                <li><strong>Playbooks</strong> are the generative building block of Dialogflow CX agents: a goal, step instructions, examples (few-shot conversations) and parameters. <strong>Task playbooks</strong> are reusable subtasks that exchange input and output parameters; <strong>routine playbooks</strong> model sequential stages and can hand off to other routine playbooks or to flows.</li>
+                <li><strong>References in playbook instructions:</strong> <code>${PLAYBOOK: name}</code> routes to another playbook, <code>${TOOL: name}</code> calls a tool, and <code>${FLOW: name}</code> hands control to a deterministic flow.</li>
+                <li><strong>Generators</strong> call an LLM from inside a fulfillment with a prompt template (placeholders such as <code>$last-user-utterance</code> or session parameters) for summarization, parameter extraction or rewriting, without a webhook.</li>
+                <li><strong>Session parameters</strong> are the shared memory between the generative and deterministic halves: a routine playbook writes them and a flow reads them, or the reverse (task playbooks pass data through input and output parameters instead).</li>
+                <li><strong>Playbook examples</strong> are sample conversations (user turns, tool calls with inputs and outputs, agent replies) that act as few-shot prompts. Give every playbook at least one and aim for four or more, covering happy paths plus edge cases such as a tool returning no data; example quality usually drives behavior more than instruction wording. For multilingual agents, write examples in each language.</li>
+                <li><strong>Example Store</strong> (preview, Agent Platform) is the code-agent counterpart: a managed set of few-shot examples retrieved by similarity to the user query. An ADK agent linked to an instance pulls relevant examples into its requests automatically, and new examples take effect without redeploying, which makes it a way to correct observed misbehavior.</li>
+            </ul>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>Shape</th><th>Good fit</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Generative front, deterministic back</strong></td><td>A playbook handles open discovery, then <code>${FLOW: name}</code> runs payment or identity steps</td><td>Sales or support where the closing steps are regulated</td></tr>
+                    <tr><td><strong>Deterministic spine, generative pages</strong></td><td>A flow drives the process; a generator or data store tool answers side questions on one page</td><td>Claims intake that also fields policy questions</td></tr>
+                    <tr><td><strong>Flow as subroutine</strong></td><td>A CX Agent Studio root agent routes to a flow-based agent and gets output variables back</td><td>Reusing an existing Dialogflow CX authentication flow</td></tr>
                 </tbody>
             </table>
         </div>
@@ -803,6 +1017,27 @@
                 <h4>Exam trap — Deterministic does not mean "all flows"</h4>
                 <p>Use LLM agents for understanding and routing, flows or callbacks for steps that must never vary (identity verification, payment capture, legally required wording).</p>
             </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-bug"></i></div>State-machine design mistakes</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Mistake</th><th>What goes wrong</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>No no-match or no-input handlers</strong></td><td>Users loop on the same prompt or the call goes silent</td><td>Add numbered <code>sys.no-match-*</code> and <code>sys.no-input-*</code> handlers at flow and parameter level, ending in escalation</td></tr>
+                    <tr><td><strong>Circular routes between flows and playbooks</strong></td><td>Turns repeat until the user hangs up; deep chains overflow the 25-flow stack</td><td>Count retries in a session parameter and add a page-level condition route that exits after a limit; keep sub-flow nesting shallow</td></tr>
+                    <tr><td><strong>LLM-extracted values for strict fields</strong></td><td>Missing or invented account numbers, dates and amounts</td><td>Use page forms with typed entities and webhook validation (<code>sys.invalid-parameter</code>)</td></tr>
+                    <tr><td><strong>Reference data pasted into instructions</strong></td><td>Higher latency and token cost on every turn; stale facts</td><td>Move FAQs and policies to a data store tool and keep instructions about behavior</td></tr>
+                    <tr><td><strong>Webhook route that also sets a transition target</strong></td><td><code>webhook.error</code> never fires, so failures pass silently</td><td>Leave the target off routes whose webhook can fail, and handle the error event explicitly</td></tr>
+                    <tr><td><strong>Broad intents placed on flow-level routes</strong></td><td>Flow intent routes stay in scope on every page, so a loosely trained intent can pull the user out of a half-filled form</td><td>Attach specialized intents to the pages or route groups where they apply; keep flow-level routes for true global exits such as "talk to a person"</td></tr>
+                    <tr><td><strong>No instruction for empty tool or data store results</strong></td><td>The playbook fills the gap with invented answers</td><td>Instruct it to say it does not know or ask the user to rephrase when a tool returns nothing, and add an example showing that path</td></tr>
+                    <tr><td><strong>State-changing action with no confirmation</strong></td><td>Orders, refunds or record updates run on a misheard or misread value</td><td>Add a confirmation page (read back the values, then a yes or no route) before the webhook; in Workflow Builder, put a Human-in-the-loop approval step before the write</td></tr>
+                </tbody>
+            </table>
+        </div>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -956,6 +1191,66 @@
                 <dt>end_session</dt>
                 <dd>CX Agent Studio system tool for ending a session, transferring calls, and live-agent handoff.</dd>
             </div>
+            <div class="definition-item">
+                <dt>Entry fulfillment</dt>
+                <dd>Messages or a webhook that run when a Dialogflow CX page becomes active.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Symbolic transition target</dt>
+                <dd>A reserved destination such as <code>END_FLOW</code>, <code>PREVIOUS_PAGE</code> or <code>END_SESSION</code> that moves the session without naming a specific page.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Flow stack</dt>
+                <dd>The stack of flows entered through flow-to-flow transitions, capped at 25, that <code>END_FLOW</code> pops to return to the caller.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Generator</dt>
+                <dd>An LLM call configured inside a Dialogflow CX fulfillment with a prompt template, used without a webhook.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Task playbook vs. Routine playbook</dt>
+                <dd>A task playbook is a reusable subtask with input and output parameters; a routine playbook is a sequential stage that can hand off to other routines or flows.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>OCR parser</dt>
+                <dd>Gemini Enterprise parser for scanned or image-based PDFs; processes the first 500 pages and can merge embedded text with <code>useNativeText</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Digital parser</dt>
+                <dd>Basic parser that extracts machine-readable text without detecting tables, lists or headings; fallback for file types the chosen parser does not support.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Layout-aware chunking</dt>
+                <dd>Chunking that keeps each chunk's text within one layout entity, with a 100 to 500 token size limit (default 500).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Ancestor headings</dt>
+                <dd>Optional setting (<code>includeAncestorHeadings</code>) that prepends the document title and headings to each chunk.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Playbook example</dt>
+                <dd>A sample conversation, including tool calls, used as a few-shot prompt for a Dialogflow CX playbook.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Example Store</dt>
+                <dd>Agent Platform service (preview) that stores few-shot examples and retrieves the relevant ones for an agent at request time.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Retrieval</dt>
+                <dd>Agent Platform storage and vector search engine (formerly Vector Search 2.0) built on Collections of JSON Data Objects, with optional autogenerated embeddings.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>gemini-embedding-2</dt>
+                <dd>GA multimodal embedding model that maps text, images, documents, audio and video into one 3,072-dimension space, with an 8,192-token input limit per call.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>audio_timestamp</dt>
+                <dd>Generation config flag (<code>audioTimestamp</code> in REST) required for accurate timestamps on audio-only files.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Media data store</dt>
+                <dd>Agent Search structured data store with a media schema plus required user events, used for media search and recommendations; it does not analyze the media files themselves.</dd>
+            </div>
         </div>
 
         <div class="concept-card accent-cyan">
@@ -965,7 +1260,13 @@
                 <li>CX Agent Studio docs: overview, agents, instructions, tools, A2A tool, callbacks, evaluation, flows — <a href="https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio">https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio</a></li>
                 <li>Agent Assist handoff from CX Agent Studio — <a href="https://docs.cloud.google.com/gemini-enterprise-cx/agent-assist/handoff-cxas">https://docs.cloud.google.com/gemini-enterprise-cx/agent-assist/handoff-cxas</a></li>
                 <li>Dialogflow CX concepts (pages, state handlers) — <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler">https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler</a></li>
+                <li>Dialogflow CX playbooks, generators and webhooks: <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/playbook">playbooks</a>, <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/generators">generators</a>, <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/webhook">webhooks</a></li>
                 <li>Gemini Enterprise Agent Platform overview — <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview">https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview</a></li>
+                <li>Parsing and chunking: <a href="https://docs.cloud.google.com/gemini/enterprise/docs/parse-chunk-documents">parse and chunk documents (Gemini Enterprise)</a>, <a href="https://docs.cloud.google.com/document-ai/docs/layout-parse-chunk">Document AI layout parser</a></li>
+                <li>Dialogflow CX playbook <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/playbook/example">examples</a> and <a href="https://docs.cloud.google.com/dialogflow/cx/docs/concept/playbook/best-practices">best practices</a>; <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/example-store/overview">Example Store overview</a></li>
+                <li>Prepare data and data store types: <a href="https://docs.cloud.google.com/gemini/enterprise/docs/connectors/prepare-data">Gemini Enterprise</a>, <a href="https://docs.cloud.google.com/generative-ai-app-builder/docs/prepare-data">Agent Search</a>, <a href="https://docs.cloud.google.com/generative-ai-app-builder/docs/create-datastore-ingest">create a data store</a>; <a href="https://docs.cloud.google.com/gemini/enterprise/docs/identity">data source access control (<code>acl_info</code>)</a></li>
+                <li>Audio and video: <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/audio-understanding">audio understanding</a>, <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/video-understanding">video understanding</a>, <a href="https://docs.cloud.google.com/generative-ai-app-builder/docs/media-documents">media documents</a>, <a href="https://docs.cloud.google.com/generative-ai-app-builder/docs/media-user-events">media user events</a></li>
+                <li>Agent Retrieval and embeddings: <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/overview">overview</a>, <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/embeddings/autogenerating-embeddings">autogenerated embeddings</a>, <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2">Gemini Embedding 2</a>, <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/embeddings/get-multimodal-embeddings">multimodal embedding limits</a></li>
             </ul>
         </div>
 

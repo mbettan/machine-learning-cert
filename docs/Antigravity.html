@@ -81,7 +81,7 @@
                   "keywords": "Google Antigravity, Antigravity CLI, agy, Antigravity IDE, Antigravity SDK, Agents CLI, agents-cli, ADK, Agent Runtime, Gemini Enterprise, SKILL.md, AGENTS.md, mcp_config.json, hooks.json, subagents, terminal sandbox, Cloud Workstations, Agent Sandbox GKE, Professional Agentic Architect, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/Antigravity.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-01",
+                  "dateModified": "2026-11-03",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -381,12 +381,121 @@
         <div class="two-columns">
             <div class="concept-card accent-mint">
                 <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>Multi-file refactoring &amp; runtime optimization</h3>
-                <p>Use <strong>Planning mode</strong> (<code>/plan</code>) to inventory call sites across the repository, establish a baseline (existing test suite or latency/memory benchmark), apply incremental diffs, and run verification gates after each step before producing the final walkthrough artifact.</p>
+                <p>Use <strong>Planning mode</strong> (<code>/plan</code>) to inventory call sites across the repository, establish a baseline (existing test suite or latency/memory benchmark), apply incremental diffs, and run verification gates after each step before producing the final walkthrough artifact. The full playbook follows below.</p>
             </div>
             <div class="concept-card accent-coral">
                 <h3><div class="icon-badge"><i class="fas fa-shield-virus"></i></div>Automated vulnerability patching</h3>
-                <p>Pair security scanner findings (SAST or dependency audit) with a <strong>security implementation plan</strong> and a <strong>Proof-of-Concept (PoC)</strong> reproduction test in an isolated sandbox (<code>workspaceWrite</code> / Seatbelt). The agent confirms the PoC reproduces the flaw before the fix, patches the root cause (e.g., parameterized queries, output encoding, path canonicalization, upgraded dependency), verifies that the PoC and regression tests pass, and records a security audit report artifact. Use <code>PreToolUse</code> / <code>PostToolUse</code> hooks to run linters or security scanners automatically on every edit.</p>
+                <p>Pair security scanner findings (SAST or dependency audit) with a <strong>security implementation plan</strong> and a <strong>Proof-of-Concept (PoC)</strong> reproduction test in an isolated sandbox (the Antigravity terminal sandbox: Seatbelt profiles on macOS, kernel namespaces on Linux). The agent confirms the PoC reproduces the flaw before the fix, patches the root cause (e.g., parameterized queries, output encoding, path canonicalization, upgraded dependency), verifies that the PoC and regression tests pass, and records a security audit report artifact. Use <code>PreToolUse</code> / <code>PostToolUse</code> hooks to run linters or security scanners automatically on every edit.</p>
             </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-screwdriver-wrench"></i></div>Refactoring and runtime optimization playbook</h3>
+            <p>Refactoring and runtime optimization are judged by different proofs than a security patch, so they need their own gates.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Aspect</th><th>Multi-file refactoring</th><th>Runtime optimization</th><th>Vulnerability patching (CodeMender-style)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Goal</strong></td><td>Change structure, keep external behavior identical</td><td>Cut latency, cost or resource use against a measured baseline</td><td>Remove one verified flaw at its root cause</td></tr>
+                    <tr><td><strong>Scope</strong></td><td>Wide: many modules and call sites</td><td>Hot paths found in traces or profiles</td><td>Narrow: the code path behind one finding</td></tr>
+                    <tr><td><strong>Proof of success</strong></td><td>Unchanged test results plus a clean interface diff</td><td>Better benchmark or trace numbers and no eval regression</td><td>The exploit or PoC stops reproducing and regression tests pass</td></tr>
+                    <tr><td><strong>Typical tooling</strong></td><td>Rules, skills, <code>research</code> subagents, <code>branch</code> worktrees, hooks</td><td>Cloud Trace, benchmarks, <code>agents-cli eval compare</code>, revision traffic split</td><td>CodeMender (<code>cm fix</code> on Agent Platform, Preview) or the security plan flow above</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Key point</h4>
+                <p>CodeMender and the PoC flow above start from a finding and end with a small, reviewed diff. A refactor starts from a target design and can touch hundreds of files, so the safety net is the test suite and isolation, not an exploit reproducer.</p>
+            </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Stage</th><th>Refactoring</th><th>Runtime optimization</th><th>Gate before the next stage</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Contract and baseline</strong></td><td>Write target structure and forbidden patterns as <code>.agents/rules/</code> files; package repeatable codemod steps as a skill</td><td>Record latency percentiles, token counts and Cloud Trace waterfalls before any edit</td><td>Characterization tests pass on the old code; baseline numbers are saved</td></tr>
+                    <tr><td><strong>Decompose</strong></td><td><code>research</code> subagents map imports, call graphs and public interfaces, then the plan splits the work into independent slices</td><td>The agent reads traces and ranks suspects (serial tool calls, repeated queries, uncached prompt prefixes)</td><td>You approve the implementation plan artifact</td></tr>
+                    <tr><td><strong>Isolated execution</strong></td><td>One writer subagent per slice in <code>branch</code> mode (its own Git worktree), commands in the terminal sandbox</td><td>Apply one change at a time: parallel fan-out, caching, or a smaller model on simple steps</td><td>No writer shares a working tree; sandbox stays on</td></tr>
+                    <tr><td><strong>Automated checks</strong></td><td><code>PostToolUse</code> hooks format and lint each edit; a <code>Stop</code> hook refuses to finish while tests fail</td><td>Rerun the benchmark and the eval dataset after every change</td><td>Tests green, eval scores at or above baseline</td></tr>
+                    <tr><td><strong>Review and rollout</strong></td><td>A fresh-context reviewer subagent checks the diff against the rules; merge through CI</td><td>Canary the new revision on a small traffic share, compare traces and quality, then promote</td><td>CI passes; canary metrics hold before 100%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Walkthrough: rename a module boundary across a monorepo</h3>
+                <ol>
+                    <li><strong>Pin the contract:</strong> add an <code>always_on</code> rule that names the new package path and bans imports of the old one; run the full suite and save the result as the baseline.</li>
+                    <li><strong>Map the blast radius:</strong> in <code>/plan</code>, have the agent delegate discovery to <code>research</code> subagents that list every importer and public symbol; the plan groups them into slices with no shared files.</li>
+                    <li><strong>Fan out safely:</strong> the main agent launches one subagent per slice, each in its own branch workspace so writers never share a working tree.</li>
+                    <li><strong>Let hooks enforce quality:</strong> the formatter runs after each edit and the <code>Stop</code> hook re-enters the loop with the failing test output until the slice is green.</li>
+                    <li><strong>Review and merge:</strong> a custom reviewer subagent whose <code>tools</code> list has only read tools audits each worktree diff; the walkthrough artifact summarizes the result before you merge.</li>
+                </ol>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-gauge-high"></i></div>Walkthrough: cut response latency of a deployed ADK agent</h3>
+                <ol>
+                    <li><strong>Measure first:</strong> open the agent's Cloud Trace spans and separate model time from tool and I/O time; save <code>agents-cli eval run</code> results as the quality baseline.</li>
+                    <li><strong>Fix orchestration:</strong> independent lookups that run one after another become a <code>ParallelAgent</code> fan-out.</li>
+                    <li><strong>Fix tokens:</strong> enable ADK context caching (<code>ContextCacheConfig</code>) for long, stable instructions on Gemini, or rely on prompt caching for Claude models; move simple classification steps to a smaller model.</li>
+                    <li><strong>Prove both speed and quality:</strong> rerun the benchmark, then <code>agents-cli eval compare</code> on the old and new result files.</li>
+                    <li><strong>Canary:</strong> on Agent Runtime, switch to a manual traffic split that keeps the current revision at 100% before you deploy, then move a small share to the new revision (revisions and traffic splitting are in Preview). The default is always-latest routing, which sends all traffic to a new revision as soon as it exists.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Hook setup used above</strong> (<code>.agents/hooks.json</code>; top-level keys are hook names, and <code>Stop</code> handlers sit directly under the event with no <code>matcher</code>):</p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON: .agents/hooks.json</span>
+            </div>
+            <pre>{
+  "format-on-edit": {
+    "PostToolUse": [
+      { "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [{ "type": "command", "command": "./scripts/format_changed.sh", "timeout": 20 }] }
+    ]
+  },
+  "tests-before-stop": {
+    "Stop": [
+      { "type": "command", "command": "./scripts/stop_unless_green.sh", "timeout": 120 }
+    ]
+  }
+}</pre>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-hand"></i></div>Why the <code>Stop</code> hook carries the test gate</h3>
+            <ul>
+                <li>A <code>PostToolUse</code> hook returns an empty object, so it cannot steer the agent. A <code>Stop</code> hook can print <code>{&quot;decision&quot;: &quot;continue&quot;, &quot;reason&quot;: &quot;...&quot;}</code> and the reason is injected into the conversation, which sends the agent back to fix the failure.</li>
+                <li><strong>Cost:</strong> hooks run synchronously and block the loop (default timeout 30 seconds), so keep the <code>PostToolUse</code> script to changed files and run only the affected tests in the <code>Stop</code> script.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-ban"></i></div>Anti-patterns</h3>
+            <ul>
+                <li><strong>Refactor and feature in one change:</strong> behavior changes hide inside structural moves; ship the pure refactor first, gated by unchanged test results.</li>
+                <li><strong>Optimizing by feel:</strong> tuning prompts or swapping models without a saved baseline and an eval comparison trades latency for silent quality loss.</li>
+                <li><strong>Shared working tree:</strong> parallel writer subagents in <code>inherit</code> mode overwrite each other; use <code>branch</code> and non-overlapping slices.</li>
+                <li><strong>Self-grading:</strong> asking the authoring agent to review its own diff reuses the same blind spots; use a separate reviewer subagent with a clean context.</li>
+                <li><strong>Sandbox off for builds:</strong> benchmarks and build scripts written by the agent run with full host privileges outside the sandbox.</li>
+                <li><strong>Deploy equals rollout:</strong> with always-latest routing, every Agent Runtime deploy is a 100% rollout; pin traffic with a manual split before deploying.</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -699,31 +808,172 @@
 
         <div class="prose">
             <p>Prerequisites: Python 3.11+, <code>uv</code>, Node.js (for the skills), a coding agent. For deployment you also need the gcloud CLI and Terraform.</p>
-            <p><strong>Skills that activate</strong> (seen in the quickstarts): <code>google-agents-cli-workflow</code>, <code>-scaffold</code>, <code>-adk-code</code>, <code>-eval</code>, <code>-deploy</code>, <code>-publish</code>, <code>-observability</code>.</p>
-            <p><strong>Lifecycle commands</strong> (the coding agent usually runs them for you)</p>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-compass"></i></div>Positioning: Agents CLI vs. ADK CLI vs. gcloud vs. Antigravity</h3>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
-                    <tr><th>Stage</th><th>Command</th></tr>
+                    <tr><th>Tool</th><th>Type</th><th>Role &amp; behavior</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Scaffold</td><td><code>agents-cli create &lt;name&gt; --prototype --yes</code> then <code>agents-cli install</code></td></tr>
-                    <tr><td>Smoke test</td><td><code>agents-cli run "&lt;prompt&gt;"</code></td></tr>
-                    <tr><td>Local UI</td><td><code>agents-cli playground</code> (ADK web UI, hot reload, localhost:8080)</td></tr>
-                    <tr><td>Evaluate</td><td><code>agents-cli eval run</code> (evalsets in <code>tests/eval/evalsets/*.evalset.json</code>, LLM-as-judge criteria in <code>tests/eval/eval_config.json</code>)</td></tr>
-                    <tr><td>Add deploy target</td><td><code>agents-cli scaffold enhance --deployment-target cloud_run</code></td></tr>
-                    <tr><td>Deploy</td><td><code>agents-cli deploy</code> (Agent Runtime, Cloud Run or GKE)</td></tr>
-                    <tr><td>Publish</td><td>Register an Agent Runtime agent with Gemini Enterprise in one Agents CLI command (<code>agents-cli publish gemini-enterprise</code>, e.g. <code>--agent-runtime-id</code>)</td></tr>
+                    <tr><td><strong>Agents CLI</strong> (<code>agents-cli</code>)</td><td>Lifecycle toolchain plus a skill bundle</td><td>Scaffolds, evaluates, deploys, publishes and provisions infra for ADK projects. Built for coding agents, but every command also runs standalone in a terminal</td></tr>
+                    <tr><td><strong>ADK CLI</strong> (<code>adk</code>)</td><td>Framework CLI shipped with ADK</td><td>Inner-loop work on the framework itself (<code>adk create</code> for a single-file learning agent, <code>adk run</code> to chat with an agent in the terminal). No production scaffolding, eval synthesis or Gemini registration</td></tr>
+                    <tr><td><strong>gcloud</strong></td><td>General Google Cloud CLI</td><td>Manages individual APIs, IAM and network resources one at a time. Agents CLI drives Cloud tooling for you and suppresses gcloud prompts (<code>CLOUDSDK_CORE_DISABLE_PROMPTS=1</code>) unless you pass <code>-i</code></td></tr>
+                    <tr><td><strong>Antigravity</strong></td><td>Coding agent (the harness)</td><td>Reads the Agents CLI skills and runs <code>agents-cli</code> commands on your behalf. Agents CLI is a tool <em>for</em> a coding agent, not a coding agent itself</td></tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Rule of thumb</h4>
+                <p>Use <code>adk</code> to learn the framework, <code>agents-cli</code> to ship a project, and <code>gcloud</code> for one-off resource changes outside the agent stack.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-book-open"></i></div>Bundled skills</h3>
+            <p>Installed into your coding agent by <code>agents-cli setup</code> (refresh them with <code>agents-cli update</code>).</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Skill</th><th>What the coding agent learns</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>google-agents-cli-workflow</code></td><td>Always active: the end-to-end flow (scaffold, build, evaluate, deploy, publish, observe), rules for preserving existing code, model choice</td></tr>
+                    <tr><td><code>google-agents-cli-scaffold</code></td><td><code>scaffold create</code>, <code>scaffold enhance</code>, <code>scaffold upgrade</code>, templates, deployment targets, prototype-first</td></tr>
+                    <tr><td><code>google-agents-cli-adk-code</code></td><td>ADK API: agent types, tools, orchestration, callbacks, state</td></tr>
+                    <tr><td><code>google-agents-cli-eval</code></td><td>Eval datasets, metrics, LLM-as-judge, comparing runs, failure clusters, prompt optimization</td></tr>
+                    <tr><td><code>google-agents-cli-deploy</code></td><td>Agent Runtime, Cloud Run, GKE, CI/CD, secrets, service accounts, rollback</td></tr>
+                    <tr><td><code>google-agents-cli-publish</code></td><td>Gemini registration: ADK vs. A2A registration types, flags, auto-detection from deployment metadata</td></tr>
+                    <tr><td><code>google-agents-cli-observability</code></td><td>Cloud Trace, prompt-response logging, BigQuery Agent Analytics, third-party tracing tools</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-download"></i></div>Installing and scoping skills</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Goal</th><th>Command</th><th>Effect</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>CLI plus skills, machine-wide</td><td><code>uvx google-agents-cli setup</code></td><td>Installs the tool and pushes skills to every detected coding agent (global scope is the default)</td></tr>
+                    <tr><td>Skills for this repo only</td><td><code>agents-cli setup --workspace</code></td><td>Installs skills relative to the current directory, so teammates get them through Git</td></tr>
+                    <tr><td>Target specific agents</td><td><code>agents-cli setup --agent claude-code</code></td><td>Repeatable flag; <code>--agent all</code> covers every supported agent</td></tr>
+                    <tr><td>Preview first</td><td><code>agents-cli setup --dry-run</code></td><td>Shows what would change without writing anything</td></tr>
+                    <tr><td>Skills only, no CLI</td><td><code>npx skills add google/agents-cli</code></td><td>Copies the skill folders; the coding agent installs the CLI when it needs it</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-puzzle-piece"></i></div>Extensions (experimental)</h3>
+            <ul>
+                <li><code>agents-cli extension add &lt;ref&gt;</code> adds third-party skills and command overrides. Project scope (default) records the pin in <code>agents-cli-extensions.yaml</code> and copies skills to <code>&lt;project&gt;/.agents/skills/</code>; <code>--global</code> uses <code>~/.agents/skills/</code>. When both scopes define the same command, project scope wins.</li>
+                <li><strong>Trust:</strong> any <code>org/repo</code> reference prompts before install because its commands run arbitrary code. <code>--yes</code> skips that prompt, so keep it for automation you control.</li>
+                <li><strong>Claude Code caveat:</strong> Claude Code reads <code>.claude/skills/</code>, not <code>.agents/skills/</code>, so link or copy extension skills there yourself.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-boxes-stacked"></i></div>Relation to Skill Registry</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Aspect</th><th>Agents CLI skills</th><th>Skill Registry (Agent Platform, Preview)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Where skills live</td><td><code>SKILL.md</code> folders on disk, inside each coding agent or repo</td><td>A private, managed Google Cloud repository</td></tr>
+                    <tr><td>Who loads them</td><td>The developer's coding agent (Antigravity, Claude Code, Codex)</td><td>Agents that discover and load skills dynamically based on user intent</td></tr>
+                    <tr><td>Versioning</td><td>Git, or the commit pin of an extension</td><td>API resources: a mutable <strong>skill</strong> plus immutable <strong>skill revisions</strong></td></tr>
+                    <tr><td>Built-in helper</td><td>None needed</td><td>The <code>gcp-skill-registry</code> skill lets an agent create, search and manage registry skills</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Key point</h4>
+                <p>Both use the <code>SKILL.md</code> folder format, so a skill written for a coding agent can later be packaged for the registry. Standalone skills can also be governed centrally in Agent Registry.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-list-ol"></i></div>Lifecycle commands</h3>
+            <p>The coding agent usually runs these for you; every one also works by hand.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Stage</th><th>Command</th><th>Purpose and notable flags</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Setup</td><td><code>agents-cli setup</code></td><td>Install the CLI and skills (<code>--workspace</code>, <code>--agent</code>, <code>--skip-auth</code>, <code>--dry-run</code>)</td></tr>
+                    <tr><td>Auth</td><td><code>agents-cli login</code></td><td>Sign in to Google Cloud or AI Studio; <code>--status</code> shows the current state</td></tr>
+                    <tr><td>Scaffold</td><td><code>agents-cli create &lt;name&gt;</code></td><td>Alias of <code>scaffold create</code>. <code>-y</code> uses defaults (<code>adk_python</code> template, <code>agent_runtime</code> target); <code>-p</code> / <code>--prototype</code> skips CI/CD and Terraform; <code>-d</code> sets the target</td></tr>
+                    <tr><td>Scaffold</td><td><code>agents-cli scaffold enhance</code></td><td>Add a target (<code>-d agent_runtime</code>, <code>cloud_run</code> or <code>gke</code>) or a <code>--cicd-runner</code> (<code>github_actions</code>, <code>google_cloud_build</code>) to an existing project; <code>--dry-run</code> previews</td></tr>
+                    <tr><td>Scaffold</td><td><code>agents-cli scaffold upgrade</code></td><td>Move a project to a newer Agents CLI template version</td></tr>
+                    <tr><td>Develop</td><td><code>agents-cli install</code>, <code>agents-cli run &quot;&lt;prompt&gt;&quot;</code></td><td>Install dependencies; send one prompt to the agent (non-interactive)</td></tr>
+                    <tr><td>Develop</td><td><code>agents-cli playground</code></td><td>ADK web UI with hot reload, default <code>--port 8080</code></td></tr>
+                    <tr><td>Develop</td><td><code>agents-cli lint</code></td><td>Code quality checks (Ruff)</td></tr>
+                    <tr><td>Evaluate</td><td><code>agents-cli eval dataset synthesize</code></td><td>Generate multi-turn eval scenarios for the local agent</td></tr>
+                    <tr><td>Evaluate</td><td><code>agents-cli eval run</code></td><td>Run inference over the eval dataset and grade the traces (<code>eval generate</code> and <code>eval grade</code> split the two halves)</td></tr>
+                    <tr><td>Evaluate</td><td><code>agents-cli eval analyze</code></td><td>Cluster failure modes from grade results</td></tr>
+                    <tr><td>Evaluate</td><td><code>agents-cli eval compare</code></td><td>Compare two eval result files (regression check)</td></tr>
+                    <tr><td>Evaluate</td><td><code>agents-cli eval optimize</code></td><td>Tune agent prompts from eval data</td></tr>
+                    <tr><td>Deploy</td><td><code>agents-cli deploy</code></td><td>Deploy to Agent Runtime, Cloud Run or GKE. Useful flags: <code>--dry-run</code>, <code>--no-wait</code> then <code>--status</code>, <code>--update-only</code>, <code>--agent-identity</code> (Agent Runtime only)</td></tr>
+                    <tr><td>Infra</td><td><code>agents-cli infra single-project</code></td><td>Terraform for one project (dedicated service account, secrets, IAM). Plans by default; <code>--apply</code> applies. Optional, because <code>deploy</code> works without it</td></tr>
+                    <tr><td>Infra</td><td><code>agents-cli infra cicd</code></td><td>CI/CD pipeline plus staging and prod infrastructure</td></tr>
+                    <tr><td>Publish</td><td><code>agents-cli publish gemini</code></td><td>Register the deployed agent with a Gemini Enterprise app (<code>--gemini-app-id</code>, <code>--agent-runtime-id</code>, <code>--registration-type adk</code> or <code>a2a</code>). <code>publish gemini-enterprise</code> is the older name, kept as a hidden alias</td></tr>
+                    <tr><td>Inspect</td><td><code>agents-cli info</code></td><td>Project config, paths, CLI version and active extensions; <code>--json</code> for machine output</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Note</h4>
+                <p>Command names and flags come from the <code>google/agents-cli</code> README, docs and CLI source at writing time. The tool ships often: confirm with <code>agents-cli &lt;command&gt; --help</code> before relying on a flag.</p>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash: Agents CLI lifecycle</span>
+            </div>
+            <pre>agents-cli create support-agent --prototype -y   # scaffold with defaults, no CI/CD
+agents-cli run "Where is my order 1234?"          # smoke test, one prompt
+agents-cli eval run                              # release gate
+agents-cli scaffold enhance -d cloud_run         # add a deploy target later
+agents-cli deploy --dry-run                      # preview, then drop --dry-run
+agents-cli publish gemini --gemini-app-id "$GEMINI_APP_ID"</pre>
         </div>
 
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>Project layout</dt>
                 <dd><code>app/agent.py</code>, <code>app/fast_api_app.py</code>, <code>tests/{eval,integration,unit}</code>, <code>agents-cli-manifest.yaml</code>, <code>Dockerfile</code>, <code>GEMINI.md</code> (guidance for coding agents) and <code>.env</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Eval files</dt>
+                <dd>The default dataset is <code>tests/eval/datasets/basic-dataset.json</code> and metrics live in <code>tests/eval/eval_config.yaml</code>. Older projects with <code>tests/eval/evalsets/*.evalset.json</code> must migrate to the new dataset format. Pass <code>--dataset</code> and <code>--metrics</code> to <code>eval run</code> to target other files; <code>eval compare baseline.json candidate.json</code> diffs two result files.</dd>
             </div>
             <div class="definition-item">
                 <dt>Auth</dt>
@@ -735,16 +985,69 @@
             </div>
             <div class="definition-item">
                 <dt>Templates</dt>
-                <dd><code>adk_a2a</code> (multi-agent over A2A) and <code>agentic_rag</code>. For a single-file learning agent, use <code>adk create</code> instead.</dd>
+                <dd><code>--agent adk_python</code> (alias <code>adk</code>, the <code>-y</code> default) or <code>--agent adk_go</code>; <code>--agent</code> also accepts a template repository (<code>org/repo</code>, optionally with <code>--ref</code>) or <code>local@&lt;path&gt;</code>; confirm the exact syntax with <code>agents-cli create --help</code>. RAG is no longer a built-in template (it is now a clone-and-study recipe). For a single-file learning agent, use <code>adk create</code> instead.</dd>
             </div>
         </div>
 
-        <div class="callout info">
-            <div class="callout-icon"><i class="fas fa-circle-question"></i></div>
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-user-gear"></i></div>Agent vs. human mode</h3>
+            <p>Agents CLI serves two callers with the same commands and syntax. <em>There is no documented <code>--mode agent</code> or <code>--mode human</code> flag.</em> The difference is how prompts and output are handled.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Agent mode (coding agent or CI)</th><th>Human mode (developer at a terminal)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Caller</td><td>Antigravity or another coding agent following the <code>google-agents-cli-*</code> skills; CI runners</td><td>You, typing commands directly</td></tr>
+                    <tr><td>Prompts</td><td><code>-y</code> / <code>--yes</code> (alias <code>--auto-approve</code>) skips prompts and fills missing values with defaults; gcloud prompts stay suppressed</td><td><code>-i</code> / <code>--interactive</code> shows menus and prompts (for example <code>create -i</code>, or <code>publish gemini -i</code>, which lists your Gemini apps)</td></tr>
+                    <tr><td>Inputs</td><td>Explicit flags or env vars (<code>publish gemini</code> reads <code>GEMINI_APP_ID</code> and <code>AGENT_RUNTIME_ID</code>)</td><td>Interactive answers, plus the <code>playground</code> browser UI</td></tr>
+                    <tr><td>Output</td><td>Single-shot commands (<code>run &quot;&lt;prompt&gt;&quot;</code>) and <code>info --json</code> for parsing</td><td>Console output and local URLs meant for reading</td></tr>
+                    <tr><td>Best for</td><td>Build-eval-deploy loops, CI/CD, repeatable releases</td><td>First login, exploration, debugging in <code>playground</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
             <div class="callout-content">
-                <h4>Agent vs. human mode</h4>
-                <p>Agents CLI is built for two callers. In agent mode, your coding agent uses the installed Agents CLI skills and runs the commands for you, so it needs non-interactive flags (for example <code>--yes</code>). In human mode, you run the same commands yourself with the same syntax. Plugin options <em>(verify)</em>: check the current Agents CLI docs.</p>
+                <h4>Exam trap: <code>run --mode</code> is not agent vs. human</h4>
+                <p><code>agents-cli run --mode</code> exists, but it selects the protocol used to talk to the agent (<code>adk</code>, <code>a2a</code>, <code>adk_live</code>). It has nothing to do with agent vs. human mode. <strong>Anti-pattern:</strong> passing <code>-i</code> from a coding agent or CI job leaves the command waiting on a prompt nobody answers.</p>
             </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-rocket"></i></div>Example: build and ship a new agent with Antigravity</h3>
+                <ol>
+                    <li><strong>Brief:</strong> ask Antigravity to "use agents-cli to build a support agent for order lookups". The <code>workflow</code> and <code>scaffold</code> skills activate, and Antigravity asks about tools, inputs, outputs and success criteria.</li>
+                    <li><strong>Scaffold:</strong> Antigravity runs <code>agents-cli create support-agent --prototype -y</code>, then writes <code>app/agent.py</code> with the <code>adk-code</code> skill.</li>
+                    <li><strong>Check locally:</strong> <code>agents-cli run &quot;&lt;prompt&gt;&quot;</code> and <code>agents-cli lint</code>; you open <code>agents-cli playground</code> to try it yourself.</li>
+                    <li><strong>Gate:</strong> <code>agents-cli eval run</code> must pass before any cloud step.</li>
+                    <li><strong>Ship:</strong> <code>agents-cli deploy</code> to Agent Runtime, then <code>agents-cli publish gemini</code> to register the agent in your Gemini Enterprise app.</li>
+                </ol>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-stethoscope"></i></div>Example: fix a quality regression on a deployed agent</h3>
+                <ol>
+                    <li><strong>Widen coverage:</strong> <code>agents-cli eval dataset synthesize</code> adds scenarios around the reported failure.</li>
+                    <li><strong>Measure:</strong> <code>agents-cli eval run</code>, then <code>agents-cli eval analyze</code> to cluster the failures by cause.</li>
+                    <li><strong>Repair:</strong> <code>agents-cli eval optimize</code>, or patch the instructions by hand.</li>
+                    <li><strong>Prove it:</strong> re-run <code>eval run</code> and use <code>agents-cli eval compare</code> on the old and new result files to confirm nothing regressed.</li>
+                    <li><strong>Roll out:</strong> <code>agents-cli deploy --update-only</code> updates the existing Agent Runtime deployment instead of creating a duplicate.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Example: harden a prototype for production</h3>
+            <ol>
+                <li><strong>Add a target and pipeline:</strong> <code>agents-cli scaffold enhance -d cloud_run --cicd-runner github_actions</code> (preview with <code>--dry-run</code>).</li>
+                <li><strong>Provision:</strong> <code>agents-cli infra single-project</code> to plan, then rerun with <code>--apply</code>; or <code>agents-cli infra cicd</code> for a staging and prod split.</li>
+                <li><strong>Observe:</strong> ask Antigravity to "set up observability"; the <code>observability</code> skill covers Cloud Trace, prompt-response logging and BigQuery Agent Analytics.</li>
+                <li><strong>Verify:</strong> <code>agents-cli info</code> confirms the project config and CLI version before the first pipeline run.</li>
+            </ol>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -769,7 +1072,7 @@
             <div class="process-step">
                 <div class="process-step-number">03</div>
                 <h4>Evaluate</h4>
-                <p>Write evalsets → <code>agents-cli eval run</code> → iterate until they pass.</p>
+                <p>Write eval datasets → <code>agents-cli eval run</code> → iterate until they pass.</p>
             </div>
             <div class="process-step">
                 <div class="process-step-number">04</div>
@@ -805,6 +1108,12 @@
                     <tr><td>Hooks</td><td><code>hooks.json</code> (<code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, …)</td><td><code>settings.json</code> hooks (<code>PreToolUse</code>, …)</td></tr>
                     <tr><td>Permission precedence</td><td>Deny &gt; Ask &gt; Allow</td><td>deny → ask → allow</td></tr>
                     <tr><td>Agent-building helper</td><td>Agents CLI works with <strong>both</strong></td><td>Agents CLI works with <strong>both</strong></td></tr>
+                    <tr><td>Surfaces</td><td>App, CLI (<code>agy</code>), IDE and Python SDK</td><td>Terminal CLI plus IDE integrations</td></tr>
+                    <tr><td>Models</td><td>Gemini by default; the model selector also lists some Claude and GPT-OSS models (availability depends on your plan)</td><td>Claude models only; on Google Cloud they are served as Agent Platform partner models</td></tr>
+                    <tr><td>Google Cloud auth and billing</td><td>Google sign-in; Google Cloud credentials when it drives <code>gcloud</code> or <code>agents-cli</code></td><td><code>CLAUDE_CODE_USE_VERTEX=1</code> plus ADC; usage is billed to your Google Cloud project, Provisioned Throughput optional</td></tr>
+                    <tr><td>Built-in isolation</td><td>Terminal sandbox, permission rules, Git worktrees for subagents</td><td>Permission rules and Claude Code's own sandboxing settings</td></tr>
+                    <tr><td>Hardened environment</td><td>Cloud Workstations, Agent Sandbox on GKE</td><td>Same options: Cloud Workstations, GKE Sandbox (gVisor)</td></tr>
+                    <tr><td>Best fit</td><td>Teams that want parallel subagents, artifacts review and Gemini-first workflows</td><td>Teams standardized on Claude that still need Google Cloud IAM, residency and billing</td></tr>
                 </tbody>
             </table>
         </div>
@@ -815,6 +1124,304 @@
                 <h4>Key point</h4>
                 <p>MCP servers and SKILL.md skills carry over between harnesses. Agents CLI installs the same skills into Antigravity, Claude Code and Codex.</p>
             </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-cloud"></i></div>Claude Code on Agent Platform: model access</h3>
+            <p>Claude Code on Google Cloud solves for: teams that want Anthropic's coding agent but need the traffic, identity and bill to stay inside their Google Cloud project instead of a separate Anthropic API account.</p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Architecture</span>
+            </div>
+            <pre>Laptop / Cloud Workstation / GKE pod
+  Claude Code ── ADC (user or attached SA) ──► Agent Platform partner endpoint (Claude)
+       │                                         global | multi-region (us, eu) | regional
+       └── MCP calls ──► Google remote MCP servers (Model Armor floor setting)
+                     └─► custom MCP on Cloud Run / GKE (Agent Gateway + Model Armor)</pre>
+        </div>
+
+        <div class="process-flow">
+            <div class="process-step">
+                <div class="process-step-number">01</div>
+                <h4>Enable the API</h4>
+                <p>Turn on <code>aiplatform.googleapis.com</code> in the project that will carry the usage (a dedicated project keeps cost tracking and IAM simple).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">02</div>
+                <h4>Enable the model</h4>
+                <p>In Model Garden, open the Claude model card and click <strong>Enable</strong> to accept the partner terms. Requires <code>roles/consumerprocurement.entitlementManager</code>; the org policy must allow <code>cloudcommerceconsumerprocurement.googleapis.com</code>.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">03</div>
+                <h4>Grant invoke rights</h4>
+                <p>Give developers or the runtime service account <code>roles/aiplatform.user</code> (it carries <code>aiplatform.endpoints.predict</code>), or a custom role with just that permission.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">04</div>
+                <h4>Point Claude Code at the project</h4>
+                <p>Set the env vars below, or run <code>claude</code>, pick the third-party platform login and let the wizard write them into <code>~/.claude/settings.json</code> (<code>/setup-vertex</code> reopens it).</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step-number">05</div>
+                <h4>Verify</h4>
+                <p><code>/status</code> inside Claude Code must show Google Vertex AI as the API provider, with your project, region and model.</p>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Reseller caveat</h4>
+                <p>If a prohibited reseller manages your billing account, you cannot accept the Claude terms at all; the fix is on the reseller side.</p>
+            </div>
+        </div>
+
+        <div class="prose">
+            <p><strong>Choosing the endpoint (<code>CLOUD_ML_REGION</code>)</strong></p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Endpoint</th><th>Value</th><th>Data residency</th><th>Prompt caching</th><th>Provisioned Throughput</th><th>Pick it when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Global</strong></td><td><code>global</code></td><td>No: requests are served from any supported region</td><td>Yes</td><td>No</td><td>You want the best availability and fewest capacity errors, with no residency rule</td></tr>
+                    <tr><td><strong>Multi-region</strong></td><td><code>us</code>, <code>eu</code></td><td>Yes, within the jurisdiction</td><td>Yes</td><td>No</td><td>You need residency but still want pooled capacity</td></tr>
+                    <tr><td><strong>Regional</strong></td><td>for example <code>us-east5</code></td><td>Yes, in that region</td><td>Yes</td><td>Yes, where offered</td><td>You need a single region or reserved capacity</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Endpoint and model settings</h3>
+            <ul>
+                <li><strong>CMEK:</strong> Cloud KMS keys cannot live in the <code>global</code> location, so any customer-managed key requirement already rules out the global endpoint. Check the Agent Platform CMEK page for partner-model coverage before promising key control over prompts.</li>
+                <li><strong>Per-model overrides:</strong> with <code>CLOUD_ML_REGION=global</code>, a model that lacks global support can be routed elsewhere through its <code>VERTEX_REGION_CLAUDE_*</code> variable. A malformed region value is ignored and Claude Code falls back to <code>us-east5</code>.</li>
+                <li><strong>Pin models:</strong> set <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>, <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> and <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> to IDs enabled in your project. Unpinned aliases follow Claude Code's built-in defaults, which may not be enabled for you and default to Opus pricing.</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash: point Claude Code at Agent Platform</span>
+            </div>
+            <pre>gcloud auth application-default login          # laptop only; skip on a VM or pod with an attached SA
+export CLAUDE_CODE_USE_VERTEX=1                # route Claude Code to Agent Platform
+export ANTHROPIC_VERTEX_PROJECT_ID=my-proj     # wins over GOOGLE_CLOUD_PROJECT and the ADC file
+export CLOUD_ML_REGION=global                  # or us / eu / us-east5
+export VERTEX_REGION_CLAUDE_HAIKU_4_5=us-east5 # per-model region override
+# export ENABLE_PROMPT_CACHING_1H=1            # 1-hour cache TTL instead of 5 minutes
+# export DISABLE_PROMPT_CACHING=1              # turn caching off (on by default)
+claude                                         # then /status to confirm the provider</pre>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-coins"></i></div>Claude Code on Agent Platform: cost and capacity</h3>
+            <ul>
+                <li><strong>Prompt caching</strong> is on by default in Claude Code. A coding session resends the same system prompt, tool schemas and repo context on every turn, so cached prefixes cut both latency and input cost. Caches are scoped to one Google Cloud project.</li>
+                <li><strong>Default TTL:</strong> 5 minutes. <strong>Extended TTL:</strong> 1 hour, requested with <code>ENABLE_PROMPT_CACHING_1H=1</code>.</li>
+                <li><strong>Billing shape:</strong> writing to the cache costs more than a normal input token (more again for the 1-hour TTL); reading from it costs far less.</li>
+                <li><strong>Provisioned Throughput</strong> reserves capacity for some partner models for a fixed fee, in the regions you choose, and is bought through sales. Reserved requests are served ahead of pay-as-you-go traffic when the system is busy. It works only on regional endpoints, not global or multi-region.</li>
+                <li><strong>Quota errors (429):</strong> on regional endpoints, check that both the primary and the background model are offered in that region, or move to <code>global</code>. Rate-limit increases go through Google Cloud quotas, not Anthropic.</li>
+            </ul>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Note</h4>
+                <p>The cache multipliers on the Agent Platform pricing page at writing time: 5-minute writes cost 1.25x base input, 1-hour writes 2x, and cache reads 0.1x. Treat these as directional and recheck the pricing page before quoting them.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-key"></i></div>Claude Code on Agent Platform: keyless auth and isolation</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Where Claude Code runs</th><th>Identity</th><th>Least-privilege roles</th><th>Isolation</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Laptop</strong></td><td>User ADC from <code>gcloud auth application-default login</code></td><td><code>roles/aiplatform.user</code> on the model project</td><td>Claude Code permission rules only; the shell sees your whole home folder</td></tr>
+                    <tr><td><strong>Cloud Workstations</strong></td><td>Service account set on the workstation configuration, read through the metadata server</td><td><code>roles/aiplatform.user</code>, plus <code>roles/mcp.toolUser</code> if it calls Google remote MCP servers</td><td>Private cluster, VPC Service Controls, no public IP (<a href="#secure-environments">section 08</a>)</td></tr>
+                    <tr><td><strong>GKE pod</strong></td><td>Workload Identity Federation for GKE</td><td>Same roles, bound to the pod's principal</td><td>GKE Sandbox (gVisor) for agent-run builds and tests</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-user-lock"></i></div>Credentials</h3>
+                <ul>
+                    <li><strong>No API keys:</strong> none of these paths needs <code>ANTHROPIC_API_KEY</code>. Avoid service account key files too; use ADC from a user login or an attached identity.</li>
+                    <li><strong>Workstation tip:</strong> Cloud Workstations ships keep-alive samples for Claude Code so a suspended workstation keeps the agent's session (see section 08).</li>
+                    <li><strong>Expiring user credentials:</strong> Claude Code's <code>gcpAuthRefresh</code> setting runs a command (typically the ADC login) when it detects expired credentials, instead of failing mid-session.</li>
+                    <li><strong>Anti-pattern (keys in the repo):</strong> a service account key in <code>.env</code> or <code>GOOGLE_APPLICATION_CREDENTIALS</code> on a laptop is a long-lived secret the agent can read and leak.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-filter"></i></div>Governing MCP traffic</h3>
+                <ul>
+                    <li><strong>Google remote MCP servers:</strong> enable a Model Armor floor setting with MCP sanitization (integrated service <code>GOOGLE_MCP_SERVER</code>) in the project. Every tool call and response to a supported Google MCP server is screened for prompt injection and sensitive data, whatever harness made the call.</li>
+                    <li><strong>Custom MCP servers:</strong> host them on Cloud Run or GKE behind Agent Gateway, which applies access policies and Model Armor templates to agent egress traffic.</li>
+                    <li><strong>Residency:</strong> some Google MCP servers route Model Armor calls across jurisdictions, so check the supported-products list if residency matters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-building-shield"></i></div>Claude Code on Agent Platform: organization policy guardrails</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Constraint</th><th>What it governs</th><th>What to set for Claude Code</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong><code>constraints/vertexai.allowedModels</code></strong></td><td>Which Model Garden models principals can use, per action, written as <code>publishers/PUBLISHER/models/MODEL:ACTION</code> (<code>predict</code>, <code>deploy</code>, <code>tune</code>)</td><td>Allow <code>:predict</code> on every Claude model the team pins (primary and background), plus <code>publishers/anthropic/models/count-tokens:predict</code>, because Claude token counting has its own publisher model ID</td></tr>
+                    <tr><td><strong><code>constraints/vertexai.allowedPartnerModelFeatures</code></strong></td><td>Advanced partner-model features: <code>web_search</code> and <code>structured_outputs</code>. In projects under an organization both are blocked until allowed</td><td>Allow at publisher (<code>publishers/anthropic</code>), model, or <code>model:feature</code> granularity, and only for features the sessions need</td></tr>
+                    <tr><td><strong>Restrict service usage</strong></td><td>Which Google APIs can be enabled</td><td>Keep <code>cloudcommerceconsumerprocurement.googleapis.com</code> allowed so an entitlement manager can accept Claude terms</td></tr>
+                    <tr><td><strong><code>constraints/iam.disableServiceAccountKeyCreation</code></strong></td><td>Creation of new external service account keys</td><td>Enforce it so the keyless pattern above cannot be bypassed with a JSON key</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Allowlist semantics and limits</h4>
+                <p>A custom allow list implicitly denies every model not listed; with no policy set or inherited, every model is allowed. An explicit deny at the folder wins over an allow at the project, unless the project policy is set to override its parents. List each model individually (there is no "all third-party models" value) and stay under 500 allowed plus denied values per policy. The policy applies to every principal in the resource, not per user, and only to Model Garden models (not Model Registry). <strong>Anti-pattern:</strong> allowing the Claude model but not <code>count-tokens</code>, so token-count requests stay blocked.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-book"></i></div>Claude Code on Agent Platform: Developer Knowledge MCP server</h3>
+            <p>The Developer Knowledge MCP server (<code>https://developerknowledge.googleapis.com/mcp</code>, remote HTTP transport) lets Claude Code ground its answers in current Google developer documentation through three tools: <code>search_documents</code>, <code>get_documents</code> and <code>answer_query</code>.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Auth path</th><th>How Claude Code sends it</th><th>Watch out for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>API key</strong> (the path Google documents for Claude Code)</td><td><code>X-Goog-Api-Key</code> header</td><td>Restrict the key to the Developer Knowledge API; keep it out of committed files</td></tr>
+                    <tr><td><strong>ADC bearer token</strong></td><td><code>Authorization: Bearer</code> plus <code>X-Goog-User-Project</code></td><td>Tokens from <code>print-access-token</code> last one hour; the quota project header needs <code>serviceusage.services.use</code> (for example <code>roles/serviceusage.serviceUsageConsumer</code>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash: add the server (local scope)</span>
+            </div>
+            <pre>gcloud services enable developerknowledge.googleapis.com
+claude mcp add google-developer-knowledge --transport http \
+  https://developerknowledge.googleapis.com/mcp --header "X-Goog-Api-Key: $DK_KEY"</pre>
+        </div>
+
+        <div class="prose">
+            <p>That command writes to local scope. For a team-shared, keyless setup, commit a project-scoped <code>.mcp.json</code> whose <code>headersHelper</code> script prints a fresh ADC token on every connection:</p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">JSON: .mcp.json</span>
+            </div>
+            <pre>{
+  "mcpServers": {
+    "google-developer-knowledge": {
+      "type": "http",
+      "url": "https://developerknowledge.googleapis.com/mcp",
+      "headersHelper": "/usr/local/bin/dk-headers"
+    }
+  }
+}</pre>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-circle-check"></i></div>Helper contract, approval and errors</h3>
+            <ul>
+                <li><strong>Helper contract:</strong> the command must print a JSON object of string headers (here <code>Authorization</code> and <code>X-Goog-User-Project</code>); Claude Code reruns it on reconnect, so expiring tokens do not break the session.</li>
+                <li><strong>Approval:</strong> project-scoped servers stay pending until each developer trusts the workspace and approves them; a cloned repo cannot pre-approve its own servers.</li>
+                <li><strong>Errors:</strong> a 403 asking for a quota project means the <code>X-Goog-User-Project</code> header is missing; a 404 or 403 on <code>/mcp</code> usually means the API is not enabled.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-desktop"></i></div>Claude Code on Cloud Workstations</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Layer</th><th>Setting</th><th>Why it matters for a coding agent</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Cluster</strong></td><td>Private cluster, reached through a Private Service Connect endpoint and a private DNS zone for the cluster hostname</td><td>No one can open the workstation from the public internet</td></tr>
+                    <tr><td><strong>Perimeter</strong></td><td>VPC Service Controls; restrict the Compute Engine API whenever the Cloud Workstations API is restricted, and keep Cloud Storage and Artifact Registry VPC-accessible for image pulls</td><td>Source code and model traffic stay inside the perimeter</td></tr>
+                    <tr><td><strong>VM network</strong></td><td><code>--disable-public-ip-addresses</code> on the configuration, plus Private Google Access or Cloud NAT (one is required)</td><td>Private Google Access is how Claude Code still reaches the Agent Platform and MCP endpoints on <code>googleapis.com</code></td></tr>
+                    <tr><td><strong>Image</strong></td><td>Custom container image with Claude Code, gcloud, linters, managed settings and the MCP header helper baked in</td><td>Every developer starts from the same reviewed toolchain</td></tr>
+                    <tr><td><strong>Service account</strong></td><td>Set on the configuration; needs Artifact Registry Reader for a private image and log and metric write permissions</td><td>It is the identity ADC resolves to inside the workstation (see the table above)</td></tr>
+                    <tr><td><strong>Audit</strong></td><td><code>--enable-audit-agent</code> turns on Linux <code>auditd</code> logging (the service account needs <code>logging.buckets.write</code>)</td><td>Records what agent-run commands did on the VM</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="code-block">
+            <div class="code-block-header">
+                <div class="code-block-dots"><span></span><span></span><span></span></div>
+                <span class="code-block-lang">Bash: SSH tunnel for a local IDE</span>
+            </div>
+            <pre>gcloud workstations start-tcp-tunnel --project=PROJECT --region=REGION \
+  --cluster=CLUSTER --config=CONFIG --local-host-port=:2222 WORKSTATION 22
+# then point VS Code Remote-SSH (or any SSH client) at localhost:2222</pre>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-network-wired"></i></div>Workstation access notes</h3>
+            <ul>
+                <li><strong>Local IDE access:</strong> the tunnel forwards a local port to the workstation's SSH port; it authenticates with your gcloud credentials and is authorized by the workstation's IAM policy, so nothing listens publicly. <code>gcloud workstations ssh</code> does the same in one command.</li>
+                <li><strong>Private cluster caveat:</strong> the laptop must sit on a network that reaches the PSC endpoint (for example over VPN or Interconnect), or the tunnel cannot connect.</li>
+                <li><strong>Keep TCP on:</strong> <code>--disable-tcp-connections</code> blocks plain TCP connections, so leave it unset when developers rely on the SSH tunnel.</li>
+                <li><strong>Org policy interplay:</strong> if <code>constraints/compute.trustedImageProjects</code> is enforced, allow <code>projects/cos-cloud</code>, because workstation VMs boot from Container-Optimized OS images.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-triangle-exclamation"></i></div>Claude Code on Agent Platform: setup pitfalls</h3>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pitfall</th><th>Symptom</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Model not enabled</strong></td><td>"Model not found" (404) even though the caller has <code>roles/aiplatform.user</code></td><td>Enable the model in Model Garden; an entitlement manager must accept the partner terms</td></tr>
+                    <tr><td><strong>Org policy blocks procurement</strong></td><td>Nobody can enable the Claude model, even with the entitlement manager role</td><td>Allow <code>cloudcommerceconsumerprocurement.googleapis.com</code> in the restrict-service-usage policy</td></tr>
+                    <tr><td><strong>Unsupported region</strong></td><td>404 for one model, or 429 on a regional endpoint</td><td>Pick a region listed for that model, use <code>global</code> or <code>us</code>/<code>eu</code>, or set the model's <code>VERTEX_REGION_CLAUDE_*</code> override</td></tr>
+                    <tr><td><strong>Wrong project billed</strong></td><td>Calls land in an unexpected project</td><td><code>ANTHROPIC_VERTEX_PROJECT_ID</code> takes priority over <code>GOOGLE_CLOUD_PROJECT</code> and the ADC file; set it explicitly</td></tr>
+                    <tr><td><strong>Expired ADC</strong></td><td>"Could not load the default credentials" mid-session</td><td>Re-run the ADC login, set <code>gcpAuthRefresh</code>, or move to a workstation with an attached service account</td></tr>
+                    <tr><td><strong>Global plus residency or CMEK</strong></td><td>Compliance review fails</td><td>Switch to a regional or <code>us</code>/<code>eu</code> endpoint; global has no residency guarantee</td></tr>
+                    <tr><td><strong>Expecting Provisioned Throughput on global</strong></td><td>Reserved capacity is never used</td><td>Provisioned Throughput applies to regional endpoints only</td></tr>
+                    <tr><td><strong>Unrestricted shell on a laptop</strong></td><td>The agent reads <code>~/.ssh</code>, kubeconfigs or cloud credentials, or pushes outside the perimeter</td><td>Move sessions to a VPC-SC Cloud Workstation, keep deny rules, and never run <code>--dangerously-skip-permissions</code> outside a sandbox</td></tr>
+                    <tr><td><strong>Model missing from the org allowlist</strong></td><td>The model is enabled in Model Garden, yet calls to it are refused</td><td>Add <code>publishers/anthropic/models/MODEL:predict</code> (and <code>count-tokens:predict</code>) to <code>vertexai.allowedModels</code>, or check for a deny inherited from a folder</td></tr>
+                    <tr><td><strong>Partner feature blocked</strong></td><td>Requests that use web search or structured outputs are rejected in an organization project</td><td>Allow the feature in <code>vertexai.allowedPartnerModelFeatures</code> at the narrowest granularity that works</td></tr>
+                    <tr><td><strong>Static ADC token in MCP headers</strong></td><td>The Developer Knowledge server starts returning auth errors about an hour into the session</td><td>Replace the pasted token with a <code>headersHelper</code> script, or use an API key</td></tr>
+                    <tr><td><strong>Tunnel from outside the private network</strong></td><td><code>start-tcp-tunnel</code> cannot reach a private-cluster workstation</td><td>Connect from a network that reaches the PSC endpoint (VPN or Interconnect); private clusters accept no public clients, browser or tunnel</td></tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -840,7 +1447,9 @@
                     <tr><td>The agent slows to a crawl</td><td>Slow synchronous hook</td><td>Keep hooks fast. Move heavy work out of the loop</td></tr>
                     <tr><td>A workstation loses agent state overnight</td><td>Idle timeout stops the VM</td><td><code>idleAction=SUSPEND</code> + keep-alive hooks</td></tr>
                     <tr><td>Data exfiltration risk from dev VMs</td><td>Public IPs, public cluster</td><td>Private cluster, VPC-SC, <code>vmExternalIpAccess</code> constraint</td></tr>
-                    <tr><td>The agent shipped without evals</td><td>Deploy before evaluating</td><td><code>agents-cli eval run</code> with an evalset is a release gate</td></tr>
+                    <tr><td>The agent shipped without evals</td><td>Deploy before evaluating</td><td><code>agents-cli eval run</code> with an eval dataset is a release gate</td></tr>
+                    <tr><td>A coding agent or CI job hangs on an <code>agents-cli</code> command</td><td><code>-i</code> / <code>--interactive</code> passed in an unattended run</td><td>Use <code>-y</code> / <code>--yes</code> plus explicit flags or env vars</td></tr>
+                    <tr><td><code>agents-cli publish gemini-enterprise</code> missing from <code>--help</code></td><td>Renamed to <code>publish gemini</code>; the old name is a hidden alias</td><td>Use <code>agents-cli publish gemini</code></td></tr>
                     <tr><td>Treating Antigravity as the agent runtime</td><td>Mixing up the dev harness and production</td><td>Deploy the ADK agent to Agent Runtime, Cloud Run or GKE</td></tr>
                 </tbody>
             </table>
@@ -887,10 +1496,90 @@
                 <dt>Workstation suspension</dt>
                 <dd><code>idleAction=SUSPEND</code> keeps VM memory and agent state through idle periods.</dd>
             </div>
+            <div class="definition-item">
+                <dt>ADK CLI (<code>adk</code>)</dt>
+                <dd>The framework-level CLI bundled with ADK (<code>adk create</code>, <code>adk run</code>), used for learning and inner-loop work.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agents CLI extension</dt>
+                <dd>An experimental, commit-pinned add-on that contributes skills and command overrides at project or <code>--global</code> scope.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Skill Registry</dt>
+                <dd>A private Agent Platform repository (Preview) from which agents discover and load versioned skills.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Skill revision</dt>
+                <dd>An immutable snapshot of one version of a Skill Registry skill.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Non-interactive mode</dt>
+                <dd>Running <code>agents-cli</code> with <code>-y</code> / <code>--yes</code> so missing values fall back to defaults and no prompt blocks a coding agent or CI job.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Partner model (Claude on Agent Platform)</dt>
+                <dd>An Anthropic model served by Agent Platform after you enable it in Model Garden; billing, IAM and quotas are Google Cloud's.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Global endpoint</dt>
+                <dd>The <code>global</code> location for partner models; best availability, separate quotas, no data residency and no Provisioned Throughput.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Multi-region endpoint</dt>
+                <dd>The <code>us</code> or <code>eu</code> location; keeps processing inside the jurisdiction while pooling capacity.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Prompt caching</dt>
+                <dd>Reuse of a repeated prompt prefix for 5 minutes by default or 1 hour on request; cache reads are billed far below normal input.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Provisioned Throughput</dt>
+                <dd>Reserved, fixed-fee model capacity in chosen regions that takes priority over pay-as-you-go traffic.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>CLAUDE_CODE_USE_VERTEX</code></dt>
+                <dd>The Claude Code env var that switches it from the Anthropic API to Agent Platform, used with <code>ANTHROPIC_VERTEX_PROJECT_ID</code> and <code>CLOUD_ML_REGION</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Model Armor floor setting</dt>
+                <dd>Project-wide minimum filters; with the <code>GOOGLE_MCP_SERVER</code> integration it screens calls to Google remote MCP servers.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>vertexai.allowedModels</code></dt>
+                <dd>The list constraint that allows or denies Model Garden models per action (<code>predict</code>, <code>deploy</code>, <code>tune</code>); a custom allow list implicitly denies everything else.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>vertexai.allowedPartnerModelFeatures</code></dt>
+                <dd>The list constraint that unlocks partner-model features such as <code>web_search</code> and <code>structured_outputs</code>, which are blocked by default in organization projects.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Developer Knowledge MCP server</dt>
+                <dd>Google's remote MCP endpoint for searching and retrieving official developer documentation (<code>search_documents</code>, <code>get_documents</code>, <code>answer_query</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>headersHelper</code></dt>
+                <dd>A Claude Code MCP setting that runs a command at connection time and sends the JSON headers it prints, used for short-lived tokens.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Workstation TCP tunnel</dt>
+                <dd><code>gcloud workstations start-tcp-tunnel</code>, an IAM-authorized forward from a local port to a workstation port, used for SSH from a local IDE.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Characterization test</dt>
+                <dd>A test that records what existing code does today, so a refactor can prove behavior did not change.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Revision traffic split</dt>
+                <dd>An Agent Runtime setting (Preview) that sends set percentages of traffic to active revisions; the default sends all traffic to the latest revision.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>CodeMender</dt>
+                <dd>Google's code security agent on Agent Platform (Preview) that verifies a vulnerability with an exploit and proposes a validated patch (<code>cm fix</code>).</dd>
+            </div>
         </div>
 
         <div class="prose">
-            <p><strong>Official sources:</strong> antigravity.google/docs (overview, artifacts, implementation-plan, rules, skills, hooks, plugins, mcp, subagents, permissions, sandbox, settings, cli/gcli-migration) · adk.dev/get-started/agents-cli · docs.cloud.google.com/gemini-enterprise-agent-platform/agents/quickstart-adk · docs.cloud.google.com/gemini/enterprise/docs/register-and-manage-an-adk-agent · docs.cloud.google.com/workstations (overview, agent-optimized-development, VPC-SC &amp; private clusters) · docs.cloud.google.com/kubernetes-engine/docs/concepts/machine-learning/agent-sandbox.</p>
+            <p><strong>Official sources:</strong> antigravity.google/docs (overview, artifacts, implementation-plan, rules, skills, hooks, plugins, mcp, subagents, permissions, sandbox, settings, cli/gcli-migration) · adk.dev/get-started/agents-cli · github.com/google/agents-cli (README, CLI and skills reference, extensions guide, evaluation guide) · google.github.io/agents-cli · docs.cloud.google.com/gemini-enterprise-agent-platform/build/skill-registry · docs.cloud.google.com/gemini-enterprise-agent-platform/agents/quickstart-adk · docs.cloud.google.com/gemini/enterprise/docs/register-and-manage-an-adk-agent · docs.cloud.google.com/workstations (overview, agent-optimized-development, VPC-SC &amp; private clusters) · docs.cloud.google.com/kubernetes-engine/docs/concepts/machine-learning/agent-sandbox · docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models (use-partner-models, claude/use-claude, claude/prompt-caching) · docs.cloud.google.com/gemini-enterprise-agent-platform/resources/locations · docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/cmek · docs.cloud.google.com/model-armor/model-armor-mcp-google-cloud-integration · docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview · docs.cloud.google.com/gemini-enterprise-agent-platform/models/control-model-access · docs.cloud.google.com/organization-policy/reference/org-policy-constraints · docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-revisions-and-traffic · docs.cloud.google.com/gemini-enterprise-agent-platform/agents/codemender/fix-and-patch · docs.cloud.google.com/workstations/docs (develop-code-using-local-vscode-editor, ssh-support, customize-development-environment) · docs.cloud.google.com/sdk/gcloud/reference/workstations (start-tcp-tunnel, configs/create) · developers.google.com/knowledge/mcp · adk.dev/context/caching · code.claude.com/docs/en/google-vertex-ai and code.claude.com/docs/en/mcp (Anthropic).</p>
         </div>
 
         <div class="two-columns">
@@ -975,7 +1664,7 @@
                 <div class="quiz-question">
                     <p><span class="q-num">Q7.</span> List the Agents CLI path from an empty folder to Gemini Enterprise.</p>
                     <div class="quiz-answer">
-                        <span class="answer-text"><code>uvx google-agents-cli setup</code> → <code>agents-cli create</code> + <code>install</code> → <code>run</code> / <code>playground</code> → <code>eval run</code> (release gate) → <code>scaffold enhance --deployment-target</code> if needed → <code>deploy</code> → register with Gemini Enterprise in one Agents CLI command (<code>agents-cli publish gemini-enterprise</code>).</span>
+                        <span class="answer-text"><code>uvx google-agents-cli setup</code> → <code>agents-cli create</code> + <code>install</code> → <code>run</code> / <code>playground</code> → <code>eval run</code> (release gate) → <code>scaffold enhance --deployment-target</code> if needed → <code>deploy</code> → register with Gemini Enterprise in one Agents CLI command (<code>agents-cli publish gemini</code>; <code>publish gemini-enterprise</code> is the older hidden alias).</span>
                     </div>
                 </div>
                 <div class="quiz-question">

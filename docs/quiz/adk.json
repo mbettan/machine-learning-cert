@@ -1293,6 +1293,318 @@
           "url": "https://ai.google.dev/gemini-api/docs/generate-content/thinking"
         }
       ]
+    },
+    {
+      "id": "adk-q-34",
+      "section": "Multi-Agent Delegation",
+      "guide_anchor": "multi-agent",
+      "question": "A retail team runs one ADK deployment on Agent Runtime whose coordinator holds a read-only catalog researcher and a payroll-adjustment specialist as `sub_agents`. Security wants a platform policy that lets only the payroll specialist reach the payroll MCP server, but audit logs show a single principal for every call. What change makes that policy possible?",
+      "options": [
+        {
+          "text": "Add a sentence to the coordinator's instruction stating that only the payroll specialist may call the payroll MCP server.",
+          "correct": false,
+          "why_wrong": "An instruction is a probabilistic prompt, not an access control; the researcher still runs as the same principal and the platform cannot tell the two apart."
+        },
+        {
+          "text": "Give each `sub_agents` child a distinct `name` and `description` so Agent Gateway can map them to separate principals.",
+          "correct": false,
+          "why_wrong": "In-process children all run under the deployment's single Agent Identity; names and descriptions only guide LLM routing and never create a new principal."
+        },
+        {
+          "text": "Deploy the payroll specialist separately on Agent Runtime with its own identity, reach it over A2A, and scope UAP allows to it.",
+          "correct": true
+        },
+        {
+          "text": "Wrap the payroll specialist in `AgentTool` so it runs in an isolated child session with its own credentials and audit identity.",
+          "correct": false,
+          "why_wrong": "`AgentTool` isolates conversation context, not identity; the wrapped specialist still executes inside the same process as the deployment's one principal."
+        }
+      ],
+      "explanation": "Workflow agents, `sub_agents` transfer and graph nodes all live in one process, so every child acts as the deployment's single Agent Identity principal. Platform controls such as IAM Unified Access Policies and Principal Access Boundary key on that principal. Moving the privileged specialist behind A2A as a separate Agent Runtime deployment gives it its own identity, so UAP rules can allow it alone to reach the payments server.",
+      "key_takeaway": "Identity isolation needs a process boundary: put a privileged specialist behind A2A with its own Agent Identity, not in `sub_agents`.",
+      "doc_links": [
+        {
+          "label": "Agent Identity on Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/agent-identity"
+        },
+        {
+          "label": "Agent Gateway overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-35",
+      "section": "Multi-Agent Delegation",
+      "guide_anchor": "multi-agent",
+      "question": "One platform team owns a three-step invoice pipeline (extract, validate, post) with a single release cycle and one privilege tier. An architect proposes splitting each step into its own A2A service on Agent Runtime \"for modularity\". Which recommendation fits the orchestration boundary guidance?",
+      "options": [
+        {
+          "text": "Split the steps into three A2A services so each one gets a separate Agent Identity and its own Agent Gateway policy set.",
+          "correct": false,
+          "why_wrong": "With one owner and one privilege tier there is nothing to isolate; three services add network hops, three deployments and three policy surfaces with no gain."
+        },
+        {
+          "text": "Keep it in one service as a `Workflow` (or `SequentialAgent`) so handoffs stay in-process and share `session.state`.",
+          "correct": true
+        },
+        {
+          "text": "Expose only the validate step over A2A with `to_a2a()` so the other two steps can call it as a remote peer through the gateway.",
+          "correct": false,
+          "why_wrong": "This still adds a network round trip and gateway evaluation on every invoice for a step owned by the same team, without any identity or fault isolation benefit."
+        },
+        {
+          "text": "Run the three steps as a `ParallelAgent` so they finish faster, then merge their outputs with a final summarizer node.",
+          "correct": false,
+          "why_wrong": "The steps depend on each other in order (validate needs the extraction, posting needs validation), so concurrent branches that see no sibling state would break the pipeline."
+        }
+      ],
+      "explanation": "The orchestration boundary table ties remote A2A agents to different owners, release cycles, runtimes or privilege tiers. A fixed pipeline owned by one team belongs in a single deployable unit: a graph `Workflow` or workflow agents exchanging data through `session.state`. Splitting it into A2A services adds latency, deployments and policy surfaces without improving isolation.",
+      "key_takeaway": "Choose A2A for different owners or privilege tiers; a single-team fixed pipeline stays in-process as a `Workflow`.",
+      "doc_links": [
+        {
+          "label": "ADK workflow patterns",
+          "url": "https://adk.dev/workflows/patterns/"
+        },
+        {
+          "label": "ADK workflow agents",
+          "url": "https://adk.dev/agents/workflow-agents/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-36",
+      "section": "MCP & A2A Integration",
+      "guide_anchor": "mcp-a2a",
+      "question": "A developer exposes an ADK agent with `a2a_app = to_a2a(root_agent, port=8001)` and starts it with `uvicorn ... --port 9000`. Clients fetch `/.well-known/agent-card.json` successfully, yet every message they send to the URL in the card fails to connect. What is the most likely cause?",
+      "options": [
+        {
+          "text": "The card uses the `port` passed to `to_a2a()`, so it advertises 8001 while uvicorn listens on 9000; make the values match.",
+          "correct": true
+        },
+        {
+          "text": "`to_a2a()` only serves agents that ship an `agent.json` file, so the card is a placeholder until one is added to the agent folder.",
+          "correct": false,
+          "why_wrong": "The `agent.json` requirement applies to `adk api_server --a2a`; `to_a2a()` builds the card from the agent's metadata and skills on its own."
+        },
+        {
+          "text": "Agent Cards can only be served over Agent Runtime, so a local uvicorn server returns the card but rejects A2A messages by design.",
+          "correct": false,
+          "why_wrong": "`to_a2a()` with uvicorn is a supported way to serve A2A locally; nothing restricts message handling to Agent Runtime."
+        },
+        {
+          "text": "The agent must be registered in Agent Registry before any client can send it messages, even when calling its URL directly.",
+          "correct": false,
+          "why_wrong": "Registration enables discovery and gateway checks; a direct client call to a running A2A server does not require a registry entry to connect."
+        }
+      ],
+      "explanation": "`to_a2a(root_agent, port=...)` generates the Agent Card from the agent and publishes it at `/.well-known/agent-card.json` once served with uvicorn. The URL inside the card uses the `port` given to `to_a2a()`, so it must match uvicorn's `--port`, otherwise clients read a card that points at an unreachable address. Pass `agent_card=` when you need full control over what is advertised.",
+      "key_takeaway": "Keep the `to_a2a()` port equal to the uvicorn `--port`, or the generated card advertises an unreachable URL.",
+      "doc_links": [
+        {
+          "label": "ADK A2A documentation",
+          "url": "https://adk.dev/a2a/"
+        },
+        {
+          "label": "A2A protocol specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-37",
+      "section": "MCP & A2A Integration",
+      "guide_anchor": "mcp-a2a",
+      "question": "A team deploys an A2A agent to Cloud Run with `--functional-type=agent` so it is registered automatically in Agent Registry, but the deploy is rejected. Their colleagues on Agent Runtime never had to do anything to appear in the registry. What explains both observations?",
+      "options": [
+        {
+          "text": "Cloud Run agents can only be registered manually with `gcloud agent-registry services create`, so the functional-type flag is not supported there.",
+          "correct": false,
+          "why_wrong": "Cloud Run does support automatic registration; it is opt-in through `--functional-type=agent`, so manual registration is not the only path."
+        },
+        {
+          "text": "Automatic registration works only in the `us` and `eu` multi-regions, and the Cloud Run service was deployed to a single region instead.",
+          "correct": false,
+          "why_wrong": "The multi-region note is the reverse and applies to manual registration, which is not available in `us` and `eu`; region is not the cause here."
+        },
+        {
+          "text": "Agent Runtime registration also needs an explicit opt-in flag, so the colleagues' agents are probably not indexed and must be redeployed.",
+          "correct": false,
+          "why_wrong": "On Agent Runtime, registration is automatic and on by default; deploying registers the agent and later updates and deletions sync."
+        },
+        {
+          "text": "Cloud Run registration is opt-in and `--functional-type=agent` needs `--identity-type=agent-identity`; Agent Runtime registers by default.",
+          "correct": true
+        }
+      ],
+      "explanation": "Agent Registry registration differs by runtime. Agent Runtime registers agents automatically by default and syncs updates and deletions. Cloud Run is automatic but opt-in: deploy with `--functional-type=agent`, which requires `--identity-type=agent-identity`. GKE uses a functional-type label plus an Agent Card annotation, and external or unsupported runtimes need manual registration.",
+      "key_takeaway": "Cloud Run registration is opt-in via `--functional-type=agent` and needs agent identity; Agent Runtime registers automatically.",
+      "doc_links": [
+        {
+          "label": "Agent Registry overview",
+          "url": "https://docs.cloud.google.com/agent-registry/overview"
+        },
+        {
+          "label": "Agent Identity on Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/agent-identity"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-38",
+      "section": "MCP & A2A Integration",
+      "guide_anchor": "mcp-a2a",
+      "question": "A platform team writes a new IAM Unified Access Policy that limits which specialists a treasury coordinator may call through Agent Gateway. They are worried that enforcing it immediately could break handoffs that work today. What rollout matches the documented approach?",
+      "options": [
+        {
+          "text": "Enforce it right away but add a matching semantic governance policy as a fallback so blocked calls are re-evaluated by intent.",
+          "correct": false,
+          "why_wrong": "Semantic governance is a probabilistic LLM check that adds to IAM; it does not undo a deny, and enforcing first is the anti-pattern the guide warns against."
+        },
+        {
+          "text": "Set `iamEnforcementMode: \"DRY_RUN\"`, review the would-be violations in Cloud Audit Logs, then enforce by removing that field.",
+          "correct": true
+        },
+        {
+          "text": "Attach the rules to a Principal Access Boundary in audit mode first, then copy them into the UAP once the boundary shows no violations.",
+          "correct": false,
+          "why_wrong": "PAB caps the most an identity could ever reach; it is not a dry-run stage for UAP rules. Dry run is set with iamEnforcementMode in the IAP authorization extension metadata."
+        },
+        {
+          "text": "Grant `iap.googleapis.com/resources.egressViaIAP` to every peer first, then delete the grants one at a time while watching error rates.",
+          "correct": false,
+          "why_wrong": "Granting egress broadly and removing it piecemeal tests in production and risks outages; the dry-run mode logs violations without blocking anything."
+        }
+      ],
+      "explanation": "Agent policies enforced by Agent Gateway include IAM Unified Access Policies with allow and deny rules and CEL conditions, where deny overrides allow. Start a new policy with `iamEnforcementMode: \"DRY_RUN\"` so violations are logged to Cloud Audit Logs but not blocked, check the logs against expected handoffs, then enforce by removing the field.",
+      "key_takeaway": "Roll out a new UAP in `DRY_RUN`, read Cloud Audit Logs, then enforce by removing the `iamEnforcementMode` field.",
+      "doc_links": [
+        {
+          "label": "Agent Gateway overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview"
+        },
+        {
+          "label": "Principal Access Boundary policies",
+          "url": "https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-39",
+      "section": "Failure Modes & Exam Traps",
+      "guide_anchor": "failure-modes",
+      "question": "A logistics coordinator on Agent Runtime calls a carrier's agent hosted outside Google Cloud. A `curl` to the carrier's endpoint responds, but every A2A call from the coordinator is denied at Agent Gateway. Which fix addresses the root cause?",
+      "options": [
+        {
+          "text": "Export a service account key for the coordinator so it can call the carrier's endpoint directly and skip the Agent Gateway check entirely.",
+          "correct": false,
+          "why_wrong": "Long-lived keys defeat Agent Identity's design and skip the governance path; the denial comes from a missing registration and access rule, not missing credentials."
+        },
+        {
+          "text": "Raise `HttpRetryOptions(attempts=...)` on the coordinator's client so transient gateway denials eventually succeed.",
+          "correct": false,
+          "why_wrong": "A policy denial is deterministic, not transient; retrying the same unregistered destination returns the same deny every time."
+        },
+        {
+          "text": "Add the carrier's Agent Card URL to the coordinator's instruction so the model knows the endpoint is approved.",
+          "correct": false,
+          "why_wrong": "Gateway decisions come from registry entries and IAM rules, not from text in a prompt; the model's instruction has no effect on egress policy."
+        },
+        {
+          "text": "Register the carrier manually from its card, grant `resources.egressViaIAP` via a UAP, and resolve it with `get_remote_a2a_agent()`.",
+          "correct": true
+        }
+      ],
+      "explanation": "Agent Gateway checks that the destination is registered in Agent Registry or covered by an explicit access rule on its URL; with no matching policy it denies by default. External agents are not registered automatically, so register the carrier manually from its card, grant the coordinator's principal `iap.googleapis.com/resources.egressViaIAP` on it through a UAP, and resolve it through the `AgentRegistry` client instead of a hardcoded URL.",
+      "key_takeaway": "Agent Gateway denies unregistered peers by default: register external agents manually and grant egress through a UAP.",
+      "doc_links": [
+        {
+          "label": "Agent Gateway overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview"
+        },
+        {
+          "label": "Agent Registry overview",
+          "url": "https://docs.cloud.google.com/agent-registry/overview"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-40",
+      "section": "HITL, Resilience & Durability",
+      "guide_anchor": "hitl-resilience",
+      "question": "A procurement agent uses `require_confirmation` on its `issue_purchase_order` tool, and approvals sometimes arrive hours later. After moving sessions to `VertexAiSessionService` for durability, the confirmation flow no longer behaves as expected. What should the team change?",
+      "options": [
+        {
+          "text": "Keep tool confirmation and set `include_contents=\"none\"` so the pending approval is not lost when the session reloads.",
+          "correct": false,
+          "why_wrong": "`include_contents` only controls which history the model sees; it does not make tool confirmation work with `VertexAiSessionService`."
+        },
+        {
+          "text": "Use `LongRunningFunctionTool` or a graph node yielding `RequestInput`; tool confirmation does not support that session service.",
+          "correct": true
+        },
+        {
+          "text": "Move the approval into a `before_agent_callback` that blocks the thread until a manager replies through a webhook.",
+          "correct": false,
+          "why_wrong": "Blocking a callback holds the invocation open for hours and still has no durable pause; ADK provides dedicated long-running and human-input mechanisms instead."
+        },
+        {
+          "text": "Return to `InMemorySessionService`, which is the only backend that persists confirmation requests across server restarts.",
+          "correct": false,
+          "why_wrong": "`InMemorySessionService` loses all state on restart, so it cannot hold an approval that arrives hours later."
+        }
+      ],
+      "explanation": "ADK documents that tool confirmation does not support `DatabaseSessionService` or `VertexAiSessionService`. For durable approvals use `LongRunningFunctionTool`, or in a graph workflow a node that yields `RequestInput(message=..., payload=..., response_schema=...)`, whose reply becomes the next node's input. When resumability is on, a confirmation reply must carry the same `invocation_id` that raised it.",
+      "key_takeaway": "Tool confirmation does not support durable session services; use `LongRunningFunctionTool` or a graph `RequestInput` node.",
+      "doc_links": [
+        {
+          "label": "ADK tool confirmation",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        },
+        {
+          "label": "ADK graph human input",
+          "url": "https://adk.dev/graphs/human-input/"
+        }
+      ]
+    },
+    {
+      "id": "adk-q-41",
+      "section": "Failure Modes & Exam Traps",
+      "guide_anchor": "failure-modes",
+      "question": "A coordinator delegates contract reviews to a legal agent over A2A. The legal agent often returns tasks in `TASK_STATE_INPUT_REQUIRED`. Over a week, unanswered tasks accumulate, users never see the legal agent's questions, and coordinator connections stay open. Which design resolves this?",
+      "options": [
+        {
+          "text": "Raise the HTTP client timeout so the coordinator can keep each stream open until the legal agent's task completes.",
+          "correct": false,
+          "why_wrong": "An input-required task is interrupted, not terminal, and waits for a reply; a longer timeout just holds more connections open without surfacing the question."
+        },
+        {
+          "text": "Treat `TASK_STATE_INPUT_REQUIRED` as a terminal failure and immediately resend the original message as a new task.",
+          "correct": false,
+          "why_wrong": "The state is not terminal; resending creates duplicate tasks while the original still waits for the answer it asked for."
+        },
+        {
+          "text": "Surface the peer's question to the user, use a push webhook (`CreateTaskPushNotificationConfig`) if allowed, track task IDs with deadlines, and `CancelTask` on expiry.",
+          "correct": true
+        },
+        {
+          "text": "Move the legal agent into the coordinator's `sub_agents` so its questions appear in the same session and no A2A task tracking is needed at all.",
+          "correct": false,
+          "why_wrong": "This collapses the process boundary and the legal agent's separate identity and ownership, which is why it was remote in the first place."
+        }
+      ],
+      "explanation": "`TASK_STATE_INPUT_REQUIRED` (`input-required` in v0.3 JSON) is an interrupted state, not a terminal one: the caller answers with another message on the same task. If the peer's card declares the `pushNotifications` capability, register a webhook with `CreateTaskPushNotificationConfig` (`url`, `token`) instead of holding a stream, surface the question to the user, keep the task ID and a deadline in session state, and call `CancelTask` when it expires.",
+      "key_takeaway": "Input-required A2A tasks are not terminal: surface them, track a deadline, use push webhooks and cancel on expiry.",
+      "doc_links": [
+        {
+          "label": "A2A streaming and async operations",
+          "url": "https://a2a-protocol.org/latest/topics/streaming-and-async/"
+        },
+        {
+          "label": "A2A protocol specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
     }
   ]
 }

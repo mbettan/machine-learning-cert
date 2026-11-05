@@ -1,0 +1,1399 @@
+{
+  "topic_id": "gemini-enterprise",
+  "title": "Gemini Enterprise & Low-Code Agents",
+  "guide_url": "GeminiEnterprise.html",
+  "questions": [
+    {
+      "id": "gemini-enterprise-q-01",
+      "section": "Editions & Product Map",
+      "guide_anchor": "editions",
+      "question": "A 60-person fintech subscribed to Gemini Enterprise Business edition. The platform team now wants to register an ADK agent they built and place the deployment inside a VPC Service Controls perimeter. What should the architect recommend?",
+      "options": [
+        {
+          "text": "Move to Standard or Plus edition, which are administered in Google Cloud with IAM and support custom agents.",
+          "correct": true
+        },
+        {
+          "text": "Stay on Business and register the ADK agent through business.gemini.google using an API key stored in the admin settings page.",
+          "correct": false,
+          "why_wrong": "Business edition is a SaaS experience without the Cloud console or IAM and does not support bringing your own full-code agents."
+        },
+        {
+          "text": "Buy the Frontline add-on so the team gets enterprise-grade security controls on Business.",
+          "correct": false,
+          "why_wrong": "Frontline is an add-on for frontline workers that requires 150+ Standard or Plus users; it adds no security controls to Business."
+        },
+        {
+          "text": "Rebuild the agent in Workflow Builder, because Business edition only blocks code-based agents.",
+          "correct": false,
+          "why_wrong": "Rebuilding does not solve the VPC-SC requirement; Business edition lacks enterprise-grade security and compliance controls."
+        }
+      ],
+      "explanation": "Business edition targets small teams (1–500 users) as a SaaS app without Google Cloud console or IAM, without own full-code agents and without enterprise-grade security controls. Registering ADK agents and using VPC Service Controls requires a Google Cloud–administered edition such as Standard or Plus.",
+      "key_takeaway": "Need IAM, VPC-SC, CMEK, or custom ADK/A2A agents? Business edition is out; pick Standard or Plus.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-02",
+      "section": "Editions & Product Map",
+      "guide_anchor": "editions",
+      "question": "A retailer with 2,000 Plus-edition office users wants to give 5,000 store associates access to a few curated agents at a lower cost. Which statement about the Frontline add-on is accurate?",
+      "options": [
+        {
+          "text": "Frontline users get their own 75 GiB pool and can build no-code agents for their store.",
+          "correct": false,
+          "why_wrong": "Frontline has a 2 GiB pooled allowance and its users cannot author no-code agents."
+        },
+        {
+          "text": "Frontline users run only admin-provisioned agents and cannot author no-code agents themselves.",
+          "correct": true
+        },
+        {
+          "text": "Frontline is a standalone edition that any company can buy without other Gemini Enterprise seats.",
+          "correct": false,
+          "why_wrong": "Frontline is an add-on that requires at least 150 Standard or Plus users."
+        },
+        {
+          "text": "Frontline users can register A2A agents with a quota of ten new agents per user per day.",
+          "correct": false,
+          "why_wrong": "The agent creation quota for Frontline is zero; registration is not something Frontline users do."
+        }
+      ],
+      "explanation": "Frontline is an add-on for organizations that already have 150+ Standard or Plus users. It is aimed at frontline workers, has a small pooled storage allowance, and lets users run only the agents an admin provisions — they cannot author no-code agents or create skills.",
+      "key_takeaway": "Frontline = add-on (150+ Standard/Plus prerequisite), consume admin-provisioned agents only, no authoring.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-03",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "A legal department connects a third-party contract system to Gemini Enterprise. Policy forbids copying any contract content outside that system, even into an encrypted index. Which connector mode should be used?",
+      "options": [
+        {
+          "text": "Data ingestion with CMEK, because customer-managed keys make the indexed copy compliant.",
+          "correct": false,
+          "why_wrong": "CMEK encrypts the copy but a copy still exists, which violates the no-copy policy."
+        },
+        {
+          "text": "Data ingestion with incremental sync only, so that only metadata is stored in the index.",
+          "correct": false,
+          "why_wrong": "Incremental sync still ingests changed content; it is not a metadata-only mode."
+        },
+        {
+          "text": "Federated search, which queries the source live without copying or storing the content.",
+          "correct": true
+        },
+        {
+          "text": "A Workflow Builder knowledge file export, refreshed nightly from the contract system.",
+          "correct": false,
+          "why_wrong": "Uploading knowledge files copies content into Gemini Enterprise, again violating the policy."
+        }
+      ],
+      "explanation": "Federated search sends the query to the third-party system at request time and stores nothing in Gemini Enterprise. It trades answer quality for zero data copy and is subject to the source's terms. Ingestion gives better quality but creates an indexed copy.",
+      "key_takeaway": "No-copy requirement → federated search; best answer quality → ingestion.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-04",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "Users report that Gemini Enterprise still cites SharePoint pages that were deleted two weeks ago and shows a document to someone recently removed from its access group. The data store runs incremental syncs every hour. What is the most likely fix?",
+      "options": [
+        {
+          "text": "Add a Model Armor response template that blocks references to deleted or restricted documents.",
+          "correct": false,
+          "why_wrong": "Model Armor screens content for safety and leakage; it does not know which source documents were deleted."
+        },
+        {
+          "text": "Schedule full syncs, because incremental syncs do not propagate deletions or identity changes.",
+          "correct": true
+        },
+        {
+          "text": "Switch the identity provider to Workforce Identity Federation so ACLs are evaluated live.",
+          "correct": false,
+          "why_wrong": "Changing the IdP does not refresh stale entity or ACL data in an ingested store."
+        },
+        {
+          "text": "Increase the incremental sync frequency to every five minutes to catch the deletions faster.",
+          "correct": false,
+          "why_wrong": "Incremental sync never carries deletions or identity changes, regardless of frequency."
+        }
+      ],
+      "explanation": "Incremental syncs pick up new and changed entities only. Deletions and identity/ACL updates are carried by full syncs (entity and identity). Without them, stale or no-longer-permitted documents can remain in the index.",
+      "key_takeaway": "Deletions and permission changes need full syncs; incremental syncs only add or update content.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-05",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "A field-services company loads 40,000 inspection forms into a Gemini Enterprise data store. Branch offices scanned the paper forms, so each PDF page is an image with no embedded text layer. Searches never return content from these files. What should the team change?",
+      "options": [
+        {
+          "text": "Switch the data store to federated search so the source system reads the scans live at query time.",
+          "correct": false,
+          "why_wrong": "Federation sends the query to a third-party API without indexing; it does not extract text from image-only pages and lowers answer quality."
+        },
+        {
+          "text": "Configure the OCR parser for these PDFs so text is recognized from the scanned page images.",
+          "correct": true
+        },
+        {
+          "text": "Keep the digital parser and schedule a full sync so every form is re-read from scratch.",
+          "correct": false,
+          "why_wrong": "The digital parser reads machine-readable text; re-syncing image-only PDFs with it still yields no text."
+        },
+        {
+          "text": "Attach the forms to a Workflow Builder agent as knowledge files instead of using a data store.",
+          "correct": false,
+          "why_wrong": "Knowledge files are capped at 800,000 tokens combined and do not solve missing text extraction for 40,000 scanned forms."
+        }
+      ],
+      "explanation": "Image-only PDFs have no text layer, so a parser that reads embedded text finds nothing to index. The OCR parser recognizes text in scanned pages, which makes the forms searchable and usable for grounding.",
+      "key_takeaway": "Scanned, image-only PDFs need the OCR parser; the digital parser only reads embedded text.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-06",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "A company uses Microsoft Entra ID and configures Workforce Identity Federation for Gemini Enterprise. The setup fails after the admin created the workforce pool in europe-west1 to match the EU data store. What is wrong?",
+      "options": [
+        {
+          "text": "Workforce Identity Federation is not supported for Gemini Enterprise; only Google Identity works.",
+          "correct": false,
+          "why_wrong": "Workforce Identity Federation is a supported identity option alongside Google Identity."
+        },
+        {
+          "text": "The data store must be moved to the global region before any identity provider can be configured.",
+          "correct": false,
+          "why_wrong": "EU data stores are valid; the location constraint applies to the workforce pool."
+        },
+        {
+          "text": "The workforce pool must be created as a global resource, even when the data store is in the EU.",
+          "correct": true
+        },
+        {
+          "text": "Each data store needs its own workforce pool in the same region as the data store.",
+          "correct": false,
+          "why_wrong": "There is one identity provider type per location, and the workforce pool itself must be global."
+        }
+      ],
+      "explanation": "Gemini Enterprise supports Google Identity (recommended) or Workforce Identity Federation. The workforce pool must be global, and only one IdP type can be used per location. Search then enforces source ACLs for the federated identities.",
+      "key_takeaway": "Workforce Identity Federation for Gemini Enterprise requires a global workforce pool.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-07",
+      "section": "Google-made Agents, Agent Gallery & Sharing",
+      "guide_anchor": "prebuilt-agents-gallery",
+      "question": "An employee-built expense agent is producing questionable answers. The admin wants to stop all usage immediately while keeping it visible in the Agent Gallery so users understand it is temporarily unavailable. Which state should be applied?",
+      "options": [
+        {
+          "text": "Disabled, which keeps the agent listed in the gallery but greys out the chat box for every user.",
+          "correct": false,
+          "why_wrong": "Disabled agents are hidden from the gallery, so users would not see it at all."
+        },
+        {
+          "text": "Private, which returns the agent to its owner while leaving the gallery entry public.",
+          "correct": false,
+          "why_wrong": "Private limits the agent to its owner; it is not a visible-but-frozen state."
+        },
+        {
+          "text": "Suspended, which keeps the agent visible in the gallery while blocking any interaction.",
+          "correct": true
+        },
+        {
+          "text": "Enabled with sharing approval turned on, so new conversations require admin approval.",
+          "correct": false,
+          "why_wrong": "Sharing approval governs who can share the agent; existing users could still interact with it."
+        }
+      ],
+      "explanation": "Agent states are Private, Enabled, Suspended and Disabled. Suspended agents stay visible in the gallery but users cannot interact with them; Disabled agents are hidden entirely.",
+      "key_takeaway": "Suspended = visible but unusable; Disabled = hidden.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Agent Registry",
+          "url": "https://docs.cloud.google.com/agent-registry/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-08",
+      "section": "Google-made Agents, Agent Gallery & Sharing",
+      "guide_anchor": "prebuilt-agents-gallery",
+      "question": "A strategy team bookmarked the Idea Generation agent for brainstorming sessions, but it no longer appears in the Agent Gallery. What should the architect tell them?",
+      "options": [
+        {
+          "text": "Ask the admin to re-enable it under End user features, because Google-made agents are switched off by default in new apps.",
+          "correct": false,
+          "why_wrong": "There is no toggle to restore it; the preview agent was removed from the product."
+        },
+        {
+          "text": "It was a preview agent that has been removed; use the assistant, Deep Research or Co-Scientist instead.",
+          "correct": true
+        },
+        {
+          "text": "It moved to the Marketplace filter and now must be procured through Google Cloud Marketplace.",
+          "correct": false,
+          "why_wrong": "It was not moved to the Marketplace; it was removed."
+        },
+        {
+          "text": "Rebuild it from the Gallery template by registering it as an A2A agent with the original agent card.",
+          "correct": false,
+          "why_wrong": "Google-made agents are not re-registered as A2A agents by customers; the agent no longer exists."
+        }
+      ],
+      "explanation": "The Idea Generation agent, which was in preview, was removed in July 2026. Brainstorming and hypothesis-generation needs are now served by the assistant, Deep Research or Co-Scientist.",
+      "key_takeaway": "Idea Generation was removed; route brainstorming to the assistant, Deep Research, or Co-Scientist.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Agent Registry",
+          "url": "https://docs.cloud.google.com/agent-registry/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-09",
+      "section": "Agent Designer → Workflow Builder",
+      "guide_anchor": "workflow-builder",
+      "question": "Every Monday at 8:00, a team lead wants Gemini Enterprise to collect new high-priority Jira bugs, draft a summary, and post it to a Chat space only after she approves the draft. Which Workflow Builder design fits best?",
+      "options": [
+        {
+          "text": "A chat agent with a starter prompt that she remembers to run each Monday morning.",
+          "correct": false,
+          "why_wrong": "A chat agent relies on someone starting it and has no built-in approval gate before posting."
+        },
+        {
+          "text": "A workflow with a Schedule trigger, a Gemini Agent step, a Human-in-the-loop approval step, then the post.",
+          "correct": true
+        },
+        {
+          "text": "A workflow with an Event trigger on every Jira change, which posts each bug to Chat immediately.",
+          "correct": false,
+          "why_wrong": "An event-per-change design spams the space and skips the required approval before posting."
+        },
+        {
+          "text": "An ADK agent on Agent Runtime with a custom approval UI, because human approvals cannot be modeled in Workflow Builder at all.",
+          "correct": false,
+          "why_wrong": "Workflow Builder supports Human-in-the-loop request-approval steps, so pro-code is unnecessary."
+        }
+      ],
+      "explanation": "Workflows support Manual, Schedule (including cron) and Event triggers, Gemini Agent steps, Condition steps, and Human-in-the-loop steps for requesting information or approval. A weekly, approval-gated process maps directly to these primitives.",
+      "key_takeaway": "Repeatable, scheduled, approval-gated process → workflow (Schedule + Gemini Agent + Human-in-the-loop).",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-10",
+      "section": "Agent Designer → Workflow Builder",
+      "guide_anchor": "workflow-builder",
+      "question": "A workflow step that updates Salesforce opportunities keeps failing with ENTITY_NOT_FOUND. The admin enabled the Salesforce \"Add Or Update Data\" toggle but left all \"Search For Data\" actions off. What is the fix?",
+      "options": [
+        {
+          "text": "Enable the related Search For Data actions, because mutative actions depend on them to locate records.",
+          "correct": true
+        },
+        {
+          "text": "Disable human review for write actions, since the review step strips the record identifier.",
+          "correct": false,
+          "why_wrong": "Human review is required for write actions and does not cause ENTITY_NOT_FOUND."
+        },
+        {
+          "text": "Grant each user the Salesforce System Administrator profile so writes bypass record lookup.",
+          "correct": false,
+          "why_wrong": "Over-privileging users does not fix a missing search action and violates least privilege."
+        },
+        {
+          "text": "Split the step into two Gemini Agent nodes so one node holds the write tool and the other holds the knowledge.",
+          "correct": false,
+          "why_wrong": "Two nodes are the fix for Drive/OneDrive tool precedence, not for missing search actions."
+        }
+      ],
+      "explanation": "Search actions are enabled per action, while Add Or Update Data is a connector-level, all-or-nothing toggle that requires human review. Mutative actions need the matching search actions enabled; otherwise they fail with ENTITY_NOT_FOUND.",
+      "key_takeaway": "Write actions need their search actions enabled; Add Or Update Data is connector-wide and human-reviewed.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-11",
+      "section": "Agent Designer → Workflow Builder",
+      "guide_anchor": "workflow-builder",
+      "question": "An HR team builds a policy chat agent in Workflow Builder by uploading 1,200 pages of handbooks as knowledge files. Responses become slow and some uploads are rejected. What is the recommended design?",
+      "options": [
+        {
+          "text": "Compress the handbooks into a single PDF so the knowledge file fits the 800,000-token limit.",
+          "correct": false,
+          "why_wrong": "Compressing the file format does not reduce tokens; the content still exceeds what should sit in context."
+        },
+        {
+          "text": "Switch the node model from Flash to Pro, which has no knowledge file limits.",
+          "correct": false,
+          "why_wrong": "Model choice does not remove the combined knowledge limit; large libraries should be retrieved, not stuffed."
+        },
+        {
+          "text": "Connect the handbooks through a data store and let the agent retrieve relevant passages per question.",
+          "correct": true
+        },
+        {
+          "text": "Create one chat agent per handbook chapter, each with its own knowledge files, and ask employees to pick the correct agent before asking.",
+          "correct": false,
+          "why_wrong": "Fragmenting agents hurts usability and still places full chapters in context each turn."
+        }
+      ],
+      "explanation": "Knowledge files are added to the context on every turn, up to 800,000 tokens combined. For large libraries (more than roughly 100 pages), the guidance is to connect a data store so the agent retrieves only the relevant chunks.",
+      "key_takeaway": "Small reference docs → knowledge files; large libraries → connected data store with retrieval.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-12",
+      "section": "Bringing Custom ADK, A2A & Dialogflow Agents",
+      "guide_anchor": "custom-agents",
+      "question": "A developer wrote an ADK agent and deployed it as a container on GKE. The business wants employees to use it from the Gemini Enterprise Agent Gallery through the supported ADK registration path. What must change?",
+      "options": [
+        {
+          "text": "Nothing; any HTTPS endpoint can be registered as an ADK agent if it returns JSON.",
+          "correct": false,
+          "why_wrong": "ADK registration requires the agent to be hosted on Agent Runtime, not any HTTPS endpoint."
+        },
+        {
+          "text": "Deploy the agent to Agent Runtime, then register it with an account holding the Gemini Enterprise Admin role.",
+          "correct": true
+        },
+        {
+          "text": "Publish the agent on Google Cloud Marketplace, because only Marketplace agents appear in the gallery.",
+          "correct": false,
+          "why_wrong": "Organization agents appear in the gallery without Marketplace; Marketplace is for partner agents."
+        },
+        {
+          "text": "Rewrite the agent in Workflow Builder, since ADK agents cannot be surfaced in Gemini Enterprise.",
+          "correct": false,
+          "why_wrong": "ADK agents can be registered in Gemini Enterprise; rewriting is unnecessary."
+        }
+      ],
+      "explanation": "The ADK registration path requires the agent to run on Agent Runtime (formerly Agent Engine, resource ReasoningEngine). Registration needs the Gemini Enterprise Admin role and the Discovery Engine API and can be done in the console, via API, or with the Agents CLI. Agents hosted elsewhere can alternatively be exposed over A2A.",
+      "key_takeaway": "ADK path = host on Agent Runtime, then register (Gemini Enterprise Admin role, Discovery Engine API).",
+      "doc_links": [
+        {
+          "label": "Deploying ADK on Google Cloud",
+          "url": "https://adk.dev/get-started/google-cloud/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-13",
+      "section": "Bringing Custom ADK, A2A & Dialogflow Agents",
+      "guide_anchor": "custom-agents",
+      "question": "A team registers an A2A agent hosted on Cloud Run (default run.app URL, authentication required). Every call from Gemini Enterprise returns HTTP 403. What is the correct fix?",
+      "options": [
+        {
+          "text": "Add an apiKey entry to the agent card securitySchemes and paste the key during registration.",
+          "correct": false,
+          "why_wrong": "Gemini Enterprise does not use agent card securitySchemes, API keys or custom headers for A2A agents."
+        },
+        {
+          "text": "Make the Cloud Run service public with allUsers invoker so Gemini Enterprise can reach it.",
+          "correct": false,
+          "why_wrong": "Opening the service to everyone removes authentication and is an unnecessary security regression."
+        },
+        {
+          "text": "Put the service behind a custom domain and an external load balancer so that Gemini Enterprise switches to end-user OAuth automatically.",
+          "correct": false,
+          "why_wrong": "The OIDC header flow is for run.app URLs; custom domains do not trigger an automatic fix."
+        },
+        {
+          "text": "Grant roles/run.invoker to the Discovery Engine service agent; it then sends an OIDC token in X-Serverless-Authorization.",
+          "correct": true
+        }
+      ],
+      "explanation": "For Cloud Run run.app endpoints, grant the Discovery Engine service agent roles/run.invoker. Gemini Enterprise sends an OIDC token in the X-Serverless-Authorization header, leaving the Authorization header for the end user's OAuth token. This flow does not apply to custom domains, load balancers, or gateways.",
+      "key_takeaway": "A2A on Cloud Run: give the Discovery Engine service agent run.invoker; auth arrives in X-Serverless-Authorization.",
+      "doc_links": [
+        {
+          "label": "Deploying ADK on Google Cloud",
+          "url": "https://adk.dev/get-started/google-cloud/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-14",
+      "section": "Bringing Custom ADK, A2A & Dialogflow Agents",
+      "guide_anchor": "custom-agents",
+      "question": "A registered ADK agent must create ServiceNow incidents as the signed-in employee, not as a shared service account. What should the developer configure during registration?",
+      "options": [
+        {
+          "text": "An OAuth authorization resource (Web application client) with clientId, secret, authorization and token URIs.",
+          "correct": true
+        },
+        {
+          "text": "A shared ServiceNow admin password stored as an environment variable on Agent Runtime and rotated every 90 days by the platform team.",
+          "correct": false,
+          "why_wrong": "A shared admin credential acts as a service account, violating per-user authorization and least privilege."
+        },
+        {
+          "text": "The Workflow Builder ServiceNow connector toggle, which ADK agents inherit automatically.",
+          "correct": false,
+          "why_wrong": "Connector toggles apply to Workflow Builder and search; ADK agents need their own OAuth authorization."
+        },
+        {
+          "text": "A Model Armor template that injects the user's email into each ServiceNow request header.",
+          "correct": false,
+          "why_wrong": "Model Armor screens content; it does not perform delegated authorization."
+        }
+      ],
+      "explanation": "ADK agent registration supports an optional OAuth authorization resource: create a Web application OAuth client with Gemini Enterprise's redirect URIs and supply clientId, clientSecret, authorizationUri and tokenUri (serverSideOauth2). The agent can then act on third-party systems on behalf of the user.",
+      "key_takeaway": "Act as the user in third-party systems → OAuth authorization resource on the ADK registration.",
+      "doc_links": [
+        {
+          "label": "Deploying ADK on Google Cloud",
+          "url": "https://adk.dev/get-started/google-cloud/"
+        },
+        {
+          "label": "A2A Protocol Documentation",
+          "url": "https://a2a-protocol.org/latest/"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-15",
+      "section": "Governance & Admin Controls",
+      "guide_anchor": "governance",
+      "question": "A security team enabled Model Armor in the Gemini Enterprise console with strict prompt-injection templates. They assume this also protects the three ADK agents and one Marketplace agent their employees use. What is the correct assessment?",
+      "options": [
+        {
+          "text": "Correct; console Model Armor applies to every agent that appears in the Agent Gallery, including custom and Marketplace agents.",
+          "correct": false,
+          "why_wrong": "The console setting covers the assistant only; registered custom and Marketplace agents are excluded."
+        },
+        {
+          "text": "Incorrect; console Model Armor screens the assistant only, so custom agents must call Model Armor in their code.",
+          "correct": true
+        },
+        {
+          "text": "Correct, as long as the ADK agents are hosted in the same project as the Gemini Enterprise app.",
+          "correct": false,
+          "why_wrong": "Project co-location does not extend the console Model Armor setting to custom agents."
+        },
+        {
+          "text": "Incorrect; Model Armor cannot be used with ADK agents at all, so prompt filters must be written by hand.",
+          "correct": false,
+          "why_wrong": "ADK agents can and should integrate Model Armor in code; it is not unsupported."
+        }
+      ],
+      "explanation": "The Gemini Enterprise console Model Armor setting screens prompts and responses of the assistant. ADK, A2A and Marketplace agents are not covered by it; developers configure Model Armor (or equivalent guardrails) inside the agent code.",
+      "key_takeaway": "Console Model Armor = assistant only; custom/Marketplace agents need in-code guardrails.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-16",
+      "section": "Governance & Admin Controls",
+      "guide_anchor": "governance",
+      "question": "A compliance officer asks that the Gemini Enterprise assistant mask credit card numbers in responses rather than refuse to answer. Model Armor is configured with INSPECT_AND_BLOCK templates. What will users experience when a response contains card numbers?",
+      "options": [
+        {
+          "text": "The assistant replaces each card number with asterisks and returns the rest of the answer normally.",
+          "correct": false,
+          "why_wrong": "Model Armor in Gemini Enterprise does not de-identify; it blocks the response."
+        },
+        {
+          "text": "The response is blocked: the answer state becomes SKIPPED with a CUSTOMER_POLICY_VIOLATION reason.",
+          "correct": true
+        },
+        {
+          "text": "The assistant silently retries with a smaller model until the response no longer contains card numbers.",
+          "correct": false,
+          "why_wrong": "There is no automatic model retry; a violation results in a blocked, skipped answer."
+        },
+        {
+          "text": "The response is delivered, and a violation report is sent to the admin for later review.",
+          "correct": false,
+          "why_wrong": "INSPECT_AND_BLOCK blocks the content; it does not deliver it with an after-the-fact report."
+        }
+      ],
+      "explanation": "Model Armor for the assistant inspects and blocks — it does not de-identify. When a template is violated, the answer state is SKIPPED with CUSTOMER_POLICY_VIOLATION. Masking requirements need a different design, such as de-identification upstream in the data pipeline.",
+      "key_takeaway": "Gemini Enterprise Model Armor blocks (SKIPPED / CUSTOMER_POLICY_VIOLATION); it does not mask.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-17",
+      "section": "CX Agent Studio for Customer-Facing Agents",
+      "guide_anchor": "cx-agent-studio",
+      "question": "A telecom company's CX Agent Studio application has a root agent and six sub-agents (billing, roaming, devices, etc.). Brand guidelines on tone and forbidden phrases must apply in every conversation. Where should these rules live?",
+      "options": [
+        {
+          "text": "Copied into the instructions of each of the six sub-agents so every agent sees them explicitly.",
+          "correct": false,
+          "why_wrong": "Duplicating rules across agents drifts over time; global instructions exist for shared rules."
+        },
+        {
+          "text": "In a before_model callback that rewrites every model response to match the brand tone.",
+          "correct": false,
+          "why_wrong": "A callback is for deterministic logic; tone guidance belongs in instructions the model follows."
+        },
+        {
+          "text": "In global instructions, which every agent in the application inherits.",
+          "correct": true
+        },
+        {
+          "text": "In a golden test case, so evaluation enforces brand tone at runtime.",
+          "correct": false,
+          "why_wrong": "Test cases evaluate behavior offline; they do not instruct the agent at runtime."
+        }
+      ],
+      "explanation": "CX Agent Studio global instructions are inherited by every agent in an application and are the place for brand tone and DOs/DON'Ts. Agent-specific instructions then cover each sub-agent's task flow.",
+      "key_takeaway": "Rules for all agents (brand tone, DOs/DON'Ts) → CX Agent Studio global instructions.",
+      "doc_links": [
+        {
+          "label": "CX Agent Studio Documentation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio"
+        },
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-18",
+      "section": "CX Agent Studio for Customer-Facing Agents",
+      "guide_anchor": "cx-agent-studio",
+      "question": "A voice agent built in CX Agent Studio calls a legacy order-status API that takes 20–40 seconds. Callers hear dead air and hang up. Which change best improves the experience?",
+      "options": [
+        {
+          "text": "Increase the synchronous tool timeout to 60 seconds so the API call always completes.",
+          "correct": false,
+          "why_wrong": "A longer synchronous wait keeps the caller in silence; sync tools are meant for sub-5-second calls."
+        },
+        {
+          "text": "Configure the tool for asynchronous execution so the agent keeps talking while the call completes.",
+          "correct": true
+        },
+        {
+          "text": "Move the API call into a Dialogflow CX flow because flows run faster than agent tools.",
+          "correct": false,
+          "why_wrong": "Flows do not speed up a slow backend; the latency is in the API itself."
+        },
+        {
+          "text": "Replace the tool with a Google Search tool so the agent answers from public web results.",
+          "correct": false,
+          "why_wrong": "Public web results cannot return a customer's private order status."
+        }
+      ],
+      "explanation": "CX Agent Studio supports synchronous tools for short calls (under about 5 seconds) and asynchronous tool calls for roughly 5–60 seconds, during which the agent can continue the conversation.",
+      "key_takeaway": "Slow backend (5–60 s) in a voice agent → asynchronous tool execution.",
+      "doc_links": [
+        {
+          "label": "CX Agent Studio Documentation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio"
+        },
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-19",
+      "section": "CX Agent Studio for Customer-Facing Agents",
+      "guide_anchor": "cx-agent-studio",
+      "question": "After restructuring a CX Agent Studio agent's instructions, the team wants a regression check that the refund conversation still follows the ideal path, including calling lookup_order before issue_refund. Which evaluation approach fits?",
+      "options": [
+        {
+          "text": "A scenario test case in which an AI-simulated user pursues a refund goal in free form across several personas.",
+          "correct": false,
+          "why_wrong": "Scenario cases test open-ended goal pursuit, not adherence to a specific ideal path with tool order."
+        },
+        {
+          "text": "Manual spot checks in the simulator after each deployment, recorded in a spreadsheet.",
+          "correct": false,
+          "why_wrong": "Manual checks are not repeatable regression tests and miss tool-call correctness at scale."
+        },
+        {
+          "text": "A golden test case describing the ideal turns and tool calls, scored with tool correctness and semantic match.",
+          "correct": true
+        },
+        {
+          "text": "A Model Armor response template that blocks answers missing the lookup_order call.",
+          "correct": false,
+          "why_wrong": "Model Armor screens content safety; it cannot validate tool-call trajectories."
+        }
+      ],
+      "explanation": "Golden test cases capture the ideal path, including tool calls, and are used for regression; semantic match (0–4) applies only to golden cases. Scenario and simulation cases test goal pursuit and milestone ordering with AI-simulated users.",
+      "key_takeaway": "Regression on an ideal path with exact tool calls → golden test case.",
+      "doc_links": [
+        {
+          "label": "CX Agent Studio Documentation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio"
+        },
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-20",
+      "section": "CX Agent Studio for Customer-Facing Agents",
+      "guide_anchor": "cx-agent-studio",
+      "question": "A bank's CX Agent Studio agent must return a legally approved, word-for-word disclosure whenever a customer asks about overdraft fees, without the model paraphrasing it. What is the most reliable implementation?",
+      "options": [
+        {
+          "text": "Add the disclosure as an inline few-shot example in the instructions so the model learns to repeat it exactly every time.",
+          "correct": false,
+          "why_wrong": "Few-shot examples guide style but do not guarantee verbatim output."
+        },
+        {
+          "text": "A before_model callback that detects the topic and returns an LlmResponse with the fixed text, skipping the model.",
+          "correct": true
+        },
+        {
+          "text": "Raise the model temperature in global instructions so the disclosure is selected more consistently.",
+          "correct": false,
+          "why_wrong": "Temperature is not set via instructions and higher randomness makes verbatim output less likely."
+        },
+        {
+          "text": "Store the disclosure in a data store tool and instruct the agent to summarize it for the customer.",
+          "correct": false,
+          "why_wrong": "Summarizing paraphrases the text, which breaks the word-for-word requirement."
+        }
+      ],
+      "explanation": "CX Agent Studio callbacks mirror ADK: returning an LlmResponse from before_model skips the model call. That makes exact, deterministic responses (such as legal wording) reliable, whereas prompts and few-shot examples remain probabilistic.",
+      "key_takeaway": "Verbatim or deterministic responses → callback (before_model returning LlmResponse), not prompts.",
+      "doc_links": [
+        {
+          "label": "CX Agent Studio Documentation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio"
+        },
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-21",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "An insurer has a mature Dialogflow CX flow for caller authentication (pages, form parameters, condition routes, and no-match event handlers). They are moving to CX Agent Studio for generative conversations. What is the recommended architecture?",
+      "options": [
+        {
+          "text": "Use a CX Agent Studio agent as the steering layer and hand authentication to the existing flow via a flow-based agent.",
+          "correct": true
+        },
+        {
+          "text": "Rewrite authentication as free-form LLM instructions, since flows cannot be used from CX Agent Studio.",
+          "correct": false,
+          "why_wrong": "Flow-based agents can call Dialogflow CX flows, and deterministic authentication is exactly what flows are good at."
+        },
+        {
+          "text": "Use the Dialogflow CX flow as the root agent and call CX Agent Studio only for intent classification.",
+          "correct": false,
+          "why_wrong": "Guidance is the reverse: CX Agent Studio routes, and LLMs (not flows) should handle classification."
+        },
+        {
+          "text": "Convert every flow page into a separate CX Agent Studio sub-agent with copied event handlers.",
+          "correct": false,
+          "why_wrong": "Re-implementing pages as sub-agents loses the deterministic flow and adds needless complexity."
+        }
+      ],
+      "explanation": "A flow-based agent hands the conversation to a Dialogflow CX flow until it ends, mapping input and output variables. The recommended pattern uses a CX Agent Studio agent as the steering/routing layer and reserves flows for deterministic data collection, validation and authentication. The Customer Engagement Suite service agent needs the Dialogflow API Client role.",
+      "key_takeaway": "Keep deterministic CX flows (auth, validation) behind a CX Agent Studio steering agent.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX Flows & State Handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        },
+        {
+          "label": "CX Agent Studio Human Handoff",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/agent-assist/handoff-cxas"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-22",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "A CX Agent Studio voice agent must transfer callers who ask for billing to a human agent who uses Agent Assist for real-time suggestions. How should the end_session tool be configured?",
+      "options": [
+        {
+          "text": "Set liveAgentHandoff.endSession to true so the session closes cleanly before the transfer.",
+          "correct": false,
+          "why_wrong": "Setting endSession to true ends the conversation; with Agent Assist it should stay at the default false."
+        },
+        {
+          "text": "Leave liveAgentHandoff.endSession at its default false and add end_session to every sub-agent that may escalate.",
+          "correct": true
+        },
+        {
+          "text": "Skip end_session and ask the caller to dial the billing number shown in an escalation message.",
+          "correct": false,
+          "why_wrong": "Asking callers to redial loses context; end_session supports telephony transfer and live-agent handoff."
+        },
+        {
+          "text": "Use a Dialogflow CX flow ending in END_FLOW so Agent Assist reconnects to the closed session later.",
+          "correct": false,
+          "why_wrong": "After a session ends CX Agent Studio cannot reconnect to it, and handoff should use the end_session tool."
+        }
+      ],
+      "explanation": "The end_session system tool carries escalationMessage, telephonyTransferCall and liveAgentHandoff. With Agent Assist (bidirectional API), keep endSession at its default false so the conversation transfers to the human with assistance. Add the tool to the agent and all sub-agents that can escalate.",
+      "key_takeaway": "Agent Assist handoff → end_session on all escalating agents, liveAgentHandoff.endSession left false.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX Flows & State Handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        },
+        {
+          "label": "CX Agent Studio Human Handoff",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/agent-assist/handoff-cxas"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-23",
+      "section": "Low-Code vs Pro-Code Decision Matrix",
+      "guide_anchor": "decision-matrix",
+      "question": "A 200-person HR department without developers wants an agent that answers benefits questions from Google Drive and SharePoint policies and drafts emails for employees. Which build option fits best?",
+      "options": [
+        {
+          "text": "ADK on Agent Runtime with a custom RAG pipeline, registered in Gemini Enterprise.",
+          "correct": false,
+          "why_wrong": "Pro-code adds engineering cost the team cannot staff, with no requirement that no-code cannot meet."
+        },
+        {
+          "text": "CX Agent Studio, because it provides the most control over conversation design.",
+          "correct": false,
+          "why_wrong": "CX Agent Studio targets customer-facing chat and voice, not internal employee productivity."
+        },
+        {
+          "text": "Agent Studio on Agent Platform, exported to code and hosted on Cloud Run for HR.",
+          "correct": false,
+          "why_wrong": "Agent Studio is a developer prototyping surface; the team has no developers to run hosted code."
+        },
+        {
+          "text": "A Workflow Builder chat agent in Gemini Enterprise using admin-provisioned Drive and SharePoint connectors.",
+          "correct": true
+        }
+      ],
+      "explanation": "Employee-facing productivity over connected enterprise data with no developers maps to Workflow Builder in Gemini Enterprise. Escalate to ADK only when you need custom code, complex tools, or rigorous evaluation.",
+      "key_takeaway": "Employees + connectors + no developers → Workflow Builder; escalate to ADK only when no-code runs out.",
+      "doc_links": [
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-24",
+      "section": "Exam Traps & Architect Checklist",
+      "guide_anchor": "exam-traps",
+      "question": "A platform team requires that every call to an agent passes through Agent Gateway for central policy enforcement. A business unit registered its Cloud Run A2A agent directly in Gemini Enterprise. What should the architect flag?",
+      "options": [
+        {
+          "text": "Nothing; all agents that appear in the Agent Gallery are automatically routed through Agent Gateway.",
+          "correct": false,
+          "why_wrong": "The documentation states that traffic to A2A agents registered this way does not go through Agent Gateway."
+        },
+        {
+          "text": "Direct A2A registration bypasses Agent Gateway, so the central-policy requirement is not met by default.",
+          "correct": true
+        },
+        {
+          "text": "The agent must be converted to a Workflow Builder workflow because A2A agents are not allowed in Gemini Enterprise.",
+          "correct": false,
+          "why_wrong": "A2A agents can be registered (preview); the issue is gateway coverage, not eligibility."
+        },
+        {
+          "text": "Model Armor in the console will enforce the gateway policies on that agent's traffic instead.",
+          "correct": false,
+          "why_wrong": "Console Model Armor covers only the assistant and is not a substitute for Agent Gateway."
+        }
+      ],
+      "explanation": "Traffic from Gemini Enterprise to A2A agents registered via the agent card path does not go through Agent Gateway. If gateway enforcement is mandatory, the design must route traffic accordingly (for example through governed Agent Platform paths) rather than assuming the gallery adds it.",
+      "key_takeaway": "Directly registered A2A agents skip Agent Gateway — don't assume gallery = gateway coverage.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Documentation",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs"
+        },
+        {
+          "label": "CX Agent Studio Documentation",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio"
+        },
+        {
+          "label": "A2A Protocol Specification",
+          "url": "https://a2a-protocol.org/latest/specification/"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-25",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "A utility's voice agent asks callers for a meter number. Testers find that when a caller twice says something that is not a valid meter number, the agent repeats the identical prompt forever. The team wants a clearer prompt on the first miss, an example on the second, and a transfer on the third. What should they configure on the meter-number form parameter?",
+      "options": [
+        {
+          "text": "Raise the speech timeout so callers have more time before the prompt repeats.",
+          "correct": false,
+          "why_wrong": "A longer timeout changes no-input timing; it does not vary the reprompt or add an escalation path."
+        },
+        {
+          "text": "Reprompt handlers for sys.no-match-1, sys.no-match-2 and sys.no-match-3, the last one routing to escalation.",
+          "correct": true
+        },
+        {
+          "text": "A single sys.no-match-default handler on the flow whose one message explains all three behaviors to the caller at once.",
+          "correct": false,
+          "why_wrong": "One default handler gives the same response every time; numbered handlers are what allow a different response per attempt."
+        },
+        {
+          "text": "A generator that rewrites the prompt each turn so the caller hears new wording.",
+          "correct": false,
+          "why_wrong": "Varied wording does not count attempts or guarantee a transfer; the numbered no-match events provide that escalation ladder."
+        }
+      ],
+      "explanation": "Numbered no-match events (sys.no-match-1 to -6) replace sys.no-match-default and are invoked in order, and they can be attached at the form-parameter level. That lets each failed attempt get its own response and the final one transition to a human or a fallback page.",
+      "key_takeaway": "Use numbered sys.no-match-N reprompt handlers on the parameter to build an escalation ladder.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX state handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        },
+        {
+          "label": "Dialogflow CX parameters and forms",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/parameter"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-26",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "A route on the Payment page calls an inventory webhook in its fulfillment and also sets the Confirmation page as its transition target. During an outage the webhook times out, yet users land on Confirmation with no warning, and the webhook.error handler on the page never runs. What explains this?",
+      "options": [
+        {
+          "text": "Webhook error events are only raised at flow level, so a handler attached to the Payment page is out of scope for the error.",
+          "correct": false,
+          "why_wrong": "webhook.error handlers are supported at both flow and page level."
+        },
+        {
+          "text": "Timeouts are retried indefinitely, so no error event is ever raised for them.",
+          "correct": false,
+          "why_wrong": "Dialogflow CX raises webhook.error.timeout or webhook.error after the timeout; it does not retry forever."
+        },
+        {
+          "text": "Because the calling route has its own transition target, the webhook fails silently and the event is not raised.",
+          "correct": true
+        },
+        {
+          "text": "The webhook returned HTTP 200 with an empty body, which counts as success.",
+          "correct": false,
+          "why_wrong": "The scenario states a timeout; also an invalid response would itself trigger the error event if no target were set."
+        }
+      ],
+      "explanation": "When a handler's fulfillment produces a webhook error and that handler has a transition target, the webhook fails silently and the session follows the target. The webhook error events (webhook.error, webhook.error.timeout and others) are only invoked when the originating route has no transition target.",
+      "key_takeaway": "A route with its own transition target swallows webhook errors; omit the target to let webhook.error fire.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX state handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        },
+        {
+          "label": "Dialogflow CX webhooks",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/webhook"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-27",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "An airline's rebooking flow lets travelers review a fare page, open a baggage-rules page, and then go back to the fare page with their earlier selections intact. Which transition target should the Back route on the baggage-rules page use?",
+      "options": [
+        {
+          "text": "START_PAGE, so the flow restarts and reloads the fare data cleanly.",
+          "correct": false,
+          "why_wrong": "START_PAGE jumps to the flow's start page and does not return to the specific prior page with its state."
+        },
+        {
+          "text": "END_FLOW, which returns control to whichever page originally called the current flow.",
+          "correct": false,
+          "why_wrong": "END_FLOW pops the whole flow back to the caller; the baggage page is in the same flow as the fare page."
+        },
+        {
+          "text": "CURRENT_PAGE, which re-enters the page and repeats its entry prompt.",
+          "correct": false,
+          "why_wrong": "CURRENT_PAGE stays on the baggage-rules page instead of going back."
+        },
+        {
+          "text": "PREVIOUS_PAGE, which returns to the prior page and restores its page state.",
+          "correct": true
+        }
+      ],
+      "explanation": "PREVIOUS_PAGE is a symbolic transition target that goes back to the page that caused the transition to the current page and restores that page's state, so earlier form values are kept.",
+      "key_takeaway": "PREVIOUS_PAGE returns to the prior page with its page state restored.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX state handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-28",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "A bank's agent chains many sub-flows (verify identity, then card services, then disputes, then nested sub-flows inside each). In long sessions, END_FLOW at the end of a deep sub-flow sometimes returns callers to an unrelated page. What is the most likely cause and fix?",
+      "options": [
+        {
+          "text": "The flow stack is capped at 25; past that, flows can be popped from the stack, so reduce flow-to-flow nesting before END_FLOW.",
+          "correct": true
+        },
+        {
+          "text": "Session parameters expire after 25 turns, so extend the session time-to-live in the agent's general settings page.",
+          "correct": false,
+          "why_wrong": "The behavior comes from the flow stack limit of 25 transitions, not from parameter expiry."
+        },
+        {
+          "text": "END_FLOW always ends the session; replace it with END_SESSION in every sub-flow.",
+          "correct": false,
+          "why_wrong": "END_FLOW returns to the calling page; it ends the session only when the stack is empty. END_SESSION would make the problem worse."
+        },
+        {
+          "text": "Route groups are evaluated before page routes; move all routes into flow-level groups.",
+          "correct": false,
+          "why_wrong": "Intent routes are evaluated as page routes, page route groups, flow routes, then flow route groups; reordering them does not affect the flow stack."
+        }
+      ],
+      "explanation": "Each flow-to-flow transition pushes onto a flow stack with a maximum of 25. Exceeding it can cause flows to be popped from the stack, so END_FLOW returns somewhere unexpected. The documented mitigation is to minimize flow-to-flow transitions before END_FLOW.",
+      "key_takeaway": "Flow stack limit is 25; deep sub-flow chains make END_FLOW return to the wrong caller.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX state handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-29",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "A retailer's support agent should chat freely to understand what a customer wants, but once the customer asks to change a payment method, every step must follow a fixed, audited sequence. The team uses Dialogflow CX playbooks and flows. Which design fits?",
+      "options": [
+        {
+          "text": "Put the payment steps in the playbook's examples so the model imitates the audited sequence.",
+          "correct": false,
+          "why_wrong": "Few-shot examples guide an LLM but do not guarantee a fixed, auditable sequence of states."
+        },
+        {
+          "text": "A routine playbook for discovery that hands off with ${FLOW: change_payment} to a deterministic flow, sharing data via session parameters.",
+          "correct": true
+        },
+        {
+          "text": "A single flow with an intent route for every possible discovery question the customer might ask, and no playbooks at all.",
+          "correct": false,
+          "why_wrong": "Modeling open discovery as intents is brittle; the generative playbook is the right tool for that half."
+        },
+        {
+          "text": "A generator on the start page that writes the payment steps as free text each turn.",
+          "correct": false,
+          "why_wrong": "A generator produces LLM text inside a fulfillment; it does not enforce a deterministic state sequence."
+        }
+      ],
+      "explanation": "Playbooks handle open, generative conversation and can transfer to a flow by referencing ${FLOW: name} in their instructions. The flow then enforces the regulated steps with pages, forms and handlers, while session parameters carry data between the two.",
+      "key_takeaway": "Generative playbook for discovery, ${FLOW: name} handoff to a deterministic flow for regulated steps.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX playbooks",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/playbook"
+        },
+        {
+          "label": "Dialogflow CX state handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-30",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "Inside a deterministic claims-intake flow, one page must turn the caller's long free-text description of an accident into a two-sentence summary stored in a parameter. The team wants no external service to maintain. What should they use?",
+      "options": [
+        {
+          "text": "A webhook to a Cloud Run service that calls Gemini with the description and returns the summary.",
+          "correct": false,
+          "why_wrong": "This works but adds a service to build and run; the requirement is to avoid external services."
+        },
+        {
+          "text": "A sys.long-utterance handler that truncates the description to 256 characters.",
+          "correct": false,
+          "why_wrong": "That event handles over-length input for non-generative matching; truncation is not summarization."
+        },
+        {
+          "text": "A generator in the page fulfillment whose prompt references the caller's last utterance.",
+          "correct": true
+        },
+        {
+          "text": "A task playbook that replaces the whole flow so the LLM can manage the intake.",
+          "correct": false,
+          "why_wrong": "Replacing the flow gives up the deterministic intake the team wants; only one sub-task needs an LLM."
+        }
+      ],
+      "explanation": "Generators call an LLM natively from Dialogflow CX with a prompt that can include placeholders such as $last-user-utterance and session parameters, and the output can be saved to a parameter. They suit summarization and parameter extraction without writing a webhook.",
+      "key_takeaway": "Use a generator inside a flow page for an LLM sub-task like summarization, with no webhook needed.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX generators",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/generators"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-31",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "A manufacturer grounds a Gemini Enterprise assistant in 300 equipment manuals with layout-aware chunking on. Answers often quote a chunk such as \"Set the torque to 40 Nm, then repeat for each bolt\" without saying which machine or procedure it belongs to, and ranking mixes up near-identical steps from different manuals. Which setting most directly addresses this?",
+      "options": [
+        {
+          "text": "Lower chunkSize from 500 to 100 tokens so every step becomes its own smaller and more precise chunk.",
+          "correct": false,
+          "why_wrong": "Smaller chunks tighten matches on specific facts but carry even less surrounding context, so the machine and procedure names would still be missing."
+        },
+        {
+          "text": "Switch the data store's search result mode from chunks back to whole documents for every query.",
+          "correct": false,
+          "why_wrong": "Document mode returns entire manuals instead of passages, which undoes the RAG setup instead of giving each chunk its context."
+        },
+        {
+          "text": "Turn on includeAncestorHeadings so each chunk carries the document title and its section headings.",
+          "correct": true
+        },
+        {
+          "text": "Replace the layout parser with the digital parser so chunk boundaries no longer follow headings and lists.",
+          "correct": false,
+          "why_wrong": "The digital parser does not detect headings at all, so chunks would lose structure and context rather than gain it."
+        }
+      ],
+      "explanation": "includeAncestorHeadings (default false) prepends the title and headings at all levels to each chunk, so a step from the middle of a manual keeps its machine and procedure context during retrieval and ranking. chunkSize (100 to 500 tokens, default 500) only trades precision for surrounding context within the chunk itself.",
+      "key_takeaway": "Mid-document chunks losing their context? Turn on includeAncestorHeadings rather than shrinking chunkSize.",
+      "doc_links": [
+        {
+          "label": "Parse and chunk documents",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs/parse-chunk-documents"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-32",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "An archives team set the OCR parser as the default for a data store of scanned court-transcript PDFs, some of them 800 pages long. Answers cite the early pages of each long transcript but never anything from its later pages. What explains this, and what is the fix?",
+      "options": [
+        {
+          "text": "Chunks are capped at 500 tokens, so later pages overflow the index; raise chunkSize above the maximum through the API.",
+          "correct": false,
+          "why_wrong": "chunkSize is limited to 100-500 tokens and controls chunk length, not how many pages are parsed; it cannot be raised past the cap."
+        },
+        {
+          "text": "Incremental sync skipped the later pages; switch the connector to full sync so every page is re-read.",
+          "correct": false,
+          "why_wrong": "Sync type affects which documents and ACL changes propagate, not how many pages of a PDF the parser processes."
+        },
+        {
+          "text": "Turn on useNativeText so the OCR parser reads embedded text and therefore continues past its page limit.",
+          "correct": false,
+          "why_wrong": "useNativeText merges embedded text with recognized text for mixed PDFs; scanned pages have no embedded text and the page limit still applies."
+        },
+        {
+          "text": "The OCR parser processes only the first 500 pages of each PDF; split long transcripts into parts before importing them.",
+          "correct": true
+        }
+      ],
+      "explanation": "The OCR parser recognizes text from scanned pages but processes only the first 500 pages of a PDF, so content beyond that point is never indexed. Splitting long scans into files under the limit keeps every page searchable. Chunk size, sync type and useNativeText do not change the page limit.",
+      "key_takeaway": "The OCR parser stops at the first 500 pages of each PDF; split long scanned files before import.",
+      "doc_links": [
+        {
+          "label": "Parse and chunk documents",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs/parse-chunk-documents"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-33",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "An engineering organization records about 4,000 design reviews a year as MP4 files. Employees want to ask Gemini Enterprise what was decided about a component and jump to the moment it was discussed. Some reviews cover unreleased products and must be visible only to the project's group. Which approach fits?",
+      "options": [
+        {
+          "text": "Load the MP4 files into an Agent Search media data store with title, uri and categories, and send media-play events.",
+          "correct": false,
+          "why_wrong": "A media data store ranks on catalog fields and viewing events; it never looks at the recordings, so it cannot answer what was decided."
+        },
+        {
+          "text": "Have a custom app pass the relevant recordings' Cloud Storage URIs to Gemini on every question, with timestamp references requested in the prompt each time.",
+          "correct": false,
+          "why_wrong": "Prompting the files directly costs latency on every question, does not scale to thousands of recordings and offers no per-document ACLs."
+        },
+        {
+          "text": "Embed each full recording with gemini-embedding-2 in one call per file and store the vectors in Agent Retrieval.",
+          "correct": false,
+          "why_wrong": "A call takes about 120 s of video and 8,192 tokens; longer input is silently truncated, and Agent Retrieval returns clips without answering."
+        },
+        {
+          "text": "Transcribe each review into text segments and import them with JSONL rows carrying start and end times plus acl_info readers.",
+          "correct": true
+        }
+      ],
+      "explanation": "Raw recordings are not on the unstructured data store format list, so turn them into text first. Each segment is ingested as HTML or TXT with a JSONL metadata row whose structData holds the source URI and start and end times, and whose acl_info readers restrict access on a store created with access control enabled. The text is then parsed, chunked and searched like any document, with permissions respected.",
+      "key_takeaway": "Searchable, permission-aware recording archive in Gemini Enterprise: transcribe to segments with structData timestamps and acl_info.",
+      "doc_links": [
+        {
+          "label": "Prepare data for Agent Search",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/prepare-data"
+        },
+        {
+          "label": "Data source access control",
+          "url": "https://docs.cloud.google.com/gemini/enterprise/docs/identity"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-34",
+      "section": "Connectors, Data Stores & Grounding",
+      "guide_anchor": "data-grounding",
+      "question": "An internal learning portal loads 2,500 course videos into an Agent Search media data store with the required catalog fields and streams media-play and media-complete events. \"Watch next\" works well, but a search for \"the lesson where the trainer sketches the failover topology\" returns nothing useful. What is the most likely cause?",
+      "options": [
+        {
+          "text": "The available_time field is missing on most records, so the store hides those videos from search results.",
+          "correct": false,
+          "why_wrong": "available_time is a required catalog field; the scenario states the required fields are present, and it does not describe video content."
+        },
+        {
+          "text": "The store ranks only on the record text supplied and on behavior; it never inspects frames, so the catalog lacks words describing that scene.",
+          "correct": true
+        },
+        {
+          "text": "Media data stores need at least a year of media-complete events before they can return search results for a query.",
+          "correct": false,
+          "why_wrong": "User events are required, but no such time threshold applies, and recommendations already work in this scenario."
+        },
+        {
+          "text": "The duration field must be set before the store will run its frame-level visual analysis on each video file.",
+          "correct": false,
+          "why_wrong": "duration matters when optimizing watch time; no media data store setting turns on frame or waveform analysis."
+        }
+      ],
+      "explanation": "A media data store indexes catalog records (title, uri, categories, available_time, plus optional fields such as transcript) and user events. It never looks at frames or waveforms, so content only seen on screen is findable only if the record text you supply describes it, for example through a transcript or description.",
+      "key_takeaway": "A media data store is a catalog and behavior ranker, not a video analyzer; it only knows the text and events you send.",
+      "doc_links": [
+        {
+          "label": "Media documents",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/media-documents"
+        },
+        {
+          "label": "Media user events",
+          "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/media-user-events"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-35",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "An ADK agent on Agent Runtime fills a shipping tool's parameters correctly for most requests, but for multi-parcel orders it keeps putting every parcel in a single package. The team wants to add a few corrected demonstrations that apply only to similar requests, and to fix this without redeploying the agent. What should they use?",
+      "options": [
+        {
+          "text": "Dialogflow CX playbook examples attached to the agent, with one example for each type of multi-parcel order.",
+          "correct": false,
+          "why_wrong": "Playbook examples are few-shot prompts for Dialogflow CX playbooks, not for a code agent built with ADK."
+        },
+        {
+          "text": "Paste a dozen corrected multi-parcel transcripts into the agent instruction, then redeploy it to Agent Runtime.",
+          "correct": false,
+          "why_wrong": "This sends every example on every request and needs a redeploy, which the team wants to avoid."
+        },
+        {
+          "text": "An Example Store instance linked to the agent, holding the corrected multi-parcel examples.",
+          "correct": true
+        },
+        {
+          "text": "A tuned model trained on the corrected multi-parcel transcripts, which then replaces the current Gemini model in the agent definition.",
+          "correct": false,
+          "why_wrong": "Tuning is heavier than needed and requires changing and redeploying the agent, while the goal is a quick targeted correction."
+        }
+      ],
+      "explanation": "Example Store (preview, Agent Platform) is a managed set of few-shot examples retrieved by similarity to the user query. An ADK agent linked to an instance pulls relevant examples into its requests automatically, and new examples take effect without redeploying, which makes it a way to correct observed misbehavior.",
+      "key_takeaway": "Code agents get query-relevant few-shot examples from Example Store; new examples apply without a redeploy.",
+      "doc_links": [
+        {
+          "label": "Example Store overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/example-store/overview"
+        },
+        {
+          "label": "Dialogflow CX playbook examples",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/playbook/example"
+        }
+      ]
+    },
+    {
+      "id": "gemini-enterprise-q-36",
+      "section": "Flows, State Handlers & Human Handoff",
+      "guide_anchor": "cx-flows-handoff",
+      "question": "A roadside-assistance agent collects location, vehicle and problem on an Incident page form. A caller who answers the problem prompt with \"the tow last time cost me 90 dollars, now the battery is dead\" is pulled into the billing flow and the half-filled form is abandoned. The billing.question intent route sits on the flow's start page. What should the designer change?",
+      "options": [
+        {
+          "text": "Raise the agent's intent classification threshold so billing.question matches only when the caller's phrasing closely resembles its training phrases.",
+          "correct": false,
+          "why_wrong": "A global threshold change affects every intent and does not fix the real issue: a specialized route in scope on every page."
+        },
+        {
+          "text": "Add a sys.no-match-1 handler on the Incident page that sends the caller back into the problem parameter.",
+          "correct": false,
+          "why_wrong": "No-match handlers fire when nothing matches; here the billing intent matched, so the handler never runs."
+        },
+        {
+          "text": "Add an END_FLOW target to the billing route so the caller returns to the Incident page after billing.",
+          "correct": false,
+          "why_wrong": "END_FLOW returns to the calling flow, but the page form is still abandoned and the hijack still happens mid-form."
+        },
+        {
+          "text": "Move billing.question to the pages or route groups where billing applies, leaving flow-level routes for global exits.",
+          "correct": true
+        }
+      ],
+      "explanation": "Intent routes on the flow (start page) stay in scope on every page of the flow, so a loosely trained intent can pull the user out of a half-filled form. Attach specialized intents to the pages or route groups where they apply, and keep flow-level routes for true global exits such as \"talk to a person\".",
+      "key_takeaway": "Flow-level intent routes are always in scope; reserve them for global exits and scope specialized intents to pages.",
+      "doc_links": [
+        {
+          "label": "Dialogflow CX state handlers",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/handler"
+        },
+        {
+          "label": "Dialogflow CX playbook best practices",
+          "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/playbook/best-practices"
+        }
+      ]
+    }
+  ]
+}

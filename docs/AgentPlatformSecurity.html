@@ -94,7 +94,7 @@
                   "keywords": "Agent Identity, Agent Gateway, Agent Registry, Skill Registry, Principal Access Boundary, Unified Access Policy, Semantic Governance, Model Armor, Sensitive Data Protection, VPC Service Controls, Private Service Connect, CMEK, Cloud Audit Logs, Security Command Center AI Protection, HITL, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/AgentPlatformSecurity.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-01",
+                  "dateModified": "2026-11-03",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -291,6 +291,7 @@
                     <tr><td>An email in context instructs the agent to forward mail to an attacker (indirect injection → rogue tool call)</td><td><strong>Semantic Governance</strong> (intent alignment) + <strong>Model Armor</strong> prompt-injection filter</td><td>UAP sees an allowed tool name and can't judge intent</td></tr>
                     <tr><td>Refund over a business limit (e.g., &gt;$75) must never auto-execute</td><td><strong>Semantic Governance</strong> natural-language constraint, or deterministic check + <strong>HITL tool confirmation</strong></td><td>Model Armor has no business rules</td></tr>
                     <tr><td>Jailbreak / prompt injection / malicious URL in user input</td><td><strong>Model Armor</strong> (input template)</td><td>Gemini safety filters only cover harm categories</td></tr>
+                    <tr><td>Every team's Model Armor templates must keep prompt-injection detection on, whatever each team configures</td><td><strong>Model Armor floor settings</strong> at org or folder level (template conformance)</td><td>A template protects only the workload that references it</td></tr>
                     <tr><td>Credit-card numbers leak in responses</td><td><strong>Model Armor SDP filter</strong> (advanced mode with de-identify template) / <strong>Sensitive Data Protection</strong></td><td>Safety filters don't detect custom infoTypes</td></tr>
                     <tr><td>Hateful output from the model</td><td><strong>Gemini safety filters</strong> (model level) and/or <strong>Model Armor RAI filter</strong> (model-agnostic)</td><td>—</td></tr>
                     <tr><td>Data exfiltration from Google APIs to an outside project</td><td><strong>VPC Service Controls</strong> perimeter</td><td>IAM alone can't stop a legitimately authorized identity copying data out</td></tr>
@@ -312,8 +313,8 @@
                     <tr><th>Capability</th><th>Status</th><th>Note</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Agent Identity</td><td><strong>Preview</strong></td><td>Falls back to service accounts if not enabled</td></tr>
-                    <tr><td>Agent Identity auth manager</td><td>Preview with Agent Identity (verify)</td><td>—</td></tr>
+                    <tr><td>Agent Identity</td><td><strong>GA</strong> (since 2026-04-22)</td><td>Falls back to service accounts if not enabled</td></tr>
+                    <tr><td>Agent Identity auth manager</td><td><strong>GA</strong> (since 2026-08-22, with the <code>agentidentity</code> / <code>agentidentitycredentials</code> APIs)</td><td>Older IAM Connectors API stays Preview and will not reach GA</td></tr>
                     <tr><td>Agent Gateway</td><td><strong>GA</strong> for Agent Runtime + Gemini Enterprise (GE: egress only)</td><td>GKE, Cloud Run, cross-cloud: coming soon / early preview</td></tr>
                     <tr><td>Agent Registry</td><td>GA (verify); <strong>standalone skills in Registry = Preview</strong></td><td>—</td></tr>
                     <tr><td>Skill Registry</td><td><strong>Preview</strong></td><td>—</td></tr>
@@ -321,6 +322,12 @@
                     <tr><td>Token-management policies, extension bindings</td><td>Coming soon</td><td>—</td></tr>
                     <tr><td>Agent Platform Threat Detection (SCC)</td><td><strong>Preview</strong>, Premium tier</td><td>—</td></tr>
                     <tr><td>ADK tool confirmation (HITL)</td><td><strong>Experimental</strong></td><td>—</td></tr>
+                    <tr><td>Model Armor image screening, template modality selection, exclusion rules</td><td><strong>Preview</strong></td><td>Text and document screening carry no Preview label</td></tr>
+                    <tr><td>Model Armor floor settings for Google Cloud MCP servers</td><td><strong>Preview</strong></td><td>Labeled Preview on the floor settings page</td></tr>
+                    <tr><td>Model Armor spans in Cloud Trace</td><td><strong>Preview</strong></td><td>Span attribute names may change</td></tr>
+                    <tr><td>Agent Gateway Cloud Trace integration</td><td><strong>Preview</strong></td><td>Gateway request logs and the Observability dashboard carry no Preview label</td></tr>
+                    <tr><td>Model Armor insights (Agent Platform Security tab)</td><td><strong>Preview</strong></td><td>Needs tracing set up for the agent</td></tr>
+                    <tr><td>Agent Anomaly Detection</td><td><strong>Preview</strong>, allowlisted users only</td><td>Findings go to SCC (Standard, Premium or Enterprise)</td></tr>
                 </tbody>
             </table>
         </div>
@@ -350,7 +357,7 @@
                 <tbody>
                     <tr><td><strong>Default service agent</strong></td><td>AI Platform Reasoning Engine Service Agent <code>service-PROJECT_NUMBER@gcp-sa-aiplatform-re.iam.gserviceaccount.com</code> (<code>roles/aiplatform.reasoningEngineServiceAgent</code>)</td><td>Zero setup</td><td>Shared by every agent in the project, so no per-agent least privilege</td></tr>
                     <tr><td><strong>Custom service account</strong></td><td>You attach your own SA</td><td>Per-workload roles possible</td><td>Can be shared and impersonated; key-management risk</td></tr>
-                    <tr><td><strong>Agent Identity</strong> (Preview)</td><td>Per-agent, SPIFFE-based, strongly attested principal tied to the agent's lifecycle and resource URI</td><td>Not shared, <strong>can't be impersonated</strong>, no long-lived keys; tokens bound to the agent's X.509 cert (24h, auto-rotated); Context-Aware Access enforces <strong>mTLS + DPoP</strong> by default</td><td>Preview; new principal on every redeploy (see traps)</td></tr>
+                    <tr><td><strong>Agent Identity</strong> (GA)</td><td>Per-agent, SPIFFE-based, strongly attested principal tied to the agent's lifecycle and resource URI</td><td>Not shared, <strong>can't be impersonated</strong>, no long-lived keys; tokens bound to the agent's X.509 cert (24h, auto-rotated); Context-Aware Access enforces <strong>mTLS + DPoP</strong> by default</td><td>GA since 2026-04-22; new principal on every redeploy (see traps)</td></tr>
                     <tr><td><strong>Workload Identity Federation (WIF)</strong></td><td>Federates external/other-cloud workloads to Google Cloud without keys</td><td>Used by Agent Gateway / auth manager for cross-cloud and external identity exchange</td><td>Not an agent-native identity</td></tr>
                 </tbody>
             </table>
@@ -424,6 +431,28 @@
         </div>
         <p>Audit logs record <strong>both the agent and the user</strong> when the agent acts on a user's behalf, and only the agent when it acts on its own authority.</p>
 
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-users"></i></div>Identities in one agent call</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Identity</th><th>What it represents</th><th>Where it comes from</th><th>Typical use</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>End user</strong></td><td>The person typing the prompt</td><td>Cloud Identity or an external IdP through Workforce Identity Federation</td><td>Carries the user's own data entitlements (document sharing, row-level rules)</td></tr>
+                        <tr><td><strong>Agent Identity</strong></td><td>One deployed agent</td><td>Provisioned by Agent Runtime, Gemini Enterprise or Cloud Run; SPIFFE ID with a certificate-bound credential</td><td>Calls Google Cloud APIs and the gateway as the agent; is granted <code>roles/agentidentity.user</code> on the auth providers it may use</td></tr>
+                        <tr><td><strong>Service account</strong></td><td>A workload, not a specific agent</td><td>Attached by you, or the default Reasoning Engine service agent</td><td>Fallback when Agent Identity is off; also the runtime identity of a self-hosted MCP server (e.g., on Cloud Run)</td></tr>
+                        <tr><td><strong>OAuth client in an auth provider</strong></td><td>The registered app at a third-party service (Jira, Salesforce, GitHub)</td><td>Client ID and secret stored in an auth manager auth provider</td><td>The "application" side of 2LO and 3LO flows</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>As itself:</strong> the data or action is not tied to who is asking (reference data, shared queues, batch jobs, service-to-service calls). Use Agent Identity for Google Cloud APIs, or a 2LO/API-key auth provider for a third party.</li>
+                <li><strong>On behalf of the user:</strong> the result must differ per user, or the action must be attributable to that user (their mailbox, their tickets, CRM records filtered by owner). Use a 3LO auth provider so the downstream service applies the user's own permissions.</li>
+                <li><strong>Anti-pattern (shared super-credential):</strong> one 2LO token or broad service account answers every user's request. The agent then decides who sees what, which sets up a confused deputy (see <a href="#access-boundaries">Access boundaries</a>).</li>
+            </ul>
+        </div>
+
         <div class="two-columns">
             <div class="concept-card accent-amber">
                 <h3><div class="icon-badge"><i class="fas fa-key"></i></div>Agent Identity auth manager</h3>
@@ -434,6 +463,7 @@
                     <li>Access to auth providers is governed by IAM using the agent's SPIFFE identity. User grants can be viewed and revoked.</li>
                     <li>With <strong>Agent Gateway + Gemini Enterprise</strong>, end-user credentials are encrypted by the auth manager and decrypted at the gateway, so the agent never sees the raw credential.</li>
                     <li>Constraint: some providers (e.g., GitHub, Microsoft) support only a single scope.</li>
+                    <li><strong>API migration:</strong> auth providers were first exposed through the IAM Connectors API (<code>iamconnectors.googleapis.com</code>, Preview), which will not reach GA. Use the Agent Identity API (<code>agentidentity.googleapis.com</code>; credential calls on <code>agentidentitycredentials.googleapis.com</code>), where resources are named <code>authProviders/</code> instead of <code>connectors/</code>. Both run side by side during migration.</li>
                 </ul>
             </div>
             <div class="concept-card accent-coral">
@@ -446,11 +476,94 @@
             </div>
         </div>
 
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-right-left"></i></div>OAuth patterns and token lifecycle</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Pattern</th><th>Who consents</th><th>What the auth manager stores</th><th>Refresh</th><th>Use when</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>3-legged OAuth (authorization code + user consent)</strong></td><td>The end user, once per provider, via a consent page reached from the chat UI; the app supplies a <code>continue_uri</code> to return to</td><td>The user's resulting OAuth tokens in a Google-managed vault</td><td>Handled by the auth manager</td><td>Per-user SaaS data; the downstream service enforces that user's permissions</td></tr>
+                        <tr><td><strong>2-legged OAuth (client credentials)</strong></td><td>No user; the agent's identity is authorized to use the provider</td><td>The OAuth client ID and secret (Google-managed storage)</td><td>Handled by the auth manager</td><td>Machine-to-machine calls on the agent's own authority</td></tr>
+                        <tr><td><strong>API key</strong></td><td>No user</td><td>The key</td><td>Not applicable; rotate the key</td><td>Services without OAuth</td></tr>
+                        <tr><td><strong>Token exchange (RFC 8693)</strong></td><td>No new consent; an existing credential is swapped for another</td><td>Not an auth manager provider type</td><td>Short-lived results</td><td>Workload Identity Federation: the Security Token Service swaps an external OIDC/SAML or Kubernetes credential for a Google credential. Agent Gateway cross-cloud mode (early preview) uses WIF to swap Kubernetes workload credentials for Agent Identity credentials</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Flow:</strong> ADK asks the auth provider for a credential (allowed only if the agent holds <code>roles/agentidentity.user</code> on it), then injects the returned token as a request header on the tool or MCP call.</li>
+                <li><strong>3LO prerequisites:</strong> a front end that can show the sign-in prompt and redirect, plus the auth provider's callback URL registered on the third-party OAuth client.</li>
+                <li><strong>Revocation:</strong> user grants are visible and revocable, so withdrawing consent cuts off the agent's on-behalf-of access without redeploying.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-code-compare"></i></div>Credential flows compared</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Flow</th><th>Principal the destination sees</th><th>User consent</th><th>Confused-deputy resistance</th><th>Credential lifecycle</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Agent's own identity</strong></td><td>The deployed agent (<code>principal://agents.global…</code>)</td><td>None</td><td>Limited: one authority serves every user. Bound tokens stop replay, not misuse, so pair with PAB, UAP and HITL</td><td>Google-issued, certificate-bound, rotated automatically</td></tr>
+                        <tr><td><strong>2LO</strong></td><td>The OAuth client registered at the provider</td><td>None</td><td>Low: the same app privilege answers every user's request</td><td>Client ID and secret held by the auth manager; access tokens minted and refreshed for you</td></tr>
+                        <tr><td><strong>3LO</strong></td><td>The end user</td><td>Once per provider; revocable</td><td>High: the destination applies that user's own permissions</td><td>Per-user tokens vaulted and refreshed by the auth manager</td></tr>
+                        <tr><td><strong>API key</strong></td><td>Whoever holds the key</td><td>None</td><td>Lowest: no caller identity at all</td><td>Static; kept in the auth manager or Secret Manager; rotate it yourself</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Anti-pattern (2LO for per-user data):</strong> the agent, not the source system, ends up deciding which user sees which record.</li>
+            </ul>
+        </div>
+
         <div class="callout tip">
             <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="callout-content">
                 <h4>Decision rule</h4>
                 <p>Per-user consent → 3LO through the auth manager. Static third-party key → Secret Manager (or an auth-manager API-key provider). Google Cloud API → the agent's own identity with least-privilege IAM. Never put secrets in code, prompts or plaintext env vars.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-route"></i></div>Identity propagation, hop by hop</h3>
+            <p>Each hop checks a different credential against a different policy. Access to the data succeeds only when every hop allows it.</p>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-step-number">01</div>
+                    <h4>User → front end</h4>
+                    <p>User sign-in session (Cloud Identity or federated IdP), checked by Gemini Enterprise or the front end: may this user use the app and agent?</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">02</div>
+                    <h4>Front end → agent</h4>
+                    <p>Caller identity plus the user's context, checked by Agent Runtime: IAM permission to query the agent (e.g., <code>roles/aiplatform.user</code>) and ingress gateway policies if Client-to-Agent is enabled.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">03</div>
+                    <h4>Agent → Agent Gateway</h4>
+                    <p>Agent Identity credential (mTLS + DPoP) plus the injected tool credential. <code>REQUEST_AUTHZ</code> (IAP: UAP, PAB) runs first, then <code>CONTENT_AUTHZ</code> (Model Armor, Semantic Governance).</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">04</div>
+                    <h4>Gateway → tool or MCP server</h4>
+                    <p>The destination's credential (3LO token, 2LO token, API key or the agent's Google token), checked by destination IAM, e.g., <code>roles/iap.httpsResourceAccessor</code> for an IAP-protected Cloud Run server or <code>roles/mcp.toolUser</code> for Google remote MCP, plus OAuth scopes.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">05</div>
+                    <h4>Tool → data source</h4>
+                    <p>The user's delegated token, the agent's identity, or the MCP server's own service account, checked by source IAM and ACLs (row/column rules, document sharing) and the VPC-SC perimeter.</p>
+                </div>
+            </div>
+            <p>Example: on first use the auth manager redirects the user to Jira for consent and vaults the token; the agent then sends <code>tools/call</code> with its Agent Identity and that token through the gateway, the MCP server forwards the user token, and Jira returns only that user's records, which Model Armor screens on the way back.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>If the MCP server queries the data source with its own broad service account, the user's identity stops at the server and the source can no longer filter by user. Propagate the user token (3LO) to the last hop when results must be user-specific.</p>
             </div>
         </div>
 
@@ -508,6 +621,32 @@
                 <li>Binding example: <code>gcloud iam principal-access-boundary-policies bindings create … --target-principal-set=…</code> (bound to a principal set, e.g., the agents in a project or org).</li>
                 <li>For agents, PAB can also be enforced on egress through Agent Gateway (via IAP).</li>
             </ul>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-calculator"></i></div>Effective access and CEL conditions</h3>
+            <ul>
+                <li><strong>Effective access</strong> = (resources granted by allow policies ∩ resources eligible under PAB) minus permissions blocked by deny policies.</li>
+                <li><strong>Worked case:</strong> someone grants <code>roles/bigquery.admin</code> at the org level to the agents' <code>principalSet</code>. A PAB bound to that set that lists only the <code>analytics-prod</code> project keeps the agents out of every other project's datasets.</li>
+                <li><strong>IAM conditions</strong> add CEL to an allow binding so the grant applies only in context, e.g., <code>resource.name.startsWith("projects/_/buckets/agent-reports")</code> or <code>request.time &lt; timestamp("2027-01-01T00:00:00Z")</code> for a time-boxed grant.</li>
+                <li><strong>Gateway CEL</strong> (in UAPs, see <a href="#gateway-policies">Gateway policies</a>) works on tool and destination attributes that IAM conditions can't see, e.g., allow only when <code>destination.agent_registry.mcp_server.tool.annotations.read_only_hint == true</code>.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-user-ninja"></i></div>Identity failure scenarios</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Failure</th><th>How it happens</th><th>Controls that prevent it</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Confused deputy</strong></td><td>The agent holds one strong credential (2LO token or broad service account) and a user's prompt steers it to read or change records that user can't access</td><td>3LO so the source checks the requesting user; UAP deny on <code>destructive_hint == true</code>; Semantic Governance intent check; HITL confirmation for writes</td></tr>
+                        <tr><td><strong>Token leakage in prompts, logs or traces</strong></td><td>A token or key is placed in the prompt, returned in tool output, or captured in logs and spans, then replayed</td><td>Auth manager header injection (credentials never in code or prompts); gateway-side decryption of end-user credentials with Gemini Enterprise; Model Armor SDP filter on prompts and responses; certificate-bound Agent Identity tokens that fail when replayed elsewhere; SCC finding <em>Agentic Identity Credential Used Outside of Google Cloud</em></td></tr>
+                        <tr><td><strong>Over-privileged service account</strong></td><td>Every agent in a project runs as the default service agent or one shared SA with <code>roles/editor</code>, so one hijacked agent reaches everything</td><td>Per-agent Agent Identity; PAB on the agents' <code>principalSet</code>; deny policies for admin permissions; per-provider <code>roles/agentidentity.user</code>; SCC over-privileged agent detection</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="callout warning">
@@ -590,7 +729,7 @@
                     <li>Bound to the project that holds the gateway; enforced by IAP. The permission involved is <code>iap.googleapis.com/resources.egressViaIAP</code>.</li>
                     <li><strong>Default-deny:</strong> nothing passes unless an allow rule matches. Rules can mix allow and deny effects; <strong>deny overrides allow</strong>.</li>
                     <li>CEL conditions on attributes such as <code>destination.agent_registry.mcp_server.tool.name</code>, <code>…tool.annotations.read_only_hint</code> / <code>destructive_hint</code>, and <code>destination.unregistered.host</code>, <code>.path</code>, <code>.method</code>.</li>
-                    <li><strong>Rollout:</strong> <code>DRY_RUN</code> logs would-be violations to Cloud Audit Logs without blocking, then you switch to <code>ENFORCE</code>.</li>
+                    <li><strong>Rollout:</strong> set <code>iamEnforcementMode: "DRY_RUN"</code> in the IAP authorization extension metadata so IAP logs would-be denials to Cloud Audit Logs without blocking. Remove the field to start enforcing (see <a href="#audit-detection">Audit and detection</a>).</li>
                     <li>Best practices: dry-run first; name specific tools (no wildcards); use deny rules as guardrails (e.g., deny <code>destructive_hint == true</code>); audit regularly.</li>
                 </ul>
             </div>
@@ -602,6 +741,7 @@
                     <li>Verdict: <code>ALLOW</code> or <code>DENY</code> with a rationale. A custom denial message (≤1,000 chars) can replace the rationale.</li>
                     <li>Mitigates <strong>context poisoning / indirect prompt injection</strong> and <strong>rogue actions</strong>. Can also govern which skills load.</li>
                     <li>Complements IAM and UAP; <strong>doesn't replace them</strong>. Verdicts are probabilistic and can be wrong, so keep deterministic controls for hard limits.</li>
+                    <li><strong>Enforcement order:</strong> gateway policies run as Service Extensions authorization extensions. <code>REQUEST_AUTHZ</code> extensions see only headers (IAP evaluates identity and UAPs). <code>CONTENT_AUTHZ</code> extensions see full request and response bodies (Model Armor, Semantic Governance). A custom engine can use either profile.</li>
                 </ul>
             </div>
         </div>
@@ -620,6 +760,23 @@
             </table>
         </div>
 
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-bug"></i></div>MCP risks mapped to controls</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Risk</th><th>Attack</th><th>Controls</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Tool poisoning / rug pull</strong></td><td>A tool description, or a server update after approval, carries hidden instructions the model follows</td><td>Register only vetted servers in Agent Registry; gateway default-deny for unregistered destinations; UAP names each allowed tool. Model Armor on the gateway doesn't screen <code>tools/list</code>, so review tool metadata at registration</td></tr>
+                        <tr><td><strong>Over-broad scopes</strong></td><td>An auth provider or role grants far more than the tool needs, so any misuse has a large blast radius</td><td>Request minimal OAuth scopes per provider; grant <code>roles/agentidentity.user</code> only on the providers each agent needs; UAP allow on <code>read_only_hint</code>; PAB</td></tr>
+                        <tr><td><strong>Indirect prompt injection via tool output</strong></td><td>A ticket, email or web page returned by a tool contains instructions that steer the next tool call</td><td>Model Armor (<code>CONTENT_AUTHZ</code>) screens <code>tools/call</code> responses; Semantic Governance blocks calls that don't match the user's request. Streamable HTTP/SSE streams aren't screened</td></tr>
+                        <tr><td><strong>Data exfiltration</strong></td><td>The agent is steered to send sensitive results to an attacker-controlled host or tool</td><td>Gateway default-deny plus UAP on <code>destination.unregistered.host</code>; Model Armor SDP on outbound arguments; VPC-SC with egress through your VPC</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- ═══════════════════════════════════════
              SECTION 06: CONTENT SAFETY
              ═══════════════════════════════════════ -->
@@ -635,14 +792,17 @@
                     <tr><th>Filter</th><th>Detects</th><th>Notes</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Responsible AI</td><td>Hate, harassment, sexually explicit, dangerous (CSAM always on)</td><td>Confidence: <code>HIGH</code>, <code>MEDIUM_AND_ABOVE</code>, <code>LOW_AND_ABOVE</code></td></tr>
-                    <tr><td>Prompt injection &amp; jailbreak</td><td>Attempts to override instructions</td><td>Inputs under 3 words return no match</td></tr>
-                    <tr><td>Sensitive Data Protection</td><td><strong>Basic:</strong> fixed infoTypes, inspect only. <strong>Advanced:</strong> SDP inspect + <strong>de-identify</strong> templates</td><td>Redaction needs advanced mode</td></tr>
-                    <tr><td>Malicious URL detection</td><td>Phishing/malware links</td><td>First 256 URLs screened</td></tr>
+                    <tr><td>Responsible AI</td><td>Hate, harassment, sexually explicit, dangerous (CSAM always on)</td><td>Confidence: <code>HIGH</code>, <code>MEDIUM_AND_ABOVE</code>, <code>LOW_AND_ABOVE</code>. The floor settings console defaults to Medium and above when left blank</td></tr>
+                    <tr><td>Prompt injection &amp; jailbreak</td><td>Attempts to override instructions, in prompts and in responses</td><td>Inputs under 3 words return <code>NO_MATCH_FOUND</code>. In a floor setting update that omits the level, it defaults to <code>LOW_AND_ABOVE</code></td></tr>
+                    <tr><td>Sensitive Data Protection</td><td><strong>Basic:</strong> six fixed infoTypes (credit card, US SSN, financial account, US ITIN, Google Cloud credentials, Google Cloud API key), inspect only, no SDP templates. <strong>Advanced:</strong> an SDP <strong>inspect</strong> template plus an optional <strong>de-identify</strong> template</td><td>Redaction needs advanced mode. Only infoTypes named in <em>both</em> templates are de-identified. SDP templates in another project need <code>roles/dlp.user</code> and <code>roles/dlp.reader</code> for the Model Armor service agent. Uses SDP match likelihood, not the confidence enum</td></tr>
+                    <tr><td>Malicious URL detection</td><td>Phishing/malware links</td><td>Only the first 256 URLs in a payload are screened</td></tr>
+                    <tr><td>Document screening</td><td>Text in PDF, CSV, TXT, Word, PowerPoint and Excel files</td><td>Files over 4 MB are skipped; files under 69 bytes are rejected. Direct API or the Gemini Enterprise integration only; other integrations scan text</td></tr>
+                    <tr><td>Image screening (<strong>Preview</strong>)</td><td>Text in images (OCR); visual content through the advanced SDP filter</td><td>JPEG, PNG, BMP; one image per request, 4 MB max; <code>us</code> and <code>eu</code> multi-regions only</td></tr>
                 </tbody>
             </table>
         </div>
         <ul>
+            <li><strong>Built-in limits:</strong> each prompt or response is screened as a single turn with no conversation memory; Base64, hex, URL-encoded or encrypted text is not decoded; audio and video are not supported. Multi-turn or encoded attacks need other layers (Semantic Governance, HITL).</li>
             <li><strong>Templates</strong> hold filter configs. Enforcement is <strong>Inspect only</strong> or <strong>Inspect and block</strong>.</li>
             <li><strong>Floor settings</strong> set a minimum baseline at org, folder or project level that every template must meet.</li>
             <li>Best practice: separate <strong>input</strong> and <strong>output</strong> templates; start at High/Medium; run inspect-only to tune; then block.</li>
@@ -658,6 +818,150 @@
                 <li><strong>Redaction</strong> requires an advanced SDP de-identify template <strong>and</strong> <code>INSPECT_AND_BLOCK</code>. If multiple detectors fire, the whole payload is blocked. Logs are redacted either way.</li>
                 <li>Ingress screens ADK <code>streamQuery</code>. Egress screens A2A SendMessage/AgentCard, MCP <code>tools/call</code>, <code>prompts/get</code>, tool-execution errors, and OpenAI-compatible LLM payloads. It does <strong>not</strong> screen <code>tools/list</code>, <code>resources/*</code>, notifications or MCP Streamable HTTP/SSE streams.</li>
             </ul>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Model Armor floor settings vs. templates</h3>
+            <p>Floor settings solve for: dozens of teams writing their own templates, where one team quietly switching off a detector reopens a hole the security team closed.</p>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Dimension</th><th>Floor settings</th><th>Templates</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Purpose</strong></td><td>Minimum baseline (<em>template conformance</em>) and, at project level, <em>inline enforcement</em> on Gemini and Google Cloud MCP servers</td><td>The filter set and enforcement type for one workload or integration point</td></tr>
+                        <tr><td><strong>Who manages</strong></td><td>Central security team</td><td>Application or platform team</td></tr>
+                        <tr><td><strong>IAM role</strong></td><td><code>roles/modelarmor.floorSettingsAdmin</code> (Model Armor Floor Setting Admin)</td><td><code>roles/modelarmor.admin</code> on the project that holds the template</td></tr>
+                        <tr><td><strong>Scope and resource</strong></td><td><code>organizations/ORG_ID</code>, <code>folders/FOLDER_ID</code> or <code>projects/PROJECT_ID</code>, always at <code>locations/global/floorSetting</code></td><td>A regional resource, <code>projects/PROJECT_ID/locations/LOCATION/templates/TEMPLATE_ID</code></td></tr>
+                        <tr><td><strong>How it is set</strong></td><td>Console at project level only (inherit, custom or disable). Org and folder need the API, gcloud or Terraform <code>google_model_armor_floorsetting</code></td><td>Console, gcloud, REST or client libraries</td></tr>
+                        <tr><td><strong>Inheritance</strong></td><td>Org applies to everything below; folder to its projects; project to itself. On conflict the <strong>lower level wins</strong> (project over folder)</td><td>Not inherited; referenced explicitly</td></tr>
+                        <tr><td><strong>Enforced by</strong></td><td>The Model Armor API at template create/update; inline on Gemini <code>generateContent</code> and Google Cloud MCP traffic</td><td>Callers of <code>sanitize*</code>, Agent Gateway, Gemini Enterprise, Agent Runtime, Service Extensions, Apigee</td></tr>
+                        <tr><td><strong>Enforcement type</strong></td><td>Set per integrated service (Agent Platform, Google MCP server)</td><td><code>enforcement_type</code> in <code>template_metadata</code></td></tr>
+                        <tr><td><strong>Effect takes hold</strong></td><td>A few minutes after a change</td><td>On next request</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>New or edited template weaker than the floor:</strong> the create or update call fails; you can't save a template less strict than the effective floor.</li>
+                <li><strong>Template that predates the floor (or a raised floor):</strong> it keeps working, and Security Command Center (Premium or Enterprise tier) raises a <strong>high-severity finding</strong> naming the floor, the template and the gap (missing filter, or confidence below the minimum).</li>
+                <li><strong>SDP is not checked:</strong> floor settings don't validate a template's Sensitive Data Protection config, so an org-wide redaction rule can't be forced through conformance.</li>
+            </ul>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>"Lower level wins" cuts both ways. A project admin holding <code>roles/modelarmor.floorSettingsAdmin</code> can choose <strong>Disable</strong> and drop the inherited floor for that project (API flag <code>enableFloorSettingEnforcement=false</code>). Grant the role at org or folder level to the central team only, and restrict it at project level.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-plug-circle-check"></i></div>Inline protection for Gemini and Google Cloud MCP servers</h3>
+            <p>Project floor settings can screen traffic with no code change by picking <em>integrated services</em>:</p>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Integrated service</th><th>What is screened</th><th>Key behaviors</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Agent Platform (Gemini)</strong></td><td>Gemini API <code>generateContent</code> prompts and responses in the project, including calls through the Google Gen AI SDK or Firebase AI Logic</td><td>Grant <code>roles/modelarmor.user</code> to <code>service-PROJECT_NUMBER@gcp-sa-aiplatform.iam.gserviceaccount.com</code>. A request can name its own <code>promptTemplateName</code> / <code>responseTemplateName</code> instead. No documents or images. De-identified text is not returned to Gemini; an SDP match under <code>INSPECT_AND_BLOCK</code> becomes a block. Floor settings use the Stable filter version</td></tr>
+                        <tr><td><strong>Google MCP server</strong> (Preview)</td><td><code>tools/call</code>, <code>prompts/get</code> and tool-execution errors on supported Google and Google Cloud remote MCP servers</td><td>Unsupported servers aren't covered. Uses filter version v1, which you can't override. If the agent and the MCP server sit in different projects, each project's floor runs, so Model Armor is called twice</td></tr>
+                        <tr><td><strong>Template creation &amp; update</strong></td><td>Template conformance only</td><td>Rejects weaker templates; no traffic screening</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Fail-open on Gemini:</strong> if Model Armor is unavailable in the region, unreachable, or errors, Gemini processes the request unscreened. Configuration errors (permissions, quota) are still reported under <code>INSPECT_AND_BLOCK</code>. For guaranteed screening, also screen in the app or at the gateway.</li>
+                <li><strong>Prompt-injection tip for MCP:</strong> skip the prompt injection and jailbreak filter on MCP floors unless the tool traffic carries natural language.</li>
+                <li><strong>Enable the MCP integration:</strong> <code>gcloud model-armor floorsettings update</code> with <code>--full-uri='projects/PROJECT_ID/locations/global/floorSetting'</code>, <code>--enable-floor-setting-enforcement=TRUE</code>, <code>--add-integrated-services=GOOGLE_MCP_SERVER</code>, <code>--google-mcp-server-enforcement-type=INSPECT_ONLY</code> and <code>--enable-google-mcp-server-cloud-logging</code>.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-toggle-on"></i></div>Rollout: inspect only, then block</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Mode</th><th>Detection</th><th>Traffic</th><th>Use for</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>INSPECT_ONLY</code></td><td>Logged to Cloud Logging</td><td>Passes unchanged</td><td>Measuring false positives, monitoring new attack patterns, compliance evidence</td></tr>
+                        <tr><td><code>INSPECT_AND_BLOCK</code></td><td>Logged</td><td>The caller (the enforcement point) blocks the prompt or response; redaction applies where the integration supports it</td><td>Production protection</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-step-number">01</div>
+                    <h4>Enable logging first</h4>
+                    <p><code>INSPECT_ONLY</code> produces nothing useful without Cloud Logging.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">02</div>
+                    <h4>Start conservative</h4>
+                    <p>Separate input and output templates; RAI at <code>HIGH</code>; prompt injection at <code>HIGH</code> or <code>MEDIUM_AND_ABOVE</code> (<code>HIGH</code> for Gemini Enterprise to avoid false positives).</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">03</div>
+                    <h4>Replay known traffic</h4>
+                    <p>Run known-good and known-bad prompts and record the false-positive baseline.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">04</div>
+                    <h4>Read the verdicts in logs</h4>
+                    <p>Check <code>SanitizeOperationLogEntry</code> records; a model refusal in the response body is not a Model Armor block.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-number">05</div>
+                    <h4>Switch to block</h4>
+                    <p>Move to <code>INSPECT_AND_BLOCK</code>; lower a threshold only for the one category that is under-protected.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern</h4>
+                <p>Turning on <code>LOW_AND_ABOVE</code> across all RAI categories on day one. The docs flag it as high false-positive risk for general content; reserve it for categories where a miss costs more than a wrong block.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-file-lines"></i></div>Model Armor logging, traces and findings</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Signal</th><th>Default</th><th>Contents</th><th>Notes</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Processing</strong></td><td>Stateless</td><td>Prompts and responses handled in memory and discarded</td><td>Nothing is retained unless you enable logging</td></tr>
+                        <tr><td><strong>Template logging</strong></td><td>Off</td><td><code>log_template_operations</code> (template CRUD); <code>log_sanitize_operations</code> (full prompt and response text plus verdicts)</td><td>Sanitize logs hold raw user data; route them to an access-controlled sink. Anyone with <code>roles/logging.privateLogViewer</code> can read them</td></tr>
+                        <tr><td><strong>Floor setting logging</strong></td><td>Console: on for Agent Platform, off for MCP</td><td><code>--enable-vertex-ai-cloud-logging</code>, <code>--enable-google-mcp-server-cloud-logging</code></td><td>Detection logs land under <code>modelarmor.googleapis.com/detection</code>. With residency needs, create a regional log sink <em>before</em> enabling</td></tr>
+                        <tr><td><strong>Audit logs</strong></td><td>Admin Activity on</td><td>Template and floor setting changes</td><td>See <a href="#audit-detection">Audit and detection</a></td></tr>
+                        <tr><td><strong>Cloud Trace</strong> (Preview)</td><td>When tracing is set up for the agent</td><td>Parent span <code>apply_guardrail "Google Cloud Model Armor"</code> with <code>Request Path</code> and <code>Response Path</code> children; attributes include <code>gen_ai.security.decision.type</code> (<code>modify</code> means redacted), <code>gen_ai.security.policy.id</code>, <code>gcp.modelarmor.violations</code>, <code>gcp.modelarmor.sdp.info_types</code></td><td>Viewed from Agent Registry (agent, Traces tab) or Trace explorer; needs <code>roles/cloudtrace.user</code> and <code>roles/logging.viewer</code>. Separates guardrail latency and blocks from model errors</td></tr>
+                        <tr><td><strong>SCC findings</strong></td><td>Premium or Enterprise tier</td><td>High-severity floor setting violations</td><td>Complements the AI Protection view in <a href="#audit-detection">Audit and detection</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>Model Armor configuration patterns</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Pattern</th><th>Floor settings</th><th>Template</th><th>Outcome</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Org baseline, team redaction</strong></td><td>Org: prompt injection and malicious URL enabled, RAI minimums</td><td>Payments agent: input and output templates with advanced SDP (inspect + de-identify), <code>INSPECT_AND_BLOCK</code>, bound to Agent Gateway in the gateway's region</td><td>No team can drop below the baseline; card numbers are masked on gateway traffic</td></tr>
+                        <tr><td><strong>Staged tightening</strong></td><td>Staging project: custom floor with the tighter thresholds, Agent Platform service set to Inspect only (inline inspection is configured per project, not per folder)</td><td>Existing templates unchanged</td><td>Logged would-be blocks show false-positive rates before production moves to block</td></tr>
+                        <tr><td><strong>Zero-code MCP guard</strong></td><td>Project: Google MCP server service, malicious URI and RAI dangerous at <code>MEDIUM_AND_ABOVE</code>, logging on</td><td>None required</td><td>Calls to supported Google Cloud MCP servers are screened even if a developer attaches no template</td></tr>
+                        <tr><td><strong>Gemini Enterprise assistant</strong></td><td>Optional</td><td>Template bound to the Gemini Enterprise app</td><td>Violating turns are blocked; SDP hits block rather than mask, since this integration doesn't de-identify</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="two-columns">
@@ -676,6 +980,57 @@
                     <li>Thresholds: <code>BLOCK_LOW_AND_ABOVE</code>, <code>BLOCK_MEDIUM_AND_ABOVE</code>, <code>BLOCK_ONLY_HIGH</code>, <code>BLOCK_NONE</code>, <code>OFF</code>. Method: <code>SEVERITY</code> (default) or <code>PROBABILITY</code>.</li>
                     <li>Per the docs, newer Gemini models default to <code>OFF</code> for configurable filters (verify for your model version).</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-mask"></i></div>SDP de-identification methods compared</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Method</th><th>SDP config</th><th>Reversible</th><th>Referential integrity</th><th>Format kept</th><th>Key</th><th>Best agent use</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Replace with infoType</strong></td><td><code>ReplaceWithInfoTypeConfig</code></td><td>No</td><td>No: every email becomes the same <code>[EMAIL_ADDRESS]</code> label</td><td>No</td><td>None</td><td>Free text bound for RAG chunks, logs and prompts where who-is-who doesn't matter</td></tr>
+                        <tr><td><strong>Redaction</strong></td><td><code>RedactConfig</code></td><td>No</td><td>No</td><td>No</td><td>None</td><td>Dropping a value entirely; the model loses even the hint that something was there</td></tr>
+                        <tr><td><strong>Character masking</strong></td><td><code>CharacterMaskConfig</code></td><td>No</td><td>No</td><td>Length kept; chosen characters stay visible</td><td>None</td><td>Support agents confirming the last digits of a card or account</td></tr>
+                        <tr><td><strong>Crypto hash</strong></td><td><code>CryptoHashConfig</code></td><td>No</td><td>Yes</td><td>No (fixed-length hashed surrogate)</td><td>Yes</td><td>Stable join keys when nobody may ever re-identify</td></tr>
+                        <tr><td><strong>Deterministic tokenization</strong></td><td><code>CryptoDeterministicConfig</code> (AES-SIV, optional surrogate infoType)</td><td>Yes, via <code>content.reidentify</code> with the same key</td><td>Yes</td><td>No; any input accepted</td><td>Yes</td><td>Multi-turn, multi-tool flows that must keep customer A and customer B apart; an authorized back end re-identifies</td></tr>
+                        <tr><td><strong>Format-preserving encryption</strong></td><td><code>CryptoReplaceFfxFpeConfig</code> (FFX mode)</td><td>Yes</td><td>Yes</td><td>Same length and alphabet (2 to 95 characters)</td><td>Yes</td><td>A tool or legacy schema validates length or character set</td></tr>
+                        <tr><td><strong>Date shifting</strong></td><td><code>DateShiftConfig</code></td><td>No</td><td>Same shift per context (e.g., per patient), so sequence and duration hold</td><td>Still a valid date</td><td>Optional, for consistent shifts</td><td>Clinical or financial timelines where intervals matter</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Key choice:</strong> a Cloud KMS-wrapped key is the preferred option. A transient key is generated per request and discarded, so its tokens can't be re-identified later or matched across requests.</li>
+                <li><strong>FPE caveat:</strong> the docs advise FPE only when the alphabet and size must be preserved. It is slower and has alphabet and token limits; for variable-length input or input over 32 bytes, use <code>CryptoDeterministicConfig</code>.</li>
+                <li><strong>Structure:</strong> infoType transformations act on findings detected in free text; record transformations act on named columns of a table or CSV.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>De-identify at the data layer</h3>
+            <p>Once raw values are embedded, stored in sessions or copied into telemetry, finding and deleting them is slow and incomplete. Clean data before each storage boundary:</p>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Boundary</th><th>Risk if raw data lands</th><th>Control</th><th>Constraints</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Before indexing (RAG Engine, Agent Search, vector stores)</strong></td><td>Retrieval can surface embedded PII to anyone allowed to query the corpus</td><td>Land files in a quarantine bucket; run an SDP inspection job with a de-identify action (console: <em>Make a de-identified copy</em>) that writes to a clean bucket; index only the clean bucket</td><td>Output bucket must differ from the input bucket; CSV, TSV, text and image file groups</td></tr>
+                        <tr><td><strong>Gemini Enterprise connectors and uploads</strong></td><td>Sensitive entities from SaaS sources appear in answers; sensitive files get uploaded</td><td>SDP content policy (<code>projects/PROJECT_ID/locations/LOCATION/contentPolicies/POLICY_ID</code>) set on the connector, the assistant or Gemini Notebook Enterprise</td><td>Blocks content rather than masking it. Covers third-party, custom MCP and Workspace connectors, not older Cloud Storage, BigQuery or website data stores. Not in the Business edition. The Gemini Enterprise service account needs <code>roles/dlp.user</code>; a policy from another project must sit in the same VPC-SC perimeter</td></tr>
+                        <tr><td><strong>Before session and Memory Bank writes</strong></td><td>A pasted SSN stays in session events and can be distilled into a long-lived memory</td><td>De-identify upstream (Model Armor advanced SDP de-identify on the gateway, or in the front end) so the raw value never becomes an event. ADK <code>before_model_callback</code> / <code>after_tool_callback</code> can also scrub what the model sees and what tools return</td><td>Use deterministic tokens when the agent still has to tell entities apart</td></tr>
+                        <tr><td><strong>Before log and trace export</strong></td><td>Prompts, tool arguments and responses copied into spans, logs, prompt archives in Cloud Storage and BigQuery</td><td><code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> keeps PII out of span attributes. <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code> still records prompts, as log events, so restrict and de-identify those logs and the prompt and response bucket before analysts query them</td><td>Model Armor sanitize logs also hold raw text (see the logging table above)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern</h4>
+                <p>Prompt-only privacy: a system instruction such as "never repeat card numbers" is not a control. The raw value is still indexed, stored and logged.</p>
             </div>
         </div>
 
@@ -777,9 +1132,90 @@
             </table>
         </div>
         <ul>
-            <li>UAP <code>DRY_RUN</code> results land in Cloud Audit Logs, which makes them a safe policy-tuning loop.</li>
+            <li>UAP dry-run results (<code>iamEnforcementMode: "DRY_RUN"</code>) land in Cloud Audit Logs, which makes them a safe policy-tuning loop.</li>
             <li>Agent Gateway emits OpenTelemetry traces and access logs (Agent Observability), so you can trace <em>which tool</em> was called and <em>with what verdict</em>.</li>
         </ul>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-chart-line"></i></div>Agent Gateway monitoring signals</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Signal</th><th>Where</th><th>What it holds</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Gateway request log</strong></td><td>Resource <code>networkservices.googleapis.com/Gateway</code>, log <code>gateway_requests</code></td><td><code>httpRequest</code> (URL, status); <code>jsonPayload.agentGatewayInfo</code> with <code>mcpInfo</code> (MCP method and tool name) and <code>agentRegistryResource</code> (matched registry entry); <code>authzPolicyInfo</code> result (<code>ALLOWED</code> / <code>DENIED</code>); <code>serviceExtensionsInfo</code> (which extension handled the call); <code>trace</code>. Dry-run traffic is logged too</td></tr>
+                        <tr><td><strong>IAP decision</strong></td><td><code>cloudaudit.googleapis.com/data_access</code>, service <code>iap.googleapis.com</code></td><td><code>authorizationInfo[].granted</code>; <code>authenticationInfo.principalSubject</code> (the agent's SPIFFE or <code>principal://</code> ID); resolved resource; label <code>iap.googleapis.com/audited_resource_name</code> reads <code>unregisteredResource</code> for unregistered hosts; <code>metadata.iamEnforcementMode</code></td></tr>
+                        <tr><td><strong>Model Armor</strong></td><td>Sanitize and detection logs; Agent Platform Security tab (Preview)</td><td>Matched filter and verdict; total, flagged and blocked interaction counts</td></tr>
+                        <tr><td><strong>Semantic Governance</strong></td><td>Log <code>semantic-governance-policy</code></td><td>Overall <code>verdict</code>; <code>evaluations[]</code> with <code>toolName</code>, <code>verdict</code>, <code>rationale</code>; <code>token_usage</code></td></tr>
+                        <tr><td><strong>Agent output</strong></td><td><code>reasoning_engine_stderr</code> / <code>reasoning_engine_stdout</code></td><td>Startup failures and the agent's view of a denied call</td></tr>
+                        <tr><td><strong>Observability dashboard</strong></td><td>Agent Gateway page, Observability tab</td><td>Attempted authorizations, authorization failures, requests per second, egress logs including 403s and unregistered destinations. Needs the <code>_Default</code> log bucket upgraded to Observability Analytics</td></tr>
+                        <tr><td><strong>Cloud Trace</strong> (Preview)</td><td>Telemetry policy attached to the gateway</td><td>Gateway spans joined to agent and MCP spans through W3C <code>traceparent</code>; compare with metric <code>networkservices.googleapis.com/agentgateway/total_latencies</code> to split gateway latency from destination latency</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Tracing setup:</strong> import a <code>telemetryPolicies</code> resource with <code>samplingRate</code> (the docs suggest 0.01 or 0.001 for busy production traffic) and <code>parentBasedSampling</code> to honor upstream sampling. Grant <code>roles/cloudtrace.agent</code> to the Compute Engine, Network Security and Agent Gateway service agents, and to the calling agent's identity, or the parent span is missing.</li>
+                <li><strong>Topology:</strong> Agent Registry and the Topology page draw agent and MCP traffic edges with the last hour of latency and error rate (App Topology API). An MCP server registered in Agent Registry is treated as a shared resource and shows no edges. The SCC data on these graphs is Preview.</li>
+                <li><strong>Agent Anomaly Detection</strong> (Preview, allowlist) analyzes OpenTelemetry logs and traces out of band, so it adds no request latency. Built-in detectors target agentic threats such as tool misuse, privilege abuse and cascading failures; findings go to SCC and metrics to Cloud Monitoring.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <h3><div class="icon-badge"><i class="fas fa-flask"></i></div>Dry run before enforcement</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Control</th><th>Shadow setting</th><th>Read results in</th><th>To enforce</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>UAP through IAP</strong> (<code>REQUEST_AUTHZ</code>)</td><td><code>iamEnforcementMode: "DRY_RUN"</code> in the IAP authorization extension metadata</td><td>Audit logs filtered on <code>protoPayload.metadata.iamEnforcementMode="DRY_RUN"</code></td><td>Remove the field</td></tr>
+                        <tr><td><strong>Semantic Governance</strong> (<code>CONTENT_AUTHZ</code>)</td><td><code>sgpEnforcementMode: DRY_RUN</code> in the authorization extension metadata; every call is allowed and verdicts are logged</td><td><code>semantic-governance-policy</code> log</td><td>Remove the key</td></tr>
+                        <tr><td><strong>Model Armor</strong> (<code>CONTENT_AUTHZ</code>)</td><td>Template or floor setting at <code>INSPECT_ONLY</code></td><td>Sanitize logs, Security tab flagged count</td><td>Switch to <code>INSPECT_AND_BLOCK</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul>
+                <li><strong>Example extension:</strong> an authorization extension named <code>iap-egress-authz</code> with <code>service: iap.googleapis.com</code>, <code>failOpen: false</code> and metadata <code>iapPolicyVersion: "V2"</code> plus <code>iamEnforcementMode: "DRY_RUN"</code>.</li>
+                <li><strong>Endpoint discovery:</strong> run IAP in dry run, list the hostnames the agent actually reaches from the logs, register and authorize exactly those, then enforce.</li>
+                <li><strong>Metadata trap:</strong> a PATCH with <code>updateMask=metadata</code> replaces the whole map. Clearing <code>sgpEnforcementMode</code> that way also drops <code>sgpUserIntentMatching: DISABLED</code>, which turns intent matching back on.</li>
+                <li><strong>Reading a 403 in dry run:</strong> IAP doesn't block in dry run, so a 403 then comes from the gateway's egress proxy or from the destination.</li>
+            </ul>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-screwdriver-wrench"></i></div>Agent Gateway troubleshooting</h3>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Symptom</th><th>Layer</th><th>Check</th><th>Likely cause and fix</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>403 "Egress request is not authorized"</td><td>IAP (<code>REQUEST_AUTHZ</code>)</td><td>IAP audit entry with <code>granted: false</code>; <code>principalSubject</code></td><td>No <code>egressViaIAP</code> grant for this agent at registry, resource or unregistered-endpoint scope; a CEL condition silently excludes the agent; a PAB leaves the destination out of scope. Test with a direct <code>principal://</code> binding to rule out principal-set sync delays or missing attributes</td></tr>
+                        <tr><td>403 and no IAP entry at all</td><td>Gateway, before IAP</td><td>Gateway log <code>authzPolicyInfo</code> = <code>DENIED</code>, <code>requestUrl</code></td><td>Hostname not registered exactly (regional and <code>mtls</code> variants count as different hosts), or no authorization policy targets the gateway, so the extension never runs</td></tr>
+                        <tr><td>403 with different text</td><td>Destination</td><td>Agent stderr</td><td>The tool rejected the call: fix destination IAM (e.g., <code>roles/iap.httpsResourceAccessor</code>, <code>roles/mcp.toolUser</code>) or the injected token</td></tr>
+                        <tr><td>Auth error from a third-party tool</td><td>Auth manager</td><td>Agent logs</td><td>Agent lacks <code>roles/agentidentity.user</code> on the auth provider, or the user never completed 3LO consent</td></tr>
+                        <tr><td>403s while Agent Runtime starts</td><td>Default-deny egress</td><td>Gateway logs, status 403</td><td>Google Cloud APIs the runtime calls at startup (Agent Platform, Resource Manager, Logging, Trace, Secret Manager hostnames) not registered or allowed: dry-run, register, grant</td></tr>
+                        <tr><td>"Failed to convert project number to project ID" at startup</td><td>Agent identity roles</td><td><code>reasoning_engine_stderr</code></td><td>Missing <code>resourcemanager.projects.get</code>: grant <code>roles/browser</code> alongside the default agent roles</td></tr>
+                        <tr><td>Payload blocked</td><td>Model Armor</td><td>Sanitize log filter; span <code>gen_ai.security.decision.type</code></td><td>Template threshold, or a floor setting stricter than the template</td></tr>
+                        <tr><td>Tool call denied mid-turn</td><td>Semantic Governance</td><td><code>rationale</code> in the policy log</td><td>Constraint too strict, or the call didn't match the user's request (intent matching is on by default); tune in dry run</td></tr>
+                        <tr><td>No semantic verdict</td><td>Semantic Governance</td><td>Gateway log <code>serviceExtensionsInfo</code> lacks the extension</td><td>Engine not <code>ACTIVE</code>, gateway not bound, request path outside the policy's <code>when</code> condition, or a streamed model call (not supported)</td></tr>
+                        <tr><td>TLS handshake failures</td><td>Egress connectivity</td><td>Agent logs</td><td>Destination uses a private CA or self-signed cert: set <code>tlsConfig</code> in the agent connectivity template (keep <code>PUBLICLY_TRUSTED_ROOTS</code> for Google APIs) and rebind it after changes. BYOC containers must trust the gateway's root CA</td></tr>
+                        <tr><td>Binding fails or false "unregistered destination" denials</td><td>Project setup</td><td>Error text</td><td><code>iap.googleapis.com</code> API disabled</td></tr>
+                        <tr><td>Gateway spans appear as separate root traces</td><td>Trace propagation</td><td>Trace explorer</td><td><code>parentBasedSampling</code> off, caller lacks <code>roles/cloudtrace.agent</code>, or the app doesn't propagate <code>traceparent</code></td></tr>
+                        <tr><td>Latency spike</td><td>Gateway vs. destination</td><td><code>agentgateway/total_latencies</code> against the span breakdown</td><td>Separate guardrail and policy time (Model Armor and Semantic Governance spans) from tool time before tuning</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Exam trap</h4>
+                <p>Logs explain <em>why</em> one call was denied; dry run shows <em>what would break</em> before you enforce. Enforcing without a dry-run window is a common cause of startup 403s on Agent Runtime.</p>
+            </div>
+        </div>
 
         <div class="concept-card accent-pink">
             <h3><div class="icon-badge"><i class="fas fa-satellite-dish"></i></div>Security Command Center: AI Protection</h3>
@@ -870,7 +1306,7 @@
         <div class="definition-grid">
             <div class="definition-item">
                 <dt>Agent Identity</dt>
-                <dd>A per-agent SPIFFE-based principal with certificate-bound, auto-rotated credentials (Preview).</dd>
+                <dd>A per-agent SPIFFE-based principal with certificate-bound, auto-rotated credentials.</dd>
             </div>
             <div class="definition-item">
                 <dt>Auth manager</dt>
@@ -895,6 +1331,62 @@
             <div class="definition-item">
                 <dt>PSC-I</dt>
                 <dd>Private Service Connect interface for private agent egress.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Auth provider</dt>
+                <dd>An auth manager resource holding one integration's credentials (3LO, 2LO or API key); agents need <code>roles/agentidentity.user</code> on it.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Confused deputy</dt>
+                <dd>A privileged component tricked into using its authority for a caller who lacks it.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>REQUEST_AUTHZ</code> / <code>CONTENT_AUTHZ</code></dt>
+                <dd>Gateway authorization profiles that inspect headers only (IAP) or full payloads (Model Armor, Semantic Governance).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Token exchange (RFC 8693)</dt>
+                <dd>Swapping one security token for another, as Workload Identity Federation's Security Token Service does.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Template conformance</dt>
+                <dd>The floor settings check that rejects any Model Armor template weaker than the effective floor at create or update time.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Inline enforcement</dt>
+                <dd>Project floor settings applied directly to Gemini <code>generateContent</code> and Google Cloud MCP traffic, with no template reference in code.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>INSPECT_ONLY</code> / <code>INSPECT_AND_BLOCK</code></dt>
+                <dd>Model Armor enforcement types that log detections only, or log and return a block verdict.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Fail-open</dt>
+                <dd>A control that lets traffic through unscreened when it is unavailable, as the Gemini integration does if Model Armor can't be reached.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Referential integrity (SDP)</dt>
+                <dd>The same input always maps to the same output under one key and context, so joins and entity tracking survive de-identification.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Format-preserving encryption (FPE)</dt>
+                <dd>Reversible tokenization (<code>CryptoReplaceFfxFpeConfig</code>) that keeps the input's length and alphabet.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Surrogate infoType</dt>
+                <dd>A label prefixed to a deterministic token so <code>content.reidentify</code> can find and reverse it.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>SDP content policy</dt>
+                <dd>A Sensitive Data Protection resource that Gemini Enterprise applies to connectors and uploads to block sensitive content.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>iamEnforcementMode</code> / <code>sgpEnforcementMode</code></dt>
+                <dd>Authorization extension metadata keys that put IAP or Semantic Governance in <code>DRY_RUN</code> (log only); removing the key enforces.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Telemetry policy</dt>
+                <dd>The <code>telemetryPolicies</code> resource that turns on Cloud Trace sampling for an Agent Gateway.</dd>
             </div>
         </div>
 
@@ -1006,6 +1498,22 @@
                 <li>secret-manager/docs/integrate-secret-manager-with-adk</li>
                 <li>security-command-center/docs/ai-protection-overview</li>
                 <li>adk.dev/tools-custom/confirmation/</li>
+                <li>iam/docs/auth-with-3lo-v2 · auth-with-2lo-v2 · migrate-to-agent-identity-api</li>
+                <li>iam/docs/auth-agent-own-identity · auth-with-api-key-v2</li>
+                <li>iam/docs/conditions-overview</li>
+                <li>gemini-enterprise-agent-platform/govern/gateways/delegate-authorization</li>
+                <li>gemini-enterprise-agent-platform/govern/policies/iap-cloud-run-mcp</li>
+                <li>datatracker.ietf.org/doc/html/rfc8693 (IETF)</li>
+                <li>model-armor/configure-floor-settings · manage-templates · configure-logging · integrations</li>
+                <li>model-armor/model-armor-vertex-integration · model-armor-mcp-google-cloud-integration</li>
+                <li>gemini-enterprise-agent-platform/govern/view-model-armor-spans</li>
+                <li>sensitive-data-protection/docs/transformations-reference · pseudonymization · deidentify-storage</li>
+                <li>gemini/enterprise/docs/protect-sensitive-data</li>
+                <li>stackdriver/docs/instrumentation/ai-agent-adk · collect-view-multimodal-prompts-responses</li>
+                <li>gemini-enterprise-agent-platform/govern/gateways/monitor-agent-gateway</li>
+                <li>gemini-enterprise-agent-platform/troubleshooting/troubleshoot-agent-gateway</li>
+                <li>gemini-enterprise-agent-platform/govern/policies/configure-semantic-governance</li>
+                <li>gemini-enterprise-agent-platform/govern/monitor-content-security · topology · agent-anomalies-overview</li>
             </ul>
         </div>
 

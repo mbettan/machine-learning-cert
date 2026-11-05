@@ -1,0 +1,1532 @@
+{
+  "topic_id": "agent-platform",
+  "title": "Agent Platform: Build, Retrieve & Run",
+  "guide_url": "AgentPlatform.html",
+  "questions": [
+    {
+      "id": "agent-platform-q-01",
+      "section": "Platform Map: Naming & Pillars",
+      "guide_anchor": "platform-map",
+      "question": "An architect is modernizing a two-year-old design document that references \"Vertex AI Agent Engine\" for hosting and \"Vertex AI Search\" for document retrieval. Which current Gemini Enterprise Agent Platform names should the updated document use?",
+      "options": [
+        {
+          "text": "Agent Runtime for hosting and Agent Search for managed document retrieval.",
+          "correct": true
+        },
+        {
+          "text": "Agent Gateway for hosting and Agent Retrieval for managed document retrieval, since both products were merged during the rename.",
+          "correct": false,
+          "why_wrong": "Agent Gateway is a governance component and Agent Retrieval is the former Vector Search 2.0; neither is the renamed Agent Engine or Vertex AI Search."
+        },
+        {
+          "text": "Agent Studio for hosting and RAG Engine for managed document retrieval, because the low-code builder now runs agents directly.",
+          "correct": false,
+          "why_wrong": "Agent Studio is the low-code builder and RAG Engine is a code-first RAG pipeline; Agent Engine became Agent Runtime and Vertex AI Search became Agent Search."
+        },
+        {
+          "text": "Cloud Run for Agents for hosting and Vector Search 1.0 for retrieval, as the platform retired both original products.",
+          "correct": false,
+          "why_wrong": "Neither product was retired; Agent Engine was renamed Agent Runtime and Vertex AI Search was renamed Agent Search. Vector Search 1.0 was formerly Matching Engine."
+        }
+      ],
+      "explanation": "Gemini Enterprise Agent Platform is the evolution of Vertex AI. Agent Engine (and the older Reasoning Engine) is now Agent Runtime, although the API resource is still named reasoningEngines. Vertex AI Search is now Agent Search, the Google-managed search and RAG service with data stores and connectors.",
+      "key_takeaway": "Agent Engine → Agent Runtime; Vertex AI Search → Agent Search; Vector Search 2.0 → Agent Retrieval; Matching Engine → Vector Search 1.0.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-02",
+      "section": "Platform Map: Naming & Pillars",
+      "guide_anchor": "platform-map",
+      "question": "During a platform review, a security lead asks which Agent Platform pillar owns Agent Registry, Agent Identity and Agent Gateway, and which pillar owns online evaluation and prompt optimization. What is the correct mapping?",
+      "options": [
+        {
+          "text": "Registry, Identity and Gateway belong to Build because they are configured while authoring agents; online evaluation and prompt optimization belong to Scale.",
+          "correct": false,
+          "why_wrong": "Build covers ADK, Agent Studio, Model Garden and retrieval services, and Scale covers Agent Runtime, Sessions, Memory Bank and Code Execution — not identity or evaluation."
+        },
+        {
+          "text": "Registry, Identity and Gateway belong to Govern; online evaluation and prompt optimization belong to Optimize.",
+          "correct": true
+        },
+        {
+          "text": "All of them belong to Scale, because they only become relevant once an agent is running on Agent Runtime in production.",
+          "correct": false,
+          "why_wrong": "Scale is the runtime pillar (Agent Runtime, Sessions, Memory Bank, Code Execution); identity and policy controls sit in Govern and quality tooling sits in Optimize."
+        },
+        {
+          "text": "Registry and Identity belong to Optimize as quality controls, while Gateway, online evaluation and prompt optimization belong to Build.",
+          "correct": false,
+          "why_wrong": "This scrambles the pillars: identity, registry and gateway are governance controls, while evaluation and prompt optimization are Optimize capabilities."
+        }
+      ],
+      "explanation": "Agent Platform is organized into four pillars: Build (ADK, Agent Studio, Agent Garden, Model Garden, RAG Engine, Vector Search), Scale (Agent Runtime, Sessions, Memory Bank, Code Execution), Govern (Agent Registry, Agent Identity, Agent Gateway, governance policies) and Optimize (agent evaluation, simulation, observability, prompt optimization).",
+      "key_takeaway": "Four pillars: Build, Scale, Govern, Optimize. Identity, registry and gateway are Govern; evaluation and prompt optimization are Optimize.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-03",
+      "section": "Agent Runtime: Deploying Agents",
+      "guide_anchor": "agent-runtime",
+      "question": "A team keeps a Python ADK agent in a Git repository and wants every merge to the main branch to redeploy the agent to Agent Runtime with as little custom pipeline glue as possible. Which deployment method fits best?",
+      "options": [
+        {
+          "text": "Serialize the agent object in a Colab notebook after each merge and deploy it with the SDK in-memory object method.",
+          "correct": false,
+          "why_wrong": "The in-memory SDK object method targets interactive prototyping in notebooks; it is a manual step, not a Git-driven CI/CD path."
+        },
+        {
+          "text": "Rewrite the agent so it can ship as a container image, because container images are the only method that supports automated CI/CD.",
+          "correct": false,
+          "why_wrong": "Container images are not the only automatable method; Developer Connect and source-file deployment both support CI/CD for Python agents without a rewrite."
+        },
+        {
+          "text": "Connect the repository through Developer Connect, the recommended Git-based deployment method for Python agents.",
+          "correct": true
+        },
+        {
+          "text": "Upload a zip archive to a Cloud Storage bucket that Agent Runtime polls and redeploys automatically whenever the object changes.",
+          "correct": false,
+          "why_wrong": "Agent Runtime has no bucket-polling deployment mechanism; source-file deployment even avoids needing a Cloud Storage staging bucket."
+        }
+      ],
+      "explanation": "Agent Runtime supports five deployment methods: Developer Connect (Git, Python), source files (Python, CI/CD and Terraform), Dockerfile (any language), container image from Artifact Registry (any language, lowest deployment latency) and an in-memory SDK object (notebook prototyping). For code that already lives in Git, Developer Connect is the recommended path.",
+      "key_takeaway": "Git-hosted Python agent → Developer Connect; Terraform/CI pipelines → source files; non-Python → Dockerfile or container image; notebooks → SDK object.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Deploying to Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-04",
+      "section": "Agent Runtime: Deploying Agents",
+      "guide_anchor": "agent-runtime",
+      "question": "A platform team has a Java-based agent and wants Agent Runtime's managed hosting and fast cold starts rather than operating its own infrastructure. Which approach is supported?",
+      "options": [
+        {
+          "text": "Deploy through Developer Connect, which detects the language of the repository and compiles Java agents automatically.",
+          "correct": false,
+          "why_wrong": "Developer Connect deployment supports Python agents; it does not compile Java code."
+        },
+        {
+          "text": "Package the agent with a Dockerfile or a prebuilt Artifact Registry image that conforms to the Agent Runtime container contract.",
+          "correct": true
+        },
+        {
+          "text": "Agent Runtime only accepts Python, so the team must move the agent to GKE because Cloud Run also lacks Java support.",
+          "correct": false,
+          "why_wrong": "Agent Runtime accepts any language through Dockerfile or container image deployment, and Cloud Run also runs containers in any language."
+        },
+        {
+          "text": "Use the source-files method with a pom.xml so the runtime builds the JAR without a container.",
+          "correct": false,
+          "why_wrong": "Source-file deployment is a Python method; non-Python agents must be packaged as a container."
+        }
+      ],
+      "explanation": "Developer Connect, source files and SDK-object deployments target Python. For other languages, Agent Runtime accepts a Dockerfile or a container image from Artifact Registry, as long as the container conforms to the runtime contract. Container images also give the lowest deployment latency.",
+      "key_takeaway": "Non-Python agents can still run on Agent Runtime via a Dockerfile or Artifact Registry container that meets the runtime contract.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Deploying to Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-05",
+      "section": "Agent Runtime: Deploying Agents",
+      "guide_anchor": "agent-runtime",
+      "question": "An engineer copies a Cloud Run deployment config to Agent Runtime, including env vars PORT=8080, GOOGLE_CLOUD_PROJECT=my-proj and a custom GOOGLE_CLOUD_AGENT_ENGINE_MODE flag. The deployment misbehaves. What should they change?",
+      "options": [
+        {
+          "text": "Raise min_instances so the runtime keeps a warm instance that will read the environment variables correctly at startup.",
+          "correct": false,
+          "why_wrong": "min_instances controls warm capacity; it does not resolve conflicts with environment variables that the runtime itself manages."
+        },
+        {
+          "text": "Move every variable into Secret Manager, because Agent Runtime rejects all plain environment variables in deployment configs.",
+          "correct": false,
+          "why_wrong": "Agent Runtime accepts custom environment variables; the issue is specifically the reserved names and prefix, not plain variables in general."
+        },
+        {
+          "text": "Drop PORT and GOOGLE_CLOUD_PROJECT and rename the custom flag so it avoids the GOOGLE_CLOUD_AGENT_ENGINE prefix.",
+          "correct": true
+        },
+        {
+          "text": "Switch to the in-memory SDK object method, since only container-based deployments are affected by environment variable settings.",
+          "correct": false,
+          "why_wrong": "The reserved-variable rule applies regardless of deployment method; changing methods does not fix the conflicting names."
+        }
+      ],
+      "explanation": "Agent Runtime sets platform-managed variables such as PORT and GOOGLE_CLOUD_PROJECT itself, so they must not be set in the deployment configuration. Custom variables should also avoid the GOOGLE_CLOUD_AGENT_ENGINE prefix, which the runtime reserves (for example, for telemetry switches).",
+      "key_takeaway": "On Agent Runtime, never set reserved variables like PORT or GOOGLE_CLOUD_PROJECT, and avoid the GOOGLE_CLOUD_AGENT_ENGINE prefix for custom variables.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Deploying to Agent Runtime",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/deploy-an-agent"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-06",
+      "section": "Choosing a Runtime: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "choosing-runtime",
+      "question": "A three-person team built a Python ADK customer-service agent. They need managed conversation sessions, long-term user memory and a sandbox for generated code, and they have no platform engineers. Where should they host it?",
+      "options": [
+        {
+          "text": "On GKE with GKE Sandbox, so they control node pools and can add memory services later.",
+          "correct": false,
+          "why_wrong": "GKE carries the highest operational overhead and gives no built-in Sessions or Memory Bank; it suits teams that need fine-grained infrastructure control."
+        },
+        {
+          "text": "On Agent Runtime, which provides managed hosting plus built-in Sessions, Memory Bank and Code Execution.",
+          "correct": true
+        },
+        {
+          "text": "On Cloud Run with conversation history kept in instance memory, because Cloud Run scales to zero and is the cheapest option.",
+          "correct": false,
+          "why_wrong": "Cloud Run is stateless; in-memory history is lost whenever instances are replaced or scaled to zero, and the team would still need to build memory and sandboxing."
+        },
+        {
+          "text": "On Compute Engine VMs running the ADK web server, which avoid platform quotas and keep the session database on local disk.",
+          "correct": false,
+          "why_wrong": "Self-managed VMs add patching and scaling work and local-disk sessions do not survive instance loss, which contradicts the minimal-ops requirement."
+        }
+      ],
+      "explanation": "Agent Runtime is the fully managed option for Python agents with minimal operations, and it integrates Sessions, Memory Bank and the Code Execution sandbox. Cloud Run needs external state stores, and GKE suits teams that require infrastructure control and can absorb the operational burden.",
+      "key_takeaway": "Python agent + small team + managed memory and sandbox → Agent Runtime. Move to Cloud Run or GKE only for a concrete need.",
+      "doc_links": [
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-07",
+      "section": "Choosing a Runtime: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "choosing-runtime",
+      "question": "A company wants to expose its internal inventory API to several agents through a custom MCP server written in TypeScript. Traffic is bursty and mostly idle overnight. Where should the MCP server run?",
+      "options": [
+        {
+          "text": "On Agent Runtime, deployed next to the agents so tool calls stay inside the same managed runtime.",
+          "correct": false,
+          "why_wrong": "Agent Runtime hosts agents; it is not designed to host custom MCP servers. Run the server on Cloud Run or GKE and let agents call it."
+        },
+        {
+          "text": "Inside Memory Bank as a stored tool definition that agents retrieve and execute on demand.",
+          "correct": false,
+          "why_wrong": "Memory Bank stores consolidated user memories; it does not host or execute servers."
+        },
+        {
+          "text": "On a dedicated GPU node pool in a new GKE cluster so the MCP server can accelerate inventory lookups for every agent.",
+          "correct": false,
+          "why_wrong": "An API-wrapping MCP server does not need GPUs, and a dedicated GKE node pool adds cost and operations for bursty, idle-overnight traffic."
+        },
+        {
+          "text": "On Cloud Run using streamable HTTP, which runs any-language containers and scales to zero when idle.",
+          "correct": true
+        }
+      ],
+      "explanation": "Cloud Run runs containers in any language, scales to zero and can host MCP servers over streamable HTTP, which matches bursty traffic. Agent Runtime is for agents, not custom MCP servers, and GKE is justified only when you need infrastructure control or accelerators.",
+      "key_takeaway": "Host custom MCP servers on Cloud Run (streamable HTTP) or GKE — not on Agent Runtime.",
+      "doc_links": [
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        },
+        {
+          "label": "MCP Streamable HTTP Transport",
+          "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-08",
+      "section": "Choosing a Runtime: Agent Runtime vs. Cloud Run vs. GKE",
+      "guide_anchor": "choosing-runtime",
+      "question": "A research group already operates a large GKE estate. Its new agent must serve a fine-tuned Gemma model on GPUs, run third-party plugins with kernel-level isolation, and restrict pod-to-pod traffic. What is the best fit?",
+      "options": [
+        {
+          "text": "Agent Runtime, because its sandbox provides GPU-backed model serving and kernel isolation for plugins.",
+          "correct": false,
+          "why_wrong": "Agent Runtime is less suitable for heavy compute customization such as self-hosted GPU model serving; the requirements point to infrastructure-level control."
+        },
+        {
+          "text": "Cloud Run with a GPU and default settings, since serverless isolation already equals gVisor plus network policies.",
+          "correct": false,
+          "why_wrong": "The scenario explicitly needs fine-grained pod network policies and an existing GKE platform to reuse; GKE gives that control directly."
+        },
+        {
+          "text": "GKE with GPU node pools, GKE Sandbox (gVisor) for plugins, Network Policies and Workload Identity Federation.",
+          "correct": true
+        },
+        {
+          "text": "Self-host Gemini instead of Gemma on GKE so the agent avoids pay-as-you-go model costs entirely.",
+          "correct": false,
+          "why_wrong": "Gemini cannot be self-hosted on GKE or Cloud Run; it is served only through Agent Platform. Open models such as Gemma can be self-hosted."
+        }
+      ],
+      "explanation": "GKE fits complex workloads needing GPUs, self-hosted open models, gVisor isolation through GKE Sandbox, Network Policies and Workload Identity Federation, and the team already runs GKE. Reusing an existing platform is a decision rule in its own right.",
+      "key_takeaway": "GPUs, self-hosted open models, gVisor isolation and network policies on an existing GKE estate → GKE.",
+      "doc_links": [
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-09",
+      "section": "Sessions, Memory Bank & Example Store",
+      "guide_anchor": "sessions-memory",
+      "question": "A meal-planning assistant must remember each user's allergies and preferences across conversations held weeks apart, without exposing one user's facts to another. Which design is correct?",
+      "options": [
+        {
+          "text": "Store preferences in session state, which persists automatically across all future sessions for the same user.",
+          "correct": false,
+          "why_wrong": "Session state is temporary and tied to the current conversation; it is not long-term cross-session memory."
+        },
+        {
+          "text": "Use Memory Bank to generate and consolidate memories scoped by user and app, retrieved by similarity per request.",
+          "correct": true
+        },
+        {
+          "text": "Load every user's past transcripts into one shared RAG corpus and retrieve the top chunks for each new conversation.",
+          "correct": false,
+          "why_wrong": "A shared corpus of raw transcripts lacks per-user scoping and consolidation, risking cross-user leakage and contradictory, stale facts."
+        },
+        {
+          "text": "Add the preferences as few-shot examples in Example Store so the agent picks them up through dynamic example retrieval.",
+          "correct": false,
+          "why_wrong": "Example Store retrieves demonstrations that steer output format and behavior; it is not a per-user fact memory."
+        }
+      ],
+      "explanation": "Memory Bank uses an LLM to extract facts from conversation events and consolidate them with existing memories. Memories are partitioned by an identity scope such as user and app, and RetrieveMemories can return them by similarity to the current query, so facts persist across sessions without crossing users.",
+      "key_takeaway": "Within one conversation → session state; across conversations, per user → Memory Bank with an identity scope.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Sessions",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-10",
+      "section": "Sessions, Memory Bank & Example Store",
+      "guide_anchor": "sessions-memory",
+      "question": "A team runs its ADK agent on Cloud Run rather than Agent Runtime but still wants Agent Platform's managed session storage instead of operating a database. How should they configure the agent?",
+      "options": [
+        {
+          "text": "Use DatabaseSessionService pointed at Memorystore, which acts as the managed session backend for Agent Platform.",
+          "correct": false,
+          "why_wrong": "DatabaseSessionService persists sessions in a SQL database such as Cloud SQL, not in Memorystore, and it means operating that database yourself."
+        },
+        {
+          "text": "Keep sessions in memory on Cloud Run and enable session affinity so each user always lands on the same instance.",
+          "correct": false,
+          "why_wrong": "Session affinity is best effort; instances can still be replaced or scaled to zero, losing in-memory sessions."
+        },
+        {
+          "text": "Sessions are only available to agents deployed on Agent Runtime, so they must migrate before using managed sessions.",
+          "correct": false,
+          "why_wrong": "Managed sessions can be used outside Agent Runtime by pointing ADK at the session service."
+        },
+        {
+          "text": "Point ADK at the managed service with --session_service_uri agentengine://<id>.",
+          "correct": true
+        }
+      ],
+      "explanation": "ADK agents deployed to Agent Runtime get managed sessions automatically. When the agent runs elsewhere, such as Cloud Run, it can still use the managed session service by setting the session service URI to the agentengine scheme with the resource ID.",
+      "key_takeaway": "Agent Platform Sessions work outside Agent Runtime: set ADK's session service URI to agentengine://<id>.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Sessions",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-11",
+      "section": "Sessions, Memory Bank & Example Store",
+      "guide_anchor": "sessions-memory",
+      "question": "A team created an Example Store instance with text-embedding-005 and now wants multilingual retrieval using text-multilingual-embedding-002 for the same examples. What should they do?",
+      "options": [
+        {
+          "text": "Update the embedding model on the existing instance; stored examples are re-embedded automatically overnight.",
+          "correct": false,
+          "why_wrong": "The embedding model of an Example Store instance is fixed at creation and cannot be changed in place."
+        },
+        {
+          "text": "Create a new Example Store instance with the multilingual model and load the examples into it.",
+          "correct": true
+        },
+        {
+          "text": "Move the examples into Memory Bank, which supports any embedding model and replaces Example Store for few-shot use.",
+          "correct": false,
+          "why_wrong": "Memory Bank stores consolidated user memories, not curated few-shot demonstrations, so it does not replace Example Store."
+        },
+        {
+          "text": "Translate every example into English so the existing English-only embedding keeps working for all languages.",
+          "correct": false,
+          "why_wrong": "Translating examples is a workaround that degrades fidelity; the supported path is a new instance created with the desired embedding model."
+        }
+      ],
+      "explanation": "Example Store (Preview) retrieves the most relevant few-shot examples dynamically. Its embedding model is chosen when the instance is created and stays fixed, so switching models means creating a new instance; there is also a per-project, per-region instance limit to keep in mind.",
+      "key_takeaway": "Example Store's embedding model is fixed at creation; to change it, create a new instance. Example Store is Preview.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Sessions",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
+        },
+        {
+          "label": "Agent Platform Memory Bank",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-12",
+      "section": "Code Execution Sandbox",
+      "guide_anchor": "code-execution",
+      "question": "An analytics agent writes pandas code to analyze uploaded CSVs; analysts refine results over several turns, and security forbids running model-generated code in the agent process. Which design meets both needs?",
+      "options": [
+        {
+          "text": "Run the generated code with exec() inside the agent process, restricted by a prompt instruction not to touch the network.",
+          "correct": false,
+          "why_wrong": "Prompt instructions are not an isolation boundary; executing generated code in the agent process violates the security requirement."
+        },
+        {
+          "text": "Use the Code Execution sandbox via AgentEngineSandboxCodeExecutor, which keeps one sandbox per session so state carries across turns.",
+          "correct": true
+        },
+        {
+          "text": "Create a new sandbox for every tool call and destroy it immediately, so no intermediate data frames survive between turns.",
+          "correct": false,
+          "why_wrong": "Isolation is preserved, but discarding the sandbox each call loses variables and files the analyst needs across refinement turns."
+        },
+        {
+          "text": "Grant the sandbox a service account with project-wide editor rights so it can read CSVs directly from any bucket.",
+          "correct": false,
+          "why_wrong": "Broad credentials inside the sandbox defeat its purpose; pass data in as files and keep the sandbox least-privileged."
+        }
+      ],
+      "explanation": "The Code Execution sandbox runs untrusted, model-generated Python in isolation with sub-second create/execute, file I/O and state that persists across calls for a configurable TTL. ADK's AgentEngineSandboxCodeExecutor maintains one sandbox per session, so multi-turn analysis keeps its variables and files.",
+      "key_takeaway": "Runtime = trusted agent logic; sandbox = untrusted generated code. One sandbox per session preserves multi-turn state.",
+      "doc_links": [
+        {
+          "label": "Gemini Code Execution Sandbox",
+          "url": "https://ai.google.dev/gemini-api/docs/code-execution"
+        },
+        {
+          "label": "Agent Runtime Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-13",
+      "section": "Grounding & Retrieval on Google Cloud",
+      "guide_anchor": "grounding-retrieval",
+      "question": "An HR agent must answer from thousands of policy documents in existing enterprise repositories, respect each employee's document permissions, and ship within weeks with minimal retrieval engineering. Which service fits best?",
+      "options": [
+        {
+          "text": "Agent Search, with connectors, managed parsing and chunking, hybrid retrieval and native ACL enforcement.",
+          "correct": true
+        },
+        {
+          "text": "Vector Search 1.0 with a custom ingestion pipeline, since an ANN index is the fastest route to permission-aware answers.",
+          "correct": false,
+          "why_wrong": "Vector Search is an ANN index; the team would have to build connectors, parsing, chunking and ACL filtering themselves."
+        },
+        {
+          "text": "BigQuery VECTOR_SEARCH over a table of exported documents, filtering rows by employee ID in SQL.",
+          "correct": false,
+          "why_wrong": "BigQuery vector search suits analytical retrieval; it does not provide document connectors or native ACL handling for a serving agent."
+        },
+        {
+          "text": "Grounding with Google Search restricted to the company domain, so public indexing handles permissions automatically.",
+          "correct": false,
+          "why_wrong": "Google Search grounding covers the public web; internal permission-controlled documents are not indexed there."
+        }
+      ],
+      "explanation": "Agent Search (formerly Vertex AI Search) is the turnkey managed search and RAG option: it supplies connectors, parsing, chunking, hybrid retrieval and native access controls, which matches a fast, permission-aware enterprise deployment.",
+      "key_takeaway": "Enterprise documents + permissions + minimal engineering → Agent Search.",
+      "doc_links": [
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-14",
+      "section": "Grounding & Retrieval on Google Cloud",
+      "guide_anchor": "grounding-retrieval",
+      "question": "A team wants Document AI layout parsing for complex PDFs, its own chunk-size settings, and an existing Pinecone index as the vector database, while still using a Google-managed retrieval pipeline. Which service should they choose?",
+      "options": [
+        {
+          "text": "Agent Search, because its connectors let teams swap in any third-party vector database behind the managed index.",
+          "correct": false,
+          "why_wrong": "Agent Search is turnkey and manages its own index; it trades control over parsing, chunking and the vector store for speed."
+        },
+        {
+          "text": "Memorystore for Redis vector search, since HNSW indexes support layout parsing during ingestion.",
+          "correct": false,
+          "why_wrong": "Memorystore provides vector search for caching and small indexes; it has no document parsing or managed RAG pipeline."
+        },
+        {
+          "text": "RAG Engine, which lets them pick the parser, set chunking and choose a vector DB such as Pinecone.",
+          "correct": true
+        },
+        {
+          "text": "Example Store, because it embeds documents with a fixed model and retrieves the most relevant passages at request time.",
+          "correct": false,
+          "why_wrong": "Example Store retrieves few-shot demonstrations; it is not a document ingestion and retrieval pipeline."
+        }
+      ],
+      "explanation": "RAG Engine is the code-first managed RAG pipeline: ingestion, transformation with a choice of default, LLM or Document AI layout parser, configurable chunking, embedding, a corpus index on RagManagedDb, Vector Search or third-party stores such as Pinecone, then retrieval and generation.",
+      "key_takeaway": "Need control over parser, chunking or vector DB but still want a managed pipeline → RAG Engine.",
+      "doc_links": [
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        },
+        {
+          "label": "Document AI Layout Parser for RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/layout-parser-integration"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-15",
+      "section": "Grounding & Retrieval on Google Cloud",
+      "guide_anchor": "grounding-retrieval",
+      "question": "An engineer creates an Agent Retrieval collection index with default settings and attaches it as the backend for a RAG Engine corpus. Retrieval queries against the corpus then fail with FAILED_PRECONDITION. What is the most likely fix?",
+      "options": [
+        {
+          "text": "Request a higher quota for RAG Engine corpora in the region, because FAILED_PRECONDITION signals quota exhaustion.",
+          "correct": false,
+          "why_wrong": "Quota exhaustion surfaces as resource-exhausted errors; FAILED_PRECONDITION here points to an incompatible index configuration."
+        },
+        {
+          "text": "Switch the corpus to the LLM parser, since the default parser cannot write to Agent Retrieval indexes.",
+          "correct": false,
+          "why_wrong": "Parser choice affects document transformation, not compatibility between the corpus and the vector index."
+        },
+        {
+          "text": "Delete the collection and use KNN without an index, because RAG Engine never works with collection indexes.",
+          "correct": false,
+          "why_wrong": "RAG Engine can use Agent Retrieval indexes; KNN without an index is limited to roughly 100k objects and is not the fix."
+        },
+        {
+          "text": "Recreate the index with the cosine metric; the default DOT_PRODUCT is incompatible with RAG Engine.",
+          "correct": true
+        }
+      ],
+      "explanation": "When Agent Retrieval (formerly Vector Search 2.0) backs a RAG Engine corpus, the index distance metric must be cosine. RAG Engine always sends COSINE_DISTANCE, so an index left at the default DOT_PRODUCT breaks retrieval with FAILED_PRECONDITION. RAG Engine with these corpora is also region-restricted, so check location as well.",
+      "key_takeaway": "Agent Retrieval index behind RAG Engine → cosine metric; default DOT_PRODUCT breaks retrieval (FAILED_PRECONDITION).",
+      "doc_links": [
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-16",
+      "section": "Grounding & Retrieval on Google Cloud",
+      "guide_anchor": "grounding-retrieval",
+      "question": "A support agent retrieves its top 50 candidates from Vector Search. The right passage is usually among them but often ranked 20th or lower, so the model misses it. What is the most targeted improvement?",
+      "options": [
+        {
+          "text": "Rerank the candidates with the Ranking API's semantic ranker and pass only the top few to the model.",
+          "correct": true
+        },
+        {
+          "text": "Increase top-k to 500 so the correct passage is always somewhere in the prompt for the model to find.",
+          "correct": false,
+          "why_wrong": "Stuffing more candidates increases cost and dilutes attention; the problem is ordering, not recall."
+        },
+        {
+          "text": "Run the Check grounding API before retrieval so only passages with high support scores are stored in the index.",
+          "correct": false,
+          "why_wrong": "Check grounding scores how well a generated response is supported by facts; it does not reorder retrieval candidates."
+        },
+        {
+          "text": "Move the index to Memorystore for Redis, whose FLAT index always ranks candidates more accurately than ANN.",
+          "correct": false,
+          "why_wrong": "Exact search changes nearest-neighbor accuracy, not the semantic relevance ordering of passages already retrieved."
+        }
+      ],
+      "explanation": "Recall is fine but precision at the top is poor, which is the job of a reranker. The Ranking API (semantic-ranker-default@latest) is a stateless reranker that can be applied to candidates from Vector Search or any retriever before passing a small, high-precision set to the model.",
+      "key_takeaway": "Right document retrieved but ranked low → add a reranker (Ranking API) rather than raising top-k.",
+      "doc_links": [
+        {
+          "label": "Grounding Responses with RAG",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/ground-responses-using-rag"
+        },
+        {
+          "label": "Google Cloud Agent Search",
+          "url": "https://docs.cloud.google.com/enterprise-search"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-17",
+      "section": "Caching & External State",
+      "guide_anchor": "caching-state",
+      "question": "A Cloud Run agent intermittently forgets what users said a few turns earlier, especially after traffic spikes and quiet periods. Logs show requests landing on newly started instances. What is the right fix?",
+      "options": [
+        {
+          "text": "Raise the request timeout to the maximum so instances stay alive longer and keep conversation history in memory.",
+          "correct": false,
+          "why_wrong": "Request timeout limits a single request; it does not stop instances from being replaced or scaled to zero between requests."
+        },
+        {
+          "text": "Persist conversation state outside the instance, in Agent Platform Sessions, Memorystore, Firestore or Cloud SQL.",
+          "correct": true
+        },
+        {
+          "text": "Move all conversation history into Memory Bank so every turn is consolidated into long-term memories immediately.",
+          "correct": false,
+          "why_wrong": "Memory Bank holds consolidated cross-session facts with asynchronous generation; it is not a turn-by-turn conversation store."
+        },
+        {
+          "text": "Write the history to the container's local filesystem, which Cloud Run shares across all instances of a service.",
+          "correct": false,
+          "why_wrong": "Cloud Run's local filesystem is per instance and ephemeral; it is not shared across instances."
+        }
+      ],
+      "explanation": "Cloud Run is stateless: instances can be added, replaced or scaled to zero at any time, so in-memory state disappears. Externalize session state to Agent Platform Sessions or a store such as Memorystore, Firestore or Cloud SQL.",
+      "key_takeaway": "Cloud Run is stateless — externalize conversation state to Sessions, Memorystore, Firestore or Cloud SQL.",
+      "doc_links": [
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        },
+        {
+          "label": "Agent Platform Sessions",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-18",
+      "section": "Caching & External State",
+      "guide_anchor": "caching-state",
+      "question": "A multi-tenant agent receives many near-duplicate questions, and the team wants to cut model calls with a low-latency semantic cache. Answers sometimes depend on documents only certain users may see. Which design is appropriate?",
+      "options": [
+        {
+          "text": "Use one global semantic cache in BigQuery shared by all tenants, since VECTOR_SEARCH gives the lowest serving latency.",
+          "correct": false,
+          "why_wrong": "BigQuery suits analytics rather than hot-path caching, and a global cache shared by all tenants risks leaking permission-scoped answers."
+        },
+        {
+          "text": "Cache answers in session state so every user automatically benefits from other users' earlier questions.",
+          "correct": false,
+          "why_wrong": "Session state is per conversation; it cannot act as a shared cache, and sharing answers across users ignores permissions."
+        },
+        {
+          "text": "Store cached answers in Memory Bank and retrieve them by similarity, as Memory Bank deduplicates repeated questions.",
+          "correct": false,
+          "why_wrong": "Memory Bank consolidates per-identity facts for personalization; it is not a response cache."
+        },
+        {
+          "text": "Use Memorystore for Redis vector search with a similarity threshold and TTL, partitioning cache keys by tenant or ACL scope.",
+          "correct": true
+        }
+      ],
+      "explanation": "Memorystore for Redis supports vector search (HNSW or FLAT), which enables semantic caching: embed the query, look up similar cached entries, and return a hit above a threshold. Partitioning by tenant or ACL scope prevents returning answers derived from documents another user cannot access.",
+      "key_takeaway": "Semantic cache → Memorystore vector search with threshold and TTL; partition by tenant/ACL to avoid cross-permission leaks.",
+      "doc_links": [
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        },
+        {
+          "label": "Agent Platform Sessions",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-19",
+      "section": "Evaluation: Gen AI Evaluation Service & Autoraters",
+      "guide_anchor": "evaluation",
+      "question": "A banking agent's final answers score well on response quality, but an audit shows that in some runs it skipped the mandatory identity-verification tool before reading account data. How should the team extend its evaluation?",
+      "options": [
+        {
+          "text": "Raise the pass threshold on final-response quality so that weaker answers from skipped steps are filtered out.",
+          "correct": false,
+          "why_wrong": "The final answers were correct; a stricter response threshold still cannot detect a skipped tool call."
+        },
+        {
+          "text": "Add BLEU and ROUGE against reference answers, since lexical overlap reveals which tools were called.",
+          "correct": false,
+          "why_wrong": "Computation metrics compare text overlap and say nothing about the sequence of tool calls."
+        },
+        {
+          "text": "Add trajectory metrics such as trajectory_in_order_match against the expected tool sequence, alongside tool-use quality.",
+          "correct": true
+        },
+        {
+          "text": "Rely on the hallucination metric, which flags any response produced without calling the expected tools.",
+          "correct": false,
+          "why_wrong": "Hallucination metrics assess whether claims are supported, not whether the required tools were called in order."
+        }
+      ],
+      "explanation": "Final-answer metrics miss right-answer, wrong-path failures. Trajectory metrics compare the actual tool-call sequence with the expected one (exact, in-order or any-order match), and agent metrics such as TOOL_USE_QUALITY judge tool usage, catching skipped mandatory steps.",
+      "key_takeaway": "When the order of tool calls matters, add trajectory metrics; final-response metrics alone miss wrong-path failures.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-20",
+      "section": "Evaluation: Gen AI Evaluation Service & Autoraters",
+      "guide_anchor": "evaluation",
+      "question": "A team must evaluate thousands of open-ended agent responses across very different prompts. Writing a bespoke rubric per prompt is impractical, and one generic rubric misses prompt-specific requirements. Which approach fits?",
+      "options": [
+        {
+          "text": "Exact-match scoring against a single reference answer per prompt, which is deterministic and needs no rubric at all.",
+          "correct": false,
+          "why_wrong": "Open-ended responses have many valid phrasings, so exact match penalizes correct answers and misses quality issues."
+        },
+        {
+          "text": "Adaptive rubrics such as GENERAL_QUALITY, where an autorater generates pass/fail tests for each prompt and judges against them.",
+          "correct": true
+        },
+        {
+          "text": "A static rubric applied identically to every prompt, then manual review of the lowest-scoring responses.",
+          "correct": false,
+          "why_wrong": "This is exactly the generic-rubric approach the team found misses prompt-specific requirements."
+        },
+        {
+          "text": "Online evaluation only, letting production traffic reveal quality issues instead of running offline evaluations.",
+          "correct": false,
+          "why_wrong": "Online monitors complement offline evaluation; skipping offline evaluation ships regressions before they are measured."
+        }
+      ],
+      "explanation": "Adaptive rubrics are the recommended approach in the Gen AI evaluation service: an autorater creates prompt-specific pass/fail tests and then evaluates the response against them. Static rubrics apply fixed criteria, and computation metrics such as exact match suit closed-form answers.",
+      "key_takeaway": "Diverse open-ended prompts → adaptive rubrics (autorater-generated, per-prompt tests); static rubrics for fixed criteria.",
+      "doc_links": [
+        {
+          "label": "ADK Evaluation & Conformance",
+          "url": "https://adk.dev/evaluate/"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-21",
+      "section": "Observability: Tracing, Logging & Dashboards",
+      "guide_anchor": "observability",
+      "question": "After setting GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true on Agent Runtime, traces and token metrics appear but prompt and response text does not. Compliance wants content kept out of logs by default. What is true?",
+      "options": [
+        {
+          "text": "Telemetry is misconfigured; prompts are always captured once telemetry is enabled, so the Telemetry API must be broken.",
+          "correct": false,
+          "why_wrong": "The telemetry switch deliberately excludes message content; missing prompts are expected behavior, not a fault."
+        },
+        {
+          "text": "This is expected: content capture is a separate opt-in via OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT.",
+          "correct": true
+        },
+        {
+          "text": "Prompts can only be captured by enabling Data Access audit logs for the agent, which also records model responses.",
+          "correct": false,
+          "why_wrong": "Prompt and response capture is controlled by the OpenTelemetry gen-AI content setting, not by audit log configuration."
+        },
+        {
+          "text": "Prompt text is stored in Memory Bank instead of logs, so compliance should review memories rather than traces.",
+          "correct": false,
+          "why_wrong": "Memory Bank stores extracted memories, not a log of prompts; observability content capture is separate."
+        }
+      ],
+      "explanation": "On Agent Runtime, the telemetry switch emits traces, logs and metrics without prompt content. Capturing prompts and responses requires a separate opt-in through the OpenTelemetry gen-AI message-content setting, which should be enabled only with appropriate consent and data handling.",
+      "key_takeaway": "Agent Runtime telemetry excludes prompts by default; capturing content is a separate, deliberate opt-in.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-22",
+      "section": "Observability: Tracing, Logging & Dashboards",
+      "guide_anchor": "observability",
+      "question": "Users report that an agent became slow last week. The SRE wants to know whether a specific tool, the model call, or something else drives the p95 latency increase. Where should they look first?",
+      "options": [
+        {
+          "text": "The billing export in BigQuery, because higher spend on a tool usually indicates higher latency for that tool.",
+          "correct": false,
+          "why_wrong": "Spend data does not show per-span latency and arrives too coarsely to isolate a slow tool."
+        },
+        {
+          "text": "Increase min_instances first and check whether complaints stop, which isolates the slow component.",
+          "correct": false,
+          "why_wrong": "Adding warm instances only addresses cold starts and does not identify which tool or model span is slow."
+        },
+        {
+          "text": "The Check grounding API scores for last week, because ungrounded responses take longer to generate.",
+          "correct": false,
+          "why_wrong": "Grounding scores measure factual support, not latency, and do not attribute time to components."
+        },
+        {
+          "text": "The Tools dashboard's per-tool p95 latency and Cloud Trace waterfalls showing which spans dominate.",
+          "correct": true
+        }
+      ],
+      "explanation": "Agent observability uses OpenTelemetry gen-AI spans for model calls, tool calls and agent steps. The Tools dashboard reports p95 latency per tool, and trace waterfalls in Cloud Trace show which span dominates a slow request.",
+      "key_takeaway": "Latency regressions → trace waterfalls and per-tool p95 on the Tools dashboard, not guesswork with scaling.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-23",
+      "section": "Cost, Quotas & Capacity",
+      "guide_anchor": "cost-quotas",
+      "question": "A retailer's agent hits 429 Resource exhausted errors on pay-as-you-go Gemini calls during promotions. Leadership wants predictable capacity for an upcoming flagship sale. Which plan addresses both now and the event?",
+      "options": [
+        {
+          "text": "Add exponential backoff and the global endpoint now, and buy Provisioned Throughput for guaranteed capacity during the sale.",
+          "correct": true
+        },
+        {
+          "text": "Retry failed calls immediately in a tight loop, since 429 errors clear within milliseconds on pay-as-you-go endpoints.",
+          "correct": false,
+          "why_wrong": "Tight retry loops amplify the overload; 429 handling calls for exponential backoff with jitter and smoother traffic."
+        },
+        {
+          "text": "Self-host Gemini on GKE during the sale so capacity is no longer shared with other pay-as-you-go customers.",
+          "correct": false,
+          "why_wrong": "Gemini cannot be self-hosted; reserved capacity comes from Provisioned Throughput."
+        },
+        {
+          "text": "Raise min_instances on Agent Runtime, since 429 errors from Gemini mean the agent has too few warm instances.",
+          "correct": false,
+          "why_wrong": "Agent instances do not add model capacity; 429s on Gemini calls reflect shared model capacity or quota."
+        }
+      ],
+      "explanation": "On pay-as-you-go, 429 errors reflect shared capacity or quota limits. Mitigations include the global endpoint, exponential backoff, smoothing bursts and quota increases. For guaranteed capacity, Provisioned Throughput reserves throughput (bought in GSUs) with spillover to pay-as-you-go by default.",
+      "key_takeaway": "PayGo 429s → backoff, global endpoint, smoothing; predictable capacity → Provisioned Throughput.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-24",
+      "section": "Cost, Quotas & Capacity",
+      "guide_anchor": "cost-quotas",
+      "question": "Deploying a new agent to Agent Runtime fails with a message that the region is temporarily at capacity. A teammate suggests filing a quota increase request. What is the better response?",
+      "options": [
+        {
+          "text": "File the quota increase anyway, because every deployment failure on Agent Runtime is ultimately a project quota issue.",
+          "correct": false,
+          "why_wrong": "Regional capacity errors are distinct from project quotas; a quota increase does not add regional capacity."
+        },
+        {
+          "text": "Retry later, deploy to another region, or request smaller CPU and memory, since this is regional capacity, not quota.",
+          "correct": true
+        },
+        {
+          "text": "Switch from Agent Runtime to Example Store hosting, which runs on separate capacity pools in every region.",
+          "correct": false,
+          "why_wrong": "Example Store stores few-shot examples; it cannot host an agent."
+        },
+        {
+          "text": "Purchase Provisioned Throughput, which reserves Agent Runtime compute in addition to model capacity.",
+          "correct": false,
+          "why_wrong": "Provisioned Throughput reserves model serving capacity; it does not reserve Agent Runtime deployment compute."
+        }
+      ],
+      "explanation": "A region-at-capacity message on deployment indicates temporary regional resource shortage rather than a project quota limit. Retrying, choosing another region or requesting less CPU and memory are the effective responses.",
+      "key_takeaway": "\"Region temporarily at capacity\" is not a quota error: retry, change region, or shrink resources.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Gemini Context Caching",
+          "url": "https://ai.google.dev/gemini-api/docs/caching"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-25",
+      "section": "Failure Modes & Exam Traps",
+      "guide_anchor": "failure-modes",
+      "question": "A regulated insurer's launch plan for next month depends on the Managed Agents API, Example Store and the LlamaIndex template on Agent Runtime, and the contract promises an availability SLA. What should the architect flag?",
+      "options": [
+        {
+          "text": "Nothing; every Agent Platform feature inherits the platform's GA SLA as soon as it appears in the console.",
+          "correct": false,
+          "why_wrong": "Launch stage is per feature; Pre-GA features do not carry GA commitments just because they are visible in the console."
+        },
+        {
+          "text": "Only the LlamaIndex template is a concern, because the Managed Agents API and Example Store are generally available.",
+          "correct": false,
+          "why_wrong": "The Managed Agents API and Example Store are also Preview features, not generally available."
+        },
+        {
+          "text": "These are Preview features without GA commitments; confirm launch stages or plan GA alternatives for SLA-bound paths.",
+          "correct": true
+        },
+        {
+          "text": "The plan is fine if the agent is deployed in two regions, since multi-region deployment turns Preview features into GA.",
+          "correct": false,
+          "why_wrong": "Deployment topology does not change a feature's launch stage or contractual coverage."
+        }
+      ],
+      "explanation": "The Managed Agents API, Example Store and the LlamaIndex template on Agent Runtime are Preview (Pre-GA) features. An SLA-bound regulated launch should verify current launch stages and design around GA components where commitments are required.",
+      "key_takeaway": "Check each feature's launch stage; Preview features should not underpin SLA-bound production commitments.",
+      "doc_links": [
+        {
+          "label": "Choosing Agentic Architecture on GCP",
+          "url": "https://docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components"
+        },
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-26",
+      "section": "Platform Map, Pillars & Build Paths",
+      "guide_anchor": "platform-map",
+      "question": "A platform team wants to ship an autonomous spreadsheet-reconciliation and code-analysis agent via REST without maintaining custom orchestration loops, container images, or retry state, while mounting reusable SKILL.md bundles inside an isolated container that blocks outbound internet traffic by default. Which Agent Platform build path fits best?",
+      "options": [
+        {
+          "text": "Agent Studio low-code Workflow Builder running inside the end-user Gemini Enterprise subscription seat without any sandbox.",
+          "correct": false,
+          "why_wrong": "Agent Studio targets visual low-code chat/workflow authoring rather than a REST-driven harness with Skill Registry mounts and a no-egress Linux container."
+        },
+        {
+          "text": "Managed Agents API (Preview), pairing the Agents API and Skill Registry with the stateful Interactions API and no-egress sandbox.",
+          "correct": true
+        },
+        {
+          "text": "Deploying a stateless Streamable HTTP MCP server directly onto Agent Runtime with custom Dockerfiles and open internet egress.",
+          "correct": false,
+          "why_wrong": "Agent Runtime hosts stateful agents rather than standalone MCP servers, and a custom Dockerfile leaves you owning the orchestration harness."
+        },
+        {
+          "text": "Self-hosting proprietary Gemini 4 Argon weights on a GKE Autopilot GPU cluster with custom LangGraph checkpointing in BigQuery.",
+          "correct": false,
+          "why_wrong": "Proprietary Gemini models cannot be self-hosted on GKE, and BigQuery is an analytics warehouse rather than a hot-path checkpoint store."
+        }
+      ],
+      "explanation": "The Managed Agents API (Preview) combines the declarative Agents API and mounted Skill Registry bundles with the stateful Interactions API (`previous_interaction_id`, `background=true`). Google owns the Think-Act-Observe loop, automatic restarts, artifacts, and an isolated Linux sandbox with network egress disabled by default.",
+      "key_takeaway": "Managed Agents API (Preview) pairs Agents API + Skill Registry + Interactions API with a Google-managed loop and no-egress Linux sandbox.",
+      "doc_links": [
+        {
+          "label": "Gemini Enterprise Agent Platform Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Interactions API Reference",
+          "url": "https://ai.google.dev/gemini-api/docs/interactions"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-27",
+      "section": "Agent Runtime & Production Tooling",
+      "guide_anchor": "agent-runtime",
+      "question": "An engineering lead wants a standardized scaffold for 15 new ADK agents that provisions staging and production Terraform infrastructure, wires OpenTelemetry spans, and automatically blocks pull requests in Cloud Build whenever trajectory or rubric scores drop on golden test cases. Which tooling combination provides this out of the box?",
+      "options": [
+        {
+          "text": "Exporting Colab notebook cells as in-memory pickled SDK objects via `client.runtimes.create` manually from each developer laptop.",
+          "correct": false,
+          "why_wrong": "In-memory SDK object deployment is meant for rapid notebook prototyping and provides neither Terraform IaC nor automated CI/CD evaluation gates."
+        },
+        {
+          "text": "Enabling `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true` alone on Cloud Functions without an evaluation dataset.",
+          "correct": false,
+          "why_wrong": "That environment variable only opts into logging raw prompt/response payloads in telemetry; it does not scaffold Terraform or gate CI builds."
+        },
+        {
+          "text": "Scaffolding repositories with `agent-starter-pack` and running `agents-cli eval` gates inside Cloud Build CI/CD with Terraform.",
+          "correct": true
+        },
+        {
+          "text": "Creating a Vector Search 1.0 Matching Engine endpoint with `DOT_PRODUCT` distance and scheduling weekly BigQuery batch exports.",
+          "correct": false,
+          "why_wrong": "Vector Search 1.0 and BigQuery exports handle vector indexing and analytics, not repository CI/CD scaffolding or pull-request evaluation gates."
+        }
+      ],
+      "explanation": "`agent-starter-pack` and `agents-cli` generate production-ready agent repositories complete with Terraform IaC, least-privilege IAM, OpenTelemetry instrumentation, BigQuery feedback sinks, and Cloud Build / GitHub Actions pipelines that execute `agents-cli eval` against golden datasets before promoting builds.",
+      "key_takeaway": "Use `agent-starter-pack` + `agents-cli eval` to standardize Terraform IaC, telemetry wiring, and automated CI/CD evaluation gates.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Deployment & CLI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        },
+        {
+          "label": "Agent Starter Pack Repository",
+          "url": "https://github.com/GoogleCloudPlatform/agent-starter-pack"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-28",
+      "section": "Evaluation, 2-Step Simulation & Flywheels",
+      "guide_anchor": "evaluation",
+      "question": "Before launching a multi-turn travel-rebooking agent, the QA team wants to automatically test how it handles vague callers who reveal booking constraints only when asked follow-up questions. How does Agent Platform's 2-Step Agent Simulation execute this?",
+      "options": [
+        {
+          "text": "From an Agent Registry version snapshot, Step 1 synthesizes a Starting Prompt and hidden Conversation Plan; Step 2 runs a multi-turn simulated user.",
+          "correct": true
+        },
+        {
+          "text": "Step 1 replays unredacted live production credit-card calls against merchant APIs, and Step 2 computes single-turn BLEU scores on the final string.",
+          "correct": false,
+          "why_wrong": "Replaying live payment calls mutates production state, and BLEU cannot evaluate dynamic multi-turn clarification or tool trajectories."
+        },
+        {
+          "text": "Step 1 fine-tunes Gemini 4 Argon weights on synthetic dialogues, and Step 2 deploys the checkpoint onto a GKE Sandbox node pool for load testing.",
+          "correct": false,
+          "why_wrong": "2-Step Agent Simulation is an evaluation harness in the Gen AI Evaluation Service, not weight fine-tuning (which Gemini 4 Argon does not support)."
+        },
+        {
+          "text": "Step 1 disables Cloud Trace spans to reduce latency, and Step 2 replaces all agent tools with static ` trajectory_exact_match` regex assertions.",
+          "correct": false,
+          "why_wrong": "Simulation relies on full multi-turn trace generation so autoraters and trajectory metrics can inspect every intermediate turn and tool call."
+        }
+      ],
+      "explanation": "2-Step Agent Simulation requires an immutable Agent Registry version snapshot for reproducibility. In Step 1, it inspects the agent's instructions and tool schemas to generate realistic Starting Prompts paired with a hidden Conversation Plan (persona, goal, constraints). In Step 2, a simulated user LLM conducts multi-turn sessions against the agent to produce traces for rubric and trajectory grading.",
+      "key_takeaway": "2-Step Agent Simulation uses an Agent Registry snapshot to generate a Starting Prompt + Conversation Plan, then runs multi-turn simulated dialogues.",
+      "doc_links": [
+        {
+          "label": "Gen AI Evaluation Service Overview",
+          "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-29",
+      "section": "Evaluation, 2-Step Simulation & Flywheels",
+      "guide_anchor": "evaluation",
+      "question": "An order-management agent calls three external ERP MCP tools. Architects need to verify that the agent retries gracefully on HTTP 503 spikes and never double-charges when timeouts occur, without touching the live ERP system, and also want thumbs-down production chats turned into safe regression tests. Which workflow is best?",
+      "options": [
+        {
+          "text": "Run chaos tests directly against the production ERP database at midnight and copy raw unredacted customer chat logs into a public Git repository.",
+          "correct": false,
+          "why_wrong": "Testing against production risks real financial mutations, and committing unredacted customer chats leaks PII into source control."
+        },
+        {
+          "text": "Use Environment Simulation to inject deterministic 503/timeout tool faults, and redact exported failure traces with SDP before adding to golden evals.",
+          "correct": true
+        },
+        {
+          "text": "Rely solely on `GENERAL_QUALITY` adaptive rubrics over single-turn happy-path prompts while setting `OnlineEvaluator` sampling to 100% with no trace API.",
+          "correct": false,
+          "why_wrong": "Happy-path single-turn prompts never trigger 503/timeout recovery paths, and OnlineEvaluator requires Cloud Trace + OpenTelemetry spans."
+        },
+        {
+          "text": "Switch the ERP database vector index from `COSINE` to `DOT_PRODUCT` so RAG Engine automatically mocks failed HTTP responses during CI builds.",
+          "correct": false,
+          "why_wrong": "Vector index distance metrics have nothing to do with mocking tool faults, and `DOT_PRODUCT` breaks RAG Engine retrieval with `FAILED_PRECONDITION`."
+        }
+      ],
+      "explanation": "Environment Simulation intercepts tool calls during evaluation to inject deterministic faults (HTTP 503s, 429s, latency spikes, mocked edge-case payloads) safely offline. Combined with the production data flywheel — exporting low-scoring or thumbs-down traces, scrubbing PII via Sensitive Data Protection (SDP), and curating expected trajectories into golden evalsets — teams continuously harden reliability.",
+      "key_takeaway": "Use Environment Simulation for deterministic offline tool-fault injection and SDP-redacted production failure traces to grow golden evalsets.",
+      "doc_links": [
+        {
+          "label": "Gen AI Evaluation Service Overview",
+          "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview"
+        },
+        {
+          "label": "Sensitive Data Protection Overview",
+          "url": "https://cloud.google.com/sensitive-data-protection/docs/concepts-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-30",
+      "section": "Observability, Audit & Prompt Optimization",
+      "guide_anchor": "observability",
+      "question": "A CISO reviewing an enterprise financial agent asks how Cloud Audit Logs distinguish whether a sensitive BigQuery query was run autonomously by a specific agent versus directly by an engineer, while still preserving which employee initiated the chat session. How does Agent Platform address this?",
+      "options": [
+        {
+          "text": "By forcing every employee and every agent across the organization to authenticate using one shared project-editor service account key file.",
+          "correct": false,
+          "why_wrong": "Sharing a single service account key destroys least privilege and erases both per-agent and per-user forensic attribution."
+        },
+        {
+          "text": "By storing user OAuth bearer tokens in plaintext inside prompt strings and enabling `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT`.",
+          "correct": false,
+          "why_wrong": "Embedding bearer tokens in prompts and logs is a severe credential-leakage anti-pattern, not an audit-attribution control."
+        },
+        {
+          "text": "Through dual-attribution agentic Cloud Audit Logs (`is_agentic=true`) recording both the cryptographic SPIFFE Agent Identity and the human user principal.",
+          "correct": true
+        },
+        {
+          "text": "By disabling Cloud Audit Logs on BigQuery MCP endpoints and relying instead on client-side browser cookies cached in Memorystore for Redis.",
+          "correct": false,
+          "why_wrong": "Browser cookies in Redis are mutable application state, whereas compliance requires immutable Cloud Audit Logs with dual principal attribution."
+        }
+      ],
+      "explanation": "Agent Platform emits agentic Cloud Audit Logs (`is_agentic=true`) with dual attribution: each audit entry records both the cryptographic SPIFFE / Agent Registry identity (`spiffe://...` / `principal://...`) of the acting agent and the initiating human user's identity context, eliminating confused-deputy blind spots.",
+      "key_takeaway": "Agentic Cloud Audit Logs (`is_agentic=true`) capture dual attribution: both the SPIFFE Agent Identity and the initiating human principal.",
+      "doc_links": [
+        {
+          "label": "Cloud Audit Logs Overview",
+          "url": "https://cloud.google.com/logging/docs/audit"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-31",
+      "section": "Observability, Audit & Prompt Optimization",
+      "guide_anchor": "observability",
+      "question": "After migrating an IT-helpdesk agent to a new model, Online Monitors flag a 12% drop in `TOOL_USE_QUALITY` across thousands of traces. Instead of manually reading every trace and guessing prompt edits, which Optimize workflow isolates the root causes and tunes the system instructions?",
+      "options": [
+        {
+          "text": "File a regional compute quota increase ticket and double `min_instances` on Agent Runtime so instances stay warm overnight.",
+          "correct": false,
+          "why_wrong": "Increasing warm compute instances reduces cold-start latency but has zero effect on LLM tool-selection quality after a model migration."
+        },
+        {
+          "text": "Run Failure Cluster Analysis to group recurring trace errors by root cause, then run Prompt Optimization (`Agent Optimizer`) against golden evals.",
+          "correct": true
+        },
+        {
+          "text": "Delete the agent's Memory Bank and Session history every five minutes so the model never encounters multi-turn tool calls in production.",
+          "correct": false,
+          "why_wrong": "Wiping user sessions breaks multi-turn functionality rather than diagnosing or fixing systemic prompt/schema regressions."
+        },
+        {
+          "text": "Replace all trajectory and adaptive rubric evaluations with static exact-string matching on raw OpenTelemetry span IDs.",
+          "correct": false,
+          "why_wrong": "OpenTelemetry span IDs are random per-request identifiers; exact-matching them cannot evaluate or optimize prompt instructions."
+        }
+      ],
+      "explanation": "Failure Cluster Analysis automatically clusters failing simulation and low-scoring online traces into actionable root-cause groups (such as ambiguous tool argument descriptions). Programmatic Prompt Optimization (`Agent Optimizer`) then iteratively refines system instructions and few-shot examples against your golden evaluation suite via `client.evals` before rollout.",
+      "key_takeaway": "Pair Failure Cluster Analysis (root-cause grouping) with Prompt Optimization (`Agent Optimizer`) validated on golden evals to fix regressions.",
+      "doc_links": [
+        {
+          "label": "Vertex AI Prompt Optimizer",
+          "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/prompt-optimizer"
+        },
+        {
+          "label": "Gemini Enterprise Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-32",
+      "section": "Grounding, Retrieval & MCP Tooling",
+      "guide_anchor": "grounding-retrieval",
+      "question": "A logistics team wants an agent to look up shipment status in its Cloud SQL for PostgreSQL database. The DBA insists the agent may only run five reviewed, parameterized queries and never free-form SQL. The team is comfortable running a container on Cloud Run. Which integration layer fits best?",
+      "options": [
+        {
+          "text": "Attach the managed Cloud SQL remote MCP server and let the agent call `execute_sql` with whatever statement the model writes for each request.",
+          "correct": false,
+          "why_wrong": "The managed server exposes Google-defined tools such as `execute_sql`; it offers no custom logic to restrict the agent to five reviewed queries."
+        },
+        {
+          "text": "Build an Application Integration flow with a managed connector so the agent can reach the database through visual data mapping.",
+          "correct": false,
+          "why_wrong": "Application Integration connectors target SaaS ERPs and CRMs without a native MCP endpoint; they are not the tool for vetted parameterized SQL."
+        },
+        {
+          "text": "Run MCP Toolbox for Databases on Cloud Run and define the five parameterized queries as custom tools in `tools.yaml`.",
+          "correct": true
+        },
+        {
+          "text": "Write one custom MCP tool named `run_any_sql` that forwards the model's SQL to the database, then rely on the system prompt to keep it safe.",
+          "correct": false,
+          "why_wrong": "A generic SQL tool turns any prompt injection into a database incident; a system prompt is not an access control."
+        }
+      ],
+      "explanation": "MCP Toolbox for Databases is the declarative middle option: you run the container (Cloud Run or GKE) and define parameterized, SQL-injection-safe custom tools in `tools.yaml`, so the agent can only execute vetted queries. The managed Cloud SQL server needs no ops but uses Google-defined tool schemas, and a generic SQL tool is the anti-pattern the guide warns against.",
+      "key_takeaway": "Need only vetted, parameterized queries against your own database: MCP Toolbox `tools.yaml`; standard managed access with no server: managed MCP.",
+      "doc_links": [
+        {
+          "label": "MCP Toolbox for Databases",
+          "url": "https://github.com/googleapis/mcp-toolbox"
+        },
+        {
+          "label": "Google Cloud MCP servers overview",
+          "url": "https://docs.cloud.google.com/mcp/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-33",
+      "section": "Grounding, Retrieval & MCP Tooling",
+      "guide_anchor": "grounding-retrieval",
+      "question": "An engineer manually registers a partner's MCP server, hosted outside Google Cloud, in Agent Registry using only its endpoint URL. The server entry appears in the registry, but agents searching the registry find no tools for it. What fixes this?",
+      "options": [
+        {
+          "text": "Re-run the registration and upload a `toolspec.json` (MCP tool schema, 10 KB max) listing the tool names, descriptions, and annotations.",
+          "correct": true
+        },
+        {
+          "text": "Grant the agent `roles/mcp.toolUser` on the governance project so Agent Registry can list and return the partner server's tools on its behalf during every search.",
+          "correct": false,
+          "why_wrong": "`roles/mcp.toolUser` authorizes calls to Google Cloud MCP servers; it does not make the registry discover tools on an external server."
+        },
+        {
+          "text": "Redeploy the partner server with `gcloud beta run deploy --functional-type=mcp-server` so the registry inspects it automatically.",
+          "correct": false,
+          "why_wrong": "That flag auto-registers Cloud Run services you deploy; it does not apply to a partner server hosted outside Google Cloud."
+        },
+        {
+          "text": "Query the registry with `--location=us-central1`, since manually registered servers only expose tools from a regional location.",
+          "correct": false,
+          "why_wrong": "The location flag is about where the resource lives (auto-registered Google servers live in `global`); it does not create missing tool metadata."
+        }
+      ],
+      "explanation": "For external servers, Agent Registry does not inspect the server, so manual registration records only the endpoint unless you upload a `toolspec.json` with tool names, descriptions, and hints such as `readOnlyHint` or `destructiveHint`. Google Cloud servers, Cloud Run services deployed with `--functional-type=mcp-server`, and labeled GKE servers register their tools automatically.",
+      "key_takeaway": "Manually registered external MCP servers need an uploaded `toolspec.json`; the registry never inspects them, so no tool spec means no discoverable tools.",
+      "doc_links": [
+        {
+          "label": "Register MCP servers in Agent Registry",
+          "url": "https://docs.cloud.google.com/agent-registry/register-mcp-servers"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-34",
+      "section": "Caching & External State",
+      "guide_anchor": "caching-state",
+      "question": "A bank's ADK agent runs on a GKE private cluster. Auditors require conversation sessions to live in the bank's own AlloyDB instance with CMEK and private connectivity, and analysts want to run custom SQL reports over session data. Which session backend should the team configure?",
+      "options": [
+        {
+          "text": "`InMemorySessionService` with session affinity on the GKE Service so each user keeps hitting the same pod for the whole conversation.",
+          "correct": false,
+          "why_wrong": "In-memory sessions are lost on restart and not shared across replicas; affinity does not make them durable or queryable with SQL."
+        },
+        {
+          "text": "`VertexAiSessionService`, because managed Agent Platform Sessions persist across restarts and can be called from GKE.",
+          "correct": false,
+          "why_wrong": "It is persistent and reachable from GKE, but the data lives in managed Agent Platform Sessions, not in the bank's own AlloyDB for custom SQL."
+        },
+        {
+          "text": "Memorystore for Redis as the session store, because sub-millisecond reads keep multi-turn latency low on the hot path.",
+          "correct": false,
+          "why_wrong": "Memorystore is a cache that can evict or lose keys on failover; it is not a durable, SQL-queryable session record."
+        },
+        {
+          "text": "`DatabaseSessionService` pointed at the bank's AlloyDB for PostgreSQL instance over private connectivity.",
+          "correct": true
+        }
+      ],
+      "explanation": "`DatabaseSessionService` stores sessions in a SQL database you operate (PostgreSQL or MySQL such as Cloud SQL or AlloyDB), which suits self-hosted agents that need residency, private networking, CMEK on their own instance, or custom SQL reporting. `VertexAiSessionService` is the zero-ops default but keeps data in the managed service.",
+      "key_takeaway": "Sessions must sit in your own SQL database for residency, CMEK, or SQL reporting: `DatabaseSessionService`; zero-ops default: `VertexAiSessionService`.",
+      "doc_links": [
+        {
+          "label": "ADK sessions and session services",
+          "url": "https://adk.dev/sessions/"
+        },
+        {
+          "label": "Agent Platform Sessions",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-35",
+      "section": "Caching & External State",
+      "guide_anchor": "caching-state",
+      "question": "A public FAQ agent on Cloud Run already uses Memorystore for a semantic cache and per-API-key rate limits. A developer now proposes writing customer refund approvals to the same Memorystore instance because it is the fastest store in the design. How should the architect respond?",
+      "options": [
+        {
+          "text": "Approve it if the instance has a read replica, because replication makes Memorystore durable enough to be the single authoritative record for every approval.",
+          "correct": false,
+          "why_wrong": "Memorystore replicas are asynchronous, and keys can still be evicted or lost during failover, so replicas do not make it a system of record."
+        },
+        {
+          "text": "Keep approvals in a durable transactional store such as Cloud SQL, AlloyDB, Spanner, or Firestore, and treat Memorystore entries as rebuildable.",
+          "correct": true
+        },
+        {
+          "text": "Write approvals to BigQuery instead, since its strong consistency after commit makes it the right per-turn store for transactional records.",
+          "correct": false,
+          "why_wrong": "BigQuery is the analytics and telemetry sink with seconds-per-query latency; the guide says it is never the per-turn state store."
+        },
+        {
+          "text": "Store each approval in Memory Bank so it is consolidated into the customer's long-term memories and retrievable in later sessions.",
+          "correct": false,
+          "why_wrong": "Memory Bank holds LLM-extracted user facts that converge asynchronously; it is not an authoritative ledger for financial approvals."
+        }
+      ],
+      "explanation": "Memorystore is the default for semantic caching and atomic rate-limit counters because of its in-memory speed and native key expiry, but a cache can evict or lose keys during failover. Authoritative orders, approvals, and audit data belong in Cloud SQL, AlloyDB, Spanner, or Firestore.",
+      "key_takeaway": "Use Memorystore for semantic cache, counters, and locks; keep authoritative transactional records in Cloud SQL, AlloyDB, Spanner, or Firestore.",
+      "doc_links": [
+        {
+          "label": "Memorystore for Redis vector search",
+          "url": "https://docs.cloud.google.com/memorystore/docs/redis/about-vector-search"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-36",
+      "section": "Grounding, Retrieval & MCP Tooling",
+      "guide_anchor": "grounding-retrieval",
+      "question": "A team prototyped document RAG in RAG Engine Serverless mode because it needed no tier management. Before importing the production corpus, the security office mandates customer-managed encryption keys for all stored RAG data. What should the team do?",
+      "options": [
+        {
+          "text": "Stay in Serverless mode and enable VPC Service Controls, since the perimeter satisfies the key-management requirement for stored corpora.",
+          "correct": false,
+          "why_wrong": "Both modes support VPC Service Controls, but a service perimeter limits data exfiltration; it does not provide customer-managed encryption keys."
+        },
+        {
+          "text": "Switch the project to the Unprovisioned tier so RAG Engine stops managing storage and the team can attach its own keys afterwards.",
+          "correct": false,
+          "why_wrong": "The Unprovisioned tier deletes the Spanner instance and its data; it is not a way to bring your own keys."
+        },
+        {
+          "text": "Pass a Cloud KMS key when creating the production corpus in Serverless mode, then re-import the prototype corpus into it.",
+          "correct": false,
+          "why_wrong": "Serverless mode does not support CMEK at all, so there is no key to pass when creating a corpus in that mode."
+        },
+        {
+          "text": "Switch the project to Spanner mode (Basic or Scaled tier) with CMEK before importing, because corpora do not carry over between modes.",
+          "correct": true
+        }
+      ],
+      "explanation": "Serverless mode autoscales without tiers but has no storage isolation and no CMEK. Spanner mode runs a dedicated Spanner instance at the Basic or Scaled tier, isolates storage and performance, and supports CMEK. Because one RAG API routes to whichever mode is active and corpora from the other mode stay hidden, choose Spanner mode before importing data.",
+      "key_takeaway": "CMEK mandate on RAG Engine: use Spanner mode, chosen before import; Serverless mode has no CMEK and corpora do not move between modes.",
+      "doc_links": [
+        {
+          "label": "RAG Engine deployment modes",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/deployment-modes"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-37",
+      "section": "Grounding, Retrieval & MCP Tooling",
+      "guide_anchor": "grounding-retrieval",
+      "question": "A retailer is building a new product-catalog agent. It wants each product's JSON payload stored next to its vectors, embeddings generated automatically from the title and description fields, keyword plus semantic search, a managed MCP server for agents, and no always-on endpoint bill while traffic is low. Which store fits?",
+      "options": [
+        {
+          "text": "An Agent Retrieval Collection with a `vertex_embedding_config` on the vector field, adding a Collection Index as it nears 100,000 objects.",
+          "correct": true
+        },
+        {
+          "text": "A Vector Search 1.0 index deployed to an endpoint, with dense and sparse vectors computed in a separate offline batch pipeline and fused through RRF.",
+          "correct": false,
+          "why_wrong": "Vector Search 1.0 is bring-your-own embeddings, keeps source records in a separate store, has no managed MCP server, and bills deployed endpoints by node-hour even when idle."
+        },
+        {
+          "text": "BigQuery `VECTOR_SEARCH` over a products table, because in-warehouse SQL keeps payloads and vectors together without a separate store.",
+          "correct": false,
+          "why_wrong": "BigQuery vector search has seconds of query startup latency, which suits batch enrichment rather than interactive agent turns."
+        },
+        {
+          "text": "Example Store, since it embeds each stored product with a fixed model and returns the top-k similar entries at inference time.",
+          "correct": false,
+          "why_wrong": "Example Store injects curated few-shot demonstrations into prompts; it is not a product catalog or search backend."
+        }
+      ],
+      "explanation": "Agent Retrieval keeps JSON Data Objects (payload plus vector fields) in a schema-validated Collection, can fill a vector field automatically from a `vertex_embedding_config`, combines semantic and keyword search through RRF, has a Google-managed MCP server, and serves brute-force KNN with no index until a Collection Index is needed near 100,000 objects.",
+      "key_takeaway": "New agent store with payload plus vectors, auto-embeddings, hybrid search, and MCP: Agent Retrieval; existing BYO-embedding ANN pipelines: Vector Search 1.0.",
+      "doc_links": [
+        {
+          "label": "Agent Retrieval overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/overview"
+        },
+        {
+          "label": "Agent Retrieval autogenerated embeddings",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/embeddings/autogenerating-embeddings"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-38",
+      "section": "Grounding, Retrieval & MCP Tooling",
+      "guide_anchor": "grounding-retrieval",
+      "question": "A platform team publishes agent skills to Skill Registry through the Agent Platform API from a CI pipeline. Dozens of production agents only need to discover and load those skills. Which IAM setup follows least privilege on this path?",
+      "options": [
+        {
+          "text": "Grant every agent `roles/agentregistry.admin` so it can load skills and also repair broken skill revisions directly in production without waiting for the CI pipeline.",
+          "correct": false,
+          "why_wrong": "Admin on Agent Registry lets a compromised agent alter tool definitions or enroll malicious agents, and those roles govern the standalone-skills path, not Skill Registry."
+        },
+        {
+          "text": "Grant the agents `roles/agentregistry.viewer` and the CI pipeline `roles/agentregistry.user`, since skills are registry resources.",
+          "correct": false,
+          "why_wrong": "That split is right for Agent Registry standalone skills; Skill Registry inherits project IAM through `roles/aiplatform.*` roles instead."
+        },
+        {
+          "text": "Grant the CI pipeline `roles/aiplatform.user` and the agents `roles/aiplatform.viewer`, and add semantic governance policies on skill tools.",
+          "correct": true
+        },
+        {
+          "text": "Grant the agents `roles/mcp.toolUser`, because loading a skill is a tool call that is authorized like any MCP tool invocation.",
+          "correct": false,
+          "why_wrong": "`roles/mcp.toolUser` authorizes calls to Google Cloud MCP servers; it does not grant read access to Skill Registry packages."
+        }
+      ],
+      "explanation": "Skill Registry inherits project IAM: `roles/aiplatform.user` manages skills and `roles/aiplatform.viewer` gives read-only access. Agent Registry standalone skills use the `roles/agentregistry.*` family instead. IAM alone cannot stop an authorized agent from being steered into loading a powerful skill, so the guide pairs it with semantic governance policies.",
+      "key_takeaway": "Skill Registry path: publishers `roles/aiplatform.user`, consumers `roles/aiplatform.viewer`, plus semantic governance; never registry admin roles on agents.",
+      "doc_links": [
+        {
+          "label": "Skill Registry overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/skill-registry"
+        },
+        {
+          "label": "Govern agent skills",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/govern-agent-skills"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-q-39",
+      "section": "Observability, Audit & Prompt Optimization",
+      "guide_anchor": "observability",
+      "question": "An approved staging project with SDP de-identification and a restricted log bucket follows a team standard that requires `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`. To debug prompts, an engineer sets `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true`, and afterwards no traces or logs arrive at all. What is the fix?",
+      "options": [
+        {
+          "text": "Set `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=true` as well, because content capture needs both variables set to `true` before text is recorded.",
+          "correct": false,
+          "why_wrong": "The guide says to keep `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`; the problem is the invalid `true` value on the OTel variable."
+        },
+        {
+          "text": "Change the value to `EVENT_ONLY` and keep `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`, since `true` is invalid with the latest conventions.",
+          "correct": true
+        },
+        {
+          "text": "Enable Data Access audit logs on the Agent Platform API, which is where prompt and completion text is captured for agents.",
+          "correct": false,
+          "why_wrong": "Audit logs record who did what; prompt and completion capture is controlled by the GenAI content-capture setting, not audit logging."
+        },
+        {
+          "text": "Remove `OTEL_SEMCONV_STABILITY_OPT_IN` so the instrumentation falls back to older conventions that still accept the `true` value.",
+          "correct": false,
+          "why_wrong": "The team standard requires the latest GenAI conventions, so dropping the opt-in is not allowed here; the fix is a valid content-capture value."
+        }
+      ],
+      "explanation": "Prompt and completion capture is opt-in. With the latest GenAI semantic conventions, `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true` is an invalid configuration, so log and trace data is not collected at all. Set it to `EVENT_ONLY` and keep `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`, and enable it only in approved environments with SDP de-identification and restricted Cloud Logging buckets.",
+      "key_takeaway": "Content capture uses `EVENT_ONLY`, not `true`, with in-span capture off; enable it only where SDP and restricted log buckets are in place.",
+      "doc_links": [
+        {
+          "label": "Agent Platform Observability",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/observability/overview"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    }
+  ]
+}

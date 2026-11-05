@@ -94,7 +94,7 @@
                   "keywords": "Gemini Enterprise Agent Platform, Agent Runtime, Managed Agents API, Interactions API, Skill Registry, Agent Studio, agent-starter-pack, agents-cli, Sessions, Memory Bank, Example Store, Code Execution sandbox, Cloud Run, GKE, Agent Search, RAG Engine, Agent Retrieval, Vector Search, 2-Step Agent Simulation, Environment Simulation, OnlineEvaluator, Failure Cluster Analysis, Prompt Optimization, Dual-Attribution Audit Logs, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/AgentPlatform.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-01",
+                  "dateModified": "2026-11-05",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -579,8 +579,8 @@
                 </thead>
                 <tbody>
                     <tr><td><strong>Agent Search</strong> (formerly Vertex AI Search)</td><td>Turnkey managed search/RAG</td><td>Enterprise corpora (Drive, SharePoint, Confluence, Jira, GCS, BigQuery) needing built-in parsing, hybrid search, reranking, and <strong>native document-level ACLs</strong></td><td>Less low-level control over custom chunking or bespoke embeddings</td></tr>
-                    <tr><td><strong>RAG Engine</strong></td><td>Code-first managed RAG pipeline</td><td>You want explicit control over parsers (Document AI Layout Parser, LLM parser), chunking, embeddings, and vector DB</td><td>Check regional &amp; model matrix (<code>gemini-4-argon</code> is not directly bound as a RAG Engine generator; Agent Retrieval corpora require supported regions + cosine metric)</td></tr>
-                    <tr><td><strong>Vector Search 1.0</strong></td><td>ScaNN ANN index-as-a-service</td><td>Tens of millions to billions of custom vectors (e.g., <code>gemini-embedding-2</code>) at single-digit-ms latency</td><td>Deployed index endpoints bill continuously even when idle</td></tr>
+                    <tr><td><strong>RAG Engine</strong></td><td>Code-first managed RAG pipeline</td><td>You want explicit control over parsers (Document AI Layout Parser, LLM parser), chunking, embeddings, and vector DB (<strong>RagManagedDb</strong>, Agent Retrieval, Vector Search 1.0, Pinecone, Weaviate; the choice depends on the deployment mode)</td><td>Check regional &amp; model matrix (<code>gemini-4-argon</code> is not directly bound as a RAG Engine generator; Agent Retrieval corpora require supported regions + cosine metric)</td></tr>
+                    <tr><td><strong>Vector Search 1.0</strong></td><td>ScaNN ANN index-as-a-service</td><td>Tens of millions to billions of custom vectors (text or multimodal embeddings you compute yourself) at single-digit-ms latency</td><td>Deployed index endpoints bill continuously even when idle</td></tr>
                     <tr><td><strong>Agent Retrieval</strong> (formerly Vector Search 2.0)</td><td>Self-tuning collection store</td><td>Schema-aware collections of Data Objects with managed auto-embeddings or BYO embeddings</td><td>Exact KNN up to ~100k objects; create an ANN <strong>Collection Index</strong> beyond ~100k</td></tr>
                     <tr><td><strong>Grounding with Google Search / Maps / Web</strong></td><td>Live public-index grounding</td><td>Fresh public facts, places/geospatial context, or enterprise web grounding (Parallel, Exa)</td><td>Must render required Search Suggestions &amp; attribution metadata</td></tr>
                     <tr><td><strong>BigQuery</strong> (<code>VECTOR_SEARCH</code>)</td><td>In-warehouse SQL vectors</td><td>Analytical batch enrichment, warehouse joins, and offline evaluation pipelines</td><td>Multi-second startup latency — not a sub-100ms interactive chat store</td></tr>
@@ -592,7 +592,7 @@
         <div class="two-columns">
             <div class="concept-card accent-blue">
                 <h3><div class="icon-badge"><i class="fas fa-diagram-project"></i></div>RAG Engine pipeline</h3>
-                <p>Ingestion (local files, Cloud Storage, Google Drive, Slack/Jira connectors) → transformation (chunking via default parser, LLM parser, or <strong>Document AI Layout Parser</strong>) → embedding → <strong>corpus</strong> index → retrieval → generation. Vector store backends include <strong>RagManagedDb</strong> (default; KNN or ANN, CMEK), Vector Search, AlloyDB, and Pinecone. Supports VPC-SC and CMEK.</p>
+                <p>Ingestion (local files, Cloud Storage, Google Drive, Slack/Jira connectors) → transformation (chunking via default parser, LLM parser, or <strong>Document AI Layout Parser</strong>) → embedding → <strong>corpus</strong> index → retrieval → generation. Vector store options depend on the deployment mode: <strong>Spanner mode</strong> offers RagManagedDb (default), Agent Retrieval, Vector Search 1.0, Pinecone, and Weaviate; <strong>Serverless mode</strong> defaults to an Agent Retrieval collection (Pinecone and Weaviate as alternatives). Both modes support VPC-SC; only Spanner mode supports CMEK.</p>
             </div>
             <div class="concept-card accent-purple">
                 <h3><div class="icon-badge"><i class="fas fa-magnifying-glass-chart"></i></div>Precision &amp; citation verification</h3>
@@ -610,8 +610,8 @@
         <div class="concept-card accent-mint" style="margin-bottom: 24px;">
             <h3><div class="icon-badge"><i class="fas fa-plug"></i></div>Google Cloud MCP servers &amp; enterprise tool integrations</h3>
             <ul>
-                <li><strong>Google Cloud remote MCP servers:</strong> Google-hosted HTTP endpoints (<code>https://&lt;service&gt;.googleapis.com/mcp</code> or regional <code>.rep.googleapis.com/mcp</code>) auto-enabled with the service API and registered in <strong>Agent Registry</strong> (<code>urn:mcp:…</code>) across <strong>BigQuery</strong>, <strong>AlloyDB</strong>, <strong>Spanner / Bigtable / Firestore / Memorystore</strong>, <strong>GKE</strong>, <strong>Compute Engine</strong>, <strong>Pub/Sub</strong>, <strong>Apigee API Hub</strong>, <strong>Dataplex Knowledge Catalog</strong>, <strong>Looker</strong>, and <strong>Agent Retrieval</strong>. Requires <strong>MCP Tool User</strong> (<code>roles/mcp.toolUser</code> → <code>mcp.tools.call</code>) plus underlying service IAM roles.</li>
-                <li><strong>MCP Toolbox for Databases (<code>mcp-toolbox</code>):</strong> open-source MCP server managing connection pooling, OAuth/IAM auth, and parameterized SQL-injection-safe tools for Cloud SQL, AlloyDB, Spanner, BigQuery, and Looker.</li>
+                <li><strong>Google Cloud remote MCP servers:</strong> Google-hosted HTTP endpoints (<code>https://&lt;service&gt;.googleapis.com/mcp</code> or regional <code>.rep.googleapis.com/mcp</code>) that become available when you enable the service API and are registered in <strong>Agent Registry</strong> automatically, across <strong>BigQuery</strong>, <strong>Cloud SQL</strong>, <strong>AlloyDB</strong>, <strong>Spanner / Bigtable / Firestore / Memorystore</strong>, <strong>Cloud Storage</strong>, <strong>GKE</strong>, <strong>Cloud Run</strong>, <strong>Compute Engine</strong>, <strong>Pub/Sub</strong>, <strong>Cloud Logging / Monitoring / Trace</strong>, <strong>Apigee API hub</strong>, <strong>Knowledge Catalog</strong>, and <strong>Agent Retrieval</strong> <span class="preview-badge">Preview</span>. Requires <strong>MCP Tool User</strong> (<code>roles/mcp.toolUser</code> → <code>mcp.tools.call</code>) plus underlying service IAM roles.</li>
+                <li><strong>MCP Toolbox for Databases (<code>github.com/googleapis/mcp-toolbox</code>, formerly <code>genai-toolbox</code>):</strong> open-source MCP server that manages connection pools and auth, ships prebuilt tools per database (<code>--prebuilt=&lt;database&gt;</code>), and lets you define parameterized, SQL-injection-safe custom tools in <code>tools.yaml</code> for Cloud SQL, AlloyDB, Spanner, BigQuery, and many non-Google databases (PostgreSQL, MySQL, MongoDB, Neo4j, Snowflake and others).</li>
                 <li><strong>Custom &amp; SaaS MCP servers:</strong> host custom Streamable HTTP MCP servers on <strong>Cloud Run</strong> or <strong>GKE</strong>, or wrap enterprise ERPs/CRMs via <strong>Apigee</strong> and <strong>Application Integration (<code>ApplicationIntegrationToolset</code>)</strong>; govern discovery in <strong>Agent Registry</strong> and egress via <strong>Agent Gateway</strong> (<a href="AgentPlatformSecurity.html">Security guide</a>).</li>
             </ul>
         </div>
@@ -621,6 +621,180 @@
             <div class="callout-content">
                 <h4>Common trap — wrong distance metric</h4>
                 <p>When an Agent Retrieval / Vector Search index backs a RAG Engine corpus, configure the distance metric as <strong><code>COSINE</code></strong>. RAG Engine queries using cosine distance, so leaving the index at default <code>DOT_PRODUCT</code> fails with <code>FAILED_PRECONDITION</code>.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-scale-balanced"></i></div>Vector Search 1.0 vs. Agent Retrieval vs. RAG Engine</h3>
+            <p>When the matrix above leaves two vector options close, compare them on these dimensions.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Dimension</th><th>Vector Search 1.0</th><th>Agent Retrieval</th><th>RAG Engine</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Object model</strong></td><td>Datapoints (ID, embedding, optional filter metadata) in an index deployed to an endpoint; source records live in a separate store</td><td>JSON <strong>Data Objects</strong> (payload fields plus one or more vector fields) inside a schema-validated <strong>Collection</strong></td><td><code>RagCorpus</code> and <code>RagFile</code> resources; vectors go to a backing vector database</td></tr>
+                    <tr><td><strong>Embedding pipeline</strong></td><td>Bring your own dense (and, for hybrid, sparse) vectors before upserting</td><td>Your own vectors, or automatic fill from a <code>vertex_embedding_config</code> (model ID, text template over payload fields, task type) when a Data Object arrives without that vector</td><td>Parses, chunks, and embeds files for you at import time</td></tr>
+                    <tr><td><strong>Hybrid search and reranking</strong></td><td>Dense plus sparse index fused with Reciprocal Rank Fusion (RRF), weighted by <code>rrf_ranking_alpha</code>; you build sparse vectors (for example TF-IDF)</td><td>Semantic plus built-in keyword text search through RRF; optional Ranking API rerank</td><td>Reranking in <code>RagRetrievalConfig</code> (<code>rank_service</code> or <code>llm_ranker</code>); <code>hybrid_search.alpha</code> applies only with Weaviate</td></tr>
+                    <tr><td><strong>Agent and MCP integration</strong></td><td>Custom function tool or your own MCP server</td><td>Google-managed remote MCP server (Preview, read-only tools)</td><td>Corpus attached to Gemini requests as a <code>vertex_rag_store</code> retrieval tool</td></tr>
+                    <tr><td><strong>Scaling and cost</strong></td><td>Deployed index endpoints bill by node-hour, even when idle</td><td>Brute-force KNN with no index; add a Collection Index near 100,000 Data Objects or when KNN latency is too high; usage-based or resource-based pricing</td><td>Depends on the deployment mode (see below)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-server"></i></div>RAG Engine deployment modes</h3>
+                <p>One RAG API routes to whichever mode the project has active; corpora created under the other mode stay stored but hidden until you switch back.</p>
+                <ul>
+                    <li><strong>Serverless mode:</strong> no tier management, autoscales, and by default provisions an Agent Retrieval collection in your project as the vector database (Pinecone and Weaviate are alternatives; RagManagedDb is not offered). Storage is not isolated and <strong>CMEK is not supported</strong>.</li>
+                    <li><strong>Spanner mode</strong> (default when no mode is chosen): dedicated Spanner instance at the <strong>Basic</strong> tier (default, fixed low compute) or the <strong>Scaled</strong> tier (autoscaling, production volumes); the <strong>Unprovisioned</strong> tier deletes the instance and its data. Isolates storage and performance, <strong>supports CMEK</strong>, and offers RagManagedDb (default), Agent Retrieval, Vector Search 1.0, Pinecone, and Weaviate.</li>
+                    <li><strong>Both modes</strong> support VPC Service Controls.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-cyan">
+                <h3><div class="icon-badge"><i class="fas fa-key"></i></div>When to choose and CMEK</h3>
+                <ul>
+                    <li><strong>Vector Search 1.0:</strong> existing pipelines with your own embedders and tuned, always-on ANN endpoints.</li>
+                    <li><strong>Agent Retrieval:</strong> a new custom agent store that keeps payload and vectors together, with auto-embeddings, keyword plus semantic search, and an MCP server.</li>
+                    <li><strong>RAG Engine Serverless mode:</strong> the fastest managed document RAG when CMEK is not required.</li>
+                    <li><strong>RAG Engine Spanner mode</strong> (or a CMEK-enabled Agent Retrieval collection): when policy demands CMEK or isolated storage and performance.</li>
+                    <li><strong>CMEK on Agent Retrieval:</strong> set the Cloud KMS key (same region as the collection) at Collection creation (<code>--kms-key</code>). An existing collection cannot be switched; export its Data Objects to Cloud Storage and import them into a new CMEK collection.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern: Serverless mode under a CMEK mandate</h4>
+                <p>Serverless mode has no CMEK option, so a key-management policy rules it out. Pick Spanner mode before importing data, because corpora do not carry over between modes.</p>
+            </div>
+        </div>
+        <div class="concept-card accent-mint" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-plug-circle-check"></i></div>Managed remote MCP servers agents use most</h3>
+            <p>Google-hosted HTTPS endpoints; callers need <code>roles/mcp.toolUser</code> (<code>mcp.tools.call</code>) plus IAM on the underlying resources.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Server (endpoint host)</th><th>What the agent can do</th><th>Auth notes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>BigQuery</strong> (<code>bigquery.googleapis.com</code>)</td><td>Discover datasets and tables, read schemas, run SQL over warehouse data without copying tables into the prompt</td><td>IAM principal; BigQuery row/column controls still apply</td></tr>
+                    <tr><td><strong>Cloud SQL</strong> (<code>sqladmin.googleapis.com</code>)</td><td>Create, manage, and query MySQL, PostgreSQL, and SQL Server instances (<code>execute_sql</code>, <code>execute_sql_readonly</code>)</td><td>IAM principal; prefer the read-only tool for analysis agents</td></tr>
+                    <tr><td><strong>AlloyDB / Spanner / Firestore</strong></td><td>Manage resources and run queries or document operations against operational data</td><td>IAM principal; AlloyDB regional endpoints are Preview</td></tr>
+                    <tr><td><strong>Cloud Storage</strong> (<code>storage.googleapis.com/storage/mcp</code>)</td><td>List buckets and read or write objects such as reports and artifacts</td><td>IAM principal plus bucket IAM</td></tr>
+                    <tr><td><strong>Agent Retrieval</strong> (<code>vectorsearch.googleapis.com</code>) <span class="preview-badge">Preview</span></td><td>Inspect collections and indexes; run vector, semantic, hybrid, and text search (nine read-only tools, no write tools)</td><td>IAM principal; the client sends routing headers (such as the target project) on every <code>tools/call</code></td></tr>
+                    <tr><td><strong>Cloud Logging / Monitoring / Trace</strong></td><td>Query logs, metrics, and traces while troubleshooting agents</td><td>IAM principal with observability viewer roles</td></tr>
+                    <tr><td><strong>Developer Knowledge</strong> and <strong>Maps Grounding Lite</strong></td><td>Search Google developer documentation; look up places and location facts</td><td>Google (non-Cloud) servers: API key or OAuth, no <code>roles/mcp.toolUser</code>, and not controllable through IAM policies</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Check the supported products list</h4>
+                <p>The catalog grows quickly and launch stages differ per server and per endpoint. Check the public <em>Supported products</em> list for Google Cloud MCP servers before you design around a specific server.</p>
+            </div>
+        </div>
+        <div class="concept-card accent-amber" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-layer-group"></i></div>Integration layer decision table</h3>
+            <p>Pick the thinnest integration layer that still gives the agent narrow, governed tools.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Option</th><th>Custom logic</th><th>Ops burden</th><th>Typical auth</th><th>Choose when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Managed remote MCP server</strong></td><td>None (Google-defined tool schemas)</td><td>None (Google-hosted)</td><td>Agent identity, service account, or user OAuth; IAM on <code>roles/mcp.toolUser</code> + resource roles</td><td>Standard access to Google Cloud data and infrastructure with no server to run</td></tr>
+                    <tr><td><strong>MCP Toolbox for Databases</strong></td><td>Declarative (<code>tools.yaml</code> parameterized SQL)</td><td>Low to medium (you run the container on Cloud Run or GKE)</td><td>IAM database auth or per-tool OAuth/OIDC</td><td>Agents must run only vetted, parameterized queries against your databases</td></tr>
+                    <tr><td><strong>Custom MCP server on Cloud Run</strong></td><td>Full (any language, multi-API composition)</td><td>Medium (image, scaling, patching)</td><td>Service account or agent identity; IAP in front</td><td>Proprietary business workflows or internal services with no managed server</td></tr>
+                    <tr><td><strong>OpenAPI tool</strong> (ADK <code>OpenAPIToolset</code>)</td><td>Lives in the existing REST service</td><td>Low when a spec already exists</td><td>API key, OAuth, or service account</td><td>Wrapping a well-documented REST API without standing up an MCP server</td></tr>
+                    <tr><td><strong>Application Integration connectors</strong></td><td>Visual flows and data mapping</td><td>Low (managed connectors)</td><td>Managed connector auth profiles</td><td>SaaS ERPs/CRMs (SAP, Workday, ServiceNow) without a native MCP endpoint</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern: one generic <code>run_any_sql</code> tool</h4>
+                <p>Handing the model unrestricted SQL turns every prompt injection into a database incident. Prefer read-only tools, parameterized Toolbox tools, or narrow custom tools.</p>
+            </div>
+        </div>
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-address-book"></i></div>How Agent Registry records MCP servers</h3>
+                <ul>
+                    <li><strong>Google and Google Cloud servers</strong> register automatically when the API is enabled, tools included. The <code>McpServer</code> resource exists only in <code>global</code>; regional endpoints appear in its <code>interfaces</code> field, so query with <code>--location=global</code> (a regional query returns <code>NOT_FOUND</code>).</li>
+                    <li><strong>Custom servers on Cloud Run</strong> register automatically when deployed with <code>gcloud beta run deploy --functional-type=mcp-server</code> (services only; Cloud Run jobs can't be MCP servers). <code>--identity-type</code> (beta) selects <code>agent-identity</code> or <code>service-account</code> (default).</li>
+                    <li><strong>Custom servers on GKE</strong> register automatically from the <code>registry.gke.io/functional-type: "MCP_SERVER"</code> label plus <code>modelcontextprotocol.info/*</code> annotations; GKE fetches the tool spec from the running server.</li>
+                    <li><strong>External servers, and cross-project servers without a management boundary,</strong> need manual registration (<code>gcloud agent-registry services create … --mcp-server-spec-type=tool-spec</code>) with an uploaded <code>toolspec.json</code> (MCP tool schema, 10 KB max) listing tool names, descriptions, and annotations such as <code>readOnlyHint</code> or <code>destructiveHint</code>.</li>
+                    <li><strong>Data residency:</strong> register manually in a specific region when registry metadata must stay there. <strong>Role:</strong> registering requires <code>roles/agentregistry.editor</code> on the governance project.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-id-badge"></i></div>Transports and identity choice</h3>
+                <ul>
+                    <li><strong>Transport:</strong> <code>stdio</code> runs the server as a local child process on the same machine (IDEs, CLIs, local Toolbox); <strong>Streamable HTTP</strong> over HTTPS is required for remote and production servers on Google infrastructure, Cloud Run, or GKE.</li>
+                    <li><strong>Identity:</strong> a service account or <strong>agent identity</strong> acts on the agent's own authority (recommended for production so permissions and logs are scoped to the agent); <strong>end-user OAuth</strong> runs and logs actions as the user, needed when downstream tools enforce per-user ACLs (brokered through Auth Manager).</li>
+                    <li><strong>Stateless MCP:</strong> Google Cloud remote servers support MCP version <code>2026-07-28</code>, which drops the <code>initialize</code> handshake and <code>Mcp-Session-Id</code>; each request carries what it needs in HTTP headers or <code>_meta</code>, so load balancers route without parsing bodies.</li>
+                    <li><strong>Agent identity vs. service account:</strong> agent identities are SPIFFE-based, not shared across workloads by default, can't be impersonated, and don't allow long-lived keys.</li>
+                    <li><strong>Security controls</strong> (Agent Gateway egress policies, IAP tool-level authorization, Model Armor screening of MCP traffic) are covered in the <a href="AgentPlatformSecurity.html">Security guide</a>.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="concept-card accent-pink" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-toolbox"></i></div>Skill Registry lifecycle <span class="preview-badge">Preview</span></h3>
+            <p><strong>Skill Registry</strong> is the Agent Platform repository for agent skills in the open Agent Skills layout: a <code>SKILL.md</code> file plus optional <code>scripts/</code>, <code>references/</code>, and <code>assets/</code> folders. Agents load a skill only when the task calls for it. <strong>Agent Registry</strong> can also hold the same packages as <em>standalone skills</em>, with its own API, roles, and tighter payload limits, so keep the two paths apart.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Stage</th><th>Skill Registry (Agent Platform API)</th><th>Agent Registry standalone skills</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Author</strong></td><td><code>SKILL.md</code> front matter: <code>name</code> (required, max 64 characters, lowercase letters, digits, and hyphens, no leading or trailing hyphen), <code>description</code> (required, max 1,024 characters), optional <code>license</code>. Body max 500,000 characters. The skill ID (1 to 63 characters, starts with a letter) stays reserved after deletion; the <code>gcp-</code> prefix is reserved for built-in skills</td><td>Same <code>SKILL.md</code> at the zip root with valid front matter per the Agent Skills specification</td></tr>
+                    <tr><td><strong>Publish and validate</strong></td><td><code>CreateSkill</code> long-running operation (REST <code>v1beta1</code> or <code>client.skills.create</code>) with a base64 zip. Validation rejects a zip over <strong>10 MB</strong>, over 500 MB unzipped, over <strong>10,000</strong> entries, nested deeper than 8 folders, compression ratio over 100, any <strong>symbolic link</strong>, duplicate names, <code>..</code> or absolute paths, or a missing <code>SKILL.md</code></td><td><code>gcloud alpha agent-registry skills create</code> with <code>--payload</code> or <code>--gcs-source-uri</code>. Limits: <strong>500 KB</strong> compressed, 10 MB uncompressed, 1 MB per file, 8 folder levels. The ID gets a <code>private-</code> prefix; a Cloud Storage import needs the Agent Registry service agent to hold <code>storage.objects.get</code></td></tr>
+                    <tr><td><strong>Revisions</strong></td><td>Every create or update stores an immutable <strong>skill revision</strong>; <code>GetSkill</code> returns the latest, and <code>ListSkillRevisions</code> / <code>GetSkillRevision</code> expose history</td><td>New skills start <code>DISABLED</code>; set the default revision and switch the target state to Active before agents can discover it</td></tr>
+                    <tr><td><strong>Discover</strong></td><td><code>ListSkills</code> returns name, display name, and description; <code>RetrieveSkills</code> runs semantic search over them. The built-in <code>gcp-skill-registry</code> skill lets an agent create, search, and manage skills itself</td><td>Agent Registry search across agents, MCP servers, and skills</td></tr>
+                    <tr><td><strong>Authorize</strong></td><td>Inherits project IAM: <code>roles/aiplatform.user</code> to manage skills, <code>roles/aiplatform.viewer</code> for read-only access</td><td><code>roles/agentregistry.viewer</code> (discover and read), <code>roles/agentregistry.user</code> (plus create, update, delete skills and revisions), <code>roles/agentregistry.editor</code> (plus agents, MCP servers, endpoints), <code>roles/agentregistry.admin</code> (plus bindings and skill IAM policies)</td></tr>
+                    <tr><td><strong>Govern at runtime</strong></td><td><strong>Semantic governance policies</strong> (Preview) intercept the ADK skill tools and judge each call against natural language constraints (NLCs)</td><td>Same policies apply, because loading a skill is itself a tool call</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-stairs"></i></div>Progressive disclosure through four ADK skill tools</h3>
+                <ul>
+                    <li><code>list_skills</code> shows the model only the catalog of skill names and descriptions.</li>
+                    <li><code>load_skill</code> pulls one skill's full instructions and tools into context.</li>
+                    <li><code>load_skill_resource</code> fetches a referenced file or asset on demand.</li>
+                    <li><code>run_skill_script</code> executes the skill's bundled code. Each tool is a point where a policy can return a verdict.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-shield-halved"></i></div>Compliance and runtime controls</h3>
+                <ul>
+                    <li><strong>Compliance:</strong> Access Transparency and US/EU data residency are supported; CMEK, VPC Service Controls, and HIPAA are not. Regions: <code>us-central1</code>, <code>europe-west4</code>, <code>us-east5</code>.</li>
+                    <li><strong>Tainted-session control:</strong> an NLC can deny <code>load_skill</code> for any skill that sends messages or writes externally once the history contains web, email, or uploaded content.</li>
+                    <li><strong>Supply-chain control:</strong> an NLC can inspect the arguments of an install tool triggered by skill instructions and deny packages outside an allowlist.</li>
+                    <li><strong>Caveat:</strong> semantic governance uses an LLM, so verdicts are probabilistic. Keep IAM and network egress controls as the deterministic layer.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern: registry admin roles on agents</h4>
+                <p>Granting <code>roles/agentregistry.admin</code> or <code>roles/agentregistry.editor</code> to an agent identity lets a compromised agent alter tool definitions or enroll a malicious agent. On the standalone-skills path, give consuming agents <code>roles/agentregistry.viewer</code> and publishers or CI pipelines <code>roles/agentregistry.user</code>; on the Skill Registry path, use <code>roles/aiplatform.viewer</code> for consumers and <code>roles/aiplatform.user</code> for publishers.</p>
+            </div>
+        </div>
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Anti-pattern: IAM as the only skill control</h4>
+                <p>IAM decides who may publish or read a package, but an authorized agent can still be steered by injected content into loading a powerful skill. Pair IAM with semantic governance policies.</p>
             </div>
         </div>
 
@@ -655,6 +829,105 @@
             <div class="callout-content">
                 <h4>Common trap — caching across permission boundaries</h4>
                 <p>A global semantic cache shared across users can leak answers synthesized from restricted HR/finance documents to unauthorized callers. Always partition semantic cache keys by tenant/role/ACL scope or skip response caching for permission-sensitive corpora.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-blue" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-database"></i></div>Choosing data services by agent data need</h3>
+            <p>Split agent data by access pattern rather than putting everything in one database. Each row names the default pick and the usual fallback.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Data need</th><th>Default service</th><th>Common alternative</th><th>Why the default fits</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Conversation sessions</strong> (events + state)</td><td><strong>Agent Platform Sessions</strong> via <code>VertexAiSessionService</code></td><td>Cloud SQL or AlloyDB via <code>DatabaseSessionService</code></td><td>No schema to own; reachable from Agent Runtime, Cloud Run, GKE, or a laptop; feeds Memory Bank generation</td></tr>
+                    <tr><td><strong>Long-term user memory</strong></td><td><strong>Memory Bank</strong></td><td>Your own facts table with vectors in AlloyDB/Cloud SQL (<code>pgvector</code>) or Firestore vector search</td><td>Managed LLM extraction, consolidation, identity-scoped similarity retrieval, TTL, and revisions</td></tr>
+                    <tr><td><strong>Semantic cache</strong></td><td><strong>Memorystore for Redis</strong> vector search (Redis 7.2; HNSW approximate or FLAT exact)</td><td>AlloyDB vector index</td><td>In-memory lookups with native key expiry, so repeated or paraphrased prompts skip the model call</td></tr>
+                    <tr><td><strong>Rate-limit and budget counters</strong></td><td><strong>Memorystore</strong> (Redis/Valkey atomic increments with TTL)</td><td>Firestore counters (higher latency, lower write rate per document)</td><td>Atomic in-memory operations suit per-user or per-agent throttling on the hot path</td></tr>
+                    <tr><td><strong>Transactional data that tools read and write</strong></td><td><strong>Cloud SQL</strong> or <strong>AlloyDB</strong></td><td><strong>Spanner</strong> (global scale) or <strong>Firestore</strong> (document model)</td><td>ACID transactions, joins, and vector columns next to live rows; reachable through managed MCP servers or MCP Toolbox</td></tr>
+                    <tr><td><strong>Analytics and agent telemetry</strong></td><td><strong>BigQuery</strong></td><td>Cloud Logging Log Analytics</td><td>Serverless SQL over prompt/response logs, traces, eval results, and token cost; never the per-turn state store</td></tr>
+                    <tr><td><strong>Documents, media, and artifacts</strong></td><td><strong>Cloud Storage</strong> (ADK <code>GcsArtifactService</code> for agent outputs)</td><td>BigQuery object tables (SQL metadata over Cloud Storage objects)</td><td>Durable, cheap object storage that also feeds Agent Search, RAG Engine, and Agent Retrieval ingestion</td></tr>
+                    <tr><td><strong>Vector embeddings</strong></td><td><strong>Agent Retrieval</strong> or <strong>Vector Search 1.0</strong></td><td>AlloyDB/Cloud SQL <code>pgvector</code>, Firestore vector search, BigQuery <code>VECTOR_SEARCH</code></td><td>Purpose-built ANN and hybrid search; pick the operational database when vectors must be filtered with live transactional rows</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="concept-card accent-purple" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-clock-rotate-left"></i></div>ADK session service options</h3>
+            <p>The <code>SessionService</code> backend decides whether conversation state survives restarts and scale-out.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th><code>SessionService</code></th><th>Where data lives</th><th>Survives restart / scale-out</th><th>Use for</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>InMemorySessionService</code></td><td>Process memory</td><td>No (lost on restart; not shared across replicas)</td><td>Local development, unit tests, <code>adk web</code> demos</td></tr>
+                    <tr><td><code>DatabaseSessionService</code></td><td>SQL database you operate (SQLite locally; PostgreSQL or MySQL such as Cloud SQL or AlloyDB in production)</td><td>Yes</td><td>Self-hosted agents on Cloud Run or GKE that need sessions in your own database for residency, private networking, or custom SQL reporting</td></tr>
+                    <tr><td><code>VertexAiSessionService</code></td><td>Agent Platform Sessions (managed, tied to an Agent Runtime resource)</td><td>Yes</td><td>Default on Agent Runtime; also usable from Cloud Run, GKE, or local code; pairs with <code>VertexAiMemoryBankService</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Rule of thumb</h4>
+                <p>Use <code>InMemorySessionService</code> only until the first deployment. Any multi-replica or serverless deployment needs <code>DatabaseSessionService</code> or <code>VertexAiSessionService</code>.</p>
+            </div>
+        </div>
+        <div class="concept-card accent-cyan" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Service trade-offs</h3>
+            <p>Latency, consistency, cost model, and operational burden for the stores agents use most.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Service</th><th>Latency profile</th><th>Consistency</th><th>Cost model</th><th>Ops burden</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Agent Platform Sessions + Memory Bank</strong></td><td>API calls on the hot path; memory generation runs asynchronously</td><td>Session reads/writes are immediate; memories converge after background consolidation</td><td>Managed usage-based pricing</td><td>Lowest</td></tr>
+                    <tr><td><strong>Firestore</strong></td><td>Low (serverless document reads/writes)</td><td>Strong, with ACID transactions</td><td>Per operation + storage</td><td>Very low (scales to zero)</td></tr>
+                    <tr><td><strong>Memorystore</strong></td><td>Sub-millisecond in-memory</td><td>Strong on the primary; replicas are asynchronous</td><td>Provisioned capacity per hour</td><td>Low to medium (capacity sizing)</td></tr>
+                    <tr><td><strong>Cloud SQL</strong></td><td>Low within the VPC</td><td>Strong relational ACID</td><td>Provisioned vCPU/RAM + storage</td><td>Medium (instances, backups, indexes)</td></tr>
+                    <tr><td><strong>AlloyDB</strong></td><td>Low, with accelerated vector and analytical queries</td><td>Strong relational ACID</td><td>Provisioned primary and read pool nodes</td><td>Low to medium</td></tr>
+                    <tr><td><strong>BigQuery</strong></td><td>Seconds per query</td><td>Strong after commit</td><td>Per data scanned or reserved slots + storage</td><td>Very low</td></tr>
+                    <tr><td><strong>Cloud Storage</strong></td><td>Tens of milliseconds to first byte</td><td>Strong read-after-write</td><td>Per GB-month by class + operations + egress</td><td>Lowest</td></tr>
+                    <tr><td><strong>Agent Retrieval / Vector Search</strong></td><td>Low-latency ANN</td><td>Near real time for streaming updates</td><td>Usage-based (Agent Retrieval) or deployed node-hours (Vector Search 1.0)</td><td>Low</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callout important">
+            <div class="callout-icon"><i class="fas fa-circle-info"></i></div>
+            <div class="callout-content">
+                <h4>Latency labels are directional</h4>
+                <p>Benchmark with your own payload sizes and regions before committing to an SLO.</p>
+            </div>
+        </div>
+        <div class="concept-card accent-amber" style="margin-bottom: 24px;">
+            <h3><div class="icon-badge"><i class="fas fa-sitemap"></i></div>Reference architectures</h3>
+            <p>Four agent shapes and the services each one typically combines.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Component</th><th>Customer support agent</th><th>Data analysis agent</th><th>High-QPS public FAQ agent</th><th>Regulated-industry agent</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Runtime</strong></td><td>Agent Runtime</td><td>Agent Runtime</td><td>Cloud Run (autoscaled)</td><td>GKE private cluster inside a VPC-SC perimeter</td></tr>
+                    <tr><td><strong>Sessions</strong></td><td><code>VertexAiSessionService</code></td><td><code>VertexAiSessionService</code></td><td>Firestore or Memorystore (short-lived state)</td><td><code>DatabaseSessionService</code> on AlloyDB with CMEK and private connectivity</td></tr>
+                    <tr><td><strong>Memory</strong></td><td>Memory Bank (device history, preferences)</td><td>Memory Bank (analyst preferences)</td><td>None (anonymous traffic)</td><td>Memory Bank with strict topics and TTL, or none</td></tr>
+                    <tr><td><strong>Knowledge and vectors</strong></td><td>Policy PDFs in Cloud Storage indexed by Agent Search or Agent Retrieval</td><td>BigQuery tables through the BigQuery MCP server</td><td>Agent Retrieval behind a Memorystore semantic cache</td><td>AlloyDB vectors with row-level security next to transactional rows</td></tr>
+                    <tr><td><strong>Tools and transactions</strong></td><td>Order and refund lookups in Cloud SQL via MCP Toolbox</td><td>Code Execution sandbox for Python; charts saved with <code>GcsArtifactService</code></td><td>Memorystore rate limits per IP or API key</td><td>Narrow custom MCP tools behind Agent Gateway</td></tr>
+                    <tr><td><strong>Telemetry</strong></td><td>Cloud Trace + BigQuery eval sink</td><td>BigQuery cost and eval analytics</td><td>Cloud Monitoring cache hit rate + BigQuery logs</td><td>Audit logs to BigQuery; locked Cloud Storage retention bucket</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-ban"></i></div>
+            <div class="callout-content">
+                <h4>Common trap: Memorystore as the system of record</h4>
+                <p>A cache or counter store can evict or lose keys during failover. Keep authoritative orders, approvals, and audit data in Cloud SQL, AlloyDB, Spanner, or Firestore, and treat Memorystore entries as rebuildable.</p>
             </div>
         </div>
 
@@ -729,7 +1002,7 @@
             <div class="concept-card accent-cyan">
                 <h3><div class="icon-badge"><i class="fas fa-chart-line"></i></div>OpenTelemetry &amp; 8 Agent Registry Views</h3>
                 <ul>
-                    <li><strong>Telemetry flags:</strong> set <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> (exports traces, metrics, and logs <em>without</em> raw prompt text) + <code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code>. Raw payload capture requires explicit opt-in via <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true</code> + SDP redaction.</li>
+                    <li><strong>Telemetry flags:</strong> set <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> (exports traces, metrics, and logs <em>without</em> raw prompt text) + <code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code>. Raw payload capture is opt-in: set <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code> and keep <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> (the value <code>true</code> is invalid with the latest conventions and collects nothing), paired with SDP de-identification and restricted log buckets (<code>roles/logging.privateLogViewer</code>).</li>
                     <li><strong>8 Agent Registry Observability tabs:</strong> <strong>Overview</strong>, <strong>Evaluation</strong>, <strong>Models</strong>, <strong>Tools</strong> (per-tool &amp; per-MCP-server p95 latency + <em>"no-tool interactions"</em>), <strong>Usage</strong>, <strong>Logs</strong>, <strong>Traces</strong> (waterfall/DAG), and <strong>Topology</strong> (live graph of agents, A2A peers, models, and MCP servers) + native <strong>Model Armor</strong> spans.</li>
                 </ul>
             </div>
@@ -761,7 +1034,7 @@
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Common trap — logging raw prompts by default</h4>
-                <p>Enabling <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</code> writes raw user prompts and tool payloads into logs, risking PII exposure. Keep content capture disabled by default or pair it with SDP de-identification and restricted log buckets (<a href="AgentPlatformSecurity.html">Security guide</a>).</p>
+                <p>Setting <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code> writes raw user prompts and tool payloads into logs, risking PII exposure. Keep content capture disabled by default or pair it with SDP de-identification and restricted log buckets (<a href="AgentPlatformSecurity.html">Security guide</a>).</p>
             </div>
         </div>
 
@@ -821,6 +1094,9 @@
                     <tr><td>Grading compliance agents only on final-answer quality</td><td>Misses skipped verification tools ("right answer, wrong path")</td><td>Add <strong>trajectory metrics</strong> (<code>trajectory_in_order_match</code>)</td></tr>
                     <tr><td>Fault-testing resilience against live production APIs</td><td>Triggers real side effects &amp; non-reproducible states</td><td>Use <strong>Environment Simulation</strong> + <strong>2-Step Agent Simulation</strong></td></tr>
                     <tr><td>Global semantic cache over ACL-protected documents</td><td>Leaks confidential answers across users</td><td>Partition cache keys by ACL/tenant scope</td></tr>
+                    <tr><td>Querying an auto-registered Google Cloud MCP server with <code>--location=us-central1</code></td><td>Auto-registered <code>McpServer</code> resources exist only in <code>global</code>, so the call returns <code>NOT_FOUND</code></td><td>Query with <code>--location=global</code>, or register the server manually in the region when metadata residency matters</td></tr>
+                    <tr><td>Registering an external MCP server without a <code>toolspec.json</code></td><td>Manual registration records only the endpoint; the registry does not inspect the server, so no tools are discoverable</td><td>Upload a <code>toolspec.json</code> (MCP tool schema, 10 KB max) during registration</td></tr>
+                    <tr><td>Shipping with <code>InMemorySessionService</code> on Cloud Run</td><td>Sessions vanish on restart and are not shared across replicas</td><td>Switch to <code>VertexAiSessionService</code> or <code>DatabaseSessionService</code> before the first deployment</td></tr>
                 </tbody>
             </table>
         </div>
@@ -878,6 +1154,54 @@
                 <dt>Provisioned Throughput</dt>
                 <dd>Reserved model capacity bought in GSUs for predictable latency &amp; throughput.</dd>
             </div>
+            <div class="definition-item">
+                <dt>Google Cloud remote MCP server</dt>
+                <dd>Google-hosted HTTPS MCP endpoint for a Cloud service, enabled with the service API, auto-registered in Agent Registry, and gated by <code>roles/mcp.toolUser</code> plus resource IAM.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>MCP Toolbox for Databases</dt>
+                <dd>Open-source MCP server (<code>googleapis/mcp-toolbox</code>) with prebuilt database tools and parameterized custom tools defined in <code>tools.yaml</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>toolspec.json</code></dt>
+                <dd>Tool specification file (MCP tool schema, 10 KB max) uploaded when manually registering an external MCP server in Agent Registry.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Streamable HTTP vs. stdio</dt>
+                <dd>Remote HTTPS MCP transport for cloud servers vs. local child-process transport for servers on the same machine.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>ADK session services</dt>
+                <dd><code>VertexAiSessionService</code> (managed Agent Platform Sessions), <code>DatabaseSessionService</code> (SQL database you operate), and <code>InMemorySessionService</code> (non-persistent process memory).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Skill Registry <span class="preview-badge">Preview</span></dt>
+                <dd>Agent Platform repository that validates, versions, and serves <code>SKILL.md</code>-based skill packages; inherits project IAM (<code>roles/aiplatform.*</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Skill revision</dt>
+                <dd>Immutable snapshot of one version of a skill; agents load the default revision unless a specific revision is requested.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>gcp-skill-registry</code></dt>
+                <dd>Google-managed built-in skill that lets an agent create, search, and manage skills in Skill Registry.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Semantic governance policy <span class="preview-badge">Preview</span></dt>
+                <dd>LLM-evaluated natural language constraint that can allow or deny skill tool calls such as <code>load_skill</code> and <code>run_skill_script</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>RAG Engine Serverless vs. Spanner mode</dt>
+                <dd>Zero-tier, autoscaled backend without CMEK vs. dedicated Spanner instance with Basic or Scaled tiers, isolation, and CMEK.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Collection / Data Object</dt>
+                <dd>Agent Retrieval container with a schema (similar to a table) and the individual JSON record it stores alongside its vector fields.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Semantic cache</dt>
+                <dd>Vector-indexed response cache (for example Memorystore for Redis vector search) serving stored answers to semantically similar prompts; partition keys by tenant or ACL scope.</dd>
+            </div>
         </div>
 
         <div class="two-columns">
@@ -897,7 +1221,7 @@
                 <div class="audio-label" style="margin-top: 15px;">Agent Platform: Build, Retrieve, Run &amp; Optimize (Podcast)</div>
                 <div class="audio-wrapper">
                     <audio controls controlsList="nodownload" oncontextmenu="return false;">
-                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/AgentPlatform-v2.0.mp3" type="audio/mpeg">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/google/AgentPlatform-v2.1.mp3" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
                 </div>
@@ -921,6 +1245,20 @@
                 <li>Build (Agent Studio, Managed Agents API, Skill Registry, ADK), Scale (Agent Runtime, Sessions, Memory Bank, Example Store, Code Execution), and Optimize (Evaluation, Simulation, Observability, Prompt Optimization) — docs.cloud.google.com/gemini-enterprise-agent-platform</li>
                 <li>Choose your agentic AI architecture components — docs.cloud.google.com/architecture/choose-agentic-ai-architecture-components</li>
                 <li><em>Introduction to Agents and Agent Architectures</em> (Google Cloud Whitepaper) — AgentOps flywheel, context engineering, and runtime patterns</li>
+                <li>Google Cloud MCP servers: overview, supported products, and authentication: docs.cloud.google.com/mcp/overview, docs.cloud.google.com/mcp/supported-products, docs.cloud.google.com/mcp/authenticate-mcp</li>
+                <li>Register MCP servers in Agent Registry: docs.cloud.google.com/agent-registry/register-mcp-servers</li>
+                <li>Cloud SQL remote MCP server: docs.cloud.google.com/sql/docs/postgres/use-cloudsql-mcp</li>
+                <li>Agent Retrieval MCP server: docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/use-agent-retrieval-mcp</li>
+                <li>MCP Toolbox for Databases: github.com/googleapis/mcp-toolbox</li>
+                <li>Memory Bank overview: docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank</li>
+                <li>Memorystore for Redis vector search: docs.cloud.google.com/memorystore/docs/redis/about-vector-search</li>
+                <li>ADK sessions and session services: adk.dev/sessions/</li>
+                <li>Skill Registry overview and skill management: docs.cloud.google.com/gemini-enterprise-agent-platform/build/skill-registry, docs.cloud.google.com/gemini-enterprise-agent-platform/build/skill-registry/create-manage</li>
+                <li>Register standalone skills and Agent Registry roles: docs.cloud.google.com/agent-registry/register-skills, docs.cloud.google.com/agent-registry/roles-permissions</li>
+                <li>Govern agent skills with semantic governance policies: docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/govern-agent-skills</li>
+                <li>RAG Engine deployment modes and retrieval/ranking: docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/deployment-modes, docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/retrieval-and-ranking</li>
+                <li>Agent Retrieval overview, autogenerated embeddings, and CMEK: docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/overview, docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/embeddings/autogenerating-embeddings, docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/cmek</li>
+                <li>Vector Search 1.0 hybrid search: docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/about-hybrid-search</li>
             </ul>
         </div>
 

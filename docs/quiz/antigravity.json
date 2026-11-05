@@ -1,0 +1,1255 @@
+{
+  "topic_id": "antigravity",
+  "title": "Antigravity & Agents CLI",
+  "guide_url": "Antigravity.html",
+  "questions": [
+    {
+      "id": "antigravity-q-01",
+      "section": "Surfaces",
+      "guide_anchor": "surfaces",
+      "question": "A platform team embeds an Antigravity agent in a nightly CI job through the Python SDK. The agent should review dependency diffs and write a report file into the repository, but the report never gets written. What is the most likely cause?",
+      "options": [
+        {
+          "text": "The SDK only works while the desktop App is open and signed in on the same CI runner, so headless jobs cannot write files.",
+          "correct": false,
+          "why_wrong": "The write limit comes from the SDK's read-only default capabilities. The SDK is meant for scripts, pipelines and tests, so the problem is not a missing App window."
+        },
+        {
+          "text": "Pipelines must call the agy CLI in headless mode, because the SDK package cannot be imported from Python scripts.",
+          "correct": false,
+          "why_wrong": "The SDK is the Python package google-antigravity, built specifically for embedding agents in scripts, pipelines and tests."
+        },
+        {
+          "text": "The SDK agent is read-only by default, so write tools must be enabled by passing a CapabilitiesConfig to the agent.",
+          "correct": true
+        },
+        {
+          "text": "The artifact review policy defaults to asks-for-review, so every file write is waiting for a human approval click.",
+          "correct": false,
+          "why_wrong": "The artifact review policy governs plans, not file writes. Here the write tools are simply not enabled in the SDK agent's capabilities."
+        }
+      ],
+      "explanation": "The Antigravity SDK (google-antigravity) creates agents that are read-only by default. To let the agent create or edit files, pass capabilities=CapabilitiesConfig() when you build it. That is the documented switch for write tools.",
+      "key_takeaway": "Antigravity SDK agents are read-only by default; enable write tools with CapabilitiesConfig.",
+      "doc_links": [
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        },
+        {
+          "label": "Antigravity Surfaces & Features",
+          "url": "https://antigravity.google/docs/features"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-02",
+      "section": "Surfaces",
+      "guide_anchor": "surfaces",
+      "question": "A terminal-first developer is moving from Gemini CLI to the Antigravity CLI and wants to keep using the Gemini CLI extensions their team built. What is the supported migration path?",
+      "options": [
+        {
+          "text": "Run agy plugin import gemini so the existing Gemini CLI extensions are converted into Antigravity plugins.",
+          "correct": true
+        },
+        {
+          "text": "Copy each extension folder into .agents/rules/ so the extensions load as always-on rules on the next launch.",
+          "correct": false,
+          "why_wrong": "Rules are Markdown constraints that need a trigger in their frontmatter. Extensions are not rules; the documented conversion is agy plugin import gemini."
+        },
+        {
+          "text": "Install the Antigravity IDE instead, because only the IDE can read Gemini CLI extension manifests and settings.",
+          "correct": false,
+          "why_wrong": "Migration is a CLI feature: agy detects Gemini CLI configs on first launch, and agy plugin import gemini converts the extensions."
+        },
+        {
+          "text": "Recreate every extension by hand as a subagent file under .agents/agents/ using the same extension names.",
+          "correct": false,
+          "why_wrong": "Subagent files define specialized agents, not extension bundles. Antigravity offers an automatic conversion into plugins."
+        }
+      ],
+      "explanation": "On first launch, agy detects old Gemini CLI configs. The agy plugin import gemini command converts Gemini CLI extensions into Antigravity plugins: namespaced bundles of skills, rules, hooks, MCP servers and agents.",
+      "key_takeaway": "Gemini CLI extensions become Antigravity plugins with agy plugin import gemini.",
+      "doc_links": [
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        },
+        {
+          "label": "Antigravity Surfaces & Features",
+          "url": "https://antigravity.google/docs/features"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-03",
+      "section": "Agent Workflow",
+      "guide_anchor": "agent-workflow",
+      "question": "An engineer asks the agent to move a payment service from one ORM to another across 40 files. Team policy says a human must approve the approach, including how it will be verified, before any code changes. Which setup fits best?",
+      "options": [
+        {
+          "text": "Use Fast mode, then read the walkthrough artifact at the end to decide whether to keep or roll back the whole migration.",
+          "correct": false,
+          "why_wrong": "Fast mode acts right away, and the walkthrough comes after the work is done. The approach would not be approved before edits."
+        },
+        {
+          "text": "Use Planning mode (/plan) so the agent produces an implementation plan with verification gates for review before it edits anything.",
+          "correct": true
+        },
+        {
+          "text": "Set the CLI artifact review policy to always-proceed so the plan is shown in the conversation but never blocks progress.",
+          "correct": false,
+          "why_wrong": "always-proceed removes the human review step that the policy requires. The plan would not wait for approval."
+        },
+        {
+          "text": "Switch the agent mode to accept-edits so every file change in the workspace is approved automatically as it happens.",
+          "correct": false,
+          "why_wrong": "accept-edits auto-approves edits, which is the opposite of human gating, and it does not create a plan to review."
+        }
+      ],
+      "explanation": "Planning mode researches the codebase and writes an implementation plan artifact (tasks, verification gates, risks) before any edit. You comment on it and then click Proceed. That makes it the right choice for large, multi-file, high-risk changes.",
+      "key_takeaway": "Use Planning mode for multi-file or risky work: review the plan and its verification gates before edits.",
+      "doc_links": [
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        },
+        {
+          "label": "Antigravity Artifact Review",
+          "url": "https://antigravity.google/docs/artifact-review"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-04",
+      "section": "Agent Workflow",
+      "guide_anchor": "agent-workflow",
+      "question": "A tech lead sets artifactReviewPolicy to asks-for-review in the Antigravity CLI. After approving a plan, they see the agent write files without showing any diffs. What explains this?",
+      "options": [
+        {
+          "text": "The asks-for-review value is ignored in the CLI and only takes effect in the desktop App's conversation view.",
+          "correct": false,
+          "why_wrong": "artifactReviewPolicy is a CLI setting, and asks-for-review is its default value. It works in the CLI."
+        },
+        {
+          "text": "agent-decides is the real CLI default, so the agent chose to skip diff review for files it judged to be low risk.",
+          "correct": false,
+          "why_wrong": "The default is asks-for-review, and agent-decides currently behaves the same way. The diff behavior comes from the agent mode."
+        },
+        {
+          "text": "Diff review needs a PreToolUse hook that returns force_ask, because without such a hook writes are never reviewed.",
+          "correct": false,
+          "why_wrong": "The default agent mode already asks you to review a diff before every file write. No hook is needed for that."
+        },
+        {
+          "text": "Artifact review only covers plans; file-write approval is set separately by the agent mode, and accept-edits auto-approves workspace edits.",
+          "correct": true
+        }
+      ],
+      "explanation": "Antigravity treats the two approvals separately. The artifact review policy decides whether plans wait for you. The CLI agentMode decides whether file writes do: default asks for a diff review, and accept-edits auto-approves workspace edits.",
+      "key_takeaway": "Plan approval (artifact review policy) and file-edit approval (agent mode) are separate settings.",
+      "doc_links": [
+        {
+          "label": "Antigravity Planning Mode",
+          "url": "https://antigravity.google/docs/plan"
+        },
+        {
+          "label": "Antigravity Artifact Review",
+          "url": "https://antigravity.google/docs/artifact-review"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-05",
+      "section": "Rules & Skills",
+      "guide_anchor": "rules-skills",
+      "question": "A team adds .agents/rules/security/no-secrets.md with the frontmatter trigger: alwaysOn. The agent never follows it. What fixes the problem?",
+      "options": [
+        {
+          "text": "Use the snake_case value always_on and move the file up to .agents/rules/, or register the subfolder in rules.json.",
+          "correct": true
+        },
+        {
+          "text": "Rename the file to AGENTS.md inside the security folder so it loads as a directory rule for the entire repository.",
+          "correct": false,
+          "why_wrong": "An AGENTS.md in a subfolder only applies to that directory and below. The real issues are the invalid trigger and the nested location."
+        },
+        {
+          "text": "Raise the per-file size limit above 24 KB in settings so the rule fits inside the always-on rules budget again.",
+          "correct": false,
+          "why_wrong": "A short rule file is nowhere near the limits. It is discarded because of the camelCase trigger and the nested folder."
+        },
+        {
+          "text": "Add a description field, because always-on rules only load when the model decides that the rule looks relevant.",
+          "correct": false,
+          "why_wrong": "A description is needed for model_decision rules. Valid always_on rules are injected every time."
+        }
+      ],
+      "explanation": "Files in .agents/rules/ must have a valid trigger (always_on, model_decision, glob or manual). An invalid value is silently discarded. The folder is also scanned only one level deep, so nested files need a rules.json entry.",
+      "key_takeaway": "Rule triggers are snake_case; invalid triggers and nested rule files are silently ignored.",
+      "doc_links": [
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        },
+        {
+          "label": "Antigravity Agent Skills",
+          "url": "https://antigravity.google/docs/skills"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-06",
+      "section": "Rules & Skills",
+      "guide_anchor": "rules-skills",
+      "question": "A team ships a skill named db-migrate whose SKILL.md description just says \"Helpful utilities.\" When a developer asks the agent to add a column through a migration, the skill never activates. What is the most effective fix?",
+      "options": [
+        {
+          "text": "Turn the skill into an always_on rule in .agents/rules/ so that the full migration runbook stays in the agent's context at all times.",
+          "correct": false,
+          "why_wrong": "That spends the shared 20,000-token always-on budget on a procedure. Procedures belong in skills that have good descriptions."
+        },
+        {
+          "text": "Move the whole runbook into the frontmatter so the agent can read every step during skill discovery.",
+          "correct": false,
+          "why_wrong": "The frontmatter holds the name and description. Bulky content belongs in the body or in references/, which load on demand."
+        },
+        {
+          "text": "Rewrite the description to say what the skill does and when to use it, for example creating and applying schema migrations.",
+          "correct": true
+        },
+        {
+          "text": "Move the skill to ~/.gemini/config/skills so global discovery gives it a higher priority than any workspace skill.",
+          "correct": false,
+          "why_wrong": "Workspace customizations rank above global discovery. And location does not decide activation; the description does."
+        }
+      ],
+      "explanation": "Skills use progressive disclosure: only the name and description are in the context until a task matches. A vague description means the agent never sees a reason to load the skill. Describe what it does and when to use it.",
+      "key_takeaway": "A skill's description decides whether it activates: state what it does and when to use it.",
+      "doc_links": [
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        },
+        {
+          "label": "Antigravity Agent Skills",
+          "url": "https://antigravity.google/docs/skills"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-07",
+      "section": "MCP, Hooks & Plugins",
+      "guide_anchor": "mcp-hooks-plugins",
+      "question": "A developer must connect Antigravity to a vendor's remote MCP server that only exposes the legacy HTTP+SSE transport. What configuration works?",
+      "options": [
+        {
+          "text": "Put the SSE address under serverUrl, because that key is meant for SSE servers while url is for Streamable HTTP.",
+          "correct": false,
+          "why_wrong": "serverUrl is only an accepted alias for url on Streamable HTTP servers. Legacy SSE is not supported under either key."
+        },
+        {
+          "text": "Declare the server in a plugin's mcp_config.json, since plugins can load transports that workspace configs cannot.",
+          "correct": false,
+          "why_wrong": "Transport support is the same wherever the config lives. A plugin location only adds a namespace to the tool names."
+        },
+        {
+          "text": "Register it in hooks.json as a SessionStart hook that opens the vendor's SSE stream at the start of every new agent session.",
+          "correct": false,
+          "why_wrong": "Hooks run command handlers on lifecycle events. They do not register MCP servers or add tools to the agent."
+        },
+        {
+          "text": "Add a stdio entry in mcp_config.json that runs a bridge such as mcp-remote, pointed at the vendor's endpoint.",
+          "correct": true
+        }
+      ],
+      "explanation": "Antigravity supports stdio (command, args, env) and Streamable HTTP (url) MCP servers. The legacy HTTP+SSE transport is not supported. For an SSE-only server, run a local stdio bridge such as mcp-remote.",
+      "key_takeaway": "Legacy SSE MCP servers are unsupported; use Streamable HTTP or a stdio bridge like mcp-remote.",
+      "doc_links": [
+        {
+          "label": "MCP in Google Antigravity",
+          "url": "https://antigravity.google/docs/mcp"
+        },
+        {
+          "label": "Antigravity JSON Hooks",
+          "url": "https://antigravity.google/docs/hooks"
+        },
+        {
+          "label": "Antigravity Plugins & Marketplace",
+          "url": "https://antigravity.google/docs/plugins"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-08",
+      "section": "MCP, Hooks & Plugins",
+      "guide_anchor": "mcp-hooks-plugins",
+      "question": "Security wants every shell command the agent runs to be logged, and any command that targets the production kubectl context to be blocked before it runs, without slowing the agent much. Which approach fits?",
+      "options": [
+        {
+          "text": "A PostToolUse hook that inspects each command after it runs and reverts any production change it detects.",
+          "correct": false,
+          "why_wrong": "PostToolUse fires after the tool has run, so the production change has already happened."
+        },
+        {
+          "text": "A fast PreToolUse hook with a command matcher that logs each call and returns decision deny for production kubectl.",
+          "correct": true
+        },
+        {
+          "text": "A Stop hook that returns decision continue until the transcript shows no production commands were issued.",
+          "correct": false,
+          "why_wrong": "Stop fires when the loop ends. It cannot block a single command before that command runs."
+        },
+        {
+          "text": "A webhook-type hook in hooks.json that posts each command to a remote policy service and waits for an asynchronous allow or deny verdict.",
+          "correct": false,
+          "why_wrong": "Only type command hooks are supported, and hooks run synchronously. There is no webhook or asynchronous hook type."
+        }
+      ],
+      "explanation": "PreToolUse runs before a tool and can return allow, deny, ask or force_ask, or rewrite arguments with overwrite. Hooks run synchronously and block the loop, so a small, fast command-type hook is the right way to gate and audit.",
+      "key_takeaway": "Gate tools before they run with a fast PreToolUse hook returning deny; PostToolUse is too late.",
+      "doc_links": [
+        {
+          "label": "MCP in Google Antigravity",
+          "url": "https://antigravity.google/docs/mcp"
+        },
+        {
+          "label": "Antigravity JSON Hooks",
+          "url": "https://antigravity.google/docs/hooks"
+        },
+        {
+          "label": "Antigravity Plugins & Marketplace",
+          "url": "https://antigravity.google/docs/plugins"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-09",
+      "section": "Discovery & Precedence",
+      "guide_anchor": "discovery-precedence",
+      "question": "A developer has a global skill named deploy in ~/.gemini/config/skills. The repository they open also commits its own .agents/skills/deploy. Which version does the agent use in that repository?",
+      "options": [
+        {
+          "text": "The global version, because machine-level configuration always overrides repository files for safety reasons.",
+          "correct": false,
+          "why_wrong": "Global discovery ranks below the workspace project and the workspace declared configs."
+        },
+        {
+          "text": "The repository's .agents/skills/deploy, because workspace project customizations have the highest priority on a name clash.",
+          "correct": true
+        },
+        {
+          "text": "Both, merged into one skill whose instructions are concatenated in discovery order before the run starts.",
+          "correct": false,
+          "why_wrong": "When two customizations share a name, the higher-priority one wins. Skills are not merged."
+        },
+        {
+          "text": "Neither of them, since a name clash disables both skills until one of the two is renamed or removed.",
+          "correct": false,
+          "why_wrong": "Name clashes are resolved by the priority order. They do not disable both skills."
+        }
+      ],
+      "explanation": "Priority runs from the workspace project (walking up from the CWD), then workspace skills.json/plugins.json, then global ~/.gemini/config/, then built-ins, then global declared configs. A same-named workspace skill shadows the global one.",
+      "key_takeaway": "On a name clash, workspace customizations beat global ones; the higher-priority source wins.",
+      "doc_links": [
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        },
+        {
+          "label": "Antigravity Agent Skills",
+          "url": "https://antigravity.google/docs/skills"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-10",
+      "section": "Discovery & Precedence",
+      "guide_anchor": "discovery-precedence",
+      "question": "A platform team keeps shared skills in tools/agents/skills/ in a monorepo. They want every engineer who clones the repo to get those skills automatically, without touching anyone's home directory. What should they commit?",
+      "options": [
+        {
+          "text": "A setup script that copies the skills into each engineer's ~/.gemini/config/skills folder after cloning.",
+          "correct": false,
+          "why_wrong": "That changes each home directory and only works if everyone runs the script. Declared configs give automatic discovery."
+        },
+        {
+          "text": "A GEMINI.md at the repo root that lists the skill folder paths in plain text for the agent to look up on its own.",
+          "correct": false,
+          "why_wrong": "GEMINI.md is an always-on rules file. It does not register skill folders for discovery."
+        },
+        {
+          "text": "A plugins.json whose inherits field points at tools/agents/skills, since inherits scans folders recursively.",
+          "correct": false,
+          "why_wrong": "inherits points to other config files. Paths are scanned through entries, and only one level deep."
+        },
+        {
+          "text": "A .agents/skills.json file with an entries item whose path points to tools/agents/skills.",
+          "correct": true
+        }
+      ],
+      "explanation": "Workspace declared configs (.agents/skills.json or plugins.json) list entries paths that are scanned one level deep. Committing one that points at tools/agents/skills makes the shared skills load for everyone who clones the repo.",
+      "key_takeaway": "Commit .agents/skills.json with entries pointing at a shared skills folder to share skills team-wide.",
+      "doc_links": [
+        {
+          "label": "Antigravity Rules Documentation",
+          "url": "https://antigravity.google/docs/rules"
+        },
+        {
+          "label": "Antigravity Agent Skills",
+          "url": "https://antigravity.google/docs/skills"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-11",
+      "section": "Subagents",
+      "guide_anchor": "subagents",
+      "question": "A lead agent starts three subagents to refactor three modules in parallel. They keep overwriting a shared file and each other's uncommitted changes. What should change?",
+      "options": [
+        {
+          "text": "Launch each subagent with the branch workspace mode so it works in its own Git worktree, and give them non-overlapping scopes.",
+          "correct": true
+        },
+        {
+          "text": "Use the inherit workspace mode so that all subagents see the same folder and can coordinate edits live.",
+          "correct": false,
+          "why_wrong": "inherit means the same folder for everyone, which is exactly what causes the overwrites."
+        },
+        {
+          "text": "Use the self subagent type for all three, because clones of the caller share its full context and therefore avoid any edit conflicts.",
+          "correct": false,
+          "why_wrong": "Every subagent starts with a clean context, and the subagent type does not isolate files on disk."
+        },
+        {
+          "text": "Route all three tasks through the browser subagent, which serializes every file write in the workspace.",
+          "correct": false,
+          "why_wrong": "The browser subagent drives Chrome and is only reached through /browser. It does not coordinate file writes."
+        }
+      ],
+      "explanation": "Subagent workspace modes are inherit (same folder), branch (an isolated Git worktree) and share (shared repo storage). Parallel writers need branch isolation and clearly separated scopes.",
+      "key_takeaway": "Run parallel editing subagents in branch mode (Git worktrees) with non-overlapping scopes.",
+      "doc_links": [
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        },
+        {
+          "label": "Parallel Sessions with Git Worktrees",
+          "url": "https://code.claude.com/docs/en/worktrees"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-12",
+      "section": "Subagents",
+      "guide_anchor": "subagents",
+      "question": "A lead agent hands a security review to a custom subagent, assuming it already knows the threat model the user explained earlier in the parent conversation. The review misses that context. What explains this, and what is the fix?",
+      "options": [
+        {
+          "text": "The subagent's model was set to flash, which cuts the inherited parent history down to save tokens.",
+          "correct": false,
+          "why_wrong": "Subagents never inherit the parent's history, whichever model they use."
+        },
+        {
+          "text": "The subagent was Idle, and an Idle subagent loses its context until it is killed and launched again.",
+          "correct": false,
+          "why_wrong": "An Idle subagent wakes up with its full context when it gets a message. Killing it is permanent."
+        },
+        {
+          "text": "Subagents start with a clean context window, so the parent must include the threat model in the subagent's prompt.",
+          "correct": true
+        },
+        {
+          "text": "commandExecutionPolicy defaulted to sandbox, which hides the parent's conversation from the subagent's view.",
+          "correct": false,
+          "why_wrong": "commandExecutionPolicy controls how commands run, not what conversation context the subagent gets."
+        }
+      ],
+      "explanation": "invoke_subagent passes a role and a prompt. The subagent starts with a fresh context window and cannot see the parent's history. Anything it needs, such as a threat model or constraints, must be in that prompt.",
+      "key_takeaway": "Subagents don't see the parent's history; pass all required context explicitly in the prompt.",
+      "doc_links": [
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        },
+        {
+          "label": "Antigravity Multi-Agent Teamwork",
+          "url": "https://antigravity.google/docs/teamwork"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-13",
+      "section": "Permissions & Sandbox",
+      "guide_anchor": "permissions-sandbox",
+      "question": "A developer wants the CLI agent to edit workspace files freely and run test commands. No command should run outside an OS-level boundary, and network access should only reach a few approved documentation domains. Which configuration fits?",
+      "options": [
+        {
+          "text": "Set toolPermission to always-proceed and deny rm in the deny list, because enough deny rules make the terminal sandbox unnecessary.",
+          "correct": false,
+          "why_wrong": "always-proceed without a sandbox runs commands on the host with full privileges. A deny list cannot list every dangerous command."
+        },
+        {
+          "text": "Choose the strict tool permission, which runs every command inside the terminal sandbox automatically.",
+          "correct": false,
+          "why_wrong": "strict asks before every tool call, even reads. It does not turn on the sandbox."
+        },
+        {
+          "text": "Turn on the terminal sandbox with toolPermission proceed-in-sandbox, and allow read_url only for the approved domains.",
+          "correct": true
+        },
+        {
+          "text": "Use agentMode accept-edits, which also sends every shell command into an isolated container.",
+          "correct": false,
+          "why_wrong": "accept-edits only auto-approves file edits. Commands still follow toolPermission."
+        }
+      ],
+      "explanation": "The terminal sandbox hides everything except the mounted project folders and permitted paths. Sandboxed commands get no network by default, and domains allowed under read_url join the outbound allowlist. proceed-in-sandbox runs commands without prompts, but only inside that boundary.",
+      "key_takeaway": "Contain agent commands with the terminal sandbox plus proceed-in-sandbox; allow network per domain via read_url.",
+      "doc_links": [
+        {
+          "label": "Antigravity Permissions",
+          "url": "https://antigravity.google/docs/permissions"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-14",
+      "section": "Permissions & Sandbox",
+      "guide_anchor": "permissions-sandbox",
+      "question": "A developer selects the desktop App's Turbo security preset, assuming that agent commands are automatically sandboxed. The agent executes a script that modifies a file in their home directory outside the workspace. What went wrong?",
+      "options": [
+        {
+          "text": "The Turbo preset leaves the terminal sandbox off (only Default and Auto presets enable it by default in individual profiles), so commands ran with full host privileges.",
+          "correct": true
+        },
+        {
+          "text": "Turbo enables the terminal sandbox but automatically binds the entire user home directory as a writable mount.",
+          "correct": false,
+          "why_wrong": "The terminal sandbox never binds the entire home directory read-write; project folders are mounted read-write while other paths remain hidden."
+        },
+        {
+          "text": "The sandbox was active, but terminal sandboxing only blocks outbound network requests rather than local filesystem access.",
+          "correct": false,
+          "why_wrong": "The terminal sandbox isolates the filesystem using OS-level controls (Seatbelt/bubblewrap), but the Turbo preset leaves the sandbox off entirely."
+        },
+        {
+          "text": "Turbo automatically migrates terminal execution to a remote Cloud Workstation where local filesystem rules do not apply.",
+          "correct": false,
+          "why_wrong": "Desktop App security presets govern local machine tool permissions and do not redirect commands to Cloud Workstations."
+        }
+      ],
+      "explanation": "In Desktop App v2.23.0+, individual developer profiles enable the terminal sandbox automatically on Default and Auto presets, but leave it off on Request Review and Turbo (while Enterprise managed profiles leave it off by default across presets unless enforced by org policy). Commands running with the sandbox disabled execute directly on the host with full privileges.",
+      "key_takeaway": "Desktop App Turbo and Request Review presets leave the sandbox off; enable the sandbox or use Default/Auto presets to confine execution.",
+      "doc_links": [
+        {
+          "label": "Antigravity Permissions",
+          "url": "https://antigravity.google/docs/permissions"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-15",
+      "section": "Secure Environments",
+      "guide_anchor": "secure-environments",
+      "question": "A bank wants engineers and their coding agents to work in dev environments where source code cannot be copied out to the internet and the VMs cannot be reached publicly. Which design fits?",
+      "options": [
+        {
+          "text": "Agent Sandbox on GKE with a SandboxWarmPool, so that each engineer gets a pre-warmed gVisor pod as a desktop.",
+          "correct": false,
+          "why_wrong": "Agent Sandbox is for running untrusted, LLM-generated code inside products, not for human dev environments."
+        },
+        {
+          "text": "The Antigravity terminal sandbox on each laptop, since it blocks .env files and has no network by default.",
+          "correct": false,
+          "why_wrong": "This protects one laptop from agent commands, but the source code still lives on endpoints outside any perimeter."
+        },
+        {
+          "text": "Cloud Workstations that keep public IPs, plus an IAM condition that limits which users in the organization may start a workstation.",
+          "correct": false,
+          "why_wrong": "IAM controls who can start a workstation. Public IPs and no perimeter still leave paths for data to leave."
+        },
+        {
+          "text": "Cloud Workstations on a private cluster in a VPC-SC perimeter, with public IPs blocked by the vmExternalIpAccess constraint.",
+          "correct": true
+        }
+      ],
+      "explanation": "Cloud Workstations can run inside a VPC Service Controls perimeter on a private cluster that clients reach through Private Service Connect. Public IPs are turned off with the constraints/compute.vmExternalIpAccess org policy.",
+      "key_takeaway": "Exfiltration-safe dev boxes: Cloud Workstations on a private cluster, VPC-SC, and no public IPs.",
+      "doc_links": [
+        {
+          "label": "Antigravity Enterprise Security",
+          "url": "https://antigravity.google/docs/enterprise"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-16",
+      "section": "Secure Environments",
+      "guide_anchor": "secure-environments",
+      "question": "Coding agents run multi-hour tasks on Cloud Workstations. Finance wants no compute charges while an agent waits for human input, but engineers lose the agent's in-memory context whenever the workstation idles out. What is the best configuration?",
+      "options": [
+        {
+          "text": "Turn off the idle timeout so the workstation never stops, and rely on the running timeout to keep costs in check.",
+          "correct": false,
+          "why_wrong": "The workstation keeps billing the whole time the agent waits, which is what finance wants to avoid."
+        },
+        {
+          "text": "Set idleAction to SUSPEND with an idleTimeout, and add keep-alive hooks that run only while the agent is working.",
+          "correct": true
+        },
+        {
+          "text": "Save the agent transcript to the persistent disk and let the VM stop, so the agent rebuilds its state on the next boot.",
+          "correct": false,
+          "why_wrong": "Stopping loses RAM and running processes. Suspending keeps them and still stops vCPU and memory charges."
+        },
+        {
+          "text": "Move the agent into Agent Sandbox on GKE, whose warm pools keep each user's memory alive indefinitely.",
+          "correct": false,
+          "why_wrong": "Warm pools are pre-warmed pods for fast startup. They do not suspend and resume a developer's session."
+        }
+      ],
+      "explanation": "Agent-optimized development pairs idleAction=SUSPEND with keep-alive lifecycle hooks: keep_alive.sh starts when the agent begins working and is killed when it waits for input. Suspension keeps memory, processes and agent context.",
+      "key_takeaway": "Use idleAction=SUSPEND plus keep-alive hooks to keep agent state without paying for idle compute.",
+      "doc_links": [
+        {
+          "label": "Antigravity Enterprise Security",
+          "url": "https://antigravity.google/docs/enterprise"
+        },
+        {
+          "label": "Antigravity Terminal Sandbox",
+          "url": "https://antigravity.google/docs/sandbox"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-17",
+      "section": "Agents CLI",
+      "guide_anchor": "agents-cli",
+      "question": "An architect uses a coding agent with Agents CLI to build a support agent. Before it goes to Cloud Run, the team wants repeatable proof that responses meet the quality bar. Which step belongs before deploy?",
+      "options": [
+        {
+          "text": "Run agents-cli playground and let a teammate chat with the agent for a few minutes as the release check.",
+          "correct": false,
+          "why_wrong": "The playground is for manual smoke testing. It is not a repeatable, scored release gate."
+        },
+        {
+          "text": "Write evalsets under tests/eval/evalsets and run agents-cli eval run until the LLM-as-judge criteria pass.",
+          "correct": true
+        },
+        {
+          "text": "Deploy first with agents-cli deploy and use Cloud Trace data to judge response quality in production.",
+          "correct": false,
+          "why_wrong": "Shipping before evaluating is exactly the failure mode to avoid. Tracing is observability, not a release gate."
+        },
+        {
+          "text": "Run agents-cli scaffold enhance, which adds automated quality scoring to the deployment target.",
+          "correct": false,
+          "why_wrong": "scaffold enhance adds a deployment target such as cloud_run. It does not add evaluation."
+        }
+      ],
+      "explanation": "agents-cli eval run executes the evalsets in tests/eval/evalsets/*.evalset.json against the criteria in tests/eval/eval_config.json, including LLM-as-judge. Passing evals should gate agents-cli deploy.",
+      "key_takeaway": "Gate deployment on agents-cli eval run with evalsets; the playground is not a quality gate.",
+      "doc_links": [
+        {
+          "label": "Antigravity CLI Guide",
+          "url": "https://antigravity.google/docs/cli/using"
+        },
+        {
+          "label": "ADK Agents CLI",
+          "url": "https://adk.dev/get-started/agents-cli/"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-18",
+      "section": "Agents CLI",
+      "guide_anchor": "agents-cli",
+      "question": "A developer sets up a new laptop that has both Antigravity and Claude Code installed. They want both coding agents to gain Agents CLI expertise. What is the one command they run themselves?",
+      "options": [
+        {
+          "text": "agents-cli create my-agent --prototype --yes, which also installs the skills into every coding agent it detects on the machine.",
+          "correct": false,
+          "why_wrong": "create scaffolds a project once Agents CLI is already installed. setup is the step that installs the CLI and the skills."
+        },
+        {
+          "text": "adk create my-agent, because the Agents CLI skills ship inside the single-file ADK learning template.",
+          "correct": false,
+          "why_wrong": "adk create makes a single-file learning agent. It does not install Agents CLI or its skills."
+        },
+        {
+          "text": "agy plugin install agents-cli@antigravity-plugins-official, since Agents CLI only supports Antigravity.",
+          "correct": false,
+          "why_wrong": "Agents CLI works with several coding agents, including Claude Code. The documented installer is setup."
+        },
+        {
+          "text": "uvx google-agents-cli setup, which installs agents-cli, the ADK packages and the skills into the local coding agents.",
+          "correct": true
+        }
+      ],
+      "explanation": "The docs say uvx google-agents-cli setup (or pip/pipx install followed by agents-cli setup) is the only command you run yourself. It installs the CLI, the ADK packages and the skills, and the coding agent then runs the lifecycle commands.",
+      "key_takeaway": "Install Agents CLI with uvx google-agents-cli setup; it adds skills to every local coding agent.",
+      "doc_links": [
+        {
+          "label": "Antigravity CLI Guide",
+          "url": "https://antigravity.google/docs/cli/using"
+        },
+        {
+          "label": "ADK Agents CLI",
+          "url": "https://adk.dev/get-started/agents-cli/"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-19",
+      "section": "Lifecycle & Comparison",
+      "guide_anchor": "lifecycle-comparison",
+      "question": "An ADK agent runs on Agent Runtime. The business wants employees to find and use it in Gemini Enterprise, and security asks about user identity and the network perimeter. Which statement is accurate?",
+      "options": [
+        {
+          "text": "Register it with Gemini Enterprise through Agents CLI; the user's email is passed to the agent and the link is VPC-SC compliant.",
+          "correct": true
+        },
+        {
+          "text": "Publish it from the Antigravity App's Automations panel, which then hosts the agent for Gemini Enterprise users.",
+          "correct": false,
+          "why_wrong": "Antigravity is the developer's harness, and Automations run scheduled prompts. Neither hosts production agents."
+        },
+        {
+          "text": "Redeploy it to Cloud Workstations, because Gemini Enterprise can only connect to agents running on workstations.",
+          "correct": false,
+          "why_wrong": "Cloud Workstations are dev environments. Production agents run on Agent Runtime, Cloud Run or GKE."
+        },
+        {
+          "text": "Package the deployed agent's code as a SKILL.md file so Gemini Enterprise users can load it on demand through progressive disclosure.",
+          "correct": false,
+          "why_wrong": "Skills are instructions for coding agents. They are not a way to distribute a deployed agent to end users."
+        }
+      ],
+      "explanation": "Agents CLI can register an Agent Runtime agent with Gemini Enterprise in a single command (exact flags may change). Gemini Enterprise passes the user's email to the agent, and the Agent Runtime to Gemini Enterprise connection is VPC-SC compliant.",
+      "key_takeaway": "Ship to Agent Runtime, then publish to Gemini Enterprise; Antigravity is never the production host.",
+      "doc_links": [
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        },
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-20",
+      "section": "Lifecycle & Comparison",
+      "guide_anchor": "lifecycle-comparison",
+      "question": "A team moving from Claude Code to Antigravity wants to reuse its always-on project memory, its SKILL.md skills and its MCP servers. Which mapping is correct?",
+      "options": [
+        {
+          "text": "CLAUDE.md becomes a manual-trigger rule, skills become hooks.json entries, and MCP servers stay in .mcp.json.",
+          "correct": false,
+          "why_wrong": "Manual rules are not always on, skills are not hooks, and Antigravity reads MCP servers from mcp_config.json."
+        },
+        {
+          "text": "Skills cannot be reused, because SKILL.md is a Claude-only format that Antigravity does not read at all.",
+          "correct": false,
+          "why_wrong": "SKILL.md skills carry over between harnesses. Agents CLI even installs the same skills into both."
+        },
+        {
+          "text": "CLAUDE.md content goes into AGENTS.md or GEMINI.md, skills move to .agents/skills/, and MCP servers go into mcp_config.json.",
+          "correct": true
+        },
+        {
+          "text": "All three must be bundled into a single plugin with a plugin.json manifest, since Antigravity only loads customizations from installed plugins.",
+          "correct": false,
+          "why_wrong": "Antigravity also discovers customizations in the workspace .agents/ folder and the global config. Plugins are optional."
+        }
+      ],
+      "explanation": "Mapping: CLAUDE.md maps to AGENTS.md/GEMINI.md, .claude/skills to .agents/skills, .claude/agents to .agents/agents, and .mcp.json to mcp_config.json. MCP servers and SKILL.md skills work in both harnesses.",
+      "key_takeaway": "Skills and MCP servers port between Claude Code and Antigravity; CLAUDE.md maps to AGENTS.md/GEMINI.md.",
+      "doc_links": [
+        {
+          "label": "Google Antigravity Overview",
+          "url": "https://antigravity.google/docs/overview"
+        },
+        {
+          "label": "Extending Claude Code Overview",
+          "url": "https://code.claude.com/docs/en/features-overview"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-21",
+      "section": "Failure Modes",
+      "guide_anchor": "failure-modes",
+      "question": "A team splits a long coding-standards document into many always_on rule files and also keeps large global rules. The agent now refers to some rules only by file path and does not follow them. What is happening, and what is the fix?",
+      "options": [
+        {
+          "text": "Every rule over 2 KB is truncated, so the team should split the standards into even more always_on files.",
+          "correct": false,
+          "why_wrong": "The per-file cap is 24 KB. Splitting into more always_on files does not shrink the shared budget."
+        },
+        {
+          "text": "Global rules always override workspace rules, so the workspace standards were dropped as duplicates.",
+          "correct": false,
+          "why_wrong": "Rules add up, and when they conflict the more specific directory rule wins. Nothing is dropped as a duplicate."
+        },
+        {
+          "text": "Rules are injected only for the first file the agent reads in a session, so the standards are missing for every later file it opens.",
+          "correct": false,
+          "why_wrong": "Directory rules are found by walking up from each file the agent reads or edits. Each rule file is injected once."
+        },
+        {
+          "text": "The shared 20,000-token rules budget is exceeded, so some rules shrink to path pointers; use model_decision rules or skills.",
+          "correct": true
+        }
+      ],
+      "explanation": "Always-on and global rules share a 20,000-token budget, and rules over budget are reduced to a file-path pointer. Move material that is only sometimes needed into model_decision rules or skills, which load on demand.",
+      "key_takeaway": "Too many always-on rules overflow the 20k-token budget; move them to model_decision rules or skills.",
+      "doc_links": [
+        {
+          "label": "Antigravity Permissions",
+          "url": "https://antigravity.google/docs/permissions"
+        },
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-22",
+      "section": "Failure Modes",
+      "guide_anchor": "failure-modes",
+      "question": "After a team adds a hook that runs the full test suite after every file edit, agent sessions become very slow. What is the cause, and what is the fix?",
+      "options": [
+        {
+          "text": "PostToolUse hooks run in parallel and starve the model of CPU, so switch the hook to an HTTP type to offload the test run remotely.",
+          "correct": false,
+          "why_wrong": "Hooks run synchronously, not in parallel, and only type command hooks are supported."
+        },
+        {
+          "text": "Hooks run synchronously and block the agent loop, so keep the hook fast and move the full test run out of the per-edit hook.",
+          "correct": true
+        },
+        {
+          "text": "The hook re-enters the loop each time through Stop continue, so set enabled false on the Stop hook only.",
+          "correct": false,
+          "why_wrong": "The slowness comes from a slow PostToolUse command that blocks the loop. No Stop hook is involved."
+        },
+        {
+          "text": "Hooks are reloaded from disk before every model call, so bundle them in a plugin to keep them cached.",
+          "correct": false,
+          "why_wrong": "Nothing in the docs links slowness to hook loading. The documented behavior is that hooks run synchronously."
+        }
+      ],
+      "explanation": "Antigravity hooks are command handlers that run synchronously and block the loop. Keep per-edit work such as a quick lint or format small, and run heavy suites in a separate step or a CI pipeline.",
+      "key_takeaway": "Hooks block the loop; keep them fast and push heavy work outside per-tool hooks.",
+      "doc_links": [
+        {
+          "label": "Antigravity Permissions",
+          "url": "https://antigravity.google/docs/permissions"
+        },
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-23",
+      "section": "Agents CLI",
+      "guide_anchor": "agents-cli",
+      "question": "A platform engineer has an ADK agent already running on Agent Runtime and now wants it to appear in the company's Gemini Enterprise app, registered from a release script. Which Agents CLI step does that?",
+      "options": [
+        {
+          "text": "Run agents-cli deploy --agent-identity again, since a deploy with Agent Identity also lists the agent in Gemini Enterprise.",
+          "correct": false,
+          "why_wrong": "deploy builds and ships the agent (the flag sets its identity on Agent Runtime); registration in a Gemini Enterprise app is a separate publish step."
+        },
+        {
+          "text": "Run agents-cli publish gemini with the app and runtime IDs, passed as flags or as GEMINI_APP_ID and AGENT_RUNTIME_ID.",
+          "correct": true
+        },
+        {
+          "text": "Run agents-cli publish gemini-enterprise, because publish gemini targets AI Studio rather than Gemini Enterprise apps.",
+          "correct": false,
+          "why_wrong": "publish gemini is the current command for Gemini Enterprise; gemini-enterprise is only a hidden alias kept from before the rename."
+        },
+        {
+          "text": "Run agents-cli infra single-project, which provisions the project resources and registers the agent in Gemini Enterprise.",
+          "correct": false,
+          "why_wrong": "infra single-project provisions observability and supporting infrastructure; it does not register the agent in a Gemini Enterprise app."
+        }
+      ],
+      "explanation": "Deploying and registering are separate lifecycle steps. agents-cli publish gemini registers a deployed agent in a Gemini Enterprise app; it takes the target app and the Agent Runtime instance as --gemini-app-id and --agent-runtime-id or from the GEMINI_APP_ID and AGENT_RUNTIME_ID environment variables, with --registration-type selecting how it is registered. publish gemini-enterprise still works only as a hidden alias.",
+      "key_takeaway": "deploy ships the agent; publish gemini registers it in a Gemini Enterprise app, with app and runtime IDs as flags or env vars.",
+      "doc_links": [
+        {
+          "label": "Agents CLI on GitHub",
+          "url": "https://github.com/google/agents-cli"
+        },
+        {
+          "label": "ADK: Get started with Agents CLI",
+          "url": "https://adk.dev/get-started/agents-cli"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-24",
+      "section": "Agents CLI",
+      "guide_anchor": "agents-cli",
+      "question": "A developer writes a team wiki page saying Antigravity must call agents-cli with --mode agent, while humans should use --mode human. A reviewer doubts it. Which statement about Agents CLI callers is accurate?",
+      "options": [
+        {
+          "text": "Both callers use the same commands and syntax; the difference is prompt handling, with -y for agents and CI and -i for interactive use.",
+          "correct": true
+        },
+        {
+          "text": "Agent mode is turned on by installing the skills with agents-cli setup --workspace, and human mode by the default machine-wide global install.",
+          "correct": false,
+          "why_wrong": "--workspace only changes where skills are installed (repo vs. machine). It does not change how commands behave."
+        },
+        {
+          "text": "Coding agents must call the ADK CLI (adk run) while humans use agents-cli, because agents-cli is reserved for terminals.",
+          "correct": false,
+          "why_wrong": "Agents CLI is built for coding agents first, and every command also runs by hand. adk is the framework CLI for learning."
+        },
+        {
+          "text": "The documented --mode flag on agents-cli run sets agent or human behavior, so the wiki is right for that command only.",
+          "correct": false,
+          "why_wrong": "run --mode exists but selects the agent protocol (adk, a2a, adk_live). It has nothing to do with who is calling."
+        }
+      ],
+      "explanation": "There is no documented --mode agent or --mode human flag. Agents CLI serves both callers with identical commands. Agents and CI runners use -y / --yes and explicit flags, plus single-shot output such as run \"<prompt>\" and info --json; humans can add -i for menus and use playground.",
+      "key_takeaway": "Agent vs. human mode is about prompts and output handling (-y vs. -i), not a separate mode flag.",
+      "doc_links": [
+        {
+          "label": "Agents CLI on GitHub",
+          "url": "https://github.com/google/agents-cli"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-25",
+      "section": "Agents CLI",
+      "guide_anchor": "agents-cli",
+      "question": "Users report that a deployed support agent now gives wrong refund answers. The team wants to find the failure pattern, repair it, prove nothing else regressed, and update the existing Agent Runtime deployment. Which Agents CLI sequence fits best?",
+      "options": [
+        {
+          "text": "agents-cli scaffold upgrade, then agents-cli lint, then agents-cli infra single-project --apply, then agents-cli deploy.",
+          "correct": false,
+          "why_wrong": "Upgrading the template, linting and provisioning infra do not measure or fix answer quality, and nothing proves the regression is gone."
+        },
+        {
+          "text": "agents-cli playground to reproduce the bug by hand, edit the prompt, then a plain agents-cli deploy so a fresh deployment replaces the old one.",
+          "correct": false,
+          "why_wrong": "Manual testing gives no measured before and after, and a plain deploy without --update-only can create a duplicate deployment."
+        },
+        {
+          "text": "agents-cli eval run once, then agents-cli publish gemini again so Gemini Enterprise picks up the corrected instructions.",
+          "correct": false,
+          "why_wrong": "Publishing only registers the agent in a Gemini app. It does not repair the agent or compare evaluation results."
+        },
+        {
+          "text": "eval dataset synthesize, eval run, eval analyze, eval optimize or a manual fix, eval compare old vs. new, then deploy --update-only.",
+          "correct": true
+        }
+      ],
+      "explanation": "The guide's regression workflow widens coverage with eval dataset synthesize, measures with eval run, clusters causes with eval analyze, repairs with eval optimize or a manual edit, proves no regression with eval compare on two result files, and ships with deploy --update-only so the existing Agent Runtime deployment is updated.",
+      "key_takeaway": "Regression fixes go synthesize, run, analyze, optimize, compare, then deploy --update-only.",
+      "doc_links": [
+        {
+          "label": "Agents CLI on GitHub",
+          "url": "https://github.com/google/agents-cli"
+        },
+        {
+          "label": "ADK: Get started with Agents CLI",
+          "url": "https://adk.dev/get-started/agents-cli"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-26",
+      "section": "Lifecycle & Comparison",
+      "guide_anchor": "lifecycle-comparison",
+      "question": "A developer sets CLAUDE_CODE_USE_VERTEX=1, CLOUD_ML_REGION and ANTHROPIC_VERTEX_PROJECT_ID, and holds roles/aiplatform.user. Every Claude request fails with a 404 saying the model was not found. The region supports the model. What is the most likely fix?",
+      "options": [
+        {
+          "text": "Grant roles/aiplatform.admin, because invoking Anthropic partner models needs broader rights than the aiplatform.endpoints.predict permission.",
+          "correct": false,
+          "why_wrong": "roles/aiplatform.user already carries aiplatform.endpoints.predict, which is all invoking needs. Broader roles do not fix a missing model."
+        },
+        {
+          "text": "Set ANTHROPIC_API_KEY next to the Vertex variables so Claude Code can authenticate the model call with Anthropic.",
+          "correct": false,
+          "why_wrong": "The Agent Platform path is keyless and uses ADC. An Anthropic API key plays no part in calls to Agent Platform."
+        },
+        {
+          "text": "Have someone with the entitlement manager role open the Claude model card in Model Garden and click Enable to accept the terms.",
+          "correct": true
+        },
+        {
+          "text": "Switch CLOUD_ML_REGION to us-east5, since Claude Code ignores any other region and always falls back to that value.",
+          "correct": false,
+          "why_wrong": "Claude Code falls back to us-east5 only for a malformed region value. A valid supported region is honored."
+        }
+      ],
+      "explanation": "A \"model not found\" 404 despite invoke rights usually means the partner model was never enabled. Enabling it in Model Garden accepts the partner terms and needs roles/consumerprocurement.entitlementManager; the org policy must also allow cloudcommerceconsumerprocurement.googleapis.com.",
+      "key_takeaway": "Claude on Agent Platform must be enabled in Model Garden by an entitlement manager before any call works.",
+      "doc_links": [
+        {
+          "label": "Claude Code on Google Vertex AI",
+          "url": "https://code.claude.com/docs/en/google-vertex-ai"
+        },
+        {
+          "label": "Use partner models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/use-partner-models"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-27",
+      "section": "Lifecycle & Comparison",
+      "guide_anchor": "lifecycle-comparison",
+      "question": "An organization adds a custom vertexai.allowedModels allow list with :predict entries for the two Claude models its developers pin in Claude Code. Chat requests now work, but token-count requests are refused. What should the admin add?",
+      "options": [
+        {
+          "text": "publishers/anthropic/models/count-tokens:predict, because Claude token counting uses its own publisher model ID.",
+          "correct": true
+        },
+        {
+          "text": "A single value that allows all third-party models, so helper models such as token counters are covered without listing them.",
+          "correct": false,
+          "why_wrong": "There is no all third-party models value. Each model, including the token counter, must be listed on its own."
+        },
+        {
+          "text": "The deploy and tune actions for both Claude models, since token counting runs as a deployment-side operation.",
+          "correct": false,
+          "why_wrong": "Token counting is a predict call on its own publisher model ID. Adding deploy or tune actions does not unblock it."
+        },
+        {
+          "text": "An allow for web_search and structured_outputs in vertexai.allowedPartnerModelFeatures for the Anthropic publisher.",
+          "correct": false,
+          "why_wrong": "That constraint governs advanced partner features, not which models can be called. Token counting is a model access issue."
+        }
+      ],
+      "explanation": "A custom allow list implicitly denies every model not listed. Claude token counting has its own publisher model ID, so publishers/anthropic/models/count-tokens:predict must be allowed alongside each pinned primary and background model.",
+      "key_takeaway": "When allowlisting Claude for Claude Code, include count-tokens:predict as well as every pinned model.",
+      "doc_links": [
+        {
+          "label": "Control access to Model Garden models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/control-model-access"
+        },
+        {
+          "label": "Organization policy constraints",
+          "url": "https://docs.cloud.google.com/organization-policy/reference/org-policy-constraints"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-28",
+      "section": "Lifecycle & Comparison",
+      "guide_anchor": "lifecycle-comparison",
+      "question": "Claude Code sessions in a project under an organization work for normal coding, but any request that uses Claude's web search tool is rejected. The model is enabled and allowed in vertexai.allowedModels. What change addresses this with the least extra exposure?",
+      "options": [
+        {
+          "text": "Remove the vertexai.allowedModels policy from the project entirely, since a project with no policy allows every model and every feature.",
+          "correct": false,
+          "why_wrong": "Dropping the model allow list widens model access for everyone and still leaves partner features governed by a separate constraint."
+        },
+        {
+          "text": "Move CLOUD_ML_REGION from a regional endpoint to global, because web search is only served from the global endpoint.",
+          "correct": false,
+          "why_wrong": "The guide ties the block to an organization policy, not to the endpoint. Changing region does not lift a feature constraint."
+        },
+        {
+          "text": "Grant roles/mcp.toolUser to every developer so Claude Code can reach Google remote MCP servers for search.",
+          "correct": false,
+          "why_wrong": "That role is for calling Google remote MCP servers. Claude's web search is a partner-model feature governed by org policy."
+        },
+        {
+          "text": "Allow web_search in vertexai.allowedPartnerModelFeatures at the narrowest granularity that works, such as one model and feature.",
+          "correct": true
+        }
+      ],
+      "explanation": "In projects under an organization, partner-model features such as web_search and structured_outputs are blocked until allowed in constraints/vertexai.allowedPartnerModelFeatures. You can allow them per publisher, per model, or per model:feature; pick the narrowest scope the sessions need.",
+      "key_takeaway": "Partner features like web_search need vertexai.allowedPartnerModelFeatures, scoped as narrowly as possible.",
+      "doc_links": [
+        {
+          "label": "Control access to Model Garden models",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/control-model-access"
+        },
+        {
+          "label": "Organization policy constraints",
+          "url": "https://docs.cloud.google.com/organization-policy/reference/org-policy-constraints"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-29",
+      "section": "Lifecycle & Comparison",
+      "guide_anchor": "lifecycle-comparison",
+      "question": "A developer's laptop has GOOGLE_CLOUD_PROJECT set to a sandbox project, and their ADC file names a shared quota project. Claude Code usage should be billed to a dedicated tools project. Which setting guarantees that?",
+      "options": [
+        {
+          "text": "Run gcloud config set project to the tools project, since Claude Code reads only the active gcloud configuration to choose the billed project.",
+          "correct": false,
+          "why_wrong": "The guide names ANTHROPIC_VERTEX_PROJECT_ID as the deciding setting; changing the gcloud config does not override it or the env var order."
+        },
+        {
+          "text": "Export ANTHROPIC_VERTEX_PROJECT_ID with the tools project ID, because it takes priority over GOOGLE_CLOUD_PROJECT and the ADC file.",
+          "correct": true
+        },
+        {
+          "text": "Set CLOUD_ML_REGION to the tools project's region, which makes Claude Code bill the project that owns that region.",
+          "correct": false,
+          "why_wrong": "CLOUD_ML_REGION only picks the endpoint location. Regions are not owned by projects and do not select billing."
+        },
+        {
+          "text": "Create a service account key in the tools project and point GOOGLE_APPLICATION_CREDENTIALS at it on the laptop.",
+          "correct": false,
+          "why_wrong": "A key file is a long-lived secret the agent can read and leak, which the keyless pattern avoids. It also does not pin the project."
+        }
+      ],
+      "explanation": "ANTHROPIC_VERTEX_PROJECT_ID wins over GOOGLE_CLOUD_PROJECT and the ADC file, so setting it explicitly prevents calls from landing in an unexpected project. /status inside Claude Code then confirms the provider, project, region and model.",
+      "key_takeaway": "Set ANTHROPIC_VERTEX_PROJECT_ID explicitly; it overrides GOOGLE_CLOUD_PROJECT and the ADC project.",
+      "doc_links": [
+        {
+          "label": "Claude Code on Google Vertex AI",
+          "url": "https://code.claude.com/docs/en/google-vertex-ai"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-30",
+      "section": "Agent Workflow",
+      "guide_anchor": "agent-workflow",
+      "question": "During a large refactor, a team wants the agent to keep working until the affected tests pass instead of ending its turn with a broken build. They already have a PostToolUse hook that formats each edited file. Where should the test gate go?",
+      "options": [
+        {
+          "text": "In a Stop hook that prints decision continue with a reason, so the failing output is injected and the agent re-enters the loop.",
+          "correct": true
+        },
+        {
+          "text": "In the existing PostToolUse hook, which can return decision continue after each edit to send the agent straight back to fix the failing tests.",
+          "correct": false,
+          "why_wrong": "A PostToolUse hook returns an empty object, so it cannot steer the agent. Only a Stop hook can return decision continue."
+        },
+        {
+          "text": "In a PreToolUse hook on write_to_file that returns deny until the full test suite passes on the current tree.",
+          "correct": false,
+          "why_wrong": "Denying edits until tests pass would block the very edits needed to fix them. PreToolUse gates tool calls, not loop exit."
+        },
+        {
+          "text": "In a SessionStart hook that runs the full suite once when the session opens and stores the result for later steps.",
+          "correct": false,
+          "why_wrong": "SessionStart fires once per new session. A single run at startup cannot keep the agent working after later edits fail tests."
+        }
+      ],
+      "explanation": "A Stop hook fires when the loop ends and can print {\"decision\": \"continue\", \"reason\": \"...\"}; the reason is injected into the conversation and the agent goes back to fix the failure. Keep the PostToolUse script to changed files and run only affected tests in Stop, because hooks block the loop (default timeout 30 seconds).",
+      "key_takeaway": "PostToolUse cannot steer; put the tests-must-pass gate in a Stop hook that returns decision continue.",
+      "doc_links": [
+        {
+          "label": "Antigravity Hooks",
+          "url": "https://antigravity.google/docs/hooks"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-31",
+      "section": "Agent Workflow",
+      "guide_anchor": "agent-workflow",
+      "question": "A team cut latency of an ADK agent on Agent Runtime with a parallel fan-out and caching. They plan to deploy the new revision and watch Cloud Trace. Routing is still at its default. What should they do before deploying so the change is a true canary?",
+      "options": [
+        {
+          "text": "Nothing extra: Agent Runtime holds a new revision at 0% traffic by default until someone promotes it.",
+          "correct": false,
+          "why_wrong": "The default is always-latest routing, which sends all traffic to a new revision as soon as it exists."
+        },
+        {
+          "text": "Run agents-cli eval compare after the deploy finishes, which automatically rolls back if quality drops below baseline.",
+          "correct": false,
+          "why_wrong": "eval compare reports differences between two result files. It does not route traffic or roll back a deployment."
+        },
+        {
+          "text": "Switch to a manual traffic split pinning the current revision at 100%, then deploy and shift a small share to the new one.",
+          "correct": true
+        },
+        {
+          "text": "Deploy with agents-cli deploy --update-only, which keeps the old revision serving all traffic while the new revision warms up in the background.",
+          "correct": false,
+          "why_wrong": "--update-only updates the existing deployment instead of creating a duplicate. It does not hold traffic on the old revision."
+        }
+      ],
+      "explanation": "With always-latest routing every Agent Runtime deploy is a 100% rollout. Pin traffic with a manual split before deploying, then move a small share to the new revision and compare traces and eval quality before promoting. Revisions and traffic splitting are in Preview.",
+      "key_takeaway": "Default Agent Runtime routing makes each deploy a full rollout; set a manual split first to canary.",
+      "doc_links": [
+        {
+          "label": "Agent Runtime revisions and traffic",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-revisions-and-traffic"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-q-32",
+      "section": "Agent Workflow",
+      "guide_anchor": "agent-workflow",
+      "question": "A monorepo refactor moves a package to a new path. The lead agent will run several writer subagents in parallel, then wants an independent review of each diff against the team's rules. Which setup follows the guide's playbook?",
+      "options": [
+        {
+          "text": "Give writers inherit mode so they can see each other's edits live in one tree, then ask the lead agent to review the merged diff itself.",
+          "correct": false,
+          "why_wrong": "inherit mode shares one working tree so writers overwrite each other, and self-review reuses the authoring agent's blind spots."
+        },
+        {
+          "text": "Let one writer do the whole refactor in Fast mode to avoid conflicts, then rely on CI alone as the reviewer.",
+          "correct": false,
+          "why_wrong": "Fast mode skips the plan and its gates, and a single serial writer loses the parallel, isolated slices the playbook relies on."
+        },
+        {
+          "text": "Run writers with the terminal sandbox off so builds are faster, and let each writer review its own slice before merging.",
+          "correct": false,
+          "why_wrong": "Sandbox off gives agent-written build scripts full host privileges, and self-grading is a named anti-pattern."
+        },
+        {
+          "text": "One writer per non-overlapping slice in branch mode, then a separate reviewer subagent with read-only tools and a clean context.",
+          "correct": true
+        }
+      ],
+      "explanation": "Branch mode gives each writer its own Git worktree, and non-overlapping slices stop conflicts. A custom reviewer subagent whose tools list has only read tools audits each diff with a fresh context, avoiding the self-grading blind spot. Characterization tests on the old code form the baseline.",
+      "key_takeaway": "Parallel refactors: branch-mode writers on disjoint slices, then a read-only, fresh-context reviewer subagent.",
+      "doc_links": [
+        {
+          "label": "Antigravity Custom Subagents",
+          "url": "https://antigravity.google/docs/subagents"
+        }
+      ]
+    }
+  ]
+}

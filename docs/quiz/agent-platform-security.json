@@ -1,0 +1,1388 @@
+{
+  "topic_id": "agent-platform-security",
+  "title": "Agent Platform: Identity, Security & Governance",
+  "guide_url": "AgentPlatformSecurity.html",
+  "questions": [
+    {
+      "id": "agent-platform-security-q-01",
+      "section": "Agent Identity Model",
+      "guide_anchor": "identity-model",
+      "question": "Five agents in one project all run as the default AI Platform Reasoning Engine Service Agent. Security now requires each agent to have its own credential that cannot be impersonated and involves no long-lived keys. What should the architect do?",
+      "options": [
+        {
+          "text": "Create one custom service account per agent, export a JSON key for each, and store the keys in Secret Manager for the agents to load at startup.",
+          "correct": false,
+          "why_wrong": "Exported service account keys are long-lived secrets, and service accounts can still be impersonated by anyone holding the right role."
+        },
+        {
+          "text": "Redeploy each agent with Agent Identity enabled and grant IAM roles to that agent's own principal:// identifier.",
+          "correct": true
+        },
+        {
+          "text": "Keep the shared service agent but add IAM conditions on each role binding that check the calling agent's display name before allowing access.",
+          "correct": false,
+          "why_wrong": "The service agent stays shared by every agent in the project, so there is still no distinct per-agent credential to scope or audit."
+        },
+        {
+          "text": "Create a Workload Identity Federation pool per agent and map each agent's container hostname to a federated principal in that pool.",
+          "correct": false,
+          "why_wrong": "Workload Identity Federation is for external or other-cloud workloads; Agent Runtime agents get a native per-agent identity through Agent Identity."
+        }
+      ],
+      "explanation": "Agent Identity gives every agent a SPIFFE-based, strongly attested principal tied to its lifecycle. It isn't shared by default, can't be impersonated, and uses certificate-bound, auto-rotated credentials instead of keys. You grant roles to the agent's principal:// (or to a principalSet for groups of agents).",
+      "key_takeaway": "For per-agent, non-impersonable, keyless credentials, use Agent Identity rather than shared or custom service accounts.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        },
+        {
+          "label": "Agent Runtime Identity & Credentials",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/agent-identity"
+        },
+        {
+          "label": "SPIFFE Workload Identity Standard",
+          "url": "https://spiffe.io/docs/latest/spiffe-about/overview/"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-02",
+      "section": "Agent Identity Model",
+      "guide_anchor": "identity-model",
+      "question": "A CI/CD pipeline redeploys an agent that uses Agent Identity on every release. After the latest release, the agent suddenly gets permission-denied errors on BigQuery, even though nobody changed IAM. What is the most likely cause and the durable fix?",
+      "options": [
+        {
+          "text": "The agent's X.509 certificate expired after 24 hours; schedule a pipeline job that restarts the agent every day so a new certificate is issued.",
+          "correct": false,
+          "why_wrong": "Agent Identity certificates are rotated automatically, so expiry isn't the cause and daily restarts would not be needed."
+        },
+        {
+          "text": "Context-Aware Access blocked BigQuery because mTLS failed; opt the agent out of the default Context-Aware Access policy.",
+          "correct": false,
+          "why_wrong": "Opting out of Context-Aware Access is not recommended and doesn't address the real issue, which is a changed principal."
+        },
+        {
+          "text": "The redeploy created a new resource ID, so a new principal; read spec.effectiveIdentity after deploy and keep baseline roles on the project principalSet.",
+          "correct": true
+        },
+        {
+          "text": "IAM changes take time to propagate after any deploy; add a fixed ten-minute wait step to the pipeline before routing production traffic to the new revision.",
+          "correct": false,
+          "why_wrong": "No IAM change was made; the old bindings point at the previous agent's principal, so waiting won't restore access."
+        }
+      ],
+      "explanation": "An agent identity is tied to the agent's resource URI. Redeploying as a new resource produces a new principal, and bindings on the old principal no longer apply. Pipelines should read spec.effectiveIdentity to bind per-agent roles, and put shared baseline roles on the project-level principalSet, which survives redeploys.",
+      "key_takeaway": "A new agent resource means a new principal: use principalSet baselines and read spec.effectiveIdentity in CI/CD.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        },
+        {
+          "label": "Agent Runtime Identity & Credentials",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/agent-identity"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-03",
+      "section": "Agent Identity Model",
+      "guide_anchor": "identity-model",
+      "question": "During a red-team exercise, an attacker extracts a valid access token from an agent's memory and tries to use it from their own laptop to call Google Cloud APIs. The agent uses Agent Identity with default settings. What prevents the token from working?",
+      "options": [
+        {
+          "text": "A Model Armor sensitive data template that detects bearer tokens in agent responses and redacts them before they leave the gateway for any caller.",
+          "correct": false,
+          "why_wrong": "Redacting tokens in responses doesn't help once a token is already stolen; replay protection comes from token binding."
+        },
+        {
+          "text": "A Secret Manager rotation schedule that replaces the agent's access token every hour so the stolen value expires quickly.",
+          "correct": false,
+          "why_wrong": "Agent access tokens aren't stored or rotated in Secret Manager, and a short lifetime alone would still allow replay until expiry."
+        },
+        {
+          "text": "An IAM deny policy on the agent's principal that blocks every permission whenever the request comes from outside the project.",
+          "correct": false,
+          "why_wrong": "IAM deny policies deny permissions; they don't evaluate network origin, and denying everything would break the agent too."
+        },
+        {
+          "text": "Tokens are bound to the agent's X.509 certificate, and default Context-Aware Access enforces mTLS and DPoP, so they can't be replayed.",
+          "correct": true
+        }
+      ],
+      "explanation": "Agent Identity issues access tokens that are cryptographically bound to the agent's certificate. A Google-managed Context-Aware Access policy enforces mTLS and DPoP token binding by default, so a token copied out of the trusted runtime can't be replayed elsewhere.",
+      "key_takeaway": "Agent Identity's certificate-bound tokens plus default Context-Aware Access (mTLS + DPoP) defeat token replay.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Identity",
+          "url": "https://docs.cloud.google.com/iam/docs/agent-identity-overview"
+        },
+        {
+          "label": "Agent Runtime Identity & Credentials",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/agent-identity"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-04",
+      "section": "Tool Authentication & Secrets",
+      "guide_anchor": "tool-auth",
+      "question": "An IT helpdesk agent must create Jira tickets as the employee who asked, so tickets show that employee as reporter and respect their Jira project permissions. Which authentication approach meets this requirement?",
+      "options": [
+        {
+          "text": "Configure an auth manager auth provider for 3-legged OAuth so each employee consents once and the user's token is injected into the tool call.",
+          "correct": true
+        },
+        {
+          "text": "Store a single Jira administrator API key in Secret Manager and pass the employee's email as a field in each ticket-creation request for attribution.",
+          "correct": false,
+          "why_wrong": "A shared admin key acts with the admin's authority, bypassing each employee's own permissions and attribution."
+        },
+        {
+          "text": "Use 2-legged OAuth client credentials registered for the agent so it can call Jira machine-to-machine without any user interaction.",
+          "correct": false,
+          "why_wrong": "2-legged OAuth is the agent's own authority (machine-to-machine), not delegation on behalf of a specific user."
+        },
+        {
+          "text": "Federate the agent's Agent Identity to Jira using OIDC ID tokens, then map the agent principal to a dedicated Jira service user.",
+          "correct": false,
+          "why_wrong": "OIDC federation of the agent identity still authenticates as the agent itself, so actions would not carry the employee's identity."
+        }
+      ],
+      "explanation": "User-delegated access requires 3-legged OAuth. The Agent Identity auth manager runs the consent, code exchange and refresh flow, stores the delegated token in an auth provider, and injects the Authorization header into the tool or MCP call. Logs then record both the agent and the user.",
+      "key_takeaway": "Acting as the user with consent means 3-legged OAuth through the auth manager; API keys, 2LO and OIDC are the agent's own authority.",
+      "doc_links": [
+        {
+          "label": "IAM Auth Manager Overview",
+          "url": "https://docs.cloud.google.com/iam/docs/auth-manager-overview"
+        },
+        {
+          "label": "Secret Manager Integration with ADK",
+          "url": "https://docs.cloud.google.com/secret-manager/docs/integrate-secret-manager-with-adk"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-05",
+      "section": "Tool Authentication & Secrets",
+      "guide_anchor": "tool-auth",
+      "question": "A weather API key is currently set as a plaintext environment variable on an Agent Runtime agent. The security team wants the key out of code and config, and wants a rotated key to take effect without redeploying or restarting the agent. What should you implement?",
+      "options": [
+        {
+          "text": "Encrypt the key with a CMEK key, commit the ciphertext to source code, and decrypt it in the agent at startup on every instance using Cloud KMS.",
+          "correct": false,
+          "why_wrong": "The secret still lives in source code, and the value is only read at startup, so rotation still requires a restart."
+        },
+        {
+          "text": "Store it in Secret Manager in the same project, grant the agent secretAccessor, and fetch it at runtime with the ADK SecretManagerClient.",
+          "correct": true
+        },
+        {
+          "text": "Reference the key as a secret environment variable that points to a secret held in a central security project shared by all teams.",
+          "correct": false,
+          "why_wrong": "Agent Runtime secret env vars can only reference same-project secrets, and env vars are resolved at deploy rather than per call."
+        },
+        {
+          "text": "Move the key into the agent's system instruction so the model can include it in tool arguments whenever it calls the weather API.",
+          "correct": false,
+          "why_wrong": "Putting secrets in prompts exposes them to the model, logs and potential prompt-injection exfiltration."
+        }
+      ],
+      "explanation": "Secret Manager keeps the key out of code. Fetching it dynamically through the ADK SecretManagerClient picks up new versions without a container restart. The agent identity needs roles/secretmanager.secretAccessor. Secret env vars on Agent Runtime are limited to same-project secrets and are bound at deploy time.",
+      "key_takeaway": "Secrets belong in Secret Manager; fetch them at runtime when rotation must not require a redeploy.",
+      "doc_links": [
+        {
+          "label": "IAM Auth Manager Overview",
+          "url": "https://docs.cloud.google.com/iam/docs/auth-manager-overview"
+        },
+        {
+          "label": "Secret Manager Integration with ADK",
+          "url": "https://docs.cloud.google.com/secret-manager/docs/integrate-secret-manager-with-adk"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-06",
+      "section": "Tool Authentication & Secrets",
+      "guide_anchor": "tool-auth",
+      "question": "A bank deploys a Gemini Enterprise agent whose tools use employees' delegated connector credentials. A security requirement states that agent code must never be able to read a raw end-user credential. Which design satisfies this?",
+      "options": [
+        {
+          "text": "Keep user tokens in the agent's session state encrypted with a CMEK key, and decrypt them in a callback just before each tool call.",
+          "correct": false,
+          "why_wrong": "The agent decrypts and holds the raw token, which is exactly what the requirement forbids."
+        },
+        {
+          "text": "Apply a Model Armor sensitive data template to the agent's context window so any OAuth tokens are redacted before the model sees or logs them.",
+          "correct": false,
+          "why_wrong": "Model Armor screens content; it doesn't broker credentials, and the agent runtime would still handle the token."
+        },
+        {
+          "text": "Use Agent Identity with Agent Gateway: the auth manager encrypts end-user credentials and the gateway decrypts them on the outbound call.",
+          "correct": true
+        },
+        {
+          "text": "Replace delegated OAuth with per-team API keys so no end-user credential is ever involved in tool calls made by the agent.",
+          "correct": false,
+          "why_wrong": "This removes user delegation entirely, so tools no longer act with each employee's permissions."
+        }
+      ],
+      "explanation": "When Agent Identity is used with Agent Gateway and Gemini Enterprise, end-user credentials are encrypted by the auth manager and decrypted only at the gateway. The agent never has access to the raw credential while tools still act on the user's behalf.",
+      "key_takeaway": "Auth manager + Agent Gateway keeps raw user credentials away from agent code: encrypted by the auth manager, decrypted at the gateway.",
+      "doc_links": [
+        {
+          "label": "IAM Auth Manager Overview",
+          "url": "https://docs.cloud.google.com/iam/docs/auth-manager-overview"
+        },
+        {
+          "label": "Secret Manager Integration with ADK",
+          "url": "https://docs.cloud.google.com/secret-manager/docs/integrate-secret-manager-with-adk"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-07",
+      "section": "Access Boundaries: IAM, Deny & PAB",
+      "guide_anchor": "access-boundaries",
+      "question": "The governance team wants a guarantee that agents in the project support-agents can only ever operate on resources in two approved projects, even if an engineer later grants them broad roles elsewhere in the organization. Which control provides this preventive guarantee?",
+      "options": [
+        {
+          "text": "An organization-level IAM deny policy that lists the Cloud Storage and BigQuery permissions the agents should never use outside the two projects.",
+          "correct": false,
+          "why_wrong": "Deny policies target specific permissions; listing two services leaves every other service reachable."
+        },
+        {
+          "text": "A Principal Access Boundary policy listing the two projects, bound to the principal set of agents in support-agents.",
+          "correct": true
+        },
+        {
+          "text": "A quarterly IAM Recommender review that flags and removes any role bindings the agents hold outside the two approved projects.",
+          "correct": false,
+          "why_wrong": "Periodic reviews are detective and after the fact; they don't prevent a new grant from being used in between."
+        },
+        {
+          "text": "Remove every existing role binding the agents hold outside the two projects and document the rule in the team's onboarding runbook.",
+          "correct": false,
+          "why_wrong": "Cleanup only fixes today's state; nothing stops a future over-grant from taking effect."
+        }
+      ],
+      "explanation": "A PAB policy defines which resources a principal is eligible to access, regardless of the roles it holds. Bound to the agents' principal set, it caps their reach to the listed projects even if broad allow grants appear elsewhere later.",
+      "key_takeaway": "PAB caps where a principal can ever operate; allow policies grant, and deny policies remove specific permissions.",
+      "doc_links": [
+        {
+          "label": "Principal Access Boundary (PAB)",
+          "url": "https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies"
+        },
+        {
+          "label": "Managing Agent Access & IAM",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-agent-access"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-08",
+      "section": "Access Boundaries: IAM, Deny & PAB",
+      "guide_anchor": "access-boundaries",
+      "question": "An agent needs a broad predefined role for its job, but security insists it must never be able to change IAM policies on any resource, even if additional roles are granted to it in the future. Which control best enforces this?",
+      "options": [
+        {
+          "text": "A Principal Access Boundary policy that excludes the agent's own project so it can never reach IAM settings on resources there.",
+          "correct": false,
+          "why_wrong": "PAB works at the resource level; excluding the project would remove all access there, not just IAM changes."
+        },
+        {
+          "text": "A Unified Access Policy on Agent Gateway that denies every MCP tool whose annotations set destructive_hint to true.",
+          "correct": false,
+          "why_wrong": "Gateway policies govern agent traffic to tools by annotation; they don't remove a Google Cloud IAM permission."
+        },
+        {
+          "text": "An IAM deny policy that denies the setIamPolicy permissions to the agent's principal, since deny overrides any allow.",
+          "correct": true
+        },
+        {
+          "text": "A custom role that copies the predefined role minus setIamPolicy, granted in place of the predefined role on every project.",
+          "correct": false,
+          "why_wrong": "A trimmed custom role helps today, but a future grant of another role containing the permission would reintroduce it."
+        }
+      ],
+      "explanation": "IAM deny policies block specific permissions for specific principals and take precedence over allow policies. That makes them the right tool when one permission must never be usable regardless of present or future role grants.",
+      "key_takeaway": "To make a specific permission unusable regardless of grants, use an IAM deny policy; deny overrides allow.",
+      "doc_links": [
+        {
+          "label": "Principal Access Boundary (PAB)",
+          "url": "https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies"
+        },
+        {
+          "label": "Managing Agent Access & IAM",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-agent-access"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-09",
+      "section": "Access Boundaries: IAM, Deny & PAB",
+      "guide_anchor": "access-boundaries",
+      "question": "An agent identity holds roles/bigquery.dataViewer on project analytics-prod. A Principal Access Boundary policy bound to the agents' principal set lists only support-dev and support-prod. No deny policies exist. The agent queries a table in analytics-prod. What happens?",
+      "options": [
+        {
+          "text": "The query succeeds because an explicit allow grant on the resource always takes precedence over boundary policies.",
+          "correct": false,
+          "why_wrong": "PAB is evaluated in addition to allow policies; an allow grant can't make an out-of-boundary resource eligible."
+        },
+        {
+          "text": "The query is denied because analytics-prod is outside the principal's boundary, even though an allow role exists.",
+          "correct": true
+        },
+        {
+          "text": "The query succeeds but a Policy Denied entry is written, because PAB policies only run in dry-run mode for agents.",
+          "correct": false,
+          "why_wrong": "Dry-run applies to gateway Unified Access Policies, not to PAB; there is no agent-only dry-run behavior for PAB."
+        },
+        {
+          "text": "The query is denied only if a matching IAM deny policy also exists; without one, PAB has nothing to enforce here.",
+          "correct": false,
+          "why_wrong": "PAB enforces on its own; it doesn't depend on a deny policy being present."
+        }
+      ],
+      "explanation": "Access requires all three: an allow grant, the resource being inside the principal's PAB (for permissions supported by the enforcement version), and no matching deny. Here the resource is outside the boundary, so access fails.",
+      "key_takeaway": "Effective access = allow AND inside the PAB boundary AND not denied. PAB never grants on its own.",
+      "doc_links": [
+        {
+          "label": "Principal Access Boundary (PAB)",
+          "url": "https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies"
+        },
+        {
+          "label": "Managing Agent Access & IAM",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/manage-agent-access"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-10",
+      "section": "Agent Registry, Skill Registry & Agent Gateway",
+      "guide_anchor": "registry-gateway",
+      "question": "A platform team finds hundreds of agents and dozens of MCP servers built by different teams, with no inventory and no control over which tools agents call. They need central discovery plus enforcement that agents only reach approved destinations. What should they adopt?",
+      "options": [
+        {
+          "text": "Publish every MCP server's instructions into Skill Registry so agents discover tools dynamically instead of hard-coding their endpoints.",
+          "correct": false,
+          "why_wrong": "Skill Registry stores loadable skills; it isn't the inventory of agents and MCP servers, and it doesn't enforce destinations."
+        },
+        {
+          "text": "Rely on the Security Command Center AI asset inventory to list agents, and email owners of any agent that calls unknown tools.",
+          "correct": false,
+          "why_wrong": "An inventory alone gives visibility but no enforcement; nothing blocks an unapproved call."
+        },
+        {
+          "text": "Export Cloud Asset Inventory to BigQuery weekly and maintain an approved-tools spreadsheet that each team must review.",
+          "correct": false,
+          "why_wrong": "Spreadsheets and reports aren't enforced at runtime and quickly drift from reality."
+        },
+        {
+          "text": "Register agents and MCP servers in Agent Registry and route agent egress through Agent Gateway with default-deny policies.",
+          "correct": true
+        }
+      ],
+      "explanation": "Agent Registry is the central catalog of agents, MCP servers/tools, endpoints and skills, with automatic registration for supported workloads and manual Service resources for remote ones. Agent Gateway queries the registry before routing, and default-deny Unified Access Policies allow only approved destinations, which addresses agent sprawl.",
+      "key_takeaway": "Agent sprawl is solved by Agent Registry (inventory) plus Agent Gateway with default-deny policies (enforcement).",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Registry",
+          "url": "https://docs.cloud.google.com/agent-registry/overview"
+        },
+        {
+          "label": "Agent Gateway Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-11",
+      "section": "Agent Registry, Skill Registry & Agent Gateway",
+      "guide_anchor": "registry-gateway",
+      "question": "An Agent Runtime agent calls a third-party MCP server. Security wants a record of exactly which MCP tool names were invoked, and wants to apply allow/deny decisions per tool. Which component provides this?",
+      "options": [
+        {
+          "text": "Agent Gateway on the Client-to-Agent path, which terminates user mTLS and logs every request the end user sends to the agent.",
+          "correct": false,
+          "why_wrong": "Client-to-Agent is ingress; calls from the agent to an MCP server travel the Agent-to-Anywhere egress path."
+        },
+        {
+          "text": "Agent Gateway on the Agent-to-Anywhere path, which inspects MCP JSON-RPC for tool names and emits traces and access logs.",
+          "correct": true
+        },
+        {
+          "text": "VPC Flow Logs on the agent's network attachment, filtered for connections to the MCP server's IP range and port.",
+          "correct": false,
+          "why_wrong": "Flow logs capture network connections, not application-level MCP tool names, and can't enforce per-tool decisions."
+        },
+        {
+          "text": "Data Access audit logs for Agent Platform, which capture every outbound third-party tool invocation made by the agent.",
+          "correct": false,
+          "why_wrong": "Audit logs record Google Cloud API operations; they don't show the tool names called on a third-party MCP server."
+        }
+      ],
+      "explanation": "Agent Gateway mediates MCP, A2A, REST and gRPC. On the egress (Agent-to-Anywhere) path, it parses MCP JSON-RPC to identify tool names for policy evaluation, and emits OpenTelemetry traces and access logs to Cloud Logging and Trace.",
+      "key_takeaway": "Per-tool visibility and control for agent-to-tool traffic comes from Agent Gateway's egress path, which understands MCP.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Agent Registry",
+          "url": "https://docs.cloud.google.com/agent-registry/overview"
+        },
+        {
+          "label": "Agent Gateway Overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview"
+        },
+        {
+          "label": "OpenTelemetry GenAI Semantic Conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-12",
+      "section": "Gateway Policies: UAP & Semantic Governance",
+      "guide_anchor": "gateway-policies",
+      "question": "An agent should be able to call read-only tools on an inventory MCP server but must never call any tool annotated as destructive. The team must roll this out to production without accidentally breaking legitimate calls. What is the best approach?",
+      "options": [
+        {
+          "text": "Add a Semantic Governance constraint saying never run destructive tools, and enable it in enforcement mode for all production agents at once.",
+          "correct": false,
+          "why_wrong": "Semantic Governance is an LLM judgment, not a deterministic tool filter, and turning it on everywhere at once skips safe validation."
+        },
+        {
+          "text": "Write a Unified Access Policy allowing named tools and denying destructive_hint, run IAP in dry run, review audit logs, then enforce.",
+          "correct": true
+        },
+        {
+          "text": "Create an IAM deny policy on the agent identity covering all aiplatform.* permissions that could modify inventory data.",
+          "correct": false,
+          "why_wrong": "Google Cloud IAM permissions don't map to MCP tool names on a separate server, so this neither allows nor blocks specific tools."
+        },
+        {
+          "text": "Configure a Model Armor input template that blocks any prompt containing words such as delete, drop or remove before it reaches the agent.",
+          "correct": false,
+          "why_wrong": "Keyword screening of prompts is content filtering, not authorization, and is easy to evade or prone to false positives."
+        }
+      ],
+      "explanation": "Unified Access Policies are default-deny, support CEL on tool names and annotations such as destructive_hint, and let deny rules override allow rules. DRY_RUN logs would-be violations to Cloud Audit Logs without blocking, so you can tune the policy before switching to enforcement.",
+      "key_takeaway": "Deterministic tool-level control is a gateway UAP: name tools explicitly, deny destructive ones, run DRY_RUN, then enforce by removing iamEnforcementMode.",
+      "doc_links": [
+        {
+          "label": "Unified Access Policies (UAP)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/overview-uap"
+        },
+        {
+          "label": "Semantic Governance Policies",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-13",
+      "section": "Gateway Policies: UAP & Semantic Governance",
+      "guide_anchor": "gateway-policies",
+      "question": "A support agent is legitimately allowed to use send_email. A customer email in its context contains hidden text telling it to forward all invoices to an outside address. Which control evaluates whether this proposed tool call matches what the user actually asked for?",
+      "options": [
+        {
+          "text": "A tighter Unified Access Policy whose CEL condition allows send_email only when the tool name matches exactly.",
+          "correct": false,
+          "why_wrong": "The tool name is legitimately allowed; a tool-name rule can't tell whether this particular call serves the user's intent."
+        },
+        {
+          "text": "A Principal Access Boundary policy that limits the agent's identity to resources in the support project only.",
+          "correct": false,
+          "why_wrong": "PAB limits which Google Cloud resources are eligible; it doesn't inspect email recipients or user intent."
+        },
+        {
+          "text": "Semantic Governance with its intent-alignment check, which intercepts the proposed call and returns ALLOW or DENY with a rationale.",
+          "correct": true
+        },
+        {
+          "text": "Customer-managed encryption keys on the agent so any invoice data it reads stays encrypted under the company's own key.",
+          "correct": false,
+          "why_wrong": "CMEK protects data at rest; it doesn't stop an authorized agent from sending data in a tool call."
+        }
+      ],
+      "explanation": "Semantic Governance (Preview) uses an LLM policy engine to evaluate each proposed tool call. Its alignment-with-user-intent check is on by default, which targets indirect prompt injection and context poisoning when the tool itself is allowed.",
+      "key_takeaway": "When the tool is allowed but the call is rogue, Semantic Governance's intent check is the control; UAP only sees names and attributes.",
+      "doc_links": [
+        {
+          "label": "Unified Access Policies (UAP)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/overview-uap"
+        },
+        {
+          "label": "Semantic Governance Policies",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview"
+        },
+        {
+          "label": "OWASP Top 10 for LLM Applications",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-14",
+      "section": "Gateway Policies: UAP & Semantic Governance",
+      "guide_anchor": "gateway-policies",
+      "question": "A team plans to enforce the hard financial rule \"never issue refunds above $75\" using only a Semantic Governance natural-language constraint, with no other check. What is the architect's main concern with this design?",
+      "options": [
+        {
+          "text": "Semantic Governance only evaluates the user's initial prompt, so it never sees the refund amount inside the proposed tool call.",
+          "correct": false,
+          "why_wrong": "Semantic Governance intercepts proposed tool calls, so it does see call arguments such as the amount."
+        },
+        {
+          "text": "Semantic Governance requires a Model Armor floor setting for the same project, so the policy can't be enabled on its own.",
+          "correct": false,
+          "why_wrong": "There is no such dependency; Semantic Governance and Model Armor are separate controls."
+        },
+        {
+          "text": "Natural-language constraints can't express numeric limits, so the refund rule must be rewritten as a Unified Access Policy CEL rule.",
+          "correct": false,
+          "why_wrong": "Business constraints like refund limits are a documented use case; the concern is reliability, not expressiveness."
+        },
+        {
+          "text": "Its verdicts are LLM-evaluated and can be wrong; it complements rather than replaces deterministic checks or human approval for hard limits.",
+          "correct": true
+        }
+      ],
+      "explanation": "Semantic Governance is designed to complement IAM and access policies. Because an LLM produces the verdicts, they can be incorrect. A hard financial limit should also be enforced in deterministic code or behind HITL confirmation.",
+      "key_takeaway": "Use Semantic Governance as an extra layer; hard invariants still need deterministic enforcement or HITL.",
+      "doc_links": [
+        {
+          "label": "Unified Access Policies (UAP)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/overview-uap"
+        },
+        {
+          "label": "Semantic Governance Policies",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-15",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "An organization runs agents on Gemini and on a third-party model hosted in another cloud. It must block prompt injection, jailbreaks and malicious URLs in user input, and wants one minimum baseline that every team's configuration must meet. Which approach fits?",
+      "options": [
+        {
+          "text": "Model Armor templates screening prompts for all models, plus floor settings at organization level as the enforced baseline.",
+          "correct": true
+        },
+        {
+          "text": "Set Gemini safety filters to BLOCK_LOW_AND_ABOVE for every harm category on all calls and ask the other team to match.",
+          "correct": false,
+          "why_wrong": "Gemini safety filters apply only to Gemini calls and cover harm categories, not prompt injection or malicious URLs."
+        },
+        {
+          "text": "Run Sensitive Data Protection inspection templates on every prompt and block any request containing a detected infoType.",
+          "correct": false,
+          "why_wrong": "SDP finds sensitive data such as card numbers; it doesn't detect jailbreaks, injections or malicious links."
+        },
+        {
+          "text": "Enable Semantic Governance on Agent Gateway so every incoming user prompt is checked against business constraints first.",
+          "correct": false,
+          "why_wrong": "Semantic Governance evaluates proposed tool calls, not inbound prompt content for injection or malicious URLs."
+        }
+      ],
+      "explanation": "Model Armor is model-agnostic and cloud-agnostic. It provides prompt injection and jailbreak detection, malicious URL detection, Responsible AI filters and SDP integration. Floor settings define an org, folder or project minimum that all templates must meet.",
+      "key_takeaway": "Cross-model input screening with a central baseline = Model Armor templates + floor settings.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "Configuring Gemini Safety Filters",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/configure-safety-filters"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-16",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "Responses flowing through Agent Gateway occasionally contain payment card numbers. The business wants those numbers redacted, not just detected, using Model Armor on the gateway. Which configuration is required?",
+      "options": [
+        {
+          "text": "A template using SDP basic mode with the built-in card infoType, and enforcement set to Inspect only so traffic is never interrupted.",
+          "correct": false,
+          "why_wrong": "Basic mode only inspects fixed infoTypes and can't de-identify, and Inspect only never alters the payload."
+        },
+        {
+          "text": "An advanced-mode SDP template referencing a de-identify template, with INSPECT_AND_BLOCK, in the gateway's region.",
+          "correct": true
+        },
+        {
+          "text": "An advanced-mode SDP template referencing a de-identify template, with enforcement set to Inspect only to avoid blocking any traffic.",
+          "correct": false,
+          "why_wrong": "On the gateway, redaction requires INSPECT_AND_BLOCK; Inspect only reports findings without modifying the payload."
+        },
+        {
+          "text": "Set the Gemini non-configurable PII safety filter to its strictest threshold so card numbers are masked in model output.",
+          "correct": false,
+          "why_wrong": "Non-configurable filters can't be tuned, and model safety filters don't perform SDP-style de-identification."
+        }
+      ],
+      "explanation": "For redaction through Agent Gateway, Model Armor needs advanced SDP mode with a de-identify template and the INSPECT_AND_BLOCK enforcement type. The template must also be in the same region as the gateway. If multiple detectors fire, the whole payload is blocked instead.",
+      "key_takeaway": "Gateway redaction = advanced SDP de-identify template + INSPECT_AND_BLOCK, in the gateway's region.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "Configuring Gemini Safety Filters",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/configure-safety-filters"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-17",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "After enabling Model Armor on Agent Gateway egress, a team sees findings for MCP tools/call traffic but nothing for MCP tools/list responses or for MCP Streamable HTTP/SSE streams. They suspect a misconfiguration. What is the most accurate explanation?",
+      "options": [
+        {
+          "text": "An organization floor setting is overriding the project template and silently disabling screening for those two traffic types.",
+          "correct": false,
+          "why_wrong": "Floor settings raise the minimum protection; they don't disable screening for particular MCP methods."
+        },
+        {
+          "text": "Model Armor on the gateway only screens ingress traffic, so tools/call findings must actually come from a different integration.",
+          "correct": false,
+          "why_wrong": "Gateway egress screening is supported, including MCP tools/call, A2A messages and OpenAI-compatible payloads."
+        },
+        {
+          "text": "This is expected: gateway screening covers tools/call, prompts/get and A2A messages, but not tools/list, resources/* or MCP SSE streams.",
+          "correct": true
+        },
+        {
+          "text": "Model Armor regional endpoints need a Private Service Connect endpoint, and without one only some message types are screened.",
+          "correct": false,
+          "why_wrong": "A PSC endpoint is for reaching regional Model Armor APIs from a VPC; it doesn't change which gateway message types are screened."
+        }
+      ],
+      "explanation": "Model Armor's Agent Gateway integration screens specific message types. On egress, that means A2A SendMessage/AgentCard, MCP tools/call and prompts/get, tool execution errors, and OpenAI-compatible LLM payloads. MCP tools/list, resources/*, notifications and Streamable HTTP/SSE streams pass without sanitization.",
+      "key_takeaway": "Know the gateway screening scope: tools/call yes; tools/list, resources/* and MCP SSE streams no.",
+      "doc_links": [
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        },
+        {
+          "label": "Configuring Gemini Safety Filters",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/configure-safety-filters"
+        },
+        {
+          "label": "MCP Streamable HTTP Transport",
+          "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-18",
+      "section": "Network & Data Protection",
+      "guide_anchor": "network-data",
+      "question": "An agent on Agent Runtime must call an internal REST API hosted on-premises, reachable over Interconnect from the company VPC and resolved through private DNS names. Which networking configuration enables this?",
+      "options": [
+        {
+          "text": "A Private Service Connect endpoint in the VPC targeting Google APIs, so the agent's traffic reaches on-premises through it.",
+          "correct": false,
+          "why_wrong": "A PSC endpoint provides private ingress to Google services; it doesn't give the agent egress into your network."
+        },
+        {
+          "text": "Attach Cloud NAT directly to the Agent Runtime instance and allowlist its NAT addresses on the on-premises firewall.",
+          "correct": false,
+          "why_wrong": "Cloud NAT provides internet egress for VPC resources; it doesn't connect a managed agent to private on-prem networks."
+        },
+        {
+          "text": "A PSC interface with a network attachment (subnet at least /28) and DNS peering, configured at creation since it can't be changed later.",
+          "correct": true
+        },
+        {
+          "text": "Agent Gateway on the Client-to-Agent path so the on-premises API can call into the agent through a managed mTLS endpoint.",
+          "correct": false,
+          "why_wrong": "Client-to-Agent is ingress to the agent; the requirement is outbound calls from the agent to on-prem."
+        }
+      ],
+      "explanation": "A PSC interface gives Agent Runtime private egress into your VPC, and from there to on-prem or multicloud networks. It uses a network attachment (minimum /28 subnet), with DNS peering for private names. It's set at agent creation and requires recreating the agent to change.",
+      "key_takeaway": "Private agent egress to VPC or on-prem = PSC interface + network attachment + DNS peering; plan it at creation time.",
+      "doc_links": [
+        {
+          "label": "Private Service Connect Interface (PSC-I)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/private-service-connect-interface"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-19",
+      "section": "Network & Data Protection",
+      "guide_anchor": "network-data",
+      "question": "A regulator requires customer-managed keys for an agent deployed in europe-west4. Which plan is correct for Agent Runtime?",
+      "options": [
+        {
+          "text": "Use a multi-region europe key at first, then switch to a europe-west4 key with an update once the agent is stable in production.",
+          "correct": false,
+          "why_wrong": "The key must be a single-region key in the instance's region, and it can't be changed after deployment."
+        },
+        {
+          "text": "Deploy with Google default encryption first, then add CMEK later with an agent update once the compliance review is complete.",
+          "correct": false,
+          "why_wrong": "CMEK is set at creation via encryption_spec and can't be added or changed after deploy."
+        },
+        {
+          "text": "Rely on Google default encryption combined with a VPC Service Controls perimeter, which together satisfy the customer-managed requirement.",
+          "correct": false,
+          "why_wrong": "VPC-SC limits data movement; it doesn't give the customer control of encryption keys."
+        },
+        {
+          "text": "Use a europe-west4 key, grant cryptoKeyEncrypterDecrypter to the gcp-sa-aiplatform-re agent, set encryption_spec at creation.",
+          "correct": true
+        }
+      ],
+      "explanation": "CMEK for Agent Runtime uses a single-region key in the same region as the instance, set through encryption_spec at creation, with the Reasoning Engine service agent granted the encrypter/decrypter role. Some metadata, such as display names and env vars, isn't covered by the key, so secrets must not go there.",
+      "key_takeaway": "CMEK on Agent Runtime: same-region single-region key, set at creation, immutable; metadata isn't key-protected.",
+      "doc_links": [
+        {
+          "label": "Private Service Connect Interface (PSC-I)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/private-service-connect-interface"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        },
+        {
+          "label": "CMEK Encryption on Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/cmek"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-20",
+      "section": "Network & Data Protection",
+      "guide_anchor": "network-data",
+      "question": "An EU bank's agent uses the global model endpoint for availability. Compliance now requires that both stored data and ML processing remain within the EU. What should the architect change?",
+      "options": [
+        {
+          "text": "Keep the global endpoint and set every storage location to an EU region, which also pins model processing to the EU.",
+          "correct": false,
+          "why_wrong": "The global endpoint offers no processing residency guarantee, whatever the storage location."
+        },
+        {
+          "text": "Move to the eu multi-region or an EU regional endpoint, and block the global endpoint with organization policy.",
+          "correct": true
+        },
+        {
+          "text": "Wrap the project in a VPC Service Controls perimeter so all model requests are forced to be processed inside the EU.",
+          "correct": false,
+          "why_wrong": "VPC-SC controls data exfiltration across perimeters; it doesn't determine where ML processing happens."
+        },
+        {
+          "text": "Encrypt all agent data with an EU-hosted CMEK key so that processing location requirements are automatically satisfied.",
+          "correct": false,
+          "why_wrong": "Key location is about encryption control; it doesn't move or restrict where processing takes place."
+        }
+      ],
+      "explanation": "Data residency for ML processing depends on the endpoint. Jurisdictional multi-region (eu) and regional endpoints keep processing in scope, while the global endpoint doesn't guarantee residency. Blocking the global endpoint through org policy prevents accidental use.",
+      "key_takeaway": "Residency = regional or jurisdictional endpoint; the global endpoint has no guarantee, so block it by policy.",
+      "doc_links": [
+        {
+          "label": "Private Service Connect Interface (PSC-I)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/private-service-connect-interface"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-21",
+      "section": "Network & Data Protection",
+      "guide_anchor": "network-data",
+      "question": "An Agent Runtime agent runs inside a VPC Service Controls perimeter and still reaches Google APIs, but now must call a public SaaS API on the internet. What is the documented way to provide this egress?",
+      "options": [
+        {
+          "text": "Add the SaaS domain as an egress rule in the service perimeter so Agent Runtime may reach that internet hostname directly.",
+          "correct": false,
+          "why_wrong": "Perimeter egress rules govern access to Google Cloud resources outside the perimeter, not arbitrary internet hosts."
+        },
+        {
+          "text": "Configure a PSC interface into your VPC, route through an RFC 1918 proxy VM, and use Cloud NAT for internet access.",
+          "correct": true
+        },
+        {
+          "text": "Assign a public IP address to the Agent Runtime instance and restrict it with a firewall rule allowing only the SaaS IP range.",
+          "correct": false,
+          "why_wrong": "Agent Runtime is managed; you don't assign public IPs to it, and the perimeter blocks direct internet access."
+        },
+        {
+          "text": "Remove only the Agent Platform API from the perimeter so the agent regains unrestricted internet access while keeping other services protected.",
+          "correct": false,
+          "why_wrong": "This weakens the perimeter for the service holding your agent data, defeating the purpose of VPC-SC."
+        }
+      ],
+      "explanation": "In a VPC-SC perimeter, Agent Runtime keeps Google API access but public internet access is blocked. The documented pattern is a PSC interface into your VPC, an RFC 1918 proxy VM, and Cloud NAT for controlled internet egress.",
+      "key_takeaway": "Internet egress from a perimeter-protected agent = PSC interface + private proxy VM + Cloud NAT.",
+      "doc_links": [
+        {
+          "label": "Private Service Connect Interface (PSC-I)",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/runtime/private-service-connect-interface"
+        },
+        {
+          "label": "VPC Service Controls for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-22",
+      "section": "Audit, Observability & Threat Detection",
+      "guide_anchor": "audit-detection",
+      "question": "Compliance asks for a record of every model prediction call that an agent makes against model endpoints. The team's logs only show resource creation and IAM changes. What must they do, and who can view the result?",
+      "options": [
+        {
+          "text": "Nothing; Admin Activity audit logs already capture prediction calls, so the team only needs to widen the log query's time range.",
+          "correct": false,
+          "why_wrong": "Admin Activity logs cover configuration and metadata changes, not data-plane calls such as predictions."
+        },
+        {
+          "text": "Enable Data Access audit logs and grant reviewers roles/logging.viewer, which includes read access to all audit log types.",
+          "correct": false,
+          "why_wrong": "Logs Viewer can't read Data Access logs in the _Default bucket; Private Logs Viewer is needed."
+        },
+        {
+          "text": "Enable Policy Denied audit logs, which record each model request so denied and allowed calls can be compared side by side.",
+          "correct": false,
+          "why_wrong": "Policy Denied logs only record requests rejected by a security policy, not every successful call."
+        },
+        {
+          "text": "Enable Data Access audit logs for Agent Platform, and grant reviewers Private Logs Viewer (roles/logging.privateLogViewer).",
+          "correct": true
+        }
+      ],
+      "explanation": "Admin Activity logs are always on and cover configuration changes. Usage of model endpoints is captured only after Data Access audit logs are enabled. Reading Data Access logs in the _Default bucket requires roles/logging.privateLogViewer.",
+      "key_takeaway": "Usage audit = enable Data Access logs; reading them needs Private Logs Viewer. Admin Activity covers config changes only.",
+      "doc_links": [
+        {
+          "label": "Cloud Audit Logging for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/audit-logging"
+        },
+        {
+          "label": "Security Command Center AI Protection",
+          "url": "https://docs.cloud.google.com/security-command-center/docs/ai-protection-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-23",
+      "section": "Audit, Observability & Threat Detection",
+      "guide_anchor": "audit-detection",
+      "question": "The CISO wants to be alerted automatically if an agent identity's credential is used from outside Google Cloud, or if an unusual IAM grant is made to an agent identity. Which capability addresses this?",
+      "options": [
+        {
+          "text": "Security Command Center AI Protection with Agent Platform Threat Detection, whose rules flag these agentic-identity events.",
+          "correct": true
+        },
+        {
+          "text": "Enable Data Access audit logs on all projects and have the security team review the agent entries in Logs Explorer every week.",
+          "correct": false,
+          "why_wrong": "Audit logs record events but don't detect or alert on them; weekly manual review isn't automatic alerting."
+        },
+        {
+          "text": "Apply a Model Armor floor setting at organization level so any agent prompt mentioning credentials raises a finding.",
+          "correct": false,
+          "why_wrong": "Model Armor screens content, not identity or credential misuse in IAM and authentication activity."
+        },
+        {
+          "text": "Run every gateway Unified Access Policy in DRY_RUN permanently so all would-be violations are written to audit logs.",
+          "correct": false,
+          "why_wrong": "Dry-run logs gateway policy matches; it doesn't detect credential use outside Google Cloud or anomalous IAM grants."
+        }
+      ],
+      "explanation": "SCC AI Protection includes threat detection for agents. Event Threat Detection rules such as IAM Anomalous Grant to Agentic Identity and Agentic Identity Credential Used Outside of Google Cloud generate findings automatically (Agent Platform Threat Detection is Preview, Premium tier).",
+      "key_takeaway": "Logs record; SCC AI Protection detects and alerts on agent identity threats.",
+      "doc_links": [
+        {
+          "label": "Cloud Audit Logging for AI",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/audit-logging"
+        },
+        {
+          "label": "Security Command Center AI Protection",
+          "url": "https://docs.cloud.google.com/security-command-center/docs/ai-protection-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-24",
+      "section": "HITL & Governance at Scale",
+      "guide_anchor": "hitl-governance",
+      "question": "An ADK agent's transfer_funds tool must pause for a human approver only when the amount exceeds 10,000, and approvers respond from a separate web application at a later time. Which implementation fits?",
+      "options": [
+        {
+          "text": "Configure a Model Armor template in Inspect only mode so large transfer requests are flagged for later human review in SCC.",
+          "correct": false,
+          "why_wrong": "Inspect only records findings after the fact; it doesn't pause the tool or collect an approval."
+        },
+        {
+          "text": "Add a Semantic Governance constraint with a custom denial message telling the user to contact finance for large transfers.",
+          "correct": false,
+          "why_wrong": "This denies the call outright instead of pausing for a human decision that can approve it."
+        },
+        {
+          "text": "Wrap the tool as FunctionTool with require_confirmation set to a function returning true above 10,000; approvals arrive via the REST API.",
+          "correct": true
+        },
+        {
+          "text": "Instruct the model in its system prompt to always ask the user for confirmation in chat before calling transfer_funds above 10,000.",
+          "correct": false,
+          "why_wrong": "A prompt instruction is probabilistic and doesn't enforce a pause; the model may skip it."
+        }
+      ],
+      "explanation": "ADK tool confirmation (Experimental) supports require_confirmation=True or a function that decides per call, e.g., based on amount. Advanced confirmation accepts structured responses, and remote approvals can be submitted through the REST API, which suits asynchronous approval UIs.",
+      "key_takeaway": "Conditional, enforceable HITL in ADK = require_confirmation with a predicate; remote approvals via the REST API.",
+      "doc_links": [
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        },
+        {
+          "label": "Semantic Governance Policies",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-25",
+      "section": "HITL & Governance at Scale",
+      "guide_anchor": "hitl-governance",
+      "question": "A central governance team must impose org-wide guardrails on every team's agents: a minimum content-screening level, use of approved gateways only, and a cap on which projects agents can reach. Which combination enforces all three centrally?",
+      "options": [
+        {
+          "text": "Model Armor floor settings at org level, custom org policy constraints on gateway association, and PAB on agent principal sets.",
+          "correct": true
+        },
+        {
+          "text": "Per-team Model Armor templates documented on a wiki, plus a standing request that teams use the shared gateway and narrow roles.",
+          "correct": false,
+          "why_wrong": "Documentation and requests aren't enforced; teams can drift from the baseline at any time."
+        },
+        {
+          "text": "Gemini safety filters at BLOCK_MEDIUM_AND_ABOVE on every call, plus the Owner role for the governance team on all projects.",
+          "correct": false,
+          "why_wrong": "Safety filters are per-call model settings, and broad Owner grants increase risk without enforcing gateway use or reach."
+        },
+        {
+          "text": "The Security Command Center AI Security dashboard reviewed monthly, with owners notified when an agent falls outside policy.",
+          "correct": false,
+          "why_wrong": "A dashboard gives visibility, not preventive enforcement of baselines, gateways or reach."
+        }
+      ],
+      "explanation": "Central, preventive governance uses org-level mechanisms. Model Armor floor settings enforce a minimum screening level, custom org policy constraints can restrict which gateways agents use, and PAB bound to agent principal sets caps reachable resources.",
+      "key_takeaway": "Org-wide agent governance = floor settings + org policy constraints + PAB, backed by Registry inventory and SCC detection.",
+      "doc_links": [
+        {
+          "label": "ADK Tool Confirmation & Guardrails",
+          "url": "https://adk.dev/tools-custom/confirmation/"
+        },
+        {
+          "label": "Semantic Governance Policies",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview"
+        },
+        {
+          "label": "Google Cloud Model Armor",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-26",
+      "section": "Tool Authentication & Secrets",
+      "guide_anchor": "tool-auth",
+      "question": "A sales agent calls a custom MCP server on Cloud Run, which queries BigQuery tables protected by row-level rules keyed on the requesting user. Users authenticate with 3LO, yet every user sees every region's rows. Logs show BigQuery calls arrive as the MCP server's service account. What fixes this?",
+      "options": [
+        {
+          "text": "Grant the MCP server's service account a narrower BigQuery role so it can read only the tables the sales agent needs.",
+          "correct": false,
+          "why_wrong": "A narrower role still applies one identity to every request, so BigQuery cannot filter rows per user."
+        },
+        {
+          "text": "Add a Semantic Governance constraint telling the agent to return only rows that belong to the user who asked.",
+          "correct": false,
+          "why_wrong": "Semantic Governance judges proposed tool calls probabilistically; it cannot make the data source apply per-user row rules."
+        },
+        {
+          "text": "Have the MCP server pass the user's delegated token to BigQuery so the last hop runs as the requesting user.",
+          "correct": true
+        },
+        {
+          "text": "Bind a Principal Access Boundary to the agents' principal set that lists only the sales project's datasets.",
+          "correct": false,
+          "why_wrong": "PAB limits which resources a principal is eligible to reach; it does not restore the user's identity at the data source."
+        }
+      ],
+      "explanation": "Each hop validates its own credential. When the MCP server calls BigQuery with its own broad service account, the user's identity stops at the server and the source cannot apply row-level rules for that user. Propagating the user's 3LO token to the last hop lets BigQuery enforce that user's entitlements.",
+      "key_takeaway": "For user-specific results, carry the user's delegated token all the way to the data source, not just to the MCP server.",
+      "doc_links": [
+        {
+          "label": "Auth manager: 3-legged OAuth",
+          "url": "https://docs.cloud.google.com/iam/docs/auth-with-3lo-v2"
+        },
+        {
+          "label": "Auth manager overview",
+          "url": "https://docs.cloud.google.com/iam/docs/auth-manager-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-27",
+      "section": "Tool Authentication & Secrets",
+      "guide_anchor": "tool-auth",
+      "question": "A team built its agent's third-party tool auth on the IAM Connectors API during the preview and now wants to take it to production on a supported, GA surface. Their resources are named connectors/. What should they plan?",
+      "options": [
+        {
+          "text": "Migrate to the Agent Identity API, where those integrations become authProviders/ resources.",
+          "correct": true
+        },
+        {
+          "text": "Keep the IAM Connectors API, since it graduated to GA together with Agent Identity and needs no changes.",
+          "correct": false,
+          "why_wrong": "The IAM Connectors API stays Preview and will not reach GA; the GA auth manager uses the Agent Identity API."
+        },
+        {
+          "text": "Move the OAuth client secrets into Secret Manager and have the agent run the full OAuth code exchange itself.",
+          "correct": false,
+          "why_wrong": "This drops the managed consent, vaulting and refresh that the auth manager provides and puts token handling in agent code."
+        },
+        {
+          "text": "Replace every provider with a single API key stored as a plaintext environment variable on Agent Runtime.",
+          "correct": false,
+          "why_wrong": "Plaintext env vars expose secrets and an API key carries no caller identity, which weakens confused-deputy resistance."
+        }
+      ],
+      "explanation": "Auth providers were first exposed through the IAM Connectors API (iamconnectors.googleapis.com), which remains Preview and will not reach GA. The auth manager reached GA with the Agent Identity API (agentidentity.googleapis.com, with credential calls on agentidentitycredentials.googleapis.com), where resources are named authProviders/. Both APIs run side by side during migration.",
+      "key_takeaway": "The GA auth manager lives on the Agent Identity API (authProviders/); the IAM Connectors API (connectors/) stays Preview.",
+      "doc_links": [
+        {
+          "label": "Migrate to the Agent Identity API",
+          "url": "https://docs.cloud.google.com/iam/docs/migrate-to-agent-identity-api"
+        },
+        {
+          "label": "Auth manager overview",
+          "url": "https://docs.cloud.google.com/iam/docs/auth-manager-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-28",
+      "section": "Access Boundaries: IAM, Deny & PAB",
+      "guide_anchor": "access-boundaries",
+      "question": "A reporting agent needs write access to one Cloud Storage bucket, agent-reports, during a migration that ends on 1 January 2027. Security wants the grant scoped to that bucket and to expire automatically without anyone remembering to remove it. What should the architect configure?",
+      "options": [
+        {
+          "text": "A Unified Access Policy on Agent Gateway that allows the storage hostname until the migration date.",
+          "correct": false,
+          "why_wrong": "UAPs govern traffic through the gateway by tool and destination; they do not scope a Google Cloud IAM role to a bucket or add expiry."
+        },
+        {
+          "text": "An IAM deny policy on all other buckets plus a calendar reminder to delete the allow binding later.",
+          "correct": false,
+          "why_wrong": "Deny policies block permissions but do not expire a grant; relying on a reminder is exactly what security wants to avoid."
+        },
+        {
+          "text": "A Principal Access Boundary listing only the bucket, rebound with a new policy once the migration ends.",
+          "correct": false,
+          "why_wrong": "PAB rules list Resource Manager resources and grant nothing; it has no time condition, so removal would still be manual."
+        },
+        {
+          "text": "An IAM allow binding with CEL conditions on the bucket's resource.name and on request.time.",
+          "correct": true
+        }
+      ],
+      "explanation": "IAM conditions add CEL to an allow binding so the grant applies only in context. A condition such as resource.name.startsWith(\"projects/_/buckets/agent-reports\") combined with request.time < timestamp(\"2027-01-01T00:00:00Z\") scopes the role to one bucket and makes it lapse on its own.",
+      "key_takeaway": "Use CEL conditions on IAM allow bindings for resource-scoped, time-boxed grants that expire automatically.",
+      "doc_links": [
+        {
+          "label": "IAM conditions overview",
+          "url": "https://docs.cloud.google.com/iam/docs/conditions-overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-29",
+      "section": "Gateway Policies: UAP & Semantic Governance",
+      "guide_anchor": "gateway-policies",
+      "question": "A third-party MCP server approved last quarter pushed an update whose tool descriptions now hide instructions that steer the model toward an extra export tool. Model Armor is enabled on gateway egress but flagged nothing. Which set of controls best addresses this risk?",
+      "options": [
+        {
+          "text": "Lower the Model Armor prompt-injection threshold to LOW_AND_ABOVE so the gateway catches the hidden text in tools/list.",
+          "correct": false,
+          "why_wrong": "Gateway Model Armor does not screen tools/list at all, so a lower threshold cannot see tool descriptions."
+        },
+        {
+          "text": "Vet servers in Agent Registry, keep default-deny, name allowed tools in a UAP, and review tool metadata.",
+          "correct": true
+        },
+        {
+          "text": "Rotate the auth provider's OAuth client secret so that the updated server must be re-consented by every user.",
+          "correct": false,
+          "why_wrong": "Rotating a secret changes credentials, not the tool metadata the model reads, so the poisoned descriptions remain."
+        },
+        {
+          "text": "Enable Data Access audit logs on the project so any future change to the tool descriptions is recorded.",
+          "correct": false,
+          "why_wrong": "Audit logs record activity after the fact; they neither block the export tool nor screen tool descriptions."
+        }
+      ],
+      "explanation": "This is tool poisoning, or a rug pull. Because Model Armor on the gateway does not screen tools/list, defenses rely on registering only vetted servers, default-deny for unregistered destinations, UAPs that name each allowed tool so a new export tool is not callable, and review of tool metadata at registration.",
+      "key_takeaway": "Counter tool poisoning with registry vetting, default-deny and named-tool UAPs; gateway Model Armor does not read tools/list.",
+      "doc_links": [
+        {
+          "label": "Unified Access Policies overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/overview-uap"
+        },
+        {
+          "label": "Configure Model Armor on Agent Gateway",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/configure-model-armor"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-30",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "The security team set a Model Armor floor setting at the folder level requiring prompt-injection detection. An audit finds one project under that folder where Gemini traffic is no longer held to the floor, because a project admin chose Disable in the console. How should the team prevent this?",
+      "options": [
+        {
+          "text": "Move the floor setting to the organization level, because an org floor always overrides any project choice.",
+          "correct": false,
+          "why_wrong": "On conflict the lower level wins, so a project setting still overrides an organization floor."
+        },
+        {
+          "text": "Recreate the floor setting as a regional resource in the project's region so it can't be disabled locally.",
+          "correct": false,
+          "why_wrong": "Floor settings always live at locations/global/floorSetting; there is no regional floor resource."
+        },
+        {
+          "text": "Grant the Floor Setting Admin role only to the central team and restrict it at project level.",
+          "correct": true
+        },
+        {
+          "text": "Switch every template in the folder to INSPECT_AND_BLOCK so the disabled floor no longer matters.",
+          "correct": false,
+          "why_wrong": "Template enforcement type does not restore the floor; teams could still weaken templates without conformance checks."
+        }
+      ],
+      "explanation": "Floor settings inherit from org to folder to project, and on conflict the lower level wins. A project admin holding roles/modelarmor.floorSettingsAdmin can therefore disable the inherited floor for that project. Grant the role to the central team at org or folder level and keep it away from project admins.",
+      "key_takeaway": "Lower-level floor settings win, so control who holds roles/modelarmor.floorSettingsAdmin at project level.",
+      "doc_links": [
+        {
+          "label": "Configure Model Armor floor settings",
+          "url": "https://docs.cloud.google.com/model-armor/configure-floor-settings"
+        },
+        {
+          "label": "Model Armor overview",
+          "url": "https://docs.cloud.google.com/model-armor/overview"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-31",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "A project relies on floor-setting inline protection for Gemini generateContent calls, with no templates in code. During a regional Model Armor incident, reviewers notice prompts were answered but no detection logs exist for that window. What explains this, and what closes the gap?",
+      "options": [
+        {
+          "text": "Gemini fails open when Model Armor is unreachable; also screen in the app or at the gateway.",
+          "correct": true
+        },
+        {
+          "text": "Detection logs are always delayed by a day during incidents; wait for them to backfill before acting.",
+          "correct": false,
+          "why_wrong": "Nothing in the documented behavior backfills screening; requests were processed unscreened during the outage."
+        },
+        {
+          "text": "Inline protection only covers documents and images, so text prompts were never screened in the first place.",
+          "correct": false,
+          "why_wrong": "It is the reverse: the Gemini integration screens text prompts and responses and does not cover documents or images."
+        },
+        {
+          "text": "The floor setting fell back to a lower filter version, which skips logging but still blocks violations.",
+          "correct": false,
+          "why_wrong": "Floor settings use the Stable filter version; the gap comes from fail-open behavior, not a silent version change."
+        }
+      ],
+      "explanation": "If Model Armor is unavailable in the region, unreachable, or errors, Gemini processes the request unscreened. Configuration errors such as permissions or quota are still reported under INSPECT_AND_BLOCK, but outages are not. For guaranteed screening, add another enforcement point in the application or at Agent Gateway.",
+      "key_takeaway": "Inline Model Armor on Gemini fails open; layer app or gateway screening when screening must be guaranteed.",
+      "doc_links": [
+        {
+          "label": "Model Armor integration with Gemini",
+          "url": "https://docs.cloud.google.com/model-armor/model-armor-vertex-integration"
+        },
+        {
+          "label": "Configure Model Armor floor settings",
+          "url": "https://docs.cloud.google.com/model-armor/configure-floor-settings"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-32",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "A claims agent passes customer account numbers between several tools over a long conversation. It must never see raw numbers, must still tell customer A from customer B across turns, and an authorized back end must later recover the originals. Which SDP setup fits?",
+      "options": [
+        {
+          "text": "ReplaceWithInfoTypeConfig, so each account number becomes a readable [ACCOUNT_NUMBER] label in the prompt.",
+          "correct": false,
+          "why_wrong": "Every value becomes the same label, so the agent can't tell customers apart and nothing can be re-identified."
+        },
+        {
+          "text": "CryptoHashConfig with a stable key, so the same number always produces the same opaque surrogate.",
+          "correct": false,
+          "why_wrong": "Hashing keeps referential integrity but is not reversible, so the back end could never recover the originals."
+        },
+        {
+          "text": "CryptoDeterministicConfig with a transient key generated for each request, so no key is stored anywhere.",
+          "correct": false,
+          "why_wrong": "A transient key is discarded per request, so tokens can't be re-identified later or matched across turns."
+        },
+        {
+          "text": "CryptoDeterministicConfig with a KMS-wrapped key and surrogate infoType, reversed by reidentify.",
+          "correct": true
+        }
+      ],
+      "explanation": "Deterministic tokenization (CryptoDeterministicConfig, AES-SIV) is reversible and keeps referential integrity, so the same customer maps to the same token in every turn. A surrogate infoType lets content.reidentify find and reverse tokens. A Cloud KMS-wrapped key is preferred because a transient key cannot support later re-identification.",
+      "key_takeaway": "Need consistent, reversible tokens across turns? Use CryptoDeterministicConfig with a KMS-wrapped key, not a transient key.",
+      "doc_links": [
+        {
+          "label": "SDP transformations reference",
+          "url": "https://docs.cloud.google.com/sensitive-data-protection/docs/transformations-reference"
+        },
+        {
+          "label": "SDP pseudonymization",
+          "url": "https://docs.cloud.google.com/sensitive-data-protection/docs/pseudonymization"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-33",
+      "section": "Content Safety: Model Armor, SDP & Safety Filters",
+      "guide_anchor": "content-safety",
+      "question": "A team will index thousands of exported support tickets into a RAG corpus. The tickets contain phone numbers and personal emails that anyone allowed to query the corpus must never retrieve. They currently plan a system instruction saying never reveal contact details. What should they do instead?",
+      "options": [
+        {
+          "text": "Keep the system instruction and add a Model Armor output template at LOW_AND_ABOVE for every RAI category.",
+          "correct": false,
+          "why_wrong": "The raw values would still be embedded and stored, and RAI categories do not target contact details."
+        },
+        {
+          "text": "Write an SDP de-identified copy from a quarantine bucket to a clean bucket and index only that.",
+          "correct": true
+        },
+        {
+          "text": "Run the SDP de-identify job in place on the source bucket so the cleaned files overwrite the originals.",
+          "correct": false,
+          "why_wrong": "The SDP de-identified copy must be written to an output bucket that differs from the input bucket."
+        },
+        {
+          "text": "Index the raw files, then delete individual chunks later whenever a user reports seeing personal data.",
+          "correct": false,
+          "why_wrong": "Once values are embedded, finding and deleting them is slow and incomplete; clean data before indexing."
+        }
+      ],
+      "explanation": "A prompt instruction is not a control: the raw values are still indexed, stored and logged. Clean data before the storage boundary by landing files in a quarantine bucket, running an SDP inspection job with a de-identify action that writes to a separate clean bucket, and indexing only the clean bucket.",
+      "key_takeaway": "De-identify before indexing with an SDP de-identified copy into a separate clean bucket; prompts alone aren't privacy controls.",
+      "doc_links": [
+        {
+          "label": "De-identify data in storage",
+          "url": "https://docs.cloud.google.com/sensitive-data-protection/docs/deidentify-storage"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-34",
+      "section": "Audit, Observability & Threat Detection",
+      "guide_anchor": "audit-detection",
+      "question": "A gateway's IAP authorization extension has run with iamEnforcementMode set to DRY_RUN for two weeks. The team listed the hostnames agents reach, registered and authorized them, and found no unexpected would-be denials. What is the correct way to start enforcing?",
+      "options": [
+        {
+          "text": "Change the metadata value from DRY_RUN to ENFORCE and keep the rest of the extension unchanged.",
+          "correct": false,
+          "why_wrong": "The documented way to enforce is to remove the field; there is no separate enforce value to set."
+        },
+        {
+          "text": "Delete the authorization extension, because the UAPs start enforcing as soon as no extension is attached.",
+          "correct": false,
+          "why_wrong": "Without the extension IAP never evaluates the UAPs, so nothing would be enforced at the gateway."
+        },
+        {
+          "text": "Set failOpen to true so that any request IAP can't evaluate still passes while enforcement begins.",
+          "correct": false,
+          "why_wrong": "failOpen governs behavior when the extension can't respond; it does not switch dry run to enforcement."
+        },
+        {
+          "text": "Remove the iamEnforcementMode field from the IAP extension metadata, keeping the other metadata keys.",
+          "correct": true
+        }
+      ],
+      "explanation": "Dry run for UAPs through IAP is set with iamEnforcementMode: \"DRY_RUN\" in the authorization extension metadata, and would-be denials are read in audit logs filtered on that value. Removing the field enforces. Take care when patching: an updateMask on metadata replaces the whole map, so keep the other keys.",
+      "key_takeaway": "Enforce IAP gateway policies by removing iamEnforcementMode from the extension metadata after a dry-run window.",
+      "doc_links": [
+        {
+          "label": "Monitor Agent Gateway",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/monitor-agent-gateway"
+        },
+        {
+          "label": "Unified Access Policies overview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/overview-uap"
+        }
+      ]
+    },
+    {
+      "id": "agent-platform-security-q-35",
+      "section": "Audit, Observability & Threat Detection",
+      "guide_anchor": "audit-detection",
+      "question": "An agent's calls to a registered Google API return 403, and engineers find no matching IAP audit entry at all. The gateway request log shows authzPolicyInfo as DENIED, and the requestUrl uses a regional mtls variant of the hostname. What is the most likely cause?",
+      "options": [
+        {
+          "text": "The agent lacks roles/agentidentity.user on the auth provider, so the auth manager refused to inject a token.",
+          "correct": false,
+          "why_wrong": "That surfaces as an auth error from the tool in agent logs, not a gateway DENIED before IAP runs."
+        },
+        {
+          "text": "The exact hostname variant isn't registered, so the gateway denied the call before IAP was ever invoked.",
+          "correct": true
+        },
+        {
+          "text": "A UAP CEL condition silently excludes the agent, so IAP denied it with granted set to false.",
+          "correct": false,
+          "why_wrong": "A CEL exclusion would produce an IAP audit entry with granted: false, and here no IAP entry exists."
+        },
+        {
+          "text": "The destination rejected the injected token, so the fix is to grant roles/mcp.toolUser on the API.",
+          "correct": false,
+          "why_wrong": "A destination rejection shows a different 403 text in agent stderr, and the gateway log would not show DENIED."
+        }
+      ],
+      "explanation": "A 403 with no IAP entry means the gateway denied the request before IAP. The usual causes are a hostname that isn't registered exactly (regional and mtls variants count as different hosts) or no authorization policy targeting the gateway, so the extension never runs.",
+      "key_takeaway": "403 with no IAP audit entry points to the gateway itself: check exact hostname registration, including mtls variants.",
+      "doc_links": [
+        {
+          "label": "Troubleshoot Agent Gateway",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/troubleshooting/troubleshoot-agent-gateway"
+        },
+        {
+          "label": "Monitor Agent Gateway",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/monitor-agent-gateway"
+        }
+      ]
+    }
+  ]
+}

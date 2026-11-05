@@ -81,7 +81,7 @@
                   "keywords": "Agent Development Kit, ADK, ADK 2.0, Google ADK, ManagedAgent, Interactions API, Gemini 4 Argon, thinking_level, LlmAgent, Workflow, Runner, SessionService, Vertex AI Memory Bank, Gen AI Evaluation Service, Agent Runtime, MCP, A2A, SkillToolset, Agents CLI, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/ADK.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-02",
+                  "dateModified": "2026-11-03",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -418,21 +418,14 @@
             </ul>
         </div>
 
-        <pre><code class="language-python">import os
-from google.adk.agents import LlmAgent, ManagedAgent
-from google.adk.tools import google_search
-from google.adk.tools.agent_tool import AgentTool
-
-# ManagedAgent runs server-side via the Interactions API (global endpoint on Agent Platform)
+        <pre><code class="language-python"># ManagedAgent runs server-side via Interactions API; coordinator wraps it as AgentTool
 web_researcher = ManagedAgent(
     name=&quot;managed_web_researcher&quot;,
-    description=&quot;Performs grounded web synthesis in Google&#x27;s remote managed environment.&quot;,
+    description=&quot;Grounded web synthesis in Google&#x27;s remote managed environment.&quot;,
     agent_id=os.environ.get(&quot;MANAGED_AGENT_ID&quot;, &quot;antigravity-preview-09-2026&quot;),
     environment={&quot;type&quot;: &quot;remote&quot;},
-    tools=[google_search],  # Server-side tools only; local FunctionTools raise NotImplementedError
+    tools=[google_search],  # Server-side tools only; local tools raise NotImplementedError
 )
-
-# Coordinator combines local/MCP tools with the remote ManagedAgent wrapped as an AgentTool
 coordinator = LlmAgent(
     name=&quot;portfolio_coordinator&quot;,
     model=&quot;gemini-4-argon&quot;,
@@ -480,27 +473,19 @@ coordinator = LlmAgent(
             </table>
         </div>
 
-        <pre><code class="language-python">from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent, LoopAgent
-from google.adk.tools import ToolContext
-
-def approve_patch(tool_context: ToolContext) -&gt; dict:
-    &quot;&quot;&quot;Invoke ONLY when static analysis and unit tests report zero defects.&quot;&quot;&quot;
-    tool_context.actions.escalate = True            # Halts the enclosing LoopAgent immediately
-    tool_context.actions.skip_summarization = True  # Avoids redundant post-tool LLM turn
-    tool_context.state[&quot;temp:verified&quot;] = True      # Proves convergence vs. hitting max_iterations
+        <pre><code class="language-python">def approve_patch(tool_context: ToolContext) -&gt; dict:
+    tool_context.actions.escalate = True            # Halts enclosing LoopAgent immediately
+    tool_context.actions.skip_summarization = True  # Suppresses redundant post-tool LLM turn
+    tool_context.state[&quot;temp:verified&quot;] = True      # Proves convergence vs max_iterations cap
     return {&quot;status&quot;: &quot;verified&quot;}
 
-gather = ParallelAgent(name=&quot;gather_context&quot;, sub_agents=[
-    LlmAgent(name=&quot;cve_scan&quot;, model=&quot;gemini-3.5-flash-lite&quot;, instruction=&quot;Extract CVE specs.&quot;, tools=[read_advisory], output_key=&quot;cve&quot;),
-    LlmAgent(name=&quot;ast_scan&quot;, model=&quot;gemini-3.5-flash-lite&quot;, instruction=&quot;Locate affected symbols.&quot;, tools=[search_repo], output_key=&quot;symbols&quot;),
-])
 patch_loop = LoopAgent(name=&quot;patch_and_verify&quot;, max_iterations=3, sub_agents=[
-    LlmAgent(name=&quot;patcher&quot;, model=&quot;gemini-3.8-flash&quot;, instruction=&quot;Write patch for {cve} in {symbols}. Feedback: {audit?}&quot;, output_key=&quot;diff&quot;),
+    LlmAgent(name=&quot;patcher&quot;, model=&quot;gemini-3.8-flash&quot;, instruction=&quot;Write patch for {cve}.&quot;, output_key=&quot;diff&quot;),
     LlmAgent(name=&quot;auditor&quot;, model=&quot;gemini-4-argon&quot;, include_contents=&quot;none&quot;,
-             instruction=&quot;Verify {diff} with test tools. Call approve_patch only if all checks pass.&quot;,
+             instruction=&quot;Verify {diff}. Call approve_patch only if tests pass.&quot;,
              tools=[run_tests, approve_patch], output_key=&quot;audit&quot;),
 ])
-root_agent = SequentialAgent(name=&quot;remediation_pipeline&quot;, sub_agents=[gather, patch_loop])</code></pre>
+root_agent = SequentialAgent(name=&quot;pipeline&quot;, sub_agents=[gather_agent, patch_loop])</code></pre>
 
         <div class="concept-card accent-amber">
             <ul>
@@ -555,6 +540,35 @@ root_agent = SequentialAgent(name=&quot;remediation_pipeline&quot;, sub_agents=[
             </div>
         </div>
 
+        <div class="two-columns">
+        <div class="concept-card accent-amber">
+            <p>### Choosing the orchestration boundary: Workflow Agents vs. Graph Workflows vs. Remote A2A Agents</p>
+        </div>
+        <div class="concept-card accent-coral">
+            <p>The delegation table above decides who speaks next. This table decides where the process boundary sits, which in turn fixes what can be isolated, who can govern it and what each handoff costs.</p>
+        </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>State sharing</th><th>Deployment boundary</th><th>Handoff latency</th><th>Fault and identity isolation</th><th>Governance granularity</th><th>Choose when</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Workflow agents</strong> (<code>SequentialAgent</code>, <code>ParallelAgent</code>, <code>LoopAgent</code>)</td><td>one <code>session.state</code>; children exchange data through <code>output_key</code> and <code>{key}</code> templates</td><td>single process, single deployable unit</td><td>in-process call</td><td>none: a crash or runaway loop takes down every child, and all children act as the deployment&#x27;s one principal</td><td>ADK callbacks and plugins inside your code</td><td>fixed pipeline owned by one team, or Java/Kotlin and ADK 1.x codebases</td></tr>
+                    <tr><td><strong>Graph workflows</strong> (<code>Workflow(edges=[...])</code>)</td><td>typed <code>node_input</code> between nodes plus the shared <code>session.state</code></td><td>single process, single deployable unit</td><td>in-process edge evaluation</td><td>same as workflow agents; explicit edges make the failing node easier to locate</td><td>callbacks plus explicit routes and human-input nodes (<code>RequestInput</code>)</td><td>branching, loops and approval pauses inside one service (Python, TypeScript, Go)</td></tr>
+                    <tr><td><strong>Remote A2A agents</strong> (<code>RemoteA2aAgent</code> to a peer on Agent Runtime)</td><td>nothing shared; only A2A messages, task status and artifacts cross the wire</td><td>separate service per peer, possibly another project, language or organization</td><td>network round trip plus gateway policy evaluation on every call</td><td>strong: each peer scales and fails on its own and runs under its own Agent Identity principal</td><td>agent policies enforced by Agent Gateway (IAM Unified Access Policies, Principal Access Boundary, Model Armor, semantic governance) on top of each peer&#x27;s own callbacks</td><td>different owners, release cycles, runtimes or privilege tiers, and partner agents</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <ul>
+                <li><strong>Anti-pattern (network for its own sake):</strong> splitting one team&#x27;s three-step pipeline into three A2A services adds network hops, three deployments and three policy surfaces with no isolation gain; keep it as a <code>Workflow</code>.</li>
+                <li><strong>Anti-pattern (privilege mixing in one process):</strong> attaching a read-only researcher and a refund-issuing specialist as <code>sub_agents</code> of one deployment gives both the same principal, so no platform policy can tell them apart; move the privileged specialist behind A2A with its own identity.</li>
+            </ul>
+        </div>
+
         <!-- ═══════════════════════════════════════
              SECTION 05: 5. GRAPH WORKFLOWS (ADK 2.0), PLANNERS AND GEMINI 4 ARGON THINKING LEVELS
              ═══════════════════════════════════════ -->
@@ -568,33 +582,14 @@ root_agent = SequentialAgent(name=&quot;remediation_pipeline&quot;, sub_agents=[
             <p>Available across <strong>Python, TypeScript, and Go</strong>, <code>Workflow(edges=[...])</code> unifies sequential pipelines, parallel fan-out/fan-in, cyclic loops, and conditional routing into one directed graph combining <code>LlmAgent</code>s, plain code nodes (<code>FunctionNode</code>), <code>ManagedAgent</code>s, and nested <code>Workflow</code>s. Return values pass as typed <code>node_input</code>, and function parameters matching <code>session.state</code> keys are dependency-injected automatically.</p>
         </div>
 
-        <pre><code class="language-python">from google.genai import types
-from google.adk import Workflow
-from google.adk.agents import LlmAgent
-from google.adk.planners import BuiltInPlanner
-from google.adk.workflow import START, END, JoinNode
-from google.adk.events import Event
-
-def classify_severity(node_input: str) -&gt; Event:
+        <pre><code class="language-python">def classify_severity(node_input: str) -&gt; Event:
     target = &quot;deep_architect&quot; if &quot;architecture&quot; in node_input.lower() else &quot;fast_responder&quot;
-    return Event(output=node_input, route=target)  # Deterministic conditional edge
+    return Event(output=node_input, route=target)  # Route key for conditional edge
 
-deep_architect = LlmAgent(
-    name=&quot;deep_architect&quot;,
-    model=&quot;gemini-4-argon&quot;,
-    planner=BuiltInPlanner(
-        thinking_config=types.ThinkingConfig(include_thoughts=True, thinking_level=&quot;high&quot;)
-    ),
-    instruction=&quot;Produce a rigorous root-cause remediation plan.&quot;,
-)
-fast_responder = LlmAgent(
-    name=&quot;fast_responder&quot;,
-    model=&quot;gemini-3.8-flash&quot;,
-    planner=BuiltInPlanner(
-        thinking_config=types.ThinkingConfig(include_thoughts=False, thinking_level=&quot;low&quot;)
-    ),
-    instruction=&quot;Resolve standard operational questions concisely.&quot;,
-)
+deep_architect = LlmAgent(name=&quot;deep_architect&quot;, model=&quot;gemini-4-argon&quot;,
+    planner=BuiltInPlanner(thinking_config=types.ThinkingConfig(thinking_level=&quot;high&quot;)))
+fast_responder = LlmAgent(name=&quot;fast_responder&quot;, model=&quot;gemini-3.8-flash&quot;,
+    planner=BuiltInPlanner(thinking_config=types.ThinkingConfig(thinking_level=&quot;low&quot;)))
 
 root_agent = Workflow(name=&quot;support_graph&quot;, edges=[
     (START, classify_severity),
@@ -747,11 +742,7 @@ root_agent = Workflow(name=&quot;support_graph&quot;, edges=[
             <p>**MCP is vertical (<code>Agent → Tools/Resources</code>); A2A is horizontal (<code>Agent → Peer Agent</code>).<strong> Enterprise architectures combine both under </strong>Agent Registry** governance (<code>PAA 3.2 / 3.3</code>).</p>
         </div>
 
-        <pre><code class="language-python">from google.adk.tools.mcp_tool import McpToolset
-from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
-from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
-
-# Vertical: remote Streamable HTTP MCP server with explicit allowlist &amp; namespace prefix
+        <pre><code class="language-python"># Vertical: remote Streamable HTTP MCP server with explicit allowlist &amp; namespace prefix
 erp_mcp = McpToolset(
     connection_params=StreamableHTTPConnectionParams(url=&quot;https://erp-mcp.internal.example/mcp&quot;),
     tool_filter=[&quot;get_order&quot;, &quot;list_shipments&quot;],  # Exact list or ReadonlyContext predicate (never globs)
@@ -761,7 +752,6 @@ erp_mcp = McpToolset(
 # Horizontal: cross-org or cross-language specialist discovered via A2A Agent Card
 customs_agent = RemoteA2aAgent(
     name=&quot;customs_clearance_agent&quot;,
-    description=&quot;Validates international tariff codes and customs holds.&quot;,
     agent_card=&quot;https://partner.example/.well-known/agent-card.json&quot;,
 )</code></pre>
 
@@ -785,6 +775,164 @@ customs_agent = RemoteA2aAgent(
                 <h4>Common trap</h4>
                 <p>Assuming local ADK <code>before_tool_callback</code> hooks inspect a <code>RemoteA2aAgent</code>&#x27;s internal database queries. Remote A2A agents are <strong>opaque peers</strong> executing outside your process—never expose internal prompts/tools over A2A, authenticate via the card&#x27;s <code>securitySchemes</code>, and validate every returned A2A artifact at your boundary.</p>
             </div>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <p>### Platform path: expose, deploy, register and discover</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Step</th><th>Action</th><th>Documented mechanism</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Expose</strong></td><td>Serve the ADK agent over A2A with an Agent Card</td><td><code>to_a2a(root_agent, port=...)</code> builds the card from the agent&#x27;s metadata and skills and publishes it at <code>/.well-known/agent-card.json</code> once served with <code>uvicorn</code>; pass <code>agent_card=</code> (an <code>AgentCard</code> object or a JSON file path) to control what is advertised. <code>adk api_server --a2a</code> exposes only agent folders that contain an <code>agent.json</code> card.</td></tr>
+                    <tr><td><strong>2. Deploy</strong></td><td>Host on Agent Runtime with a per-agent identity</td><td><code>agents-cli deploy --agent-identity</code>; or <code>adk deploy agent_engine</code> with <code>.agent_engine_config.json</code> set to <code>{&quot;identity_type&quot;: &quot;AGENT_IDENTITY&quot;}</code>; or the Agent Platform SDK <code>client.runtimes.create(...)</code> with <code>identity_type</code> in the config. A2A-native hosting on Agent Runtime uses the <code>A2aAgent</code> template (<code>AgentCard</code> + <code>AgentExecutor</code>), currently Preview.</td></tr>
+                    <tr><td><strong>3. Register</strong></td><td>Make the agent discoverable in Agent Registry</td><td>Automatic or manual registration (next table).</td></tr>
+                    <tr><td><strong>4. Discover</strong></td><td>Resolve peers at runtime instead of hardcoding URLs</td><td>ADK <code>AgentRegistry</code> client (<code>google-adk[a2a,agent-identity,mcp]</code>, version <code>1.29.0</code> or later): <code>get_remote_a2a_agent()</code> returns a remote agent you can attach as a sub-agent; <code>get_mcp_toolset()</code> returns a registered MCP server as a toolset.</td></tr>
+                    <tr><td><strong>5. Authorize</strong></td><td>Allow only approved caller-to-peer paths</td><td>Agent policies at Agent Gateway (see the next subsection).</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Where the agent runs</th><th>Registration mode</th><th>How it happens</th><th>What gets indexed</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Agent Runtime</strong></td><td>automatic, on by default</td><td>deploying registers it; later updates and deletions sync</td><td>A2A skills read from the Agent Card when the agent speaks A2A</td></tr>
+                    <tr><td><strong>Cloud Run</strong></td><td>automatic, opt-in</td><td>deploy with <code>--functional-type=agent</code>, which requires <code>--identity-type=agent-identity</code></td><td>agent name and <code>AGENT</code> type, plus card skills for A2A agents</td></tr>
+                    <tr><td><strong>GKE</strong></td><td>automatic, opt-in</td><td>label <code>registry.gke.io/functional-type: &quot;AGENT&quot;</code> plus an <code>a2a-protocol.org/agent-card</code> annotation on the Deployment</td><td>card skills from the annotated endpoint</td></tr>
+                    <tr><td><strong>Built-in Google agents</strong> (Google Workspace, Gemini Enterprise)</td><td>automatic</td><td>no action</td><td>ingested by the platform</td></tr>
+                    <tr><td><strong>External clouds, on-premises, unsupported runtimes, other projects outside a management boundary</strong></td><td>manual</td><td>console, <code>gcloud agent-registry services create --agent-spec-type=a2a-agent-card --agent-spec-content=agent-card.json</code>, or Terraform <code>google_agent_registry_service</code>; needs <code>roles/agentregistry.editor</code> on the governance project</td><td><code>A2A_AGENT_CARD</code> agents get their card synced; plain REST agents use <code>NO_SPEC</code> and carry no skills</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <ul>
+                <li><strong>Discovery scope:</strong> automatic registration only sees the governance project unless you configure a management boundary across projects; everything else must be registered manually.</li>
+                <li><strong>Non-A2A agents:</strong> the registry records them but cannot capture endpoint, identity or skills on its own; add those through manual registration or skill registration.</li>
+                <li><strong>Location limit:</strong> manual registration is not available in the <code>us</code> and <code>eu</code> multi-regions; use a single region or <code>global</code>.</li>
+            </ul>
+        </div>
+
+        <pre><code class="language-python">from google.adk.a2a.utils.agent_to_a2a import to_a2a
+
+# Card is generated from the agent; port must match the uvicorn --port value
+# or the card advertises an unreachable URL
+a2a_app = to_a2a(root_agent, port=8001)</code></pre>
+
+        <pre><code class="language-python">from google.adk.integrations.agent_registry import AgentRegistry
+
+registry = AgentRegistry(project_id=GOVERNANCE_PROJECT, location=&quot;global&quot;)
+# Resolve once at startup, not on every invocation
+fx_agent = registry.get_remote_a2a_agent(
+    agent_name=&quot;agents/AGENT_ID&quot;,       # short form inherits project and location
+    httpx_client=authed_httpx_client,   # attaches the caller&#x27;s credentials
+)
+coordinator = LlmAgent(
+    name=&quot;treasury_coordinator&quot;,
+    model=&quot;gemini-3.8-flash&quot;,
+    instruction=&quot;Send currency questions to the FX specialist.&quot;,
+    sub_agents=[fx_agent],              # fx_agent.clone() for a second parent
+)</code></pre>
+
+        <div class="two-columns">
+        <div class="concept-card accent-amber">
+            <ul>
+                <li><strong>Single-parent rule still applies:</strong> a fetched remote agent can have only one parent; call <code>.clone()</code> to reuse it under another orchestrator.</li>
+                <li><strong>Anti-pattern (hardcoded peer URLs):</strong> pasting a partner&#x27;s card URL into <code>RemoteA2aAgent</code> skips the registry, so endpoint changes break silently and the gateway cannot apply per-resource rules to that peer.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-coral">
+            <p>### Cross-agent authorization with agent policies</p>
+        </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <p>Agent policies are the controls that Agent Gateway enforces on Agent-to-Anywhere (egress) traffic. Each control answers a different question, and a call proceeds only when all of them pass.</p>
+        </div>
+
+        <div class="diagram-block">
+            <div class="diagram-title"><i class="fas fa-sitemap"></i> ADK Runtime Architecture &amp; Event Loop</div>
+            <div class="architecture-flow">
+                <div class="arch-node input">Agent / Workflow (stateless)<br><small>model, instruction, tools, sub_agents</small></div>
+                <div class="arch-arrow">+</div>
+                <div class="arch-node storage">SessionService (stateful)<br><small>app_name → user_id → session_id</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node process">Runner (event loop)<br><small>GenerateContent / Interactions API · tools</small></div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node output">Commit Event<br><small>state_delta + artifact_delta → repeat</small></div>
+            </div>
+            <pre style="margin-top: 14px;"><code>coordinator on Agent Runtime (principal A)
+   │ A2A request, mTLS + certificate-bound token
+   ▼
+Agent Gateway, Agent-to-Anywhere mode
+   1. IAP: UAP grants A egress to the target? PAB includes the target?
+   2. Agent Registry: target registered, or an explicit rule for its URL?
+   3. Inspection: Model Armor, semantic governance, custom authz engine
+   ▼
+specialist on Agent Runtime (principal B, its own egress policies)</code></pre>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Control</th><th>Question it answers</th><th>How it is enforced</th><th>Exam detail</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Agent Identity</strong> (GA)</td><td>Who is calling?</td><td>SPIFFE-based <code>principal://</code> identifier per agent, tied to the Agent Runtime resource; X.509 certificate and certificate-bound tokens checked with mTLS and DPoP under a Google-managed Context-Aware Access policy</td><td>not shared across workloads by default, cannot be impersonated, no long-lived keys</td></tr>
+                    <tr><td><strong>Agent Registry check</strong></td><td>Is the destination approved?</td><td>gateway confirms the target is registered; an unregistered target needs an explicit access rule on its URL</td><td>no matching policy means the request is denied</td></tr>
+                    <tr><td><strong>IAM Unified Access Policies</strong> (via IAP)</td><td>May principal A reach this agent, tool or endpoint?</td><td>rules with allow and deny effects plus CEL conditions; the permission granted on the destination is <code>iap.googleapis.com/resources.egressViaIAP</code></td><td>deny overrides allow; start with <code>iamEnforcementMode: &quot;DRY_RUN&quot;</code> (violations logged to Cloud Audit Logs, not blocked), then enforce by removing that field</td></tr>
+                    <tr><td><strong>Principal Access Boundary</strong></td><td>What is the most A could ever reach?</td><td>PAB policy on the agent identity, evaluated by IAP</td><td>an over-granted allow rule still cannot reach resources outside the boundary</td></tr>
+                    <tr><td><strong>Model Armor</strong></td><td>Is the payload safe?</td><td>content filter on the gateway for prompts and tool responses</td><td>blocks prompt injection and sensitive data leaks between agents</td></tr>
+                    <tr><td><strong>Semantic governance policies</strong> (Preview)</td><td>Does this tool call match the user&#x27;s intent and business rules?</td><td>managed policy engine in your VPC checks each proposed tool call against natural-language constraints; the user-intent check is on by default</td><td>verdicts come from an LLM and are probabilistic; it adds to IAM and never replaces it</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+        <div class="concept-card accent-blue">
+            <ul>
+                <li><strong>Availability:</strong> the Google-managed gateway covers Agent Runtime and Gemini Enterprise; GKE, Cloud Run and cross-cloud deployment models are listed as early preview.</li>
+                <li><strong>Anti-pattern (enforcing on day one):</strong> enforcing a new egress policy without a dry run can cut off working handoffs in production; validate in <code>DRY_RUN</code> against audit logs first.</li>
+                <li><strong>Anti-pattern (semantic governance as the only gate):</strong> relying on natural-language constraints for access control leaves a probabilistic check as the sole barrier; keep deterministic UAP deny rules and PAB underneath it.</li>
+            </ul>
+        </div>
+        <div class="concept-card accent-purple">
+            <p>### Handoff controls and approval pauses by pattern</p>
+        </div>
+        </div>
+
+        <div class="concept-card accent-amber">
+            <p>The orchestration-boundary table in section 4 picks the boundary. This table shows what each choice gives you at the handoff itself: whose identity the next agent uses, whether the registry knows about it, what can sit between the two agents and where a person can stop the flow.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Pattern</th><th>Where it runs</th><th>Sub-agent identity</th><th>Agent Registry discovery</th><th>Controls between agents</th><th>Where a human approval pauses it</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Sequential</strong> (<code>SequentialAgent</code>)</td><td>inside the parent&#x27;s process, children one after another in the same invocation</td><td>the deployment&#x27;s single principal, shared by every child</td><td>children are not registered; only the deployed agent as a whole is</td><td><code>output_key</code> and <code>{key}</code> templates carry data; <code>before_agent_callback</code> can gate the next child</td><td>ADK tool confirmation inside a child&#x27;s tool (<code>require_confirmation</code> or <code>tool_context.request_confirmation(hint=..., payload=...)</code>)</td></tr>
+                    <tr><td><strong>Parallel</strong> (<code>ParallelAgent</code>)</td><td>same process; branches start concurrently and see no history or state from sibling branches while running</td><td>same single principal</td><td>same as sequential</td><td>one distinct <code>output_key</code> per branch, then a merge step that reads them after all branches finish</td><td>same tool-level confirmation, raised inside a branch&#x27;s tool</td></tr>
+                    <tr><td><strong>Graph workflow</strong> (<code>Workflow(edges=[...])</code>)</td><td>same process (Python, TypeScript, Go)</td><td>same single principal</td><td>nodes are not registered</td><td>typed <code>node_input</code>, route keys on edges, and plain function nodes that validate or redact before the next agent node</td><td>a node yields <code>RequestInput(message=..., payload=..., response_schema=...)</code> (from <code>google.adk.events</code>); the reply becomes the next node&#x27;s input, and <code>rerun_on_resume</code> decides whether the pausing node runs again</td></tr>
+                    <tr><td><strong>Remote A2A</strong> (<code>RemoteA2aAgent</code> to a peer on Agent Runtime)</td><td>separate service, possibly another project or organization</td><td>the peer&#x27;s own Agent Identity principal</td><td><code>AgentRegistry.get_remote_a2a_agent()</code>; Agent Runtime peers register automatically, others manually from their card</td><td>Agent Gateway policies (registry check, UAP, PAB, Model Armor, semantic governance) plus artifact validation at your boundary</td><td>the peer returns its task in <code>TASK_STATE_INPUT_REQUIRED</code> (v0.3 JSON: <code>input-required</code>), an interrupted state that is not terminal; the caller answers with another message on the same task</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <ul>
+                <li><strong>Tool confirmation limit:</strong> ADK documents that tool confirmation does not support <code>DatabaseSessionService</code> or <code>VertexAiSessionService</code>; for durable approvals use <code>LongRunningFunctionTool</code> or a graph <code>RequestInput</code> node (section 11).</li>
+                <li><strong>Confirmation with resume:</strong> when resumability is on, the confirmation response must carry the same <code>invocation_id</code> that raised the request, otherwise ADK starts a new invocation.</li>
+                <li><strong>Confirmation vs. RequestInput:</strong> tool confirmation lives inside an <code>LlmAgent</code>&#x27;s tool call and asks for a yes/no answer or a small payload; <code>RequestInput</code> is a standalone graph node that can ask for structured data against a schema.</li>
+                <li><strong>Detective control after the handoff:</strong> Agent Anomaly Detection (Preview, allowlisted access) reads OpenTelemetry logs and traces asynchronously, so it adds no latency and never blocks a call. Its categories include agentic cascading failures (OWASP ASI08: fault propagation, infinite loops, oscillating retries), tool misuse (ASI02), identity privilege abuse (ASI03) and rogue agents (ASI10), with findings sent to Security Command Center.</li>
+                <li><strong>Anti-pattern (anomaly detection as the loop breaker):</strong> an asynchronous detector reports a ping-pong handoff after it happened; the hard stops remain <code>RunConfig(max_llm_calls=...)</code>, <code>LoopAgent(max_iterations=...)</code> and hub-and-spoke transfer rules.</li>
+            </ul>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -1099,34 +1247,15 @@ customs_agent = RemoteA2aAgent(
             </div>
         </div>
 
-        <pre><code class="language-python">import asyncio
-from google.genai import types
-from google.adk.agents import LlmAgent
-from google.adk.planners import BuiltInPlanner
-from google.adk.runners import Runner
-from google.adk.sessions import InMemorySessionService
+        <pre><code class="language-python">runner = Runner(agent=agent, app_name=&quot;hub&quot;, session_service=session_service)
+msg = types.Content(role=&quot;user&quot;, parts=[types.Part(text=prompt)])
 
-agent = LlmAgent(
-    name=&quot;architect_helper&quot;,
-    model=&quot;gemini-4-argon&quot;,
-    planner=BuiltInPlanner(thinking_config=types.ThinkingConfig(include_thoughts=True, thinking_level=&quot;medium&quot;)),
-    instruction=&quot;Answer concisely with concrete architectural trade-offs.&quot;,
-)
-
-async def run_turn(prompt: str) -&gt; str:
-    session_service = InMemorySessionService()  # Replace with VertexAiSessionService / DatabaseSessionService in prod
-    session = await session_service.create_session(app_name=&quot;hub&quot;, user_id=&quot;u_42&quot;)
-    runner = Runner(agent=agent, app_name=&quot;hub&quot;, session_service=session_service)
-    msg = types.Content(role=&quot;user&quot;, parts=[types.Part(text=prompt)])
-    final_answer = &quot;&quot;
-    async for event in runner.run_async(user_id=&quot;u_42&quot;, session_id=session.id, new_message=msg):
-        if event.is_final_response() and event.content and event.content.parts:
-            # Drain ALL events in multi-agent runs and filter out internal thought summaries (p.thought == True)
-            final_answer = &quot;&quot;.join(p.text or &quot;&quot; for p in event.content.parts if not getattr(p, &quot;thought&quot;, False))
-    return final_answer
-
-if __name__ == &quot;__main__&quot;:
-    print(asyncio.run(run_turn(&quot;When should I choose AgentTool over sub_agents?&quot;)))</code></pre>
+# Drain runner stream; filter out intermediate thought summaries (p.thought == True)
+async for event in runner.run_async(user_id=&quot;u_42&quot;, session_id=session.id, new_message=msg):
+    if event.is_final_response() and event.content and event.content.parts:
+        final_answer = &quot;&quot;.join(
+            p.text or &quot;&quot; for p in event.content.parts if not getattr(p, &quot;thought&quot;, False)
+        )</code></pre>
 
         <div class="concept-card accent-amber">
             <ul>
@@ -1164,6 +1293,13 @@ if __name__ == &quot;__main__&quot;:
                     <tr><td>Raw SSNs appear in <code>session.events</code> and traces despite <code>after_model_callback</code> redaction</td><td>Tool results are persisted and sent to the LLM <em>before</em> <code>after_model_callback</code> → scrub PII at the tool boundary (<code>after_tool_callback</code> &amp; <code>before_tool_callback</code>) and keep <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code></td><td>Strengthening system prompt privacy rules</td></tr>
                     <tr><td><code>adk eval</code> fails when setting a threshold on <code>tool_call_count_v1</code> or <code>token_usage_v1</code></td><td>Built-in efficiency metrics are <code>INFORMATIONAL</code> only → enforce call/token budgets via Python <code>custom_metrics</code> (<code>code_config.name</code>)</td><td>Lowering threshold values to <code>0.5</code></td></tr>
                     <tr><td>Team wants to test 503 tool outages and auto-generate multi-turn personas across a deployed Go Cloud Run agent</td><td><code>adk eval</code> is designed for local/CI golden files → use <strong>Agent Platform Gen AI Evaluation Service</strong> (<strong>2-Step Agent Simulation</strong> + <strong>Environment Simulation</strong> + <strong>Adaptive Rubrics</strong>)</td><td>Running chaos faults against live production ERP APIs</td></tr>
+                    <tr><td>Audit logs show one principal for every specialist, and a research sub-agent can reach the refund MCP server</td><td>Shared identity across sub-agents: every in-process <code>sub_agents</code> child runs under its deployment&#x27;s single Agent Identity, so policy cannot separate them → deploy the privileged specialist as its own Agent Runtime agent with its own identity, call it over A2A, and scope UAP allow rules to that principal</td><td>Adding &quot;only the billing agent may issue refunds&quot; to the coordinator&#x27;s instruction</td></tr>
+                    <tr><td>Coordinator&#x27;s A2A call to a partner agent is denied at Agent Gateway even though the URL responds</td><td>Unregistered remote agent: the destination is not in Agent Registry and no access rule targets its URL, so the gateway denies by default → register it manually from its Agent Card, grant <code>iap.googleapis.com/resources.egressViaIAP</code> through a UAP, and resolve it with <code>get_remote_a2a_agent()</code></td><td>Exporting a service account key so the coordinator can call the partner directly</td></tr>
+                    <tr><td>Two agents pass the same task back and forth until the LLM call budget runs out</td><td>Delegation loop: peers can hand work to each other with no termination rule → enforce hub-and-spoke (<code>disallow_transfer_to_peers=True</code>, specialists as <code>AgentTool</code> or <code>mode=&quot;single_turn&quot;</code> returning to the coordinator), keep <code>RunConfig(max_llm_calls=...)</code> as a backstop, and add a UAP deny rule so the specialist&#x27;s identity cannot call back into the coordinator</td><td>Raising <code>max_llm_calls</code></td></tr>
+                    <tr><td>Handoffs to a partner agent start failing with connection or schema errors after the partner redeploys, while the coordinator&#x27;s config has not changed</td><td>Stale Agent Card or endpoint drift: the peer URL or card is pinned in code, or a manual registry entry was never updated, so the coordinator works from an old snapshot → resolve the peer with <code>get_remote_a2a_agent()</code> (Agent Runtime registrations sync on update), update manual registrations from the new card in the partner&#x27;s release pipeline, re-resolve on connection or schema errors, and compare the card&#x27;s <code>version</code> and <code>protocol_version</code></td><td>Raising <code>HttpRetryOptions(attempts=...)</code></td></tr>
+                    <tr><td>Latency and token cost climb with every handoff, and specialists answer about topics from earlier in the conversation</td><td>Context bloat: <code>sub_agents</code> transfer shares the full <code>session.events</code>, so each specialist reads the whole transcript → call specialists through <code>AgentTool</code> (isolated child session) or set <code>include_contents=&quot;none&quot;</code> and pass explicit state keys, enable <code>EventsCompactionConfig(compaction_interval=..., overlap_size=...)</code> on the <code>App</code> to summarize older events, and send a short task message over A2A instead of the transcript</td><td>Switching to a model with a larger context window</td></tr>
+                    <tr><td>One of several parallel researchers errors or hangs, and the merge step returns an incomplete answer or the whole turn fails</td><td>Partial branch failure in parallel fan-out: branches share no state, and the merger assumes every branch&#x27;s key exists → have branch tools return structured error dicts with timeouts set in tool code, write one <code>output_key</code> per branch, make the merger handle missing or error keys and label the result as partial, and in a graph route on the failing node&#x27;s output</td><td>Rewriting the fan-out as a <code>SequentialAgent</code></td></tr>
+                    <tr><td>Remote tasks pile up unanswered, users never see the peer&#x27;s question, and coordinator connections stay open</td><td>Orphaned <code>input-required</code> task: the peer returned <code>TASK_STATE_INPUT_REQUIRED</code>, which is interrupted but not terminal, and nothing surfaced or closed it → if the card declares the <code>pushNotifications</code> capability, register a webhook with <code>CreateTaskPushNotificationConfig</code> (<code>url</code>, <code>token</code>) instead of holding a stream open, store the task ID with a deadline in session state, and call <code>CancelTask</code> when it expires (the task ends in <code>TASK_STATE_CANCELLED</code> when the peer supports cancellation)</td><td>Raising the HTTP client timeout</td></tr>
                 </tbody>
             </table>
         </div>
@@ -1180,8 +1316,11 @@ if __name__ == &quot;__main__&quot;:
             <div class="concept-card accent-blue">
                 <h3><div class="icon-badge"><i class="fas fa-video"></i></div>ADK Production Blueprint Video</h3>
                 <p>A comprehensive walkthrough of the Google ADK runtime architecture, multi-agent topologies, tool contracts, and enterprise production guardrails.</p>
-                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); aspect-ratio: 16 / 9;">
-                    <iframe src="https://www.youtube-nocookie.com/embed/Ebk43dbkEZE" title="ADK Production Blueprint Video" style="width: 100%; height: 100%; border: 0; display: block;" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                    <video controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" style="width: 100%; display: block;">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/ADK-v2.0.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
                 </div>
             </div>
 

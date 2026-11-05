@@ -95,7 +95,7 @@
                   "keywords": "AgentOps, Gen AI Evaluation Service, Autoraters, Adaptive Rubrics, 2-Step Agent Simulation, Environment Simulation, Agent Optimizer, Prompt Optimizer, LM Feedback Flywheel, Failure Cluster Analysis, Online Evaluation Monitors, Agent Runtime, Cloud Run, GKE Agent Sandbox, Agent Substrate, pass@k, pass^k, OpenTelemetry, AI FinOps, Michael Bettan, Michaël Bettan",
                   "url": "https://mbettan.github.io/machine-learning-cert/AgentOps.html",
                   "inLanguage": "en",
-                  "dateModified": "2026-11-01",
+                  "dateModified": "2026-11-05",
                   "learningResourceType": "Study Guide",
                   "educationalLevel": "Advanced",
                   "author": {
@@ -494,23 +494,20 @@
                 </ul>
             </div>
             <div class="concept-card accent-amber">
-                <h3><div class="icon-badge"><i class="fas fa-code"></i></div>Anchored Judge Schema Pattern</h3>
-                <pre><code class="language-python">from pydantic import BaseModel, Field
-
-class FaithfulnessRubric(BaseModel):
-    extracted_claims: list[str] = Field(
-        description="Atomic factual claims in candidate answer."
-    )
-    unsupported_claims: list[str] = Field(
-        description="Claims missing from source context."
-    )
-    critique: str = Field(
-        description="Evidence check BEFORE scoring."
-    )
-    score: int = Field(
-        ge=1, le=3,
-        description="1=Hallucination; 2=Incomplete; 3=Faithful."
-    )</code></pre>
+                <h3><div class="icon-badge"><i class="fas fa-clipboard-check"></i></div>Anchored Judge Schema Pattern</h3>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Field</th><th>Type</th><th>Autorater Target</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>extracted_claims</code></td><td><code>list[str]</code></td><td>Atomic factual claims in candidate answer.</td></tr>
+                            <tr><td><code>unsupported_claims</code></td><td><code>list[str]</code></td><td>Claims missing from source context.</td></tr>
+                            <tr><td><code>critique</code></td><td><code>str</code></td><td>Evidence check executed BEFORE scoring.</td></tr>
+                            <tr><td><code>score</code></td><td><code>int (1-3)</code></td><td>1=Hallucination; 2=Incomplete; 3=Faithful.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -597,7 +594,7 @@ class FaithfulnessRubric(BaseModel):
                     </tr>
                     <tr>
                         <td><strong>2. In-Repo CI Gate</strong><br><code>adk eval</code> · <code>agents-cli eval run</code></td>
-                        <td>Runs <code>*.test.json</code> and <code>*.evalset.json</code> suites against live models, grading <code>tool_trajectory_avg_score</code> (<code>EXACT</code>, <code>IN_ORDER</code>, <code>ANY_ORDER</code>), rubrics, and <code>custom_metrics</code>.</td>
+                        <td>ADK runs <code>*.test.json</code> files and <code>*.evalset.json</code> evalsets against live models, grading <code>test_config.json</code> criteria such as <code>tool_trajectory_avg_score</code> (<code>EXACT</code>, <code>IN_ORDER</code>, <code>ANY_ORDER</code>), rubric criteria, and custom metrics. <code>agents-cli</code> now reads <code>EvaluationDataset</code> files (<code>tests/eval/datasets/*-dataset.json</code>) and grades traces with the metrics named in <code>tests/eval/eval_config.yaml</code>.</td>
                         <td><strong>1–5 minutes · Low cost</strong></td>
                         <td>Pull-request blocking gates inside GitHub Actions or Cloud Build for code-first ADK repositories (<code>tests/eval/</code>).</td>
                     </tr>
@@ -679,7 +676,187 @@ class FaithfulnessRubric(BaseModel):
             <div class="callout-icon"><i class="fas fa-ban"></i></div>
             <div class="callout-content">
                 <h4>Compliance Trap: "Right Answer, Wrong Path" in Outcome-Only Grading</h4>
-                <p>Grading a refund or clinical agent solely with <code>FINAL_RESPONSE_QUALITY</code> or <code>multi_turn_task_success_v1</code> will pass an agent that issued a refund <em>without</em> calling <code>verify_customer_identity</code> or <code>check_return_eligibility</code> first. Whenever policy mandates verification steps, <strong>always pair outcome autoraters with <code>trajectory_in_order_match</code> or <code>trajectory_exact_match</code></strong> plus a forbidden-tool custom check.</p>
+                <p>Grading a refund or clinical agent solely with <code>FINAL_RESPONSE_QUALITY</code> or <code>multi_turn_task_success</code> will pass an agent that issued a refund <em>without</em> calling <code>verify_customer_identity</code> or <code>check_return_eligibility</code> first. Whenever policy mandates verification steps, <strong>always pair outcome autoraters with <code>trajectory_in_order_match</code> or <code>trajectory_exact_match</code></strong> plus a forbidden-tool custom check.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-toolbox"></i></div>Evaluation tool selection: ADK Eval vs. agents-cli Eval vs. Gen AI Evaluation Service vs. Custom Autoraters</h3>
+            <p>The tiers above say <em>when</em> to evaluate. The table below says <em>which tool</em> to reach for, since the four options overlap but differ in dataset format, metrics and where the grading happens.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>ADK eval tooling</th>
+                        <th><code>agents-cli eval</code></th>
+                        <th>Gen AI evaluation service</th>
+                        <th>Custom autoraters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Use case</strong></td>
+                        <td>Unit and integration tests inside an ADK repo; web UI capture of sessions into evals</td>
+                        <td>Inner eval-fix loop and PR gates for agents scaffolded with <code>agents-cli</code>; regression diff and failure clustering from the terminal</td>
+                        <td>Cross-framework batch evaluation, user simulation, online monitors on live traces, Automatic Loss Analysis</td>
+                        <td>Domain rules that built-in metrics do not encode (clinical, legal, financial, format or length policies)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dataset format</strong></td>
+                        <td><code>*.test.json</code> (single session) and <code>*.evalset.json</code> (multi-session, can hold a conversation scenario for user simulation); criteria in <code>test_config.json</code></td>
+                        <td><code>EvaluationDataset</code> JSON in <code>tests/eval/datasets/</code> (default <code>basic-dataset.json</code>); metrics in <code>tests/eval/eval_config.yaml</code></td>
+                        <td><code>EvaluationDataset</code> built in the SDK, from files, or from sampled Cloud Trace data</td>
+                        <td>Defined alongside whichever harness runs them</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Metrics</strong></td>
+                        <td><code>tool_trajectory_avg_score</code>, <code>response_match_score</code>, <code>final_response_match_v2</code>, rubric-based quality criteria, <code>hallucinations_v1</code>, custom metric functions</td>
+                        <td>Built-ins such as <code>tool_use_quality</code>, <code>multi_turn_task_success</code>, <code>multi_turn_trajectory_quality</code>, <code>final_response_match</code>, <code>hallucination</code>, <code>safety</code> (<code>agents-cli eval metric list</code> prints all)</td>
+                        <td>Adaptive and static rubrics, agent autoraters, trajectory and computation metrics (see the taxonomy above)</td>
+                        <td>Code metrics (<code>custom_function</code>) or LLM-as-judge metrics (<code>prompt_template</code> plus optional <code>judge_model</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Where it runs</strong></td>
+                        <td>Developer machine or CI runner (<code>adk eval</code>, <code>pytest</code> with <code>AgentEvaluator</code>); judge-based criteria call a model</td>
+                        <td>Agent inference runs locally; grading goes through the Gen AI evaluation SDK</td>
+                        <td>Managed Google Cloud backend through SDK, console or scheduled online monitor</td>
+                        <td>Code metrics run in the CLI process by default; add <code>execution: remote</code> in <code>eval_config.yaml</code> for a sandboxed server-side code metric</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scale</strong></td>
+                        <td>Tens to low hundreds of cases per run</td>
+                        <td>Same order as ADK per CI run; <code>eval dataset synthesize</code> grows coverage</td>
+                        <td>Large batch datasets plus continuous sampling of production traffic</td>
+                        <td>Bound by the host harness and, for judges, by model quota</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Setup</strong></td>
+                        <td>Low: capture sessions in <code>adk web</code>, save as evalset, set thresholds</td>
+                        <td>Low: scaffolded <code>tests/eval/</code> folder; edit dataset and config</td>
+                        <td>Low to medium: point the SDK or console at a dataset or deployed agent</td>
+                        <td>Medium to high: write, version and calibrate against human labels</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost driver</strong></td>
+                        <td>Agent tokens plus judge tokens for LLM criteria</td>
+                        <td>Agent tokens plus judge tokens</td>
+                        <td>Judge model usage; check the Agent Platform pricing page</td>
+                        <td>Free compute for code metrics; judge tokens multiplied by <code>judge_model_sampling_count</code> (1 to 32)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="callout-content">
+                <h4>Legacy evalsets in agents-cli projects</h4>
+                <p><code>agents-cli eval generate</code> and <code>eval run</code> no longer read <code>tests/eval/evalsets/*.evalset.json</code>. Run <code>agents-cli scaffold upgrade</code> to convert them into <code>tests/eval/datasets/</code>, then hand-port any seeded session state, which the migrator does not carry over. ADK's own <code>adk eval</code> and <code>AgentEvaluator</code> still use the evalset schema, so the two formats coexist across repos. The scale and setup rows above are rules of thumb, not published limits.</p>
+                <ul>
+                    <li><strong>Anti-pattern:</strong> writing a custom LLM judge for a property a built-in metric already scores (task success, hallucination, safety). Start with built-ins and add custom autoraters only for rules they miss.</li>
+                    <li><strong>Anti-pattern:</strong> running untrusted custom metric code locally in CI with the runner's credentials. Use <code>execution: remote</code> or review the code like any other dependency.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-purple">
+            <h3><div class="icon-badge"><i class="fas fa-code-branch"></i></div>CI/CD evaluation gates: from pull request to canary</h3>
+            <p>Each gate is cheaper and faster than the next, so most regressions die early and only release candidates pay for simulation and judge-heavy grading.</p>
+            <ol>
+                <li><strong>PR trajectory gate:</strong> every pull request that touches prompts, tools or model settings runs <code>agents-cli eval run</code> (or <code>adk eval</code> / <code>pytest</code> with <code>AgentEvaluator</code> in an ADK-only repo) in CI, for example a pipeline created with <code>agents-cli infra cicd</code>. Cases replay recorded or mocked tool outputs, and the metrics are trajectory checks plus cheap code metrics, so the gate stays fast and deterministic enough to block merges.</li>
+                <li><strong>Release-candidate simulation and rubric gate:</strong> after merge, deploy the candidate to staging and run simulated multi-turn scenarios (from <code>agents-cli eval dataset synthesize</code> or the Gen AI evaluation service user simulation) with environment simulation for tool faults. Grade with <code>multi_turn_task_success</code>, <code>multi_turn_trajectory_quality</code>, <code>hallucination</code>, <code>safety</code> and any calibrated custom autoraters, and enforce an absolute floor per metric.</li>
+                <li><strong>Regression compare against production:</strong> grade the same frozen dataset against the current production revision and the candidate, then run <code>agents-cli eval compare prod_results.json rc_results.json</code>. Fail the build when a critical slice drops beyond the agreed tolerance, even if the averages still clear their floors, and run <code>agents-cli eval analyze --eval-result rc_results.json</code> to cluster what broke.</li>
+                <li><strong>Canary rollout:</strong> ship the candidate as a new revision and send it a small traffic slice, using Agent Runtime revisions and traffic splitting (Preview) or Cloud Run traffic splitting. Online monitors and quality alerts (<a href="#observability-drift">observability and drift</a>) watch the canary; promote in steps or shift traffic back to the previous revision. Staging order and canary safety rules are in <a href="#rollouts-ab">safe rollouts</a>.</li>
+            </ol>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="callout-content">
+                <h4>Gate design rules</h4>
+                <p>Metric floors, regression tolerances and canary percentages are team choices, not Google defaults, and the result file names above are placeholders.</p>
+                <ul>
+                    <li><strong>Anti-pattern:</strong> gating only on the average score. A two-point average gain can hide a collapse on one compliance slice; gate per slice and per critical metric.</li>
+                    <li><strong>Anti-pattern:</strong> letting the judge model float between runs. Pin the judge model and sampling count so a score change reflects the agent, not the grader.</li>
+                    <li><strong>Anti-pattern:</strong> running PR gates against live mutating tools. Use recorded fixtures or environment simulation so CI never sends real emails or refunds.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-list-check"></i></div>Golden set design checklist</h3>
+            <p>A golden set is the frozen, versioned dataset every gate grades against. Cover each case type below and tag every case with its slice and origin so regressions can be traced.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Case type</th>
+                        <th>What it catches</th>
+                        <th>How to express it</th>
+                        <th>Typical metrics</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Trajectory cases</strong></td>
+                        <td>Skipped verification steps, wrong tool, bad arguments</td>
+                        <td>Single prompt (<code>prompt</code> field in <code>agents-cli</code>, one turn in an ADK evalset) plus expected tool calls; assert required milestones in order, not full transcripts</td>
+                        <td><code>tool_trajectory_avg_score</code> (<code>IN_ORDER</code>), <code>tool_use_quality</code>, forbidden-tool code check</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Continued-conversation cases</strong></td>
+                        <td>Mid-session regressions after earlier turns set context</td>
+                        <td><code>agent_data</code> turns ending with a user message (<code>agents-cli</code>) or a multi-turn evalset session (ADK)</td>
+                        <td><code>multi_turn_tool_use_quality</code>, <code>multi_turn_trajectory_quality</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Simulated multi-turn scenarios</strong></td>
+                        <td>Clarification loops, users who change their mind, goal abandonment</td>
+                        <td>Starting prompt plus conversation plan and persona (<code>eval dataset synthesize --instruction ...</code>, ADK conversation scenario, service user simulation)</td>
+                        <td><code>multi_turn_task_success</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Abstention cases</strong></td>
+                        <td>Hallucinating when retrieval is empty, answering out-of-scope or unauthorized requests</td>
+                        <td>Prompts with no supporting data or outside the agent's remit; expected outcome is a decline or a clarifying question</td>
+                        <td><code>hallucination</code>, custom refusal check</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Adversarial cases</strong></td>
+                        <td>Prompt injection in tool output, jailbreaks, PII extraction</td>
+                        <td>Injected strings in mocked tool results and user turns; expected outcome is refusal and no forbidden tool call</td>
+                        <td><code>safety</code>, forbidden-tool code check</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fault cases</strong></td>
+                        <td>Broken retry, fallback and escalation paths</td>
+                        <td>Environment simulation returning <code>429</code>, <code>503</code>, timeouts, empty rows</td>
+                        <td>Trajectory milestones on the fallback path</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loss-analysis backfill</strong></td>
+                        <td>Production failure classes the set never covered</td>
+                        <td>Representative traces from Automatic Loss Analysis or <code>agents-cli eval analyze</code> clusters, scrubbed of PII and converted to cases</td>
+                        <td>Whatever metric flagged the cluster</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-vial-circle-check"></i></div>
+            <div class="callout-content">
+                <h4>Keeping the golden set honest</h4>
+                <ul>
+                    <li><strong>Held-out split:</strong> keep a slice that neither engineers nor <code>agents-cli eval optimize</code> see during tuning, so prompt fixes generalize instead of memorizing the set.</li>
+                    <li><strong>Version with the code:</strong> commit datasets and <code>eval_config.yaml</code> next to the agent so a revision and its gate always travel together.</li>
+                    <li><strong>Retire saturated cases:</strong> when a slice scores near perfect for many releases, replace it with harder or fresher cases from the backfill loop.</li>
+                </ul>
             </div>
         </div>
 
@@ -1063,45 +1240,277 @@ class FaithfulnessRubric(BaseModel):
                 <h3><div class="icon-badge"><i class="fas fa-user-shield"></i></div>PII-Safe Telemetry &amp; Dual-Attribution Audit Logs</h3>
                 <p>Production observability must diagnose failures and prove actor provenance without turning logs into a compliance liability:</p>
                 <ul>
-                    <li><strong>Metadata-first default spans:</strong> Enabling <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> exports latency waterfalls, token/cache counts, and error codes—<strong>never raw user prompts or PII</strong>.</li>
-                    <li><strong>SDP-scrubbed payload vault:</strong> Enable raw message capture (<code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true</code>) only with <strong>Sensitive Data Protection (SDP)</strong> de-identification templates and RBAC-restricted Cloud Logging buckets (<code>roles/logging.privateLogViewer</code>).</li>
+                    <li><strong>Spans hold metadata, not conversations:</strong> Agent Platform keeps latency, status codes and structure in spans and routes prompts and responses to Cloud Storage (recommended) or Cloud Logging, so IAM can grant <code>roles/cloudtrace.user</code> for debugging without read access to conversation content.</li>
+                    <li><strong>Content capture as events:</strong> set <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code> (never <code>true</code>, which collects nothing under the latest <code>gen_ai</code> conventions) and <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code>; redact upstream with <strong>Sensitive Data Protection</strong> templates or <strong>Model Armor</strong> and restrict the log bucket (<code>roles/logging.privateLogViewer</code>).</li>
                     <li><strong>Dual-Attribution Audit Logging (<code>is_agentic=true</code>):</strong> Cloud Audit Logs tag agent actions with <code>is_agentic=true</code> and record <strong>both</strong> the cryptographic SPIFFE <strong>Agent Identity</strong> (<code>spiffe://...</code>) and the initiating <strong>human principal</strong>—eliminating "confused deputy" blind spots.</li>
                 </ul>
             </div>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-toggle-on"></i></div>Default vs. Opt-In telemetry for ADK agents</h3>
+            <p>Platform signals (request logs, container logs, resource metrics) arrive without any agent code change. Agent-level <code>gen_ai.*</code> spans and prompt content do not: they appear only after you turn on ADK's built-in OpenTelemetry instrumentation (ADK 1.17.0 or later) and export it to Cloud Trace through the Telemetry (OTLP) API. An empty Traces tab on a healthy agent almost always means this step was skipped.</p>
         </div>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
                 <thead>
                     <tr>
-                        <th>Production Issue (PAA 4.2)</th>
-                        <th>Diagnostic Signature in Cloud Trace / Agent Observability</th>
-                        <th>Root Cause &amp; Engineering Remediation</th>
+                        <th>Runtime</th>
+                        <th>Available without extra setup</th>
+                        <th>Requires explicit opt-in</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Agent Reasoning Loops</strong></td>
-                        <td><code>Traces</code> waterfall shows 8–15 consecutive <code>gen_ai.chat</code> &harr; <code>execute_tool</code> spans calling the exact same tool with identical or oscillating arguments until <code>max_turns</code> aborts.</td>
-                        <td>Ambiguous tool error message (e.g., returning <code>""</code> instead of actionable schema feedback) or missing loop cap. Return structured error hints (<code>ReflectAndRetryToolPlugin</code>), enforce <code>max_llm_calls</code> / <code>max_iterations</code>, and break cycles with deterministic state flags.</td>
+                        <td><strong>Agent Runtime</strong></td>
+                        <td>Agent logs in Cloud Logging; the Observability tab's Usage view (container CPU and memory allocation)</td>
+                        <td>Agent traces: set <code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code>, pass <code>--otel_to_cloud</code> to <code>adk deploy agent_engine</code>, or build the app with <code>AdkApp(..., enable_tracing=True)</code></td>
                     </tr>
                     <tr>
-                        <td><strong>Tool Invocation Latency Spikes</strong></td>
-                        <td>End-to-end turn <code>p95</code> jumps to 14s while LLM <code>ttft_ms</code> and decode time stay &lt;1.2s; <code>Tools</code> tab highlights a single MCP server <code>p95</code> at 11.5s or 5 serial tool spans.</td>
-                        <td>Unpooled database connections, cross-region VPC hops, or sequential execution of independent reads. Co-locate runtimes with data, use <code>MCP Toolbox</code> connection pooling, and fan out independent reads concurrently (<code>ParallelAgent</code>).</td>
+                        <td><strong>Cloud Run</strong></td>
+                        <td>Request logs, container stdout/stderr, request latency, instance count, CPU and memory metrics</td>
+                        <td>ADK spans: initialize ADK's telemetry module with Google Cloud exporters (<code>get_gcp_exporters(enable_cloud_tracing=True)</code>) or an OTLP exporter targeting <code>telemetry.googleapis.com</code>; <code>adk web --otel_to_cloud</code> covers the local dev server</td>
                     </tr>
                     <tr>
-                        <td><strong>Ignored Tools ("No-Tool Interactions")</strong></td>
-                        <td><code>Tools</code> tab shows high <strong>"no-tool interaction"</strong> rate alongside elevated <code>HALLUCINATION</code> autorater flags on domain questions.</td>
-                        <td>Vague or overlapping tool docstrings/schemas cause the model to guess from parametric memory instead of calling the tool. Sharpen tool descriptions and add <code>trajectory_in_order_match</code> CI gates.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Model Prefill / Thinking Bottlenecks</strong></td>
-                        <td><code>Models</code> &amp; <code>Traces</code> tabs show <code>thinking_tokens</code> dominating <code>total_generation_ms</code> on simple classification hops, or high <code>ttft_ms</code> with <code>cached_tokens = 0</code>.</td>
-                        <td><code>thinking_level="HIGH"</code> over-allocated to routine steps, or dynamic timestamps placed at line 1 busting prefix caching. Route simple steps to <code>gemini-3.5-flash-lite</code> (<code>minimal</code>) or <code>gemini-3.8-flash</code> (<code>low</code>), and move volatile state after <code>static_instruction</code>.</td>
+                        <td><strong>GKE</strong></td>
+                        <td>Container logs and system metrics through the default Cloud Logging and Cloud Monitoring integration</td>
+                        <td>Same ADK telemetry module or OTLP exporter as Cloud Run; GKE agents also need an Agent Registry entry before they appear in Topology</td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-mint">
+                <h3><div class="icon-badge"><i class="fas fa-sliders"></i></div>Content-safe tracing settings</h3>
+                <p>The writer identity (usually the runtime service account) needs <code>roles/telemetry.tracesWriter</code>, <code>roles/logging.logWriter</code> and <code>roles/monitoring.metricWriter</code>. The ADK instrumentation guide recommends:</p>
+                <ul>
+                    <li><code>GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true</code> (Agent Runtime only)</li>
+                    <li><code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code> (latest <code>gen_ai</code> conventions)</li>
+                    <li><code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code> (messages as events, never <code>true</code>)</li>
+                    <li><code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> (no prompt text or PII in span attributes)</li>
+                    <li><strong>Media offload:</strong> <code>OTEL_INSTRUMENTATION_GENAI_COMPLETION_HOOK=upload</code>, <code>OTEL_INSTRUMENTATION_GENAI_UPLOAD_FORMAT=jsonl</code> and <code>OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH=gs://...</code> so images and large documents land in a bucket instead of inside spans.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-scale-balanced"></i></div>Tracing is a data decision</h3>
+                <ul>
+                    <li><strong>Review with the data owner:</strong> once the built-in instrumentation is enabled, text prompts and agent responses are sent to your project.</li>
+                    <li><strong>Separate stores:</strong> Cloud Storage (no truncation, multimodal payloads, lifecycle rules) or Cloud Logging (text only, size limits) hold content; spans hold latency, status codes and structure.</li>
+                    <li><strong>Online monitors depend on captured content:</strong> they read <code>gen_ai.input.messages</code>, <code>gen_ai.output.messages</code>, <code>gen_ai.system_instructions</code> and <code>gen_ai.tool.definitions</code> from the inference event. Switching content capture off also switches off online evaluation, so address PII by redacting upstream instead.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-magnifying-glass-chart"></i></div>Reading one agent turn in a trace</h3>
+            <p>The agent's Traces tab offers a Session view (multi-turn conversations with session token totals and evaluation scores), a Trace view (one end-to-end request) and a Span view (individual model calls, API requests and tool executions). Open one trace for a single turn and walk it top-down.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Span to inspect</th>
+                        <th>Healthy pattern</th>
+                        <th>Investigate when</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><strong>Root <code>invoke_agent</code></strong></td>
+                        <td>One trace per user turn; total duration roughly equals the sum of child spans</td>
+                        <td>A gap before the first child (cold start or blocking initialization), or one turn split across several traces (context propagation broken)</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong>LLM spans (<code>call_llm</code> wrapping <code>generate_content {model}</code>)</strong></td>
+                        <td>A small, stable number of calls per turn; input tokens grow modestly turn over turn; each call ends in a final answer or a well-formed tool call</td>
+                        <td>Input tokens climbing every turn (history bloat), output cut off at the token limit, repeated retries after <code>429</code></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong>Tool spans (<code>execute_tool</code>; MCP calls carry <code>mcp.method.name = tools/call</code> and <code>gen_ai.tool.name</code>)</strong></td>
+                        <td>Independent tools overlap in time; compact results; no <code>error.type</code></td>
+                        <td>Same tool with the same arguments three or more times in a row, <code>error.type</code> set, or a serial waterfall of multi-second calls</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><strong>Sub-agent handoffs (nested <code>invoke_agent</code> spans)</strong></td>
+                        <td>A shallow parent-to-specialist tree that matches the intended design and the Topology tab's edges</td>
+                        <td>A to B to A ping-pong, unexpected specialists, or depth that grows with every turn</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><strong>Retrieval spans (search and RAG tools appear as <code>execute_tool</code>)</strong></td>
+                        <td>Fast, non-empty results whose content shows up in the final answer</td>
+                        <td>Zero or irrelevant results followed by a confident answer (hallucination risk)</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td><strong>Guardrail spans (Model Armor, Preview)</strong></td>
+                        <td>Screening adds little latency and allows benign traffic</td>
+                        <td>An empty or refused answer that a Model Armor interception explains, which rules out a retrieval miss</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td><strong>Evaluation tab on the trace</strong></td>
+                        <td>Online monitor scores and rationales agree with what you just read</td>
+                        <td>Low scores on a trace that looks clean (check the rubric) or high scores on a broken one (check the autorater)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-coral">
+            <h3><div class="icon-badge"><i class="fas fa-stethoscope"></i></div>Troubleshooting production agent issues via telemetry views</h3>
+            <p>Agent Registry's Observability tab (Overview, Evaluation, Models, Tools, Usage, Logs) plus the agent's Traces and Topology tabs map production symptoms to root causes. The Models view isolates <code>p95</code> latency, errors, quota failures and tokens per model; the Tools view shows <code>p95</code> latency, call counts and error rates per tool, plus how often a turn called no tool at all.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Symptom</th>
+                        <th>Likely cause</th>
+                        <th>Where to look</th>
+                        <th>Fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tool latency spike</strong> (turn <code>p95</code> jumps while LLM time stays flat)</td>
+                        <td>Unpooled database connections, cross-region hops, or independent reads executed one after another</td>
+                        <td>Tools view <code>p95</code> per tool; Traces waterfall with long or serial <code>execute_tool</code> spans</td>
+                        <td>Co-locate runtime and data, use <strong>MCP Toolbox</strong> connection pooling, fan out independent reads (<code>ParallelAgent</code>), set per-tool timeouts, cache hot lookups</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reasoning or tool-call loops</strong></td>
+                        <td>Ambiguous tool errors (an empty string instead of actionable feedback) or cyclic sub-agent routing</td>
+                        <td>Traces: 8 or more consecutive <code>call_llm</code> and <code>execute_tool</code> pairs with identical or oscillating arguments; Topology for A to B to A edges</td>
+                        <td>Return structured error hints (<code>ReflectAndRetryToolPlugin</code>), cap iterations (<code>max_llm_calls</code>, <code>max_iterations</code>), break cycles with deterministic state flags (per-cause fixes in the runaway loop triage table below)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ignored tools ("no-tool interactions")</strong></td>
+                        <td>Vague or overlapping tool descriptions, so the model answers from parametric memory</td>
+                        <td>Tools view no-tool rate alongside rising <code>HALLUCINATION</code> scores on domain questions</td>
+                        <td>Sharpen tool descriptions and schemas; add <code>trajectory_in_order_match</code> CI gates</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prefill or thinking bottleneck</strong></td>
+                        <td><code>thinking_level="HIGH"</code> on routine hops, or volatile text at the top of the prompt defeating prefix caching</td>
+                        <td>Models and Traces views: <code>thinking_tokens</code> dominating generation time, high TTFT with <code>cached_tokens = 0</code></td>
+                        <td>Route simple steps to <code>gemini-3.5-flash-lite</code> (<code>minimal</code>) or <code>gemini-3.8-flash</code> (<code>low</code>); move volatile state after <code>static_instruction</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rising token cost</strong></td>
+                        <td>Unbounded conversation history, large tool payloads, many tool schemas sent on every turn</td>
+                        <td>Overview token usage (input vs. output); per-span input tokens growing turn over turn</td>
+                        <td>ADK context compaction (token-based or sliding window), context caching, pruned tool results, tools and skills loaded on demand</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hallucinated answers</strong></td>
+                        <td>Empty or weak grounding, or the agent answering despite an empty retrieval</td>
+                        <td>Evaluation view hallucination rate; retrieval span output compared with the final response</td>
+                        <td>Ground on Agent Search or RAG Engine, add reranking, instruct the agent to abstain when retrieval returns nothing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Retrieval misses</strong></td>
+                        <td>Dense-only search missing exact codes and acronyms, or chunks stripped of their section headings</td>
+                        <td>Retrieval <code>execute_tool</code> spans returning irrelevant or zero results</td>
+                        <td>Hybrid (dense plus keyword) retrieval, chunking that keeps ancestor headings, reranking, corpus refresh</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quality drift after a model or prompt change</strong></td>
+                        <td>New model version or prompt edit changes tool selection, formatting or refusal behavior</td>
+                        <td>Evaluation dashboard trends across agent versions; Automatic Loss Analysis clusters for the new version</td>
+                        <td>Roll back to the prior pinned version, add failing traces to the golden set, re-run the optimizer before re-promoting (see <a href="#feedback-flywheel">feedback flywheel</a>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong><code>429</code> / quota errors</strong></td>
+                        <td>Burst traffic or runaway loops exhausting model quota (<code>RESOURCE_EXHAUSTED</code>)</td>
+                        <td>Models view quota failures; Cloud Logging entries with <code>429</code></td>
+                        <td>Full-jitter backoff (see <a href="#resilience-stack">resilience stack</a>), loop caps, concurrency limits, Provisioned Throughput for predictable capacity</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cold starts</strong></td>
+                        <td>No idle instance when a request arrives; heavy imports and client setup at startup</td>
+                        <td>Gap before the first child span on the first turn; instance count rising during spikes</td>
+                        <td>Raise <code>min_instances</code> (Agent Runtime) or <code>--min-instances</code> (Cloud Run) to cover baseline load, lazy-load heavy libraries, slim images; for async ADK agents on Agent Runtime start <code>container_concurrency</code> at a multiple of 9 (for example 36) and watch memory</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Traces tab or online monitor empty</strong></td>
+                        <td>Telemetry never enabled, or content capture disabled</td>
+                        <td>Cloud Trace for <code>gen_ai.*</code> attributes; Logs Explorer filtered on <code>resource.labels.online_evaluator</code></td>
+                        <td>Apply the opt-in settings above; confirm monitor filters with Initial Inspection</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="concept-card accent-pink">
+            <h3><div class="icon-badge"><i class="fas fa-arrows-spin"></i></div>Runaway loop triage</h3>
+            <p>The loop row above names the shared symptom. Five different causes produce it, and each one needs its own fix. The common rule: a loop must never end on model judgment alone. An iteration cap, a terminal route or a budget has to end it.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Loop cause</th>
+                        <th>Trace signal</th>
+                        <th>Deterministic fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong><code>LoopAgent</code> with no exit path</strong></td>
+                        <td>The same child agent spans repeat in the same order until something external stops the run; <code>LoopAgent</code> never decides to stop by itself</td>
+                        <td>Set <code>max_iterations</code> on every <code>LoopAgent</code> and give the checker an exit tool that sets <code>tool_context.actions.escalate = True</code> (a custom agent can instead yield an event with <code>EventActions(escalate=True)</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Graph back-edge with no terminal branch</strong></td>
+                        <td>Two graph nodes alternate in the trace and the run ends only on a timeout or budget</td>
+                        <td>Keep an iteration counter in state and have the router node emit a terminal route (for example <code>DONE</code>) once the counter reaches its cap; point <code>DEFAULT_ROUTE</code>, which fires when no other route on that node matches, at a terminal or fallback node rather than at the back-edge</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool error retried forever</strong></td>
+                        <td><code>execute_tool</code> spans with <code>error.type</code> set, each followed by an LLM call that reissues the same tool with the same arguments</td>
+                        <td><code>ReflectAndRetryToolPlugin(max_retries=...)</code> caps retries per tool (default 3, tracked per invocation) and returns structured guidance to the model; for errors that cannot self-heal (<code>401</code>, <code>403</code>, <code>404</code>), a <code>before_tool_callback</code> that counts calls per tool-and-arguments key returns a dict once the limit is hit, which skips the tool and hands the model a "do not retry" result</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A2A ping-pong delegation</strong></td>
+                        <td>Nested spans alternate between two remote agents inside one distributed trace; Topology shows edges in both directions</td>
+                        <td>Keep delegation acyclic (a specialist never delegates back to its caller), carry a hop or depth counter in the delegated task and refuse past a fixed depth, and give each task a deadline and token budget</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Over-strict critic</strong></td>
+                        <td>Every run uses the full <code>max_iterations</code> even on drafts a reviewer would accept; the escalate event never appears</td>
+                        <td>Calibrate the critic rubric against golden examples labeled acceptable, and when the cap is hit return the best draft flagged as partial or hand off to a human instead of failing silently</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-purple">
+                <h3><div class="icon-badge"><i class="fas fa-door-open"></i></div>Exit wiring and anomaly detection</h3>
+                <ul>
+                    <li><strong>Minimal exit wiring:</strong> give the critic an exit tool that sets <code>tool_context.actions.escalate = True</code> when the draft passes, and always construct the loop with a hard cap, for example <code>LoopAgent(name="refine", sub_agents=[critic, refiner], max_iterations=5)</code>, so the loop stops even if escalation never fires.</li>
+                    <li><strong>Agent Anomaly Detection (Preview, allowlisted):</strong> analyzes ADK OpenTelemetry traces and logs out of band, so it adds no latency to the agent. Its agentic cascading failures category (OWASP ASI08) covers infinite execution loops and oscillating retries, and a separate resource exhaustion category covers runaway token or compute use. Findings appear in Security Command Center and detection metrics in Cloud Monitoring. It requires ADK for Python 2.1.0 or later on Agent Runtime, Cloud Run or GKE, with tracing on and prompt and response content captured.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-amber">
+                <h3><div class="icon-badge"><i class="fas fa-ban"></i></div>Loop anti-patterns</h3>
+                <ul>
+                    <li><strong>Detection is not prevention:</strong> anomaly findings arrive after the loop has already spent tokens, so the caps and terminal routes in the table stay mandatory.</li>
+                    <li><strong>Raising the cap:</strong> bumping <code>max_iterations</code> or <code>max_llm_calls</code> so the agent "has room to finish" leaves the missing exit signal in place and makes each runaway cost more.</li>
+                    <li><strong>Default route as back-edge:</strong> mapping <code>DEFAULT_ROUTE</code> to the loop's back-edge means any unexpected route value, including a typo, re-enters the cycle.</li>
+                </ul>
+            </div>
         </div>
 
         <div class="comparison-table-wrapper">
@@ -1168,6 +1577,92 @@ class FaithfulnessRubric(BaseModel):
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="concept-card accent-blue">
+            <h3><div class="icon-badge"><i class="fas fa-bell"></i></div>Alert policies for agent SLIs</h3>
+            <p>Every row maps a signal that already exists in Agent Platform or Cloud Monitoring to an example condition. Tune each threshold to your own SLOs and baseline.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Signal</th>
+                        <th>Where it comes from</th>
+                        <th>Example alert condition (directional)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Turn latency <code>p95</code></strong></td>
+                        <td>Overview latency percentiles (p50, p95, p99)</td>
+                        <td><code>p95</code> above the latency SLO (for example 8 s for chat) for 10 minutes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agent error rate</strong></td>
+                        <td>Overview error rate</td>
+                        <td>Above 2% of invocations over 5 minutes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool error rate</strong></td>
+                        <td>Tools view per-tool error rate; <code>execute_tool</code> spans with <code>error.type</code></td>
+                        <td>Any single tool above 5% errors for 15 minutes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quota failures</strong></td>
+                        <td>Models view quota failures; <code>429</code> log entries</td>
+                        <td>Sustained <code>429</code> responses for 5 minutes, or more than 1% of model calls</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Input tokens per turn</strong></td>
+                        <td>Overview token usage; per-span token counts</td>
+                        <td><code>p95</code> input tokens at 2&times; the trailing 7-day baseline</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No-tool interaction rate</strong></td>
+                        <td>Tools view</td>
+                        <td>A 50% rise against the pre-deploy baseline</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Online evaluation score</strong></td>
+                        <td><code>aiplatform.googleapis.com/online_evaluator/scores</code>, filtered by <code>metric.labels.evaluation_metric_name</code></td>
+                        <td>Mean task success below 0.8 over a 30-minute window (the threshold used in the public sample policy)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-ruler"></i></div>
+            <div class="callout-content">
+                <h4>Directional thresholds</h4>
+                <p>The numbers above are starting points, not Google-published limits. Only the metric type and its <code>evaluation_metric_name</code> label come from the documentation. Set each threshold from your own SLOs and two to four weeks of baseline data, then revisit after every model or prompt change.</p>
+            </div>
+        </div>
+
+        <div class="concept-card accent-mint">
+            <h3><div class="icon-badge"><i class="fas fa-satellite-dish"></i></div>Online monitors and quality alerts: catching drift</h3>
+            <p>Offline evals prove a release was good on the day it shipped. <strong>Online Monitors</strong> keep scoring production traffic afterwards, and <strong>quality alerts</strong> turn a falling score into a page, so both drift types from the table above surface without a manual spot check.</p>
+            <ol>
+                <li><strong>Instrument for evaluation:</strong> enable Cloud Trace export and content capture as events (<code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code>, <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code>) so each trace carries <code>gen_ai.agent.name</code>, <code>gen_ai.conversation.id</code> and the inference messages.</li>
+                <li><strong>Create a monitor:</strong> on the Online monitors tab of the Evaluation page, pick the agent, evaluate all traces or a filtered slice (for example by duration or token usage), choose metrics such as safety, task success, tool use quality or hallucination, then set a sampling percentage and a maximum samples per run to cap judge cost.</li>
+                <li><strong>Scheduled scoring loop:</strong> roughly every 10 minutes the monitor queries sampled traces from Cloud Trace and Cloud Logging, scores them with the Agent Platform evaluation service, writes results to Cloud Logging and exports numeric scores to Cloud Monitoring.</li>
+                <li><strong>Alert on the scores:</strong> from the monitor's menu, choose <strong>Create alerting policy</strong> to get one template per configured metric, or use <strong>Recommended Alerts</strong> on the agent's Evaluation dashboard (an aggregate low-score template plus per-metric templates such as task success and tool use quality). Route incidents to Slack, email or Pub/Sub; each incident carries the monitor's labels so responders land on the traces that caused it.</li>
+                <li><strong>Triage the drop:</strong> compare score trends across agent versions on the Evaluation dashboard, open the Evaluation tab of low-scoring traces for rubric verdicts and rationales, then run <strong>Automatic Loss Analysis</strong> to classify rubric failures into loss patterns and semantic clusters.</li>
+                <li><strong>Classify and fix:</strong> a step change aligned with a deploy or model switch points to model or prompt drift (roll back, then fix through the flywheel). A gradual decline with no deploy points to input drift (refresh the corpus, expand the golden set). Either way, the clustered failures feed the closed loop in <a href="#feedback-flywheel">the feedback flywheel</a>.</li>
+            </ol>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-icon"><i class="fas fa-user-lock"></i></div>
+            <div class="callout-content">
+                <h4>Monitor access and silent monitors</h4>
+                <ul>
+                    <li><strong>Access control:</strong> online evaluation runs under the project-level service agent (P4SA), and anyone allowed to create an <code>OnlineEvaluator</code> can attach it to any agent in the project. Restrict that permission to authorized administrators.</li>
+                    <li><strong>Silent monitor:</strong> when a monitor is active but shows no results, confirm live traces contain <code>gen_ai.*</code> attributes, re-check filters with Initial Inspection, and search Logs Explorer for <code>resource.labels.online_evaluator</code> error entries.</li>
+                </ul>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════
@@ -1285,7 +1780,7 @@ class FaithfulnessRubric(BaseModel):
             <h2>7. Deployment Runtime Selection: Agent Runtime vs. Cloud Run vs. GKE</h2>
         </div>
 
-        <p style="margin-bottom: 16px;">Apply <strong>Rule 0 (Managed by Default)</strong> when choosing Google Cloud compute runtimes (PAA Section 4.2): start at the most managed runtime that satisfies your language, protocol, accelerator, and isolation constraints—escalating to GKE only when self-hosted open-weight models on GPUs/TPUs or custom Kubernetes kernel sandboxes require it.</p>
+        <p style="margin-bottom: 16px;">Apply <strong>Rule 0 (Managed by Default)</strong> when choosing Google Cloud compute runtimes: start at the most managed runtime that satisfies your language, protocol, accelerator, and isolation constraints—escalating to GKE only when self-hosted open-weight models on GPUs/TPUs or custom Kubernetes kernel sandboxes require it.</p>
 
         <div class="comparison-table-wrapper">
             <table class="comparison-table">
@@ -1350,6 +1845,117 @@ class FaithfulnessRubric(BaseModel):
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="concept-card accent-cyan">
+            <h3><div class="icon-badge"><i class="fas fa-table-columns"></i></div>Runtime dimensions in detail</h3>
+            <p>The matrix above names the best fit. The table below compares the three general-purpose runtimes on the dimensions that usually decide an architecture review.</p>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Agent Runtime</th>
+                        <th>Cloud Run</th>
+                        <th>GKE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Managed agent primitives</strong></td>
+                        <td>Sessions, Memory Bank, Code Execution sandbox and Agent Identity available to the deployed agent; bidirectional streaming in Preview</td>
+                        <td>None built in; call Agent Platform Sessions or Memory Bank through the SDK, or bring Firestore, Memorystore or Cloud SQL</td>
+                        <td>None built in; wire state yourself or use Agent Sandbox and Agent Substrate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scale-to-zero</strong></td>
+                        <td><code>min_instances</code> defaults to 1, so one warm instance stays up</td>
+                        <td>Scales to zero when idle unless you set minimum instances</td>
+                        <td>Pods scale with HPA and nodes with the cluster autoscaler; the cluster itself stays provisioned</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cold start and concurrency</strong></td>
+                        <td>Raise <code>min_instances</code> to absorb baseline load; <code>container_concurrency</code> defaults to 9 (one per agent process), and async ADK agents should start at a multiple of 9 such as 36 (too high risks OOM)</td>
+                        <td>Default 80 concurrent requests per instance for console deploys (80 &times; vCPU with gcloud or Terraform), configurable up to 1,000; minimum instances and startup CPU boost cut cold starts</td>
+                        <td>Warm pods have no cold start; new pods pay image pull and readiness time, which you tune</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accelerators</strong></td>
+                        <td>None exposed; calls hosted models</td>
+                        <td>NVIDIA L4 (24 GB) and NVIDIA RTX PRO 6000 Blackwell (96 GB) GPUs, with scale to zero; L4 needs at least 4 CPU and 16 GiB memory</td>
+                        <td>Full GPU and Cloud TPU node pools for self-hosted models</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Runtime contract</strong></td>
+                        <td>Custom containers listen on <code>0.0.0.0:8080</code>; <code>/api/reasoning_engine</code> (unary <code>query</code>) and <code>/api/stream_reasoning_engine</code> (<code>streamQuery</code>) are optional but required for SDK use, and the streaming one for the console playground; <code>AdkApp</code> is the reference implementation</td>
+                        <td>Any container that serves on <code>$PORT</code> (HTTP, gRPC, WebSockets)</td>
+                        <td>Standard Kubernetes Pod spec: sidecars, DaemonSets, StatefulSets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sandboxing untrusted code</strong></td>
+                        <td>Managed Code Execution sandbox</td>
+                        <td>Per-instance sandboxed execution environment; call the managed Code Execution sandbox for model-written code</td>
+                        <td>GKE Sandbox (gVisor) and Agent Sandbox with warm pools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Networking</strong></td>
+                        <td>Private Service Connect interface for private egress into your VPC (needs at least a <code>/28</code> subnet); VPC Service Controls supported; with Agent Gateway it needs VPC network egress through the agent connectivity template (gateways created after 2026-09-08)</td>
+                        <td>Direct VPC egress, internal ingress, VPC Service Controls, IAP</td>
+                        <td>Native VPC subnets, private clusters, <code>NetworkPolicy</code>, service mesh</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Identity</strong></td>
+                        <td>Agent Identity (GA) per agent, or a service account</td>
+                        <td>Per-service service account; IAP for callers</td>
+                        <td>Workload Identity Federation for GKE maps Kubernetes service accounts to IAM principals</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ops burden</strong></td>
+                        <td>Lowest: packaging, revisions and telemetry hooks managed</td>
+                        <td>Low: no nodes, you own the container</td>
+                        <td>Highest: cluster upgrades, node pools, networking, controllers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Billing shape</strong></td>
+                        <td>Compute and memory of running instances, including the warm baseline; see Agent Platform pricing</td>
+                        <td>Request-based or instance-based billing; GPUs billed per GPU second</td>
+                        <td>Cluster fee plus nodes (Standard) or requested Pod resources (Autopilot)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-icon"><i class="fas fa-stopwatch"></i></div>
+            <div class="callout-content">
+                <h4>Directional cold-start figures</h4>
+                <p>The Agent Runtime scaling guide shows one benchmark (300 concurrent requests, default <code>min_instances=1</code>) averaging about 4.7 seconds on a cold run versus about 0.4 seconds warm, and roughly 1.4 seconds once <code>min_instances=10</code>. Cloud Run documents about 5 seconds to start a GPU instance with drivers preinstalled. Treat these as examples and load test your own agent.</p>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="concept-card accent-blue">
+                <h3><div class="icon-badge"><i class="fas fa-signs-post"></i></div>Choose this runtime when</h3>
+                <ul>
+                    <li><strong>Stateful ADK orchestrator that needs sessions, memory and per-agent identity with little glue code:</strong> choose Agent Runtime.</li>
+                    <li><strong>Real-time voice or video agent that streams in both directions:</strong> Agent Runtime bidirectional streaming fits, but it is Preview; confirm the launch stage is acceptable or host a WebSocket service on Cloud Run.</li>
+                    <li><strong>Custom Streamable HTTP MCP server or webhook tool that idles most of the day:</strong> choose Cloud Run for scale to zero and IAP in front of the endpoint.</li>
+                    <li><strong>Polyglot agent or web front end packaged as a standard container:</strong> choose Cloud Run.</li>
+                    <li><strong>Bursty small open model inference without running a cluster:</strong> choose Cloud Run with an L4 or RTX PRO 6000 GPU.</li>
+                    <li><strong>Large self-hosted open-weight models on multi-GPU or TPU nodes inside a private VPC:</strong> choose GKE.</li>
+                    <li><strong>Model-written or user-supplied code that must run with kernel isolation next to your workloads:</strong> choose GKE with GKE Sandbox or Agent Sandbox; for short stateless snippets, the managed Code Execution sandbox is enough.</li>
+                    <li><strong>Workload that needs sidecars, DaemonSets or StatefulSet caches in one namespace:</strong> choose GKE.</li>
+                </ul>
+            </div>
+            <div class="concept-card accent-coral">
+                <h3><div class="icon-badge"><i class="fas fa-ban"></i></div>Runtime anti-patterns</h3>
+                <ul>
+                    <li><strong>GKE "for flexibility":</strong> picking GKE for a single stateless agent means you inherit cluster upgrades and on-call load with no capability you need.</li>
+                    <li><strong>Raising <code>container_concurrency</code> for a synchronous agent:</strong> on Agent Runtime the default of 9 assumes blocking code; only async agents benefit, and memory limits still apply.</li>
+                </ul>
+            </div>
         </div>
 
         <div class="two-columns">
@@ -2014,6 +2620,62 @@ class FaithfulnessRubric(BaseModel):
                 <dt>Human-Review Tax (Step 4 ROI)</dt>
                 <dd>Mandatory labor cost of human auditors reviewing flagged AI outputs and specialists fixing errors—subtracted in Step 4 of enterprise ROI.</dd>
             </div>
+            <div class="definition-item">
+                <dt>Automatic Loss Analysis</dt>
+                <dd>Agent Platform feature that reads pass/fail signals from rubric-based metrics, classifies failures into predefined loss patterns and groups them into semantic clusters.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Quality alert</dt>
+                <dd>Cloud Monitoring alerting policy on online monitor scores (<code>aiplatform.googleapis.com/online_evaluator/scores</code>) that notifies owners through Slack, email or Pub/Sub when quality drifts below a threshold.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Anomaly Detection</dt>
+                <dd>Agent Platform service (Preview, allowlisted) that analyzes ADK traces and logs asynchronously and reports anomalous sessions to Security Command Center, including infinite loops and oscillating retries under the OWASP ASI08 cascading failures category.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Loop exit signal (<code>escalate</code>)</dt>
+                <dd>ADK event action (<code>tool_context.actions.escalate = True</code> or <code>EventActions(escalate=True)</code>) that ends a <code>LoopAgent</code> before <code>max_iterations</code> is reached.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>DEFAULT_ROUTE</code></dt>
+                <dd>ADK graph workflow route that matches when no other route from the same source node matches; point it at a terminal or fallback node, not at a loop back-edge.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Topology view</dt>
+                <dd>Agent Registry and project-level graph (App Topology API) of inbound and outbound dependencies between agents and MCP servers, with latency and error rates from the most recent hour of trace data.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>--otel_to_cloud</code></dt>
+                <dd>ADK CLI flag (<code>adk web</code>, <code>adk deploy agent_engine</code>) that exports the built-in OpenTelemetry instrumentation to Google Cloud Observability.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Message content capture</dt>
+                <dd><code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY</code> records prompts and responses as events (required by online monitors), while <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> keeps that text out of span attributes.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>EvaluationDataset</code> (agents-cli)</dt>
+                <dd>Gen AI evaluation SDK dataset type that <code>agents-cli eval</code> reads from <code>tests/eval/datasets/*-dataset.json</code>; each case is a single <code>prompt</code> or an <code>agent_data</code> conversation ending in a user turn. Replaced the ADK evalset format in <code>agents-cli</code> projects.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>eval_config.yaml</code></dt>
+                <dd><code>agents-cli</code> file under <code>tests/eval/</code> that lists <code>metrics_to_run</code> and defines custom code metrics (<code>custom_function</code>) or LLM-as-judge metrics (<code>prompt_template</code>).</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Evalset</dt>
+                <dd>ADK <code>*.evalset.json</code> file holding one or more sessions (or a conversation scenario for user simulation), graded by <code>adk eval</code> or <code>AgentEvaluator</code> with criteria from <code>test_config.json</code>.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Golden set</dt>
+                <dd>Frozen, versioned dataset of trajectory, multi-turn, abstention, adversarial and backfilled cases that every CI/CD gate grades against.</dd>
+            </div>
+            <div class="definition-item">
+                <dt>Agent Runtime contract</dt>
+                <dd>Requirements for custom containers on Agent Runtime: listen on <code>0.0.0.0:8080</code>, and implement <code>/api/reasoning_engine</code> and <code>/api/stream_reasoning_engine</code> to support the Python SDK and console playground.</dd>
+            </div>
+            <div class="definition-item">
+                <dt><code>container_concurrency</code></dt>
+                <dd>Agent Runtime setting for concurrent requests per instance; defaults to 9 (one per agent process), and async agents usually start at a multiple of 9.</dd>
+            </div>
         </div>
 
         <div class="two-columns">
@@ -2030,10 +2692,14 @@ class FaithfulnessRubric(BaseModel):
             <div class="concept-card accent-pink">
                 <h3><div class="icon-badge"><i class="fas fa-microphone"></i></div>Audio Deep Dive &amp; Study Downloads</h3>
                 <p>Listen to the 65-minute AgentOps audio deep dive, open the 2-column study guide PDF, 21-slide deck, and sketchnote infographic in the Hub Viewer, or drill 38 scenario-based questions on the 3-tier grading ladder, autoraters, <code>pass@k</code> vs. <code>pass^k</code>, OTel <code>gen_ai.*</code> tracing, and heavy-tail FinOps.</p>
+                <div class="audio-label" style="margin-top: 15px;">AgentOps: Evals, Observability & Cost (Video Walkthrough)</div>
+                <div style="margin: 8px 0 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); aspect-ratio: 16 / 9;">
+                    <iframe src="https://www.youtube-nocookie.com/embed/NtvMs4WgXGw" title="AgentOps: Evals, Observability & Cost Video Walkthrough" style="width: 100%; height: 100%; border: 0; display: block;" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
                 <div class="audio-label" style="margin-top: 15px;">Production AgentOps: Evals, Observability &amp; Cost (Podcast)</div>
                 <div class="audio-wrapper">
                     <audio controls controlsList="nodownload" oncontextmenu="return false;">
-                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/AgentOps-v2.0.mp3" type="audio/mpeg">
+                        <source src="https://github.com/mbettan/machine-learning-cert/raw/refs/heads/main/foundation/AgentOps-v2.1.mp3" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
                 </div>

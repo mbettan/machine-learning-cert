@@ -1453,6 +1453,224 @@
           "url": "https://deepmind.google/discover/blog/"
         }
       ]
+    },
+    {
+      "id": "google-q-38",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "A payroll analytics company signs a customer clause stating that ML processing must stay inside the European Union. The team also wants more availability headroom than one region offers, and nothing in the design needs CMEK on Agent Runtime. Which location should the Gen AI SDK client use?",
+      "options": [
+        {
+          "text": "`global`, because it has the most capacity and the fewest `429` errors.",
+          "correct": false,
+          "why_wrong": "The `global` location can process requests in any supported Google Cloud location, so it gives no EU residency guarantee."
+        },
+        {
+          "text": "The `eu` multi-region, which keeps processing in the EU jurisdiction.",
+          "correct": true
+        },
+        {
+          "text": "`europe-west4` only, since a single region is the only EU residency choice.",
+          "correct": false,
+          "why_wrong": "A single EU region does satisfy residency, but the `eu` multi-region also does and adds the availability the team asked for."
+        },
+        {
+          "text": "`global` inside a VPC-SC perimeter, which pins processing to the EU.",
+          "correct": false,
+          "why_wrong": "A VPC Service Controls perimeter blocks data exfiltration; it does not change where the `global` location runs ML processing."
+        }
+      ],
+      "explanation": "Multi-region endpoints (`us`, `eu`) run ML processing anywhere inside the named jurisdiction, giving jurisdiction-level residency with better availability than a single region. The `global` location offers no residency guarantee, and VPC-SC controls data movement rather than processing location. A regional endpoint would also be compliant but gives up the extra availability.",
+      "key_takeaway": "Residency clause: rule out `global` first, then pick regional for a single region or `us`/`eu` multi-region for jurisdiction-level residency.",
+      "doc_links": [
+        {
+          "label": "Agent Platform data residency",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/data-residency"
+        }
+      ]
+    },
+    {
+      "id": "google-q-39",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "A team moved its agent to the `global` location to cut `429` errors. A new security mandate now requires CMEK protection on stored agent resources, and the team cannot satisfy it while staying on `global`. What change resolves the conflict?",
+      "options": [
+        {
+          "text": "Stay on `global` and switch the project to Priority PayGo request headers.",
+          "correct": false,
+          "why_wrong": "Priority PayGo changes request priority on shared capacity; it has no effect on whether resources can be protected with CMEK."
+        },
+        {
+          "text": "Wrap the project in a VPC Service Controls perimeter, which turns on CMEK.",
+          "correct": false,
+          "why_wrong": "VPC-SC is an exfiltration perimeter, not an encryption feature, so it cannot make `global` resources CMEK-protected."
+        },
+        {
+          "text": "Move Agent Runtime to the `eu` multi-region so CMEK keys can follow it.",
+          "correct": false,
+          "why_wrong": "The guide notes that CMEK is unavailable for Agent Runtime on multi-region locations, so this does not meet the mandate."
+        },
+        {
+          "text": "Use a regional endpoint, since Cloud KMS keys are geographic.",
+          "correct": true
+        }
+      ],
+      "explanation": "Cloud KMS keys live in a geographic boundary, so the `global` location cannot hold CMEK-protected resources (for example, Sessions and Memory Bank lose CMEK on `global`). Pairing the CMEK mandate with a regional endpoint keeps the keys and resources in the same region, at the cost of less burst headroom than `global`.",
+      "key_takeaway": "CMEK mandate plus agent resources means a regional endpoint; `global` cannot hold CMEK resources and multi-region drops CMEK for Agent Runtime.",
+      "doc_links": [
+        {
+          "label": "Agent Platform data residency",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/data-residency"
+        }
+      ]
+    },
+    {
+      "id": "google-q-40",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "A freight company tuned an eligible Gemini Flash version to emit a fixed shipping-manifest schema. While testing a new private-networking design, the team tries to expose the tuned model through a Private Service Connect endpoint and the attempt fails. What is the root cause?",
+      "options": [
+        {
+          "text": "Tuned Gemini models deploy only to shared public endpoints, so they cannot be attached to a PSC endpoint.",
+          "correct": true
+        },
+        {
+          "text": "PSC needs an org policy allowlist; add the tuned model to `allowedPartnerModels`.",
+          "correct": false,
+          "why_wrong": "`constraints/vertexai.allowedPartnerModels` restricts which partner models a project may call; it does not enable PSC for tuned Gemini."
+        },
+        {
+          "text": "The tuned model must move to `global` before it can be attached to a PSC endpoint.",
+          "correct": false,
+          "why_wrong": "Location does not unlock PSC for tuned Gemini, and `global` also drops tuning support entirely."
+        },
+        {
+          "text": "PSC needs explicit caching on; turn it on for the tuned model and redeploy behind PSC.",
+          "correct": false,
+          "why_wrong": "Explicit caching is unrelated to network exposure, and tuned models cannot use explicit caching anyway."
+        }
+      ],
+      "explanation": "Tuned Gemini models are served from shared public endpoints and are not supported on PSC endpoints, so no allowlist, location change or caching setting makes the attachment work. Any design that requires PSC for this model has to be revisited before rollout.",
+      "key_takeaway": "Tuned Gemini models are not available on PSC endpoints; they run on shared public endpoints only.",
+      "doc_links": [
+        {
+          "label": "Model Garden overview",
+          "url": "https://docs.cloud.google.com/model-garden"
+        },
+        {
+          "label": "VPC Service Controls for Agent Platform",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/vpc-service-controls"
+        }
+      ]
+    },
+    {
+      "id": "google-q-41",
+      "section": "Model Garden & Serving Options",
+      "guide_anchor": "model-garden",
+      "question": "A national rail operator wants a Gemini-based assistant for dispatch staff inside its signalling control center. The site's mandate forbids any network connection to a public cloud region. An architect says the only option is an open model because Gemini cannot run disconnected. What should the team choose?",
+      "options": [
+        {
+          "text": "Gemini on a regional endpoint inside a VPC-SC perimeter, reached over PSC.",
+          "correct": false,
+          "why_wrong": "VPC-SC and PSC keep traffic private, but the site still connects to a Google Cloud region, which the mandate forbids."
+        },
+        {
+          "text": "Open weights on a private GKE cluster in the closest Google Cloud region.",
+          "correct": false,
+          "why_wrong": "Cloud GKE still runs in a Google Cloud region, so it breaks the no-connection mandate just like the managed API."
+        },
+        {
+          "text": "Google Distributed Cloud air-gapped, running Gemini for GDC.",
+          "correct": true
+        },
+        {
+          "text": "Open weights only, since no Gemini model is offered for a disconnected site.",
+          "correct": false,
+          "why_wrong": "This is the architect's misconception: GDC air-gapped runs Gemini through the Gemini for GDC API, alongside open models such as Gemma."
+        }
+      ],
+      "explanation": "When a site cannot reach any Google Cloud region at all, managed APIs and cloud GKE are both out. Google Distributed Cloud air-gapped is the disconnected sovereign option, and it runs Gemini through the Gemini for GDC API as well as open models such as Gemma on vLLM.",
+      "key_takeaway": "No connection to any public cloud region means Google Distributed Cloud air-gapped, which still offers Gemini, not only open models.",
+      "doc_links": [
+        {
+          "label": "Google Distributed Cloud",
+          "url": "https://cloud.google.com/distributed-cloud"
+        }
+      ]
+    },
+    {
+      "id": "google-q-42",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "A procurement agent built with ADK runs `gemini-4-argon` at every node. Each request fans out to dozens of invoice-field extractions and lookup tool calls, and only the opening plan needs deep reasoning. End-to-end latency and token spend keep climbing. What redesign fits best?",
+      "options": [
+        {
+          "text": "Keep Argon on every node and buy Provisioned Throughput to lower latency.",
+          "correct": false,
+          "why_wrong": "Reserved throughput removes `429` risk but not the stacked thinking latency, and it still spends planner-grade tokens on simple extraction."
+        },
+        {
+          "text": "Keep Argon as coordinator; give worker agents Flash or Flash-Lite.",
+          "correct": true
+        },
+        {
+          "text": "Make Flash-Lite the coordinator too, so every node runs the cheapest tier.",
+          "correct": false,
+          "why_wrong": "An SLM coordinator for open-ended goals plans poorly, causes wrong delegation, and every downstream worker inherits the error."
+        },
+        {
+          "text": "Merge the workers into one Argon call with a larger thinking budget per request.",
+          "correct": false,
+          "why_wrong": "A single larger Argon call keeps frontier pricing and thinking time on every extraction step, which is the cost the team wants to remove."
+        }
+      ],
+      "explanation": "The coordinator plus specialist workers pattern pays frontier prices only where frontier reasoning is needed. In ADK each `LlmAgent` sets its own `model`, so a `gemini-4-argon` coordinator can delegate to `gemini-3.8-flash` tool-loop workers and Flash-Lite extractors in one agent tree. A frontier model at every node multiplies latency across hops.",
+      "key_takeaway": "Frontier coordinator owns ambiguity; Flash or Flash-Lite workers own narrow typed subtasks, set per `LlmAgent`.",
+      "doc_links": [
+        {
+          "label": "ADK LLM agents",
+          "url": "https://adk.dev/agents/llm-agents/"
+        },
+        {
+          "label": "ADK agent routing",
+          "url": "https://adk.dev/agents/routing/"
+        }
+      ]
+    },
+    {
+      "id": "google-q-43",
+      "section": "Model Selection Framework",
+      "guide_anchor": "model-selection",
+      "question": "An internal knowledge tool serves a large open model on a dedicated Model Garden endpoint. Traffic arrives in short weekday bursts totaling a few hundred requests a day, and the monthly bill is dominated by accelerator node-hours while replicas sit idle. Which change best matches the capacity guidance?",
+      "options": [
+        {
+          "text": "Buy Provisioned Throughput GSUs for the open model so idle time stops billing.",
+          "correct": false,
+          "why_wrong": "PT is a term commitment billed whether used or not, and it covers supported Gemini and partner models rather than your self-served open weights."
+        },
+        {
+          "text": "Move the same weights to a private GKE cluster with autoscaling node pools.",
+          "correct": false,
+          "why_wrong": "GKE still bills for provisioned nodes or reservations, so spiky low-volume traffic keeps paying for idle accelerators."
+        },
+        {
+          "text": "Move the endpoint to the `global` location to raise capacity and lower idle cost.",
+          "correct": false,
+          "why_wrong": "Endpoint location affects residency and burst headroom for managed APIs; it does not change node-hour billing on a self-hosted endpoint."
+        },
+        {
+          "text": "Use per-token MaaS now and self-host once usage is sustained.",
+          "correct": true
+        }
+      ],
+      "explanation": "Self-hosted endpoints bill accelerator node-hours for as long as replicas run, even at zero traffic. Managed PayGo bills only tokens consumed and has no idle cost. Self-hosting a large open model for spiky, low-volume traffic is an anti-pattern: start on MaaS and move once utilization is sustained.",
+      "key_takeaway": "Spiky low volume favors per-token MaaS; self-hosting pays off only at sustained utilization or when weight control and private execution are required.",
+      "doc_links": [
+        {
+          "label": "Model Garden overview",
+          "url": "https://docs.cloud.google.com/model-garden"
+        }
+      ]
     }
   ]
 }
