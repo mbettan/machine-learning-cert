@@ -75,13 +75,13 @@
         "ccar-f": "supporting"
       },
       "quiz": "ml101",
-      "source_md": "foundation/ML101-v2.0.md",
+      "source_md": "foundation/ML101-v2.1.md",
       "assets": {
-        "notes": "foundation/ML101-v2.0.pdf",
-        "infographic": "foundation/ML101-v2.0.png",
-        "deck": "foundation/ML101-deck-v2.0.pdf",
+        "notes": "foundation/ML101-v2.1.pdf",
+        "infographic": "foundation/ML101-v2.1.png",
+        "deck": "foundation/ML101-deck-v2.1.pdf",
         "video": "https://youtu.be/siV0RMdK_DA",
-        "audio": "foundation/ML101-v2.0.mp3"
+        "audio": "foundation/ML101-v2.1.mp3"
       },
       "order": 10
     },
@@ -96,13 +96,13 @@
         "ccar-f": "supporting"
       },
       "quiz": "genai101",
-      "source_md": "foundation/GenAI101-v3.0.md",
+      "source_md": "foundation/GenAI101-v3.1.md",
       "assets": {
-        "notes": "foundation/GenAI101-v3.0.pdf",
-        "infographic": "foundation/GenAI101-v3.0.png",
-        "deck": "foundation/GenAI101-deck-v3.0.pdf",
+        "notes": "foundation/GenAI101-v3.1.pdf",
+        "infographic": "foundation/GenAI101-v3.1.png",
+        "deck": "foundation/GenAI101-deck-v3.1.pdf",
         "video": "https://youtu.be/pQvnEq6ESok",
-        "audio": "foundation/GenAI101-v3.0.mp3"
+        "audio": "foundation/GenAI101-v3.1.mp3"
       },
       "order": 20
     },
@@ -117,13 +117,13 @@
         "ccar-f": "core"
       },
       "quiz": "prompt-engineering",
-      "source_md": "foundation/PromptEngineering-v3.0.md",
+      "source_md": "foundation/PromptEngineering-v3.1.md",
       "assets": {
-        "notes": "foundation/PromptEngineering-v3.0.pdf",
-        "infographic": "foundation/PromptEngineering-v3.0.png",
-        "deck": "foundation/PromptEngineering-deck-v3.0.pdf",
+        "notes": "foundation/PromptEngineering-v3.1.pdf",
+        "infographic": "foundation/PromptEngineering-v3.1.png",
+        "deck": "foundation/PromptEngineering-deck-v3.1.pdf",
         "video": "https://youtu.be/knHPmfV-YOw",
-        "audio": "foundation/PromptEngineering-v3.0.mp3"
+        "audio": "foundation/PromptEngineering-v3.1.mp3"
       },
       "order": 30
     },
@@ -158,12 +158,13 @@
         "ccar-f": "core"
       },
       "quiz": "context-engineering",
-      "source_md": "foundation/ContextEngineering-v1.0.md",
+      "source_md": "foundation/ContextEngineering-v1.1.md",
       "assets": {
-        "notes": "foundation/ContextEngineering-v1.0.pdf",
-        "infographic": "foundation/ContextEngineering-v1.0.png",
-        "deck": "foundation/ContextEngineering-deck-v1.0.pdf",
-        "audio": "foundation/ContextEngineering-v1.0.mp3"
+        "notes": "foundation/ContextEngineering-v1.1.pdf",
+        "infographic": "foundation/ContextEngineering-v1.1.png",
+        "deck": "foundation/ContextEngineering-deck-v1.1.pdf",
+        "audio": "foundation/ContextEngineering-v1.1.mp3",
+        "video": "https://youtu.be/eh3ZSUOm2dk"
       },
       "order": 45
     },
@@ -199,13 +200,13 @@
         "ccar-f": "core"
       },
       "quiz": "mcp",
-      "source_md": "foundation/MCP-v2.0.md",
+      "source_md": "foundation/MCP-v2.1.md",
       "assets": {
-        "notes": "foundation/MCP-v2.0.pdf",
-        "infographic": "foundation/MCP-v2.0.png",
-        "deck": "foundation/MCP-deck-v2.0.pdf",
+        "notes": "foundation/MCP-v2.1.pdf",
+        "infographic": "foundation/MCP-v2.1.png",
+        "deck": "foundation/MCP-deck-v2.1.pdf",
         "video": "https://youtu.be/xTFwnaoX1U0",
-        "audio": "foundation/MCP-v2.0.mp3"
+        "audio": "foundation/MCP-v2.1.mp3"
       },
       "order": 60
     },
@@ -266,7 +267,8 @@
         "notes": "foundation/KnowledgeEngineering-v1.0.pdf",
         "infographic": "foundation/KnowledgeEngineering-v1.0.png",
         "deck": "foundation/KnowledgeEngineering-deck-v1.0.pdf",
-        "audio": "foundation/KnowledgeEngineering-v1.0.mp3"
+        "audio": "foundation/KnowledgeEngineering-v1.0.mp3",
+        "video": "https://youtu.be/aaSJwOb0EYU"
       },
       "order": 90
     },
@@ -281,12 +283,13 @@
         "ccar-f": "core"
       },
       "quiz": "agent-ops",
-      "source_md": "foundation/AgentOps-v2.0.md",
+      "source_md": "foundation/AgentOps-v2.1.md",
       "assets": {
-        "notes": "foundation/AgentOps-v2.0.pdf",
-        "infographic": "foundation/AgentOps-v2.0.png",
-        "deck": "foundation/AgentOps-deck-v2.0.pdf",
-        "audio": "foundation/AgentOps-v2.0.mp3"
+        "notes": "foundation/AgentOps-v2.1.pdf",
+        "infographic": "foundation/AgentOps-v2.1.png",
+        "deck": "foundation/AgentOps-deck-v2.1.pdf",
+        "audio": "foundation/AgentOps-v2.1.mp3",
+        "video": "https://youtu.be/NtvMs4WgXGw"
       },
       "order": 100
     },
@@ -301,12 +304,13 @@
         "ccar-f": "core"
       },
       "quiz": "responsible-ai",
-      "source_md": "foundation/ResponsibleAI-v1.0.md",
+      "source_md": "foundation/ResponsibleAI-v1.1.md",
       "assets": {
-        "notes": "foundation/ResponsibleAI-v1.0.pdf",
-        "infographic": "foundation/ResponsibleAI-v1.0.png",
-        "deck": "foundation/ResponsibleAI-deck-v1.0.pdf",
-        "audio": "foundation/ResponsibleAI-v1.0.mp3"
+        "notes": "foundation/ResponsibleAI-v1.1.pdf",
+        "infographic": "foundation/ResponsibleAI-v1.1.png",
+        "deck": "foundation/ResponsibleAI-deck-v1.1.pdf",
+        "audio": "foundation/ResponsibleAI-v1.1.mp3",
+        "video": "https://youtu.be/mTduE4ggBM4"
       },
       "order": 110
     },
@@ -321,12 +325,13 @@
         "ccar-f": "supporting"
       },
       "quiz": "vibe-coding",
-      "source_md": "foundation/VibeCoding-v3.0.md",
+      "source_md": "foundation/VibeCoding-v3.1.md",
       "assets": {
-        "notes": "foundation/VibeCoding-v3.0.pdf",
-        "infographic": "foundation/VibeCoding-v3.0.png",
-        "deck": "foundation/VibeCoding-deck-v3.0.pdf",
-        "audio": "foundation/VibeCoding-v3.0.mp3"
+        "notes": "foundation/VibeCoding-v3.1.pdf",
+        "infographic": "foundation/VibeCoding-v3.1.png",
+        "deck": "foundation/VibeCoding-deck-v3.1.pdf",
+        "audio": "foundation/VibeCoding-v3.1.mp3",
+        "video": "https://youtu.be/Y5pVXfCAkrc"
       },
       "order": 120
     },
@@ -341,11 +346,13 @@
         "ccar-f": "supporting"
       },
       "quiz": "idd",
-      "source_md": "foundation/IDD-v3.0.md",
+      "source_md": "foundation/IDD-v3.1.md",
       "assets": {
-        "notes": "foundation/IDD-v3.0.pdf",
-        "infographic": "foundation/IDD-v3.0.png",
-        "audio": "foundation/IDD-v3.0.mp3"
+        "notes": "foundation/IDD-v3.1.pdf",
+        "infographic": "foundation/IDD-v3.1.png",
+        "deck": "foundation/IDD-deck-v3.1.pdf",
+        "audio": "foundation/IDD-v3.1.mp3",
+        "video": "https://youtu.be/2mD2u08hbcQ"
       },
       "order": 130
     },
@@ -413,12 +420,12 @@
         "agentic-architect": "core"
       },
       "quiz": "agent-platform",
-      "source_md": "google/AgentPlatform-v2.0.md",
+      "source_md": "google/AgentPlatform-v2.1.md",
       "assets": {
-        "notes": "google/AgentPlatform-v2.0.pdf",
-        "infographic": "google/AgentPlatform-v2.0.png",
-        "deck": "google/AgentPlatform-deck-v2.0.pdf",
-        "audio": "google/AgentPlatform-v2.0.mp3"
+        "notes": "google/AgentPlatform-v2.1.pdf",
+        "infographic": "google/AgentPlatform-v2.1.png",
+        "deck": "google/AgentPlatform-deck-v2.1.pdf",
+        "audio": "google/AgentPlatform-v2.1.mp3"
       },
       "order": 170
     },
