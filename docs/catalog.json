@@ -138,12 +138,13 @@
         "ccar-f": "core"
       },
       "quiz": "adp",
-      "source_md": "foundation/ADP-v1.0.md",
+      "source_md": "foundation/ADP-v1.1.md",
       "assets": {
-        "notes": "foundation/ADP-v1.0.pdf",
-        "infographic": "foundation/ADP-v1.0.png",
-        "deck": "foundation/ADP-deck-v1.0.pdf",
-        "audio": "foundation/ADP-v1.0.mp3"
+        "notes": "foundation/ADP-v1.1.pdf",
+        "infographic": "foundation/ADP-v1.1.png",
+        "deck": "foundation/ADP-deck-v1.1.pdf",
+        "audio": "foundation/ADP-v1.1.mp3",
+        "video": "https://youtu.be/H8aUI_2YNoY"
       },
       "order": 40
     },
@@ -177,7 +178,6 @@
       "certs": {
         "agentic-architect": "core"
       },
-      "badge": "Open-source",
       "quiz": "adk",
       "source_md": "foundation/ADK-v2.0.md",
       "assets": {
@@ -384,12 +384,13 @@
         "agentic-architect": "core"
       },
       "quiz": "gemini-enterprise",
-      "source_md": "google/GeminiEnterprise-v1.0.md",
+      "source_md": "google/GeminiEnterprise-v1.1.md",
       "assets": {
-        "notes": "google/GeminiEnterprise-v1.0.pdf",
-        "infographic": "google/GeminiEnterprise-v1.0.png",
-        "deck": "google/GeminiEnterprise-deck-v1.0.pdf",
-        "audio": "google/GeminiEnterprise-v1.0.mp3"
+        "notes": "google/GeminiEnterprise-v1.1.pdf",
+        "infographic": "google/GeminiEnterprise-v1.1.png",
+        "deck": "google/GeminiEnterprise-deck-v1.1.pdf",
+        "audio": "google/GeminiEnterprise-v1.1.mp3",
+        "video": "https://youtu.be/IKEGTXYQDPQ"
       },
       "order": 150
     },
@@ -402,12 +403,13 @@
         "agentic-architect": "core"
       },
       "quiz": "antigravity",
-      "source_md": "google/Antigravity-v1.0.md",
+      "source_md": "google/Antigravity-v1.1.md",
       "assets": {
-        "notes": "google/Antigravity-v1.0.pdf",
-        "infographic": "google/Antigravity-v1.0.png",
-        "deck": "google/Antigravity-deck-v1.0.pdf",
-        "audio": "google/Antigravity-v1.0.mp3"
+        "notes": "google/Antigravity-v1.1.pdf",
+        "infographic": "google/Antigravity-v1.1.png",
+        "deck": "google/Antigravity-deck-v1.1.pdf",
+        "audio": "google/Antigravity-v1.1.mp3",
+        "video": "https://youtu.be/kdyBksg3Vvs"
       },
       "order": 160
     },
